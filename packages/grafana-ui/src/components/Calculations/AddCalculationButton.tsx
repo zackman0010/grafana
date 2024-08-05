@@ -57,7 +57,7 @@ export const AddCalculationButton = memo(() => {
           <CalculationEditorModalContent
             // index={editIndex}
             // link={isNew ? { title: '', url: '' } : linksSafe[editIndex]}
-            link={{ title: '', url: '' }}
+            link={{ name: '', expression: '' }}
             // data={data}
             // onSave={onDataLinkChange}
             // onCancel={onDataLinkCancel}

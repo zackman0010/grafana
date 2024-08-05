@@ -140,7 +140,7 @@ export const DataLinksInlineEditor = ({
 
       {isEditing && editIndex !== null && (
         <Modal
-          title="Edit link"
+          title="New calculation"
           isOpen={true}
           closeOnBackdropClick={false}
           onDismiss={() => {

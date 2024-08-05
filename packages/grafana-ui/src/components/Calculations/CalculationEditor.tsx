@@ -7,8 +7,17 @@ import {
 import {
   // VariableSuggestion,
   GrafanaTheme2,
-  DataLink,
+  // DataLink,
 } from '@grafana/data';
+
+// TODO: Move this to @grafana/data
+/**
+ * Calculation configuration.
+ */
+export interface Calculation {
+  name: string;
+  expression: string;
+}
 
 import { useStyles2 } from '../../themes/index';
 // import { isCompactUrl } from '../../utils/dataLinks';
@@ -17,10 +26,10 @@ import { Input } from '../Input/Input';
 
 // import { DataLinkInput } from './DataLinkInput';
 
-interface DataLinkEditorProps {
+interface CalculationEditorProps {
   // index: number;
   // isLast: boolean;
-  value: DataLink;
+  value: Calculation;
   // suggestions: VariableSuggestion[];
   // onChange: (index: number, link: DataLink, callback?: () => void) => void;
 }
@@ -41,7 +50,7 @@ export const CalculationEditor = memo(
     //  index,
     value,
     // onChange, suggestions, isLast
-  }: DataLinkEditorProps) => {
+  }: CalculationEditorProps) => {
     const styles = useStyles2(getStyles);
 
     // const onUrlChange = (url: string, callback?: () => void) => {
@@ -53,23 +62,24 @@ export const CalculationEditor = memo(
 
     return (
       <div className={styles.listItem}>
-        <Field label="Title">
+        <Field label="Name">
           <Input
-            value={value.title}
+            value={value.name}
             // onChange={onTitleChange}
-            placeholder="Show details"
+            placeholder="Custom calculation"
           />
         </Field>
 
         <Field
-          label="URL"
+          label="Expression"
           // invalid={isCompactUrl(value.url)}
-          error="Data link is an Explore URL in a deprecated format. Please visit the URL to be redirected, and edit this data link to use that URL."
+          // error="Data link is an Explore URL in a deprecated format. Please visit the URL to be redirected, and edit this data link to use that URL."
         >
           {/* <DataLinkInput value={value.url} onChange={onUrlChange} suggestions={suggestions} /> */}
           <Input
-            value={value.url}
+            value={value.expression}
             // onChange={onUrlChange} suggestions={suggestions}
+            placeholder="7 + 4 / 2"
           />
         </Field>
 

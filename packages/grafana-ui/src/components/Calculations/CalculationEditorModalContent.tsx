@@ -1,19 +1,19 @@
 import { useState } from 'react';
 
-import {
-  // DataFrame,
-  DataLink,
-  // VariableSuggestion
-} from '@grafana/data';
+// import {
+//   // DataFrame,
+//   // DataLink,
+//   // VariableSuggestion
+// } from '@grafana/data';
 
 import { Button } from '../Button';
 import { Modal } from '../Modal/Modal';
 
-import { CalculationEditor } from './CalculationEditor';
+import { Calculation, CalculationEditor } from './CalculationEditor';
 // import { DataLinkEditor } from 'DataLinkEditor';
 
 interface CalculationEditorModalContentProps {
-  link: DataLink;
+  link: Calculation;
   // index: number;
   // data: DataFrame[];
   // getSuggestions: () => VariableSuggestion[];
