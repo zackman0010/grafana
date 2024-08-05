@@ -1,13 +1,19 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// import { DataFrame, DataLink, VariableSuggestion } from '@grafana/data';
+import {
+  // DataFrame,
+  DataLink,
+  // VariableSuggestion
+} from '@grafana/data';
 
 import { Button } from '../Button';
 import { Modal } from '../Modal/Modal';
+
+import { CalculationEditor } from './CalculationEditor';
 // import { DataLinkEditor } from 'DataLinkEditor';
 
 interface CalculationEditorModalContentProps {
-  // link: DataLink;
+  link: DataLink;
   // index: number;
   // data: DataFrame[];
   // getSuggestions: () => VariableSuggestion[];
@@ -15,28 +21,31 @@ interface CalculationEditorModalContentProps {
   // onCancel: (index: number) => void;
 }
 
-export const CalculationEditorModalContent = (
-  {
-    // link,
-    // index,
-    // getSuggestions,
-    // onSave,
-    // onCancel,
-  }: CalculationEditorModalContentProps
-) => {
-  // const [dirtyLink, setDirtyLink] = useState(link);
+export const CalculationEditorModalContent = ({
+  link,
+  // index,
+  // getSuggestions,
+  // onSave,
+  // onCancel,
+}: CalculationEditorModalContentProps) => {
+  const [
+    dirtyLink,
+    // setDirtyLink
+  ] = useState(link);
   return (
     <>
-      {/* <DataLinkEditor
+      <CalculationEditor
         value={dirtyLink}
-        index={index}
-        isLast={false}
-        suggestions={getSuggestions()}
-        onChange={(index, link) => {
-          setDirtyLink(link);
-        }}
-      /> */}
-      Calculation Editor here
+        // index={index}
+        // isLast={false}
+        // suggestions={getSuggestions()}
+        // onChange={(
+        //   // index,
+        //   link
+        // ) => {
+        //   setDirtyLink(link);
+        // }}
+      />
       <Modal.ButtonRow>
         <Button
           variant="secondary"
