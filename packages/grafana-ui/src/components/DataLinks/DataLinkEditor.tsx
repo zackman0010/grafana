@@ -7,7 +7,6 @@ import { useStyles2 } from '../../themes/index';
 import { isCompactUrl } from '../../utils/dataLinks';
 import { Field } from '../Forms/Field';
 import { Input } from '../Input/Input';
-import { Switch } from '../Switch/Switch';
 
 import { DataLinkInput } from './DataLinkInput';
 
@@ -25,7 +24,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   infoText: css({
     paddingBottom: theme.spacing(2),
-    marginLeft: '66px',
+    // marginLeft: '66px',
     color: theme.colors.text.secondary,
   }),
 });
@@ -38,10 +37,6 @@ export const DataLinkEditor = memo(({ index, value, onChange, suggestions, isLas
   };
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(index, { ...value, title: event.target.value });
-  };
-
-  const onOpenInNewTabChanged = () => {
-    onChange(index, { ...value, targetBlank: !value.targetBlank });
   };
 
   return (
@@ -58,16 +53,10 @@ export const DataLinkEditor = memo(({ index, value, onChange, suggestions, isLas
         <DataLinkInput value={value.url} onChange={onUrlChange} suggestions={suggestions} />
       </Field>
 
-      <Field label="Open in new tab">
-        <Switch value={value.targetBlank || false} onChange={onOpenInNewTabChanged} />
-      </Field>
-
-      {isLast && (
-        <div className={styles.infoText}>
-          With data links you can reference data variables like series name, labels and values. Type CMD+Space,
-          CTRL+Space, or $ to open variable suggestions.
-        </div>
-      )}
+      <div className={styles.infoText}>
+        You can reference data variables like series name, labels and values. Type CMD+Space, CTRL+Space, or $ to open
+        variable suggestions.
+      </div>
     </div>
   );
 });

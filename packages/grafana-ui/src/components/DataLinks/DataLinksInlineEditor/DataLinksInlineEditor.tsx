@@ -159,7 +159,7 @@ export const DataLinksInlineEditor = ({
       )}
 
       <Button size="sm" icon="plus" onClick={onDataLinkAdd} variant="secondary" className={styles.button}>
-        Add link
+        Add link for Sam
       </Button>
     </>
   );
