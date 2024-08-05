@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useAbsoluteLayout,
@@ -16,7 +15,7 @@ import { selectors } from '@grafana/e2e-selectors';
 import { TableCellHeight } from '@grafana/schema';
 
 import { useTheme2 } from '../../themes';
-import { Button } from '../Button';
+import { AddCalculationButton } from '../Calculations/addCalculationButton';
 import { CustomScrollbar } from '../CustomScrollbar/CustomScrollbar';
 import { Pagination } from '../Pagination/Pagination';
 
@@ -35,11 +34,9 @@ import {
   createFooterCalculationValues,
   guessLongestField,
 } from './utils';
-import { Modal } from '../Modal/Modal';
 
 const COLUMN_MIN_WIDTH = 150;
 const FOOTER_ROW_HEIGHT = 36;
-const TOP_BAR_LEVEL_HEIGHT = 40; // TODO import from AppChrome/types.ts
 const NO_DATA_TEXT = 'No data';
 
 export const Table = memo((props: Props) => {
@@ -69,32 +66,6 @@ export const Table = memo((props: Props) => {
   const variableSizeListScrollbarRef = useRef<HTMLDivElement>(null);
   const theme = useTheme2();
   const tableStyles = useTableStyles(theme, cellHeight);
-  const noqlStyles = () => {
-    return {
-      pageToolbar: css({
-        height: TOP_BAR_LEVEL_HEIGHT,
-        display: 'flex',
-        padding: theme.spacing(0, 0, 1, 0),
-        alignItems: 'center',
-        borderBottom: `1px solid ${theme.colors.border.weak}`,
-      }),
-      actions: css({
-        label: 'Table-actions',
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'nowrap',
-        justifyContent: 'flex-end',
-        paddingLeft: theme.spacing(1),
-        flexGrow: 1,
-        gap: theme.spacing(1),
-        minWidth: 0,
-
-        '.body-drawer-open &': {
-          display: 'none',
-        },
-      }),
-    };
-  };
   const headerHeight = noHeader ? 0 : tableStyles.rowHeight;
   const [footerItems, setFooterItems] = useState<FooterItem[] | undefined>(footerValues);
   const noValuesDisplayText = fieldConfig?.defaults?.noValue ?? NO_DATA_TEXT;
@@ -221,8 +192,6 @@ export const Table = memo((props: Props) => {
   const extendedState = state as GrafanaTableState;
   toggleAllRowsExpandedRef.current = toggleAllRowsExpanded;
 
-  const [isEditing, setIsEditing] = useState(false);
-
   /*
     Footer value calculation is being moved in the Table component and the footerValues prop will be deprecated.
     The footerValues prop is still used in the Table component for backwards compatibility. Adding the
@@ -329,16 +298,6 @@ export const Table = memo((props: Props) => {
   // Try to determine the longet field
   const longestField = guessLongestField(fieldConfig, data);
 
-  const onCalculationAdd = () => {
-    // let update = cloneDeep(linksSafe);
-    // setEditIndex(update.length);
-    setIsEditing(true);
-  };
-
-  const onAddCalculationCancel = () => {
-    setIsEditing(false);
-  };
-
   return (
     <div
       {...getTableProps()}
@@ -349,18 +308,7 @@ export const Table = memo((props: Props) => {
       style={{ width, height }}
     >
       <CustomScrollbar hideVerticalTrack={false}>
-        {isEditing && (
-          <Modal title="New calculation" isOpen={true} closeOnBackdropClick={false} onDismiss={onAddCalculationCancel}>
-            Edit your calculation here
-          </Modal>
-        )}
-        <div className={noqlStyles().pageToolbar}>
-          <div className={noqlStyles().actions}>
-            <Button onClick={onCalculationAdd} fullWidth={false} size="sm">
-              Add calculation
-            </Button>
-          </div>
-        </div>
+        <AddCalculationButton />
         <div className={tableStyles.tableContentWrapper(totalColumnsWidth)}>
           {!noHeader && (
             <HeaderRow headerGroups={headerGroups} showTypeIcons={showTypeIcons} tableStyles={tableStyles} />
