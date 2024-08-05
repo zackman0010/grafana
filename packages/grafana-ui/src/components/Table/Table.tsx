@@ -18,6 +18,7 @@ import { useTheme2 } from '../../themes';
 import { CustomScrollbar } from '../CustomScrollbar/CustomScrollbar';
 import { Pagination } from '../Pagination/Pagination';
 
+import { Button } from '../Button';
 import { FooterRow } from './FooterRow';
 import { HeaderRow } from './HeaderRow';
 import { RowsList } from './RowsList';
@@ -306,7 +307,10 @@ export const Table = memo((props: Props) => {
       ref={tableDivRef}
       style={{ width, height }}
     >
-      <CustomScrollbar hideVerticalTrack={true}>
+      <CustomScrollbar hideVerticalTrack={false}>
+        <Button fullWidth={false} size="sm">
+          Add calculation
+        </Button>
         <div className={tableStyles.tableContentWrapper(totalColumnsWidth)}>
           {!noHeader && (
             <HeaderRow headerGroups={headerGroups} showTypeIcons={showTypeIcons} tableStyles={tableStyles} />
