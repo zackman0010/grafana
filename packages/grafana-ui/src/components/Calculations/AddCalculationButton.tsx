@@ -4,6 +4,7 @@ import { memo, useState } from 'react';
 import { useTheme2 } from '../../themes';
 import { Button } from '../Button';
 import { Modal } from '../Modal/Modal';
+import { CalculationEditorModalContent } from './CalculationEditorModalContent';
 
 const TOP_BAR_LEVEL_HEIGHT = 40; // TODO import from AppChrome/types.ts
 
@@ -52,7 +53,14 @@ export const AddCalculationButton = memo(() => {
     <>
       {isEditing && (
         <Modal title="New calculation" isOpen={true} closeOnBackdropClick={false} onDismiss={onAddCalculationCancel}>
-          Edit your calculation here
+          <CalculationEditorModalContent
+          // index={editIndex}
+          // link={isNew ? { title: '', url: '' } : linksSafe[editIndex]}
+          // data={data}
+          // onSave={onDataLinkChange}
+          // onCancel={onDataLinkCancel}
+          // getSuggestions={getSuggestions}
+          />
         </Modal>
       )}
       <div className={noqlStyles().pageToolbar}>
