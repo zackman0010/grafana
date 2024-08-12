@@ -17,11 +17,17 @@ export const SqlExpr = ({ onChange, refIds, query }: Props) => {
   const initialQuery = `select * from ${vars[0]} limit 1`;
 
   const onEditorChange = (expression: string) => {
+    console.log(expression);
     onChange({
       ...query,
       expression,
     });
   };
 
-  return <SQLEditor query={query.expression || initialQuery} onChange={onEditorChange}></SQLEditor>;
+  return (
+    <>
+      Hi Sam
+      <SQLEditor query={query.expression || initialQuery} onChange={onEditorChange}></SQLEditor>
+    </>
+  );
 };
