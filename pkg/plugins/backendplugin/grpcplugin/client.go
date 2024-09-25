@@ -88,29 +88,23 @@ type PluginDescriptor struct {
 	startSecretsManagerFn StartSecretsManagerFunc
 }
 
-type BackendPluginOpts struct {
-	TracerProvider trace.TracerProvider
-	ExecutableArgs []string
+// NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
+func NewBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
+	return newBackendPlugin(pluginID, executablePath, true, skipHostEnvVars, executableArgs...)
+}
+
+// NewUnmanagedBackendPlugin creates a new backend plugin factory used for registering an unmanaged backend plugin.
+func NewUnmanagedBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
+	return newBackendPlugin(pluginID, executablePath, false, skipHostEnvVars, executableArgs...)
 }
 
 // NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
-func NewBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, opts ...BackendPluginOpts) backendplugin.PluginFactoryFunc {
-	var o BackendPluginOpts
-	if len(opts) > 0 {
-		o = opts[0]
-	}
-
-	return newBackendPlugin(pluginID, executablePath, true, skipHostEnvVars, o)
-}
-
-// NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
-func newBackendPlugin(pluginID, executablePath string, managed bool, skipHostEnvVars bool, opts BackendPluginOpts) backendplugin.PluginFactoryFunc {
+func newBackendPlugin(pluginID, executablePath string, managed bool, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
 	return newPlugin(PluginDescriptor{
 		pluginID:         pluginID,
 		executablePath:   executablePath,
-		executableArgs:   opts.ExecutableArgs,
+		executableArgs:   executableArgs,
 		skipHostEnvVars:  skipHostEnvVars,
-		tracerProvider:   opts.TracerProvider,
 		managed:          managed,
 		versionedPlugins: pluginSet,
 	})
