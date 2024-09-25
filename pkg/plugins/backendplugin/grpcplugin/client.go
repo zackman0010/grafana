@@ -6,7 +6,9 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/grpcplugin"
 	goplugin "github.com/hashicorp/go-plugin"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/stats"
 
 	"github.com/grafana/grafana/pkg/plugins/backendplugin"
 	"github.com/grafana/grafana/pkg/plugins/backendplugin/pluginextensionv2"
@@ -41,11 +43,18 @@ var pluginSet = map[int]goplugin.PluginSet{
 }
 
 func newClientConfig(executablePath string, args []string, env []string, skipHostEnvVars bool, logger log.Logger,
-	versionedPlugins map[int]goplugin.PluginSet) *goplugin.ClientConfig {
+	tracerProvider trace.TracerProvider, versionedPlugins map[int]goplugin.PluginSet) *goplugin.ClientConfig {
 	// We can ignore gosec G201 here, since the dynamic part of executablePath comes from the plugin definition
 	// nolint:gosec
 	cmd := exec.Command(executablePath, args...)
 	cmd.Env = env
+
+	var statsHandler stats.Handler
+	if tracerProvider != nil {
+		statsHandler = otelgrpc.NewClientHandler(otelgrpc.WithTracerProvider(tracerProvider))
+	} else {
+		statsHandler = otelgrpc.NewClientHandler()
+	}
 
 	return &goplugin.ClientConfig{
 		Cmd:              cmd,
@@ -55,7 +64,7 @@ func newClientConfig(executablePath string, args []string, env []string, skipHos
 		Logger:           logWrapper{Logger: logger},
 		AllowedProtocols: []goplugin.Protocol{goplugin.ProtocolGRPC},
 		GRPCDialOptions: []grpc.DialOption{
-			grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
+			grpc.WithStatsHandler(statsHandler),
 		},
 	}
 }
@@ -73,28 +82,35 @@ type PluginDescriptor struct {
 	executableArgs        []string
 	skipHostEnvVars       bool
 	managed               bool
+	tracerProvider        trace.TracerProvider
 	versionedPlugins      map[int]goplugin.PluginSet
 	startRendererFn       StartRendererFunc
 	startSecretsManagerFn StartSecretsManagerFunc
 }
 
-// NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
-func NewBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
-	return newBackendPlugin(pluginID, executablePath, true, skipHostEnvVars, executableArgs...)
-}
-
-// NewUnmanagedBackendPlugin creates a new backend plugin factory used for registering an unmanaged backend plugin.
-func NewUnmanagedBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
-	return newBackendPlugin(pluginID, executablePath, false, skipHostEnvVars, executableArgs...)
+type BackendPluginOpts struct {
+	TracerProvider trace.TracerProvider
+	ExecutableArgs []string
 }
 
 // NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
-func newBackendPlugin(pluginID, executablePath string, managed bool, skipHostEnvVars bool, executableArgs ...string) backendplugin.PluginFactoryFunc {
+func NewBackendPlugin(pluginID, executablePath string, skipHostEnvVars bool, opts ...BackendPluginOpts) backendplugin.PluginFactoryFunc {
+	var o BackendPluginOpts
+	if len(opts) > 0 {
+		o = opts[0]
+	}
+
+	return newBackendPlugin(pluginID, executablePath, true, skipHostEnvVars, o)
+}
+
+// NewBackendPlugin creates a new backend plugin factory used for registering a backend plugin.
+func newBackendPlugin(pluginID, executablePath string, managed bool, skipHostEnvVars bool, opts BackendPluginOpts) backendplugin.PluginFactoryFunc {
 	return newPlugin(PluginDescriptor{
 		pluginID:         pluginID,
 		executablePath:   executablePath,
-		executableArgs:   executableArgs,
+		executableArgs:   opts.ExecutableArgs,
 		skipHostEnvVars:  skipHostEnvVars,
+		tracerProvider:   opts.TracerProvider,
 		managed:          managed,
 		versionedPlugins: pluginSet,
 	})

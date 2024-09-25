@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 
 	"github.com/grafana/grafana-plugin-sdk-go/genproto/pluginv2"
@@ -44,6 +45,7 @@ type ProtoClientOpts struct {
 	ExecutableArgs []string
 	Env            []string
 	Logger         log.Logger
+	TracerProvider trace.TracerProvider
 }
 
 func NewProtoClient(opts ProtoClientOpts) (ProtoClient, error) {
@@ -53,6 +55,7 @@ func NewProtoClient(opts ProtoClientOpts) (ProtoClient, error) {
 			managed:          true,
 			executablePath:   opts.ExecutablePath,
 			executableArgs:   opts.ExecutableArgs,
+			tracerProvider:   opts.TracerProvider,
 			versionedPlugins: pluginSet,
 		},
 		opts.Logger,

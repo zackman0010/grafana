@@ -50,11 +50,11 @@ type TracingService struct {
 	cfg *TracingConfig
 	log log.Logger
 
-	tracerProvider tracerProvider
+	tracerProvider TracerProvider
 	trace.Tracer
 }
 
-type tracerProvider interface {
+type TracerProvider interface {
 	trace.TracerProvider
 
 	Shutdown(ctx context.Context) error
@@ -73,6 +73,8 @@ type Tracer interface {
 	// Both the context and span must be derived from the same call to
 	// [Tracer.Start].
 	Inject(context.Context, http.Header, trace.Span)
+
+	GetTracerProvider() TracerProvider
 }
 
 func ProvideService(tracingCfg *TracingConfig) (*TracingService, error) {
@@ -109,7 +111,7 @@ func NewNoopTracerService() *TracingService {
 	return ots
 }
 
-func (ots *TracingService) GetTracerProvider() tracerProvider {
+func (ots *TracingService) GetTracerProvider() TracerProvider {
 	return ots.tracerProvider
 }
 
@@ -229,12 +231,12 @@ func initTracerProvider(exp tracesdk.SpanExporter, serviceName string, serviceVe
 	return tp, nil
 }
 
-func (ots *TracingService) initNoopTracerProvider() (tracerProvider, error) {
+func (ots *TracingService) initNoopTracerProvider() (TracerProvider, error) {
 	return &noopTracerProvider{TracerProvider: noop.NewTracerProvider()}, nil
 }
 
 func (ots *TracingService) initOpentelemetryTracer() error {
-	var tp tracerProvider
+	var tp TracerProvider
 	var err error
 	switch ots.cfg.enabled {
 	case jaegerExporter:
