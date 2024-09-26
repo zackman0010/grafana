@@ -302,6 +302,9 @@ abstract class DataSourceApi<
    */
   getTagValues?(options: DataSourceGetTagValuesOptions<TQuery>): Promise<GetTagResponse> | Promise<MetricFindValue[]>;
 
+  /** Called before the editor loads to sanitize the structure */
+  migrateQueriesForEditing?(query: TQuery[]): Promise<TQuery[]>;
+
   /**
    * Set after constructor call, as the data source instance is the most common thing to pass around
    * we attach the components to this instance for easy access

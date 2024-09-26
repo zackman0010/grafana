@@ -111,11 +111,15 @@ export class QueryGroup extends PureComponent<Props, State> {
 
       const defaultDataSource = await this.dataSourceSrv.get();
       const datasource = ds.getRef();
-      const queries = options.queries.map((q) => ({
+      let queries: DataQuery[] = options.queries.map((q) => ({
         ...(queryIsEmpty(q) && ds?.getDefaultQuery?.(CoreApp.PanelEditor)),
         datasource,
         ...q,
       }));
+
+      if (ds.migrateQueriesForEditing) {
+        queries = await ds.migrateQueriesForEditing(queries);
+      }
 
       this.setState({
         queries,
