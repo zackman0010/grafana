@@ -168,7 +168,7 @@ Complete the following steps to start the Grafana server on Windows:
 
    > **Note:** You should edit `custom.ini`, never `defaults.ini`.
 
-   b. Edit `custom.ini` and uncomment the `http_port` configuration option (`;` is the comment character in ini files) and change it to something similar to `8080`, which should not require extra Windows privileges.
+   b. Edit `custom.ini` and uncomment the `http_port` configuration option (`;` is the comment character in `ini` files) and change it to something similar to `8080`, which should not require extra Windows privileges.
 
 To restart the Grafana server, complete the following steps:
 
