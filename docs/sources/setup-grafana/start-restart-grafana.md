@@ -22,7 +22,7 @@ If you installed with the APT repository or `.deb` package, then you can start t
 
 ## Linux
 
-The following subsections describe three methods of starting and restarting the Grafana server: with systemd, initd, or by directly running the binary. You should follow only one set of instructions, depending on how your machine is configured.
+The following subsections describe three methods of starting and restarting the Grafana server: with `systemd`, `initd`, or by directly running the binary. You should follow only one set of instructions, depending on how your machine is configured.
 
 ### Start the Grafana server with systemd
 
@@ -121,7 +121,7 @@ Alternatively, you can use the `docker compose restart` command to restart Grafa
 Configure your `docker-compose.yml` file. For example:
 
 ```yml
-version: "3.8"
+version: '3.8'
 services:
   grafana:
     image: grafana/grafana:latest
