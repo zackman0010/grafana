@@ -11,7 +11,6 @@ import (
 	"github.com/grafana/grafana/pkg/services/cloudmigration"
 	fakeSecrets "github.com/grafana/grafana/pkg/services/secrets/fakes"
 	secretskv "github.com/grafana/grafana/pkg/services/secrets/kvstore"
-	"github.com/grafana/grafana/pkg/services/sqlstore"
 	"github.com/grafana/grafana/pkg/tests/testsuite"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +21,7 @@ func TestMain(m *testing.M) {
 }
 
 func Test_GetAllCloudMigrationSessions(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("get all cloud_migration_session entries", func(t *testing.T) {
@@ -48,7 +47,7 @@ func Test_GetAllCloudMigrationSessions(t *testing.T) {
 }
 
 func Test_CreateMigrationSession(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("creates a session and reads it from the db", func(t *testing.T) {
@@ -77,7 +76,7 @@ func Test_CreateMigrationSession(t *testing.T) {
 }
 
 func Test_GetMigrationSessionByUID(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 	t.Run("find session by uid", func(t *testing.T) {
 		uid := "qwerty"
@@ -94,7 +93,7 @@ func Test_GetMigrationSessionByUID(t *testing.T) {
 
 /** rewrite this test using the new functions
 func Test_DeleteMigrationSession(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("deletes a session from the db", func(t *testing.T) {
@@ -112,7 +111,7 @@ func Test_DeleteMigrationSession(t *testing.T) {
 */
 
 func Test_SnapshotManagement(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("tests the snapshot lifecycle", func(t *testing.T) {
@@ -121,8 +120,9 @@ func Test_SnapshotManagement(t *testing.T) {
 
 		// create a snapshot
 		cmr := cloudmigration.CloudMigrationSnapshot{
-			SessionUID: session.UID,
-			Status:     cloudmigration.SnapshotStatusCreating,
+			SessionUID:    session.UID,
+			Status:        cloudmigration.SnapshotStatusCreating,
+			EncryptionKey: []byte("encryption_key"),
 		}
 
 		snapshotUid, err := s.CreateSnapshot(ctx, cmr)
@@ -161,7 +161,7 @@ func Test_SnapshotManagement(t *testing.T) {
 }
 
 func Test_SnapshotResources(t *testing.T) {
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("tests CRUD of snapshot resources", func(t *testing.T) {
@@ -228,9 +228,7 @@ func Test_SnapshotResources(t *testing.T) {
 }
 
 func TestGetSnapshotList(t *testing.T) {
-	t.Skip("FLAKY test: disabled until fixed")
-
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	// Taken from setUpTest
 	sessionUID := "qwerty"
 	ctx := context.Background()
@@ -273,7 +271,7 @@ func TestGetSnapshotList(t *testing.T) {
 func TestDecryptToken(t *testing.T) {
 	t.Parallel()
 
-	_, s := setUpTest(t)
+	s := setUpTest(t)
 	ctx := context.Background()
 
 	t.Run("with an nil session, it returns a `migration not found` error", func(t *testing.T) {
@@ -317,17 +315,16 @@ func TestDecryptToken(t *testing.T) {
 	})
 }
 
-func setUpTest(t *testing.T) (*sqlstore.SQLStore, *sqlStore) {
-	testDB := db.InitTestDB(t)
+func setUpTest(t *testing.T) *sqlStore {
 	s := &sqlStore{
-		db:             testDB,
+		db:             db.InitTestDB(t),
 		secretsService: fakeSecrets.FakeSecretsService{},
-		secretsStore:   secretskv.NewFakeSQLSecretsKVStore(t),
+		secretsStore:   secretskv.NewFakeSecretsKVStore(),
 	}
 	ctx := context.Background()
 
 	// insert cloud migration test data
-	_, err := testDB.GetSqlxSession().Exec(ctx, `
+	_, err := s.db.GetSqlxSession().Exec(ctx, `
 		INSERT INTO
 			cloud_migration_session (id, uid, auth_token, slug, stack_id, region_slug, cluster_slug, created, updated)
 		VALUES
@@ -342,7 +339,7 @@ func setUpTest(t *testing.T) (*sqlstore.SQLStore, *sqlStore) {
 	require.NoError(t, err)
 
 	// insert cloud migration run test data
-	_, err = testDB.GetSqlxSession().Exec(ctx, `
+	_, err = s.db.GetSqlxSession().Exec(ctx, `
 		INSERT INTO
 			cloud_migration_snapshot (session_uid, uid, created, updated, finished, status)
 		VALUES
@@ -359,7 +356,7 @@ func setUpTest(t *testing.T) (*sqlstore.SQLStore, *sqlStore) {
 		require.NoError(t, err)
 	}
 
-	_, err = testDB.GetSqlxSession().Exec(ctx, `
+	_, err = s.db.GetSqlxSession().Exec(ctx, `
 		INSERT INTO
 			cloud_migration_resource (uid, snapshot_uid, resource_type, resource_uid, status, error_string)
 		VALUES
@@ -371,7 +368,7 @@ func setUpTest(t *testing.T) (*sqlstore.SQLStore, *sqlStore) {
 	)
 	require.NoError(t, err)
 
-	return testDB, s
+	return s
 }
 
 func encodeToken(t string) string {
