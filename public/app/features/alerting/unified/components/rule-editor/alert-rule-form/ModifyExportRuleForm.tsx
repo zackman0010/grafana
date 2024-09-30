@@ -20,6 +20,7 @@ import { RuleFormValues } from '../../../types/rule-form';
 import { GRAFANA_RULES_SOURCE_NAME } from '../../../utils/datasource';
 import { DEFAULT_GROUP_EVALUATION_INTERVAL, formValuesToRulerGrafanaRuleDTO } from '../../../utils/rule-form';
 import { isGrafanaRulerRule } from '../../../utils/rules';
+import { AlertingPageWrapper } from '../../AlertingPageWrapper';
 import { FileExportPreview } from '../../export/FileExportPreview';
 import { GrafanaExportDrawer } from '../../export/GrafanaExportDrawer';
 import { ExportFormats, allGrafanaExportProviders } from '../../export/providers';
@@ -82,7 +83,15 @@ export function ModifyExportRuleForm({ ruleForm, alertUid }: ModifyExportRuleFor
   ];
 
   return (
-    <>
+    <AlertingPageWrapper
+      navId="alert-list"
+      pageNav={{
+        text: 'Modify export',
+        subTitle:
+          'Modify the current alert rule and export the rule definition in the format of your choice. Any changes you make will not be saved.',
+      }}
+      toolbar={isSingleTopNav ? actionButtons : undefined}
+    >
       <FormProvider {...formAPI}>
         {!isSingleTopNav && <AppChromeUpdate actions={actionButtons} />}
         <form onSubmit={(e) => e.preventDefault()}>
@@ -113,7 +122,7 @@ export function ModifyExportRuleForm({ ruleForm, alertUid }: ModifyExportRuleFor
         </form>
         {exportData && <GrafanaRuleDesignExporter exportValues={exportData} onClose={onClose} uid={alertUid} />}
       </FormProvider>
-    </>
+    </AlertingPageWrapper>
   );
 }
 

@@ -2,6 +2,7 @@ import { Alert, LoadingPlaceholder } from '@grafana/ui';
 import { RuleIdentifier } from 'app/types/unified-alerting';
 
 import { AlertWarning } from './AlertWarning';
+import { AlertingPageWrapper } from './components/AlertingPageWrapper';
 import { AlertRuleForm } from './components/rule-editor/alert-rule-form/AlertRuleForm';
 import { useRuleWithLocation } from './hooks/useCombinedRule';
 import { useIsRuleEditable } from './hooks/useIsRuleEditable';
@@ -27,23 +28,69 @@ export function ExistingRuleEditor({ identifier, id }: ExistingRuleEditorProps) 
   const loading = loadingAlertRule || loadingEditable;
 
   if (loading) {
-    return <LoadingPlaceholder text="Loading rule..." />;
+    return (
+      <AlertingPageWrapper
+        isLoading
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-edit',
+          text: 'Edit rule',
+        }}
+      >
+        <LoadingPlaceholder text="Loading rule..." />
+      </AlertingPageWrapper>
+    );
   }
 
   if (error) {
     return (
-      <Alert severity="error" title="Failed to load rule">
-        {stringifyErrorLike(error)}
-      </Alert>
+      <AlertingPageWrapper
+        isLoading
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-edit',
+          text: 'Edit rule',
+        }}
+      >
+        <Alert severity="error" title="Failed to load rule">
+          {stringifyErrorLike(error)}
+        </Alert>
+      </AlertingPageWrapper>
     );
   }
 
   if (!ruleWithLocation) {
-    return <AlertWarning title="Rule not found">Sorry! This rule does not exist.</AlertWarning>;
+    return (
+      <AlertingPageWrapper
+        isLoading
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-edit',
+          text: 'Edit rule',
+        }}
+      >
+        <AlertWarning title="Rule not found">Sorry! This rule does not exist.</AlertWarning>
+      </AlertingPageWrapper>
+    );
   }
 
   if (isEditable === false) {
-    return <AlertWarning title="Cannot edit rule">Sorry! You do not have permission to edit this rule.</AlertWarning>;
+    return (
+      <AlertingPageWrapper
+        isLoading
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-edit',
+          text: 'Edit rule',
+        }}
+      >
+        <AlertWarning title="Cannot edit rule">Sorry! You do not have permission to edit this rule.</AlertWarning>
+      </AlertingPageWrapper>
+    );
   }
 
   return <AlertRuleForm existing={ruleWithLocation} />;

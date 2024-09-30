@@ -6,6 +6,7 @@ import { Alert, LoadingPlaceholder } from '@grafana/ui/src';
 import { RuleIdentifier, RuleWithLocation } from '../../../types/unified-alerting';
 import { RulerRuleDTO } from '../../../types/unified-alerting-dto';
 
+import { AlertingPageWrapper } from './components/AlertingPageWrapper';
 import { AlertRuleForm } from './components/rule-editor/alert-rule-form/AlertRuleForm';
 import { useRuleWithLocation } from './hooks/useCombinedRule';
 import { generateCopiedName } from './utils/duplicate';
@@ -18,7 +19,19 @@ export function CloneRuleEditor({ sourceRuleId }: { sourceRuleId: RuleIdentifier
   const { loading, result: rule, error } = useRuleWithLocation({ ruleIdentifier: sourceRuleId });
 
   if (loading) {
-    return <LoadingPlaceholder text="Loading the rule..." />;
+    return (
+      <AlertingPageWrapper
+        isLoading
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-add',
+          text: 'New rule',
+        }}
+      >
+        <LoadingPlaceholder text="Loading the rule..." />;
+      </AlertingPageWrapper>
+    );
   }
 
   if (rule) {
@@ -30,18 +43,38 @@ export function CloneRuleEditor({ sourceRuleId }: { sourceRuleId: RuleIdentifier
 
   if (error) {
     return (
-      <Alert title="Error" severity="error">
-        {stringifyErrorLike(error)}
-      </Alert>
+      <AlertingPageWrapper
+        isLoading={false}
+        navId="alert-list"
+        pageNav={{
+          icon: 'bell',
+          id: 'alert-rule-add',
+          text: 'New rule',
+        }}
+      >
+        <Alert title="Error" severity="error">
+          {stringifyErrorLike(error)}
+        </Alert>
+      </AlertingPageWrapper>
     );
   }
 
   return (
-    <Alert
-      title="Cannot copy the rule. The rule does not exist"
-      buttonContent="Go back to alert list"
-      onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
-    />
+    <AlertingPageWrapper
+      isLoading={false}
+      navId="alert-list"
+      pageNav={{
+        icon: 'bell',
+        id: 'alert-rule-add',
+        text: 'New rule',
+      }}
+    >
+      <Alert
+        title="Cannot copy the rule. The rule does not exist"
+        buttonContent="Go back to alert list"
+        onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
+      />
+    </AlertingPageWrapper>
   );
 }
 

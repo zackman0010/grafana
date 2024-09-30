@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useParams } from 'react-router-dom-v5-compat';
 import { useAsync } from 'react-use';
 
@@ -68,35 +67,39 @@ const RuleEditor = () => {
 
   const { canCreateGrafanaRules, canCreateCloudRules, canEditRules } = useRulesAccess();
 
-  const getContent = useCallback(() => {
-    if (loading) {
-      return;
-    }
+  if (loading) {
+    return (
+      <AlertingPageWrapper isLoading navId="alert-list" pageNav={getPageNav(identifier, type)}>
+        {undefined}
+      </AlertingPageWrapper>
+    );
+  }
 
-    if (!identifier && !canCreateGrafanaRules && !canCreateCloudRules) {
-      return <AlertWarning title="Cannot create rules">Sorry! You are not allowed to create rules.</AlertWarning>;
-    }
+  if (!identifier && !canCreateGrafanaRules && !canCreateCloudRules) {
+    return (
+      <AlertingPageWrapper isLoading={false} navId="alert-list" pageNav={getPageNav(identifier, type)}>
+        <AlertWarning title="Cannot create rules">Sorry! You are not allowed to create rules.</AlertWarning>
+      </AlertingPageWrapper>
+    );
+  }
 
-    if (identifier && !canEditRules(identifier.ruleSourceName)) {
-      return <AlertWarning title="Cannot edit rules">Sorry! You are not allowed to edit rules.</AlertWarning>;
-    }
+  if (identifier && !canEditRules(identifier.ruleSourceName)) {
+    return (
+      <AlertingPageWrapper isLoading={false} navId="alert-list" pageNav={getPageNav(identifier, type)}>
+        <AlertWarning title="Cannot edit rules">Sorry! You are not allowed to edit rules.</AlertWarning>
+      </AlertingPageWrapper>
+    );
+  }
 
-    if (identifier) {
-      return <ExistingRuleEditor key={id} identifier={identifier} id={id} />;
-    }
+  if (identifier) {
+    return <ExistingRuleEditor key={id} identifier={identifier} id={id} />;
+  }
 
-    if (copyFromIdentifier) {
-      return <CloneRuleEditor sourceRuleId={copyFromIdentifier} />;
-    }
-    // new alert rule
-    return <AlertRuleForm />;
-  }, [canCreateCloudRules, canCreateGrafanaRules, canEditRules, copyFromIdentifier, id, identifier, loading]);
-
-  return (
-    <AlertingPageWrapper isLoading={loading} navId="alert-list" pageNav={getPageNav(identifier, type)}>
-      {getContent()}
-    </AlertingPageWrapper>
-  );
+  if (copyFromIdentifier) {
+    return <CloneRuleEditor sourceRuleId={copyFromIdentifier} />;
+  }
+  // new alert rule
+  return <AlertRuleForm />;
 };
 
 export default withErrorBoundary(RuleEditor, { style: 'page' });

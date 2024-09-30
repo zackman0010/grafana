@@ -49,6 +49,7 @@ import {
 import { fromRulerRule, fromRulerRuleAndRuleGroupIdentifier, stringifyIdentifier } from '../../../utils/rule-id';
 import * as ruleId from '../../../utils/rule-id';
 import { createRelativeUrl } from '../../../utils/url';
+import { AlertingPageWrapper } from '../../AlertingPageWrapper';
 import { GrafanaRuleExporter } from '../../export/GrafanaRuleExporter';
 import { AlertRuleNameAndMetric } from '../AlertRuleNameInput';
 import AnnotationsStep from '../AnnotationsStep';
@@ -85,6 +86,14 @@ export const AlertRuleForm = ({ existing, prefill }: Props) => {
 
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const isSingleTopNav = config.featureToggles.singleTopNav;
+
+  const getText = (type: RuleFormType) => {
+    if (type.endsWith('recording')) {
+      return existing ? 'Edit recording rule' : 'New recording rule';
+    } else {
+      return existing ? 'Edit alert rule' : 'New alert rule';
+    }
+  };
 
   const defaultValues: RuleFormValues = useMemo(() => {
     if (existing) {
@@ -263,64 +272,75 @@ export const AlertRuleForm = ({ existing, prefill }: Props) => {
     return null;
   }
   return (
-    <FormProvider {...formAPI}>
-      {!isSingleTopNav && <AppChromeUpdate actions={actionButtons} />}
-      <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-        <div className={styles.contentOuter}>
-          {isPaused && <InfoPausedRule />}
-          <CustomScrollbar autoHeightMin="100%" hideHorizontalTrack={true}>
-            <Stack direction="column" gap={3}>
-              {/* Step 1 */}
-              <AlertRuleNameAndMetric />
-              {/* Step 2 */}
-              <QueryAndExpressionsStep editingExistingRule={!!existing} onDataChange={checkAlertCondition} />
-              {/* Step 3-4-5 */}
-              {showDataSourceDependantStep && (
-                <>
-                  {/* Step 3 */}
-                  {isGrafanaManagedRuleByType(type) && (
-                    <GrafanaEvaluationBehavior
-                      evaluateEvery={evaluateEvery}
-                      setEvaluateEvery={setEvaluateEvery}
-                      existing={Boolean(existing)}
-                      enableProvisionedGroups={false}
-                    />
-                  )}
+    <AlertingPageWrapper
+      isLoading={false}
+      navId="alert-list"
+      pageNav={{
+        icon: 'bell',
+        id: `alert-rule-${existing ? 'edit' : 'add'}`,
+        text: getText(type),
+      }}
+      toolbar={isSingleTopNav ? actionButtons : undefined}
+    >
+      <FormProvider {...formAPI}>
+        {!isSingleTopNav && <AppChromeUpdate actions={actionButtons} />}
+        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
+          <div className={styles.contentOuter}>
+            {isPaused && <InfoPausedRule />}
+            <CustomScrollbar autoHeightMin="100%" hideHorizontalTrack={true}>
+              <Stack direction="column" gap={3}>
+                {/* Step 1 */}
+                <AlertRuleNameAndMetric />
+                {/* Step 2 */}
+                <QueryAndExpressionsStep editingExistingRule={!!existing} onDataChange={checkAlertCondition} />
+                {/* Step 3-4-5 */}
+                {showDataSourceDependantStep && (
+                  <>
+                    {/* Step 3 */}
+                    {isGrafanaManagedRuleByType(type) && (
+                      <GrafanaEvaluationBehavior
+                        evaluateEvery={evaluateEvery}
+                        setEvaluateEvery={setEvaluateEvery}
+                        existing={Boolean(existing)}
+                        enableProvisionedGroups={false}
+                      />
+                    )}
 
-                  {type === RuleFormType.cloudAlerting && <CloudEvaluationBehavior />}
+                    {type === RuleFormType.cloudAlerting && <CloudEvaluationBehavior />}
 
-                  {type === RuleFormType.cloudRecording && <RecordingRulesNameSpaceAndGroupStep />}
+                    {type === RuleFormType.cloudRecording && <RecordingRulesNameSpaceAndGroupStep />}
 
-                  {/* Step 4 & 5 */}
-                  {/* Notifications step*/}
-                  <NotificationsStep alertUid={uidFromParams} />
-                  {/* Annotations only for cloud and Grafana */}
-                  {!isRecordingRuleByType(type) && <AnnotationsStep />}
-                </>
-              )}
-            </Stack>
-          </CustomScrollbar>
-        </div>
-      </form>
-      {showDeleteModal ? (
-        <ConfirmModal
-          isOpen={true}
-          title="Delete rule"
-          body="Deleting this rule will permanently remove it. Are you sure you want to delete this rule?"
-          confirmText="Yes, delete"
-          icon="exclamation-triangle"
-          onConfirm={deleteRule}
-          onDismiss={() => setShowDeleteModal(false)}
-        />
-      ) : null}
-      {showEditYaml ? (
-        isGrafanaManagedRuleByType(type) ? (
-          <GrafanaRuleExporter alertUid={uidFromParams} onClose={() => setShowEditYaml(false)} />
-        ) : (
-          <RuleInspector onClose={() => setShowEditYaml(false)} />
-        )
-      ) : null}
-    </FormProvider>
+                    {/* Step 4 & 5 */}
+                    {/* Notifications step*/}
+                    <NotificationsStep alertUid={uidFromParams} />
+                    {/* Annotations only for cloud and Grafana */}
+                    {!isRecordingRuleByType(type) && <AnnotationsStep />}
+                  </>
+                )}
+              </Stack>
+            </CustomScrollbar>
+          </div>
+        </form>
+        {showDeleteModal ? (
+          <ConfirmModal
+            isOpen={true}
+            title="Delete rule"
+            body="Deleting this rule will permanently remove it. Are you sure you want to delete this rule?"
+            confirmText="Yes, delete"
+            icon="exclamation-triangle"
+            onConfirm={deleteRule}
+            onDismiss={() => setShowDeleteModal(false)}
+          />
+        ) : null}
+        {showEditYaml ? (
+          isGrafanaManagedRuleByType(type) ? (
+            <GrafanaRuleExporter alertUid={uidFromParams} onClose={() => setShowEditYaml(false)} />
+          ) : (
+            <RuleInspector onClose={() => setShowEditYaml(false)} />
+          )
+        ) : null}
+      </FormProvider>
+    </AlertingPageWrapper>
   );
 };
 

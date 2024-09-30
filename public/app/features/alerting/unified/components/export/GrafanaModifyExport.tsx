@@ -32,11 +32,7 @@ export default function GrafanaModifyExport({ match }: GrafanaModifyExportProps)
     );
   }
 
-  return (
-    <ModifyExportWrapper>
-      <RuleModifyExport ruleIdentifier={ruleIdentifier} />
-    </ModifyExportWrapper>
-  );
+  return <RuleModifyExport ruleIdentifier={ruleIdentifier} />;
 }
 
 interface ModifyExportWrapperProps {
@@ -52,6 +48,7 @@ function ModifyExportWrapper({ children }: ModifyExportWrapperProps) {
         subTitle:
           'Modify the current alert rule and export the rule definition in the format of your choice. Any changes you make will not be saved.',
       }}
+      toolbar={<></>}
     >
       {children}
     </AlertingPageWrapper>
@@ -62,36 +59,46 @@ function RuleModifyExport({ ruleIdentifier }: { ruleIdentifier: RuleIdentifier }
   const { loading, error, result: rulerRule } = useRuleWithLocation({ ruleIdentifier: ruleIdentifier });
 
   if (loading) {
-    return <LoadingPlaceholder text="Loading the rule..." />;
+    return (
+      <ModifyExportWrapper>
+        <LoadingPlaceholder text="Loading the rule..." />
+      </ModifyExportWrapper>
+    );
   }
 
   if (error) {
     return (
-      <Alert title="Cannot load modify export" severity="error">
-        {stringifyErrorLike(error)}
-      </Alert>
+      <ModifyExportWrapper>
+        <Alert title="Cannot load modify export" severity="error">
+          {stringifyErrorLike(error)}
+        </Alert>
+      </ModifyExportWrapper>
     );
   }
 
   if (!rulerRule && !loading) {
     // alert rule does not exist
     return (
-      <Alert
-        title="Cannot load the rule. The rule does not exist"
-        buttonContent="Go back to alert list"
-        onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
-      />
+      <ModifyExportWrapper>
+        <Alert
+          title="Cannot load the rule. The rule does not exist"
+          buttonContent="Go back to alert list"
+          onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
+        />
+      </ModifyExportWrapper>
     );
   }
 
   if (rulerRule && !isGrafanaRulerRule(rulerRule.rule)) {
     // alert rule exists but is not a grafana-managed rule
     return (
-      <Alert
-        title="This rule is not a Grafana-managed alert rule"
-        buttonContent="Go back to alert list"
-        onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
-      />
+      <ModifyExportWrapper>
+        <Alert
+          title="This rule is not a Grafana-managed alert rule"
+          buttonContent="Go back to alert list"
+          onRemove={() => locationService.replace(createRelativeUrl('/alerting/list'))}
+        />
+      </ModifyExportWrapper>
     );
   }
 
@@ -104,5 +111,9 @@ function RuleModifyExport({ ruleIdentifier }: { ruleIdentifier: RuleIdentifier }
     );
   }
 
-  return <Alert title="Unknown error" />;
+  return (
+    <ModifyExportWrapper>
+      <Alert title="Unknown error" />
+    </ModifyExportWrapper>
+  );
 }

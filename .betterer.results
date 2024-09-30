@@ -1531,6 +1531,9 @@ exports[`better eslint`] = {
     "public/app/features/alerting/unified/AlertsFolderView.tsx:5381": [
       [0, 0, 0, "No untranslated strings. Wrap text with <Trans />", "0"]
     ],
+    "public/app/features/alerting/unified/CloneRuleEditor.tsx:5381": [
+      [0, 0, 0, "No untranslated strings. Wrap text with <Trans />", "0"]
+    ],
     "public/app/features/alerting/unified/ExistingRuleEditor.tsx:5381": [
       [0, 0, 0, "No untranslated strings. Wrap text with <Trans />", "0"],
       [0, 0, 0, "No untranslated strings. Wrap text with <Trans />", "1"]

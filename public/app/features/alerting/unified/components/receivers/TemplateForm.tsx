@@ -31,6 +31,7 @@ import { useUnifiedAlertingSelector } from '../../hooks/useUnifiedAlertingSelect
 import { GRAFANA_RULES_SOURCE_NAME } from '../../utils/datasource';
 import { makeAMLink, stringifyErrorLike } from '../../utils/misc';
 import { initialAsyncRequestState } from '../../utils/redux';
+import { AlertmanagerPageWrapper } from '../AlertingPageWrapper';
 import { ProvisionedResource, ProvisioningAlert } from '../Provisioning';
 import { EditorColumnHeader } from '../contact-points/templates/EditorColumnHeader';
 import {
@@ -173,7 +174,12 @@ export const TemplateForm = ({ existing, alertManagerSourceName, config, provena
   );
 
   return (
-    <>
+    <AlertmanagerPageWrapper
+      navId="receivers"
+      accessType="notification"
+      pageNav={{ id: 'templates', text: 'Notification templates', subTitle: 'Create and edit notification templates' }}
+      toolbar={isSingleTopNav ? actionButtons : undefined}
+    >
       <FormProvider {...formApi}>
         {!isSingleTopNav && <AppChromeUpdate actions={actionButtons} />}
         <form onSubmit={handleSubmit(submit)} ref={formRef} className={styles.form}>
@@ -299,7 +305,7 @@ export const TemplateForm = ({ existing, alertManagerSourceName, config, provena
           <TemplatingCheatSheet />
         </Drawer>
       )}
-    </>
+    </AlertmanagerPageWrapper>
   );
 };
 
