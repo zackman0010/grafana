@@ -169,6 +169,7 @@ export interface PromResponse<T> {
 
 export type PromRulesResponse = PromResponse<{
   groups: PromRuleGroupDTO[];
+  nextToken?: string; // if the Prometheus-API supports pagination it will return a "nextToken"
   totals?: AlertGroupTotals;
 }>;
 

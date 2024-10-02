@@ -22,11 +22,12 @@ export interface FetchPromRulesFilter {
 export interface PrometheusDataSourceConfig {
   dataSourceName: string;
   limitAlerts?: number;
+  maxGroups?: number;
   identifier?: RuleIdentifier;
 }
 
 export function prometheusUrlBuilder(dataSourceConfig: PrometheusDataSourceConfig) {
-  const { dataSourceName, limitAlerts, identifier } = dataSourceConfig;
+  const { dataSourceName, limitAlerts, identifier, maxGroups } = dataSourceConfig;
 
   return {
     rules: (filter?: FetchPromRulesFilter, state?: string[], matcher?: Matcher[]) => {
@@ -36,6 +37,10 @@ export function prometheusUrlBuilder(dataSourceConfig: PrometheusDataSourceConfi
       // we do this because the response is large otherwise and we don't show all of them in the UI anyway.
       if (dataSourceName === GRAFANA_RULES_SOURCE_NAME && limitAlerts) {
         searchParams.set('limit_alerts', String(limitAlerts));
+      }
+
+      if (Number.isFinite(maxGroups)) {
+        searchParams.set('max_groups', String(maxGroups));
       }
 
       if (identifier && (isPrometheusRuleIdentifier(identifier) || isCloudRuleIdentifier(identifier))) {
@@ -138,13 +143,14 @@ export async function fetchRules(
   limitAlerts?: number,
   matcher?: Matcher[],
   state?: string[],
-  identifier?: RuleIdentifier
+  identifier?: RuleIdentifier,
+  maxGroups?: number
 ): Promise<RuleNamespace[]> {
   if (filter?.dashboardUID && dataSourceName !== GRAFANA_RULES_SOURCE_NAME) {
     throw new Error('Filtering by dashboard UID is only supported for Grafana Managed rules.');
   }
 
-  const { url, params } = prometheusUrlBuilder({ dataSourceName, limitAlerts, identifier }).rules(
+  const { url, params } = prometheusUrlBuilder({ dataSourceName, limitAlerts, maxGroups, identifier }).rules(
     filter,
     state,
     matcher
@@ -158,12 +164,19 @@ export async function fetchRules(
       showErrorAlert: false,
       showSuccessAlert: false,
     })
-  ).catch((e) => {
-    if ('status' in e && e.status === 404) {
-      throw new Error('404 from rule state endpoint. Perhaps ruler API is not enabled?');
-    }
-    throw e;
-  });
+  )
+    .then((result) => {
+      if (result?.data?.nextToken) {
+        console.log('have next token');
+      }
+      return result;
+    })
+    .catch((e) => {
+      if ('status' in e && e.status === 404) {
+        throw new Error('404 from rule state endpoint. Perhaps ruler API is not enabled?');
+      }
+      throw e;
+    });
 
   return groupRulesByFileName(response.data.data.groups, dataSourceName);
 }

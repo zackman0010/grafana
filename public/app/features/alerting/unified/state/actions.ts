@@ -95,7 +95,7 @@ export const fetchPromRulesAction = createAsyncThunk(
     });
 
     return await withSerializedError(
-      fetchRulesWithLogging(rulesSourceName, filter, limitAlerts, matcher, state, identifier)
+      fetchRulesWithLogging(rulesSourceName, filter, limitAlerts, matcher, state, identifier, 1)
     );
   }
 );
