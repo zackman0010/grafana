@@ -23,6 +23,11 @@ export type DataQueryFullSpec = {
   spec: DataQuerySpec;
 };
 
+export type User = {
+  userId?: string;
+  login?: string;
+};
+
 export type DataQueryPartialSpec = Partial<DataQuerySpec>;
 
 export type DataQuerySpecResponse = {

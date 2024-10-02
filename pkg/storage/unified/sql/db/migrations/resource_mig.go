@@ -97,13 +97,13 @@ func initResourceTables(mg *migrator.Migrator) string {
 		}
 	}
 
-	mg.AddMigration("Add column previous_resource_version in resource_history", migrator.NewAddColumnMigration(resource_history_table, &migrator.Column{
-		Name: "previous_resource_version", Type: migrator.DB_BigInt, Nullable: false,
-	}))
+	// mg.AddMigration("Add column previous_resource_version in resource_history", migrator.NewAddColumnMigration(resource_history_table, &migrator.Column{
+	// 	Name: "previous_resource_version", Type: migrator.DB_BigInt, Nullable: false,
+	// }))
 
-	mg.AddMigration("Add column previous_resource_version in resource", migrator.NewAddColumnMigration(resource_table, &migrator.Column{
-		Name: "previous_resource_version", Type: migrator.DB_BigInt, Nullable: false,
-	}))
+	// mg.AddMigration("Add column previous_resource_version in resource", migrator.NewAddColumnMigration(resource_table, &migrator.Column{
+	// 	Name: "previous_resource_version", Type: migrator.DB_BigInt, Nullable: false,
+	// }))
 
 	return marker
 }

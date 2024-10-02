@@ -1,13 +1,13 @@
 import { DataQuery } from '@grafana/schema';
 
-import { DataQueryPartialSpec } from './api/types';
+import { DataQueryPartialSpec, User } from './api/types';
 
 export type QueryTemplate = {
   uid: string;
   title: string;
   targets: DataQuery[];
   createdAtTimestamp: number;
-  user?: string;
+  user?: User;
 };
 
 export type AddQueryTemplateCommand = {
