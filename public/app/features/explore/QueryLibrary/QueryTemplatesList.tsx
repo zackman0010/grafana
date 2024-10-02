@@ -1,11 +1,12 @@
 import { css } from '@emotion/css';
+import { t } from 'i18next';
 import { uniqBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 
 import { GrafanaTheme2, SelectableValue } from '@grafana/data';
 import { getBackendSrv, getDataSourceSrv } from '@grafana/runtime';
-import { EmptyState, FilterInput, InlineLabel, MultiSelect, Spinner, useStyles2, Stack } from '@grafana/ui';
-import { t, Trans } from 'app/core/internationalization';
+import { EmptyState, FilterInput, InlineLabel, MultiSelect, Spinner, Stack, useStyles2 } from '@grafana/ui';
+import { Trans } from 'app/core/internationalization';
 import { createQueryText } from 'app/core/utils/richHistory';
 import { useAllQueryTemplatesQuery } from 'app/features/query-library';
 import { QueryTemplate } from 'app/features/query-library/types';
@@ -13,6 +14,7 @@ import { QueryTemplate } from 'app/features/query-library/types';
 import { getDatasourceSrv } from '../../plugins/datasource_srv';
 
 import { QueryLibraryProps } from './QueryLibrary';
+import { queryLibraryTrackFilterDatasource } from './QueryLibraryAnalyticsEvents';
 import QueryTemplatesTable from './QueryTemplatesTable';
 import { QueryTemplateRow } from './QueryTemplatesTable/types';
 import { searchQueryLibrary } from './utils/search';
@@ -173,7 +175,10 @@ export function QueryTemplatesList(props: QueryTemplatesListProps) {
         </InlineLabel>
         <MultiSelect
           className={styles.multiSelect}
-          onChange={setDatasourceFilters}
+          onChange={(items, actionMeta) => {
+            setDatasourceFilters(items);
+            actionMeta.action === 'select-option' && queryLibraryTrackFilterDatasource();
+          }}
           value={datasourceFilters}
           options={datasourceNames.map((r) => {
             return { value: r, label: r };
