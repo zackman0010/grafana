@@ -25,6 +25,8 @@ type LifecycleHooks interface {
 }
 
 func (a *WriteAccessHooks) CanWriteFolder(ctx context.Context, user claims.AuthInfo, uid string) error {
+	// This is the error that gets returned.
+	// Could it get overwritten? by setting WriteAccessHooks somehow? see how dashboards deals with it for inspiration.
 	if a.Folder == nil {
 		return fmt.Errorf("writing folders is not supported")
 	}

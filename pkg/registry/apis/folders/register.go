@@ -14,6 +14,7 @@ import (
 	common "k8s.io/kube-openapi/pkg/common"
 	"k8s.io/kube-openapi/pkg/spec3"
 
+	"github.com/grafana/authlib/claims"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/apis/folder/v0alpha1"
 	grafanaregistry "github.com/grafana/grafana/pkg/apiserver/registry/generic"
@@ -25,6 +26,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/folder"
 	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
 
 var _ builder.APIGroupBuilder = (*FolderAPIBuilder)(nil)
@@ -38,6 +40,8 @@ type FolderAPIBuilder struct {
 	namespacer    request.NamespaceMapper
 	folderSvc     folder.Service
 	accessControl accesscontrol.AccessControl
+
+	server resource.ResourceServer
 }
 
 func RegisterAPIService(cfg *setting.Cfg,
@@ -47,8 +51,28 @@ func RegisterAPIService(cfg *setting.Cfg,
 	accessControl accesscontrol.AccessControl,
 	registerer prometheus.Registerer,
 ) *FolderAPIBuilder {
-	if !features.IsEnabledGlobally(featuremgmt.FlagKubernetesFolders) && !features.IsEnabledGlobally(featuremgmt.FlagGrafanaAPIServerTestingWithExperimentalAPIs) {
-		return nil // skip registration unless opting into Kubernetes folders or unless we want to customise registration when testing
+	if !features.IsEnabledGlobally(featuremgmt.FlagKubernetesFolders) {
+		return nil // skip registration unless opting into Kubernetes folders
+	}
+
+	// Trying out something like Dashboards does
+	server, err := resource.NewResourceServer(resource.ResourceServerOptions{ //
+		// Backend: s.access,
+		// Index:   s.access,
+		WriteAccess: resource.WriteAccessHooks{
+			// Folder: func(ctx context.Context, user identity.Requester, uid string) bool {
+			Folder: func(ctx context.Context, user claims.AuthInfo, uid string) bool {
+				if user != nil {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+	})
+	// server, err := resource.NewResourceServer(resource.ResourceServerOptions{})
+	if err != nil {
+		return nil
 	}
 
 	builder := &FolderAPIBuilder{
@@ -57,6 +81,7 @@ func RegisterAPIService(cfg *setting.Cfg,
 		namespacer:    request.GetNamespaceMapper(cfg),
 		folderSvc:     folderSvc,
 		accessControl: accessControl,
+		server:        server,
 	}
 	apiregistration.RegisterAPI(builder)
 	return builder

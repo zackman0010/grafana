@@ -22,6 +22,7 @@ type dashboardStorage struct {
 }
 
 func (s *dashboardStorage) newStore(scheme *runtime.Scheme, defaultOptsGetter generic.RESTOptionsGetter) (grafanarest.LegacyStorage, error) {
+	// Could we do something like this to override the error that gets returned when a.Folder is not set?
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
 		Backend: s.access,
 		Index:   s.access,

@@ -78,6 +78,8 @@ func (d *DualWriterMode1) createOnUnifiedStorage(ctx context.Context, original r
 	startStorage := time.Now()
 	storageObj, errObjectSt := d.Storage.Create(ctx, createdCopy, createValidation, options)
 	d.recordStorageDuration(errObjectSt != nil, mode1Str, d.resource, method, startStorage)
+	// The error that gets returned is this one: errObjectSt.
+	// Even though in the frontend an error appears, this doesn't prevent the legacy folder from getting created, just the unified storage folder.
 	if errObjectSt != nil {
 		cancel()
 	}

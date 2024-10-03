@@ -292,6 +292,8 @@ func (s *server) newEvent(ctx context.Context, user claims.AuthInfo, key *Resour
 	}
 
 	folder := obj.GetFolder()
+	// Here folder represents the folder field set in annotations.
+	// Currently if that annotation is set, the error from CanWriteFolder gets returned.
 	if folder != "" {
 		err = s.access.CanWriteFolder(ctx, user, folder)
 		if err != nil {
