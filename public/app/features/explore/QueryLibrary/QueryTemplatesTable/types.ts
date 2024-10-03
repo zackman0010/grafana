@@ -1,5 +1,4 @@
 import { DataQuery, DataSourceRef } from '@grafana/schema';
-import { UserDTO } from 'app/types';
 
 export type QueryTemplateRow = {
   index: string;
@@ -10,6 +9,6 @@ export type QueryTemplateRow = {
   datasourceRef?: DataSourceRef | null;
   datasourceType?: string;
   createdAtTimestamp?: number;
-  user?: UserDTO;
+  user?: string;
   uid?: string;
 };

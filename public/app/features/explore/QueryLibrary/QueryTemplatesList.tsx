@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { t } from 'i18next';
-import { uniqBy } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 
 import { GrafanaTheme2, SelectableValue } from '@grafana/data';
@@ -42,32 +42,16 @@ export function QueryTemplatesList(props: QueryTemplatesListProps) {
       }
 
       try {
-        console.log('data:', data);
         // Fetch unique users from the data
-        const userQtList = uniqBy(
-          data.map((qt) => qt.user),
-          'userId'
-        );
-
-        console.log('userQtList:', userQtList);
+        const userQtList = uniq(data.map((qt) => qt.userId));
+        const usersParam = userQtList.map((user) => `key=${user}`).join('&');
 
         // Fetch additional user data
-        const userDataList = await Promise.all(
-          userQtList.map((user) => {
-            if (user?.userId) {
-              return getBackendSrv().get(`apis/iam.grafana.app/v0alpha1/namespaces/default/users/${user.userId}`);
-            } else {
-              // Should never happen
-              return Promise.resolve(null);
-            }
-          })
+        const userDataList = await getBackendSrv().get(
+          `apis/iam.grafana.app/v0alpha1/namespaces/default/display?${usersParam}`
         );
 
         console.log('userDataList:', userDataList);
-
-        // Create a map of user IDs/logins to user data
-
-        // console.log('userMap:', userMap);
 
         const rowsPromises = data.map(async (queryTemplate: QueryTemplate, index: number) => {
           const datasourceRef = queryTemplate.targets[0]?.datasource;
@@ -77,14 +61,9 @@ export function QueryTemplatesList(props: QueryTemplatesListProps) {
           const queryText = createQueryText(query, datasourceApi);
           const datasourceName = datasourceApi?.name || '';
 
-          // Retrieve the user data for the current query template
-          // Retrieve the user data for the current query template
-
-          const extendedUserData = userDataList.find(
-            (userData) => userData?.metadata.name === queryTemplate.user?.userId
+          const extendedUserData = userDataList.display.find(
+            (user) => `${user?.identity.type}:${user?.identity.name}` === queryTemplate.userId
           );
-
-          console.log('extendedUserData:', extendedUserData);
 
           return {
             index: index.toString(),
@@ -96,7 +75,7 @@ export function QueryTemplatesList(props: QueryTemplatesListProps) {
             query,
             queryText,
             description: queryTemplate.title,
-            user: extendedUserData?.spec.name,
+            user: extendedUserData?.displayName,
           };
         });
 

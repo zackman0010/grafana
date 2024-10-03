@@ -8,6 +8,7 @@ export const searchQueryLibrary = (queryLibrary: QueryTemplateRow[], query: stri
       (item.datasourceName?.toLowerCase().includes(query.toLowerCase()) ||
         item.datasourceType?.toLowerCase().includes(query.toLowerCase()) ||
         item.description?.toLowerCase().includes(query.toLowerCase()) ||
+        item.user?.toLowerCase().includes(query.toLowerCase()) ||
         item.queryText?.toLowerCase().includes(query.toLowerCase())) &&
       matchesFilter
     );
