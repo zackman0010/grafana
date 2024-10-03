@@ -78,7 +78,11 @@ function getTitleFromDashboardJSON(dashboardData: object | undefined): string | 
 function DashboardInfo({ data }: { data: ResourceTableItem }) {
   const dashboardUID = data.refId;
   const skipApiCall = !!data.name && !!data.parentName;
-  const { data: dashboardData, isError } = useGetDashboardByUidQuery({ uid: dashboardUID }, { skip: skipApiCall });
+  const {
+    data: dashboardData,
+    isLoading,
+    isError,
+  } = useGetDashboardByUidQuery({ uid: dashboardUID }, { skip: skipApiCall });
 
   const dashboardName = data.name || getTitleFromDashboardJSON(dashboardData?.dashboard) || dashboardUID;
   const dashboardParentName = data.parentName || dashboardData?.meta?.folderTitle || 'Dashboards';
@@ -94,7 +98,7 @@ function DashboardInfo({ data }: { data: ResourceTableItem }) {
     );
   }
 
-  if (!skipApiCall && !dashboardData) {
+  if (isLoading) {
     return <InfoSkeleton />;
   }
 
