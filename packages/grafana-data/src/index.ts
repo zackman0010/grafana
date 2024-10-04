@@ -863,3 +863,9 @@ export {
   userHasAllPermissions,
   userHasAnyPermission,
 } from './rbac/rbac';
+export {
+  type MigrationHandler,
+  instanceOfMigrationHandler,
+  migrateQuery,
+  migrateRequest,
+} from './types/migrationHandler';

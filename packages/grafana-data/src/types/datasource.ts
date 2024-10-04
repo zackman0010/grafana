@@ -5,6 +5,7 @@ import { DataSourceRef } from '@grafana/schema';
 
 import { makeClassES5Compatible } from '../utils/makeClassES5Compatible';
 
+import { QueryEditorWithMigration } from './QueryEditorWithMigration';
 import { ScopedVars } from './ScopedVars';
 import { WithAccessControlMetadata } from './accesscontrol';
 import { AnnotationEvent, AnnotationQuery, AnnotationSupport } from './annotations';
@@ -67,7 +68,7 @@ export class DataSourcePlugin<
   }
 
   setQueryEditor(QueryEditor: ComponentType<QueryEditorProps<DSType, TQuery, TOptions>>) {
-    this.components.QueryEditor = QueryEditor;
+    this.components.QueryEditor = QueryEditorWithMigration(QueryEditor);
     return this;
   }
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-import { DataSourceApi, DataSourceOptionsType, DataSourceQueryType, QueryEditorProps } from '@grafana/data';
 import { DataQuery, DataSourceJsonData } from '@grafana/schema';
 
-import { instanceOfMigrationHandler, migrateQuery } from '../utils/migrationHandler';
+import { DataSourceApi, DataSourceOptionsType, DataSourceQueryType, QueryEditorProps } from './datasource';
+import { instanceOfMigrationHandler, migrateQuery } from './migrationHandler';
 
 // QueryEditorWithMigration is a higher order component that wraps the QueryEditor component
 // and ensures that the query is migrated before being passed to the QueryEditor.

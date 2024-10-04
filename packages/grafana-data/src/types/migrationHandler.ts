@@ -1,8 +1,9 @@
-import { DataQueryRequest } from '@grafana/data';
 import { DataQuery } from '@grafana/schema';
 
-import { config } from '../config';
-import { getBackendSrv } from '../services';
+import { config } from '../../../grafana-runtime/src/config';
+import { getBackendSrv } from '../../../grafana-runtime/src/services';
+
+import { DataQueryRequest } from './datasource';
 
 export interface MigrationHandler {
   hasBackendMigration: boolean;

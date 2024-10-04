@@ -14,11 +14,13 @@ import {
   DataSourceApi,
   DataTopic,
   dateMath,
+  instanceOfMigrationHandler,
   LoadingState,
+  migrateRequest,
   PanelData,
   TimeRange,
 } from '@grafana/data';
-import { config, instanceOfMigrationHandler, migrateRequest, toDataQueryError } from '@grafana/runtime';
+import { config, toDataQueryError } from '@grafana/runtime';
 import { isExpressionReference } from '@grafana/runtime/src/utils/DataSourceWithBackend';
 import { backendSrv } from 'app/core/services/backend_srv';
 import { queryIsEmpty } from 'app/core/utils/query';
