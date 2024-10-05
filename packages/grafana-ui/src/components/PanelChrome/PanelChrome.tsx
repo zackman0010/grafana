@@ -272,7 +272,6 @@ export function PanelChrome({
           <LoadingBar width={loadingBarWidth} ariaLabel="Panel loading bar" />
         ) : null}
       </div>
-
       {hoverHeader && (
         <>
           <HoverWidget
@@ -292,7 +291,6 @@ export function PanelChrome({
           )}
         </>
       )}
-
       {hasHeader && (
         <div className={cx(styles.headerContainer, dragClass)} style={headerStyles} data-testid="header-container">
           {statusMessage && (
@@ -314,7 +312,6 @@ export function PanelChrome({
           )}
         </div>
       )}
-
       {!collapsed && (
         <div
           id={panelContentId}

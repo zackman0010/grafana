@@ -1,4 +1,4 @@
-import { clone } from 'lodash';
+import clone from 'lodash/clone';
 import { map } from 'rxjs/operators';
 
 import { getFieldDisplayName } from '../../field/fieldState';

@@ -1,4 +1,5 @@
-import { difference, isEqual } from 'lodash';
+import difference from 'lodash/difference';
+import isEqual from 'lodash/isEqual';
 import { Component } from 'react';
 import * as React from 'react';
 

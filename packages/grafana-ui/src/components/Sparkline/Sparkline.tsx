@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { PureComponent } from 'react';
 import { AlignedData, Range } from 'uplot';
 

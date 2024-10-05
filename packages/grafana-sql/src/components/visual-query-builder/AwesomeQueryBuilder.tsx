@@ -12,7 +12,7 @@ import {
   Widgets,
 } from '@react-awesome-query-builder/ui';
 import { List } from 'immutable';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 
 import { dateTime, toOption } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';

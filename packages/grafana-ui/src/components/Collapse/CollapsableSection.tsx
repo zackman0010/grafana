@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { ReactNode, useRef, useState } from 'react';
 import * as React from 'react';
 

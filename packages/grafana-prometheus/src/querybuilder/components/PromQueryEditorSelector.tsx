@@ -1,5 +1,5 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/querybuilder/components/PromQueryEditorSelector.tsx
-import { isEqual, map } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import map from 'lodash/map';
 import { memo, SyntheticEvent, useCallback, useEffect, useState } from 'react';
 
 import { CoreApp, LoadingState, SelectableValue } from '@grafana/data';

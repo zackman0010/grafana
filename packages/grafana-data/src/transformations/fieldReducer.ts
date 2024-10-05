@@ -1,5 +1,4 @@
-// Libraries
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 
 import { NullValueMode } from '../types/data';
 import { Field, FieldCalcs, FieldType } from '../types/dataFrame';

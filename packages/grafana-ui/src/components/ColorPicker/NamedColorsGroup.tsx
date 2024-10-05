@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { Property } from 'csstype';
-import { upperFirst } from 'lodash';
+import upperFirst from 'lodash/upperFirst';
 
 import { GrafanaTheme2, ThemeVizHue } from '@grafana/data';
 

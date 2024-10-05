@@ -1,4 +1,4 @@
-import { difference } from 'lodash';
+import difference from 'lodash/difference';
 
 import { createDataFrame, guessFieldTypeFromValue } from '../dataframe/processDataFrame';
 import { NullValueMode } from '../types/data';

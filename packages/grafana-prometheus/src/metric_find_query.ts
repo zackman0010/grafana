@@ -1,5 +1,6 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/metric_find_query.ts
-import { chain, map as _map, uniq } from 'lodash';
+import chain from 'lodash/chain';
+import _map from 'lodash/map';
+import uniq from 'lodash/uniq';
 
 import { getDefaultTimeRange, MetricFindValue, TimeRange } from '@grafana/data';
 

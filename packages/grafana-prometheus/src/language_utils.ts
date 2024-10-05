@@ -1,5 +1,4 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/language_utils.ts
-import { invert } from 'lodash';
+import invert from 'lodash/invert';
 import { Token } from 'prismjs';
 
 import {

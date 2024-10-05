@@ -1,4 +1,4 @@
-import { toNumber } from 'lodash';
+import toNumber from 'lodash/toNumber';
 
 /**
  * Will return any value as a number or NaN

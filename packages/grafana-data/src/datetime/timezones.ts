@@ -1,4 +1,4 @@
-import { memoize } from 'lodash';
+import memoize from 'lodash/memoize';
 import moment from 'moment-timezone';
 
 import { TimeZone } from '../types/time';

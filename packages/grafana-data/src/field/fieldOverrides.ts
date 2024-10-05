@@ -1,4 +1,8 @@
-import { isNumber, set, unset, get, cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import isNumber from 'lodash/isNumber';
+import set from 'lodash/set';
+import unset from 'lodash/unset';
 import { useMemo, useRef } from 'react';
 import usePrevious from 'react-use/lib/usePrevious';
 

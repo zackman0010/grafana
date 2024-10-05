@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { forwardRef, HTMLProps, useRef } from 'react';
 
 import { GrafanaTheme2, deprecationWarning } from '@grafana/data';

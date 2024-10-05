@@ -1,6 +1,6 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/querybuilder/shared/QueryHeaderSwitch.tsx
 import { css } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
+// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/querybuilder/shared/QueryHeaderSwitch.tsx
 import { HTMLProps, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

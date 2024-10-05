@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useCallback } from 'react';
 
 import { SelectableValue, toOption } from '@grafana/data';

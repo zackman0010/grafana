@@ -1,5 +1,4 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/language_provider.ts
-import { once } from 'lodash';
+import once from 'lodash/once';
 import Prism from 'prismjs';
 
 import {

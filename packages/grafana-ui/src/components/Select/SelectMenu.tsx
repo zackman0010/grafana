@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { max } from 'lodash';
+import max from 'lodash/max';
 import { RefCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import * as React from 'react';
 import { FixedSizeList as List } from 'react-window';

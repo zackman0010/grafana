@@ -1,5 +1,7 @@
-// Libraries
-import { isArray, isBoolean, isNumber, isString } from 'lodash';
+import isArray from 'lodash/isArray';
+import isBoolean from 'lodash/isBoolean';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 
 import { isDateTime } from '../datetime/moment_wrapper';
 import { fieldIndexComparer } from '../field/fieldComparers';

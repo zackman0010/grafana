@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { Fragment, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import {
   HeaderGroup,

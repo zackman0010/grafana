@@ -1,6 +1,6 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/components/PromExploreExtraField.tsx
 import { css, cx } from '@emotion/css';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
+// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/components/PromExploreExtraField.tsx
 import { memo, useCallback } from 'react';
 import * as React from 'react';
 import { usePrevious } from 'react-use';

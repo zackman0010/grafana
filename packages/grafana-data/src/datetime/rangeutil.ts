@@ -1,4 +1,4 @@
-import { each } from 'lodash';
+import each from 'lodash/each';
 
 import { RawTimeRange, TimeRange, TimeZone, IntervalValues, RelativeTimeRange, TimeOption } from '../types/time';
 

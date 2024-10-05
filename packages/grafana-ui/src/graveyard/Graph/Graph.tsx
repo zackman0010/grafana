@@ -1,6 +1,6 @@
-// Libraries
 import $ from 'jquery';
-import { uniqBy } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
+// Libraries
 import { PureComponent } from 'react';
 import * as React from 'react';
 

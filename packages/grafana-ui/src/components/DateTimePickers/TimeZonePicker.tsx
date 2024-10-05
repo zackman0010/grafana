@@ -1,4 +1,6 @@
-import { toLower, isEmpty, isString } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import toLower from 'lodash/toLower';
 import { useMemo, useCallback } from 'react';
 
 import {

@@ -1,4 +1,5 @@
-import { set, cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import set from 'lodash/set';
 
 import {
   FieldNamePickerConfigSettings,

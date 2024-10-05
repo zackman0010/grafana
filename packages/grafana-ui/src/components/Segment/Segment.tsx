@@ -1,5 +1,5 @@
 import { cx } from '@emotion/css';
-import { isObject } from 'lodash';
+import isObject from 'lodash/isObject';
 import { HTMLProps } from 'react';
 import * as React from 'react';
 

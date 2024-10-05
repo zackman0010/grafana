@@ -1,4 +1,4 @@
-import { toNumber } from 'lodash';
+import toNumber from 'lodash/toNumber';
 
 import { DataFrame } from '../types/dataFrame';
 import { DisplayValue } from '../types/displayValue';

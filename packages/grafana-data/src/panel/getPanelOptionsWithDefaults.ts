@@ -1,4 +1,8 @@
-import { mergeWith, isArray, isObject, unset, isEqual } from 'lodash';
+import isArray from 'lodash/isArray';
+import isEqual from 'lodash/isEqual';
+import isObject from 'lodash/isObject';
+import mergeWith from 'lodash/mergeWith';
+import unset from 'lodash/unset';
 
 import { FieldConfigOptionsRegistry } from '../field/FieldConfigOptionsRegistry';
 import { fieldColorModeRegistry } from '../field/fieldColor';

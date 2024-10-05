@@ -1,4 +1,4 @@
-import { defaultsDeep } from 'lodash';
+import defaultsDeep from 'lodash/defaultsDeep';
 import { ComponentType } from 'react';
 
 import { PanelPluginMeta, PluginMeta, PluginType, PanelPlugin, PanelProps } from '../../src';

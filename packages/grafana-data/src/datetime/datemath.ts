@@ -1,4 +1,5 @@
-import { includes, isDate } from 'lodash';
+import includes from 'lodash/includes';
+import isDate from 'lodash/isDate';
 
 import { TimeZone } from '../types/time';
 

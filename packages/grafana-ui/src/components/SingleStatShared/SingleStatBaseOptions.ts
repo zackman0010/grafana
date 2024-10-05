@@ -1,4 +1,8 @@
-import { cloneDeep, identity, isNumber, omit, pickBy } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import identity from 'lodash/identity';
+import isNumber from 'lodash/isNumber';
+import omit from 'lodash/omit';
+import pickBy from 'lodash/pickBy';
 
 import {
   convertOldAngularValueMappings,

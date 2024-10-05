@@ -1,5 +1,3 @@
-/* eslint-disable id-blacklist, no-restricted-imports, @typescript-eslint/ban-types */
-import { lowerCase } from 'lodash';
 import moment from 'moment-timezone';
 
 import { DateTimeOptions, getTimeZone } from './common';
@@ -70,7 +68,7 @@ const parseString = (value: string, options?: DateTimeOptionsWhenParsing): DateT
     return dateTimeForTimeZone(zone.name, value, format);
   }
 
-  switch (lowerCase(timeZone)) {
+  switch (timeZone.toLowerCase()) {
     case 'utc':
       return toUtc(value, format);
     default:
@@ -87,7 +85,7 @@ const parseOthers = (value: DateTimeInput, options?: DateTimeOptionsWhenParsing)
     return dateTimeForTimeZone(zone.name, date);
   }
 
-  switch (lowerCase(timeZone)) {
+  switch (timeZone.toLowerCase()) {
     case 'utc':
       return toUtc(date);
     default:

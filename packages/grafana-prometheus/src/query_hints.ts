@@ -1,5 +1,4 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/query_hints.ts
-import { size } from 'lodash';
+import size from 'lodash/size';
 
 import { QueryFix, QueryHint } from '@grafana/data';
 

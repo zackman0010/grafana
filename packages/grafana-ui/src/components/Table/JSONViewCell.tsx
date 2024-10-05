@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 
 import { useStyles2 } from '../../themes';
 import { getCellLinks } from '../../utils';

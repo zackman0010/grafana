@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import uPlot, { Cursor, Band, Hooks, Select, AlignedData, Padding, Series } from 'uplot';
 
 import { DataFrame, DefaultTimeZone, Field, getTimeZoneInfo, GrafanaTheme2, TimeRange, TimeZone } from '@grafana/data';

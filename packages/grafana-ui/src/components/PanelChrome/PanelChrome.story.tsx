@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { Meta, StoryFn } from '@storybook/react';
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import { CSSProperties, useState, ReactNode } from 'react';
 import { useInterval, useToggle } from 'react-use';
 

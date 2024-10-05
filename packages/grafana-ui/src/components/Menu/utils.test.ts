@@ -7,6 +7,7 @@ describe('utils', () => {
         parentElement: {
           getBoundingClientRect: () => ({ right }),
         },
+
         getBoundingClientRect: () => ({ width }),
       }) as HTMLElement;
 

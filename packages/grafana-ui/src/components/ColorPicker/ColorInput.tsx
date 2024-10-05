@@ -1,5 +1,5 @@
 import { cx, css } from '@emotion/css';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { forwardRef, useState, useEffect, useMemo } from 'react';
 import * as React from 'react';
 import tinycolor from 'tinycolor2';

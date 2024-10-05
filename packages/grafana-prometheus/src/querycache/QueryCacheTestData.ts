@@ -1,5 +1,4 @@
-// Core Grafana history https://github.com/grafana/grafana/blob/v11.0.0-preview/public/app/plugins/datasource/prometheus/querycache/QueryCacheTestData.ts
-import { clone } from 'lodash';
+import clone from 'lodash/clone';
 
 /**
  *

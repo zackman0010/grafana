@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css';
 import classnames from 'classnames';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { PureComponent } from 'react';
 import * as React from 'react';
 import { Value } from 'slate';

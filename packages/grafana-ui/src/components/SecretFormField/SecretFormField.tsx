@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import { InputHTMLAttributes } from 'react';
 import * as React from 'react';
 

@@ -1,5 +1,9 @@
-// Libraries
-import { toString, toNumber as _toNumber, isEmpty, isBoolean, isArray, join } from 'lodash';
+import isArray from 'lodash/isArray';
+import isBoolean from 'lodash/isBoolean';
+import isEmpty from 'lodash/isEmpty';
+import join from 'lodash/join';
+import _toNumber from 'lodash/toNumber';
+import toString from 'lodash/toString';
 
 // Types
 import { getFieldTypeFromValue } from '../dataframe/processDataFrame';

@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
-import { groupBy, capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
+import groupBy from 'lodash/groupBy';
 import { useRef, useMemo } from 'react';
 import * as React from 'react';
 import useClickAway from 'react-use/lib/useClickAway';
