@@ -22,6 +22,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.GithubOrigin":           schema_pkg_apis_provisioning_v0alpha1_GithubOrigin(ref),
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.GithubOriginList":       schema_pkg_apis_provisioning_v0alpha1_GithubOriginList(ref),
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.GithubOriginSpec":       schema_pkg_apis_provisioning_v0alpha1_GithubOriginSpec(ref),
+		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.OriginFileInfo":         schema_pkg_apis_provisioning_v0alpha1_OriginFileInfo(ref),
+		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.OriginFileList":         schema_pkg_apis_provisioning_v0alpha1_OriginFileList(ref),
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.PullRequest":            schema_pkg_apis_provisioning_v0alpha1_PullRequest(ref),
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.PullRequestSpec":        schema_pkg_apis_provisioning_v0alpha1_PullRequestSpec(ref),
 		"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.PullRequestStatus":      schema_pkg_apis_provisioning_v0alpha1_PullRequestStatus(ref),
@@ -415,6 +417,89 @@ func schema_pkg_apis_provisioning_v0alpha1_GithubOriginSpec(ref common.Reference
 		},
 		Dependencies: []string{
 			"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.FolderSettings"},
+	}
+}
+
+func schema_pkg_apis_provisioning_v0alpha1_OriginFileInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The path within the named origin",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hash": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Verification/identification hash (eg, checksum, etag, git hash etc)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"time": {
+						SchemaProps: spec.SchemaProps{
+							Description: "File modification time",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"path", "hash"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_provisioning_v0alpha1_OriginFileList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.OriginFileInfo"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1.OriginFileInfo", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 

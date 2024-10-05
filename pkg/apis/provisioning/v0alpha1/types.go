@@ -124,3 +124,22 @@ type PullRequestStatus struct {
 	Updated string `json:"updated"`
 	State   string `json:"state"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type OriginFileList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []OriginFileInfo `json:"items,omitempty"`
+}
+
+type OriginFileInfo struct {
+	// The path within the named origin
+	Path string `json:"path"`
+
+	// Verification/identification hash (eg, checksum, etag, git hash etc)
+	Hash string `json:"hash"`
+
+	// File modification time
+	Timestamp int64 `json:"time,omitempty"`
+}
