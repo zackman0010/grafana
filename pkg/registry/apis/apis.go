@@ -13,6 +13,7 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/iam"
 	"github.com/grafana/grafana/pkg/registry/apis/peakq"
 	"github.com/grafana/grafana/pkg/registry/apis/playlist"
+	"github.com/grafana/grafana/pkg/registry/apis/provisioning"
 	"github.com/grafana/grafana/pkg/registry/apis/query"
 	"github.com/grafana/grafana/pkg/registry/apis/scope"
 	"github.com/grafana/grafana/pkg/registry/apis/search"
@@ -37,6 +38,7 @@ func ProvideRegistryServiceSink(
 	_ *iam.IdentityAccessManagementAPIBuilder,
 	_ *scope.ScopeAPIBuilder,
 	_ *query.QueryAPIBuilder,
+	_ *provisioning.ProvisioningAPIBuilder,
 	_ *notifications.NotificationsAPIBuilder,
 	_ *search.SearchAPIBuilder,
 ) *Service {
