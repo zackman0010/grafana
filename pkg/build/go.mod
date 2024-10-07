@@ -21,7 +21,7 @@ require (
 	github.com/aws/aws-sdk-go v1.55.5 // @grafana/aws-datasources
 	github.com/blang/semver/v4 v4.0.0 // @grafana/grafana-release-guild
 	github.com/docker/docker v26.0.2+incompatible // @grafana/grafana-release-guild
-	github.com/drone/drone-cli v1.6.1 // @grafana/grafana-release-guild
+	github.com/drone/drone-cli v1.8.0 // @grafana/grafana-release-guild
 	github.com/gogo/protobuf v1.3.2 // indirect; @grafana/alerting-backend
 	github.com/google/go-cmp v0.6.0 // @grafana/grafana-backend-group
 	github.com/google/go-github v17.0.0+incompatible // @grafana/grafana-release-guild
@@ -63,7 +63,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
-	github.com/drone-runners/drone-runner-docker v1.8.2 // indirect
+	github.com/drone-runners/drone-runner-docker v1.8.3 // indirect
 	github.com/drone/drone-go v1.7.1 // indirect
 	github.com/drone/envsubst v1.0.3 // indirect
 	github.com/drone/runner-go v1.12.0 // indirect

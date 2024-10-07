@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import * as React from 'react';
 
 import { CoreApp, isValidDuration, isValidGrafanaDuration, SelectableValue } from '@grafana/data';
-import { EditorField, EditorRow, QueryOptionGroup } from '@grafana/experimental';
+import { EditorField, EditorRow, QueryOptionGroup } from '@grafana/plugin-ui';
 import { config, reportInteraction } from '@grafana/runtime';
 import { Alert, AutoSizeInput, RadioButtonGroup, Select } from '@grafana/ui';
 
