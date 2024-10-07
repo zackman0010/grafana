@@ -1,5 +1,5 @@
+import map from 'lodash/map';
 import 'vendor/flot/jquery.flot';
-import { map } from 'lodash';
 
 import { dateTime, GrafanaTheme2, TimeRange } from '@grafana/data';
 import { config } from 'app/core/config';

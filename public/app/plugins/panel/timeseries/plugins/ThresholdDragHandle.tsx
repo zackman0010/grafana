@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { useMemo, useState } from 'react';
 import Draggable, { DraggableBounds } from 'react-draggable';
 

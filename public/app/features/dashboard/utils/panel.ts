@@ -1,4 +1,4 @@
-import { isString as _isString } from 'lodash';
+import _isString from 'lodash/isString';
 
 import { TimeRange, AppEvents, rangeUtil, dateMath, PanelModel as IPanelModel, dateTimeAsMoment } from '@grafana/data';
 import { getTemplateSrv } from '@grafana/runtime';

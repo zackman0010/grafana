@@ -1,4 +1,4 @@
-import { fromPairs } from 'lodash';
+import fromPairs from 'lodash/fromPairs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useUnmount } from 'react-use';
 import useMountedState from 'react-use/lib/useMountedState';

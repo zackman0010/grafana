@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 

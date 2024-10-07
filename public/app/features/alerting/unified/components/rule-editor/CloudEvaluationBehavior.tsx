@@ -54,7 +54,6 @@ export const CloudEvaluationBehavior = () => {
       {type === RuleFormType.cloudAlerting && dataSourceName && (
         <GroupAndNamespaceFields rulesSourceName={dataSourceName} />
       )}
-
       <PreviewRule />
     </RuleEditorSection>
   );

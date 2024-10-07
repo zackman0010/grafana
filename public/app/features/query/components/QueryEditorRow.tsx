@@ -1,6 +1,10 @@
-// Libraries
 import classNames from 'classnames';
-import { cloneDeep, filter, has, uniqBy, uniqueId } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import filter from 'lodash/filter';
+import has from 'lodash/has';
+import uniqBy from 'lodash/uniqBy';
+import uniqueId from 'lodash/uniqueId';
+// Libraries
 import pluralize from 'pluralize';
 import * as React from 'react';
 import { PureComponent, ReactNode } from 'react';

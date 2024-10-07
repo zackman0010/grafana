@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useState, useEffect } from 'react';
 
 import { SelectableValue } from '@grafana/data';

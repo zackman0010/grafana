@@ -1,4 +1,4 @@
-import { partial } from 'lodash';
+import partial from 'lodash/partial';
 import { type ReactElement, useEffect, useState } from 'react';
 import { DeepMap, FieldError, FieldErrors, useForm, Controller } from 'react-hook-form';
 

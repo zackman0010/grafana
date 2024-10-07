@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { uniqBy } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import { useEffect, useMemo, useState } from 'react';
 
 import { AppEvents, GrafanaTheme2, SelectableValue } from '@grafana/data';

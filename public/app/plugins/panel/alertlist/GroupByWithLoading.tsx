@@ -1,4 +1,5 @@
-import { isEmpty, uniq } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import uniq from 'lodash/uniq';
 import { useEffect, useMemo } from 'react';
 
 import { SelectableValue } from '@grafana/data';

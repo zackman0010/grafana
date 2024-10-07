@@ -1,4 +1,5 @@
-import { first, uniqBy } from 'lodash';
+import first from 'lodash/first';
+import uniqBy from 'lodash/uniqBy';
 import { useCallback } from 'react';
 
 import {

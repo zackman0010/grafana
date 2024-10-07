@@ -1,4 +1,4 @@
-import { isEqualWith } from 'lodash';
+import isEqualWith from 'lodash/isEqualWith';
 
 import { PanelModel as IPanelModel } from '@grafana/data';
 

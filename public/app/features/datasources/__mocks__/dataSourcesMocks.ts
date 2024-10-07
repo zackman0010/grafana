@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 
 import { DataSourceSettings, DataSourcePluginMeta, DataSourceJsonData } from '@grafana/data';
 import { DataSourceSettingsState, PluginDashboard } from 'app/types';

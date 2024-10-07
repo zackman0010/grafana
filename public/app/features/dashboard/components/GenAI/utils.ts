@@ -1,4 +1,4 @@
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 
 import { llms } from '@grafana/experimental';
 import { config } from '@grafana/runtime';

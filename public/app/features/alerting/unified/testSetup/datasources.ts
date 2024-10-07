@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
 
 import { DataSourceInstanceSettings } from '@grafana/data';
 import { config, setDataSourceSrv } from '@grafana/runtime';

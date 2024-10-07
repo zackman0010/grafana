@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 import { ChangeEvent, PureComponent } from 'react';
 import * as React from 'react';
 

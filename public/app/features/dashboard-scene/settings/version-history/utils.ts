@@ -1,7 +1,15 @@
 import { compare, Operation } from 'fast-json-patch';
-// @ts-ignore
 import jsonMap from 'json-source-map';
-import { flow, get, isArray, isEmpty, last, sortBy, tail, toNumber, isNaN } from 'lodash';
+import flow from 'lodash/flow';
+import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
+import isNaN from 'lodash/isNaN';
+import last from 'lodash/last';
+import sortBy from 'lodash/sortBy';
+import tail from 'lodash/tail';
+import toNumber from 'lodash/toNumber';
+// @ts-ignore
 
 export type Diff = {
   op: 'add' | 'replace' | 'remove' | 'copy' | 'test' | '_get' | 'move';

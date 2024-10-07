@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 
 import { DataFrameDTO, DataFrameJSON } from '@grafana/data';
 import { config } from '@grafana/runtime';

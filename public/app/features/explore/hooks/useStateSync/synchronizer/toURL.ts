@@ -1,5 +1,5 @@
 import { Action } from '@reduxjs/toolkit';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { MutableRefObject } from 'react';
 
 import { UrlQueryMap } from '@grafana/data';

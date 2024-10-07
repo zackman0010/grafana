@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { GrafanaTheme2, ScopeDashboardBinding } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectRef, SceneObjectState } from '@grafana/scenes';

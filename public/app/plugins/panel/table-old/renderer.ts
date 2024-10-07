@@ -1,4 +1,8 @@
-import { find, first, isArray, isString, escape } from 'lodash';
+import escape from 'lodash/escape';
+import find from 'lodash/find';
+import first from 'lodash/first';
+import isArray from 'lodash/isArray';
+import isString from 'lodash/isString';
 
 import {
   escapeStringForRegex,

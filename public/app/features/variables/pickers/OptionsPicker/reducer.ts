@@ -1,6 +1,7 @@
 import uFuzzy from '@leeoniya/ufuzzy';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { cloneDeep, isString } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import isString from 'lodash/isString';
 
 import { containsSearchFilter, VariableOption, VariableWithOptions } from '@grafana/data';
 

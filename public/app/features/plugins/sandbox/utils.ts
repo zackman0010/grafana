@@ -1,5 +1,5 @@
 import { isNearMembraneProxy } from '@locker/near-membrane-shared';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import * as React from 'react';
 
 import { PluginSignatureType, PluginType } from '@grafana/data';

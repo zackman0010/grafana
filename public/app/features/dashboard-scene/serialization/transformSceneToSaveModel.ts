@@ -1,4 +1,5 @@
-import { defaults, isEqual } from 'lodash';
+import defaults from 'lodash/defaults';
+import isEqual from 'lodash/isEqual';
 
 import { isEmptyObject, ScopedVars, TimeRange } from '@grafana/data';
 import {

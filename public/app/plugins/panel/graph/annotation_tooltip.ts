@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import { isString, escape } from 'lodash';
+import escape from 'lodash/escape';
+import isString from 'lodash/isString';
 
 import coreModule from 'app/angular/core_module';
 import alertDef from 'app/features/alerting/state/alertDef';

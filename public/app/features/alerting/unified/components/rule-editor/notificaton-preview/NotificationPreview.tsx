@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { compact } from 'lodash';
+import compact from 'lodash/compact';
 import { lazy, Suspense } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

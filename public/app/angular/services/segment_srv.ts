@@ -1,4 +1,6 @@
-import { each, isString, map } from 'lodash';
+import each from 'lodash/each';
+import isString from 'lodash/isString';
+import map from 'lodash/map';
 
 import coreModule from '../core_module';
 

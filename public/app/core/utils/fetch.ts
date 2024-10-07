@@ -1,4 +1,4 @@
-import { omitBy } from 'lodash';
+import omitBy from 'lodash/omitBy';
 
 import { deprecationWarning } from '@grafana/data';
 import { BackendSrvRequest } from '@grafana/runtime';

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { cloneDeep, defaults as lodashDefaults } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import _defaults from 'lodash/defaults';
 
 import { LoadingState, VariableType, TypedVariableModel, VariableOption } from '@grafana/data';
 
@@ -24,7 +25,7 @@ const sharedReducerSlice = createSlice({
         : cloneDeep(action.payload.data.model);
 
       const variable = {
-        ...lodashDefaults({}, model, initialState),
+        ..._defaults({}, model, initialState),
         id: id,
         index: action.payload.data.index,
         global: action.payload.data.global,

@@ -1,4 +1,6 @@
-import { compact, memoize, uniq } from 'lodash';
+import compact from 'lodash/compact';
+import memoize from 'lodash/memoize';
+import uniq from 'lodash/uniq';
 import memoizeOne from 'memoize-one';
 
 import { Edge, Graph, Node } from 'app/core/utils/dag';

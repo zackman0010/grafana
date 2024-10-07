@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { pickBy } from 'lodash';
+import pickBy from 'lodash/pickBy';
 
 import { locationUtil, urlUtil, rangeUtil } from '@grafana/data';
 import { locationService } from '@grafana/runtime';

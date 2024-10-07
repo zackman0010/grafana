@@ -1,5 +1,5 @@
 import { auto } from 'angular';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 
 import {
   AppEvent,

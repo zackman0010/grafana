@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
-import { capitalize, groupBy } from 'lodash';
+import capitalize from 'lodash/capitalize';
+import groupBy from 'lodash/groupBy';
 import { useEffect, useMemo } from 'react';
 
 import { DataFrame, DataFrameJSON, GrafanaTheme2, TimeRange } from '@grafana/data';

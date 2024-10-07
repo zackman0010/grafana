@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { compact } from 'lodash';
+import compact from 'lodash/compact';
 import { useMemo } from 'react';
 import { FieldValues, FormProvider, RegisterOptions, useForm, useFormContext } from 'react-hook-form';
 

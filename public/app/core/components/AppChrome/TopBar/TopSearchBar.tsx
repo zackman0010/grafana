@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { memo } from 'react';
 import { useLocation } from 'react-router-dom-v5-compat';
 

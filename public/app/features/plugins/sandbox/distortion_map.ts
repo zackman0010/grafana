@@ -1,5 +1,6 @@
 import { ProxyTarget } from '@locker/near-membrane-shared';
-import { cloneDeep, isFunction } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import isFunction from 'lodash/isFunction';
 
 import { config } from '@grafana/runtime';
 import { Monaco } from '@grafana/ui';

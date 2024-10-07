@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import pluralize from 'pluralize';
 
 import { GrafanaTheme2 } from '@grafana/data';

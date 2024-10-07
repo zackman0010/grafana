@@ -1,4 +1,5 @@
-import { isEqual, uniqBy } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
 
 import { GrafanaAlertStateWithReason } from 'app/types/unified-alerting-dto';
 

@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import isNumber from "lodash/isNumber";
 import Feature, { FeatureLike } from 'ol/Feature';
 import Map from 'ol/Map';
 import { LineString, Point, SimpleGeometry } from 'ol/geom';

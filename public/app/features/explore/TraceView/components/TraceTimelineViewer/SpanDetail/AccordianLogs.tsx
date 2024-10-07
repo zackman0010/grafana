@@ -1,3 +1,5 @@
+import { css } from '@emotion/css';
+import _sortBy from 'lodash/sortBy';
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from '@emotion/css';
-import { sortBy as _sortBy } from 'lodash';
 import * as React from 'react';
 
 import { GrafanaTheme2, TraceKeyValuePair, TraceLog } from '@grafana/data';

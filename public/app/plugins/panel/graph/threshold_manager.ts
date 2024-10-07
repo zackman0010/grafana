@@ -1,6 +1,6 @@
+import isNumber from 'lodash/isNumber';
 import 'vendor/flot/jquery.flot';
 import $ from 'jquery';
-import { isNumber } from 'lodash';
 
 import { PanelCtrl } from 'app/angular/panel/panel_ctrl';
 import { config } from 'app/core/config';

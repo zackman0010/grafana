@@ -1,4 +1,4 @@
-import { find } from 'lodash';
+import find from 'lodash/find';
 
 import { DataFrame, dateTime, Field, FieldType, getFieldDisplayName, getTimeField, TimeRange } from '@grafana/data';
 import { applyNullInsertThreshold } from '@grafana/data/src/transformations/transformers/nulls/nullInsertThreshold';

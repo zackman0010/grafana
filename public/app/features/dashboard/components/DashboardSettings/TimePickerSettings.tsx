@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { PureComponent } from 'react';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 
 import { DateTime, dateTime, dateTimeForTimeZone } from '@grafana/data';
 

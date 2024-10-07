@@ -1,4 +1,4 @@
-import { get as lodashGet } from 'lodash';
+import get from 'lodash/get';
 
 import { NestedPanelOptions, NestedValueAccess } from '@grafana/data/src/utils/OptionsUIBuilders';
 import { Scene } from 'app/features/canvas/runtime/scene';
@@ -22,7 +22,7 @@ export function getConnectionEditor(opts: CanvasConnectionEditorOptions): Nested
 
     values: (parent: NestedValueAccess) => ({
       getValue: (path: string) => {
-        return lodashGet(opts.connection.info, path);
+        return get(opts.connection.info, path);
       },
       // TODO: Fix this unknown (maybe a dimension supplier?)
       onChange: (path: string, value: unknown) => {

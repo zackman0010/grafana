@@ -1,7 +1,7 @@
 import { ByRoleMatcher, waitFor, within } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { fromPairs } from 'lodash';
+import fromPairs from 'lodash/fromPairs';
 import { stringify } from 'querystring';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router-dom';

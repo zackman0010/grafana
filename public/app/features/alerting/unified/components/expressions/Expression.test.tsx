@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { times } from 'lodash';
+import times from 'lodash/times';
 
 import { DataFrame, toDataFrame } from '@grafana/data';
 

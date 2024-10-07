@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { useEffect, useMemo } from 'react';
 import { useEffectOnce, useToggle } from 'react-use';
 

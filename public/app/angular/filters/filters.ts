@@ -1,5 +1,8 @@
 import angular from 'angular';
-import { isArray, isNull, isObject, isUndefined } from 'lodash';
+import isArray from 'lodash/isArray';
+import isNull from 'lodash/isNull';
+import isObject from 'lodash/isObject';
+import isUndefined from 'lodash/isUndefined';
 
 import { dateTime } from '@grafana/data';
 import { getTemplateSrv, TemplateSrv } from 'app/features/templating/template_srv';

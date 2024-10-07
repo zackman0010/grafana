@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 import { dateTime } from '@grafana/data';
 import { createMonitoringLogger, getBackendSrv } from '@grafana/runtime';

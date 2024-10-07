@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { addDays, subDays } from 'date-fns';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { pickBy } from 'lodash';
+import pickBy from 'lodash/pickBy';
 import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom-v5-compat';

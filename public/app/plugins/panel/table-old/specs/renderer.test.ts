@@ -1,4 +1,4 @@
-import { each } from 'lodash';
+import each from 'lodash/each';
 
 import { ScopedVars, TimeZone } from '@grafana/data';
 import { getTheme } from '@grafana/ui';

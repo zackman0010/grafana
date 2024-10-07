@@ -1,6 +1,7 @@
 import { render, renderHook, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { first, noop } from 'lodash';
+import first from 'lodash/first';
+import noop from 'lodash/noop';
 import { Router } from 'react-router-dom';
 import { CompatRouter } from 'react-router-dom-v5-compat';
 

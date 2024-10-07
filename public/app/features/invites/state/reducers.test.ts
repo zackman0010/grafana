@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
 
 import { getMockInvitees } from 'app/features/users/__mocks__/userMocks';
 

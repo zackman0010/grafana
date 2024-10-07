@@ -1,4 +1,4 @@
-import { set } from 'lodash';
+import set from 'lodash/set';
 import { useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 

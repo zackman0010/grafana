@@ -1,4 +1,4 @@
-import { nth } from 'lodash';
+import nth from 'lodash/nth';
 
 import { locationService } from '@grafana/runtime';
 import {

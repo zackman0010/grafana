@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { CSSProperties } from 'react';
 
 import { GrafanaTheme2, PanelData, VisualizationSuggestion } from '@grafana/data';

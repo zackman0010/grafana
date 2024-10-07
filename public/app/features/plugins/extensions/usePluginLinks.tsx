@@ -1,4 +1,4 @@
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import { useMemo } from 'react';
 import { useObservable } from 'react-use';
 

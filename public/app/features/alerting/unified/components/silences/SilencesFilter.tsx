@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
-import { debounce, uniqueId } from 'lodash';
+import debounce from 'lodash/debounce';
+import uniqueId from 'lodash/uniqueId';
 import { FormEvent, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

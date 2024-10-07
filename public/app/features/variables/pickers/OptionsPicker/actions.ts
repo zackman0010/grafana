@@ -1,4 +1,5 @@
-import { debounce, trim } from 'lodash';
+import debounce from 'lodash/debounce';
+import trim from 'lodash/trim';
 
 import { isEmptyObject, containsSearchFilter, VariableWithOptions, VariableOption } from '@grafana/data';
 import { StoreState, ThunkDispatch, ThunkResult } from 'app/types';

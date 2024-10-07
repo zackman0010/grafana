@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
-import { chain, omit } from 'lodash';
+import chain from 'lodash/chain';
+import omit from 'lodash/omit';
 import moment from 'moment';
 import { useState } from 'react';
 

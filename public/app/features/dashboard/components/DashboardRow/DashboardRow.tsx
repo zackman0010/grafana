@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { indexOf } from 'lodash';
+import indexOf from 'lodash/indexOf';
 import { Component } from 'react';
 import { Unsubscribable } from 'rxjs';
 
@@ -147,9 +147,7 @@ export class UnthemedDashboardRow extends Component<DashboardRowProps> {
               [styles.toggleTargetCollapsed]: collapsed,
             })}
             onClick={this.onToggle}
-          >
-            &nbsp;
-          </div>
+          ></div>
         )}
         {canEdit && (
           <div

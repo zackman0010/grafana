@@ -1,5 +1,5 @@
 import uFuzzy from '@leeoniya/ufuzzy';
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 import { useMemo } from 'react';
 
 import { RECEIVER_META_KEY } from 'app/features/alerting/unified/components/contact-points/constants';

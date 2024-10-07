@@ -1,4 +1,4 @@
-import { chain } from 'lodash';
+import chain from 'lodash/chain';
 
 import { stringToJsRegex } from '@grafana/data';
 import { getTemplateSrv } from '@grafana/runtime';

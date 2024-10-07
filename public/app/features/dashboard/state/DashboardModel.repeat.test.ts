@@ -1,4 +1,7 @@
-import { compact, flattenDeep, map, uniq } from 'lodash';
+import compact from 'lodash/compact';
+import flattenDeep from 'lodash/flattenDeep';
+import map from 'lodash/map';
+import uniq from 'lodash/uniq';
 
 import { DashboardPanelsChangedEvent } from 'app/types/events';
 

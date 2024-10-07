@@ -1,5 +1,11 @@
 import $ from 'jquery';
-import { debounce, each, indexOf, map, partial, escape, unescape } from 'lodash';
+import debounce from 'lodash/debounce';
+import each from 'lodash/each';
+import escape from 'lodash/escape';
+import indexOf from 'lodash/indexOf';
+import map from 'lodash/map';
+import partial from 'lodash/partial';
+import unescape from 'lodash/unescape';
 
 import coreModule from 'app/angular/core_module';
 

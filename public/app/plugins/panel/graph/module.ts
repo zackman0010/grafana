@@ -1,3 +1,6 @@
+import defaults from 'lodash/defaults';
+import find from 'lodash/find';
+import without from 'lodash/without';
 import './graph';
 import './series_overrides_ctrl';
 import './thresholds_form';
@@ -6,7 +9,6 @@ import './annotation_tooltip';
 import './event_editor';
 
 import { auto } from 'angular';
-import { defaults, find, without } from 'lodash';
 
 import { DataFrame, FieldConfigProperty, PanelEvents, PanelPlugin } from '@grafana/data';
 import { locationService } from '@grafana/runtime';

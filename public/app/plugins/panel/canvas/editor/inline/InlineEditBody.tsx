@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { get as lodashGet } from 'lodash';
+import get from 'lodash/get';
 import { useMemo, useState } from 'react';
 import { useObservable } from 'react-use';
 
@@ -155,7 +155,7 @@ function getOptionsPaneCategoryDescriptor<T extends object>(
   };
 
   const access: NestedValueAccess = {
-    getValue: (path) => lodashGet(props.options, path),
+    getValue: (path) => get(props.options, path),
     onChange: (path, value) => {
       props.onChange(setOptionImmutably<T>(props.options, path, value));
     },

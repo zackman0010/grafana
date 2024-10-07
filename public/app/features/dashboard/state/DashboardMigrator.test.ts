@@ -1,4 +1,5 @@
-import { each, map } from 'lodash';
+import each from 'lodash/each';
+import map from 'lodash/map';
 
 import { DataLinkBuiltInVars, MappingType, VariableHide } from '@grafana/data';
 import { getPanelPlugin } from '@grafana/data/test/__mocks__/pluginMocks';

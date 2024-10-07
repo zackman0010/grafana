@@ -1,5 +1,5 @@
 import { createMemoryHistory } from 'history';
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import { match } from 'react-router-dom';
 
 import { GrafanaRouteComponentProps } from '../types';

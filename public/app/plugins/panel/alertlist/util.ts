@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 import { Labels } from '@grafana/data';
 import { labelsMatchMatchers } from 'app/features/alerting/unified/utils/alertmanager';

@@ -1,4 +1,4 @@
-import { difference } from 'lodash';
+import difference from 'lodash/difference';
 import { useState } from 'react';
 import { useDeepCompareEffect } from 'react-use';
 import useAsync from 'react-use/lib/useAsync';

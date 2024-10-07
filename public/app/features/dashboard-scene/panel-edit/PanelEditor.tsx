@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 import { NavIndex, PanelPlugin } from '@grafana/data';
 import { config, locationService } from '@grafana/runtime';

@@ -1,5 +1,7 @@
 import { css } from '@emotion/css';
-import { debounce, take, uniqueId } from 'lodash';
+import debounce from 'lodash/debounce';
+import take from 'lodash/take';
+import uniqueId from 'lodash/uniqueId';
 import { useCallback, useMemo, useState } from 'react';
 import * as React from 'react';
 import { FormProvider, useForm, useFormContext, Controller } from 'react-hook-form';

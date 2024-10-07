@@ -1,4 +1,5 @@
-import { map, without } from 'lodash';
+import map from 'lodash/map';
+import without from 'lodash/without';
 
 import { getValueFormats } from '@grafana/data';
 

@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 
 import { SelectableValue } from '@grafana/data';
 import { Icon, Label, MultiSelect, Tooltip } from '@grafana/ui';

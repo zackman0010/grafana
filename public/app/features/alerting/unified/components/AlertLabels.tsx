@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { chain } from 'lodash';
+import chain from 'lodash/chain';
 import pluralize from 'pluralize';
 import { useState } from 'react';
 

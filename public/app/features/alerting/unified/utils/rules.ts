@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
 
 import { AlertState } from '@grafana/data';
 import { config } from '@grafana/runtime';

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { once } from 'lodash';
+import once from 'lodash/once';
 import { useMemo, useState } from 'react';
 
 import { DataSourceInstanceSettings, DataSourceRef, GrafanaTheme2 } from '@grafana/data';

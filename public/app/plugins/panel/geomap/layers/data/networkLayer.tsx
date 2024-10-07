@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import isNumber from "lodash/isNumber";
 import { Feature } from 'ol';
 import { FeatureLike } from 'ol/Feature';
 import Map from 'ol/Map';

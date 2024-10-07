@@ -1,4 +1,5 @@
-import { last, times } from 'lodash';
+import last from 'lodash/last';
+import times from 'lodash/times';
 
 import { config } from '@grafana/runtime';
 import { Button, Stack } from '@grafana/ui';

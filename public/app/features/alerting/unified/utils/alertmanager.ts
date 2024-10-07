@@ -1,4 +1,5 @@
-import { isEqual, uniqWith } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import uniqWith from 'lodash/uniqWith';
 
 import { SelectableValue } from '@grafana/data';
 import {

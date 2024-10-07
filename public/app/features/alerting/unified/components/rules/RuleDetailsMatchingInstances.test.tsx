@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { times } from 'lodash';
+import times from 'lodash/times';
 import { byLabelText, byRole, byTestId } from 'testing-library-selector';
 
 import { PluginExtensionTypes } from '@grafana/data';

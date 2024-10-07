@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { PureComponent } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 

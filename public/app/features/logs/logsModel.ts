@@ -1,4 +1,5 @@
-import { groupBy, size } from 'lodash';
+import groupBy from 'lodash/groupBy';
+import size from 'lodash/size';
 import { from, isObservable, Observable } from 'rxjs';
 
 import {

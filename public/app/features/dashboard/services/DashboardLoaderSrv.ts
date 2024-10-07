@@ -1,6 +1,4 @@
-import $ from 'jquery';
-import _, { isFunction } from 'lodash'; // eslint-disable-line lodash/import-scope
-import moment from 'moment'; // eslint-disable-line no-restricted-imports
+import isFunction from 'lodash/isFunction';
 
 import { AppEvents, dateMath, UrlQueryValue } from '@grafana/data';
 import { getBackendSrv, locationService } from '@grafana/runtime';
@@ -179,46 +177,61 @@ export class DashboardLoaderSrv {
   }
 
   _executeScript(result: any) {
+    // Synchronously load the other dependencies
     const services = {
       dashboardSrv: getDashboardSrv(),
       datasourceSrv: getDatasourceSrv(),
     };
-    const scriptFunc = new Function(
-      'ARGS',
-      'kbn',
-      'dateMath',
-      '_',
-      'moment',
-      'window',
-      'document',
-      '$',
-      'jQuery',
-      'services',
-      result
-    );
-    const scriptResult = scriptFunc(
-      locationService.getSearchObject(),
-      kbn,
-      dateMath,
-      _,
-      moment,
-      window,
-      document,
-      $,
-      $,
-      services
-    );
 
-    // Handle async dashboard scripts
-    if (isFunction(scriptResult)) {
-      return new Promise((resolve) => {
-        scriptResult((dashboard: any) => {
-          resolve({ data: dashboard });
-        });
+    // Use promises to dynamically import lodash, moment, and jquery
+    return Promise.all([
+      import(/* webpackChunkName: "lodash" */ 'lodash'),
+      import(/* webpackChunkName: "moment" */ 'moment'),
+      import(/* webpackChunkName: "jquery" */ 'jquery'),
+    ])
+      .then(([lodashModule, momentModule, jQueryModule]) => {
+        const scriptFunc = new Function(
+          'ARGS',
+          'kbn',
+          'dateMath',
+          '_',
+          'moment',
+          'window',
+          'document',
+          '$',
+          'jQuery',
+          'services',
+          result
+        );
+
+        const scriptResult = scriptFunc(
+          locationService.getSearchObject(),
+          kbn,
+          dateMath,
+          lodashModule.default || lodashModule,
+          momentModule.default || momentModule,
+          window,
+          document,
+          jQueryModule.default || jQueryModule,
+          jQueryModule.default || jQueryModule,
+          services
+        );
+
+        // Handle async dashboard scripts
+        if (isFunction(scriptResult)) {
+          return new Promise((resolve) => {
+            scriptResult((dashboard: any) => {
+              resolve({ data: dashboard });
+            });
+          });
+        }
+
+        return { data: scriptResult };
+      })
+      .catch((error) => {
+        console.error('Failed to load dynamic script dependencies:', error);
+        throw error;
       });
-    }
-
-    return { data: scriptResult };
   }
 }
 

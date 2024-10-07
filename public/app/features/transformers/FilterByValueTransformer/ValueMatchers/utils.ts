@@ -1,4 +1,5 @@
-import { isString, isUndefined } from 'lodash';
+import isString from 'lodash/isString';
+import isUndefined from 'lodash/isUndefined';
 
 import { Field, FieldType } from '@grafana/data';
 

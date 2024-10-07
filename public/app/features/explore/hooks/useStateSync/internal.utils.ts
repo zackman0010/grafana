@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { CoreApp, DataSourceApi, ExploreUrlState, isTruthy } from '@grafana/data';
 import { DataQuery, DataSourceRef } from '@grafana/schema';

@@ -1,4 +1,6 @@
-import { isArray, pick, reduce } from 'lodash';
+import isArray from 'lodash/isArray';
+import pick from 'lodash/pick';
+import reduce from 'lodash/reduce';
 
 import {
   AlertmanagerGroup,

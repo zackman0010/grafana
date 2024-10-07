@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { PanelModel, FieldConfigSource, FieldMatcherID, ReducerID } from '@grafana/data';
 import { TooltipDisplayMode, SortOrder } from '@grafana/schema';

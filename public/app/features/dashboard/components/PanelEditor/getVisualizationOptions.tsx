@@ -1,4 +1,4 @@
-import { get as lodashGet } from 'lodash';
+import get from 'lodash/get';
 
 import {
   EventBus,
@@ -87,7 +87,7 @@ export function getVisualizationOptions(props: OptionPaneRenderProps): OptionsPa
   };
 
   const access: NestedValueAccess = {
-    getValue: (path) => lodashGet(currentOptions, path),
+    getValue: (path) => get(currentOptions, path),
     onChange: (path, value) => {
       const newOptions = setOptionImmutably(currentOptions, path, value);
       onPanelOptionsChanged(newOptions);
@@ -121,9 +121,9 @@ export function getVisualizationOptions(props: OptionPaneRenderProps): OptionsPa
     const defaults = currentFieldConfig.defaults;
     const value = fieldOption.isCustom
       ? defaults.custom
-        ? lodashGet(defaults.custom, fieldOption.path)
+        ? get(defaults.custom, fieldOption.path)
         : undefined
-      : lodashGet(defaults, fieldOption.path);
+      : get(defaults, fieldOption.path);
 
     if (fieldOption.getItemsCount) {
       category.props.itemsCount = fieldOption.getItemsCount(value);
@@ -216,7 +216,7 @@ export function getVisualizationOptions2(props: OptionPaneRenderProps2): Options
 
   const currentOptions = panel.state.options;
   const access: NestedValueAccess = {
-    getValue: (path) => lodashGet(currentOptions, path),
+    getValue: (path) => get(currentOptions, path),
     onChange: (path, value) => {
       const newOptions = setOptionImmutably(currentOptions, path, value);
       panel.onOptionsChange(newOptions);
@@ -252,9 +252,9 @@ export function getVisualizationOptions2(props: OptionPaneRenderProps2): Options
     const defaults = currentFieldConfig.defaults;
     const value = fieldOption.isCustom
       ? defaults.custom
-        ? lodashGet(defaults.custom, fieldOption.path)
+        ? get(defaults.custom, fieldOption.path)
         : undefined
-      : lodashGet(defaults, fieldOption.path);
+      : get(defaults, fieldOption.path);
 
     if (fieldOption.getItemsCount) {
       category.props.itemsCount = fieldOption.getItemsCount(value);

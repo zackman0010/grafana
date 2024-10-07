@@ -1,4 +1,4 @@
-import { uniqBy } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import { useMemo } from 'react';
 
 import { Labels } from '@grafana/data';

@@ -1,4 +1,4 @@
-import { get as lodashGet } from 'lodash';
+import get from 'lodash/get';
 
 import { DataFrame, FieldConfigPropertyItem, FieldConfigSource } from '@grafana/data';
 
@@ -19,7 +19,7 @@ export function getOptionOverrides(
   if (frames) {
     for (const frame of frames) {
       for (const field of frame.fields) {
-        const value = lodashGet(field.config, fieldOption.path);
+        const value = get(field.config, fieldOption.path);
         if (value == null) {
           continue;
         }

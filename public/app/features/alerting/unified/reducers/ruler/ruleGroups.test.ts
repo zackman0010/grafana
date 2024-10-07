@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 
 import { GrafanaRuleIdentifier } from 'app/types/unified-alerting';
 import { PostableRulerRuleGroupDTO } from 'app/types/unified-alerting-dto';

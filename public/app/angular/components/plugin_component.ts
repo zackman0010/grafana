@@ -1,5 +1,5 @@
 import angular, { ILocationService } from 'angular';
-import { each } from 'lodash';
+import each from 'lodash/each';
 
 import { DataSourceApi, PanelEvents } from '@grafana/data';
 import coreModule from 'app/angular/core_module';

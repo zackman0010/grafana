@@ -1,6 +1,8 @@
 import uFuzzy from '@leeoniya/ufuzzy';
 import { produce } from 'immer';
-import { chain, compact, isEmpty } from 'lodash';
+import chain from 'lodash/chain';
+import compact from 'lodash/compact';
+import isEmpty from 'lodash/isEmpty';
 import { useCallback, useDeferredValue, useEffect, useMemo } from 'react';
 
 import { getDataSourceSrv } from '@grafana/runtime';

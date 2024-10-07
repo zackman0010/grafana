@@ -1,4 +1,5 @@
-import { dropRight, last } from 'lodash';
+import dropRight from 'lodash/dropRight';
+import last from 'lodash/last';
 
 import { DataFrame, Labels, roundDecimals } from '@grafana/data';
 import { CombinedRuleNamespace } from 'app/types/unified-alerting';

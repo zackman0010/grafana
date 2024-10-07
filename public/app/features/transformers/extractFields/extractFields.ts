@@ -1,4 +1,5 @@
-import { isString, get } from 'lodash';
+import get from 'lodash/get';
+import isString from 'lodash/isString';
 import { map } from 'rxjs/operators';
 
 import {

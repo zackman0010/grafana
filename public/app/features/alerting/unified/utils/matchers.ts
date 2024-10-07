@@ -1,11 +1,5 @@
-/**
- * Functions in this file are used by the routeGroupsMatcher.worker.ts file.
- * This is a web worker that matches active alert instances to a policy in the notification policy tree.
- *
- * Please keep the references to other files here to a minimum, if we reference a file that uses GrafanaBootData from `window` the worker will fail to load.
- */
-
-import { compact, uniqBy } from 'lodash';
+import compact from 'lodash/compact';
+import uniqBy from 'lodash/uniqBy';
 
 import { Matcher, MatcherOperator, ObjectMatcher, Route } from 'app/plugins/datasource/alertmanager/types';
 

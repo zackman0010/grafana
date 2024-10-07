@@ -1,5 +1,5 @@
 import uFuzzy from '@leeoniya/ufuzzy';
-import { debounce as debounceLodash } from 'lodash';
+import debounceLodash from 'lodash/debounce';
 
 const uf = new uFuzzy({
   intraMode: 1,

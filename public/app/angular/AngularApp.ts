@@ -2,9 +2,8 @@ import 'angular';
 import 'angular-route';
 import 'angular-sanitize';
 import 'angular-bindonce';
-
 import angular from 'angular'; // eslint-disable-line no-duplicate-imports
-import { extend } from 'lodash';
+import extend from 'lodash/extend';
 
 import { getTemplateSrv } from '@grafana/runtime';
 import { coreModule, angularModules } from 'app/angular/core_module';

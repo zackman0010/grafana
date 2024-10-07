@@ -1,5 +1,5 @@
 import { GridSelection } from '@glideapps/glide-data-grid';
-import { capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
 import * as React from 'react';
 
 import { DataFrame, FieldType } from '@grafana/data';

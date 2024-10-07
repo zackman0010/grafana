@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 import { useEffect, useMemo, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

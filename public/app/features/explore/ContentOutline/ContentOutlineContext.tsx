@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useState, useContext, createContext, ReactNode, useCallback, useRef, useEffect } from 'react';
 import { SetOptional } from 'type-fest';
 

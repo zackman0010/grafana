@@ -1,4 +1,5 @@
-import { cloneDeep, isNumber } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import isNumber from 'lodash/isNumber';
 
 import { AnnotationEvent, dateTime } from '@grafana/data';
 import { coreModule } from 'app/angular/core_module';

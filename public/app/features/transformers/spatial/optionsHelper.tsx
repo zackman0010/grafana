@@ -1,4 +1,5 @@
-import { set, get as lodashGet } from 'lodash';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 import { StandardEditorContext, TransformerUIProps, PanelOptionsEditorBuilder } from '@grafana/data';
 import { PanelOptionsSupplier } from '@grafana/data/src/panel/PanelPlugin';
@@ -31,7 +32,7 @@ export function getTransformerOptionPane<T = any>(
   };
 
   const access: NestedValueAccess = {
-    getValue: (path) => lodashGet(props.options, path),
+    getValue: (path) => get(props.options, path),
     onChange: (path, value) => {
       props.onChange(setOptionImmutably(props.options as any, path, value));
     },

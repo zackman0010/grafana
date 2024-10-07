@@ -1,4 +1,4 @@
-import { get as lodashGet } from 'lodash';
+import get from 'lodash/get';
 
 import { NestedPanelOptions, NestedValueAccess } from '@grafana/data/src/utils/OptionsUIBuilders';
 import { ElementState } from 'app/features/canvas/runtime/element';
@@ -48,7 +48,7 @@ export function getLayerEditor(opts: InstanceState): NestedPanelOptions<LayerEdi
     // Note that canvas editor writes things to the scene!
     values: (parent: NestedValueAccess) => ({
       getValue: (path) => {
-        return lodashGet(options, path);
+        return get(options, path);
       },
       onChange: (path, value) => {
         if (path === 'type' && value) {

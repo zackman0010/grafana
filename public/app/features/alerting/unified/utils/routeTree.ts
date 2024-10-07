@@ -1,9 +1,8 @@
+import { produce } from 'immer';
+import omit from 'lodash/omit';
 /**
  * Various helper functions to modify (immutably) the route tree, aka "notification policies"
  */
-
-import { produce } from 'immer';
-import { omit } from 'lodash';
 
 import { insertAfterImmutably, insertBeforeImmutably } from '@grafana/data/src/utils/arrayUtils';
 import { Route, RouteWithID } from 'app/plugins/datasource/alertmanager/types';

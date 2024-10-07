@@ -1,4 +1,6 @@
-import { debounce, union, without } from 'lodash';
+import debounce from 'lodash/debounce';
+import union from 'lodash/union';
+import without from 'lodash/without';
 import { createContext, useContext, PropsWithChildren, useEffect, useRef } from 'react';
 
 import { AppEvents } from '@grafana/data';

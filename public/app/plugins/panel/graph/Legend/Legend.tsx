@@ -1,4 +1,4 @@
-import { sortBy as _sortBy } from 'lodash';
+import _sortBy from 'lodash/sortBy';
 import { PureComponent } from 'react';
 import * as React from 'react';
 

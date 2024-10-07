@@ -1,5 +1,5 @@
 import { SyntaxNode } from '@lezer/common';
-import { trim } from 'lodash';
+import trim from 'lodash/trim';
 
 import { parser } from './search';
 import * as terms from './search.terms';

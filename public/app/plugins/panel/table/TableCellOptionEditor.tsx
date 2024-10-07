@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import { useState } from 'react';
 
 import { GrafanaTheme2, SelectableValue } from '@grafana/data';

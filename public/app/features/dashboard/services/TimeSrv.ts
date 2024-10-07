@@ -1,4 +1,6 @@
-import { cloneDeep, extend, isString } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import extend from 'lodash/extend';
+import isString from 'lodash/isString';
 
 import {
   dateMath,

@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { partition } from 'lodash';
+import partition from 'lodash/partition';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import { useAsync } from 'react-use';

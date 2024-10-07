@@ -1,4 +1,5 @@
-import { get as lodashGet, isEqual } from 'lodash';
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 
 import { FrameGeometrySourceMode, getFrameMatchers, MapLayerOptions } from '@grafana/data';
 import { NestedPanelOptions, NestedValueAccess } from '@grafana/data/src/utils/OptionsUIBuilders';
@@ -26,7 +27,7 @@ export function getLayerEditor(opts: LayerEditorOptions): NestedPanelOptions<Map
       getContext: (parent) => {
         return { ...parent, options: opts.state.options, instanceState: opts.state };
       },
-      getValue: (path: string) => lodashGet(opts.state.options, path),
+      getValue: (path: string) => get(opts.state.options, path),
       onChange: (path: string, value: string) => {
         const { state } = opts;
         const { options } = state;

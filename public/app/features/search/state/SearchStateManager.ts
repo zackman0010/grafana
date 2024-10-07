@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { FormEvent } from 'react';
 
 import { locationService } from '@grafana/runtime';

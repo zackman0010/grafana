@@ -19,7 +19,7 @@ export function AlertWithTraceID(props: AlertWithTraceIDProps) {
           /* Deliberately don't want to translate 'Trace ID' */
           /* eslint-disable-next-line @grafana/no-untranslated-strings */
           <Text element="p" color="secondary" variant="bodySmall">
-            Trace ID: {traceID}
+            Trace ID:{traceID}
           </Text>
         )}
       </Stack>

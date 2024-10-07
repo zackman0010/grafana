@@ -1,4 +1,4 @@
-import { keys as _keys } from 'lodash';
+import _keys from 'lodash/keys';
 
 import { dateTime, TimeRange, VariableHide } from '@grafana/data';
 import { Dashboard, defaultVariableModel, RowPanel } from '@grafana/schema';

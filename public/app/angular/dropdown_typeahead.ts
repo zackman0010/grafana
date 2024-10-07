@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import { each, reduce } from 'lodash';
+import each from 'lodash/each';
+import reduce from 'lodash/reduce';
 
 import coreModule from './core_module';
 

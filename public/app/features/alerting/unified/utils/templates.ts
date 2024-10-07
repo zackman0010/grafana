@@ -1,4 +1,4 @@
-import { now } from 'lodash';
+import now from 'lodash/now';
 
 export function ensureDefine(templateName: string, templateContent: string): string {
   // notification template content must be wrapped in {{ define "name" }} tag,

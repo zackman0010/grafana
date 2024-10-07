@@ -1,4 +1,5 @@
-import { countBy, isEqual } from 'lodash';
+import countBy from 'lodash/countBy';
+import isEqual from 'lodash/isEqual';
 import { useMemo, useRef } from 'react';
 
 import {

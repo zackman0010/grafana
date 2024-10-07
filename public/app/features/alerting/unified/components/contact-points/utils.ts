@@ -1,4 +1,8 @@
-import { difference, groupBy, take, trim, upperFirst } from 'lodash';
+import difference from 'lodash/difference';
+import groupBy from 'lodash/groupBy';
+import take from 'lodash/take';
+import trim from 'lodash/trim';
+import upperFirst from 'lodash/upperFirst';
 import { ReactNode } from 'react';
 
 import { config } from '@grafana/runtime';

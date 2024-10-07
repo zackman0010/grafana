@@ -1,4 +1,4 @@
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 
 import store from 'app/core/store';
 import { removePanel } from 'app/features/dashboard/utils/panel';

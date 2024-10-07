@@ -1,4 +1,7 @@
-import { chain, cloneDeep, defaults, find } from 'lodash';
+import chain from 'lodash/chain';
+import cloneDeep from 'lodash/cloneDeep';
+import defaults from 'lodash/defaults';
+import find from 'lodash/find';
 
 import { PanelPluginMeta } from '@grafana/data';
 import { locationService } from '@grafana/runtime';

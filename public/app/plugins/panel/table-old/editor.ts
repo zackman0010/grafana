@@ -1,4 +1,6 @@
-import { find, map, without } from 'lodash';
+import find from 'lodash/find';
+import map from 'lodash/map';
+import without from 'lodash/without';
 
 import { transformers } from './transformers';
 import { ColumnStyle } from './types';

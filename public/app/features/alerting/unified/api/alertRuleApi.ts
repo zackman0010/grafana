@@ -1,4 +1,4 @@
-import { set } from 'lodash';
+import set from 'lodash/set';
 
 import { RelativeTimeRange } from '@grafana/data';
 import { t } from 'app/core/internationalization';

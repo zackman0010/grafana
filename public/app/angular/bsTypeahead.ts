@@ -1,6 +1,6 @@
 import angular from 'angular';
 import $ from 'jquery';
-import { isFunction } from 'lodash';
+import isFunction from 'lodash/isFunction';
 
 import coreModule from './core_module';
 

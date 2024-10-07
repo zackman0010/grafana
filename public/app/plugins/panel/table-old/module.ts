@@ -1,6 +1,6 @@
 import { IScope, IAngularStatic } from 'angular';
 import $ from 'jquery';
-import { defaults } from 'lodash';
+import defaults from 'lodash/defaults';
 
 import { isTableData, PanelEvents, PanelPlugin } from '@grafana/data';
 import { AnnotationsSrv } from 'app/angular/services/annotations_srv';

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { FC, useEffect } from 'react';
 import { Controller, DeepMap, FieldError, useFormContext } from 'react-hook-form';
 

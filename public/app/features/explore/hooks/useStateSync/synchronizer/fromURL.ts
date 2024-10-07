@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { EventBusSrv } from '@grafana/data';
 import { changeDatasource } from 'app/features/explore/state/datasource';

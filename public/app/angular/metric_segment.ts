@@ -1,5 +1,10 @@
 import $ from 'jquery';
-import { debounce, find, indexOf, map, escape, unescape } from 'lodash';
+import debounce from 'lodash/debounce';
+import escape from 'lodash/escape';
+import find from 'lodash/find';
+import indexOf from 'lodash/indexOf';
+import map from 'lodash/map';
+import unescape from 'lodash/unescape';
 
 import { TemplateSrv } from 'app/features/templating/template_srv';
 

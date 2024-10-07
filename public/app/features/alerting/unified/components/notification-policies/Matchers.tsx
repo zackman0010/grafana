@@ -1,5 +1,7 @@
 import { css } from '@emotion/css';
-import { take, takeRight, uniqueId } from 'lodash';
+import take from 'lodash/take';
+import takeRight from 'lodash/takeRight';
+import uniqueId from 'lodash/uniqueId';
 import { FC } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

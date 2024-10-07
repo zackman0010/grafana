@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
-import { get, groupBy } from 'lodash';
+import get from 'lodash/get';
+import groupBy from 'lodash/groupBy';
 import { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import AutoSizer, { HorizontalSize } from 'react-virtualized-auto-sizer';

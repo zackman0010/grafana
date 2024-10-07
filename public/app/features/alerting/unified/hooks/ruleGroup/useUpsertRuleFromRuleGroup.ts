@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { t } from 'app/core/internationalization';
 import { RuleGroupIdentifier, EditableRuleIdentifier } from 'app/types/unified-alerting';

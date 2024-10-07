@@ -1,5 +1,7 @@
 import { css } from '@emotion/css';
-import { groupBy, size, upperFirst } from 'lodash';
+import groupBy from 'lodash/groupBy';
+import size from 'lodash/size';
+import upperFirst from 'lodash/upperFirst';
 import { Fragment, ReactNode } from 'react';
 
 import { dateTime, GrafanaTheme2 } from '@grafana/data';

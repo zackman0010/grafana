@@ -1,3 +1,12 @@
+import clone from 'lodash/clone';
+import find from 'lodash/find';
+import flatten from 'lodash/flatten';
+import isUndefined from 'lodash/isUndefined';
+import map from 'lodash/map';
+import _max from 'lodash/max';
+import _min from 'lodash/min';
+import _sortBy from 'lodash/sortBy';
+import toNumber from 'lodash/toNumber';
 import 'vendor/flot/jquery.flot';
 import 'vendor/flot/jquery.flot.selection';
 import 'vendor/flot/jquery.flot.time';
@@ -9,7 +18,6 @@ import 'vendor/flot/jquery.flot.dashes';
 import './jquery.flot.events';
 
 import $ from 'jquery';
-import { clone, find, flatten, isUndefined, map, max as _max, min as _min, sortBy as _sortBy, toNumber } from 'lodash';
 import { createElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 

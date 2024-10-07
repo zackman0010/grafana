@@ -1,5 +1,5 @@
 import angular from 'angular';
-import { assign } from 'lodash';
+import assign from 'lodash/assign';
 
 import { AngularComponent, AngularLoader as AngularLoaderInterface } from '@grafana/runtime';
 import { GrafanaRootScope } from 'app/angular/GrafanaCtrl';

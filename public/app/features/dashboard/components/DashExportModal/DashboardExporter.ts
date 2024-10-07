@@ -1,4 +1,6 @@
-import { defaults, each, sortBy } from 'lodash';
+import defaults from 'lodash/defaults';
+import each from 'lodash/each';
+import sortBy from 'lodash/sortBy';
 
 import { DataSourceRef, PanelPluginMeta, VariableOption, VariableRefresh } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';

@@ -1,4 +1,5 @@
-import { clamp, omit } from 'lodash';
+import clamp from 'lodash/clamp';
+import omit from 'lodash/omit';
 
 import {
   DataQuery,

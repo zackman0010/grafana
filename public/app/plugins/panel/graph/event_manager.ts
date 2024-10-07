@@ -1,4 +1,6 @@
-import { each, filter, keys } from 'lodash';
+import each from 'lodash/each';
+import filter from 'lodash/filter';
+import keys from 'lodash/keys';
 import tinycolor from 'tinycolor2';
 
 import { AnnotationEvent } from '@grafana/data';

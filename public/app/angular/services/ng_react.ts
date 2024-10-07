@@ -1,3 +1,5 @@
+import angular, { auto } from 'angular';
+import kebabCase from 'lodash/kebabCase';
 //
 // This is using ng-react with this PR applied https://github.com/ngReact/ngReact/pull/199
 //
@@ -9,8 +11,6 @@
 // - reactComponent (generic directive for delegating off to React Components)
 // - reactDirective (factory for creating specific directives that correspond to reactComponent directives)
 
-import angular, { auto } from 'angular';
-import { kebabCase } from 'lodash';
 import { ComponentType } from 'react';
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';

@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { AnyAction } from 'redux';
 
 import { SplitOpenOptions, TimeRange, EventBusSrv } from '@grafana/data';

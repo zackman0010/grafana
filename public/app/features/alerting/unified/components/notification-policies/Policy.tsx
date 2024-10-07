@@ -1,5 +1,10 @@
 import { css } from '@emotion/css';
-import { defaults, groupBy, isArray, sumBy, uniqueId, upperFirst } from 'lodash';
+import defaults from 'lodash/defaults';
+import groupBy from 'lodash/groupBy';
+import isArray from 'lodash/isArray';
+import sumBy from 'lodash/sumBy';
+import uniqueId from 'lodash/uniqueId';
+import upperFirst from 'lodash/upperFirst';
 import pluralize from 'pluralize';
 import { FC, Fragment, ReactNode, useState } from 'react';
 import * as React from 'react';

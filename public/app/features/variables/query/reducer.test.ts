@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { MetricFindValue, QueryVariableModel, VariableSort } from '@grafana/data';
 

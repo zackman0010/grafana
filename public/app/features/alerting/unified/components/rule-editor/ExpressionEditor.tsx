@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { useCallback, useMemo } from 'react';
 import { useAsync } from 'react-use';
 

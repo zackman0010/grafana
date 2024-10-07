@@ -1,5 +1,8 @@
 import { css } from '@emotion/css';
-import { isNumber, max, min, throttle } from 'lodash';
+import isNumber from 'lodash/isNumber';
+import max from 'lodash/max';
+import min from 'lodash/min';
+import throttle from 'lodash/throttle';
 
 import { DataFrame, FieldType, GrafanaTheme2, PanelData, SelectableValue } from '@grafana/data';
 import {

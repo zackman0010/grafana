@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import { useMemo } from 'react';
 import { useAsync } from 'react-use';
 import AutoSizer from 'react-virtualized-auto-sizer';

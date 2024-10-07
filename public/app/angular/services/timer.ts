@@ -1,5 +1,6 @@
 import { ITimeoutService } from 'angular';
-import { without, each } from 'lodash';
+import each from 'lodash/each';
+import without from 'lodash/without';
 
 import coreModule from 'app/angular/core_module';
 

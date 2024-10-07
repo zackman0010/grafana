@@ -1,4 +1,4 @@
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 import { useCallback, useMemo } from 'react';
 
 import { SelectableValue } from '@grafana/data';

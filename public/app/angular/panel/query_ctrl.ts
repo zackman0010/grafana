@@ -1,5 +1,5 @@
 import { auto } from 'angular';
-import { indexOf } from 'lodash';
+import indexOf from 'lodash/indexOf';
 
 export class QueryCtrl<T = any> {
   target!: T;

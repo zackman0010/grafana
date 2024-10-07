@@ -1,4 +1,4 @@
-import { snakeCase } from 'lodash';
+import snakeCase from 'lodash/snakeCase';
 import { EMPTY, interval, Observable, of } from 'rxjs';
 import { thunkTester } from 'test/core/thunk/thunkTester';
 import { assertIsDefined } from 'test/helpers/asserts';

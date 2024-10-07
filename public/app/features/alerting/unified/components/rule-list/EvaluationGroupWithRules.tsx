@@ -1,4 +1,4 @@
-import { size } from 'lodash';
+import size from 'lodash/size';
 import { useToggle } from 'react-use';
 
 import { CombinedRuleGroup, RulesSource } from 'app/types/unified-alerting';

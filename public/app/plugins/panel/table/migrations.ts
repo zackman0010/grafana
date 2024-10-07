@@ -1,4 +1,8 @@
-import { omitBy, isNil, isNumber, defaultTo, groupBy } from 'lodash';
+import defaultTo from 'lodash/defaultTo';
+import groupBy from 'lodash/groupBy';
+import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
+import omitBy from 'lodash/omitBy';
 
 import {
   PanelModel,

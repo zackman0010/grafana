@@ -1,5 +1,5 @@
 import { ResourceKey } from 'i18next';
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 
 export const ENGLISH_US = 'en-US';
 export const FRENCH_FRANCE = 'fr-FR';

@@ -1,4 +1,6 @@
-import { map, each, isUndefined } from 'lodash';
+import each from 'lodash/each';
+import isUndefined from 'lodash/isUndefined';
+import map from 'lodash/map';
 
 import { textUtil } from '@grafana/data';
 import coreModule from 'app/angular/core_module';

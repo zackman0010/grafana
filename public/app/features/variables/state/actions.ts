@@ -1,4 +1,5 @@
-import { castArray, isEqual } from 'lodash';
+import castArray from 'lodash/castArray';
+import isEqual from 'lodash/isEqual';
 
 import {
   DataQuery,

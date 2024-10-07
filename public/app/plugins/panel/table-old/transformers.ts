@@ -1,4 +1,6 @@
-import { findIndex, isObject, map } from 'lodash';
+import findIndex from 'lodash/findIndex';
+import isObject from 'lodash/isObject';
+import map from 'lodash/map';
 
 import { Column, TableData } from '@grafana/data';
 import TableModel, { mergeTablesIntoModel } from 'app/core/TableModel';

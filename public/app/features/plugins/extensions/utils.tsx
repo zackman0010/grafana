@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
-import { isArray, isObject } from 'lodash';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 import * as React from 'react';
 import { useAsync } from 'react-use';
 

@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { isNumber, sortBy, toLower, uniqBy } from 'lodash';
+import isNumber from 'lodash/isNumber';
+import sortBy from 'lodash/sortBy';
+import toLower from 'lodash/toLower';
+import uniqBy from 'lodash/uniqBy';
 
 import {
   MetricFindValue,

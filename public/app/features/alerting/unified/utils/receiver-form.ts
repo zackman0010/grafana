@@ -1,4 +1,10 @@
-import { get, has, isArray, isNil, omit, omitBy, reduce } from 'lodash';
+import get from 'lodash/get';
+import has from 'lodash/has';
+import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
+import omit from 'lodash/omit';
+import omitBy from 'lodash/omitBy';
+import reduce from 'lodash/reduce';
 
 import {
   AlertmanagerReceiver,

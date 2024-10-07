@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { AbsoluteTimeRange, GrafanaTheme2, LogsSortOrder } from '@grafana/data';

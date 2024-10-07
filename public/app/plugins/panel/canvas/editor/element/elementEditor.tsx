@@ -1,4 +1,5 @@
-import { capitalize, get as lodashGet } from 'lodash';
+import capitalize from 'lodash/capitalize';
+import get from 'lodash/get';
 
 import { OneClickMode } from '@grafana/data';
 import { NestedPanelOptions, NestedValueAccess } from '@grafana/data/src/utils/OptionsUIBuilders';
@@ -39,7 +40,7 @@ export function getElementEditor(opts: CanvasEditorOptions): NestedPanelOptions<
     // Note that canvas editor writes things to the scene!
     values: (parent: NestedValueAccess) => ({
       getValue: (path) => {
-        return lodashGet(opts.element.options, path);
+        return get(opts.element.options, path);
       },
       onChange: (path, value) => {
         let options = opts.element.options;

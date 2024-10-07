@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { render } from 'test/test-utils';
 import { byRole } from 'testing-library-selector';
 

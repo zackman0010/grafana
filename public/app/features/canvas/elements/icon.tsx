@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import { CSSProperties } from 'react';
 
 import { LinkModel, OneClickMode } from '@grafana/data';

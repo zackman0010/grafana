@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { getBackendSrv, getGrafanaLiveSrv, locationService, reportInteraction } from '@grafana/runtime';
 import { playlistSrv } from 'app/features/playlist/PlaylistSrv';

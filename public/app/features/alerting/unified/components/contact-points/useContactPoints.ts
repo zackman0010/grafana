@@ -1,9 +1,5 @@
-/**
- * This hook will combine data from both the Alertmanager config
- * and (if available) it will also fetch the status from the Grafana Managed status endpoint
- */
-
-import { merge, set } from 'lodash';
+import merge from 'lodash/merge';
+import set from 'lodash/set';
 import { useMemo } from 'react';
 
 import { receiversApi } from 'app/features/alerting/unified/api/receiversK8sApi';

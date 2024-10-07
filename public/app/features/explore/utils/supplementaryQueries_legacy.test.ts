@@ -1,8 +1,4 @@
-/**
- * Test file to be removed when `getDataProvider` is removed from DataSourceWithSupplementaryQueriesSupport
- * in packages/grafana-data/src/types/logs.ts
- */
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 import { from, Observable } from 'rxjs';
 
 import {

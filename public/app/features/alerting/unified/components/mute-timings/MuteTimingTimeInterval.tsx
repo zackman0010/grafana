@@ -1,5 +1,8 @@
 import { css, cx } from '@emotion/css';
-import { concat, uniq, upperFirst, without } from 'lodash';
+import concat from 'lodash/concat';
+import uniq from 'lodash/uniq';
+import upperFirst from 'lodash/upperFirst';
+import without from 'lodash/without';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 

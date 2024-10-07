@@ -1,4 +1,7 @@
-import { filter, isArray, isNumber, isString } from 'lodash';
+import filter from 'lodash/filter';
+import isArray from 'lodash/isArray';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 
 import { getBackendSrv } from '@grafana/runtime';
 import config from 'app/core/config';

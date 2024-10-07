@@ -1,4 +1,4 @@
-import { chain } from 'lodash';
+import chain from 'lodash/chain';
 
 import { DataSourceInstanceSettings, SelectableValue } from '@grafana/data';
 import { config, getDataSourceSrv } from '@grafana/runtime';

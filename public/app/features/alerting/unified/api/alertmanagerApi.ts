@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 import { dispatch } from 'app/store/store';
 import { ReceiversStateDTO } from 'app/types/alerting';

@@ -14,7 +14,7 @@
 
 import { css } from '@emotion/css';
 import { SpanStatusCode } from '@opentelemetry/api';
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 import React, { useState, useEffect, memo, useCallback } from 'react';
 
 import { GrafanaTheme2, SelectableValue, toOption } from '@grafana/data';

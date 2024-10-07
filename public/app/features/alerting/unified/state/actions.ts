@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 import { locationService } from '@grafana/runtime';
 import { logMeasurement } from '@grafana/runtime/src/utils/logging';

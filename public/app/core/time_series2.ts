@@ -1,4 +1,6 @@
-import { isNumber, isFinite, escape } from 'lodash';
+import escape from 'lodash/escape';
+import isFinite from 'lodash/isFinite';
+import isNumber from 'lodash/isNumber';
 
 import { DecimalCount, formattedValueToString, getValueFormat, stringToJsRegex, ValueFormatter } from '@grafana/data';
 

@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { from, Observable, ReplaySubject, Unsubscribable } from 'rxjs';
 import { first } from 'rxjs/operators';
 

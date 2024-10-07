@@ -1,4 +1,4 @@
-import { defaults } from 'lodash';
+import defaults from 'lodash/defaults';
 
 import { PanelModel as PanelModelFromData, PanelPlugin } from '@grafana/data';
 import { autoMigrateAngular, PanelModel } from 'app/features/dashboard/state/PanelModel';

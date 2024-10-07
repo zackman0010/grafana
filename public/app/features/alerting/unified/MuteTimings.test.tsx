@@ -1,5 +1,5 @@
 import { InitialEntry } from 'history';
-import { last } from 'lodash';
+import last from 'lodash/last';
 import { ReactNode } from 'react';
 import { Route } from 'react-router';
 import { render, screen, userEvent, within } from 'test/test-utils';

@@ -1,4 +1,5 @@
-import { fromPairs, uniq } from 'lodash';
+import fromPairs from 'lodash/fromPairs';
+import uniq from 'lodash/uniq';
 import { useMemo } from 'react';
 
 import { Config } from './layout';

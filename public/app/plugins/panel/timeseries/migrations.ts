@@ -1,4 +1,8 @@
-import { omitBy, pickBy, isNil, isNumber, isString } from 'lodash';
+import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
+import omitBy from 'lodash/omitBy';
+import pickBy from 'lodash/pickBy';
 
 import {
   ConfigOverrideRule,

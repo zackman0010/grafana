@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { DataSourceInstanceSettings, DataSourceVariableModel } from '@grafana/data';
 import { getMockPlugins } from '@grafana/data/test/__mocks__/pluginMocks';

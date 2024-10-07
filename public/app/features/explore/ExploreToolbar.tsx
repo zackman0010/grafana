@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 import { useMemo } from 'react';
 import { shallowEqual } from 'react-redux';
 

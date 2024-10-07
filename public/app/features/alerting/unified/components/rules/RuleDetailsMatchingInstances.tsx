@@ -1,5 +1,6 @@
 import { css, cx } from '@emotion/css';
-import { countBy, sum } from 'lodash';
+import countBy from 'lodash/countBy';
+import sum from 'lodash/sum';
 import { useMemo, useState } from 'react';
 import * as React from 'react';
 

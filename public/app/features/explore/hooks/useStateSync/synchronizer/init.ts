@@ -1,4 +1,5 @@
-import { identity, isEqual } from 'lodash';
+import identity from 'lodash/identity';
+import isEqual from 'lodash/isEqual';
 import { MutableRefObject } from 'react';
 
 import { EventBusSrv } from '@grafana/data';

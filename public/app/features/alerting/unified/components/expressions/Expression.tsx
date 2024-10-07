@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { FC, useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 

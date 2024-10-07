@@ -1,3 +1,7 @@
+import { css, cx } from '@emotion/css';
+import get from 'lodash/get';
+import maxBy from 'lodash/maxBy';
+import values from 'lodash/values';
 // Copyright (c) 2018 Uber Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +16,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css, cx } from '@emotion/css';
-import { get, maxBy, values } from 'lodash';
 import { memo, Dispatch, SetStateAction, useEffect, useCallback } from 'react';
 import * as React from 'react';
 

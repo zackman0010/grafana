@@ -1,4 +1,4 @@
-import { take } from 'lodash';
+import take from 'lodash/take';
 import { useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 

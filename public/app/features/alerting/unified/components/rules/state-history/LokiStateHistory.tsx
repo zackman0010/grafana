@@ -1,5 +1,9 @@
 import { css } from '@emotion/css';
-import { fromPairs, isEmpty, sortBy, take, uniq } from 'lodash';
+import fromPairs from 'lodash/fromPairs';
+import isEmpty from 'lodash/isEmpty';
+import sortBy from 'lodash/sortBy';
+import take from 'lodash/take';
+import uniq from 'lodash/uniq';
 import * as React from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';

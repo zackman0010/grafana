@@ -1,4 +1,4 @@
-import { inRange } from 'lodash';
+import inRange from 'lodash/inRange';
 import { useState } from 'react';
 import { useWindowSize } from 'react-use';
 

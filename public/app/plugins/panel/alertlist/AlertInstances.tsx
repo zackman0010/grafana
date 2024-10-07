@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import pluralize from 'pluralize';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 

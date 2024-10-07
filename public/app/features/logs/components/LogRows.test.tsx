@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { range } from 'lodash';
+import range from 'lodash/range';
 
 import { LogRowModel, LogsDedupStrategy, LogsSortOrder } from '@grafana/data';
 

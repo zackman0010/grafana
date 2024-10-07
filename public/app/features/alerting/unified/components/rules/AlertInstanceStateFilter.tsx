@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
 
 import { GrafanaTheme2 } from '@grafana/data/src';
 import { Label, RadioButtonGroup, Tag, useStyles2 } from '@grafana/ui';

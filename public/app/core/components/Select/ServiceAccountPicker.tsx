@@ -1,4 +1,6 @@
-import { debounce, DebouncedFuncLeading, isNil } from 'lodash';
+import type { DebouncedFuncLeading } from 'lodash';
+import debounce from 'lodash/debounce';
+import isNil from 'lodash/isNil';
 import { Component } from 'react';
 
 import { SelectableValue } from '@grafana/data';

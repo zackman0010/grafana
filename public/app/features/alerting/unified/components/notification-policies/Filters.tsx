@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
-import { debounce, isEqual } from 'lodash';
+import debounce from 'lodash/debounce';
+import isEqual from 'lodash/isEqual';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { Button, Field, Icon, Input, Label, Stack, Text, Tooltip, useStyles2 } from '@grafana/ui';
