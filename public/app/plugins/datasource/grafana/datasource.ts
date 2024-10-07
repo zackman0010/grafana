@@ -1,4 +1,4 @@
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import { from, merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

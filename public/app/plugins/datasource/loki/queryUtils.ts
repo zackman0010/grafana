@@ -1,5 +1,5 @@
 import { SyntaxNode } from '@lezer/common';
-import { escapeRegExp } from 'lodash';
+import escapeRegExp from 'lodash/escapeRegExp';
 
 import {
   parser,

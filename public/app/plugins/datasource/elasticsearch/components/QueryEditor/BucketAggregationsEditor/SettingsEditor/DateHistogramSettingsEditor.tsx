@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useCallback, useRef } from 'react';
 import { GroupBase, OptionsOrGroups } from 'react-select';
 

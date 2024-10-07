@@ -1,4 +1,4 @@
-import { bind } from 'lodash';
+import bind from 'lodash/bind';
 
 // This is auto generated from the unicode tables.
 // The tables are at:

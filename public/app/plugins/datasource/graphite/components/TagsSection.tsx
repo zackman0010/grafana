@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useCallback, useMemo } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useEffect, useRef } from 'react';
 
 import { InlineField, Input, QueryField } from '@grafana/ui';

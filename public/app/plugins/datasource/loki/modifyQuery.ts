@@ -1,5 +1,5 @@
 import { NodeType, SyntaxNode } from '@lezer/common';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 
 import { QueryBuilderLabelFilter } from '@grafana/experimental';
 import {

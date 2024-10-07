@@ -1,4 +1,8 @@
-import { each, indexOf, isArray, isString, map as _map } from 'lodash';
+import each from 'lodash/each';
+import indexOf from 'lodash/indexOf';
+import isArray from 'lodash/isArray';
+import isString from 'lodash/isString';
+import _map from 'lodash/map';
 import { lastValueFrom, merge, Observable, of, OperatorFunction, pipe, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 

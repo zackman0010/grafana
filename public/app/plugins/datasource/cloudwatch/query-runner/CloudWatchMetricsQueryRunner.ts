@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { createElement } from 'react';
 import { catchError, map, Observable, of } from 'rxjs';
 

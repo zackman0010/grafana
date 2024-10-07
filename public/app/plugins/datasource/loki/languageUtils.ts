@@ -1,4 +1,4 @@
-import { invert } from 'lodash';
+import invert from 'lodash/invert';
 
 import { AbstractLabelMatcher, AbstractLabelOperator, AbstractQuery, DataFrame, TimeRange } from '@grafana/data';
 

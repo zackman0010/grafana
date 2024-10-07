@@ -1,4 +1,5 @@
-import { debounce, unionBy } from 'lodash';
+import debounce from 'lodash/debounce';
+import unionBy from 'lodash/unionBy';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 

@@ -1,4 +1,10 @@
-import { cloneDeep, first as _first, isNumber, isObject, isString, map as _map, find } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import find from 'lodash/find';
+import _first from 'lodash/first';
+import isNumber from 'lodash/isNumber';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
+import _map from 'lodash/map';
 import { from, generate, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, first, map, mergeMap, skipWhile, throwIfEmpty, tap } from 'rxjs/operators';
 import { SemVer } from 'semver';

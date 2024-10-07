@@ -1,4 +1,5 @@
-import { forEach, sortBy } from 'lodash';
+import forEach from 'lodash/forEach';
+import sortBy from 'lodash/sortBy';
 
 import { SelectableValue } from '@grafana/data';
 

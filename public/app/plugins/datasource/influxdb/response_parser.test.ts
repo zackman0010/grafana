@@ -1,4 +1,4 @@
-import { size } from 'lodash';
+import size from 'lodash/size';
 import { of } from 'rxjs';
 
 import { AnnotationEvent, DataFrame, DataQueryRequest, dateTime, FieldType, MutableDataFrame } from '@grafana/data';

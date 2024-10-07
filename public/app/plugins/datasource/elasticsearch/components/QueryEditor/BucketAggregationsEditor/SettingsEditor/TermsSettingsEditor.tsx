@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { useRef } from 'react';
 
 import { SelectableValue } from '@grafana/data';
@@ -133,8 +133,7 @@ function createOrderByOptionsForPercentiles(metric: Percentiles): Array<Selectab
 function isValidOrderTarget(metric: MetricAggregation) {
   return (
     // top metrics can't be used for ordering
-    metric.type !== 'top_metrics' &&
-    // pipeline aggregations can't be used for ordering: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-order
+    metric.type !== 'top_metrics' && // pipeline aggregations can't be used for ordering: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-order
     !isPipelineAggregation(metric)
   );
 }

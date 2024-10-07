@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import lucene, { AST, BinaryAST, LeftOnlyAST, NodeTerm } from 'lucene';
 
 import { AdHocVariableFilter } from '@grafana/data';

@@ -1,4 +1,7 @@
-import { each, flatten, groupBy, isArray } from 'lodash';
+import each from 'lodash/each';
+import flatten from 'lodash/flatten';
+import groupBy from 'lodash/groupBy';
+import isArray from 'lodash/isArray';
 
 import { AnnotationEvent, DataFrame, FieldType, QueryResultMeta } from '@grafana/data';
 import { BackendDataSourceResponse, FetchResponse, toDataQueryResponse } from '@grafana/runtime';

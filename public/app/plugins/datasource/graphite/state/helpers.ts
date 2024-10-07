@@ -1,4 +1,5 @@
-import { clone, some } from 'lodash';
+import clone from 'lodash/clone';
+import some from 'lodash/some';
 
 import { createErrorNotification } from '../../../../core/copy/appNotification';
 import { notifyApp } from '../../../../core/reducers/appNotification';

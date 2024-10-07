@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import map from 'lodash/map';
 import { of, throwError } from 'rxjs';
 
 import {

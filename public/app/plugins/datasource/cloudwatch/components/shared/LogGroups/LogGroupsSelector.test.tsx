@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// eslint-disable-next-line lodash/import-scope
 import lodash from 'lodash';
 import selectEvent from 'react-select-event';
 

@@ -1,5 +1,5 @@
 import { render, RenderResult, screen } from '@testing-library/react';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 
 import { CoreApp } from '@grafana/data';
 

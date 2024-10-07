@@ -1,4 +1,5 @@
-import { set, uniq } from 'lodash';
+import set from 'lodash/set';
+import uniq from 'lodash/uniq';
 import {
   concatMap,
   finalize,

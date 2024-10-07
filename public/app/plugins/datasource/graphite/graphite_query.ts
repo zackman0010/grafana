@@ -1,4 +1,14 @@
-import { compact, each, findIndex, flatten, get, join, keyBy, last, map, reduce, without } from 'lodash';
+import compact from 'lodash/compact';
+import each from 'lodash/each';
+import findIndex from 'lodash/findIndex';
+import flatten from 'lodash/flatten';
+import get from 'lodash/get';
+import join from 'lodash/join';
+import keyBy from 'lodash/keyBy';
+import last from 'lodash/last';
+import map from 'lodash/map';
+import reduce from 'lodash/reduce';
+import without from 'lodash/without';
 
 import { ScopedVars } from '@grafana/data';
 import { TemplateSrv } from '@grafana/runtime';

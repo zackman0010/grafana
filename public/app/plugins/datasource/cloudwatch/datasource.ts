@@ -1,4 +1,6 @@
-import { cloneDeep, find, isEmpty } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import find from 'lodash/find';
+import isEmpty from 'lodash/isEmpty';
 import { merge, Observable, of } from 'rxjs';
 
 import {

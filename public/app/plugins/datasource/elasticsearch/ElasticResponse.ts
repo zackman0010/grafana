@@ -1,4 +1,12 @@
-import { clone, filter, find, identity, isArray, keys, map, uniq, values as _values } from 'lodash';
+import clone from 'lodash/clone';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import identity from 'lodash/identity';
+import isArray from 'lodash/isArray';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
+import uniq from 'lodash/uniq';
+import _values from 'lodash/values';
 
 import {
   DataQueryResponse,

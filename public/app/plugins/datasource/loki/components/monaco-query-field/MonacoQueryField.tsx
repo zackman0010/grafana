@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useRef, useEffect } from 'react';
 import { useLatest } from 'react-use';
 import { v4 as uuidv4 } from 'uuid';

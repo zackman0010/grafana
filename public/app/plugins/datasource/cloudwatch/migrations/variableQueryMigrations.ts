@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 
 import { Dimensions, VariableQuery, VariableQueryType, OldVariableQuery, MultiFilters } from '../types';
 

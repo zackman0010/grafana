@@ -1,4 +1,5 @@
-import { clone, map } from 'lodash';
+import clone from 'lodash/clone';
+import map from 'lodash/map';
 
 import { functionRenderer, QueryPart, QueryPartDef, suffixRenderer } from 'app/features/alerting/state/query_part';
 

@@ -1,4 +1,4 @@
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 
 import { FieldType, DataFrame, DataLink, Field } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';

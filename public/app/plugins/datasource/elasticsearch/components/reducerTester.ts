@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { Action } from 'redux';
 
 import { StoreState } from 'app/types';

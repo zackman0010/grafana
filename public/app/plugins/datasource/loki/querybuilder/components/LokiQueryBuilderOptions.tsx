@@ -1,4 +1,4 @@
-import { trim } from 'lodash';
+import trim from 'lodash/trim';
 import { useMemo, useState } from 'react';
 import * as React from 'react';
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
 import { useMemo, useState } from 'react';
 
 import { CoreApp, GrafanaTheme2, getNextRefId } from '@grafana/data';

@@ -1,4 +1,5 @@
-import { groupBy, partition } from 'lodash';
+import groupBy from 'lodash/groupBy';
+import partition from 'lodash/partition';
 import { Observable, Subscriber, Subscription, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 

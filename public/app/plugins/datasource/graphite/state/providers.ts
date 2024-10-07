@@ -1,4 +1,6 @@
-import { eachRight, map, remove } from 'lodash';
+import eachRight from 'lodash/eachRight';
+import map from 'lodash/map';
+import remove from 'lodash/remove';
 
 import { SelectableValue } from '@grafana/data';
 

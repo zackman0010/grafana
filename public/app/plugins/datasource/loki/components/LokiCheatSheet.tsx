@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import { PureComponent } from 'react';
 
 import { GrafanaTheme2, QueryEditorHelpProps } from '@grafana/data';

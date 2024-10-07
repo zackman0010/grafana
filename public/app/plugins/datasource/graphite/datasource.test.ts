@@ -1,4 +1,4 @@
-import { isArray } from 'lodash';
+import isArray from 'lodash/isArray';
 import { of } from 'rxjs';
 import { createFetchResponse } from 'test/helpers/createFetchResponse';
 

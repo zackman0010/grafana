@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import last from 'lodash/last';
 
 export const GRAPHITE_VERSIONS = ['0.9', '1.0', '1.1'];
 

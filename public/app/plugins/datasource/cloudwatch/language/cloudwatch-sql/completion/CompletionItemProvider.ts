@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 
 import { getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import type { Monaco, monacoTypes } from '@grafana/ui';

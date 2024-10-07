@@ -1,5 +1,4 @@
-// Libraries
-import { map } from 'lodash';
+import map from 'lodash/map';
 import { memo } from 'react';
 import * as React from 'react';
 

@@ -1,4 +1,7 @@
-import { filter, find, indexOf, map } from 'lodash';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import indexOf from 'lodash/indexOf';
+import map from 'lodash/map';
 
 import { AdHocVariableFilter, escapeRegex, ScopedVars } from '@grafana/data';
 import { TemplateSrv } from '@grafana/runtime';

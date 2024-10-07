@@ -1,4 +1,11 @@
-import { cloneDeep, extend, has, isString, map as _map, omit, pick, reduce } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import extend from 'lodash/extend';
+import has from 'lodash/has';
+import isString from 'lodash/isString';
+import _map from 'lodash/map';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
+import reduce from 'lodash/reduce';
 import { lastValueFrom, merge, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 

@@ -1,4 +1,4 @@
-import { chain } from 'lodash';
+import chain from 'lodash/chain';
 
 import { HistoryItem, TimeRange } from '@grafana/data';
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import { Fragment, useEffect } from 'react';
 
 import { Input, InlineLabel } from '@grafana/ui';
@@ -86,7 +86,6 @@ export const BucketScriptSettingsEditor = ({ value, previousMetrics }: Props) =>
                   value={pipelineVar.pipelineAgg}
                 />
               </div>
-
               <AddRemove
                 index={index}
                 elements={value.pipelineVariables || []}
@@ -97,7 +96,6 @@ export const BucketScriptSettingsEditor = ({ value, previousMetrics }: Props) =>
           ))}
         </div>
       </div>
-
       <SettingField
         label="Script"
         metric={value}

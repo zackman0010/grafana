@@ -1,4 +1,8 @@
-import { each, map, includes, flatten, keys } from 'lodash';
+import each from 'lodash/each';
+import flatten from 'lodash/flatten';
+import includes from 'lodash/includes';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
 
 import { FieldType, QueryResultMeta, TimeSeries, TableData } from '@grafana/data';
 import TableModel from 'app/core/TableModel';

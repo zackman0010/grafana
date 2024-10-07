@@ -1,4 +1,4 @@
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 import { LRUCache } from 'lru-cache';
 
 import { LanguageProvider, AbstractQuery, KeyValue, getDefaultTimeRange, TimeRange } from '@grafana/data';

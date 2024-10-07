@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { Observable, Subject, of, throwError, concat } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import * as rxJsWebSocket from 'rxjs/webSocket';

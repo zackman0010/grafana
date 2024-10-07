@@ -1,4 +1,5 @@
-import { cloneDeep, map as lodashMap } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import _map from 'lodash/map';
 import { lastValueFrom, merge, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
@@ -812,7 +813,7 @@ export class LokiDatasource
       return lokiSpecialRegexEscape(value);
     }
 
-    const escapedValues = lodashMap(value, lokiSpecialRegexEscape);
+    const escapedValues = _map(value, lokiSpecialRegexEscape);
     return escapedValues.join('|');
   }
 

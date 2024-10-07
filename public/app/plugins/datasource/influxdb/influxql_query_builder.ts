@@ -1,4 +1,4 @@
-import { reduce } from 'lodash';
+import reduce from 'lodash/reduce';
 
 import { escapeRegex, ScopedVars } from '@grafana/data';
 import { TemplateSrv } from '@grafana/runtime';

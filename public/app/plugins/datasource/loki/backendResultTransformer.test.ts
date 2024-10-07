@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { DataFrame, DataQueryResponse, Field, FieldType } from '@grafana/data';
 

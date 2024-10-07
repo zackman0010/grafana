@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 import { createSelectClause, haveColumns, SQLQuery } from '@grafana/sql';
 

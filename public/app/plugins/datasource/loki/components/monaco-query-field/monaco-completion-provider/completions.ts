@@ -1,4 +1,4 @@
-import { trimEnd } from 'lodash';
+import trimEnd from 'lodash/trimEnd';
 
 import { escapeLabelValueInExactSelector } from '../../../languageUtils';
 import { isQueryWithParser } from '../../../queryUtils';

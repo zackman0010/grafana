@@ -1,4 +1,4 @@
-import { memoize } from 'lodash';
+import memoize from 'lodash/memoize';
 
 import { DataSourceInstanceSettings, SelectableValue } from '@grafana/data';
 import { getBackendSrv, TemplateSrv } from '@grafana/runtime';

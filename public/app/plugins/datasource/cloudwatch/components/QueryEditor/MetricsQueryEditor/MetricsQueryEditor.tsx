@@ -127,7 +127,6 @@ export const MetricsQueryEditor = (props: Props) => {
   return (
     <>
       <Space v={0.5} />
-
       {query.metricQueryType === MetricQueryType.Search && (
         <>
           {query.metricEditorMode === MetricEditorMode.Builder && (

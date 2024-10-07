@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { FixedSizeList } from 'react-window';
