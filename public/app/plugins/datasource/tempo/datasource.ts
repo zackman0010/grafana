@@ -4,6 +4,8 @@ import { catchError, concatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import semver from 'semver';
 
 import {
+  AbstractLabelOperator,
+  AbstractQuery,
   CoreApp,
   DataFrame,
   DataFrameDTO,
@@ -832,6 +834,30 @@ export class TempoDatasource extends DataSourceWithBackend<TempoQuery, TempoJson
 
     const appliedQuery = this.applyVariables(query, {});
     return generateQueryFromFilters(appliedQuery.filters);
+  }
+
+  async exportToAbstractQueries(queries: TempoQuery[]): Promise<AbstractQuery[]> {
+    return queries.map((query) => this.exportToAbstractQuery(query));
+  }
+  exportToAbstractQuery(query: TempoQuery): AbstractQuery {
+    const serviceName = (query.filters || []).find((filter) => filter.id === 'service-name');
+    if (!serviceName) {
+      return {
+        refId: 'A',
+        labelMatchers: [],
+      };
+    }
+    return {
+      refId: 'A',
+      labelMatchers: [
+        {
+          name: 'service.name',
+          otel: 'service.name',
+          operator: AbstractLabelOperator.Equal,
+          value: serviceName?.value[0] || '',
+        },
+      ],
+    };
   }
 }
 

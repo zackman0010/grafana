@@ -321,7 +321,8 @@ export function getLinkExtensionOverrides(pluginId: string, config: AddedLinkReg
       `The configure() function for "${config.title}" returned a promise, skipping updates.`
     );
 
-    path && assertLinkPathIsValid(pluginId, path);
+    // Disable path checking for POC
+    // path && assertLinkPathIsValid(pluginId, path);
     assertStringProps({ title, description }, ['title', 'description']);
 
     if (Object.keys(rest).length > 0) {

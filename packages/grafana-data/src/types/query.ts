@@ -46,6 +46,7 @@ export type AbstractLabelMatcher = {
   name: string;
   value: string;
   operator: AbstractLabelOperator;
+  otel?: 'service.name' | undefined;
 };
 
 /**

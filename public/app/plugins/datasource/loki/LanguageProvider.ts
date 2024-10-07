@@ -114,9 +114,17 @@ export default class LokiLanguageProvider extends LanguageProvider {
       return matchers;
     });
 
+    const flattenLabelMatchers = flatten(labelMatchers);
+
+    for (let matcher of flattenLabelMatchers) {
+      if (matcher.name === 'service_name') {
+        matcher.otel = 'service.name';
+      }
+    }
+
     return {
       refId: query.refId,
-      labelMatchers: flatten(labelMatchers),
+      labelMatchers: flattenLabelMatchers,
     };
   }
 

@@ -3,9 +3,10 @@ import * as React from 'react';
 import { DataQuery, DataSourceJsonData } from '@grafana/schema';
 
 import { ScopedVars } from './ScopedVars';
-import { DataSourcePluginMeta, DataSourceSettings } from './datasource';
+import { DataSourceApi, DataSourcePluginMeta, DataSourceSettings } from './datasource';
 import { IconName } from './icon';
 import { PanelData } from './panel';
+import { AbstractQuery, DataSourceRef } from './query';
 import { RawTimeRange, TimeZone } from './time';
 
 // Plugin Extensions types
@@ -181,7 +182,17 @@ export enum PluginExtensionPoints {
   DataSourceConfig = 'grafana/datasources/config',
   ExploreToolbarAction = 'grafana/explore/toolbar/action',
   UserProfileTab = 'grafana/user/profile/tab',
+  QueryToAppPlugin = 'grafana/query/query-to-app-plugin',
 }
+
+export type QueryToAppPluginContext = {
+  abstractQuery: AbstractQuery;
+  datasource: DataSourceRef;
+  from: string;
+  to: string;
+  query?: DataQuery;
+  defaultDatasources?: Record<string, DataSourceRef>;
+};
 
 export type PluginExtensionPanelContext = {
   pluginId: string;

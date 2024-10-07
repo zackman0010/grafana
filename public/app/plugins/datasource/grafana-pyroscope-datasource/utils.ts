@@ -44,6 +44,12 @@ export function extractLabelMatchers(tokens: Array<string | Token>): AbstractLab
     }
   }
 
+  for (let matcher of labelMatchers) {
+    if (matcher.name === 'service_name') {
+      matcher.otel = 'service.name';
+    }
+  }
+
   return labelMatchers;
 }
 
