@@ -1,4 +1,4 @@
-import { template } from 'lodash';
+import template from 'lodash/template';
 
 import { RawTimeRange, PanelPluginMeta, dateMath } from '@grafana/data';
 import config from 'app/core/config';

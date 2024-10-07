@@ -90,7 +90,8 @@ export const sharedDependenciesMap = {
     __useDefault: true,
   },
   ...jQueryFlotDeps,
-  lodash: () => import('app/core/lodash_extended').then((module) => ({ ...module, __useDefault: true })),
+  lodash: () =>
+    import(/* lodashExtended */ 'app/core/lodash_extended').then((module) => ({ ...module, __useDefault: true })),
   moment: () => import('moment').then((module) => ({ ...module, __useDefault: true })),
   prismjs: () => import('prismjs'),
   react: () => import('react'),

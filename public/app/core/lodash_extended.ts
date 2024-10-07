@@ -1,12 +1,13 @@
 // eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 
+import { arrayMove } from 'app/core/utils/arrayMove';
+
 /*
-  Mixins :)
+  Provide move for backwards compatibility with plugins.
 */
 _.mixin({
-  move: (array, fromIndex, toIndex) => {
-    array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
-    return array;
-  },
+  move: arrayMove,
 });
+
+export default _;

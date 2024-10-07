@@ -1,5 +1,5 @@
 import { matcherHint, printExpected, printReceived } from 'jest-matcher-utils';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { Observable, Subscription } from 'rxjs';
 
 import { expectObservable, forceObservableCompletion } from './utils';

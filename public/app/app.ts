@@ -6,7 +6,6 @@ import 'file-saver';
 import 'jquery';
 import 'vendor/bootstrap/bootstrap';
 
-import _ from 'lodash'; // eslint-disable-line lodash/import-scope
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -45,7 +44,6 @@ import { setPanelDataErrorView } from '@grafana/runtime/src/components/PanelData
 import { setPanelRenderer } from '@grafana/runtime/src/components/PanelRenderer';
 import { setPluginPage } from '@grafana/runtime/src/components/PluginPage';
 import config, { updateConfig } from 'app/core/config';
-import { arrayMove } from 'app/core/utils/arrayMove';
 import { getStandardTransformers } from 'app/features/transformers/standardTransformers';
 
 import getDefaultMonacoLanguages from '../lib/monaco-languages';
@@ -108,10 +106,6 @@ import { createQueryVariableAdapter } from './features/variables/query/adapter';
 import { createSystemVariableAdapter } from './features/variables/system/adapter';
 import { createTextBoxVariableAdapter } from './features/variables/textbox/adapter';
 import { configureStore } from './store/configureStore';
-
-// add move to lodash for backward compatabilty with plugins
-// @ts-ignore
-_.move = arrayMove;
 
 // import symlinked extensions
 const extensionsIndex = require.context('.', true, /extensions\/index.ts/);
@@ -379,7 +373,7 @@ function initEchoSrv() {
  * like PerformanceMark or PerformancePaintTiming (e.g. created with performance.mark, or first-contentful-paint)
  */
 function reportMetricPerformanceMark(metricName: string, prefix = '', suffix = ''): void {
-  const metric = _.first(performance.getEntriesByName(metricName));
+  const metric = performance.getEntriesByName(metricName).at(0);
   if (metric) {
     const metricName = metric.name.replace(/-/g, '_');
     reportPerformance(`${prefix}${metricName}${suffix}`, Math.round(metric.startTime) / 1000);
