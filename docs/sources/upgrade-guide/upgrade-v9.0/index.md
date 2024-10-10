@@ -24,7 +24,7 @@ weight: 2300
 
 ## Technical notes
 
-This section describes technical changes associated with this release of Grafana.
+This section describes technical changes associated with this release of Grafana. 
 
 ### Role-based access control: changes for general release
 
