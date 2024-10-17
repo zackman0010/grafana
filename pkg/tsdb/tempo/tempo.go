@@ -112,6 +112,9 @@ func (s *Service) query(ctx context.Context, pCtx backend.PluginContext, query b
 	if query.QueryType == string(dataquery.TempoQueryTypeTraceId) {
 		return s.getTrace(ctx, pCtx, query)
 	}
+	if query.QueryType == string(dataquery.TempoQueryTypeTraceql) {
+		return s.getMetrics(ctx, pCtx, query)
+	}
 	return nil, fmt.Errorf("unsupported query type: '%s' for query with refID '%s'", query.QueryType, query.RefID)
 }
 
