@@ -191,6 +191,9 @@ func (s *Service) applyHeaders(ctx context.Context, req backend.ForwardHTTPHeade
 func queryData(ctx context.Context, req *backend.QueryDataRequest, dsInfo *datasourceInfo, responseOpts ResponseOpts, tracer tracing.Tracer, plog log.Logger, runInParallel bool, requestStructuredMetadata bool) (*backend.QueryDataResponse, error) {
 	result := backend.NewQueryDataResponse()
 
+	req.Headers["Sven-Fake-Header"] = "fake-value"
+	req.Headers["http_Sven-Fake-Header-Second"] = "fake-value-second"
+
 	api := newLokiAPI(dsInfo.HTTPClient, dsInfo.URL, plog, tracer, requestStructuredMetadata)
 
 	start := time.Now()
