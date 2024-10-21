@@ -1,7 +1,10 @@
-import { ReactElement } from 'react';
+import { isObject } from 'lodash';
+import Prism from 'prismjs';
+import { ReactElement, useState } from 'react';
 import { useAsync } from 'react-use';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
-import { Box, Spinner, Stack } from '@grafana/ui';
+import { Box, CodeEditor, RadioButtonGroup, Spinner, Stack } from '@grafana/ui';
 import { Diffs } from 'app/features/dashboard-scene/settings/version-history/utils';
 
 import { DiffGroup } from '../../../dashboard-scene/settings/version-history/DiffGroup';
@@ -18,6 +21,8 @@ interface SaveDashboardDiffProps {
   newFolder?: string;
 }
 
+type DiffViewType = 'only-changes' | 'diff';
+
 export const SaveDashboardDiff = ({
   diff,
   oldValue,
@@ -26,41 +31,49 @@ export const SaveDashboardDiff = ({
   oldFolder,
   newFolder,
 }: SaveDashboardDiffProps) => {
-  const loader = useAsync(async () => {
-    const oldJSON = JSON.stringify(oldValue ?? {}, null, 2);
-    const newJSON = JSON.stringify(newValue ?? {}, null, 2);
+  const [viewId, setViewId] = useState<string>('diff');
+  const views = [
+    { value: 'diff', label: 'JSON diff' },
+    { value: 'changes-only', label: 'Only changed properties' },
+  ];
 
-    // Schema changes will have MANY changes that the user will not understand
-    let schemaChange: ReactElement | undefined = undefined;
-    const diffs: ReactElement[] = [];
-    let count = 0;
+  const diffCount = Object.keys(diff ?? {}).length;
+  const oldJSON = JSON.stringify(oldValue ?? {}, null, 2);
+  const newJSON = JSON.stringify(newValue ?? {}, null, 2);
 
-    if (diff) {
-      for (const [key, changes] of Object.entries(diff)) {
-        // this takes a long time for large diffs (so this is async)
-        const g = <DiffGroup diffs={changes} key={key} title={key} />;
-        if (key === 'schemaVersion') {
-          schemaChange = g;
-        } else {
-          diffs.push(g);
-        }
-        count += changes.length;
-      }
-    }
+  // const loader = useAsync(async () => {
+  //   const oldJSON = JSON.stringify(oldValue ?? {}, null, 2);
+  //   const newJSON = JSON.stringify(newValue ?? {}, null, 2);
 
-    return {
-      schemaChange,
-      diffs,
-      count,
-      showDiffs: count < 15, // overwhelming if too many changes
-      jsonView: <DiffViewer oldValue={oldJSON} newValue={newJSON} />,
-    };
-  }, [diff, oldValue, newValue]);
+  //   // Schema changes will have MANY changes that the user will not understand
+  //   let schemaChange: ReactElement | undefined = undefined;
+  //   const diffs: ReactElement[] = [];
+  //   let count = 0;
 
-  const { value } = loader;
+  //   if (diff) {
+  //     for (const [key, changes] of Object.entries(diff)) {
+  //       // this takes a long time for large diffs (so this is async)
+  //       const g = <DiffGroup diffs={changes} key={key} title={key} />;
+  //       if (key === 'schemaVersion') {
+  //         schemaChange = g;
+  //       } else {
+  //         diffs.push(g);
+  //       }
+  //       count += changes.length;
+  //     }
+  //   }
+
+  //   return {
+  //     schemaChange,
+  //     diffs,
+  //     count,
+  //     showDiffs: count < 15, // overwhelming if too many changes
+  //     jsonView: <DiffViewer oldValue={oldJSON} newValue={newJSON} />,
+  //   };
+  // }, [diff, oldValue, newValue]);
 
   return (
-    <Stack direction="column" gap={1}>
+    <Stack direction="column" gap={1} height={'100%'}>
       {hasFolderChanges && (
         <DiffGroup
           diffs={[
@@ -77,19 +90,68 @@ export const SaveDashboardDiff = ({
           title={'folder'}
         />
       )}
-      {(!value || !oldValue) && <Spinner />}
-      {value && value.count >= 1 ? (
+      <div>
+        <RadioButtonGroup options={views} value={viewId} onChange={(value) => setViewId(value)} />
+      </div>
+      {diffCount >= 1 && (
         <>
-          {value && value.schemaChange && value.schemaChange}
-          {value && value.showDiffs && value.diffs}
-          <Box paddingTop={1}>
-            <h4>Full JSON diff</h4>
-            {value.jsonView}
-          </Box>
+          {viewId === 'diff' && <DiffViewer oldValue={oldJSON} newValue={newJSON} />}
+          {viewId === 'changes-only' && <ChangesOnly oldValue={oldValue} newValue={newValue} />}
         </>
-      ) : (
-        <Box paddingTop={1}>No changes in the dashboard JSON</Box>
       )}
+      {diffCount === 0 && <Box paddingTop={1}>No changes in the dashboard JSON</Box>}
     </Stack>
   );
 };
+
+interface ChangesOnlyProps {
+  newValue: unknown;
+  oldValue: unknown;
+}
+
+function ChangesOnly(props: ChangesOnlyProps) {
+  //@ts-ignore
+  const diff = diffObjects(props.newValue, props.oldValue);
+  const json = JSON.stringify(diff, undefined, 2);
+
+  return (
+    <Stack direction="column" grow={1}>
+      <AutoSizer disableWidth>
+        {({ height }) => (
+          <CodeEditor
+            width="100%"
+            height={height}
+            language="json"
+            showLineNumbers={true}
+            value={json}
+            readOnly={true}
+          />
+        )}
+      </AutoSizer>
+    </Stack>
+  );
+}
+
+function diffObjects(objA: Record<string, unknown>, objB: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+
+  const keys = new Set<string>([...Object.keys(objA), ...Object.keys(objB)]);
+
+  keys.forEach((key) => {
+    const valueA = objA[key];
+    const valueB = objB[key];
+
+    // Check if both values are objects and not null
+    if (isObject(valueA) && isObject(valueB)) {
+      //@ts-ignore
+      const nestedDiff = diffObjects(valueA, valueB);
+      if (Object.keys(nestedDiff).length > 0) {
+        result[key] = nestedDiff; // Include nested differences
+      }
+    } else if (valueA !== valueB) {
+      result[key] = valueB; // Change to valueA if you want to show objA differences
+    }
+  });
+
+  return result;
+}
