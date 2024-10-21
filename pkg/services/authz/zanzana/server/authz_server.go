@@ -3,8 +3,9 @@ package server
 import (
 	"context"
 
-	authzextv1 "github.com/grafana/grafana/pkg/services/authz/zanzana/proto/v1"
 	openfgav1 "github.com/openfga/api/proto/openfga/v1"
+
+	authzextv1 "github.com/grafana/grafana/pkg/services/authz/zanzana/proto/v1"
 )
 
 var _ authzextv1.AuthzExtentionServiceServer = (*Server)(nil)
@@ -14,12 +15,18 @@ func NewAuthz(openfga openfgav1.OpenFGAServiceServer) *Server {
 }
 
 type Server struct {
-	authzextv1.UnsafeAuthzExtentionServiceServer
+	authzextv1.UnimplementedAuthzExtentionServiceServer
 
 	openfga openfgav1.OpenFGAServiceServer
 }
 
 // Write implements v1.AuthzExtentionServiceServer.
-func (s *Server) Write(context.Context, *authzextv1.WriteRequest) (*authzextv1.WriteResponse, error) {
-	panic("unimplemented")
+func (s *Server) Write(ctx context.Context, req *authzextv1.WriteRequest) (*authzextv1.WriteResponse, error) {
+	// TODO: Construct OpenFGA write request
+	writeReq := &openfgav1.WriteRequest{}
+	_, err := s.openfga.Write(ctx, writeReq)
+	if err != nil {
+		return nil, err
+	}
+	return &authzextv1.WriteResponse{}, nil
 }

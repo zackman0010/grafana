@@ -27,9 +27,10 @@ type TupleCollector func(ctx context.Context, tuples map[string][]*openfgav1.Tup
 // We should rewrite the migration after we have "migrated" all possible actions
 // into our schema.
 type ZanzanaReconciler struct {
-	lock   *serverlock.ServerLockService
-	log    log.Logger
-	client zanzana.Client
+	lock      *serverlock.ServerLockService
+	log       log.Logger
+	client    zanzana.Client
+	extclient zanzana.ExtensionClient
 	// collectors are one time best effort migrations that gives up on first conflict.
 	// These are deprecated and everything should move be resourceReconcilers that are periodically synced
 	// between grafana db and zanzana store.
@@ -39,7 +40,7 @@ type ZanzanaReconciler struct {
 	reconcilers []resourceReconciler
 }
 
-func NewZanzanaReconciler(client zanzana.Client, store db.DB, lock *serverlock.ServerLockService, collectors ...TupleCollector) *ZanzanaReconciler {
+func NewZanzanaReconciler(client zanzana.Client, extclient zanzana.ExtensionClient, store db.DB, lock *serverlock.ServerLockService, collectors ...TupleCollector) *ZanzanaReconciler {
 	// Append shared collectors that is used by both enterprise and oss
 	collectors = append(
 		collectors,
@@ -55,6 +56,7 @@ func NewZanzanaReconciler(client zanzana.Client, store db.DB, lock *serverlock.S
 
 	return &ZanzanaReconciler{
 		client:     client,
+		extclient:  extclient,
 		lock:       lock,
 		log:        log.New("zanzana.reconciler"),
 		collectors: collectors,
