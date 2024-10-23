@@ -111,7 +111,7 @@ interface ChangesOnlyProps {
 
 function ChangesOnly(props: ChangesOnlyProps) {
   //@ts-ignore
-  const diff = diffObjects(props.newValue, props.oldValue);
+  const diff = getDifferences(props.newValue, props.oldValue);
   const json = JSON.stringify(diff, undefined, 2);
 
   return (
@@ -132,26 +132,51 @@ function ChangesOnly(props: ChangesOnlyProps) {
   );
 }
 
-function diffObjects(objA: Record<string, unknown>, objB: Record<string, unknown>): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
+function getDifferences<T>(objA: T, objB: T): unknown {
+  if (objA && !objB) {
+    return objA;
+  }
 
-  const keys = new Set<string>([...Object.keys(objA), ...Object.keys(objB)]);
+  if (objB && !objA) {
+    return objB;
+  }
 
-  keys.forEach((key) => {
-    const valueA = objA[key];
-    const valueB = objB[key];
+  if (Array.isArray(objA) && Array.isArray(objB)) {
+    // If both are arrays, compare each element
+    const diffArray: unknown[] = [];
+    const maxLength = Math.max(objA.length, objB.length);
 
-    // Check if both values are objects and not null
-    if (isObject(valueA) && isObject(valueB)) {
-      //@ts-ignore
-      const nestedDiff = diffObjects(valueA, valueB);
-      if (Object.keys(nestedDiff).length > 0) {
-        result[key] = nestedDiff; // Include nested differences
+    for (let i = 0; i < maxLength; i++) {
+      const diff = getDifferences(objA[i], objB[i]);
+      if (diff !== undefined) {
+        diffArray.push(diff);
+      } else {
+        diffArray.push(undefined);
       }
-    } else if (valueA !== valueB) {
-      result[key] = valueB; // Change to valueA if you want to show objA differences
     }
-  });
 
-  return result;
+    // Remove trailing undefined elements
+    while (diffArray.length && diffArray[diffArray.length - 1] === undefined) {
+      diffArray.pop();
+    }
+
+    return diffArray.length ? diffArray : undefined;
+  }
+
+  if (typeof objA === 'object' && typeof objB === 'object') {
+    const result: Record<string, unknown> = {};
+    const keys = new Set([...Object.keys(objA), ...Object.keys(objB)]);
+
+    keys.forEach((key) => {
+      const diff = getDifferences((objA as any)[key], (objB as any)[key]);
+      if (diff !== undefined) {
+        result[key] = diff;
+      }
+    });
+
+    return Object.keys(result).length ? result : undefined;
+  }
+
+  // If they are different primitives, return objA
+  return objA !== objB ? objA : undefined;
 }
