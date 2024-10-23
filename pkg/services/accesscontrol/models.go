@@ -399,6 +399,9 @@ const (
 	ScopeSettingsAll  = "settings:*"
 	ScopeSettingsSAML = "settings:auth.saml:*"
 
+	// SCIM scope
+	ScopeScimAll = "scim:*"
+
 	// Team related actions
 	ActionTeamsCreate           = "teams:create"
 	ActionTeamsDelete           = "teams:delete"
