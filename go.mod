@@ -472,9 +472,13 @@ require (
 
 require github.com/jmespath-community/go-jmespath v1.1.1 // @grafana/identity-access-team
 
+require github.com/elimity-com/scim v0.0.0-20240320110924-172bf2aee9c8
+
 require (
 	cloud.google.com/go/longrunning v0.5.12 // indirect
 	github.com/at-wat/mqtt-go v0.19.4 // indirect
+	github.com/di-wu/parser v0.2.2 // indirect
+	github.com/di-wu/xsd-datetime v1.0.0 // indirect
 	github.com/dolthub/maphash v0.1.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gammazero/deque v0.2.1 // indirect
@@ -483,6 +487,7 @@ require (
 	github.com/grafana/sqlds/v4 v4.1.0 // indirect
 	github.com/maypok86/otter v1.2.2 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
+	github.com/scim2/filter-parser/v2 v2.2.0 // indirect
 	github.com/shadowspore/fossil-delta v0.0.0-20240102155221-e3a8590b820b // indirect
 )
 
