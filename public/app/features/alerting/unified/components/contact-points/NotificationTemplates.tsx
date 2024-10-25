@@ -2,7 +2,7 @@ import { Alert, LoadingPlaceholder } from '@grafana/ui';
 
 import { useAlertmanager } from '../../state/AlertmanagerContext';
 import { stringifyErrorLike } from '../../utils/misc';
-import { TemplatesTable } from '../receivers/TemplatesTable';
+import { TemplatesList } from '../receivers/TemplatesList';
 
 import { useNotificationTemplates } from './useNotificationTemplates';
 
@@ -19,7 +19,7 @@ export const NotificationTemplates = () => {
   }
 
   if (templates) {
-    return <TemplatesTable alertManagerName={selectedAlertmanager!} templates={templates} />;
+    return <TemplatesList alertManagerName={selectedAlertmanager!} templates={templates} />;
   }
 
   return null;

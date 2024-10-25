@@ -8,7 +8,7 @@ import { t } from 'app/core/internationalization';
 import { Spacer } from '../../components/Spacer';
 
 interface GroupProps extends PropsWithChildren {
-  name: string;
+  title: ReactNode;
   description?: ReactNode;
   metaRight?: ReactNode;
   actions?: ReactNode;
@@ -17,7 +17,7 @@ interface GroupProps extends PropsWithChildren {
 }
 
 export const Group = ({
-  name,
+  title,
   description,
   onToggle,
   isOpen = false,
@@ -33,7 +33,7 @@ export const Group = ({
         onToggle={onToggle}
         isOpen={isOpen}
         description={description}
-        name={name}
+        title={title}
         metaRight={metaRight}
         actions={actions}
       />
@@ -43,7 +43,7 @@ export const Group = ({
 };
 
 const GroupHeader = (props: GroupProps) => {
-  const { name, description, metaRight = null, actions = null, isOpen = false, onToggle } = props;
+  const { title, description, metaRight = null, actions = null, isOpen = false, onToggle } = props;
 
   const styles = useStyles2(getStyles);
 
@@ -56,9 +56,13 @@ const GroupHeader = (props: GroupProps) => {
             onClick={onToggle}
             aria-label={t('common.collapse', 'Collapse')}
           />
-          <Text truncate variant="body">
-            {name}
-          </Text>
+          {typeof title === 'string' ? (
+            <Text truncate variant="body">
+              {title}
+            </Text>
+          ) : (
+            title
+          )}
         </Stack>
 
         {description}

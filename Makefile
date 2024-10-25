@@ -229,7 +229,7 @@ run: $(BRA) ## Build and run web server on filesystem changes. See /.bra.toml fo
 
 .PHONY: run-go
 run-go: ## Build and run web server immediately.
-	$(GO) run -race $(if $(GO_BUILD_TAGS),-build-tags=$(GO_BUILD_TAGS)) \
+	$(GO) run $(if $(GO_BUILD_TAGS),-build-tags=$(GO_BUILD_TAGS)) \
 		./pkg/cmd/grafana -- server -profile -profile-addr=127.0.0.1 -profile-port=6000 -packaging=dev cfg:app_mode=development
 
 .PHONY: run-frontend

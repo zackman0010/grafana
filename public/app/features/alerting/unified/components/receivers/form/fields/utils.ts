@@ -15,7 +15,7 @@
  * "{{ define "templateName" }}" and "{{ end }}" delimiters.But it may also contain nested templates.
  */
 
-import { Template } from './TemplateSelector';
+import { type Template } from './TemplateSelector';
 
 export function parseTemplates(templatesString: string): Template[] {
   const templates: Record<string, Template> = {};
@@ -72,13 +72,20 @@ export function getUseTemplateText(templateName: string) {
   return `{{ template "${templateName}" . }}`;
 }
 
+const TEMPLATE_INVOCATION_REGEX = /\{\{\s*template\s*"(.*)"\s*\.\s*\}\}/;
+
 export function getTemplateName(useTemplateText: string) {
-  const match = useTemplateText.match(/\{\{\s*template\s*"(.*)"\s*\.\s*\}\}/);
+  const match = useTemplateText.match(TEMPLATE_INVOCATION_REGEX);
   return match ? match[1] : '';
 }
 
+// a integration setting can reference more than one template
+export function getTemplateNames(template: string): string[] {
+  return template.match(TEMPLATE_INVOCATION_REGEX) ?? [];
+}
+
 /* This function checks if the a field value contains only one template usage
-    for example: 
+    for example:
     "{{ template "templateName" . }}"" returns true
     but "{{ template "templateName" . }} some text {{ template "templateName" . }}"" returns false
     and "{{ template "templateName" . }} some text" some text returns false

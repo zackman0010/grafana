@@ -329,6 +329,7 @@
     },
     "templates": {
       "misconfigured-badge-text": "Misconfigured",
+      "misconfigured-meta-text": "This notification template is misconfigured",
       "misconfigured-warning": "This template is misconfigured.",
       "misconfigured-warning-details": "Templates must be defined in both the <1></1> and <4></4> sections of your alertmanager configuration."
     }
