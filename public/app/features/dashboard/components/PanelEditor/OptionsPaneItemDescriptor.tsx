@@ -15,6 +15,7 @@ export interface OptionsPaneItemProps {
   title: string;
   value?: any;
   description?: string;
+  id?: string;
   popularRank?: number;
   render: () => React.ReactElement;
   skipField?: boolean;
@@ -32,7 +33,7 @@ export class OptionsPaneItemDescriptor {
   constructor(public props: OptionsPaneItemProps) {}
 
   getLabel(searchQuery?: string): ReactNode {
-    const { title, description, overrides, addon } = this.props;
+    const { title, description, overrides, addon, id } = this.props;
 
     if (!searchQuery) {
       // Do not render label for categories with only one child
@@ -40,7 +41,9 @@ export class OptionsPaneItemDescriptor {
         return null;
       }
 
-      return <OptionPaneLabel title={title} description={description} overrides={overrides} addon={addon} />;
+      return (
+        <OptionPaneLabel title={title} description={description} overrides={overrides} addon={addon} htmlFor={id} />
+      );
     }
 
     const categories: React.ReactNode[] = [];
@@ -104,13 +107,14 @@ interface OptionPanelLabelProps {
   description?: string;
   overrides?: OptionPaneItemOverrideInfo[];
   addon: ReactNode;
+  htmlFor?: string;
 }
 
-function OptionPaneLabel({ title, description, overrides, addon }: OptionPanelLabelProps) {
+function OptionPaneLabel({ title, description, overrides, addon, htmlFor }: OptionPanelLabelProps) {
   const styles = useStyles2(getLabelStyles);
   return (
     <div className={styles.container}>
-      <Label description={description}>
+      <Label description={description} htmlFor={htmlFor}>
         {title}
         {overrides && overrides.length > 0 && <OptionsPaneItemOverrides overrides={overrides} />}
       </Label>

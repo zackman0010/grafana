@@ -331,6 +331,7 @@ export function fillOptionsPaneItems(
       new OptionsPaneItemDescriptor({
         title: pluginOption.name,
         description: pluginOption.description,
+        id: pluginOption.id,
         render: function renderEditor() {
           return (
             <Editor
