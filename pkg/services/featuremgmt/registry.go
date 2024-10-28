@@ -1562,6 +1562,14 @@ var (
 			Owner:        grafanaDashboardsSquad,
 			FrontendOnly: true,
 		},
+		{
+			Name:         "exploreMetricsRelatedLogs",
+			Description:  "Display Related Logs in Explore Metrics",
+			Stage:        FeatureStageExperimental,
+			Owner:        grafanaObservabilityMetricsSquad,
+			FrontendOnly: true,
+			HideFromDocs: true,
+		},
 	}
 )
 
