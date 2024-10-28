@@ -98,6 +98,15 @@ export default defineConfig<PluginOptions>({
       dependencies: ['authenticate'],
     },
     {
+      name: 'grafana-test-panel',
+      testDir: 'e2e/test-plugins/grafana-test-panel',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['authenticate'],
+    },
+    {
       name: 'cloudwatch',
       testDir: path.join(testDirRoot, '/cloudwatch'),
       use: {

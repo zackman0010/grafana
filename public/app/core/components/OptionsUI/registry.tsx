@@ -87,7 +87,7 @@ export const getAllOptionEditors = () => {
     name: 'Boolean',
     description: 'Allows boolean values input',
     editor(props) {
-      const { id, ...rest } = props; // Remove id from properties passed into switch
+      const { ...rest } = props; // Remove id from properties passed into switch
       return <Switch {...rest} onChange={(e) => props.onChange(e.currentTarget.checked)} />;
     },
   };

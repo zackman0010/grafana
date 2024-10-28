@@ -5,17 +5,17 @@ import { SimplePanel } from './components/SimplePanel';
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
     .addTextInput({
-      path: 'text',
+      path: 'simple-test-path',
       name: 'Simple text option',
       description: 'Description of panel option',
       defaultValue: 'Default value of text input option',
       category: ['Legend'],
     })
     .addTextInput({
-      path: 'text2',
+      path: 'simple-input',
       name: 'Simple text option',
       description: 'Description of panel option',
-      defaultValue: 'Default value of text input option',
+      // defaultValue: 'Default value of text input option',
     })
     .addBooleanSwitch({
       path: 'showSeriesCount',
@@ -23,7 +23,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       defaultValue: false,
     })
     .addSelect({
-      path: 'select',
+      path: 'simple-select2',
       name: 'Simple select option',
       description: 'Description of panel option',
       defaultValue: 'B',

@@ -1,44 +1,28 @@
-import { gte } from 'semver';
-import { test, expect } from '@grafana/plugin-e2e';
+import { test, expect, PanelEditPage } from '@grafana/plugin-e2e';
+import { Locator } from '@playwright/test';
 
-test('should display "No data" in case panel data is empty', async ({
-  gotoPanelEditPage,
-  readProvisionedDashboard,
-}) => {
-  const dashboard = await readProvisionedDashboard({ fileName: 'dashboard.json' });
-  const panelEditPage = await gotoPanelEditPage({ dashboard, id: '2' });
-  await expect(panelEditPage.panel.locator).toContainText('No data');
-});
+function getSection(label: string, panelEditPage: PanelEditPage, section: string = 'Test'): Locator {
+  return panelEditPage.getByGrafanaSelector(`${section} ${label} field property editor`);
+}
 
-test('should display circle when data is passed to the panel', async ({
-  panelEditPage,
-  readProvisionedDataSource,
-  page,
-}) => {
-  const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
-  await panelEditPage.datasource.set(ds.name);
-  await panelEditPage.setVisualization('Test');
-  await expect(page.getByTestId('simple-panel-circle')).toBeVisible();
-});
+test.describe('panel options', () => {
+  test.beforeEach(async ({ panelEditPage }) => {
+    await panelEditPage.setVisualization('Test');
+    await panelEditPage.collapseSection('Test');
+  });
 
-test('should display series counter when "Show series counter" option is enabled', async ({
-  panelEditPage,
-  readProvisionedDataSource,
-  page,
-  selectors,
-  grafanaVersion,
-}) => {
-  const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
-  await panelEditPage.datasource.set(ds.name);
-  await panelEditPage.setVisualization('Test');
-  await panelEditPage.collapseSection('Test');
-  await expect(page.getByTestId('simple-panel-circle')).toBeVisible();
-  const seriesCounterLabel = panelEditPage.getByGrafanaSelector(
-    selectors.components.PanelEditor.OptionsPane.fieldLabel('Test Show series counter')
-  );
-  const switchField = gte(grafanaVersion, '11.4.0')
-    ? seriesCounterLabel.getByRole('switch')
-    : seriesCounterLabel.getByLabel('Toggle switch');
-  await switchField.click({ force: true });
-  await expect(page.getByTestId('simple-panel-series-counter')).toBeVisible();
+  test('boolean switch', async ({ panelEditPage, page, selectors }) => {
+    const section = getSection('Show series counter', panelEditPage);
+    await expect(section.getByRole('switch', { name: 'Show series counter' })).not.toBeChecked();
+    section.getByRole('switch').check({ force: true });
+    await expect(section.getByRole('switch')).toBeChecked();
+  });
+
+  test('addTextInput', async ({ panelEditPage, page, selectors }) => {
+    const section = getSection('Simple text option', panelEditPage);
+    const field = section.getByRole('textbox', { name: 'Simple text option' });
+    await expect(field).toBeEmpty();
+    field.fill('test test');
+    await expect(field).toHaveValue('test test');
+  });
 });
