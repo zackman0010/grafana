@@ -25,6 +25,7 @@ type CloudMigrationSettings struct {
 	TokenExpiresAfter           time.Duration
 	FeedbackURL                 string
 	FrontendPollInterval        time.Duration
+	ExcludeProvisioned          bool
 
 	IsDeveloperMode bool
 }
@@ -51,6 +52,7 @@ func (cfg *Cfg) readCloudMigrationSettings() {
 	cfg.CloudMigration.IsDeveloperMode = cloudMigration.Key("developer_mode").MustBool(false)
 	cfg.CloudMigration.FeedbackURL = cloudMigration.Key("feedback_url").MustString("")
 	cfg.CloudMigration.FrontendPollInterval = cloudMigration.Key("frontend_poll_interval").MustDuration(2 * time.Second)
+	cfg.CloudMigration.ExcludeProvisioned = cloudMigration.Key("exclude_provisioned").MustBool(false)
 
 	if cfg.CloudMigration.SnapshotFolder == "" {
 		cfg.CloudMigration.SnapshotFolder = filepath.Join(cfg.DataPath, "cloud_migration")

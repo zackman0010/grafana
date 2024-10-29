@@ -39,6 +39,8 @@ var currentMigrationTypes = []cloudmigration.MigrateDataType{
 	cloudmigration.AlertRuleType,
 }
 
+var provisionedCreatedBy int64 = -1
+
 func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.SignedInUser) (*cloudmigration.MigrateDataRequest, error) {
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.getMigrationDataJSON")
 	defer span.End()
@@ -266,6 +268,12 @@ func (s *Service) getDashboardAndFolderCommands(ctx context.Context, signedInUse
 	// If any result is in the trash bin, don't migrate it
 	for _, d := range dashs {
 		if softDeleteEnabled && !d.Deleted.IsZero() {
+			continue
+		}
+
+		// If excludeProvisioned is true and result is provisioned, don't migrate it
+		// Use created by to determine if provisioned
+		if s.cfg.CloudMigration.ExcludeProvisioned && d.CreatedBy == provisionedCreatedBy {
 			continue
 		}
 

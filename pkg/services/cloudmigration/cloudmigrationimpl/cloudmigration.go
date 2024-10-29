@@ -573,6 +573,8 @@ func (s *Service) GetSnapshot(ctx context.Context, query cloudmigration.GetSnaps
 			s.log.Error("error applying plugin warnings, please open a bug report: %w", err)
 		}
 
+		// Apply provisioned warning to folders and dashboards
+
 		// Log the errors for resources with errors at migration
 		for _, resource := range resources {
 			if resource.Status == cloudmigration.ItemStatusError && resource.Error != "" {
