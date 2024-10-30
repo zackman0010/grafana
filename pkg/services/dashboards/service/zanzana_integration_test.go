@@ -70,6 +70,7 @@ func TestIntegrationDashboardServiceZanzana(t *testing.T) {
 			foldertest.NewFakeService(),
 			fStore,
 			nil,
+			zclient,
 		)
 		require.NoError(t, err)
 

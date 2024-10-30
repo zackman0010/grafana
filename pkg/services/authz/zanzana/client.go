@@ -18,6 +18,7 @@ import (
 // Client is a wrapper around [openfgav1.OpenFGAServiceClient]
 type Client interface {
 	authz.AccessClient
+	BatchCheck(ctx context.Context, id claims.AuthInfo, req *authzextv1.BatchCheckRequest) (*authzextv1.BatchCheckResponse, error)
 	List(ctx context.Context, id claims.AuthInfo, req authz.ListRequest) (*authzextv1.ListResponse, error)
 
 	CheckObject(ctx context.Context, in *openfgav1.CheckRequest) (*openfgav1.CheckResponse, error)

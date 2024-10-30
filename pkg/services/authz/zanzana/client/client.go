@@ -85,7 +85,6 @@ func New(ctx context.Context, cc grpc.ClientConnInterface, opts ...ClientOption)
 	return c, nil
 }
 
-// Check implements authz.AccessClient.
 func (c *Client) Check(ctx context.Context, id claims.AuthInfo, req authz.CheckRequest) (authz.CheckResponse, error) {
 	ctx, span := tracer.Start(ctx, "authz.zanzana.client.Check")
 	defer span.End()
@@ -109,11 +108,19 @@ func (c *Client) Check(ctx context.Context, id claims.AuthInfo, req authz.CheckR
 	return authz.CheckResponse{Allowed: res.GetAllowed()}, nil
 }
 
+func (c *Client) BatchCheck(ctx context.Context, id claims.AuthInfo, req *authzextv1.BatchCheckRequest) (*authzextv1.BatchCheckResponse, error) {
+	ctx, span := tracer.Start(ctx, "authz.zanzana.client.BatchCheck")
+	defer span.End()
+
+	req.Subject = id.GetUID()
+	return c.authzext.BatchCheck(ctx, req)
+}
+
 func (c *Client) Compile(ctx context.Context, id claims.AuthInfo, req authz.ListRequest) (authz.ItemChecker, error) {
 	ctx, span := tracer.Start(ctx, "authz.zanzana.client.Compile")
 	defer span.End()
 
-	_, err := c.authzext.List(ctx, &authzextv1.ListRequest{
+	res, err := c.authzext.List(ctx, &authzextv1.ListRequest{
 		Subject:   id.GetUID(),
 		Group:     req.Group,
 		Verb:      utils.VerbList,
@@ -125,8 +132,7 @@ func (c *Client) Compile(ctx context.Context, id claims.AuthInfo, req authz.List
 		return nil, err
 	}
 
-	// FIXME: implement checker
-	return func(namespace, name, folder string) bool { return false }, nil
+	return newItemChecker(res), nil
 }
 
 func (c *Client) List(ctx context.Context, id claims.AuthInfo, req authz.ListRequest) (*authzextv1.ListResponse, error) {
@@ -226,4 +232,31 @@ func (c *Client) loadModel(ctx context.Context, storeID string) (string, error) 
 	}
 
 	return res.AuthorizationModels[0].GetId(), nil
+}
+
+func newItemChecker(res *authzextv1.ListResponse) authz.ItemChecker {
+	// if we can see all resource of this type we can just return a function that always return true
+	if res.GetAll() {
+		return func(_, _, _ string) bool { return true }
+	}
+
+	folders := make(map[string]struct{}, len(res.Folders))
+	for _, f := range res.Folders {
+		folders[f] = struct{}{}
+	}
+
+	items := make(map[string]struct{}, len(res.Items))
+	for _, i := range res.Items {
+		items[i] = struct{}{}
+	}
+
+	return func(namespace, name, folder string) bool {
+		if _, ok := items[name]; ok {
+			return true
+		}
+		if _, ok := folders[folder]; ok {
+			return true
+		}
+		return false
+	}
 }

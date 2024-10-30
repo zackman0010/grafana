@@ -42,6 +42,7 @@ var ResourceRelations = []string{RelationRead, RelationWrite, RelationCreate, Re
 const (
 	KindOrg        string = "org"
 	KindDashboards string = "dashboards"
+	KindAlertRules string = "alert.rules"
 	KindFolders    string = "folders"
 )
 

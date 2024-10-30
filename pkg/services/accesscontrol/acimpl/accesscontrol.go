@@ -3,6 +3,7 @@ package acimpl
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -10,9 +11,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel"
 
+	"github.com/grafana/authlib/authz"
 	"github.com/grafana/authlib/claims"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/infra/metrics"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
@@ -34,6 +37,16 @@ func ProvideAccessControl(features featuremgmt.FeatureToggles, zclient zanzana.C
 	if features.IsEnabledGlobally(featuremgmt.FlagZanzana) {
 		m = initMetrics()
 	}
+
+	res, _ := zclient.Check(context.TODO(), &identity.StaticRequester{Type: claims.TypeUser, UserUID: "ce2ficppysl4wd"}, authz.CheckRequest{
+		Verb:     utils.VerbGet,
+		Group:    "dashboard.grafana.app",
+		Resource: "dashboards",
+		Name:     "gen-e274d5ad-8314-4e3d-b035-7c236f901af4",
+		Folder:   "gen-5fb43981-c102-4fbe-896f-d21fb5ef494a",
+	})
+
+	fmt.Println("Check result for user 4", res.Allowed)
 
 	return &AccessControl{
 		features,

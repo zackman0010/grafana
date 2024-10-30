@@ -155,6 +155,7 @@ var resourceTranslations = map[string]resourceTranslation{
 			"dashboards:delete":            newScopedMapping(RelationDelete, dashboardGroup, dashboardResource),
 			"dashboards.permissions:read":  newScopedMapping(RelationPermissionsRead, dashboardGroup, dashboardResource),
 			"dashboards.permissions:write": newScopedMapping(RelationPermissionsWrite, dashboardGroup, dashboardResource),
+			"alert.rules:read":             newScopedMapping(RelationRead, "alerting.grafana.app", "rules"),
 		},
 	},
 	KindDashboards: {
@@ -168,6 +169,14 @@ var resourceTranslations = map[string]resourceTranslation{
 			"dashboards:delete":            newMapping(RelationDelete),
 			"dashboards.permissions:read":  newMapping(RelationPermissionsRead),
 			"dashboards.permissions:write": newMapping(RelationPermissionsWrite),
+		},
+	},
+	KindAlertRules: {
+		typ:      TypeResource,
+		group:    "alerting.grafna.app",
+		resource: "rules",
+		mapping: map[string]actionMappig{
+			"alert.rules:read": newMapping(RelationRead),
 		},
 	},
 }

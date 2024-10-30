@@ -10,10 +10,16 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
+	"github.com/grafana/authlib/authz"
 	"github.com/grafana/authlib/claims"
+
+	"github.com/grafana/grafana/pkg/apimachinery/utils"
+	dashboardalpha1 "github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
+	folderalpha1 "github.com/grafana/grafana/pkg/apis/folder/v0alpha1"
 
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
 	"github.com/grafana/grafana/pkg/services/authz/zanzana"
+	authzextv1 "github.com/grafana/grafana/pkg/services/authz/zanzana/proto/v1"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 )
 
@@ -86,16 +92,47 @@ func (dr *DashboardServiceImpl) findDashboardsZanzanaCompare(ctx context.Context
 			"zanana_result_len", len(second.result),
 			"grafana_duration", first.duration,
 			"zanzana_duration", second.duration,
+			"title", query.Title,
+			"missing", findMissing(first.result, second.result),
 		)
+
 	} else {
 		dr.metrics.searchRequestStatusTotal.WithLabelValues("success").Inc()
-		dr.log.Debug("zanzana search is correct", "result_len", len(first.result), "grafana_duration", first.duration, "zanzana_duration", second.duration)
+		dr.log.Info("zanzana search is correct", "grafana_len", len(first.result), "zanzana_len", len(first.result), "grafana_duration", first.duration, "zanzana_duration", second.duration)
 	}
 
 	return first.result, first.err
 }
 
+func findMissing(a, b []dashboards.DashboardSearchProjection) []string {
+	lookup := make(map[string]struct{}, 0)
+	for _, s := range b {
+		lookup[s.UID] = struct{}{}
+	}
+
+	var missing []string
+	for _, s := range a {
+		if _, ok := lookup[s.UID]; !ok {
+			uid := fmt.Sprintf("folder:%s", s.UID)
+			if !s.IsFolder {
+				uid = fmt.Sprintf("dashboard:%s:parent:%s", s.UID, s.FolderUID)
+			}
+			missing = append(missing, uid)
+		}
+	}
+
+	return missing
+
+}
+
 func (dr *DashboardServiceImpl) findDashboardsZanzana(ctx context.Context, query dashboards.FindPersistedDashboardsQuery) ([]dashboards.DashboardSearchProjection, error) {
+	if query.Limit < 1 {
+		query.Limit = 1000
+	}
+
+	if query.Page < 1 {
+		query.Page = 1
+	}
 	findDashboards := dr.getFindDashboardsFn(query)
 	return findDashboards(ctx, query)
 }
@@ -104,19 +141,252 @@ type findDashboardsFn func(ctx context.Context, query dashboards.FindPersistedDa
 
 // getFindDashboardsFn makes a decision which search method should be used
 func (dr *DashboardServiceImpl) getFindDashboardsFn(query dashboards.FindPersistedDashboardsQuery) findDashboardsFn {
-	if query.Limit > 0 && query.Limit < listQueryLimitThreshold && len(query.Title) > 0 {
+	/*
+		if query.Limit > 0 && query.Limit < listQueryLimitThreshold && len(query.Title) > 0 {
+			return dr.findDashboardsZanzanaCheck
+		}
+		if len(query.DashboardUIDs) > 0 || len(query.DashboardIds) > 0 {
+			return dr.findDashboardsZanzanaCheck
+		}
+		if len(query.FolderUIDs) > 0 {
+			return dr.findDashboardsZanzanaCheck
+		}
+		if len(query.Title) <= listQueryLengthThreshold {
+			return dr.findDashboardsZanzanaList
+		}
 		return dr.findDashboardsZanzanaCheck
+	*/
+
+	if false {
+		return dr.findDashboardsZanzanaGeneric
+	} else if false {
+		return dr.findDashboardsZanzanaGenericCheck
+	} else {
+		return dr.findDashboardsZanzanaGenericBatchCheck
 	}
-	if len(query.DashboardUIDs) > 0 || len(query.DashboardIds) > 0 {
-		return dr.findDashboardsZanzanaCheck
+}
+
+func (dr *DashboardServiceImpl) findDashboardsZanzanaGeneric(ctx context.Context, query dashboards.FindPersistedDashboardsQuery) ([]dashboards.DashboardSearchProjection, error) {
+	dashCheck, err := dr.zclient.Compile(ctx, query.SignedInUser, authz.ListRequest{
+		Group:    dashboardalpha1.DashboardResourceInfo.GroupResource().Group,
+		Resource: dashboardalpha1.DashboardResourceInfo.GroupResource().Resource,
+	})
+
+	if err != nil {
+		return nil, err
 	}
-	if len(query.FolderUIDs) > 0 {
-		return dr.findDashboardsZanzanaCheck
+
+	folderCheck, err := dr.zclient.Compile(ctx, query.SignedInUser, authz.ListRequest{
+		Group:    folderalpha1.FolderResourceInfo.GroupResource().Group,
+		Resource: folderalpha1.FolderResourceInfo.GroupResource().Resource,
+	})
+
+	if err != nil {
+		return nil, err
 	}
-	if len(query.Title) <= listQueryLengthThreshold {
-		return dr.findDashboardsZanzanaList
+
+	if query.Page < 1 {
+		query.Page = 1
 	}
-	return dr.findDashboardsZanzanaCheck
+
+	// Remember initial query limit
+	limit := query.Limit
+
+	// Set limit to default to prevent pagination issues
+	query.Limit = defaultQueryLimit
+	query.SkipAccessControlFilter = true
+
+	result := make([]dashboards.DashboardSearchProjection, 0, query.Limit)
+
+outer:
+	for len(result) < int(limit) {
+		findRes, err := dr.dashboardStore.FindDashboards(ctx, &query)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(findRes) == 0 {
+			break outer
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		for _, r := range findRes {
+			if len(result) == int(limit) {
+				break outer
+			}
+
+			if r.IsFolder {
+				if folderCheck("", r.UID, "") {
+					result = append(result, r)
+				}
+			} else {
+				if dashCheck("", r.UID, r.FolderUID) {
+					result = append(result, r)
+				}
+			}
+		}
+
+		query.Page += 1
+	}
+
+	return result, nil
+}
+
+func (dr *DashboardServiceImpl) findDashboardsZanzanaGenericBatchCheck(ctx context.Context, query dashboards.FindPersistedDashboardsQuery) ([]dashboards.DashboardSearchProjection, error) {
+	if query.Page < 1 {
+		query.Page = 1
+	}
+
+	// Remember initial query limit
+	limit := query.Limit
+
+	// Set limit to default to prevent pagination issues
+	query.Limit = defaultQueryLimit
+	query.SkipAccessControlFilter = true
+
+	result := make([]dashboards.DashboardSearchProjection, 0, query.Limit)
+
+outer:
+	for len(result) < int(limit) {
+		findRes, err := dr.dashboardStore.FindDashboards(ctx, &query)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(findRes) == 0 {
+			break outer
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		foldersCheck := &authzextv1.BatchCheckRequest{
+			Verb:     utils.VerbGet,
+			Group:    folderalpha1.FolderResourceInfo.GroupResource().Group,
+			Resource: folderalpha1.FolderResourceInfo.GroupResource().Resource,
+		}
+
+		dashboardsCheck := &authzextv1.BatchCheckRequest{
+			Verb:     utils.VerbGet,
+			Group:    dashboardalpha1.DashboardResourceInfo.GroupResource().Group,
+			Resource: dashboardalpha1.DashboardResourceInfo.GroupResource().Resource,
+		}
+
+		for _, r := range findRes {
+			if r.IsFolder {
+				foldersCheck.Items = append(foldersCheck.Items, &authzextv1.BatchCheckItem{Name: r.UID})
+			} else {
+				dashboardsCheck.Items = append(dashboardsCheck.Items, &authzextv1.BatchCheckItem{Name: r.UID, Folder: r.FolderUID})
+			}
+		}
+
+		foldersRes, err := dr.zclient.BatchCheck(ctx, query.SignedInUser, foldersCheck)
+		if err != nil {
+			return nil, err
+		}
+
+		dashboardsRes, err := dr.zclient.BatchCheck(ctx, query.SignedInUser, dashboardsCheck)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, r := range findRes {
+			if len(result) == int(limit) {
+				break outer
+			}
+
+			if r.IsFolder {
+				if foldersRes.Items[r.UID] {
+					result = append(result, r)
+				}
+			} else {
+				if dashboardsRes.Items[r.UID] {
+					result = append(result, r)
+				}
+			}
+		}
+
+		query.Page += 1
+	}
+
+	return result, nil
+}
+
+func (dr *DashboardServiceImpl) findDashboardsZanzanaGenericCheck(ctx context.Context, query dashboards.FindPersistedDashboardsQuery) ([]dashboards.DashboardSearchProjection, error) {
+	if query.Page < 1 {
+		query.Page = 1
+	}
+
+	// Remember initial query limit
+	limit := query.Limit
+
+	// Set limit to default to prevent pagination issues
+	query.Limit = defaultQueryLimit
+	query.SkipAccessControlFilter = true
+
+	result := make([]dashboards.DashboardSearchProjection, 0, query.Limit)
+
+outer:
+	for len(result) < int(limit) {
+		findRes, err := dr.dashboardStore.FindDashboards(ctx, &query)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(findRes) == 0 {
+			break outer
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		for _, r := range findRes {
+			if len(result) == int(limit) {
+				break outer
+			}
+
+			if r.IsFolder {
+				res, err := dr.zclient.Check(ctx, query.SignedInUser, authz.CheckRequest{
+					Verb:     utils.VerbGet,
+					Group:    folderalpha1.FolderResourceInfo.GroupResource().Group,
+					Resource: folderalpha1.FolderResourceInfo.GroupResource().Resource,
+					Name:     r.UID,
+				})
+				if err != nil {
+					return nil, err
+				}
+
+				if res.Allowed {
+					result = append(result, r)
+				}
+
+			} else {
+				res, err := dr.zclient.Check(ctx, query.SignedInUser, authz.CheckRequest{
+					Verb:     utils.VerbGet,
+					Name:     r.UID,
+					Group:    dashboardalpha1.DashboardResourceInfo.GroupResource().Group,
+					Resource: dashboardalpha1.DashboardResourceInfo.GroupResource().Resource,
+					Folder:   r.FolderUID,
+				})
+				if err != nil {
+					return nil, err
+				}
+
+				if res.Allowed {
+					result = append(result, r)
+				}
+			}
+		}
+
+		query.Page += 1
+	}
+
+	return result, nil
 }
 
 // findDashboardsZanzanaCheck implements "Search, then check" strategy. It first performs search query, then filters out results

@@ -22,6 +22,10 @@ func (nc *NoopClient) Check(ctx context.Context, id claims.AuthInfo, req authz.C
 	return authz.CheckResponse{}, nil
 }
 
+func (nc *NoopClient) BatchCheck(ctx context.Context, id claims.AuthInfo, req *authzextv1.BatchCheckRequest) (*authzextv1.BatchCheckResponse, error) {
+	return nil, nil
+}
+
 func (nc *NoopClient) Compile(ctx context.Context, id claims.AuthInfo, req authz.ListRequest) (authz.ItemChecker, error) {
 	return nil, nil
 }

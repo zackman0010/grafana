@@ -22,6 +22,7 @@ func (s *Server) List(ctx context.Context, r *authzextv1.ListRequest) (*authzext
 
 	return s.listGeneric(ctx, r)
 }
+
 func (s *Server) listTyped(ctx context.Context, r *authzextv1.ListRequest, info common.TypeInfo) (*authzextv1.ListResponse, error) {
 	relation := common.VerbMapping[r.GetVerb()]
 

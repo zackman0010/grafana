@@ -31,7 +31,6 @@ var errStoreNotFound = errors.New("store not found")
 
 type Server struct {
 	authzv1.UnimplementedAuthzServiceServer
-	authzextv1.UnimplementedAuthzExtentionServiceServer
 
 	openfga openfgav1.OpenFGAServiceServer
 

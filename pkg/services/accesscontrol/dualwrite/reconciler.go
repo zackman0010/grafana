@@ -57,7 +57,7 @@ func NewZanzanaReconciler(client zanzana.Client, store db.DB, lock *serverlock.S
 		client:     client,
 		lock:       lock,
 		log:        log.New("zanzana.reconciler"),
-		collectors: collectors,
+		collectors: []TupleCollector{},
 		reconcilers: []resourceReconciler{
 			newResourceReconciler(
 				"team memberships",
@@ -112,7 +112,7 @@ func (r *ZanzanaReconciler) Sync(ctx context.Context) error {
 		}
 	}
 
-	r.reconcile(ctx)
+	// r.reconcile(ctx)
 
 	return nil
 }
@@ -140,13 +140,17 @@ func (r *ZanzanaReconciler) Reconcile(ctx context.Context) error {
 func (r *ZanzanaReconciler) reconcile(ctx context.Context) {
 	run := func(ctx context.Context) {
 		now := time.Now()
+		r.log.Info("Start reconciliation", "ts", now)
 		for _, reconciler := range r.reconcilers {
 			if err := reconciler.reconcile(ctx); err != nil {
 				r.log.Warn("Failed to perform reconciliation for resource", "err", err)
 			}
 		}
-		r.log.Debug("Finished reconciliation", "elapsed", time.Since(now))
+		r.log.Info("Finished reconciliation", "elapsed", time.Since(now))
 	}
+
+	run(ctx)
+	return
 
 	if r.lock == nil {
 		run(ctx)

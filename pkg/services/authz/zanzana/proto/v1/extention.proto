@@ -6,6 +6,8 @@ package authz.extention.v1;
 
 service AuthzExtentionService {
   rpc List(ListRequest) returns (ListResponse);
+
+  rpc BatchCheck(BatchCheckRequest) returns (BatchCheckResponse);
 }
 
 message ListRequest {
@@ -20,4 +22,23 @@ message ListResponse {
   bool all = 1;
   repeated string folders = 2;
   repeated string items = 3;
+}
+
+message BatchCheckRequest {
+  string subject = 1;
+  string verb = 2;
+  string group = 3;
+  string resource = 4;
+  string namespace = 5;
+  repeated BatchCheckItem items = 6;
+}
+
+message BatchCheckItem {
+  string name = 1;
+  string folder = 2;
+}
+
+message BatchCheckResponse {
+  bool all = 1;
+  map<string, bool> items = 2;
 }
