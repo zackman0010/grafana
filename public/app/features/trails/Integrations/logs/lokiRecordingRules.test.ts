@@ -11,7 +11,7 @@ import {
   type ExtractedRecordingRules,
   type RecordingRuleGroup,
   extractRecordingRulesFromRuleGroups,
-} from './logsIntegration';
+} from './lokiRecordingRules';
 
 const mockLokiDS1: DataSourceInstanceSettings<DataSourceJsonData> = {
   access: 'proxy',

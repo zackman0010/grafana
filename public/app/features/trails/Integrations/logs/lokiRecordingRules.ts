@@ -1,8 +1,10 @@
 import { lastValueFrom } from 'rxjs';
 
-import type { DataSourceInstanceSettings, DataSourceJsonData, DataSourceSettings } from '@grafana/data';
+import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/data';
 import { getBackendSrv, getDataSourceSrv, type BackendSrvRequest, type FetchResponse } from '@grafana/runtime';
 import { getLogQueryFromMetricsQuery } from 'app/plugins/datasource/loki/queryUtils';
+
+import { MetricsLogsConnector, type FoundLokiDataSource } from '.';
 
 export type RecordingRuleGroup = {
   name: string;
@@ -16,11 +18,11 @@ export type RecordingRule = {
   labels?: Record<string, string>;
 };
 
-export type FoundLokiDataSource = Pick<DataSourceSettings, 'name' | 'uid'>;
 export type ExtractedRecordingRule = RecordingRule & {
   datasource: FoundLokiDataSource;
   hasMultipleOccurrences?: boolean;
 };
+
 export type ExtractedRecordingRules = {
   [dataSourceUID: string]: ExtractedRecordingRule[];
 };
@@ -166,4 +168,24 @@ export async function fetchAndExtractLokiRecordingRules() {
   );
 
   return extractedRecordingRules;
+}
+
+export class LokiRecordingRulesConnector implements MetricsLogsConnector {
+  private lokiRecordingRules: ExtractedRecordingRules;
+
+  constructor(recordingRules: ExtractedRecordingRules) {
+    this.lokiRecordingRules = recordingRules;
+  }
+
+  async getDataSources(selectedMetric: string): Promise<FoundLokiDataSource[]> {
+    const lokiRecordingRules = await fetchAndExtractLokiRecordingRules();
+    const lokiDataSources = getDataSourcesWithRecordingRulesContainingMetric(selectedMetric, lokiRecordingRules);
+    this.lokiRecordingRules = lokiRecordingRules;
+
+    return lokiDataSources;
+  }
+
+  getLokiQueryExpr(selectedMetric: string, datasourceUid: string): string {
+    return getLokiQueryForRelatedMetric(selectedMetric, datasourceUid, this.lokiRecordingRules);
+  }
 }
