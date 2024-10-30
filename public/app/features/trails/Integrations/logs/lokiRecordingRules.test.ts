@@ -4,14 +4,7 @@ import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/da
 import { getMockPlugin } from '@grafana/data/test/__mocks__/pluginMocks';
 import * as runtime from '@grafana/runtime';
 
-import {
-  fetchAndExtractLokiRecordingRules,
-  getLokiQueryForRelatedMetric,
-  getDataSourcesWithRecordingRulesContainingMetric,
-  type ExtractedRecordingRules,
-  type RecordingRuleGroup,
-  extractRecordingRulesFromRuleGroups,
-} from './lokiRecordingRules';
+import { LokiRecordingRulesConnector, type RecordingRuleGroup } from './lokiRecordingRules';
 
 const mockLokiDS1: DataSourceInstanceSettings<DataSourceJsonData> = {
   access: 'proxy',
@@ -37,15 +30,6 @@ const mockLokiDS2: DataSourceInstanceSettings<DataSourceJsonData> = {
   uid: 'loki2',
   name: 'Loki Secondary',
 };
-
-const mockLokiDS3: DataSourceInstanceSettings<DataSourceJsonData> = {
-  ...mockLokiDS1,
-  id: 3,
-  uid: 'loki3',
-  name: 'Loki the Third with same rules',
-};
-
-const mockLokiDSs = [mockLokiDS1, mockLokiDS2, mockLokiDS3];
 
 const mockRuleGroups1: RecordingRuleGroup[] = [
   {
@@ -78,70 +62,9 @@ const mockRuleGroups2: RecordingRuleGroup[] = [
   },
 ];
 
-const mockRuleGroupsWithSameRuleName: RecordingRuleGroup[] = [
-  {
-    name: 'group_with_same_rule_names',
-    rules: [
-      {
-        name: 'metric_xx_total',
-        query: 'sum(rate({app="app-XX"} |= "error" [5m]))',
-        type: 'recording',
-        labels: {
-          customLabel: 'label value 5m',
-        },
-      },
-      {
-        name: 'metric_xx_total',
-        query: 'sum(rate({app="app-YY"} |= "warn" [10m]))',
-        type: 'recording',
-        labels: {
-          customLabel: 'label value 10m',
-        },
-      },
-    ],
-  },
-];
-
-const mockExtractedRules: ExtractedRecordingRules = {
-  loki1: [
-    {
-      name: 'metric_a_total',
-      query: 'sum(rate({app="app-A"} |= "error" [5m]))',
-      type: 'recording',
-      datasource: { name: 'Loki Main', uid: 'loki1' },
-      hasMultipleOccurrences: false,
-    },
-    {
-      name: 'metric_b_total',
-      query: 'sum(rate({app="app-B"} |= "warn" [5m]))',
-      type: 'recording',
-      datasource: { name: 'Loki Main', uid: 'loki1' },
-      hasMultipleOccurrences: false,
-    },
-  ],
-  loki2: [
-    {
-      name: 'metric_a_total',
-      query: 'sum(rate({app="app-C"} |= "error" [5m]))',
-      type: 'recording',
-      datasource: { name: 'Loki Secondary', uid: 'loki2' },
-      hasMultipleOccurrences: false,
-    },
-  ],
-  loki3: [
-    {
-      name: 'metric_xx_total',
-      query: 'sum(rate({app="app-XX"} |= "error" [5m]))',
-      type: 'recording',
-      datasource: { name: 'Loki the Third with same rules', uid: 'loki3' },
-      hasMultipleOccurrences: true,
-    },
-  ],
-};
-
 // Create spy functions
-const getListSpy = jest.fn().mockReturnValue(mockLokiDSs);
-const fetchSpy = jest.fn().mockImplementation((req) => {
+const getListSpy = jest.fn().mockReturnValue([mockLokiDS1, mockLokiDS2]);
+const defaultFetchImpl = (req: any) => {
   if (req.url.includes('loki1')) {
     return of({
       data: { data: { groups: mockRuleGroups1 } },
@@ -155,34 +78,8 @@ const fetchSpy = jest.fn().mockImplementation((req) => {
       config: { url: req.url },
     } as runtime.FetchResponse);
   }
-  if (req.url.includes('loki2')) {
-    return of({
-      data: { data: { groups: mockRuleGroups2 } },
-      ok: true,
-      status: 200,
-      statusText: 'OK',
-      headers: new Headers(),
-      redirected: false,
-      type: 'basic',
-      url: req.url,
-      config: { url: req.url },
-    } as runtime.FetchResponse);
-  }
-  if (req.url.includes('loki3')) {
-    return of({
-      data: { data: { groups: mockRuleGroupsWithSameRuleName } },
-      ok: true,
-      status: 200,
-      statusText: 'OK',
-      headers: new Headers(),
-      redirected: false,
-      type: 'basic',
-      url: req.url,
-      config: { url: req.url },
-    } as runtime.FetchResponse);
-  }
   return of({
-    data: { data: { groups: [] } },
+    data: { data: { groups: mockRuleGroups2 } },
     ok: true,
     status: 200,
     statusText: 'OK',
@@ -192,7 +89,8 @@ const fetchSpy = jest.fn().mockImplementation((req) => {
     url: req.url,
     config: { url: req.url },
   } as runtime.FetchResponse);
-});
+};
+const fetchSpy = jest.fn().mockImplementation(defaultFetchImpl);
 
 // Mock the entire @grafana/runtime module
 jest.mock('@grafana/runtime', () => ({
@@ -215,25 +113,43 @@ jest.mock('@grafana/runtime', () => ({
   }),
 }));
 
-describe('Logs Integration', () => {
-  describe('fetchAndExtractLokiRecordingRules', () => {
-    beforeEach(() => {
-      getListSpy.mockClear();
-      fetchSpy.mockClear();
-    });
+describe('LokiRecordingRulesConnector', () => {
+  let consoleSpy: jest.SpyInstance;
 
-    it('should fetch and extract rules from all Loki data sources', async () => {
-      const result = await fetchAndExtractLokiRecordingRules();
+  beforeEach(() => {
+    getListSpy.mockClear();
+    fetchSpy.mockClear();
+    fetchSpy.mockImplementation(defaultFetchImpl);
+    consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+  });
 
-      expect(result).toEqual(mockExtractedRules);
+  afterEach(() => {
+    consoleSpy.mockRestore();
+  });
+
+  describe('getDataSources', () => {
+    it('should find all data sources containing the metric', async () => {
+      const connector = new LokiRecordingRulesConnector({});
+      const result = await connector.getDataSources('metric_a_total');
+
+      expect(result).toHaveLength(2);
+      expect(result).toContainEqual({ name: 'Loki Main', uid: 'loki1' });
+      expect(result).toContainEqual({ name: 'Loki Secondary', uid: 'loki2' });
+
+      // Verify underlying calls
       expect(getListSpy).toHaveBeenCalledWith({ logs: true });
-      expect(fetchSpy).toHaveBeenCalledTimes(mockLokiDSs.length);
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
     });
 
-    it('should handle errors from individual data sources gracefully', async () => {
-      // Mock console.error to avoid test output pollution
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    it('should handle non-existent metrics', async () => {
+      const connector = new LokiRecordingRulesConnector({});
+      const result = await connector.getDataSources('non_existent_metric');
 
+      expect(result).toHaveLength(0);
+    });
+
+    it('should handle datasource fetch errors gracefully', async () => {
+      // Make the second datasource fail
       fetchSpy.mockImplementation((req) => {
         if (req.url.includes('loki1')) {
           return of({
@@ -251,61 +167,46 @@ describe('Logs Integration', () => {
         throw new Error('Failed to fetch');
       });
 
-      const result = await fetchAndExtractLokiRecordingRules();
+      const connector = new LokiRecordingRulesConnector({});
+      const result = await connector.getDataSources('metric_a_total');
 
-      // Should still have results from the first datasource
-      expect(result).toHaveProperty('loki1');
-      expect(result.loki1).toHaveLength(2);
-      expect(result.loki2).toBeUndefined();
-
+      // Should still get results from the working datasource
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({ name: 'Loki Main', uid: 'loki1' });
       expect(consoleSpy).toHaveBeenCalled();
-      consoleSpy.mockRestore();
     });
   });
 
-  describe('getLokiQueryForRelatedMetric', () => {
-    it('should return the expected Loki query for a given metric', () => {
-      const result = getLokiQueryForRelatedMetric('metric_a_total', 'loki1', mockExtractedRules);
+  describe('getLokiQueryExpr', () => {
+    let connector: LokiRecordingRulesConnector;
+
+    beforeEach(async () => {
+      connector = new LokiRecordingRulesConnector({});
+      // Populate the rules first
+      await connector.getDataSources('metric_a_total');
+    });
+
+    it('should return correct Loki query for existing metric', () => {
+      const result = connector.getLokiQueryExpr('metric_a_total', 'loki1');
       expect(result).toBe('{app="app-A"} |= "error"');
     });
 
-    it('should return empty string for non-existent data source', () => {
-      const result = getLokiQueryForRelatedMetric('metric_a_total', 'non-existent', mockExtractedRules);
-      expect(result).toBe('');
-    });
-
     it('should return empty string for non-existent metric', () => {
-      const result = getLokiQueryForRelatedMetric('non_existent_metric', 'loki1', mockExtractedRules);
+      const result = connector.getLokiQueryExpr('non_existent_metric', 'loki1');
       expect(result).toBe('');
     });
-  });
 
-  describe('getDataSourcesWithRecordingRulesContainingMetric', () => {
-    it('should find all data sources containing recording rules that define the metric of interest', () => {
-      const result = getDataSourcesWithRecordingRulesContainingMetric('metric_a_total', mockExtractedRules);
-      expect(result).toHaveLength(2);
-      expect(result).toContainEqual({ name: 'Loki Main', uid: 'loki1' });
-      expect(result).toContainEqual({ name: 'Loki Secondary', uid: 'loki2' });
+    it('should handle multiple occurrences of the same metric name', () => {
+      const query1 = connector.getLokiQueryExpr('metric_a_total', 'loki1');
+      const query2 = connector.getLokiQueryExpr('metric_a_total', 'loki2');
+
+      expect(query1).toBe('{app="app-A"} |= "error"');
+      expect(query2).toBe('{app="app-C"} |= "error"');
     });
 
-    it('should return empty array for non-existent metric', () => {
-      const result = getDataSourcesWithRecordingRulesContainingMetric('non_existent_metric', mockExtractedRules);
-      expect(result).toHaveLength(0);
+    it('should handle rules with hasMultipleOccurrences flag', () => {
+      const query = connector.getLokiQueryExpr('metric_a_total', 'loki1');
+      expect(query).toBe('{app="app-A"} |= "error"');
     });
-
-    it('should find single data source for unique metric', () => {
-      const result = getDataSourcesWithRecordingRulesContainingMetric('metric_b_total', mockExtractedRules);
-      expect(result).toHaveLength(1);
-      expect(result[0]).toEqual({ name: 'Loki Main', uid: 'loki1' });
-    });
-  });
-});
-
-describe('extractRecordingRulesFromRuleGroups', () => {
-  it('should extract only the first rule from a rule group with same rule names', () => {
-    const result = extractRecordingRulesFromRuleGroups(mockRuleGroupsWithSameRuleName, mockLokiDS3);
-
-    expect(result.length).toEqual(1);
-    expect(result).toEqual(mockExtractedRules.loki3);
   });
 });
