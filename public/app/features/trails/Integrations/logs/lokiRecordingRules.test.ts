@@ -4,7 +4,9 @@ import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/da
 import { getMockPlugin } from '@grafana/data/test/__mocks__/pluginMocks';
 import * as runtime from '@grafana/runtime';
 
-import { LokiRecordingRulesConnector, type RecordingRuleGroup } from './lokiRecordingRules';
+import { lokiRecordingRulesConnector, type RecordingRuleGroup } from './lokiRecordingRules';
+
+import { MetricsLogsConnector } from '.';
 
 const mockLokiDS1: DataSourceInstanceSettings<DataSourceJsonData> = {
   access: 'proxy',
@@ -129,7 +131,7 @@ describe('LokiRecordingRulesConnector', () => {
 
   describe('getDataSources', () => {
     it('should find all data sources containing the metric', async () => {
-      const connector = new LokiRecordingRulesConnector({});
+      const connector = lokiRecordingRulesConnector;
       const result = await connector.getDataSources('metric_a_total');
 
       expect(result).toHaveLength(2);
@@ -142,7 +144,7 @@ describe('LokiRecordingRulesConnector', () => {
     });
 
     it('should handle non-existent metrics', async () => {
-      const connector = new LokiRecordingRulesConnector({});
+      const connector = lokiRecordingRulesConnector;
       const result = await connector.getDataSources('non_existent_metric');
 
       expect(result).toHaveLength(0);
@@ -167,7 +169,7 @@ describe('LokiRecordingRulesConnector', () => {
         throw new Error('Failed to fetch');
       });
 
-      const connector = new LokiRecordingRulesConnector({});
+      const connector = lokiRecordingRulesConnector;
       const result = await connector.getDataSources('metric_a_total');
 
       // Should still get results from the working datasource
@@ -178,10 +180,10 @@ describe('LokiRecordingRulesConnector', () => {
   });
 
   describe('getLokiQueryExpr', () => {
-    let connector: LokiRecordingRulesConnector;
+    let connector: MetricsLogsConnector;
 
     beforeEach(async () => {
-      connector = new LokiRecordingRulesConnector({});
+      connector = lokiRecordingRulesConnector;
       // Populate the rules first
       await connector.getDataSources('metric_a_total');
     });

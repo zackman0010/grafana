@@ -4,7 +4,7 @@ import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/da
 import { getBackendSrv, getDataSourceSrv, type BackendSrvRequest, type FetchResponse } from '@grafana/runtime';
 import { getLogQueryFromMetricsQuery } from 'app/plugins/datasource/loki/queryUtils';
 
-import { MetricsLogsConnector, type FoundLokiDataSource } from '.';
+import { createMetricsLogsConnector, type FoundLokiDataSource } from '.';
 
 export type RecordingRuleGroup = {
   name: string;
@@ -170,22 +170,21 @@ export async function fetchAndExtractLokiRecordingRules() {
   return extractedRecordingRules;
 }
 
-export class LokiRecordingRulesConnector implements MetricsLogsConnector {
-  private lokiRecordingRules: ExtractedRecordingRules;
+const createLokiRecordingRulesConnector = () => {
+  let lokiRecordingRules: ExtractedRecordingRules = {};
 
-  constructor(recordingRules: ExtractedRecordingRules) {
-    this.lokiRecordingRules = recordingRules;
-  }
+  return createMetricsLogsConnector({
+    async getDataSources(selectedMetric: string): Promise<FoundLokiDataSource[]> {
+      lokiRecordingRules = await fetchAndExtractLokiRecordingRules();
+      const lokiDataSources = getDataSourcesWithRecordingRulesContainingMetric(selectedMetric, lokiRecordingRules);
 
-  async getDataSources(selectedMetric: string): Promise<FoundLokiDataSource[]> {
-    const lokiRecordingRules = await fetchAndExtractLokiRecordingRules();
-    const lokiDataSources = getDataSourcesWithRecordingRulesContainingMetric(selectedMetric, lokiRecordingRules);
-    this.lokiRecordingRules = lokiRecordingRules;
+      return lokiDataSources;
+    },
 
-    return lokiDataSources;
-  }
+    getLokiQueryExpr(selectedMetric: string, datasourceUid: string): string {
+      return getLokiQueryForRelatedMetric(selectedMetric, datasourceUid, lokiRecordingRules);
+    },
+  });
+};
 
-  getLokiQueryExpr(selectedMetric: string, datasourceUid: string): string {
-    return getLokiQueryForRelatedMetric(selectedMetric, datasourceUid, this.lokiRecordingRules);
-  }
-}
+export const lokiRecordingRulesConnector = createLokiRecordingRulesConnector();
