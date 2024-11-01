@@ -502,3 +502,5 @@ replace github.com/hashicorp/go-hclog => github.com/hashicorp/go-hclog v0.16.1
 replace github.com/prometheus/alertmanager => github.com/grafana/prometheus-alertmanager v0.25.1-0.20240208102907-e82436ce63e6
 
 exclude github.com/mattn/go-sqlite3 v2.0.3+incompatible
+
+replace github.com/microsoft/go-mssqldb => github.com/grafana/go-mssqldb v0.0.0-20241101172408-dd2bf12ef044
