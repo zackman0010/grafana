@@ -17,6 +17,7 @@ export const getPluginsHandler = (pluginsArray: PluginMeta[] = plugins) => {
       path: baseUrl,
       preload: true,
       version: info.version,
+      logoSmall: info.logos.small,
       angular: angular ?? { detected: false, hideDeprecation: false },
       loadingStrategy: PluginLoadingStrategy.script,
       extensions: {

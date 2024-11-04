@@ -41,6 +41,7 @@ export type AppPluginConfig = {
   id: string;
   path: string;
   version: string;
+  logoSmall: string;
   preload: boolean;
   angular: AngularMeta;
   loadingStrategy: PluginLoadingStrategy;

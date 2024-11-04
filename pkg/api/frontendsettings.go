@@ -564,6 +564,7 @@ func (hs *HTTPServer) newAppDTO(ctx context.Context, plugin pluginstore.Plugin, 
 	app := &plugins.AppDTO{
 		ID:              plugin.ID,
 		Version:         plugin.Info.Version,
+		LogoSmall:       plugin.Info.Logos.Small,
 		Path:            plugin.Module,
 		Preload:         false,
 		Angular:         plugin.Angular,

@@ -2,8 +2,8 @@ import { css } from '@emotion/css';
 import { useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-import { DataSourceInstanceSettings } from '@grafana/data';
-import { config } from '@grafana/runtime';
+import { DataSourceInstanceSettings, PanelPluginMeta } from '@grafana/data';
+import { config, AppPluginConfig } from '@grafana/runtime';
 import { CellProps, Stack, Text, Icon, useStyles2 } from '@grafana/ui';
 import { getSvgSize } from '@grafana/ui/src/components/Icon/utils';
 import { Trans } from 'app/core/internationalization';
@@ -205,6 +205,9 @@ function BasicResourceInfo({ data }: { data: ResourceTableItem }) {
 function ResourceIcon({ resource }: { resource: ResourceTableItem }) {
   const styles = useStyles2(getIconStyles);
   const datasource = useDatasource(resource.type === 'DATASOURCE' ? resource.refId : undefined);
+  const panelPlugin = usePanelPlugin(resource.type === 'PLUGIN' ? resource.refId : undefined);
+  const appPlugin = useAppPlugin(resource.type === 'PLUGIN' ? resource.refId : undefined);
+  const datasourcePlugin = useDatasourcePlugin(resource.type === 'PLUGIN' ? resource.refId : undefined);
 
   switch (resource.type) {
     case 'DASHBOARD':
@@ -230,7 +233,15 @@ function ResourceIcon({ resource }: { resource: ResourceTableItem }) {
     case 'ALERT_RULE':
       return <Icon size="xl" name="bell" />;
     case 'PLUGIN':
-      return <Icon size="xl" name="plug" />; // TODO: how to obtain the logo?
+      // Obtain plugin logo based on type
+      if (panelPlugin?.info?.logos?.small) {
+        return <img className={styles.icon} src={panelPlugin.info.logos.small} alt="" />;
+      } else if (appPlugin?.logoSmall) {
+        return <img className={styles.icon} src={appPlugin.logoSmall} alt="" />;
+      } else if (datasourcePlugin?.meta?.info?.logos?.small) {
+        return <img className={styles.icon} src={datasourcePlugin.meta.info.logos.small} alt="" />;
+      }
+      return <Icon size="xl" name="plug" />;
     default:
       return undefined;
   }
@@ -258,4 +269,40 @@ function useDatasource(datasourceUID: string | undefined): DataSourceInstanceSet
   }, [datasourceUID]);
 
   return datasource;
+}
+
+function usePanelPlugin(pluginID: string | undefined): PanelPluginMeta | undefined {
+  const plugin = useMemo(() => {
+    if (!pluginID) {
+      return undefined;
+    }
+
+    return config.panels[pluginID] || Object.values(config.panels).find((pn) => pn.id === pluginID);
+  }, [pluginID]);
+
+  return plugin;
+}
+
+function useAppPlugin(pluginID: string | undefined): AppPluginConfig | undefined {
+  const plugin = useMemo(() => {
+    if (!pluginID) {
+      return undefined;
+    }
+
+    return config.apps[pluginID] || Object.values(config.apps).find((app) => app.id === pluginID);
+  }, [pluginID]);
+
+  return plugin;
+}
+
+function useDatasourcePlugin(pluginID: string | undefined): DataSourceInstanceSettings | undefined {
+  const plugin = useMemo(() => {
+    if (!pluginID) {
+      return undefined;
+    }
+
+    return config.datasources[pluginID] || Object.values(config.datasources).find((ds) => ds.type === pluginID);
+  }, [pluginID]);
+
+  return plugin;
 }

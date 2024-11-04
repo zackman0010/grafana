@@ -322,6 +322,7 @@ type AppDTO struct {
 	ID              string          `json:"id"`
 	Path            string          `json:"path"`
 	Version         string          `json:"version"`
+	LogoSmall       string          `json:"logoSmall"`
 	Preload         bool            `json:"preload"`
 	Angular         AngularMeta     `json:"angular"`
 	LoadingStrategy LoadingStrategy `json:"loadingStrategy"`
