@@ -18,7 +18,7 @@ import {
 import { Stack, LinkButton } from '@grafana/ui';
 import { Trans } from 'app/core/internationalization';
 
-import { MetricsLogsConnector } from '../Integrations/logs';
+import { MetricsLogsConnector } from '../Integrations/logs/base';
 import { lokiRecordingRulesConnector } from '../Integrations/logs/lokiRecordingRules';
 import { reportExploreMetrics } from '../interactions';
 import { VAR_LOGS_DATASOURCE, VAR_LOGS_DATASOURCE_EXPR, VAR_METRIC_EXPR } from '../shared';

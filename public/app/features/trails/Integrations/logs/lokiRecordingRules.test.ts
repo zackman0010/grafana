@@ -4,9 +4,8 @@ import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/da
 import { getMockPlugin } from '@grafana/data/test/__mocks__/pluginMocks';
 import * as runtime from '@grafana/runtime';
 
+import { MetricsLogsConnector } from './base';
 import { lokiRecordingRulesConnector, type RecordingRuleGroup } from './lokiRecordingRules';
-
-import { MetricsLogsConnector } from '.';
 
 const mockLokiDS1: DataSourceInstanceSettings<DataSourceJsonData> = {
   access: 'proxy',

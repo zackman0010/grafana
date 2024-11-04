@@ -4,7 +4,7 @@ import type { DataSourceInstanceSettings, DataSourceJsonData } from '@grafana/da
 import { getBackendSrv, getDataSourceSrv, type BackendSrvRequest, type FetchResponse } from '@grafana/runtime';
 import { getLogQueryFromMetricsQuery } from 'app/plugins/datasource/loki/queryUtils';
 
-import { createMetricsLogsConnector, type FoundLokiDataSource } from '.';
+import { createMetricsLogsConnector, type FoundLokiDataSource } from './base';
 
 export type RecordingRuleGroup = {
   name: string;
