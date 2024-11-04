@@ -244,10 +244,22 @@ export function useAllAlertmanagerAbilities(): Abilities<AlertmanagerAction> {
     [AlertmanagerAction.UpdateNotificationTemplate]: toAbility(hasConfigurationAPI, notificationsPermissions.update),
     [AlertmanagerAction.DeleteNotificationTemplate]: toAbility(hasConfigurationAPI, notificationsPermissions.delete),
     // -- notification policies --
-    [AlertmanagerAction.CreateNotificationPolicy]: toAbility(hasConfigurationAPI, notificationsPermissions.create),
-    [AlertmanagerAction.ViewNotificationPolicyTree]: toAbility(AlwaysSupported, notificationsPermissions.read),
-    [AlertmanagerAction.UpdateNotificationPolicyTree]: toAbility(hasConfigurationAPI, notificationsPermissions.update),
-    [AlertmanagerAction.DeleteNotificationPolicy]: toAbility(hasConfigurationAPI, notificationsPermissions.delete),
+    [AlertmanagerAction.CreateNotificationPolicy]: toAbility(
+      hasConfigurationAPI,
+      AccessControlAction.AlertingRoutingTreeWrite
+    ),
+    [AlertmanagerAction.ViewNotificationPolicyTree]: toAbility(
+      AlwaysSupported,
+      AccessControlAction.AlertingRoutingTreeRead
+    ),
+    [AlertmanagerAction.UpdateNotificationPolicyTree]: toAbility(
+      hasConfigurationAPI,
+      AccessControlAction.AlertingRoutingTreeWrite
+    ),
+    [AlertmanagerAction.DeleteNotificationPolicy]: toAbility(
+      hasConfigurationAPI,
+      AccessControlAction.AlertingRoutingTreeDelete
+    ),
     [AlertmanagerAction.ExportNotificationPolicies]: toAbility(
       isGrafanaFlavoredAlertmanager,
       notificationsPermissions.read

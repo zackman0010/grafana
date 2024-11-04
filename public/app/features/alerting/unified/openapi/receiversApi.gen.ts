@@ -278,8 +278,10 @@ export type ComGithubGrafanaGrafanaPkgApimachineryApisCommonV0Alpha1Unstructured
   [key: string]: any;
 };
 export type ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1Integration = {
-  SecureFields?: ComGithubGrafanaGrafanaPkgApimachineryApisCommonV0Alpha1Unstructured;
   disableResolveMessage?: boolean;
+  secureFields?: {
+    [key: string]: boolean;
+  };
   settings: ComGithubGrafanaGrafanaPkgApimachineryApisCommonV0Alpha1Unstructured;
   type: string;
   uid?: string;

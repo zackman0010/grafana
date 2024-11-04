@@ -1,65 +1,66 @@
 import memoize from 'micro-memoize';
 
+import { BaseAlertmanagerArgs } from 'app/features/alerting/unified/types/hooks';
 import { MatcherOperator, Route } from 'app/plugins/datasource/alertmanager/types';
 
 import { alertmanagerApi } from '../../api/alertmanagerApi';
 import {
-  ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RouteSpec,
-  ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1SubRoute,
+  ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1Route,
+  ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RoutingTreeSpec,
   IoK8SApimachineryPkgApisMetaV1ObjectMeta,
   generatedRoutesApi,
 } from '../../openapi/routesApi.gen';
-import { GRAFANA_RULES_SOURCE_NAME } from '../../utils/datasource';
-import { PROVENANCE_ANNOTATION, PROVENANCE_NONE } from '../../utils/k8s/constants';
-import { shouldUseK8sApi } from '../../utils/k8s/utils';
-import { getK8sNamespace } from '../mute-timings/util';
+import { K8sAnnotations, PROVENANCE_NONE } from '../../utils/k8s/constants';
+import { getAnnotation, getK8sNamespace, shouldUseK8sApi } from '../../utils/k8s/utils';
+const k8sRoutesToRoutesMemoized = memoize(k8sRoutesToRoutes, { maxSize: 1 });
 
-const k8sRouteToRouteMemoized = memoize(k8sRouteToRoute, { maxSize: 1 });
+const { useListNamespacedRoutingTreeQuery, useCreateNamespacedRoutingTreeMutation } = generatedRoutesApi;
 
-export const useNotificationPolicyRoute = (selectedAlertmanager: string | undefined) => {
-  const { useListNamespacedRouteQuery } = generatedRoutesApi;
-  const { useGetAlertmanagerConfigurationQuery } = alertmanagerApi;
+const {
+  useUpdateAlertmanagerConfigurationMutation,
+  useLazyGetAlertmanagerConfigurationQuery,
+  useGetAlertmanagerConfigurationQuery,
+} = alertmanagerApi;
 
-  const k8sApiSupported = shouldUseK8sApi(selectedAlertmanager);
+export const useNotificationPolicyRoute = ({ alertmanager }: BaseAlertmanagerArgs) => {
+  const k8sApiSupported = shouldUseK8sApi(alertmanager);
 
-  if (!selectedAlertmanager) {
-    throw new Error('selectedAlertmanager is required');
-  }
-
-  const k8sRouteQuery = useListNamespacedRouteQuery(
+  const k8sRouteQuery = useListNamespacedRoutingTreeQuery(
     { namespace: getK8sNamespace() },
     {
-      skip: !k8sApiSupported || selectedAlertmanager !== GRAFANA_RULES_SOURCE_NAME,
-      selectFromResult: (result) => ({
-        ...result,
-        currentData: result.currentData
-          ? k8sRouteToRouteMemoized(result.currentData.spec, result.currentData.metadata)
-          : undefined,
-        data: result.data ? k8sRouteToRoute(result.data.spec, result.data.metadata) : undefined,
-      }),
+      skip: !k8sApiSupported,
+      selectFromResult: (result) => {
+        console.log(result.data);
+        return {
+          ...result,
+          currentData: result.currentData
+            ? k8sRoutesToRoutesMemoized(result.currentData.items, result.currentData.metadata)
+            : undefined,
+          data: result.data ? k8sRoutesToRoutes(result.data.items, result.data.metadata) : undefined,
+        };
+      },
     }
   );
 
-  const amConfigQuery = useGetAlertmanagerConfigurationQuery(selectedAlertmanager, {
-    skip: !k8sApiSupported,
-    selectFromResult: (result) => ({
-      ...result,
-      currentData: result.currentData ? result.currentData.alertmanager_config.route : undefined,
-      data: result.data ? result.data.alertmanager_config.route : undefined,
-    }),
+  const amConfigQuery = useGetAlertmanagerConfigurationQuery(alertmanager, {
+    skip: k8sApiSupported,
+    selectFromResult: (result) => {
+      return {
+        ...result,
+        currentData: result.currentData ? result.currentData.alertmanager_config.route : undefined,
+        data: result.data ? result.data.alertmanager_config.route : undefined,
+      };
+    },
   });
 
   return k8sApiSupported ? k8sRouteQuery : amConfigQuery;
 };
 
 export function useUpdateNotificationPolicyRoute(selectedAlertmanager: string) {
-  const { useCreateNamespacedRouteMutation } = generatedRoutesApi;
-  const { useUpdateAlertmanagerConfigurationMutation, useLazyGetAlertmanagerConfigurationQuery } = alertmanagerApi;
-
   const [getAlertmanagerConfiguration] = useLazyGetAlertmanagerConfigurationQuery();
   const [updateAlertmanagerConfiguration] = useUpdateAlertmanagerConfigurationMutation();
 
-  const [createNamespacedRoute] = useCreateNamespacedRouteMutation();
+  const [createNamespacedRoute] = useCreateNamespacedRoutingTreeMutation();
 
   const k8sApiSupported = shouldUseK8sApi(selectedAlertmanager);
 
@@ -67,7 +68,7 @@ export function useUpdateNotificationPolicyRoute(selectedAlertmanager: string) {
     const namespace = getK8sNamespace();
 
     // Convert Route to K8s compatible format
-    const k8sRoute: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RouteSpec = {
+    const k8sRoute: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RoutingTreeSpec = {
       ...newRoute,
       receiver: newRoute.receiver ?? '', // TODO Types are incorrect. Undefined should be allowed.
       routes: newRoute.routes?.map(routeToK8sSubRoute),
@@ -113,27 +114,43 @@ export function useUpdateNotificationPolicyRoute(selectedAlertmanager: string) {
   return k8sApiSupported ? updateUsingK8sApi : updateUsingConfigFileApi;
 }
 
-function k8sRouteToRoute(
-  route: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RouteSpec,
+function k8sRoutesToRoutes(
+  routes: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1RoutingTreeSpec,
   metadata: IoK8SApimachineryPkgApisMetaV1ObjectMeta
 ): Route {
+  debugger;
+  console.log(routes);
+  const provenance = getAnnotation({ metadata }, K8sAnnotations.Provenance) || PROVENANCE_NONE;
+  return routes?.map(k8sSubRouteToRoute);
   return {
     ...route,
-    provenance: metadata.annotations?.[PROVENANCE_ANNOTATION] ?? PROVENANCE_NONE,
+    provenance,
     routes: route.routes?.map(k8sSubRouteToRoute),
   };
 }
 
-function k8sSubRouteToRoute(route: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1SubRoute): Route {
+/** Helper to provide type safety for matcher operators from API */
+function isValidMatcherOperator(type: string): type is MatcherOperator {
+  return type in MatcherOperator;
+}
+
+function k8sSubRouteToRoute(route: ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1Route): Route {
+  console.log(route);
+  debugger;
   return {
     ...route,
     matchers: undefined,
-    object_matchers: route.matchers?.map((m) => [m.label, m.type as MatcherOperator, m.value]),
+    object_matchers: route.matchers?.map(({ label, type, value }) => {
+      if (!isValidMatcherOperator(type)) {
+        throw new Error(`Invalid matcher operator from API: ${type}`);
+      }
+      return [label, type, value];
+    }),
     routes: route.routes?.map(k8sSubRouteToRoute),
   };
 }
 
-function routeToK8sSubRoute(route: Route): ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1SubRoute {
+function routeToK8sSubRoute(route: Route): ComGithubGrafanaGrafanaPkgApisAlertingNotificationsV0Alpha1Route {
   return {
     ...route,
     receiver: route.receiver ?? undefined,

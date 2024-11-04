@@ -6,7 +6,9 @@ import { GrafanaTheme2, UrlQueryMap } from '@grafana/data';
 import { Alert, LoadingPlaceholder, Stack, Tab, TabContent, TabsBar, useStyles2, withErrorBoundary } from '@grafana/ui';
 import { useAppNotification } from 'app/core/copy/appNotification';
 import { useQueryParams } from 'app/core/hooks/useQueryParams';
-import { PROVENANCE_NONE, useMuteTimings } from 'app/features/alerting/unified/components/mute-timings/useMuteTimings';
+import { useContactPointsWithStatus } from 'app/features/alerting/unified/components/contact-points/useContactPoints';
+import { useMuteTimings } from 'app/features/alerting/unified/components/mute-timings/useMuteTimings';
+import { PROVENANCE_NONE } from 'app/features/alerting/unified/utils/k8s/constants';
 import { ObjectMatcher, Receiver, Route, RouteWithID } from 'app/plugins/datasource/alertmanager/types';
 
 import { useCleanup } from '../../../core/hooks/useCleanup';
@@ -72,23 +74,12 @@ const AmRoutes = () => {
 
   const contactPointsState = useGetContactPointsState(selectedAlertmanager ?? '');
 
-  // const {
-  //   currentData: result,
-  //   isLoading: resultLoading,
-  //   error: resultError,
-  // } = useAlertmanagerConfig(selectedAlertmanager, {
-  //   refetchOnFocus: true,
-  //   refetchOnReconnect: true,
-  // });
-
-  // const config = result?.alertmanager_config;
-
   const {
     currentData: result,
     isLoading: resultLoading,
     error: resultError,
     refetch: refetchNotificationPolicyRoute,
-  } = useNotificationPolicyRoute(selectedAlertmanager);
+  } = useNotificationPolicyRoute({ alertmanager: selectedAlertmanager ?? '' });
 
   const updateNotificationPolicyRoute = useUpdateNotificationPolicyRoute(selectedAlertmanager ?? '');
 
@@ -97,8 +88,11 @@ const AmRoutes = () => {
     { skip: !selectedAlertmanager }
   );
 
-  // TODO Receivers should be fetched separately from apropriate k8s endpoint
-  const receivers: Receiver[] = [];
+  const { contactPoints: receivers } = useContactPointsWithStatus({
+    alertmanager: selectedAlertmanager ?? '',
+    fetchPolicies: false,
+    fetchStatuses: true,
+  });
 
   const rootRoute = useMemo(() => {
     if (result) {

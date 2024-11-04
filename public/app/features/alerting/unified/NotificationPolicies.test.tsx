@@ -147,6 +147,9 @@ describe('NotificationPolicies', () => {
       AccessControlAction.AlertingNotificationsWrite,
       AccessControlAction.AlertingNotificationsExternalRead,
       AccessControlAction.AlertingNotificationsExternalWrite,
+      AccessControlAction.AlertingRoutingTreeRead,
+      AccessControlAction.AlertingRoutingTreeWrite,
+      AccessControlAction.AlertingRoutingTreeDelete,
     ]);
   });
 
