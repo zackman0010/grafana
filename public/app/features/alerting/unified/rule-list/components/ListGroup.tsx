@@ -13,14 +13,14 @@ interface GroupProps extends PropsWithChildren {
   metaRight?: ReactNode;
   actions?: ReactNode;
   isOpen?: boolean;
-  onToggle: () => void;
+  onToggle?: () => void;
 }
 
-export const Group = ({
+export const ListGroup = ({
   title,
   description,
   onToggle,
-  isOpen = false,
+  isOpen = true,
   metaRight = null,
   actions = null,
   children,
@@ -51,11 +51,13 @@ const GroupHeader = (props: GroupProps) => {
     <div className={styles.headerWrapper}>
       <Stack direction="row" alignItems="center" gap={1}>
         <Stack alignItems="center" gap={1}>
-          <IconButton
-            name={isOpen ? 'angle-right' : 'angle-down'}
-            onClick={onToggle}
-            aria-label={t('common.collapse', 'Collapse')}
-          />
+          {onToggle && (
+            <IconButton
+              name={isOpen ? 'angle-right' : 'angle-down'}
+              onClick={onToggle}
+              aria-label={t('common.collapse', 'Collapse')}
+            />
+          )}
           {typeof title === 'string' ? (
             <Text truncate variant="body">
               {title}

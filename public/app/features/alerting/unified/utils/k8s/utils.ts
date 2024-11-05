@@ -8,6 +8,8 @@ import { K8sAnnotations, PROVENANCE_NONE } from 'app/features/alerting/unified/u
  */
 export const getK8sNamespace = () => config.namespace;
 
+export const isK8sApiEnabled = () => Boolean(config.featureToggles.alertingApiServer);
+
 /**
  * Should we call the kubernetes-style API for managing alertmanager entities?
  *
@@ -15,7 +17,7 @@ export const getK8sNamespace = () => config.namespace;
  * and the `alertingApiServer` feature toggle being enabled
  */
 export const shouldUseK8sApi = (alertmanager?: string) => {
-  const featureToggleEnabled = config.featureToggles.alertingApiServer;
+  const featureToggleEnabled = isK8sApiEnabled();
   return featureToggleEnabled && alertmanager === GRAFANA_RULES_SOURCE_NAME;
 };
 
@@ -29,6 +31,9 @@ type EntityToCheck = {
  */
 export const isK8sEntityProvisioned = (k8sEntity: EntityToCheck) =>
   getAnnotation(k8sEntity, K8sAnnotations.Provenance) !== PROVENANCE_NONE;
+
+export const isProvisionedProvenance = (provenance: string): boolean =>
+  Boolean(provenance) ? provenance !== PROVENANCE_NONE : false;
 
 export const ANNOTATION_PREFIX_ACCESS = 'grafana.com/access/';
 

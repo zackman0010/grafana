@@ -99,6 +99,17 @@ export interface GrafanaManagedContactPoint {
   grafana_managed_receiver_configs?: GrafanaManagedReceiverConfig[];
 }
 
+// this type is only used by the /notifications/receivers endpoint
+export type GrafanaManagedNotificationsReceiverResponse = {
+  name: string;
+  grafana_managed_receiver_configs?: Array<
+    Pick<
+      GrafanaManagedReceiverConfig,
+      'uid' | 'name' | 'type' | 'disableResolveMessage' | 'secureFields' | 'provenance'
+    >
+  >;
+};
+
 export interface AlertmanagerReceiver {
   name: string;
 

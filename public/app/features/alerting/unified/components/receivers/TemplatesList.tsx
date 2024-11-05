@@ -1,14 +1,21 @@
 import { isArray } from 'lodash';
 import pluralize from 'pluralize';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Counter, Stack, Tooltip } from '@grafana/ui';
+import { Dropdown, Icon, LinkButton, Menu, Stack, Tooltip } from '@grafana/ui';
 import { t, Trans } from 'app/core/internationalization';
 
+import { AlertmanagerAction, useAlertmanagerAbility } from '../../hooks/useAbilities';
 import { ListItem } from '../../rule-list/components/ListItem';
-import { ListSection } from '../../rule-list/components/ListSection';
+import { ListWrapper } from '../../rule-list/components/ListSection';
 import { useAlertmanager } from '../../state/AlertmanagerContext';
+import { isGrafanaRulesSource } from '../../utils/datasource';
+import { isProvisionedProvenance } from '../../utils/k8s/utils';
+import { makeAMLink } from '../../utils/misc';
+import { Authorize } from '../Authorize';
 import { MetaText } from '../MetaText';
+import MoreButton from '../MoreButton';
+import { ProvisioningBadge } from '../Provisioning';
 import { CodeText } from '../common/TextVariants';
 import { useContactPointsWithStatus } from '../contact-points/useContactPoints';
 import { NotificationTemplate } from '../contact-points/useNotificationTemplates';
@@ -21,49 +28,41 @@ interface TemplatesListProps {
 }
 
 export const TemplatesList = (props: TemplatesListProps) => {
-  const { templates } = props;
-
-  // @TODO find out which ones aren't used
-  // @TODO add metadata which receivers are using the template
-  const usedTemplates = templates;
-  const unusedTemplates: NotificationTemplate[] = [];
+  const { templates, alertManagerName } = props;
 
   return (
-    <Stack direction="column" gap={2}>
-      <ListSection
-        title={
-          <Stack alignItems="center" gap={0}>
-            Used <Counter value={usedTemplates.length} />
-          </Stack>
-        }
-      >
-        {usedTemplates.map((template) => (
-          <TemplateListItem key={template.uid} template={template} />
-        ))}
-      </ListSection>
-
-      <ListSection
-        collapsed={true}
-        title={
-          <Stack alignItems="center" gap={0}>
-            Unused <Counter value={unusedTemplates.length} />
-          </Stack>
-        }
-      >
-        {unusedTemplates.map((template) => (
-          <ListItem key={template.uid} title={template.title} meta={[]} />
-        ))}
-      </ListSection>
-    </Stack>
+    <ListWrapper>
+      {templates.map((template) => (
+        <TemplateListItem key={template.uid} template={template} alertManagerName={alertManagerName} />
+      ))}
+    </ListWrapper>
   );
 };
 
 type TemplateListItemProps = {
+  alertManagerName: string;
   template: NotificationTemplate;
 };
 
-const TemplateListItem = ({ template }: TemplateListItemProps) => {
-  const { references, isLoading } = useContactPointReferences(template.content);
+const TemplateListItem = ({ template, alertManagerName }: TemplateListItemProps) => {
+  const { uid, title, content, provenance, missing } = template;
+  const { references, subtemplates, isLoading } = useContactPointReferences(content);
+
+  const [supportsDuplication, allowedToDuplicate] = useAlertmanagerAbility(AlertmanagerAction.CreateContactPoint);
+  const [supportsDeleting, allowedToDelete] = useAlertmanagerAbility(AlertmanagerAction.DeleteNotificationTemplate);
+
+  const canDuplicate = supportsDuplication && allowedToDuplicate;
+  const canDelete = supportsDeleting && allowedToDelete;
+
+  // a notification template is _actually_ a file that can contain several more templates! We'll call these "subtemplates".
+  const hasSubTemplates = !isLoading && subtemplates.length > 1;
+  const isProvisioned = isProvisionedProvenance(provenance);
+
+  const detailHref = makeAMLink(`/alerting/notifications/templates/${encodeURIComponent(uid)}/edit`, alertManagerName);
+  const duplicateHref = makeAMLink(
+    `/alerting/notifications/templates/${encodeURIComponent(uid)}/duplicate`,
+    alertManagerName
+  );
 
   const misconfiguredBadgeText = t(
     'alerting.templates.misconfigured-meta-text',
@@ -77,16 +76,24 @@ const TemplateListItem = ({ template }: TemplateListItemProps) => {
         '–'
       ) : (
         <>
-          {references.length} {pluralize('contact point', references.length)}
+          {references.length > 0 ? (
+            <>
+              Used by {references.length} {pluralize('contact point', references.length)}
+            </>
+          ) : (
+            <>Unused template</>
+          )}
         </>
       )}
     </MetaText>,
-    // <MetaText key="sloc" icon="align-left">
-    //   {sloc(template.content)} lines of code
-    // </MetaText>,
+    hasSubTemplates ? (
+      <MetaText key="subtemplates-count">
+        Contains {subtemplates.length} {pluralize('sub template', subtemplates.length)}
+      </MetaText>
+    ) : null,
   ];
 
-  if (template.missing) {
+  if (missing && !isGrafanaRulesSource(alertManagerName)) {
     meta = [
       <Tooltip
         key="missing-template"
@@ -104,12 +111,48 @@ const TemplateListItem = ({ template }: TemplateListItemProps) => {
     ];
   }
 
-  return <ListItem key={template.uid} title={template.title} meta={meta} />;
+  return (
+    <ListItem
+      key={uid}
+      title={
+        <Stack direction="row" alignItems="center" gap={0.5}>
+          <Icon name="file-alt" /> {title} {isProvisioned && <ProvisioningBadge />}
+        </Stack>
+      }
+      meta={meta}
+      actions={
+        <>
+          {isProvisioned ? (
+            <LinkButton icon="eye" href={detailHref} variant="secondary" size="sm">
+              View
+            </LinkButton>
+          ) : (
+            <Authorize actions={[AlertmanagerAction.UpdateNotificationTemplate]}>
+              <LinkButton icon="pen" href={detailHref} variant="secondary" size="sm">
+                Edit
+              </LinkButton>
+            </Authorize>
+          )}
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item icon="copy" label="Duplicate" url={duplicateHref} disabled={!canDuplicate} />
+                {!isProvisioned && (
+                  <>
+                    <Menu.Divider />
+                    <Menu.Item icon="trash-alt" label="Delete" destructive onClick={() => {}} disabled={!canDelete} />
+                  </>
+                )}
+              </Menu>
+            }
+          >
+            <MoreButton aria-label="more actions for notification template" data-testid="more-actions" />
+          </Dropdown>
+        </>
+      }
+    />
+  );
 };
-
-// function sloc(content: string) {
-//   return content.split('\n').length;
-// }
 
 function useContactPointReferences(templateFileContent: string) {
   const { selectedAlertmanager } = useAlertmanager();
@@ -120,7 +163,7 @@ function useContactPointReferences(templateFileContent: string) {
   });
 
   // firstly we parse the template file content to see which sub-templates it contains
-  const templates = parseTemplates(templateFileContent) ?? [];
+  const subtemplates = parseTemplates(templateFileContent) ?? [];
 
   const references = contactPoints.filter((contactPoint) => {
     return contactPoint.grafana_managed_receiver_configs.some((receiver) => {
@@ -138,11 +181,11 @@ function useContactPointReferences(templateFileContent: string) {
         }
 
         return getTemplateNames(setting).some((name) => {
-          return templates.some((template) => template.name === name);
+          return subtemplates.some((template) => template.name === name);
         });
       });
     });
   });
 
-  return { references, ...rest };
+  return { references, subtemplates, ...rest };
 }

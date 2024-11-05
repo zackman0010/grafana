@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { isEmpty } from 'lodash';
 import { PropsWithChildren, ReactNode } from 'react';
 import { useToggle } from 'react-use';
@@ -27,7 +27,7 @@ export const ListSection = ({
   const [isCollapsed, toggleCollapsed] = useToggle(collapsed);
 
   return (
-    <li className={styles.wrapper} role="treeitem" aria-selected="false">
+    <li className={styles.sectionWrapper} role="treeitem" aria-selected="false">
       <div className={styles.sectionTitle}>
         <Stack alignItems="center">
           <Stack alignItems="center" gap={1}>
@@ -48,9 +48,7 @@ export const ListSection = ({
       </div>
       {!isEmpty(children) && !isCollapsed && (
         <>
-          <ul role="group" className={styles.groupItemsWrapper}>
-            {children}
-          </ul>
+          <ListWrapper indent>{children}</ListWrapper>
           {pagination}
         </>
       )}
@@ -58,13 +56,22 @@ export const ListSection = ({
   );
 };
 
-const getStyles = (theme: GrafanaTheme2) => ({
-  groupItemsWrapper: css({
-    position: 'relative',
-    borderRadius: theme.shape.radius.default,
-    border: `solid 1px ${theme.colors.border.weak}`,
-    borderBottom: 'none',
+interface ListWrapperProps extends PropsWithChildren {
+  indent?: boolean;
+}
 
+export const ListWrapper = ({ children, indent = false }: ListWrapperProps) => {
+  const styles = useStyles2(getStyles);
+
+  return (
+    <ul role="group" className={cx([styles.listWrapper, indent && styles.indented])}>
+      {children}
+    </ul>
+  );
+};
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  indented: css({
     marginLeft: theme.spacing(3),
 
     '&:before': {
@@ -78,7 +85,13 @@ const getStyles = (theme: GrafanaTheme2) => ({
       marginLeft: `-${theme.spacing(2.5)}`,
     },
   }),
-  wrapper: css({
+  listWrapper: css({
+    position: 'relative',
+    borderRadius: theme.shape.radius.default,
+    border: `solid 1px ${theme.colors.border.weak}`,
+    borderBottom: 'none',
+  }),
+  sectionWrapper: css({
     display: 'flex',
     flexDirection: 'column',
 

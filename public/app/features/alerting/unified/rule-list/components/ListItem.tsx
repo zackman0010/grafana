@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { isNil } from 'lodash';
 import React, { ReactNode } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
@@ -24,7 +25,7 @@ export const ListItem = (props: ListItemProps) => {
         {/* icon */}
         {icon}
 
-        <Stack direction="column" gap={0} flex="1" minWidth={0}>
+        <Stack direction="column" gap={0.5} flex="1" minWidth={0}>
           {/* title */}
           <Stack direction="column" gap={0}>
             <div className={styles.textOverflow}>{title}</div>
@@ -33,12 +34,14 @@ export const ListItem = (props: ListItemProps) => {
 
           {/* metadata */}
           <Stack direction="row" gap={0.5} alignItems="center">
-            {meta?.map((item, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && <Separator />}
-                {item}
-              </React.Fragment>
-            ))}
+            {meta
+              ?.filter((item) => !isNil(item))
+              .map((item, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && <Separator />}
+                  {item}
+                </React.Fragment>
+              ))}
           </Stack>
         </Stack>
 
@@ -76,7 +79,11 @@ const getStyles = (theme: GrafanaTheme2) => ({
     background: theme.colors.background.primary,
 
     borderBottom: `solid 1px ${theme.colors.border.weak}`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+
+    '&:hover': css({
+      background: theme.colors.background.secondary,
+    }),
   }),
   textOverflow: css({
     overflow: 'hidden',

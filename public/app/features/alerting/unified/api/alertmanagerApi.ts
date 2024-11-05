@@ -12,7 +12,7 @@ import {
   ExternalAlertmanagersConnectionStatus,
   ExternalAlertmanagersStatusResponse,
   GrafanaAlertingConfiguration,
-  GrafanaManagedContactPoint,
+  GrafanaManagedNotificationsReceiverResponse,
   Matcher,
   MuteTimeInterval,
 } from '../../../../plugins/datasource/alertmanager/types';
@@ -295,7 +295,7 @@ export const alertmanagerApi = alertingApi.injectEndpoints({
     }),
     // Grafana Managed Alertmanager only
     // TODO: Remove as part of migration to k8s API for receivers
-    getContactPointsList: build.query<GrafanaManagedContactPoint[], void>({
+    getContactPointsList: build.query<GrafanaManagedNotificationsReceiverResponse[], void>({
       query: () => ({ url: '/api/v1/notifications/receivers' }),
       providesTags: ['ContactPoint'],
     }),

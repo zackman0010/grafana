@@ -13,14 +13,14 @@ import { BaseAlertmanagerArgs, Skippable } from 'app/features/alerting/unified/t
 import { cloudNotifierTypes } from 'app/features/alerting/unified/utils/cloud-alertmanager-notifier-types';
 import { GRAFANA_RULES_SOURCE_NAME } from 'app/features/alerting/unified/utils/datasource';
 import {
-    getK8sNamespace,
-    isK8sEntityProvisioned,
-    shouldUseK8sApi,
+  getK8sNamespace,
+  isK8sEntityProvisioned,
+  shouldUseK8sApi,
 } from 'app/features/alerting/unified/utils/k8s/utils';
 import {
-    GrafanaManagedContactPoint,
-    GrafanaManagedReceiverConfig,
-    Receiver,
+  GrafanaManagedContactPoint,
+  GrafanaManagedReceiverConfig,
+  Receiver,
 } from 'app/plugins/datasource/alertmanager/types';
 
 import { alertmanagerApi } from '../../api/alertmanagerApi';
@@ -127,7 +127,6 @@ const useFetchGrafanaContactPoints = ({ skip }: Skippable = {}) => {
         ...item,
         provisioned: item.grafana_managed_receiver_configs?.some((item) => item.provenance),
       }));
-      debugger;
       return {
         ...result,
         data,
