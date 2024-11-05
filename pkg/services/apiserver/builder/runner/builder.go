@@ -19,10 +19,12 @@ import (
 var _ builder.APIGroupBuilder = (*AppBuilder)(nil)
 
 type LegacyStorageGetter func(schema.GroupVersionResource) grafanarest.LegacyStorage
+type CustomStorageGetter func(schema.GroupVersionResource) rest.Storage
 
 type AppBuilderConfig struct {
 	Authorizer          authorizer.Authorizer
 	LegacyStorageGetter LegacyStorageGetter
+	CustomStorageGetter CustomStorageGetter
 	OpenAPIDefGetter    common.GetOpenAPIDefinitions
 	ManagedKinds        map[schema.GroupVersion]resource.Kind
 	CustomConfig        any
@@ -77,7 +79,10 @@ func (b *AppBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver.APIGroupI
 	return nil
 }
 
-func (b *AppBuilder) getStorage(resourceInfo utils.ResourceInfo, opts builder.APIGroupOptions) (grafanarest.Storage, error) {
+func (b *AppBuilder) getStorage(resourceInfo utils.ResourceInfo, opts builder.APIGroupOptions) (rest.Storage, error) {
+	if b.config.CustomStorageGetter != nil {
+		return b.config.CustomStorageGetter(resourceInfo.GroupVersionResource()), nil
+	}
 	store, err := grafanaregistry.NewRegistryStore(opts.Scheme, resourceInfo, opts.OptsGetter)
 	if err != nil {
 		return nil, err
