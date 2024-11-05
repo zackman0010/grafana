@@ -25,6 +25,7 @@ import { DashboardDTO, DashboardDataDTO } from 'app/types';
 
 import { addPanelsOnLoadBehavior } from '../addToDashboard/addPanelsOnLoadBehavior';
 import { AlertStatesDataLayer } from '../scene/AlertStatesDataLayer';
+import { CorrelationsDataLayer } from '../scene/CorrelationsDataLayer';
 import { DashboardAnnotationsDataLayer } from '../scene/DashboardAnnotationsDataLayer';
 import { DashboardControls } from '../scene/DashboardControls';
 import { DashboardDataLayerSet } from '../scene/DashboardDataLayerSet';
@@ -213,6 +214,8 @@ export function createDashboardSceneFromDashboardModel(oldModel: DashboardModel,
     });
   }
 
+  const correlationsLayer = new CorrelationsDataLayer({ key: 'correlations', name: 'Correlations' });
+
   const dashboardScene = new DashboardScene({
     description: oldModel.description,
     editable: oldModel.editable,
@@ -263,7 +266,7 @@ export function createDashboardSceneFromDashboardModel(oldModel: DashboardModel,
         version: oldModel.version,
       }),
     ],
-    $data: new DashboardDataLayerSet({ annotationLayers, alertStatesLayer }),
+    $data: new DashboardDataLayerSet({ annotationLayers, alertStatesLayer, correlationsLayer }),
     controls: new DashboardControls({
       variableControls: [new VariableValueSelectors({}), new SceneDataLayerControls()],
       timePicker: new SceneTimePicker({}),

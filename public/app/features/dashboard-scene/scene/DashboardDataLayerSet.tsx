@@ -6,10 +6,12 @@ import {
 } from '@grafana/scenes';
 
 import { AlertStatesDataLayer } from './AlertStatesDataLayer';
+import { CorrelationsDataLayer } from './CorrelationsDataLayer';
 
 export interface DashboardDataLayerSetState extends SceneDataLayerProviderState {
   alertStatesLayer?: AlertStatesDataLayer;
   annotationLayers: SceneDataLayerProvider[];
+  correlationsLayer?: CorrelationsDataLayer;
 }
 
 export class DashboardDataLayerSet
@@ -52,6 +54,10 @@ export class DashboardDataLayerSet
 
     if (this.state.alertStatesLayer) {
       layers.push(this.state.alertStatesLayer);
+    }
+
+    if (this.state.correlationsLayer) {
+      layers.push(this.state.correlationsLayer);
     }
 
     return layers;
