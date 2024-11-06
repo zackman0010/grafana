@@ -88,6 +88,11 @@ type availabilityCollector struct {
 
 // SetUnavailableGauge set the metrics so that it reflect the current state based on availability of the given service
 func (m *Metrics) SetUnavailableGauge(newAPIService *apiregistrationv1.APIService) {
+	if newAPIService.Spec.Service == nil {
+		// for local services, don't record metrics
+		return
+	}
+
 	if apiregistrationv1apihelper.IsAPIServiceConditionTrue(newAPIService, apiregistrationv1.Available) {
 		m.SetAPIServiceAvailable(newAPIService.Name)
 		return
@@ -98,6 +103,10 @@ func (m *Metrics) SetUnavailableGauge(newAPIService *apiregistrationv1.APIServic
 
 // SetUnavailableCounter increases the metrics only if the given service is unavailable and its APIServiceCondition has changed
 func (m *Metrics) SetUnavailableCounter(originalAPIService, newAPIService *apiregistrationv1.APIService) {
+	if newAPIService.Spec.Service == nil {
+		// for local services, don't record metrics
+		return
+	}
 	wasAvailable := apiregistrationv1apihelper.IsAPIServiceConditionTrue(originalAPIService, apiregistrationv1.Available)
 	isAvailable := apiregistrationv1apihelper.IsAPIServiceConditionTrue(newAPIService, apiregistrationv1.Available)
 	statusChanged := isAvailable != wasAvailable
