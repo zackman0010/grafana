@@ -108,7 +108,12 @@ func (is *IndexServer) Init(ctx context.Context, rs resource.ResourceServer) err
 	}
 
 	// Load the index
-	return is.Load(ctx)
+	err := is.Load(ctx)
+	if err != nil {
+		return err
+	}
+
+	return is.Watch(ctx)
 }
 
 func NewResourceIndexServer(cfg *setting.Cfg, tracer tracing.Tracer) *IndexServer {
