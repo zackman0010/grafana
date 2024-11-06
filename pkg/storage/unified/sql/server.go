@@ -2,9 +2,10 @@ package sql
 
 import (
 	"context"
-	"errors"
 	"os"
 	"strings"
+
+	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/authlib/claims"
 	infraDB "github.com/grafana/grafana/pkg/infra/db"
@@ -12,8 +13,8 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/storage/unified/sql/db/dbimpl"
-	"github.com/prometheus/client_golang/prometheus"
 )
 
 // Creates a new ResourceServer
@@ -50,17 +51,15 @@ func NewResourceServer(ctx context.Context, db infraDB.DB, cfg *setting.Cfg, fea
 	opts.Lifecycle = store
 
 	if features.IsEnabledGlobally(featuremgmt.FlagUnifiedStorageSearch) {
-		opts.Index = resource.NewResourceIndexServer(cfg, tracer)
+		indexer := search.NewResourceIndexServer(cfg, tracer)
+		opts.Index = indexer
 		server, err := resource.NewResourceServer(opts)
 		if err != nil {
 			return nil, err
 		}
-		// initialze the search index
-		indexer, ok := server.(resource.ResourceIndexer)
-		if !ok {
-			return nil, errors.New("index server does not implement ResourceIndexer")
-		}
-		_, err = indexer.Index(ctx)
+
+		// initialize the search index
+		err = indexer.Init(ctx, server)
 		return server, err
 	}
 

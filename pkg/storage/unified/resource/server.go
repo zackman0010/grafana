@@ -10,15 +10,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/grafana/authlib/claims"
-	"github.com/grafana/grafana/pkg/apimachinery/identity"
-	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
 	"go.opentelemetry.io/otel/trace/noop"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
+	"github.com/grafana/authlib/claims"
+	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	"github.com/grafana/grafana/pkg/apimachinery/utils"
 )
 
 // ResourceServer implements all gRPC services
@@ -782,28 +783,6 @@ func (s *server) Origin(ctx context.Context, req *OriginRequest) (*OriginRespons
 		return nil, err
 	}
 	return s.index.Origin(ctx, req)
-}
-
-// Index returns the search index. If the index is not initialized, it will be initialized.
-func (s *server) Index(ctx context.Context) (*Index, error) {
-	index := s.index.(*IndexServer)
-	if index.index == nil {
-		err := index.Init(ctx, s)
-		if err != nil {
-			return nil, err
-		}
-
-		err = index.Load(ctx)
-		if err != nil {
-			return nil, err
-		}
-
-		err = index.Watch(ctx)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return index.index, nil
 }
 
 // IsHealthy implements ResourceServer.

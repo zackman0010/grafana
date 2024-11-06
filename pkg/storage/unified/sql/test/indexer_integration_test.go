@@ -5,17 +5,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/grafana/grafana/pkg/setting"
-	"github.com/grafana/grafana/pkg/storage/unified/resource"
-	"github.com/grafana/grafana/pkg/storage/unified/sql"
-	"github.com/grafana/grafana/pkg/util/testutil"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
+
+	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
+	"github.com/grafana/grafana/pkg/storage/unified/sql"
+	"github.com/grafana/grafana/pkg/util/testutil"
 )
 
 // addResource is a helper to create a resource in unified storage
 func addResource(t *testing.T, ctx context.Context, backend sql.Backend, resourceName string, data string) {
-	ir, err := resource.NewIndexedResource([]byte(data))
+	ir, err := search.NewIndexedResource([]byte(data))
 	require.NoError(t, err)
 	_, err = backend.WriteEvent(ctx, resource.WriteEvent{
 		Type:  resource.WatchEvent_ADDED,
@@ -77,14 +79,6 @@ func TestIntegrationIndexerSearch(t *testing.T) {
 	addResource(t, ctx, backend, "playlists", playlist1)
 	addResource(t, ctx, backend, "playlists", playlist2)
 
-	// initialze and build the search index
-	indexer, ok := server.(resource.ResourceIndexer)
-	if !ok {
-		t.Fatal("server does not implement ResourceIndexer")
-	}
-	_, err := indexer.Index(ctx)
-	require.NoError(t, err)
-
 	// run search tests against the index
 	t.Run("can search for all resources", func(t *testing.T) {
 		res, err := server.Search(ctx, &resource.SearchRequest{
@@ -118,7 +112,7 @@ func TestIntegrationIndexerSearch(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Len(t, res.Items, 1)
-		ir := resource.IndexedResource{}
+		ir := search.IndexedResource{}
 		err = json.Unmarshal(res.Items[0].Value, &ir)
 		require.NoError(t, err)
 		require.Equal(t, "playlist cats", ir.Name)

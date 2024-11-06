@@ -21,6 +21,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/storage/unified/sql"
 	"github.com/grafana/grafana/pkg/storage/unified/sql/db/dbimpl"
 	"github.com/grafana/grafana/pkg/tests/testsuite"
@@ -52,12 +53,16 @@ func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceSe
 	err = ret.Init(testutil.NewDefaultTestContext(t))
 	require.NoError(t, err)
 
+	indexer := search.NewResourceIndexServer(cfg, tracing.NewNoopTracerService())
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
 		Backend:     ret,
 		Diagnostics: ret,
 		Lifecycle:   ret,
-		Index:       resource.NewResourceIndexServer(cfg, tracing.NewNoopTracerService()),
+		Index:       indexer,
 	})
+	require.NoError(t, err)
+	err = indexer.Init(context.Background(), server)
+
 	require.NoError(t, err)
 	require.NotNil(t, server)
 
