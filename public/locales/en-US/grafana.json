@@ -1628,6 +1628,8 @@
         "internal-service-error": "There has been an error while migrating. Please check the Grafana server logs for more details.",
         "library-element-name-conflict": "There is a library element with the same name in the target instance. Rename one of them and try again.",
         "only-core-data-sources": "Only core data sources are supported. Please ensure the plugin is installed on the cloud stack.",
+        "plugin-datasource-failure": "There was an error while migrating the dependent plugin. Please ensure the plugin is installed on the cloud stack.",
+        "plugin-datasource-not-suported": "Only Community and Commercial signed plugins are eligible for migration.",
         "resource-conflict": "There is a resource conflict with the target instance. Please check the Grafana server logs for more details.",
         "unexpected-error": "There has been an error while migrating. Please check the Grafana server logs for more details.",
         "unsupported-data-type": "Migration of this data type is not currently supported."

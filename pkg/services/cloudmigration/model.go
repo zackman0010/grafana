@@ -106,17 +106,19 @@ const (
 type ResourceErrorCode string
 
 const (
-	ErrDatasourceNameConflict     ResourceErrorCode = "DATASOURCE_NAME_CONFLICT"
-	ErrDatasourceInvalidURL       ResourceErrorCode = "DATASOURCE_INVALID_URL"
-	ErrFolderNameConflict         ResourceErrorCode = "FOLDER_NAME_CONFLICT"
-	ErrDashboardAlreadyManaged    ResourceErrorCode = "DASHBOARD_ALREADY_MANAGED"
-	ErrLibraryElementNameConflict ResourceErrorCode = "LIBRARY_ELEMENT_NAME_CONFLICT"
-	ErrUnsupportedDataType        ResourceErrorCode = "UNSUPPORTED_DATA_TYPE"
-	ErrResourceConflict           ResourceErrorCode = "RESOURCE_CONFLICT"
-	ErrUnexpectedStatus           ResourceErrorCode = "UNEXPECTED_STATUS_CODE"
-	ErrInternalServiceError       ResourceErrorCode = "INTERNAL_SERVICE_ERROR"
-	ErrOnlyCoreDataSources        ResourceErrorCode = "ONLY_CORE_DATA_SOURCES"
-	ErrGeneric                    ResourceErrorCode = "GENERIC_ERROR"
+	ErrDatasourceNameConflict       ResourceErrorCode = "DATASOURCE_NAME_CONFLICT"
+	ErrDatasourceInvalidURL         ResourceErrorCode = "DATASOURCE_INVALID_URL"
+	ErrFolderNameConflict           ResourceErrorCode = "FOLDER_NAME_CONFLICT"
+	ErrDashboardAlreadyManaged      ResourceErrorCode = "DASHBOARD_ALREADY_MANAGED"
+	ErrLibraryElementNameConflict   ResourceErrorCode = "LIBRARY_ELEMENT_NAME_CONFLICT"
+	ErrUnsupportedDataType          ResourceErrorCode = "UNSUPPORTED_DATA_TYPE"
+	ErrResourceConflict             ResourceErrorCode = "RESOURCE_CONFLICT"
+	ErrUnexpectedStatus             ResourceErrorCode = "UNEXPECTED_STATUS_CODE"
+	ErrInternalServiceError         ResourceErrorCode = "INTERNAL_SERVICE_ERROR"
+	ErrOnlyCoreDataSources          ResourceErrorCode = "ONLY_CORE_DATA_SOURCES"
+	ErrPluginDatasourceFailure      ResourceErrorCode = "PLUGIN_DATASOURCE_FAILURE"
+	ErrPluginDatasourceNotSupported ResourceErrorCode = "PLUGIN_DATASOURCE_NOT_SUPPORTED"
+	ErrGeneric                      ResourceErrorCode = "GENERIC_ERROR"
 )
 
 type SnapshotResourceStats struct {

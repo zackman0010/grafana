@@ -53,6 +53,16 @@ function getTMessage(errorCode: MigrateDataResponseItemDto['errorCode']): string
         'migrate-to-cloud.resource-details.error-messages.only-core-data-sources',
         'Only core data sources are supported. Please ensure the plugin is installed on the cloud stack.'
       );
+    case 'PLUGIN_DATASOURCE_FAILURE':
+      return t(
+        'migrate-to-cloud.resource-details.error-messages.plugin-datasource-failure',
+        'There was an error while migrating the dependent plugin. Please ensure the plugin is installed on the cloud stack.'
+      );
+    case 'PLUGIN_DATASOURCE_NOT_SUPPORTED':
+      return t(
+        'migrate-to-cloud.resource-details.error-messages.plugin-datasource-not-suported',
+        'Only Community and Commercial signed plugins are eligible for migration.'
+      );
     case 'UNEXPECTED_STATUS_CODE':
       return t(
         'migrate-to-cloud.resource-details.error-messages.unexpected-error',

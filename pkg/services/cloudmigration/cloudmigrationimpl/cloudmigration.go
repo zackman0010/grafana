@@ -817,7 +817,7 @@ func (s *Service) deleteLocalFiles(snapshots []cloudmigration.CloudMigrationSnap
 	return err
 }
 
-// getResourcesWithPluginWarnings iterates through each resource and, if a non-core datasource, applies a warning that we only support core
+// getResourcesWithPluginWarnings iterates through each resource and, if a non-core datasource, applies a warning if installation of the plugin failed
 func (s *Service) getResourcesWithPluginWarnings(ctx context.Context, results []cloudmigration.CloudMigrationResource) ([]cloudmigration.CloudMigrationResource, error) {
 	dsList, err := s.dsService.GetAllDataSources(ctx, &datasources.GetAllDataSourcesQuery{})
 	if err != nil {
@@ -827,6 +827,15 @@ func (s *Service) getResourcesWithPluginWarnings(ctx context.Context, results []
 	for i := 0; i < len(dsList); i++ {
 		dsMap[dsList[i].UID] = dsList[i]
 	}
+
+	pluginResults := make(map[string]cloudmigration.CloudMigrationResource, 0)
+	for _, result := range results {
+		if result.Type == cloudmigration.PluginDataType {
+			pluginResults[result.RefID] = result
+		}
+	}
+
+	fmt.Println("DEBUG | plugins", pluginResults)
 
 	for i := 0; i < len(results); i++ {
 		r := results[i]
@@ -839,12 +848,26 @@ func (s *Service) getResourcesWithPluginWarnings(ctx context.Context, results []
 				continue
 			}
 
-			p, found := s.pluginStore.Plugin(ctx, ds.Type)
-			// if the plugin is not found, it means it was uninstalled, meaning it wasn't core
-			if !p.IsCorePlugin() || !found {
-				r.Status = cloudmigration.ItemStatusWarning
-				r.ErrorCode = cloudmigration.ErrOnlyCoreDataSources
-				r.Error = "Only core data sources are supported. Please ensure the plugin is installed on the cloud stack."
+			fmt.Println("DEBUG | dashboard", ds.UID, ds.Type)
+
+			// check if the plugin was migrated
+			resPlugin, resPluginExists := pluginResults[ds.Type]
+			if !resPluginExists {
+				fmt.Println("DEBUG | plugin NOT migrated")
+				p, found := s.pluginStore.Plugin(ctx, ds.Type)
+				if !p.IsCorePlugin() || !found {
+					r.Status = cloudmigration.ItemStatusWarning
+					r.ErrorCode = cloudmigration.ErrPluginDatasourceNotSupported
+					r.Error = "Only Community and Commercial signed plugins are eligible for migration."
+				}
+			} else {
+				fmt.Println("DEBUG | plugin migrated", ds.Type, resPlugin.Error)
+				// if plugin migration had errors
+				if resPlugin.Error != "" {
+					r.Status = cloudmigration.ItemStatusWarning
+					r.ErrorCode = cloudmigration.ErrPluginDatasourceFailure
+					r.Error = resPlugin.Error // Use same error as the plugin error
+				}
 			}
 
 			results[i] = r
