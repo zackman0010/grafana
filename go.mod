@@ -37,6 +37,7 @@ require (
 	github.com/beevik/etree v1.4.1 // @grafana/grafana-backend-group
 	github.com/benbjohnson/clock v1.3.5 // @grafana/alerting-backend
 	github.com/blang/semver/v4 v4.0.0 // indirect; @grafana/grafana-developer-enablement-squad
+	github.com/blevesearch/bleve/v2 v2.4.2 // @grafana/grafana-search-and-storage
 	github.com/blugelabs/bluge v0.1.9 // @grafana/grafana-backend-group
 	github.com/blugelabs/bluge_segment_api v0.2.0 // @grafana/grafana-backend-group
 	github.com/bradfitz/gomemcache v0.0.0-20230905024940-24af94b03874 // @grafana/grafana-backend-group
@@ -473,8 +474,6 @@ require (
 )
 
 require github.com/jmespath-community/go-jmespath v1.1.1 // @grafana/identity-access-team
-
-require github.com/blevesearch/bleve/v2 v2.4.2
 
 require (
 	cloud.google.com/go/longrunning v0.5.12 // indirect
