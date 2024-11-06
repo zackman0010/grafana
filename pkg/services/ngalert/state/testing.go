@@ -60,7 +60,7 @@ func (f *FakeInstanceStore) SaveAlertInstancesForRule(ctx context.Context, key m
 	return nil
 }
 
-func (f *FakeInstanceStore) DeleteAlertInstancesByRule(ctx context.Context, key models.AlertRuleKeyWithGroup) error {
+func (f *FakeInstanceStore) DeleteAlertInstancesByRule(ctx context.Context, key models.AlertRuleKeyWithGroup, reason AlertInstancesDeleteReason) error {
 	return nil
 }
 

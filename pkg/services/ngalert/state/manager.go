@@ -267,7 +267,19 @@ func (st *Manager) DeleteStateByRuleUID(ctx context.Context, ruleKey ngModels.Al
 	}
 
 	if st.instanceStore != nil {
-		err := st.instanceStore.DeleteAlertInstancesByRule(ctx, ruleKey)
+		var deleteReason AlertInstancesDeleteReason
+		switch reason {
+		case ngModels.StateReasonRuleDeleted:
+			deleteReason = AlertInstancesDeleteReasonRuleDeleted
+		case ngModels.StateReasonUpdated:
+			deleteReason = AlertInstancesDeleteReasonRuleUpdated
+		case ngModels.StateReasonPaused:
+			deleteReason = AlertInstancesDeleteReasonRulePaused
+		default:
+			deleteReason = AlertInstancesDeleteReasonUnknown
+		}
+
+		err := st.instanceStore.DeleteAlertInstancesByRule(ctx, ruleKey, deleteReason)
 		if err != nil {
 			logger.Error("Failed to delete states that belong to a rule from database", "error", err)
 		}

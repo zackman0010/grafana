@@ -7,6 +7,15 @@ import (
 	history_model "github.com/grafana/grafana/pkg/services/ngalert/state/historian/model"
 )
 
+type AlertInstancesDeleteReason string
+
+const (
+	AlertInstancesDeleteReasonRuleDeleted AlertInstancesDeleteReason = "rule_deleted"
+	AlertInstancesDeleteReasonRuleUpdated AlertInstancesDeleteReason = "rule_updated"
+	AlertInstancesDeleteReasonRulePaused  AlertInstancesDeleteReason = "rule_paused"
+	AlertInstancesDeleteReasonUnknown     AlertInstancesDeleteReason = "unknown"
+)
+
 // InstanceStore represents the ability to fetch and write alert instances.
 type InstanceStore interface {
 	InstanceReader
@@ -15,7 +24,7 @@ type InstanceStore interface {
 	DeleteAlertInstances(ctx context.Context, keys ...models.AlertInstanceKey) error
 	// SaveAlertInstancesForRule overwrites the state for the given rule.
 	SaveAlertInstancesForRule(ctx context.Context, key models.AlertRuleKeyWithGroup, instances []models.AlertInstance) error
-	DeleteAlertInstancesByRule(ctx context.Context, key models.AlertRuleKeyWithGroup) error
+	DeleteAlertInstancesByRule(ctx context.Context, key models.AlertRuleKeyWithGroup, reason AlertInstancesDeleteReason) error
 	FullSync(ctx context.Context, instances []models.AlertInstance) error
 }
 
