@@ -49,6 +49,7 @@ type upsertDataSourceFromConfig struct {
 	Editable        bool
 	UID             string
 	IsPrunable      bool
+	Caching         cachingConfig
 }
 
 type configsV0 struct {
@@ -115,6 +116,12 @@ type upsertDataSourceFromConfigV1 struct {
 	Editable        values.BoolValue      `json:"editable" yaml:"editable"`
 	UID             values.StringValue    `json:"uid" yaml:"uid"`
 	IsPrunable      values.BoolValue
+}
+
+type cachingConfig struct {
+	Enabled    values.BoolValue `json:"enabled" yaml:"enabled"`
+	QueriesTTL values.BoolValue `json:"enabled" yaml:"enabled"`
+	// continue here
 }
 
 func (cfg *configsV1) mapToDatasourceFromConfig(apiVersion int64) *configs {

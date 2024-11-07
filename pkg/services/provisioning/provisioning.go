@@ -102,6 +102,13 @@ func (ps *ProvisioningServiceImpl) setDashboardProvisioner() error {
 	return nil
 }
 
+type datasourceCachingConfig struct {
+	datasourceID
+	datasourceUID
+	queries
+	// ...
+}
+
 type ProvisioningService interface {
 	registry.BackgroundService
 	RunInitProvisioners(ctx context.Context) error
@@ -111,6 +118,8 @@ type ProvisioningService interface {
 	ProvisionAlerting(ctx context.Context) error
 	GetDashboardProvisionerResolvedPath(name string) string
 	GetAllowUIUpdatesFromConfig(name string) bool
+
+	GetCachingConfig(ctx context.Context) ([]datasourceCachingConfig, error) // maybe
 }
 
 // Used for testing purposes
