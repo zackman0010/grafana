@@ -2,8 +2,9 @@ package search
 
 import (
 	"context"
-	"log/slog"
 	"path/filepath"
+
+	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/setting"
@@ -11,17 +12,13 @@ import (
 )
 
 // Construct the search options from settings
-func NewSearchOptions(cfg *setting.Cfg, tracer tracing.Tracer) (resource.SearchOptions, error) {
+func NewSearchOptions(cfg *setting.Cfg, tracer tracing.Tracer, reg prometheus.Registerer) (resource.SearchOptions, error) {
 	opts := resource.SearchOptions{
-		Backend: &bleveBackend{
-			log:    slog.Default().With("logger", "bleve-backend"),
-			tracer: tracer,
-			cache:  make(map[resource.NamespacedResource]*bleveIndex),
-			opts: bleveOptions{
-				Root:          filepath.Join(cfg.DataPath, "unified-search", "bleve"),
-				FileThreshold: 500, // after 500 items, switch to file based index
-			},
-		},
+		Backend: newBleveBackend(bleveOptions{
+			Root:          filepath.Join(cfg.DataPath, "unified-search", "bleve"),
+			FileThreshold: 500, // after 500 items, switch to file based index
+			BatchSize:     100,
+		}, tracer, reg),
 	}
 	opts.Resources = []resource.DocumentBuilderInfo{
 		DefaultDocumentBuilder,

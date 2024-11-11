@@ -51,7 +51,7 @@ func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceSe
 	err = ret.Init(testutil.NewDefaultTestContext(t))
 	require.NoError(t, err)
 
-	opts, err := search.NewSearchOptions(cfg, nil)
+	opts, err := search.NewSearchOptions(cfg, tracing.NewNoopTracerService(), nil)
 	require.NoError(t, err)
 
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
@@ -62,6 +62,10 @@ func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceSe
 	})
 	require.NoError(t, err)
 	require.NotNil(t, server)
+
+	rsp, err := server.IsHealthy(context.Background(), &resource.HealthCheckRequest{})
+	require.NoError(t, err)
+	require.Equal(t, resource.HealthCheckResponse_SERVING, rsp.Status)
 
 	return ret, server
 }

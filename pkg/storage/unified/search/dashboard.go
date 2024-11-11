@@ -90,6 +90,7 @@ func (s *DashboardDocumentBuilder) BuildDocument(ctx context.Context, key *resou
 	doc.Tags = summary.Tags
 	doc.SchemaVersion = summary.SchemaVersion
 	doc.LinkCount = summary.LinkCount
+	doc.ByteSize = len(value)
 
 	for _, p := range summary.Panels {
 		if p.Type != "" {

@@ -62,7 +62,7 @@ func NewResourceServer(ctx context.Context, db infraDB.DB, cfg *setting.Cfg, fea
 	}
 
 	if features.IsEnabledGlobally(featuremgmt.FlagUnifiedStorageSearch) {
-		opts.Search, err = search.NewSearchOptions(cfg, tracer)
+		opts.Search, err = search.NewSearchOptions(cfg, tracer, reg)
 		if err != nil {
 			return nil, err
 		}

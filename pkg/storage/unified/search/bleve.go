@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/grafana/authlib/authz"
@@ -17,7 +18,7 @@ import (
 const tracingPrexfixBleve = "unified_search.bleve."
 
 var _ resource.SearchBackend = &bleveBackend{}
-var _ resource.DocumentIndex = &bleveIndex{}
+var _ resource.ResourceIndex = &bleveIndex{}
 
 type bleveOptions struct {
 	// The root folder where file objects are saved
@@ -25,6 +26,10 @@ type bleveOptions struct {
 
 	// The resource count where values switch from memory to file based
 	FileThreshold int64
+
+	// How big should a batch get before flushing
+	// ?? not totally sure the units
+	BatchSize int
 }
 
 type bleveBackend struct {
@@ -37,12 +42,31 @@ type bleveBackend struct {
 	cacheMu sync.RWMutex
 }
 
+func newBleveBackend(opts bleveOptions, tracer trace.Tracer, reg prometheus.Registerer) *bleveBackend {
+	b := &bleveBackend{
+		log:    slog.Default().With("logger", "bleve-backend"),
+		tracer: tracer,
+		cache:  make(map[resource.NamespacedResource]*bleveIndex),
+		opts:   opts,
+	}
+
+	if reg != nil {
+		b.log.Info("TODO, register metrics collectors!")
+	}
+
+	return b
+}
+
 // This will return nil if the key does not exist
-func (b *bleveBackend) GetIndex(ctx context.Context, key resource.NamespacedResource) (resource.DocumentIndex, error) {
+func (b *bleveBackend) GetIndex(ctx context.Context, key resource.NamespacedResource) (resource.ResourceIndex, error) {
 	b.cacheMu.RLock()
 	defer b.cacheMu.RUnlock()
 
-	return b.cache[key], nil
+	idx, ok := b.cache[key]
+	if ok {
+		return idx, nil
+	}
+	return nil, nil
 }
 
 // Build an index from scratch
@@ -57,8 +81,8 @@ func (b *bleveBackend) BuildIndex(ctx context.Context,
 	resourceVersion int64,
 
 	// The builder will write all documents before returning
-	builder func(index resource.DocumentIndex) (int64, error),
-) (resource.DocumentIndex, error) {
+	builder func(index resource.ResourceIndex) (int64, error),
+) (resource.ResourceIndex, error) {
 	b.cacheMu.Lock()
 	defer b.cacheMu.Unlock()
 
@@ -83,9 +107,10 @@ func (b *bleveBackend) BuildIndex(ctx context.Context,
 
 	// Batch all the changes
 	idx := &bleveIndex{
-		key:   key,
-		index: index,
-		batch: index.NewBatch(),
+		key:       key,
+		index:     index,
+		batch:     index.NewBatch(),
+		batchSize: b.opts.BatchSize,
 	}
 	_, err = builder(idx)
 	if err != nil {
@@ -108,7 +133,7 @@ type bleveIndex struct {
 
 	// only valid in single thread
 	batch     *bleve.Batch
-	batchSize int
+	batchSize int // ??? not totally sure the units here
 }
 
 // Write implements resource.DocumentIndex.
@@ -146,46 +171,81 @@ func (b *bleveIndex) Flush() (err error) {
 }
 
 // Origin implements resource.DocumentIndex.
-func (b *bleveIndex) Origin(ctx context.Context, ac authz.ItemChecker, req *resource.OriginRequest) (*resource.OriginResponse, error) {
+func (b *bleveIndex) Origin(ctx context.Context, req *resource.OriginRequest) (*resource.OriginResponse, error) {
 	panic("unimplemented")
 }
 
 // Search implements resource.DocumentIndex.
-func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *resource.SearchRequest) (*resource.IndexResults, error) {
+func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *resource.ResourceSearchRequest) (*resource.ResourceSearchResponse, error) {
 	if !(req.Query == "" || req.Query == "*") {
 		return nil, fmt.Errorf("currently only match all query is supported")
 	}
 
 	query := bleve.NewMatchAllQuery()
-
-	res, err := b.index.Search(&bleve.SearchRequest{
-		Fields: []string{
+	fields := req.Fields
+	if len(fields) < 1 && req.Limit > 0 {
+		fields = []string{
 			"name",
 			"folder",
 			"origin_name",
-		},
-		Query: query,
-		Size:  int(req.Limit),
-		From:  int(req.Offset),
+		}
+	}
+	var facets bleve.FacetsRequest
+	for _, v := range req.Facet {
+		if facets == nil {
+			facets = make(bleve.FacetsRequest)
+		}
+		facets[v.Field] = bleve.NewFacetRequest(v.Field, int(v.Limit))
+	}
+
+	res, err := b.index.Search(&bleve.SearchRequest{
+		Fields:  fields,
+		Query:   query,
+		Facets:  facets,
+		Size:    int(req.Limit),
+		From:    int(req.Offset),
+		Explain: req.Explain,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	rsp := &resource.IndexResults{}
+	rsp := &resource.ResourceSearchResponse{
+		TotalHits: res.Total,
+		QueryCost: res.Cost,
+		MaxScore:  res.MaxScore,
+	}
+
 	for _, hit := range res.Hits {
 		n, ok := hit.Fields["name"]
 		if !ok {
 			return nil, fmt.Errorf("missing name: " + hit.ID)
 		}
 
-		//	fmt.Printf("HIT %+v\n", hit.Fields)
+		fmt.Printf("HIT %s // %+v\n", n, hit.Fields)
 
-		rsp.Values = append(rsp.Values, resource.IndexedResource{
-			Group:     b.key.Group,
-			Namespace: b.key.Namespace,
-			Name:      n.(string),
-		})
+		// rsp.Values = append(rsp.Values, resource.IndexedResource{
+		// 	Group:     b.key.Group,
+		// 	Namespace: b.key.Namespace,
+		// 	Name:      n.(string),
+		// })
+	}
+
+	for k, v := range res.Facets {
+		f := &resource.ResourceSearchResponse_Facet{
+			Field:   k,
+			Total:   int64(v.Total),
+			Missing: int64(v.Missing),
+		}
+		if v.Terms != nil {
+			for _, t := range v.Terms.Terms() {
+				f.Terms = append(f.Terms, &resource.ResourceSearchResponse_TermFacet{
+					Term:  t.Term,
+					Count: int64(t.Count),
+				})
+			}
+		}
+		rsp.Facet = append(rsp.Facet, f)
 	}
 	return rsp, nil
 }

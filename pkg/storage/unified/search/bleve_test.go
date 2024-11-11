@@ -37,7 +37,7 @@ func TestBleveBackend(t *testing.T) {
 		Namespace: key.Namespace,
 		Group:     key.Group,
 		Resource:  key.Resource,
-	}, 2, rv, func(index resource.DocumentIndex) (int64, error) {
+	}, 2, rv, func(index resource.ResourceIndex) (int64, error) {
 		index.Write(&StandardDocumentFields{
 			ID:         "aaa",
 			RV:         1,
@@ -57,16 +57,18 @@ func TestBleveBackend(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, index)
 
-	rsp, err := index.Search(ctx, nil, &resource.SearchRequest{
+	rsp, err := index.Search(ctx, nil, &resource.ResourceSearchRequest{
 		Query: "*",
 		Limit: 100000,
 	})
 	require.NoError(t, err)
+	require.Nil(t, rsp.Error)
+	require.NotNil(t, rsp.Frame)
 
 	names := []string{}
-	for _, r := range rsp.Values {
-		names = append(names, r.Name)
-	}
+	// for _, r := range rsp.Values {
+	// 	names = append(names, r.Name)
+	// }
 	require.Equal(t, []string{"aaa", "bbb"}, names)
 
 	// jj, err := json.MarshalIndent(rsp, "", "  ")

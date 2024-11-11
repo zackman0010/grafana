@@ -42,33 +42,15 @@ type SearchOptions struct {
 type DocumentBuilderInfo struct {
 	Group    string
 	Resource string
-	Builder  DocumentBuilder
 
-	// If the builder is namespaced, it should be retrieved on demand
+	// When the builder does not depend on cached namespace data
+	Builder DocumentBuilder
+
+	// When the builder is namespaced, it can be retrieved on demand
 	Namespaced func(ctx context.Context, namespace string) (DocumentBuilder, error)
 }
 
-type IndexedResource struct {
-	Uid       string
-	Group     string
-	Namespace string
-	Kind      string
-	Name      string
-	Title     string
-	CreatedAt string
-	CreatedBy string
-	UpdatedAt string
-	UpdatedBy string
-	FolderId  string
-	Spec      map[string]any
-}
-
-type IndexResults struct {
-	Values []IndexedResource
-	Groups []*Group
-}
-
-type DocumentIndex interface {
+type ResourceIndex interface {
 	// Add a document to the index.  Note it may not be searchable until after flush is called
 	Write(doc IndexableDocument) error
 
@@ -79,10 +61,10 @@ type DocumentIndex interface {
 	Flush() error
 
 	// Execute a search query
-	Search(ctx context.Context, ac authz.ItemChecker, req *SearchRequest) (*IndexResults, error)
+	Search(ctx context.Context, ac authz.ItemChecker, req *ResourceSearchRequest) (*ResourceSearchResponse, error)
 
-	// Execute an origin query
-	Origin(ctx context.Context, ac authz.ItemChecker, req *OriginRequest) (*OriginResponse, error)
+	// Execute an origin query -- access control is not not checked for each item
+	Origin(ctx context.Context, req *OriginRequest) (*OriginResponse, error)
 }
 
 type NamespacedResource struct {
@@ -99,7 +81,7 @@ func (s *NamespacedResource) Valid() bool {
 // SearchBackend contains the technology specific logic to support search
 type SearchBackend interface {
 	// This will return nil if the key does not exist
-	GetIndex(ctx context.Context, key NamespacedResource) (DocumentIndex, error)
+	GetIndex(ctx context.Context, key NamespacedResource) (ResourceIndex, error)
 
 	// Build an index from scratch
 	BuildIndex(ctx context.Context,
@@ -113,8 +95,8 @@ type SearchBackend interface {
 		resourceVersion int64,
 
 		// The builder will write all documents before returning
-		builder func(index DocumentIndex) (int64, error),
-	) (DocumentIndex, error)
+		builder func(index ResourceIndex) (int64, error),
+	) (ResourceIndex, error)
 }
 
 const tracingPrexfixSearch = "unified_search."
@@ -202,20 +184,26 @@ func (s *searchSupport) init(ctx context.Context) error {
 	return nil
 }
 
-func (s *searchSupport) getOrCreateIndex(ctx context.Context, key NamespacedResource) (DocumentIndex, error) {
+func (s *searchSupport) getOrCreateIndex(ctx context.Context, key NamespacedResource) (ResourceIndex, error) {
 	// TODO???
 	// We want to block while building the index and return the same index for the key
 	// simple mutex not great... we don't want to block while anything in building, just the same key
 
 	idx, err := s.search.GetIndex(ctx, key)
 	if err != nil {
-		return idx, err
+		return nil, err
 	}
 
 	if idx == nil {
 		idx, _, err = s.build(ctx, key)
+		if err != nil {
+			return nil, err
+		}
+		if idx == nil {
+			return nil, fmt.Errorf("nil index after build")
+		}
 	}
-	return idx, err
+	return idx, nil
 }
 
 // Async event
@@ -252,7 +240,7 @@ func (s *searchSupport) handleEvent(ctx context.Context, evt *WrittenEvent) {
 }
 
 // Builds an index from scratch
-func (s *searchSupport) build(ctx context.Context, nsr NamespacedResource) (DocumentIndex, int64, error) {
+func (s *searchSupport) build(ctx context.Context, nsr NamespacedResource) (ResourceIndex, int64, error) {
 	_, span := s.tracer.Start(ctx, tracingPrexfixSearch+"Build")
 	defer span.End()
 
@@ -269,7 +257,7 @@ func (s *searchSupport) build(ctx context.Context, nsr NamespacedResource) (Docu
 		Resource:  nsr.Resource,
 		Namespace: nsr.Namespace,
 	}
-	index, err := s.search.BuildIndex(ctx, nsr, size, rv, func(index DocumentIndex) (int64, error) {
+	index, err := s.search.BuildIndex(ctx, nsr, size, rv, func(index ResourceIndex) (int64, error) {
 		rv, err = s.storage.ListIterator(ctx, &ListRequest{
 			Limit: 1000000000000, // big number
 			Options: &ListOptions{
@@ -346,7 +334,7 @@ func newBuilderCache(cfg []DocumentBuilderInfo, nsCacheSize int, ttl time.Durati
 		}
 		g, ok := cache.lookup[b.Group]
 		if !ok {
-			g := make(map[string]DocumentBuilderInfo)
+			g = make(map[string]DocumentBuilderInfo)
 			cache.lookup[b.Group] = g
 		}
 		g[b.Resource] = b
@@ -421,7 +409,7 @@ func (s *server) Search(ctx context.Context, req *SearchRequest) (*SearchRespons
 		return nil, fmt.Errorf("missing user")
 	}
 
-	var ac authz.ItemChecker
+	//var ac authz.ItemChecker
 
 	key := NamespacedResource{
 		Namespace: req.Tenant,
@@ -434,15 +422,19 @@ func (s *server) Search(ctx context.Context, req *SearchRequest) (*SearchRespons
 		return nil, err
 	}
 
-	res, err := idx.Search(ctx, ac, req)
-	if err != nil {
-		return nil, err
-	}
+	fmt.Printf("TODO... search: %v\n", idx)
 
-	return &SearchResponse{
-		//Items:  res.Values,
-		Groups: res.Groups,
-	}, nil
+	return nil, fmt.Errorf("not implemented yet")
+
+	// res, err := idx.Search(ctx, ac, req)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// return &SearchResponse{
+	// 	//Items:  res.Values,
+	// 	Groups: res.Groups,
+	// }, nil
 }
 
 // Origin implements ResourceServer.
@@ -469,8 +461,6 @@ func (s *server) Origin(ctx context.Context, req *OriginRequest) (*OriginRespons
 		return nil, fmt.Errorf("missing user")
 	}
 
-	var ac authz.ItemChecker
-
 	key := NamespacedResource{
 		Namespace: req.Key.Namespace,
 		Resource:  req.Key.Resource,
@@ -482,7 +472,7 @@ func (s *server) Origin(ctx context.Context, req *OriginRequest) (*OriginRespons
 		return nil, err
 	}
 
-	return idx.Origin(ctx, ac, req)
+	return idx.Origin(ctx, req)
 }
 
 // History implements ResourceServer.

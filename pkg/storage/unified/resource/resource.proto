@@ -342,6 +342,91 @@ message SearchRequest {
   repeated string filters = 10;
 }
 
+// Search within a single resource
+message ResourceSearchRequest {
+  message Sort {
+    string field = 1;
+    bool asc = 2;
+  }
+  
+  message Facet {
+    string field = 1;
+    int64 limit = 2;
+
+    // numeric queries
+    // date queries
+  }
+
+  // Key must include namespace + group + resource
+  ResourceKey key = 1;
+  
+  // parseable query
+  // query string for chosen implementation (currently just bleve)
+  // The score is only relevant when a query exists
+  string query = 2;
+
+  // max results
+  int64 limit = 3;
+
+  // where to start the query (eg, From)
+  int64 offset = 4;
+
+  // Additional filter queries (these do not effect the score)
+  repeated string filters = 5;
+
+  // sorting
+  repeated Sort sortBy = 6;
+
+  // get stats
+  repeated Facet facet = 7;
+
+  // the return fields (empty will return everything)
+  repeated string fields = 8;
+
+  // explain each result (added to the each row)
+  bool explain = 9;
+}
+
+message ResourceSearchResponse {
+  message Facet {
+    string field = 1;
+    // The distinct terms
+    int64 total = 2;
+    // The number of documents that do *not* have this field
+    int64 missing = 3;
+    // Top term stats
+    repeated TermFacet terms = 4;
+    // numeric range
+    // date range facets 
+  }
+
+  message TermFacet {
+    string term = 1;
+    int64 count = 2;
+  }
+
+  // Error details
+  ErrorResult error = 1;
+
+  // All results exist within this key
+  ResourceKey key = 2;
+
+  // Query results returned as a data frame
+  bytes frame = 3;
+
+  // The total hit count
+  uint64 total_hits = 4;
+
+  // indicates how expensive was the query with respect to bytes read
+  uint64 query_cost = 5;
+
+  // maximum score across all fields
+  double max_score = 6;
+
+  // Facet query results
+  repeated Facet facet = 7;
+}
+
 message GroupBy {
   string name = 1;
   int64 limit = 2;

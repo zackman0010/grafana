@@ -41,6 +41,7 @@ func (s *defaultDocumentBuilder) BuildDocument(_ context.Context, key *resource.
 	doc.Load(key, rv, obj)
 
 	doc.Title = obj.FindTitle(doc.Name)
+	doc.ByteSize = len(value)
 
 	return doc, nil
 }
@@ -60,6 +61,7 @@ type StandardDocumentFields struct {
 	Title       string   `json:"title,omitempty"`
 	Description string   `json:"description,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
+	ByteSize    int      `json:"byte_size,omitempty"`
 
 	// Standard k8s style labels
 	Labels map[string]string `json:"labels,omitempty"`

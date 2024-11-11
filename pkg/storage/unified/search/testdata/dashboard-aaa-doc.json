@@ -13,6 +13,7 @@
     "b",
     "c"
   ],
+  "byte_size": 2770,
   "labels": {
     "host": "abc",
     "region": "xyz"
