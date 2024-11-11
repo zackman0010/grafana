@@ -36,9 +36,12 @@ var (
 // Provision scans a directory for provisioning config files
 // and provisions the datasource in those files.
 func Provision(ctx context.Context, configDirectory string, dsService BaseDataSourceService, correlationsStore CorrelationsStore, orgService org.Service) error {
-	dc := newDatasourceProvisioner(log.New("provisioning.datasources"), dsService, correlationsStore, orgService)
+	dc := NewDatasourceProvisioner(log.New("provisioning.datasources"), dsService, correlationsStore, orgService)
 	return dc.applyChanges(ctx, configDirectory)
 }
+
+// DatasourceProvisionerFactory creates DatasourceProvisioners based on input
+type DatasourceProvisionerFactory func(log.Logger, BaseDataSourceService, CorrelationsStore, org.Service) (DatasourceProvisioner, error)
 
 // DatasourceProvisioner is responsible for provisioning datasources based on
 // configuration read by the `configReader`
@@ -49,7 +52,7 @@ type DatasourceProvisioner struct {
 	correlationsStore CorrelationsStore
 }
 
-func newDatasourceProvisioner(log log.Logger, dsService BaseDataSourceService, correlationsStore CorrelationsStore, orgService org.Service) DatasourceProvisioner {
+func NewDatasourceProvisioner(log log.Logger, dsService BaseDataSourceService, correlationsStore CorrelationsStore, orgService org.Service) DatasourceProvisioner {
 	return DatasourceProvisioner{
 		log:               log,
 		cfgProvider:       &configReader{log: log, orgService: orgService},
@@ -270,4 +273,42 @@ func (dc *DatasourceProvisioner) deleteDatasources(ctx context.Context, dsToDele
 	}
 
 	return nil
+}
+
+type DatasourceCachingConfig struct {
+	dataSourceUID string
+	enabled       bool
+	queriesTTL    int64
+	resourcesTTL  int64
+	useDefaultTTL bool
+}
+
+func (dc *DatasourceProvisioner) GetCachingConfigs(ctx context.Context, configPath string) (string, error) {
+	configs, err := dc.cfgProvider.readConfig(ctx, configPath)
+	if err != nil {
+		return "", err
+	}
+
+	// dsCachingConfigs := make([]DatasourceCachingConfig, 0)
+	for _, config := range configs {
+		for _, ds := range config.Datasources {
+
+			// TODO: check if caching nil
+
+			dsCachingConfig := DatasourceCachingConfig{
+				dataSourceUID: ds.UID,
+				enabled:       ds.Caching.Enabled.Value(),
+				queriesTTL:    ds.Caching.QueriesTTL.Value(),
+				resourcesTTL:  ds.Caching.ResourcesTTL.Value(),
+				useDefaultTTL: ds.Caching.UseDefaultTTL.Value(),
+			}
+			fmt.Println(dsCachingConfig)
+			return "something", nil
+
+			// dsCachingConfigs = append(dsCachingConfigs, dsCachingConfig)
+		}
+	}
+
+	// return dsCachingConfigs, nil
+	return "exit", nil
 }

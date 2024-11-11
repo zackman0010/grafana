@@ -67,6 +67,7 @@ func ProvideService(
 		EncryptionService:            encryptionService,
 		NotificationService:          notificatonService,
 		newDashboardProvisioner:      dashboards.New,
+		newDatasourceProvisioner:     datasources.NewDatasourceProvisioner,
 		provisionDatasources:         datasources.Provision,
 		provisionPlugins:             plugins.Provision,
 		provisionAlerting:            prov_alerting.Provision,
@@ -89,6 +90,10 @@ func ProvideService(
 		return nil, err
 	}
 
+	if err := s.setDatasourceProvisioner(); err != nil {
+		return nil, err
+	}
+
 	return s, nil
 }
 
@@ -102,11 +107,13 @@ func (ps *ProvisioningServiceImpl) setDashboardProvisioner() error {
 	return nil
 }
 
-type datasourceCachingConfig struct {
-	datasourceID
-	datasourceUID
-	queries
-	// ...
+func (ps *ProvisioningServiceImpl) setDatasourceProvisioner() error {
+	dsProvisioner, err := ps.newDatasourceProvisioner(log.New("provisioning.datasources"), psdatasourceService, ps.correlationsService, ps.orgService)
+	if err != nil {
+		return fmt.Errorf("%v: %w", "Failed to create provisioner", err)
+	}
+	ps.datasourceProvisioner = dsProvisioner
+	return nil
 }
 
 type ProvisioningService interface {
@@ -118,8 +125,7 @@ type ProvisioningService interface {
 	ProvisionAlerting(ctx context.Context) error
 	GetDashboardProvisionerResolvedPath(name string) string
 	GetAllowUIUpdatesFromConfig(name string) bool
-
-	GetCachingConfig(ctx context.Context) ([]datasourceCachingConfig, error) // maybe
+	GetCachingConfigs(ctx context.Context) (string, error)
 }
 
 // Used for testing purposes
@@ -158,6 +164,8 @@ type ProvisioningServiceImpl struct {
 	pollingCtxCancel             context.CancelFunc
 	newDashboardProvisioner      dashboards.DashboardProvisionerFactory
 	dashboardProvisioner         dashboards.DashboardProvisioner
+	newDatasourceProvisioner     datasources.DatasourceProvisionerFactory
+	datasourceProvisioner        datasources.DatasourceProvisioner
 	provisionDatasources         func(context.Context, string, datasources.BaseDataSourceService, datasources.CorrelationsStore, org.Service) error
 	provisionPlugins             func(context.Context, string, pluginstore.Store, pluginsettings.Service, org.Service) error
 	provisionAlerting            func(context.Context, prov_alerting.ProvisionerConfig) error
@@ -327,6 +335,11 @@ func (ps *ProvisioningServiceImpl) GetDashboardProvisionerResolvedPath(name stri
 
 func (ps *ProvisioningServiceImpl) GetAllowUIUpdatesFromConfig(name string) bool {
 	return ps.dashboardProvisioner.GetAllowUIUpdatesFromConfig(name)
+}
+
+func (ps *ProvisioningServiceImpl) GetCachingConfigs(ctx context.Context) (string, error) {
+	datasourcePath := filepath.Join(ps.Cfg.ProvisioningPath, "datasources")
+	return ps.datasourceProvisioner.GetCachingConfigs(ctx, datasourcePath)
 }
 
 func (ps *ProvisioningServiceImpl) cancelPolling() {

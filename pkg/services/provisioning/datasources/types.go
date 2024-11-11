@@ -119,9 +119,11 @@ type upsertDataSourceFromConfigV1 struct {
 }
 
 type cachingConfig struct {
-	Enabled    values.BoolValue `json:"enabled" yaml:"enabled"`
-	QueriesTTL values.BoolValue `json:"enabled" yaml:"enabled"`
-	// continue here
+	Enabled values.BoolValue `json:"enabled" yaml:"enabled"`
+	// TODO: use duration with seconds
+	QueriesTTL    values.Int64Value `json:"queriesTTL" yaml:"queriesTTL"`
+	ResourcesTTL  values.Int64Value `json:"resourcesTTL" yaml:"resourcesTTL"`
+	UseDefaultTTL values.BoolValue  `json:"useDefaultTTL" yaml:"useDefaultTTL"`
 }
 
 func (cfg *configsV1) mapToDatasourceFromConfig(apiVersion int64) *configs {
