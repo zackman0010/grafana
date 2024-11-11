@@ -115,8 +115,8 @@ type ResourceServerOptions struct {
 	// The blob configuration
 	Blob BlobConfig
 
-	// Requests based on a search index
-	Index ResourceIndexServer
+	// Search options
+	Search SearchOptions
 
 	// Diagnostics
 	Diagnostics DiagnosticsServer
@@ -189,7 +189,6 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 		tracer:      opts.Tracer,
 		log:         logger,
 		backend:     opts.Backend,
-		index:       opts.Index,
 		blob:        blobstore,
 		diagnostics: opts.Diagnostics,
 		access:      opts.WriteAccess,
@@ -199,7 +198,10 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 		cancel:      cancel,
 	}
 
-	return s, nil
+	var err error
+	s.search, err = newSearchSupport(opts.Search, s.backend, opts.Tracer)
+
+	return s, err
 }
 
 var _ ResourceServer = &server{}
@@ -209,7 +211,7 @@ type server struct {
 	log          *slog.Logger
 	backend      StorageBackend
 	blob         BlobSupport
-	index        ResourceIndexServer
+	search       *searchSupport
 	diagnostics  DiagnosticsServer
 	access       WriteAccessHooks
 	lifecycle    LifecycleHooks
@@ -240,6 +242,11 @@ func (s *server) Init(ctx context.Context) error {
 		// Start watching for changes
 		if s.initErr == nil {
 			s.initErr = s.initWatcher()
+		}
+
+		// initialize the searcher
+		if s.initErr == nil && s.search != nil {
+			s.initErr = s.search.init(ctx)
 		}
 
 		if s.initErr != nil {
@@ -743,55 +750,6 @@ func (s *server) Watch(req *WatchRequest, srv ResourceStore_WatchServer) error {
 			}
 		}
 	}
-}
-
-func (s *server) Search(ctx context.Context, req *SearchRequest) (*SearchResponse, error) {
-	if err := s.Init(ctx); err != nil {
-		return nil, err
-	}
-	return s.index.Search(ctx, req)
-}
-
-// History implements ResourceServer.
-func (s *server) History(ctx context.Context, req *HistoryRequest) (*HistoryResponse, error) {
-	if err := s.Init(ctx); err != nil {
-		return nil, err
-	}
-	return s.index.History(ctx, req)
-}
-
-// Origin implements ResourceServer.
-func (s *server) Origin(ctx context.Context, req *OriginRequest) (*OriginResponse, error) {
-	if err := s.Init(ctx); err != nil {
-		return nil, err
-	}
-	return s.index.Origin(ctx, req)
-}
-
-// Index returns the search index. If the index is not initialized, it will be initialized.
-func (s *server) Index(ctx context.Context) (*Index, error) {
-	if err := s.Init(ctx); err != nil {
-		return nil, err
-	}
-
-	index := s.index.(*IndexServer)
-	if index.index == nil {
-		err := index.Init(ctx, s)
-		if err != nil {
-			return nil, err
-		}
-
-		err = index.Load(ctx)
-		if err != nil {
-			return nil, err
-		}
-
-		err = index.Watch(ctx)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return index.index, nil
 }
 
 // IsHealthy implements ResourceServer.

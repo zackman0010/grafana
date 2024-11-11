@@ -5,12 +5,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"golang.org/x/net/context"
+
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 	"github.com/grafana/grafana/pkg/storage/unified/sql"
 	"github.com/grafana/grafana/pkg/util/testutil"
-	"github.com/stretchr/testify/require"
-	"golang.org/x/net/context"
 )
 
 // addResource is a helper to create a resource in unified storage

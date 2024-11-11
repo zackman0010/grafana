@@ -27,7 +27,6 @@ type dashboardStorage struct {
 func (s *dashboardStorage) newStore(scheme *runtime.Scheme, defaultOptsGetter generic.RESTOptionsGetter, reg prometheus.Registerer) (grafanarest.LegacyStorage, error) {
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
 		Backend: s.access,
-		Index:   s.access,
 		Reg:     reg,
 		// WriteAccess: resource.WriteAccessHooks{
 		// 	Folder: func(ctx context.Context, user identity.Requester, uid string) bool {

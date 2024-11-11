@@ -1,0 +1,12 @@
+{
+  "id": "moOaT5Em8O1D/fYhSzGmRlfCRa8fdTWLd25zz2a2fqg=",
+  "rv": 1234,
+  "group": "folder.grafana.app",
+  "resource": "folders",
+  "namespace": "default",
+  "name": "bbb",
+  "title": "bbb",
+  "created": "2024-11-01T22:42:22+03:00",
+  "created_by": "user:1",
+  "origin_name": "SQL"
+}
