@@ -23,19 +23,10 @@ type IndexableDocument interface {
 	GetID() string
 }
 
-// Convert the core k8s bytes into an indexable document
+// Convert raw resource bytes into an IndexableDocument
 type DocumentBuilder interface {
 	// Convert raw bytes into an document that can be written
 	BuildDocument(ctx context.Context, key *ResourceKey, rv int64, value []byte) (IndexableDocument, error)
-}
-
-// Passed as input to the constructor
-type SearchOptions struct {
-	// The raw index backend (eg, bleve, frames, parquet, etc)
-	Backend SearchBackend
-
-	// The supported resource types
-	Resources []DocumentBuilderInfo
 }
 
 // Each namespace may need to load something
@@ -46,8 +37,8 @@ type DocumentBuilderInfo struct {
 	// When the builder does not depend on cached namespace data
 	Builder DocumentBuilder
 
-	// When the builder is namespaced, it can be retrieved on demand
-	Namespaced func(ctx context.Context, namespace string) (DocumentBuilder, error)
+	// For complicated builders (eg dashboards!) we need to load on demand
+	Namespaced func(ctx context.Context, namespace string, blob BlobSupport) (DocumentBuilder, error)
 }
 
 type ResourceIndex interface {
@@ -60,10 +51,11 @@ type ResourceIndex interface {
 	// Make sure any changes to the index are flushed and available in the next search/origin calls
 	Flush() error
 
-	// Execute a search query
-	Search(ctx context.Context, ac authz.ItemChecker, req *ResourceSearchRequest) (*ResourceSearchResponse, error)
+	// Search within a namespaced resource
+	Search(ctx context.Context, access authz.AccessClient, req *ResourceSearchRequest) (*ResourceSearchResponse, error)
 
 	// Execute an origin query -- access control is not not checked for each item
+	// NOTE: this will likely be used for provisioning, or it will be removed
 	Origin(ctx context.Context, req *OriginRequest) (*OriginResponse, error)
 }
 
@@ -305,6 +297,9 @@ type builderCache struct {
 	// The default builder
 	defaultBuilder DocumentBuilder
 
+	// Possible blob support
+	blob BlobSupport
+
 	// lookup by group, then resource (namespace)
 	// This is only modified at startup, so we do not need mutex for access
 	lookup map[string]map[string]DocumentBuilderInfo
@@ -375,7 +370,7 @@ func (s *builderCache) get(ctx context.Context, key NamespacedResource) (Documen
 				s.mu.Lock()
 				defer s.mu.Unlock()
 
-				b, err := r.Namespaced(ctx, key.Namespace)
+				b, err := r.Namespaced(ctx, key.Namespace, s.blob)
 				if err == nil {
 					_ = s.ns.Add(key, b)
 				}

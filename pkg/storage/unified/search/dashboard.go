@@ -38,7 +38,7 @@ type DashboardDocumentBuilder struct {
 	Lookup dashboard.DatasourceLookup
 
 	// For large dashboards we will need to load them from blob store
-	Blob resource.BlobStoreClient
+	Blob resource.BlobSupport
 }
 
 var _ resource.DocumentBuilder = &DashboardDocumentBuilder{}
@@ -61,11 +61,7 @@ func (s *DashboardDocumentBuilder) BuildDocument(ctx context.Context, key *resou
 
 	blob := obj.GetBlob()
 	if blob != nil {
-		rsp, err := s.Blob.GetBlob(ctx, &resource.GetBlobRequest{
-			Resource:        key,
-			ResourceVersion: rv,
-			MustProxyBytes:  true,
-		})
+		rsp, err := s.Blob.GetResourceBlob(ctx, key, blob, true)
 		if err != nil {
 			return nil, err
 		}

@@ -105,6 +105,15 @@ type BlobConfig struct {
 	Backend BlobSupport
 }
 
+// Passed as input to the constructor
+type SearchOptions struct {
+	// The raw index backend (eg, bleve, frames, parquet, etc)
+	Backend SearchBackend
+
+	// The supported resource types
+	Resources []DocumentBuilderInfo
+}
+
 type ResourceServerOptions struct {
 	// OTel tracer
 	Tracer trace.Tracer
@@ -200,7 +209,9 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 
 	var err error
 	s.search, err = newSearchSupport(opts.Search, s.backend, opts.Tracer)
-
+	if s.search != nil && s.search.builders != nil {
+		s.search.builders.blob = s.blob
+	}
 	return s, err
 }
 

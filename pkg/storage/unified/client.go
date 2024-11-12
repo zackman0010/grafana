@@ -20,6 +20,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/storage/unified/sql"
 )
 
@@ -31,6 +32,7 @@ func ProvideUnifiedStorageClient(
 	features featuremgmt.FeatureToggles,
 	db infraDB.DB,
 	tracer tracing.Tracer,
+	docs search.DocumentBuilderProvider,
 	reg prometheus.Registerer,
 ) (resource.ResourceClient, error) {
 	// See: apiserver.ApplyGrafanaConfig(cfg, features, o)
@@ -95,7 +97,7 @@ func ProvideUnifiedStorageClient(
 
 	// Use the local SQL
 	default:
-		server, err := sql.NewResourceServer(ctx, db, cfg, features, tracer, reg)
+		server, err := sql.NewResourceServer(ctx, db, cfg, features, tracer, docs, reg)
 		if err != nil {
 			return nil, err
 		}

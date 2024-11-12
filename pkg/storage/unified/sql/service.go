@@ -3,10 +3,10 @@ package sql
 import (
 	"context"
 
-	"github.com/grafana/dskit/services"
 	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
+	"github.com/grafana/dskit/services"
 	infraDB "github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/infra/tracing"
@@ -18,6 +18,7 @@ import (
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 	"github.com/grafana/grafana/pkg/storage/unified/resource/grpc"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 )
 
 var (
@@ -46,8 +47,9 @@ type service struct {
 
 	authenticator interceptors.Authenticator
 
-	log log.Logger
-	reg prometheus.Registerer
+	log  log.Logger
+	reg  prometheus.Registerer
+	docs search.DocumentBuilderProvider
 }
 
 func ProvideUnifiedStorageGrpcService(
@@ -93,7 +95,7 @@ func ProvideUnifiedStorageGrpcService(
 }
 
 func (s *service) start(ctx context.Context) error {
-	server, err := NewResourceServer(ctx, s.db, s.cfg, s.features, s.tracing, s.reg)
+	server, err := NewResourceServer(ctx, s.db, s.cfg, s.features, s.tracing, s.docs, s.reg)
 	if err != nil {
 		return err
 	}

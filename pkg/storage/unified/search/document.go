@@ -9,23 +9,60 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
+	"github.com/grafana/grafana/pkg/services/store/kind/dashboard"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
+
+type DocumentBuilderProvider interface {
+	GetDocumentBuilders(ctx context.Context) ([]resource.DocumentBuilderInfo, error)
+}
+
+// Replaced in enterprise with a version that includes stats
+func ProvideBuilders() DocumentBuilderProvider {
+	return &standardDocumentProvider{}
+}
+
+type standardDocumentProvider struct {
+	_ int // sealed
+}
 
 type defaultDocumentBuilder struct {
 	_ int // sealed
 }
 
 var (
-	DefaultDocumentBuilder = resource.DocumentBuilderInfo{
-		Group:    "",
-		Resource: "",
-		Builder:  &defaultDocumentBuilder{}, // shared for everyone
-	}
 	_ resource.DocumentBuilder = &defaultDocumentBuilder{}
+	_ DocumentBuilderProvider  = &standardDocumentProvider{}
 )
 
-func (s *defaultDocumentBuilder) BuildDocument(_ context.Context, key *resource.ResourceKey, rv int64, value []byte) (resource.IndexableDocument, error) {
+func (p *standardDocumentProvider) GetDocumentBuilders(ctx context.Context) ([]resource.DocumentBuilderInfo, error) {
+	return []resource.DocumentBuilderInfo{
+		{
+			Group:    "",
+			Resource: "",
+			Builder:  &defaultDocumentBuilder{},
+		},
+		{
+			Group:    "dashboard.grafana.app",
+			Resource: "dashboards",
+
+			// This is a dummy example, and will need resolver setup for enterprise stats and and (eventually) data sources
+			Namespaced: func(ctx context.Context, namespace string, blob resource.BlobSupport) (resource.DocumentBuilder, error) {
+				lookup := dashboard.CreateDatasourceLookup([]*dashboard.DatasourceQueryResult{
+					// TODO, query data sources
+				})
+				return &DashboardDocumentBuilder{
+					Namespace: namespace,
+					Lookup:    lookup,
+					Stats:     nil, // loaded in enterprise
+					Blob:      blob,
+				}, nil
+			},
+		},
+	}, nil
+}
+
+func (_ *defaultDocumentBuilder) BuildDocument(_ context.Context, key *resource.ResourceKey, rv int64, value []byte) (resource.IndexableDocument, error) {
 	tmp := &unstructured.Unstructured{}
 	err := tmp.UnmarshalJSON(value)
 	if err != nil {

@@ -12,7 +12,6 @@ import (
 
 	"github.com/grafana/authlib/claims"
 	"github.com/grafana/dskit/services"
-
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	infraDB "github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/infra/tracing"
@@ -51,7 +50,7 @@ func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceSe
 	err = ret.Init(testutil.NewDefaultTestContext(t))
 	require.NoError(t, err)
 
-	opts, err := search.NewSearchOptions(cfg, tracing.NewNoopTracerService(), nil)
+	opts, err := search.NewSearchOptions(cfg, tracing.NewNoopTracerService(), nil, nil)
 	require.NoError(t, err)
 
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{

@@ -180,7 +180,7 @@ func (b *bleveIndex) Origin(ctx context.Context, req *resource.OriginRequest) (*
 }
 
 // Search implements resource.DocumentIndex.
-func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *resource.ResourceSearchRequest) (*resource.ResourceSearchResponse, error) {
+func (b *bleveIndex) Search(ctx context.Context, access authz.AccessClient, req *resource.ResourceSearchRequest) (*resource.ResourceSearchResponse, error) {
 	if !(req.Query == "" || req.Query == "*") {
 		return nil, fmt.Errorf("currently only match all query is supported")
 	}
@@ -213,6 +213,10 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 		}
 		queries = append(queries, q)
 	}
+
+	// TODO AUTHZ!!!!
+	// Need to add an authz filter into the mix
+
 	switch len(queries) {
 	case 0:
 		break
