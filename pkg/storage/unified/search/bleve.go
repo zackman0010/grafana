@@ -10,6 +10,7 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/search"
+	"github.com/blevesearch/bleve/v2/search/query"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
 
@@ -184,32 +185,60 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 		return nil, fmt.Errorf("currently only match all query is supported")
 	}
 
-	query := bleve.NewMatchAllQuery()
-	selectFields := req.Fields
-	if len(selectFields) < 1 && req.Limit > 0 {
+	searchrequest := &bleve.SearchRequest{
+		Fields:  req.Fields,
+		Query:   bleve.NewMatchAllQuery(),
+		Size:    int(req.Limit),
+		From:    int(req.Offset),
+		Explain: req.Explain,
+	}
+
+	queries := []query.Query{}
+	if req.Options != nil {
+		if len(req.Options.Fields) > 0 {
+			return nil, fmt.Errorf("field queries not yet supported")
+		}
+		if len(req.Options.Labels) > 0 {
+			return nil, fmt.Errorf("label queries not yet supported")
+		}
+	}
+
+	// The raw query syntax -- depends on the engine for now
+	if req.Query != "" && req.Query != "*" {
+		q, err := query.ParseQuery([]byte(req.Query))
+		if err != nil {
+			return &resource.ResourceSearchResponse{
+				Error: resource.NewBadRequestError("error parsing query"),
+			}, nil
+		}
+		queries = append(queries, q)
+	}
+	switch len(queries) {
+	case 0:
+		break
+	case 1:
+		searchrequest.Query = queries[0]
+	default:
+		searchrequest.Query = bleve.NewConjunctionQuery(queries...) // AND
+	}
+
+	// Make sure some fields are selected
+	if len(searchrequest.Fields) < 1 && req.Limit > 0 {
 		f, err := b.index.Fields()
 		if err != nil {
 			return nil, err
 		}
-		selectFields = f
+		searchrequest.Fields = f
 	}
 
-	var facets bleve.FacetsRequest
-	for _, v := range req.Facet {
-		if facets == nil {
-			facets = make(bleve.FacetsRequest)
+	for k, v := range req.Facet {
+		if searchrequest.Facets == nil {
+			searchrequest.Facets = make(bleve.FacetsRequest)
 		}
-		facets[v.Field] = bleve.NewFacetRequest(v.Field, int(v.Limit))
+		searchrequest.Facets[k] = bleve.NewFacetRequest(v.Field, int(v.Limit))
 	}
 
-	res, err := b.index.Search(&bleve.SearchRequest{
-		Fields:  selectFields,
-		Query:   query,
-		Facets:  facets,
-		Size:    int(req.Limit),
-		From:    int(req.Offset),
-		Explain: req.Explain,
-	})
+	res, err := b.index.Search(searchrequest)
 	if err != nil {
 		return nil, err
 	}
@@ -221,13 +250,9 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 	}
 
 	// Convert the hits to a data frame
-	frame, err := hitsToFrame(selectFields, res.Hits)
+	frame, err := hitsToFrame(searchrequest.Fields, res.Hits, req.Explain)
 	if err != nil {
 		return nil, err
-	}
-
-	if req.Explain {
-
 	}
 
 	// Write frame as JSON
@@ -238,7 +263,7 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 
 	for k, v := range res.Facets {
 		f := &resource.ResourceSearchResponse_Facet{
-			Field:   k,
+			Field:   v.Field,
 			Total:   int64(v.Total),
 			Missing: int64(v.Missing),
 		}
@@ -250,12 +275,15 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 				})
 			}
 		}
-		rsp.Facet = append(rsp.Facet, f)
+		if rsp.Facet == nil {
+			rsp.Facet = make(map[string]*resource.ResourceSearchResponse_Facet)
+		}
+		rsp.Facet[k] = f
 	}
 	return rsp, nil
 }
 
-func hitsToFrame(selectFields []string, hits search.DocumentMatchCollection) (*data.Frame, error) {
+func hitsToFrame(selectFields []string, hits search.DocumentMatchCollection, explain bool) (*data.Frame, error) {
 	size := hits.Len()
 	frame := data.NewFrame("")
 	for _, fname := range selectFields {
@@ -313,6 +341,20 @@ func hitsToFrame(selectFields []string, hits search.DocumentMatchCollection) (*d
 				}
 			}
 			frame.Fields = append(frame.Fields, field)
+		}
+	}
+
+	// Add the explain field
+	if explain {
+		field := data.NewFieldFromFieldType(data.FieldTypeJSON, size)
+		field.Name = "explain"
+		for row, hit := range hits {
+			if hit.Expl != nil {
+				js, _ := json.Marshal(hit.Expl)
+				if len(js) > 0 {
+					field.Set(row, json.RawMessage(js))
+				}
+			}
 		}
 	}
 

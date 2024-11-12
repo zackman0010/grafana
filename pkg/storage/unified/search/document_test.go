@@ -27,14 +27,14 @@ func testDocumentBuilder(t *testing.T, opts testBuilderOptions) {
 	for _, name := range opts.names {
 		// nolint:gosec
 		// We can ignore the gosec G304 warning because this is a test with hardcoded input values
-		src, err := os.ReadFile(filepath.Join("testdata", fmt.Sprintf("%s-%s.json", opts.prefix, name)))
+		src, err := os.ReadFile(filepath.Join("testdata", "doc", fmt.Sprintf("input-%s-%s.json", opts.prefix, name)))
 		require.NoError(t, err)
 
 		key.Name = name
 		doc, err := opts.builder.BuildDocument(ctx, key, 1234, src)
 		require.NoError(t, err)
 
-		outpath := filepath.Join("testdata", fmt.Sprintf("%s-%s-doc.json", opts.prefix, name))
+		outpath := filepath.Join("testdata", "doc", fmt.Sprintf("output-%s-%s.json", opts.prefix, name))
 		cmp, _ := os.ReadFile(outpath)
 		out, err := json.MarshalIndent(doc, "", "  ")
 		require.NoError(t, err)

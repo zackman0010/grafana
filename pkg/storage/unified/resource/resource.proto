@@ -352,15 +352,15 @@ message ResourceSearchRequest {
   message Facet {
     string field = 1;
     int64 limit = 2;
-
+    // For now, only term queries, eventually?
     // numeric queries
     // date queries
   }
 
-  // Key must include namespace + group + resource
-  ResourceKey key = 1;
+  // The key must include namespace + group + resource
+  ListOptions options = 1;
   
-  // parseable query
+  // When a query exists, it is parsed and used to influence
   // query string for chosen implementation (currently just bleve)
   // The score is only relevant when a query exists
   string query = 2;
@@ -371,20 +371,17 @@ message ResourceSearchRequest {
   // where to start the query (eg, From)
   int64 offset = 4;
 
-  // Additional filter queries (these do not effect the score)
-  repeated string filters = 5;
-
   // sorting
-  repeated Sort sortBy = 6;
+  repeated Sort sortBy = 5;
 
-  // get stats
-  repeated Facet facet = 7;
+  // calculate field statistics
+  map<string,Facet> facet = 6;
 
   // the return fields (empty will return everything)
-  repeated string fields = 8;
+  repeated string fields = 7;
 
   // explain each result (added to the each row)
-  bool explain = 9;
+  bool explain = 8;
 }
 
 message ResourceSearchResponse {
@@ -412,6 +409,9 @@ message ResourceSearchResponse {
   ResourceKey key = 2;
 
   // Query results returned as a data frame
+  // ???? OR we could do common + schema + repeated :thinking:
+  // frame pro: efficient way to list everything -- flexible
+  // frame con: complex/not intuitive -- flexible
   bytes frame = 3;
 
   // The total hit count
@@ -423,8 +423,8 @@ message ResourceSearchResponse {
   // maximum score across all fields
   double max_score = 6;
 
-  // Facet query results
-  repeated Facet facet = 7;
+  // Facet results
+  map<string,Facet> facet = 7;
 }
 
 message GroupBy {

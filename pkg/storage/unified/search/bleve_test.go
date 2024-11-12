@@ -2,6 +2,7 @@ package search
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
 	"os"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental"
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
@@ -44,7 +46,7 @@ func TestBleveBackend(t *testing.T) {
 			ID:         "aaa",
 			RV:         1,
 			Name:       "aaa",
-			Folder:     "folder-A",
+			Folder:     "folder-1",
 			OriginName: "SQL",
 			Tags:       []string{"aa", "bb"},
 			Created:    time.Unix(10000, 0), // searchable, but not stored!!! (by default)
@@ -53,8 +55,20 @@ func TestBleveBackend(t *testing.T) {
 			ID:         "bbb",
 			RV:         2,
 			Name:       "bbb",
-			Folder:     "folder-B",
+			Folder:     "folder-2",
 			OriginName: "SQL",
+			Tags:       []string{"aa"},
+			Labels: map[string]string{
+				"key": "value",
+			},
+		})
+		index.Write(&StandardDocumentFields{
+			ID:         "ccc",
+			RV:         3,
+			Name:       "ccc",
+			Folder:     "folder-1",
+			OriginName: "SQL",
+			Tags:       []string{"aa"},
 			Labels: map[string]string{
 				"key": "value",
 			},
@@ -67,32 +81,43 @@ func TestBleveBackend(t *testing.T) {
 	rsp, err := index.Search(ctx, nil, &resource.ResourceSearchRequest{
 		Query: "*",
 		Limit: 100000,
+		Facet: map[string]*resource.ResourceSearchRequest_Facet{
+			"tags": {
+				Field: "tags",
+				Limit: 100,
+			},
+		},
 	})
 	require.NoError(t, err)
 	require.Nil(t, rsp.Error)
 	require.NotNil(t, rsp.Frame)
+	require.NotNil(t, rsp.Facet)
+
+	// Get the tags facets
+	facet, ok := rsp.Facet["tags"]
+	require.True(t, ok)
+	disp, err := json.MarshalIndent(facet, "", "  ")
+	require.NoError(t, err)
+	//fmt.Printf("%s\n", disp)
+	require.JSONEq(t, `{
+		"field": "tags",
+		"total": 4,
+		"terms": [
+			{
+				"term": "aa",
+				"count": 3
+			},
+			{
+				"term": "bb",
+				"count": 1
+			}
+		]
+	}`, string(disp))
 
 	frame := &data.Frame{}
 	err = frame.UnmarshalJSON(rsp.Frame)
 	require.NoError(t, err)
 
-	//	fmt.Printf("%s\n", rsp.Frame)
-
-	field, _ := frame.FieldByName("name")
-	require.NotNil(t, field)
-
-	require.Equal(t, []any{"aaa", "bbb"}, asSlice(field))
-
-	// jj, err := json.MarshalIndent(rsp, "", "  ")
-	// require.NoError(t, err)
-	// fmt.Printf("%s\n", jj)
-	// require.JSONEq(t, `{}`, string(jj))
-}
-
-func asSlice(f *data.Field) []any {
-	v := make([]any, f.Len())
-	for i := 0; i < len(v); i++ {
-		v[i] = f.At(i)
-	}
-	return v
+	// Verify the results in testdata
+	experimental.CheckGoldenJSONFrame(t, "testdata", "golden-simple", frame, true)
 }
