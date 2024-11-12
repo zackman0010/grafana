@@ -2,16 +2,19 @@ package search
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"path/filepath"
 	"sync"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/search"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/grafana/authlib/authz"
+	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
 
@@ -182,14 +185,15 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 	}
 
 	query := bleve.NewMatchAllQuery()
-	fields := req.Fields
-	if len(fields) < 1 && req.Limit > 0 {
-		fields = []string{
-			"name",
-			"folder",
-			"origin_name",
+	selectFields := req.Fields
+	if len(selectFields) < 1 && req.Limit > 0 {
+		f, err := b.index.Fields()
+		if err != nil {
+			return nil, err
 		}
+		selectFields = f
 	}
+
 	var facets bleve.FacetsRequest
 	for _, v := range req.Facet {
 		if facets == nil {
@@ -199,7 +203,7 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 	}
 
 	res, err := b.index.Search(&bleve.SearchRequest{
-		Fields:  fields,
+		Fields:  selectFields,
 		Query:   query,
 		Facets:  facets,
 		Size:    int(req.Limit),
@@ -216,19 +220,20 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 		MaxScore:  res.MaxScore,
 	}
 
-	for _, hit := range res.Hits {
-		n, ok := hit.Fields["name"]
-		if !ok {
-			return nil, fmt.Errorf("missing name: " + hit.ID)
-		}
+	// Convert the hits to a data frame
+	frame, err := hitsToFrame(selectFields, res.Hits)
+	if err != nil {
+		return nil, err
+	}
 
-		fmt.Printf("HIT %s // %+v\n", n, hit.Fields)
+	if req.Explain {
 
-		// rsp.Values = append(rsp.Values, resource.IndexedResource{
-		// 	Group:     b.key.Group,
-		// 	Namespace: b.key.Namespace,
-		// 	Name:      n.(string),
-		// })
+	}
+
+	// Write frame as JSON
+	rsp.Frame, err = frame.MarshalJSON()
+	if err != nil {
+		return nil, err
 	}
 
 	for k, v := range res.Facets {
@@ -248,4 +253,68 @@ func (b *bleveIndex) Search(ctx context.Context, ac authz.ItemChecker, req *reso
 		rsp.Facet = append(rsp.Facet, f)
 	}
 	return rsp, nil
+}
+
+func hitsToFrame(selectFields []string, hits search.DocumentMatchCollection) (*data.Frame, error) {
+	size := hits.Len()
+	frame := data.NewFrame("")
+	for _, fname := range selectFields {
+		var field *data.Field
+		isJSON := false // for arrays
+
+		for row, hit := range hits {
+			v, ok := hit.Fields[fname]
+			if ok {
+				if field == nil {
+					// Add a field if any value exists
+					ftype := data.FieldTypeFor(v)
+					if ftype == data.FieldTypeUnknown {
+						ftype = data.FieldTypeJSON
+						isJSON = true
+					} else if row > 0 {
+						ftype = ftype.NullableType()
+					}
+
+					field = data.NewFieldFromFieldType(ftype, size)
+					field.Name = fname
+				}
+
+				// Use json to support multi-valued fields
+				if isJSON {
+					jj, _ := json.Marshal(v)
+					field.SetConcrete(row, json.RawMessage(jj))
+				} else {
+					field.SetConcrete(row, v)
+				}
+			} else {
+				// Swap nullable type if missing
+				if field != nil && !field.Nullable() && !isJSON {
+					tmp := data.NewFieldFromFieldType(field.Type().NullableType(), size)
+					for i := 0; i < row; i++ {
+						tmp.SetConcrete(i, field.At(i)) // replace the
+					}
+					field = tmp
+				}
+			}
+		}
+
+		if field != nil {
+			// Do not include all empty strings
+			if field.Type() == data.FieldTypeString {
+				allEmpty := true
+				for i := 0; i < size; i++ {
+					if field.At(i) != "" {
+						allEmpty = false
+						break
+					}
+				}
+				if allEmpty {
+					continue
+				}
+			}
+			frame.Fields = append(frame.Fields, field)
+		}
+	}
+
+	return frame, nil
 }

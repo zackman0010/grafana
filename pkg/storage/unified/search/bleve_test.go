@@ -5,9 +5,11 @@ import (
 	"log/slog"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
@@ -44,6 +46,8 @@ func TestBleveBackend(t *testing.T) {
 			Name:       "aaa",
 			Folder:     "folder-A",
 			OriginName: "SQL",
+			Tags:       []string{"aa", "bb"},
+			Created:    time.Unix(10000, 0), // searchable, but not stored!!! (by default)
 		})
 		index.Write(&StandardDocumentFields{
 			ID:         "bbb",
@@ -51,6 +55,9 @@ func TestBleveBackend(t *testing.T) {
 			Name:       "bbb",
 			Folder:     "folder-B",
 			OriginName: "SQL",
+			Labels: map[string]string{
+				"key": "value",
+			},
 		})
 		return rv, nil
 	})
@@ -65,14 +72,27 @@ func TestBleveBackend(t *testing.T) {
 	require.Nil(t, rsp.Error)
 	require.NotNil(t, rsp.Frame)
 
-	names := []string{}
-	// for _, r := range rsp.Values {
-	// 	names = append(names, r.Name)
-	// }
-	require.Equal(t, []string{"aaa", "bbb"}, names)
+	frame := &data.Frame{}
+	err = frame.UnmarshalJSON(rsp.Frame)
+	require.NoError(t, err)
+
+	//	fmt.Printf("%s\n", rsp.Frame)
+
+	field, _ := frame.FieldByName("name")
+	require.NotNil(t, field)
+
+	require.Equal(t, []any{"aaa", "bbb"}, asSlice(field))
 
 	// jj, err := json.MarshalIndent(rsp, "", "  ")
 	// require.NoError(t, err)
 	// fmt.Printf("%s\n", jj)
 	// require.JSONEq(t, `{}`, string(jj))
+}
+
+func asSlice(f *data.Field) []any {
+	v := make([]any, f.Len())
+	for i := 0; i < len(v); i++ {
+		v[i] = f.At(i)
+	}
+	return v
 }
