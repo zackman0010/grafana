@@ -1,12 +1,15 @@
 import { groupBy, mapValues } from 'lodash';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin, from, lastValueFrom, map, mergeMap, of, Unsubscribable } from 'rxjs';
 
 import { DataSourceRef, DataTopic } from '@grafana/data';
 import {
   SceneDataLayerBase,
   SceneDataLayerProvider,
   SceneDataLayerProviderState,
+  SceneDataProvider,
   SceneDataProviderResult,
+  SceneDataState,
+  SceneDataTransformer,
   sceneGraph,
   VizPanel,
 } from '@grafana/scenes';
@@ -37,7 +40,8 @@ export class CorrelationsDataLayer
   extends SceneDataLayerBase<CorrelationsDataLayerState>
   implements SceneDataLayerProvider
 {
-  public topic = DataTopic.AlertStates;
+  private _timeRangeSub: Unsubscribable | undefined;
+  public topic = DataTopic.Correlations;
 
   public constructor(initialState: CorrelationsDataLayerState) {
     super({
@@ -47,15 +51,25 @@ export class CorrelationsDataLayer
     });
   }
 
-  public onEnable(): void {}
+  public onEnable(): void {
+    const timeRange = sceneGraph.getTimeRange(this);
 
-  public onDisable(): void {}
+    this._timeRangeSub = timeRange.subscribeToState(() => {
+      this.run();
+    });
+  }
+
+  public onDisable(): void {
+    this._timeRangeSub?.unsubscribe();
+  }
 
   public runLayer() {
+    console.log('run layer');
     this.run();
   }
 
   private async run() {
+    console.log('run');
     const dashboard = getDashboardSceneFor(this);
     const panels = dashboard.state.body.getVizPanels();
 
@@ -64,14 +78,40 @@ export class CorrelationsDataLayer
     }
 
     const fetchData: () => Promise<CorrelationData[]> = async () => {
+      console.log('fetch data');
       return getCorrelationsForDashboard(panels);
     };
 
     const correlationsExecution = from(fetchData());
-    const panelsObs = panels.map((panel) => sceneGraph.getData(panel).getResultsStream());
 
-    this.querySub = forkJoin([correlationsExecution, ...panelsObs]).subscribe({
+    /*
+      const wat2 = forkJoin(panels.map((panel) => sceneGraph.getData(panel).getResultsStream()));
+        const wat = await lastValueFrom(wat2.pipe());
+    */
+
+    const wat = forkJoin(
+      panels.map((panel) => {
+        /*const dataProvider = sceneGraph.getData(panel);
+      const wat3 = getDataProviderToSubscribeTo(dataProvider);
+      return wat3.state.$data; */
+        return sceneGraph.getData(panel).getResultsStream();
+      })
+    ).pipe(
+      map((data) => {
+        console.log('panel', data);
+        return data;
+      })
+    );
+
+    this.querySub = forkJoin([correlationsExecution, wat]).subscribe({
+      next: async (stateUpdate) => {
+        console.log(stateUpdate);
+      },
+    });
+
+    /*this.querySub = forkJoin([correlationsExecution, ...panelsObs]).subscribe({
       next: (res) => {
+        console.log('subscribe next');
         const correlations = res[0];
 
         if (correlations.length > 0) {
@@ -96,11 +136,19 @@ export class CorrelationsDataLayer
       error: (err) => {
         this.handleError(err);
       },
-    });
+    }); */
   }
 
   private handleError = (err: unknown) => {
     const notification = createErrorNotification('CorrelationsDataLayer', getMessageFromError(err));
     dispatch(notifyApp(notification));
   };
+}
+
+function getDataProviderToSubscribeTo(dataProvider: SceneDataProvider): SceneDataProvider<SceneDataState> {
+  if (dataProvider instanceof SceneDataTransformer && dataProvider.state.$data) {
+    return dataProvider.state.$data;
+  }
+
+  return dataProvider;
 }

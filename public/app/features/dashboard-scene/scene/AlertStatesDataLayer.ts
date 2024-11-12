@@ -56,11 +56,13 @@ export class AlertStatesDataLayer
   }
 
   public runLayer() {
+    console.log('run layer');
     const timeRange = sceneGraph.getTimeRange(this);
     this.runWithTimeRange(timeRange);
   }
 
   private async runWithTimeRange(timeRange: SceneTimeRangeLike) {
+    console.log('run w time range');
     const dashboard = getDashboardSceneFor(this);
     const { uid, id } = dashboard.state;
 
@@ -72,6 +74,7 @@ export class AlertStatesDataLayer
       return;
     }
     const fetchData: () => Promise<RuleNamespace[]> = async () => {
+      console.log('fetch data');
       const promRules = await dispatch(
         alertRuleApi.endpoints.prometheusRuleNamespaces.initiate({
           ruleSourceName: GRAFANA_RULES_SOURCE_NAME,
@@ -83,6 +86,7 @@ export class AlertStatesDataLayer
       }
       return promRules.data;
     };
+
     const res: Observable<PromRuleGroupDTO[]> = from(fetchData()).pipe(
       map((namespaces: RuleNamespace[]) => ungroupRulesByFileName(namespaces))
     );
@@ -125,6 +129,7 @@ export class AlertStatesDataLayer
 
     this.querySub = alerStatesExecution.subscribe({
       next: (stateUpdate) => {
+        console.log('subscribe next');
         const frame = toDataFrame(stateUpdate);
         this.publishResults({
           state: LoadingState.Done,

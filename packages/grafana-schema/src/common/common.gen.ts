@@ -15,6 +15,7 @@
 export enum DataTopic {
   AlertStates = 'alertStates',
   Annotations = 'annotations',
+  Correlations = 'correlations',
   Series = 'series',
 }
 

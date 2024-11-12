@@ -643,7 +643,7 @@ export interface DataTransformerConfig {
   /**
    * Where to pull DataFrames from as input to transformation
    */
-  topic?: ('series' | 'annotations' | 'alertStates'); // replaced with common.DataTopic
+  topic?: ('series' | 'annotations' | 'alertStates' | 'correlations'); // replaced with common.DataTopic
 }
 
 /**
