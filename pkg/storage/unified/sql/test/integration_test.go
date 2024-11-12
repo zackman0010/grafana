@@ -12,13 +12,13 @@ import (
 
 	"github.com/grafana/authlib/claims"
 	"github.com/grafana/dskit/services"
-
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	infraDB "github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/storage/unified/sql"
 	"github.com/grafana/grafana/pkg/storage/unified/sql/db/dbimpl"
 	"github.com/grafana/grafana/pkg/tests/testsuite"
@@ -50,14 +50,21 @@ func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceSe
 	err = ret.Init(testutil.NewDefaultTestContext(t))
 	require.NoError(t, err)
 
+	opts, err := search.NewSearchOptions(cfg, tracing.NewNoopTracerService(), nil, nil)
+	require.NoError(t, err)
+
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
 		Backend:     ret,
+		Search:      opts,
 		Diagnostics: ret,
 		Lifecycle:   ret,
-		Index:       resource.NewResourceIndexServer(cfg, tracing.NewNoopTracerService()),
 	})
 	require.NoError(t, err)
 	require.NotNil(t, server)
+
+	rsp, err := server.IsHealthy(context.Background(), &resource.HealthCheckRequest{})
+	require.NoError(t, err)
+	require.Equal(t, resource.HealthCheckResponse_SERVING, rsp.Status)
 
 	return ret, server
 }

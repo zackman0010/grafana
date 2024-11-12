@@ -5,26 +5,31 @@ import (
 	"testing"
 	"time"
 
-	"github.com/grafana/grafana/pkg/setting"
-	"github.com/grafana/grafana/pkg/storage/unified/resource"
-	"github.com/grafana/grafana/pkg/storage/unified/sql"
-	"github.com/grafana/grafana/pkg/util/testutil"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/util/testutil"
 )
 
 // addResource is a helper to create a resource in unified storage
-func addResource(t *testing.T, ctx context.Context, backend sql.Backend, resourceName string, data string) {
-	ir, err := resource.NewIndexedResource([]byte(data))
+func addResource(t *testing.T, ctx context.Context, backend resource.StorageBackend, gr schema.GroupResource, data string) {
+	obj := &unstructured.Unstructured{}
+	err := obj.UnmarshalJSON([]byte(data))
+	require.NoError(t, err)
+
 	require.NoError(t, err)
 	_, err = backend.WriteEvent(ctx, resource.WriteEvent{
 		Type:  resource.WatchEvent_ADDED,
 		Value: []byte(data),
 		Key: &resource.ResourceKey{
-			Namespace: ir.Namespace,
-			Group:     ir.Group,
-			Resource:  resourceName,
-			Name:      ir.Name,
+			Group:     gr.Group,
+			Resource:  gr.Resource,
+			Namespace: obj.GetNamespace(),
+			Name:      obj.GetName(),
 		},
 	})
 	require.NoError(t, err)
@@ -74,21 +79,15 @@ func TestIntegrationIndexerSearch(t *testing.T) {
 	}`
 
 	// add playlist1 and playlist2 to unified storage
-	addResource(t, ctx, backend, "playlists", playlist1)
-	addResource(t, ctx, backend, "playlists", playlist2)
-
-	// initialize and build the search index
-	indexer, ok := server.(resource.ResourceIndexer)
-	if !ok {
-		t.Fatal("server does not implement ResourceIndexer")
-	}
-	_, err := indexer.Index(ctx)
-	require.NoError(t, err)
+	gr := schema.GroupResource{Group: "playlist.grafana.app", Resource: "playlists"}
+	addResource(t, ctx, backend, gr, playlist1)
+	addResource(t, ctx, backend, gr, playlist2)
 
 	// run search tests against the index
 	t.Run("can search for all resources", func(t *testing.T) {
 		res, err := server.Search(ctx, &resource.SearchRequest{
 			Tenant: "tenant1",
+			Kind:   []string{}, // TODO??? change to group+resource
 			Query:  "*",
 			Limit:  10,
 			Offset: 0,
@@ -118,9 +117,9 @@ func TestIntegrationIndexerSearch(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Len(t, res.Items, 1)
-		ir := resource.IndexedResource{}
+		ir := map[string]any{}
 		err = json.Unmarshal(res.Items[0].Value, &ir)
 		require.NoError(t, err)
-		require.Equal(t, "playlist cats", ir.Name)
+		require.Equal(t, "playlist cats", ir["name"])
 	})
 }

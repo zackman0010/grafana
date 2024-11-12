@@ -5,18 +5,27 @@ import (
 	"os"
 	"strings"
 
+	"github.com/prometheus/client_golang/prometheus"
+
 	"github.com/grafana/authlib/claims"
 	infraDB "github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
+	"github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/storage/unified/sql/db/dbimpl"
-	"github.com/prometheus/client_golang/prometheus"
 )
 
 // Creates a new ResourceServer
-func NewResourceServer(ctx context.Context, db infraDB.DB, cfg *setting.Cfg, features featuremgmt.FeatureToggles, tracer tracing.Tracer, reg prometheus.Registerer) (resource.ResourceServer, error) {
+func NewResourceServer(ctx context.Context,
+	db infraDB.DB,
+	cfg *setting.Cfg,
+	features featuremgmt.FeatureToggles,
+	tracer tracing.Tracer,
+	docs search.DocumentBuilderProvider,
+	reg prometheus.Registerer,
+) (resource.ResourceServer, error) {
 	apiserverCfg := cfg.SectionWithEnvOverrides("grafana-apiserver")
 	opts := resource.ResourceServerOptions{
 		Tracer: tracer,
@@ -60,20 +69,15 @@ func NewResourceServer(ctx context.Context, db infraDB.DB, cfg *setting.Cfg, fea
 	}
 
 	if features.IsEnabledGlobally(featuremgmt.FlagUnifiedStorageSearch) {
-		opts.Index = resource.NewResourceIndexServer(cfg, tracer)
+		opts.Search, err = search.NewSearchOptions(cfg, tracer, reg, docs)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	rs, err := resource.NewResourceServer(opts)
 	if err != nil {
 		return nil, err
-	}
-
-	// Initialize the indexer if one is configured
-	if opts.Index != nil {
-		_, err = rs.(resource.ResourceIndexer).Index(ctx)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return rs, nil
