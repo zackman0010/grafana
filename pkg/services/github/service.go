@@ -16,12 +16,15 @@ type Service struct {
 }
 
 func ProvideService(cfg *setting.Cfg, routeRegister routing.RouteRegister) *Service {
+	logger := log.New("github.service")
 	s := Service{
-		logger:        log.New("github.service"),
+		logger:        logger,
 		cfg:           cfg,
 		routeRegister: routeRegister,
 	}
 	// TODO: If flag is disable, return
+
+	logger.Info("initializing GitHub service")
 
 	s.Init()
 
