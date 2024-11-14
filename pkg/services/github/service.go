@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/grafana/grafana/pkg/api/response"
@@ -44,6 +46,8 @@ type repository struct {
 	url           string
 	token         string
 	webhookSecret []byte
+	// TODO: this could be built for the user.
+	webhookURL string
 }
 
 func ProvideService(
@@ -76,6 +80,21 @@ func ProvideService(
 
 func (s *Service) Init() error {
 	s.registerRoutes()
+
+	go func() {
+		repo := &repository{
+			name:          s.cfg.ProvisioningV2.RepositoryName,
+			url:           s.cfg.ProvisioningV2.RepositoryURL,
+			webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
+			webhookURL:    s.cfg.ProvisioningV2.RepositoryWebhookURL,
+			token:         s.cfg.ProvisioningV2.RepositoryToken,
+		}
+
+		err := s.ensureWebhookExists(context.Background(), repo)
+		if err != nil {
+			s.logger.Error("Failed to ensure webhook exists", "error", err)
+		}
+	}()
 	return nil
 }
 
@@ -406,6 +425,56 @@ func (s *Service) ensureGithubSyncFolderExists(ctx context.Context, orgID int64,
 	return f, nil
 }
 
+func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) error {
+	tokenSrc := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: repo.token},
+	)
+	tokenClient := oauth2.NewClient(ctx, tokenSrc)
+	githubClient := github.NewClient(tokenClient)
+
+	owner, name, err := extractOwnerAndRepo(repo.url)
+	if err != nil {
+		return fmt.Errorf("error extracting owner and repo from URL: %w", err)
+	}
+
+	// List existing webhooks for the repository
+	hooks, _, err := githubClient.Repositories.ListHooks(ctx, owner, name, nil)
+	if err != nil {
+		return fmt.Errorf("error listing webhooks: %w", err)
+	}
+
+	// Check if a webhook with the given URL already exists
+	for _, hook := range hooks {
+		if *hook.Config.URL == repo.webhookURL {
+			s.logger.Info("Webhook already exists with URL:", repo.webhookURL)
+			return nil // Webhook already exists, no need to create
+		}
+	}
+
+	secret := string(repo.webhookSecret)
+	contentType := "json"
+	hookConfig := &github.HookConfig{
+		// TODO: build hook URL for users
+		URL:         &repo.webhookURL,
+		ContentType: &contentType,
+		Secret:      &secret,
+	}
+
+	hookName := "grafana github sync hook"
+	if _, _, err = githubClient.Repositories.CreateHook(ctx, owner, name, &github.Hook{
+		Name:   &hookName,
+		Config: hookConfig,
+		Events: []string{"push"},
+		Active: github.Bool(true),
+	}); err != nil {
+		return fmt.Errorf("error creating webhook: %w", err)
+	}
+
+	s.logger.Info("Webhook created successfully", "url", repo.webhookURL)
+
+	return nil
+}
+
 func githubSyncUser(orgID int64) identity.Requester {
 	// this user has 0 ID and therefore, organization wide quota will be applied
 	return accesscontrol.BackgroundUser(
@@ -422,4 +491,22 @@ func githubSyncUser(orgID int64) identity.Requester {
 			{Action: dashboards.ActionDashboardsDelete, Scope: dashboards.ScopeFoldersAll},
 		},
 	)
+}
+
+// extractOwnerAndRepo takes a GitHub repository URL and returns the owner and repo name.
+func extractOwnerAndRepo(repoURL string) (string, string, error) {
+	parsedURL, err := url.Parse(repoURL)
+	if err != nil {
+		return "", "", fmt.Errorf("invalid URL: %w", err)
+	}
+
+	// Split the path to get owner and repo
+	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
+	if len(parts) < 2 {
+		return "", "", fmt.Errorf("URL does not contain owner and repo")
+	}
+
+	owner := parts[0]
+	repo := parts[1]
+	return owner, repo, nil
 }
