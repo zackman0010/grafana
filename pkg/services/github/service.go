@@ -15,6 +15,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
 	contextmodel "github.com/grafana/grafana/pkg/services/contexthandler/model"
 	"github.com/grafana/grafana/pkg/services/dashboards"
+	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/folder"
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/setting"
@@ -34,6 +35,7 @@ type Service struct {
 	routeRegister    routing.RouteRegister
 	dashboardService dashboards.DashboardService
 	folderService    folder.Service
+	features         featuremgmt.FeatureToggles
 }
 
 // TODO: use app platform entity
@@ -46,6 +48,7 @@ type repository struct {
 
 func ProvideService(
 	cfg *setting.Cfg,
+	features featuremgmt.FeatureToggles,
 	routeRegister routing.RouteRegister,
 	dashboardService dashboards.DashboardService,
 	folderService folder.Service,
@@ -57,8 +60,12 @@ func ProvideService(
 		routeRegister:    routeRegister,
 		dashboardService: dashboardService,
 		folderService:    folderService,
+		features:         features,
 	}
-	// TODO: If flag is disable, return
+
+	if !features.IsEnabledGlobally(featuremgmt.FlagProvisioningV2) {
+		return &s
+	}
 
 	logger.Info("Start GitHub service")
 
@@ -74,7 +81,7 @@ func (s *Service) Init() error {
 
 func (s *Service) IsDisabled() bool {
 	// TODO: add the feature flag
-	return false
+	return s.features.IsEnabledGlobally(featuremgmt.FlagProvisioningV2)
 }
 
 func (s *Service) registerRoutes() {
@@ -87,11 +94,12 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	// TODO: check if the repo we care about based on <uid> in webhook URL.
 	// TODO: generate a webhook secret for each repository
 	// TODO: where to store the secret
+	// TODO: how to deal with renamed repositories?
 	repo := repository{
-		// TODO: how to deal with renamed repositories?
-		url:           "https://github.com/grafana/git-ui-sync-demo",
-		webhookSecret: []byte("some-secret"),
-		token:         "CANNOT-COMMIT-THIS",
+		name:          s.cfg.ProvisioningV2.RepositoryName,
+		url:           s.cfg.ProvisioningV2.RepositoryURL,
+		webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
+		token:         s.cfg.ProvisioningV2.RepositoryToken,
 	}
 
 	payload, err := github.ValidatePayload(c.Req, repo.webhookSecret)
@@ -106,9 +114,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	}
 
 	// TODO: will org work with webhook and app platform?
-	// orgID := c.GetOrgID()
-	orgID := int64(1)
-	s.logger.Info("The org ID is", "org", orgID)
+	orgID := s.cfg.ProvisioningV2.RepositoryOrgID
 	ctx := c.Req.Context()
 
 	// TODO: how to process events in order?
@@ -308,9 +314,6 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 				}
 
 				// get file content from the previous commit
-
-				// TODO: how to find out if we cannot get title?
-
 				fileContent, _, _, err := githubClient.Repositories.GetContents(ctx, repoOwner, repoName, file, &github.RepositoryContentGetOptions{
 					Ref: beforeRef,
 				})
@@ -403,7 +406,7 @@ func (s *Service) ensureGithubSyncFolderExists(ctx context.Context, orgID int64,
 	return f, nil
 }
 
-var githubSyncUser = func(orgID int64) identity.Requester {
+func githubSyncUser(orgID int64) identity.Requester {
 	// this user has 0 ID and therefore, organization wide quota will be applied
 	return accesscontrol.BackgroundUser(
 		// TODO: API response shows that it was created by anonymous user

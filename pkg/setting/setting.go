@@ -502,6 +502,9 @@ type Cfg struct {
 	// Cloud Migration
 	CloudMigration CloudMigrationSettings
 
+	// ProvisioningV2
+	ProvisioningV2 ProvisioningV2Settings
+
 	// Feature Management Settings
 	FeatureManagement FeatureMgmtSettings
 
@@ -1326,6 +1329,7 @@ func (cfg *Cfg) parseINIFile(iniFile *ini.File) error {
 	cfg.readFeatureManagementConfig()
 	cfg.readPublicDashboardsSettings()
 	cfg.readCloudMigrationSettings()
+	cfg.readProvisioningV2Settings()
 
 	// read experimental scopes settings.
 	scopesSection := iniFile.Section("scopes")
