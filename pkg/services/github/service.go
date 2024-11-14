@@ -19,6 +19,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/folder"
+	"github.com/grafana/grafana/pkg/services/guardian"
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
@@ -48,6 +49,7 @@ type repository struct {
 	webhookSecret []byte
 	// TODO: this could be built for the user.
 	webhookURL string
+	orgID      int64
 }
 
 func ProvideService(
@@ -56,6 +58,8 @@ func ProvideService(
 	routeRegister routing.RouteRegister,
 	dashboardService dashboards.DashboardService,
 	folderService folder.Service,
+	// TODO: Fix this hack, see https://github.com/grafana/grafana-enterprise/issues/2935
+	guardianProvider *guardian.Provider,
 ) *Service {
 	logger := log.New("github.service")
 	s := Service{
@@ -88,9 +92,34 @@ func ProvideService(
 // this must by replaced by an app platform implementation when the resource is created.
 func (s *Service) initRepoTODO() error {
 	repo := s.getRepoTODO()
-	if err := s.ensureWebhookExists(context.Background(), repo); err != nil {
+
+	ctx := context.Background()
+	client := githubClientForRepo(repo)
+
+	// TODO: master or main branch?
+	owner, name, err := extractOwnerAndRepo(repo.url)
+	if err != nil {
+		return fmt.Errorf("failed to extract owner and repo: %w", err)
+	}
+
+	folder, err := s.ensureFolderExists(ctx, repo.orgID, repo.name)
+	if err != nil {
+		return fmt.Errorf("failed to ensure Github Sync folder exists: %w", err)
+	}
+
+	if err := s.syncRepo(ctx, repo, client, folder, owner, name, "", "main"); err != nil {
+		return fmt.Errorf("failed to sync repository: %w", err)
+	}
+
+	if err := s.ensureWebhookExists(ctx, repo); err != nil {
 		return fmt.Errorf("failed to ensure webhook exists: %w", err)
 	}
+
+	// Sync twice in case we missed updates while creating the webhook
+	if err := s.syncRepo(ctx, repo, client, folder, owner, name, "", "main"); err != nil {
+		return fmt.Errorf("failed to sync repository: %w", err)
+	}
+
 	return nil
 }
 
@@ -107,6 +136,7 @@ func (s *Service) getRepoTODO() *repository {
 		webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
 		webhookURL:    s.cfg.ProvisioningV2.RepositoryWebhookURL,
 		token:         s.cfg.ProvisioningV2.RepositoryToken,
+		orgID:         s.cfg.ProvisioningV2.RepositoryOrgID,
 	}
 }
 
@@ -137,7 +167,6 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	}
 
 	// TODO: will org work with webhook and app platform?
-	orgID := s.cfg.ProvisioningV2.RepositoryOrgID
 	ctx := c.Req.Context()
 
 	// TODO: how to process events in order?
@@ -158,7 +187,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 			return response.Success(fmt.Sprintf("Skipped as %s is the main/master branch", event.GetRef()))
 		}
 
-		folder, err := s.ensureFolderExists(ctx, orgID, repo.name)
+		folder, err := s.ensureFolderExists(ctx, repo.orgID, repo.name)
 		if err != nil {
 			return response.Error(500, "Failed to ensure Github Sync folder exists", err)
 		}
@@ -191,7 +220,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				if err := s.upsertDashboard(ctx, content, folder, orgID, false); err != nil {
+				if err := s.upsertDashboard(ctx, content, folder, repo.orgID, false); err != nil {
 					return response.Error(500, "Failed to upsert dashboard", err)
 				}
 
@@ -217,7 +246,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				if err := s.upsertDashboard(ctx, content, folder, orgID); err != nil {
+				if err := s.upsertDashboard(ctx, content, folder, repo.orgID, true); err != nil {
 					return response.Error(500, "Failed to upsert dashboard", err)
 				}
 				s.logger.Info("Dashboard modified", "file", file, "content", content)
@@ -242,7 +271,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				if err := s.ensureDashboardDoesNotExist(ctx, content, folder, orgID); err != nil {
+				if err := s.ensureDashboardDoesNotExist(ctx, content, folder, repo.orgID); err != nil {
 					return response.Error(500, "Failed to ensure dashboard does not exist", err)
 				}
 
@@ -424,6 +453,53 @@ func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) err
 	}
 
 	s.logger.Info("Webhook created successfully", "url", repo.webhookURL)
+
+	return nil
+}
+
+func (s *Service) syncRepo(ctx context.Context, repo *repository, client *github.Client, folder *folder.Folder, owner, name, path, branch string) error {
+	content, contents, _, err := client.Repositories.GetContents(ctx, owner, name, path, &github.RepositoryContentGetOptions{
+		Ref: branch,
+	})
+	if err != nil {
+		return fmt.Errorf("error getting contents for path '%s': %w", path, err)
+	}
+
+	if content.GetType() == "file" {
+		if !s.isDashboard(content.GetPath()) {
+			return nil
+		}
+
+		fileContent, _, _, err := client.Repositories.GetContents(ctx, owner, name, content.GetPath(), &github.RepositoryContentGetOptions{
+			// TODO: branch could change during the sync
+			Ref: branch,
+		})
+
+		if err != nil {
+			return fmt.Errorf("error getting file content: %w", err)
+		}
+
+		bytes, err := fileContent.GetContent()
+		if err != nil {
+			return fmt.Errorf("error getting file content: %w", err)
+		}
+
+		// TODO: do something smarter to not update what's already there.
+		if err := s.upsertDashboard(ctx, bytes, folder, repo.orgID, true); err != nil {
+			return fmt.Errorf("error upserting dashboard: %w", err)
+		}
+
+		s.logger.Info("Dashboard added or updated", "file", content.GetPath(), "folder", folder.UID, "content", content, "dashboard")
+		return nil
+	}
+
+	s.logger.Info("Directory", "path", content.GetPath())
+	for _, content := range contents {
+		if err := s.syncRepo(ctx, repo, client, folder, owner, name, content.GetPath(), branch); err != nil {
+			return err
+		}
+	}
+	// TODO: remove what's not inside this directory
 
 	return nil
 }
