@@ -102,7 +102,7 @@ func (s *Service) initRepoTODO() error {
 		return fmt.Errorf("failed to extract owner and repo: %w", err)
 	}
 
-	folder, err := s.ensureFolderExists(ctx, repo.orgID, repo.name)
+	folder, err := s.emptyFolder(ctx, repo.orgID, repo.name)
 	if err != nil {
 		return fmt.Errorf("failed to ensure Github Sync folder exists: %w", err)
 	}
@@ -111,13 +111,9 @@ func (s *Service) initRepoTODO() error {
 		return fmt.Errorf("failed to sync repository: %w", err)
 	}
 
+	// TODO: we could have updates while the hook is setup
 	if err := s.ensureWebhookExists(ctx, repo); err != nil {
 		return fmt.Errorf("failed to ensure webhook exists: %w", err)
-	}
-
-	// Sync twice in case we missed updates while creating the webhook
-	if err := s.syncRepo(ctx, repo, client, folder, owner, name, "", "main"); err != nil {
-		return fmt.Errorf("failed to sync repository: %w", err)
 	}
 
 	return nil
@@ -377,6 +373,45 @@ func (s *Service) upsertDashboard(ctx context.Context, content string, folder *f
 	return nil
 }
 
+func (s *Service) emptyFolder(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
+	getQuery := &folder.GetFolderQuery{
+		Title:        &name,
+		OrgID:        orgID,
+		SignedInUser: githubSyncUser(orgID),
+	}
+
+	syncFolder, err := s.folderService.Get(ctx, getQuery)
+	switch {
+	case err == nil:
+		deleteQuery := &folder.DeleteFolderCommand{
+			UID:          syncFolder.UID,
+			OrgID:        orgID,
+			SignedInUser: githubSyncUser(orgID),
+		}
+
+		if err := s.folderService.Delete(ctx, deleteQuery); err != nil {
+			return nil, fmt.Errorf("failed to delete folder: %w", err)
+		}
+		s.logger.Info("Existing folder deleted", "folder", syncFolder.UID)
+	case !errors.Is(err, dashboards.ErrFolderNotFound):
+		return nil, err
+	}
+
+	createQuery := &folder.CreateFolderCommand{
+		OrgID:        orgID,
+		UID:          util.GenerateShortUID(),
+		Title:        name,
+		SignedInUser: githubSyncUser(orgID),
+	}
+
+	f, err := s.folderService.Create(ctx, createQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	return f, nil
+}
+
 func (s *Service) ensureFolderExists(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
 	getQuery := &folder.GetFolderQuery{
 		Title:        &name,
@@ -499,7 +534,6 @@ func (s *Service) syncRepo(ctx context.Context, repo *repository, client *github
 			return err
 		}
 	}
-	// TODO: remove what's not inside this directory
 
 	return nil
 }
