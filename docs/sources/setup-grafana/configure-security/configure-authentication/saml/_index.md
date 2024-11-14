@@ -721,3 +721,7 @@ cookie_secure = true
 ```
 
 Ensure cookie_secure is set to true to ensure that cookies are only sent over HTTPS.
+
+## Examples with different IdPs
+
+- [PingIdentity]({{< relref "./ping-identity" >}})
