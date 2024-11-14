@@ -73,34 +73,41 @@ func ProvideService(
 
 	logger.Info("Start GitHub service")
 
-	s.Init()
+	s.registerRoutes()
+
+	go func() {
+		if err := s.initRepoTODO(); err != nil {
+			s.logger.Error("Failed to ensure webhook exists", "error", err)
+		}
+	}()
 
 	return &s
 }
 
-func (s *Service) Init() error {
-	s.registerRoutes()
-
-	go func() {
-		repo := &repository{
-			name:          s.cfg.ProvisioningV2.RepositoryName,
-			url:           s.cfg.ProvisioningV2.RepositoryURL,
-			webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
-			webhookURL:    s.cfg.ProvisioningV2.RepositoryWebhookURL,
-			token:         s.cfg.ProvisioningV2.RepositoryToken,
-		}
-
-		err := s.ensureWebhookExists(context.Background(), repo)
-		if err != nil {
-			s.logger.Error("Failed to ensure webhook exists", "error", err)
-		}
-	}()
+// initRepoTODO initializes the repository
+// this must by replaced by an app platform implementation when the resource is created.
+func (s *Service) initRepoTODO() error {
+	repo := s.getRepoTODO()
+	if err := s.ensureWebhookExists(context.Background(), repo); err != nil {
+		return fmt.Errorf("failed to ensure webhook exists: %w", err)
+	}
 	return nil
 }
 
 func (s *Service) IsDisabled() bool {
-	// TODO: add the feature flag
 	return s.features.IsEnabledGlobally(featuremgmt.FlagProvisioningV2)
+}
+
+// getRepoTODO returns the repository based on the configuration.
+// this must be replaced by an app platform implementation.
+func (s *Service) getRepoTODO() *repository {
+	return &repository{
+		name:          s.cfg.ProvisioningV2.RepositoryName,
+		url:           s.cfg.ProvisioningV2.RepositoryURL,
+		webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
+		webhookURL:    s.cfg.ProvisioningV2.RepositoryWebhookURL,
+		token:         s.cfg.ProvisioningV2.RepositoryToken,
+	}
 }
 
 func (s *Service) registerRoutes() {
@@ -114,12 +121,9 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	// TODO: generate a webhook secret for each repository
 	// TODO: where to store the secret
 	// TODO: how to deal with renamed repositories?
-	repo := repository{
-		name:          s.cfg.ProvisioningV2.RepositoryName,
-		url:           s.cfg.ProvisioningV2.RepositoryURL,
-		webhookSecret: []byte(s.cfg.ProvisioningV2.RepositoryWebhookSecret),
-		token:         s.cfg.ProvisioningV2.RepositoryToken,
-	}
+	// TODO: how to do the same for renamed files?
+	// TODO: support for folders
+	repo := s.getRepoTODO()
 
 	payload, err := github.ValidatePayload(c.Req, repo.webhookSecret)
 	if err != nil {
@@ -149,44 +153,28 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 			return response.Error(400, "Repository URL mismatch", nil)
 		}
 
-		// TODO: is there a better way if it's the main branch?
 		if event.GetRef() != "refs/heads/main" && event.GetRef() != "refs/heads/master" {
 			// Return status 200 as you cannot configure the hook notifications per branch
 			return response.Success(fmt.Sprintf("Skipped as %s is the main/master branch", event.GetRef()))
 		}
 
-		repoName := event.Repo.GetName()
-		folder, err := s.ensureGithubSyncFolderExists(ctx, orgID, repoName)
+		folder, err := s.ensureFolderExists(ctx, orgID, repo.name)
 		if err != nil {
 			return response.Error(500, "Failed to ensure Github Sync folder exists", err)
 		}
 
-		tokenSrc := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: repo.token},
-		)
-		tokenClient := oauth2.NewClient(ctx, tokenSrc)
-		githubClient := github.NewClient(tokenClient)
-
+		githubClient := githubClientForRepo(repo)
 		repoOwner := event.Repo.Owner.GetName()
-
 		beforeRef := event.GetBefore()
+		repoName := event.Repo.GetName()
 
-		// For new commits, we need to iterated from oldest to newest and apply print files changed in each commit
-		// TODO: check the order of commits in the message
+		// TODO: support folders
 		for _, commit := range event.Commits {
-			s.logger.Info(
-				"Commit",
-				"message",
-				commit.GetMessage(),
-				"author",
-				commit.GetAuthor().GetLogin(),
-				"timestamp",
-				commit.GetTimestamp(),
-			)
+			s.logger.Info("Commit", "message", commit.GetMessage(), "author", commit.GetAuthor().GetLogin(), "timestamp", commit.GetTimestamp())
 
 			for _, file := range commit.Added {
 				s.logger.Info("File added", "file", file)
-				if !isDashboardRegex.MatchString(file) {
+				if s.isDashboard(file) {
 					s.logger.Info("New file is not a dashboard", "file", file)
 					continue
 				}
@@ -198,66 +186,21 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				// TODO: Support folders
-
 				content, err := fileContent.GetContent()
 				if err != nil {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				json, err := simplejson.NewJson([]byte(content))
-				if err != nil {
-					return response.Error(500, "Failed to parse file content", err)
+				if err := s.upsertDashboard(ctx, content, folder, orgID, false); err != nil {
+					return response.Error(500, "Failed to upsert dashboard", err)
 				}
 
-				dashboard := dashboards.NewDashboardFromJson(json)
-				dashboard.FolderID = folder.ID
-				dashboard.FolderUID = folder.UID
-				dashboard.OrgID = orgID
-				dashboard.Updated = time.Now()
-
-				query := &dashboards.GetDashboardQuery{
-					UID: dashboard.UID,
-					// TODO: limitation by dashboard title
-					Title:     &dashboard.Title,
-					FolderID:  &folder.ID,
-					FolderUID: &folder.UID,
-					OrgID:     orgID,
-				}
-
-				existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
-				if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
-					return response.Error(500, "Failed to get existing dashboard", err)
-				}
-
-				if existingDashboard == nil {
-					dashboard.Created = time.Now()
-					dashboard.Version = 0
-				} else {
-					s.logger.Warn("New dashboard already exists", "file", file, "content", content)
-					dashboard.UID = existingDashboard.UID
-					dashboard.Version = existingDashboard.Version + 1
-				}
-
-				dto := &dashboards.SaveDashboardDTO{
-					OrgID:     orgID,
-					UpdatedAt: time.Now(),
-					User:      githubSyncUser(orgID),
-					Message:   commit.GetMessage(),
-					Overwrite: false,
-					Dashboard: dashboard,
-				}
-				_, err = s.dashboardService.ImportDashboard(ctx, dto)
-				if err != nil {
-					return response.Error(500, "Failed to import dashboard", err)
-				}
-
-				s.logger.Info("New dashboard added", "file", file, "folder", folder.UID, "content", content, "dashboard", dashboard)
+				s.logger.Info("New dashboard added", "file", file, "folder", folder.UID, "content", content, "dashboard")
 			}
 
 			for _, file := range commit.Modified {
 				s.logger.Info("File modified", "file", file)
-				if !isDashboardRegex.MatchString(file) {
+				if !s.isDashboard(file) {
 					s.logger.Info("Modified file is not a dashboard", "file", file, "folder", folder.UID)
 					continue
 				}
@@ -269,69 +212,23 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				// TODO: Support folders
 				content, err := fileContent.GetContent()
 				if err != nil {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				json, err := simplejson.NewJson([]byte(content))
-				if err != nil {
-					return response.Error(500, "Failed to parse file content", err)
+				if err := s.upsertDashboard(ctx, content, folder, orgID); err != nil {
+					return response.Error(500, "Failed to upsert dashboard", err)
 				}
-
-				dashboard := dashboards.NewDashboardFromJson(json)
-				dashboard.FolderID = folder.ID
-				dashboard.FolderUID = folder.UID
-				dashboard.OrgID = orgID
-				dashboard.Updated = time.Now()
-
-				query := &dashboards.GetDashboardQuery{
-					UID: dashboard.UID,
-					// TODO: limitation by dashboard title
-					Title:     &dashboard.Title,
-					FolderID:  &folder.ID,
-					FolderUID: &folder.UID,
-					OrgID:     orgID,
-				}
-
-				existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
-				if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
-					return response.Error(500, "Failed to get existing dashboard", err)
-				}
-
-				if existingDashboard == nil {
-					s.logger.Warn("Modified dashboard not found", "file", file, "content", content)
-					dashboard.Created = time.Now()
-					dashboard.Version = 0
-				} else {
-					dashboard.UID = existingDashboard.UID
-					dashboard.Version = existingDashboard.Version + 1
-				}
-
-				dto := &dashboards.SaveDashboardDTO{
-					OrgID:     orgID,
-					UpdatedAt: time.Now(),
-					User:      githubSyncUser(orgID),
-					Message:   commit.GetMessage(),
-					Overwrite: true,
-					Dashboard: dashboard,
-				}
-				_, err = s.dashboardService.ImportDashboard(ctx, dto)
-				if err != nil {
-					return response.Error(500, "Failed to import dashboard", err)
-				}
-
-				s.logger.Info("Dashboard modified", "file", file, "content", content, "dashboard", dashboard)
+				s.logger.Info("Dashboard modified", "file", file, "content", content)
 			}
 
 			for _, file := range commit.Removed {
 				s.logger.Info("File removed", "file", file)
-				if !isDashboardRegex.MatchString(file) {
-					s.logger.Info("Delete file is not a dashboard", "file", file, "folder", folder.UID)
+				if !s.isDashboard(file) {
+					s.logger.Info("Deleted file is not a dashboard", "file", file, "folder", folder.UID)
 					continue
 				}
-
 				// get file content from the previous commit
 				fileContent, _, _, err := githubClient.Repositories.GetContents(ctx, repoOwner, repoName, file, &github.RepositoryContentGetOptions{
 					Ref: beforeRef,
@@ -340,45 +237,18 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				// TODO: Support folders
 				content, err := fileContent.GetContent()
 				if err != nil {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				json, err := simplejson.NewJson([]byte(content))
-				if err != nil {
-					return response.Error(500, "Failed to parse file content", err)
-				}
-
-				dashboard := dashboards.NewDashboardFromJson(json)
-
-				query := &dashboards.GetDashboardQuery{
-					UID: dashboard.UID,
-					// TODO: limitation by dashboard title
-					Title:     &dashboard.Title,
-					FolderID:  &folder.ID,
-					FolderUID: &folder.UID,
-					OrgID:     orgID,
-				}
-
-				existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
-				if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
-					return response.Error(500, "Failed to get existing dashboard", err)
-				}
-
-				if errors.Is(err, dashboards.ErrDashboardNotFound) {
-					s.logger.Warn("Deleted dashboard not found", "file", file, "content", content)
-				}
-
-				if err := s.dashboardService.DeleteDashboard(ctx, existingDashboard.ID, orgID); err != nil {
-					return response.Error(500, "Failed to delete dashboard", err)
+				if err := s.ensureDashboardDoesNotExist(ctx, content, folder, orgID); err != nil {
+					return response.Error(500, "Failed to ensure dashboard does not exist", err)
 				}
 
 				s.logger.Info("Dashboard removed", "file", file)
 			}
 
-			// TODO: how to do the same for renamed files?
 			beforeRef = commit.GetID()
 		}
 
@@ -389,14 +259,98 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	return response.Success("event successfully processed")
 }
 
-func (s *Service) ensureGithubSyncFolderExists(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
-	// TODO: this folder should be created via API
+func (s *Service) ensureDashboardDoesNotExist(ctx context.Context, content string, folder *folder.Folder, orgID int64) error {
+	json, err := simplejson.NewJson([]byte(content))
+	if err != nil {
+		return fmt.Errorf("failed to parse file content: %w", err)
+	}
 
-	title := fmt.Sprintf("Github Sync - %s", name)
-	description := "A folder containing all dashboards synced out of Github"
+	dashboard := dashboards.NewDashboardFromJson(json)
+	query := &dashboards.GetDashboardQuery{
+		UID: dashboard.UID,
+		// TODO: limitation by dashboard title
+		Title:     &dashboard.Title,
+		FolderID:  &folder.ID,
+		FolderUID: &folder.UID,
+		OrgID:     orgID,
+	}
 
+	existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
+	if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
+		return fmt.Errorf("failed to get existing dashboard: %w", err)
+	}
+
+	if errors.Is(err, dashboards.ErrDashboardNotFound) {
+		s.logger.Warn("Deleted dashboard not found", "content", content)
+		return nil
+	}
+
+	if err := s.dashboardService.DeleteDashboard(ctx, existingDashboard.ID, orgID); err != nil {
+		return fmt.Errorf("failed to delete dashboard: %w", err)
+	}
+
+	return nil
+}
+
+func (s *Service) upsertDashboard(ctx context.Context, content string, folder *folder.Folder, orgID int64, shouldExist bool) error {
+	json, err := simplejson.NewJson([]byte(content))
+	if err != nil {
+		return fmt.Errorf("failed to parse file content: %w", err)
+	}
+
+	dashboard := dashboards.NewDashboardFromJson(json)
+	dashboard.FolderID = folder.ID
+	dashboard.FolderUID = folder.UID
+	dashboard.OrgID = orgID
+	dashboard.Updated = time.Now()
+
+	query := &dashboards.GetDashboardQuery{
+		UID: dashboard.UID,
+		// TODO: limitation by dashboard title
+		Title:     &dashboard.Title,
+		FolderID:  &folder.ID,
+		FolderUID: &folder.UID,
+		OrgID:     orgID,
+	}
+
+	existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
+	if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
+		return fmt.Errorf("failed to get existing dashboard: %w", err)
+	}
+
+	if existingDashboard == nil {
+		if shouldExist {
+			s.logger.Warn("Dashboard should already exist", "content", content)
+		}
+		dashboard.Created = time.Now()
+		dashboard.Version = 0
+	} else {
+		if !shouldExist {
+			s.logger.Warn("Dashboard should not exist", "content", content)
+		}
+
+		dashboard.UID = existingDashboard.UID
+		dashboard.Version = existingDashboard.Version + 1
+	}
+
+	dto := &dashboards.SaveDashboardDTO{
+		OrgID:     orgID,
+		UpdatedAt: time.Now(),
+		User:      githubSyncUser(orgID),
+		Overwrite: true,
+		Dashboard: dashboard,
+	}
+
+	if _, err = s.dashboardService.ImportDashboard(ctx, dto); err != nil {
+		return fmt.Errorf("failed to import dashboard: %w", err)
+	}
+
+	return nil
+}
+
+func (s *Service) ensureFolderExists(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
 	getQuery := &folder.GetFolderQuery{
-		Title:        &title,
+		Title:        &name,
 		OrgID:        orgID,
 		SignedInUser: githubSyncUser(orgID),
 	}
@@ -412,9 +366,8 @@ func (s *Service) ensureGithubSyncFolderExists(ctx context.Context, orgID int64,
 	createQuery := &folder.CreateFolderCommand{
 		OrgID:        orgID,
 		UID:          util.GenerateShortUID(),
-		Title:        title,
+		Title:        name,
 		SignedInUser: githubSyncUser(orgID),
-		Description:  description,
 	}
 
 	f, err := s.folderService.Create(ctx, createQuery)
@@ -425,12 +378,12 @@ func (s *Service) ensureGithubSyncFolderExists(ctx context.Context, orgID int64,
 	return f, nil
 }
 
+func (s *Service) isDashboard(file string) bool {
+	return isDashboardRegex.MatchString(file)
+}
+
 func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) error {
-	tokenSrc := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: repo.token},
-	)
-	tokenClient := oauth2.NewClient(ctx, tokenSrc)
-	githubClient := github.NewClient(tokenClient)
+	githubClient := githubClientForRepo(repo)
 
 	owner, name, err := extractOwnerAndRepo(repo.url)
 	if err != nil {
@@ -446,7 +399,7 @@ func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) err
 	// Check if a webhook with the given URL already exists
 	for _, hook := range hooks {
 		if *hook.Config.URL == repo.webhookURL {
-			s.logger.Info("Webhook already exists with URL:", repo.webhookURL)
+			s.logger.Info("Webhook already exists with URL:", "url", repo.webhookURL)
 			return nil // Webhook already exists, no need to create
 		}
 	}
@@ -473,6 +426,14 @@ func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) err
 	s.logger.Info("Webhook created successfully", "url", repo.webhookURL)
 
 	return nil
+}
+
+func githubClientForRepo(repo *repository) *github.Client {
+	tokenSrc := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: repo.token},
+	)
+	tokenClient := oauth2.NewClient(context.Background(), tokenSrc)
+	return github.NewClient(tokenClient)
 }
 
 func githubSyncUser(orgID int64) identity.Requester {
