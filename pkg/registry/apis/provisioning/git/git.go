@@ -7,16 +7,6 @@ import (
 
 // TODO: Find a better home for this
 
-type GitOwner struct {
-	// The stack that owns this repository.
-	// Empty if this is running on-prem.
-	Stack string
-	// The organisation that owns this repository.
-	Organisation int
-	// The Kubernetes Repository resource name.
-	Resource string
-}
-
 type GitRepositoryManager interface {
 	// Opens or clones the given repository into the appropriate path given the organisation and, if it exists, stack information.
 	//
@@ -26,7 +16,6 @@ type GitRepositoryManager interface {
 	// Authentication is always provided in every authenticated method. This is to ensure the repository itself never has to manage secrets.
 	Open(
 		ctx context.Context,
-		owner GitOwner,
 		repositoryURL string,
 		auth Authentication,
 	) (Repository, error)
