@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
@@ -23,12 +24,13 @@ import (
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
+	"github.com/grafana/grafana/pkg/web"
 	"golang.org/x/oauth2"
 
 	"github.com/google/go-github/v66/github"
 )
 
-// isDashboardRegex returns true if the path ends in `-dahboard.json`.
+// isDashboardRegex returns true if the path ends in `-dashboard.json`.
 var isDashboardRegex = regexp.MustCompile(`-dashboard\.json$`)
 
 // TODO: move this logic / endpoint to the app platform code path when it's ready
@@ -80,7 +82,7 @@ func ProvideService(
 	s.registerRoutes()
 
 	go func() {
-		if err := s.initRepoTODO(); err != nil {
+		if err := s.initRepo(); err != nil {
 			s.logger.Error("Failed to ensure webhook exists", "error", err)
 		}
 	}()
@@ -88,32 +90,23 @@ func ProvideService(
 	return &s
 }
 
-// initRepoTODO initializes the repository
+// initRepo initializes the repository
 // this must by replaced by an app platform implementation when the resource is created.
-func (s *Service) initRepoTODO() error {
-	repo := s.getRepoTODO()
-
+func (s *Service) initRepo() error {
+	repo := s.getRepo()
 	ctx := context.Background()
-	client := githubClientForRepo(repo)
 
-	// TODO: master or main branch?
-	owner, name, err := extractOwnerAndRepo(repo.url)
-	if err != nil {
-		return fmt.Errorf("failed to extract owner and repo: %w", err)
-	}
-
-	folder, err := s.emptyFolder(ctx, repo.orgID, repo.name)
-	if err != nil {
-		return fmt.Errorf("failed to ensure Github Sync folder exists: %w", err)
-	}
-
-	if err := s.syncRepo(ctx, repo, client, folder, owner, name, "", "main"); err != nil {
+	if err := s.syncRepo(ctx, repo); err != nil {
 		return fmt.Errorf("failed to sync repository: %w", err)
 	}
 
-	// TODO: we could have updates while the hook is setup
 	if err := s.ensureWebhookExists(ctx, repo); err != nil {
 		return fmt.Errorf("failed to ensure webhook exists: %w", err)
+	}
+
+	// Sync again to ensure we didn't miss any updates in the meantime
+	if err := s.syncRepo(ctx, repo); err != nil {
+		return fmt.Errorf("failed to sync repository: %w", err)
 	}
 
 	return nil
@@ -123,9 +116,9 @@ func (s *Service) IsDisabled() bool {
 	return s.features.IsEnabledGlobally(featuremgmt.FlagProvisioningV2)
 }
 
-// getRepoTODO returns the repository based on the configuration.
+// getRepo returns the repository based on the configuration.
 // this must be replaced by an app platform implementation.
-func (s *Service) getRepoTODO() *repository {
+func (s *Service) getRepo() *repository {
 	return &repository{
 		name:          s.cfg.ProvisioningV2.RepositoryName,
 		url:           s.cfg.ProvisioningV2.RepositoryURL,
@@ -139,7 +132,102 @@ func (s *Service) getRepoTODO() *repository {
 func (s *Service) registerRoutes() {
 	s.routeRegister.Group("/api/github", func(api routing.RouteRegister) {
 		api.Post("/webhook", routing.Wrap(s.handleWebhook))
+		api.Post("/sync", routing.Wrap(s.handleSync))
+		api.Post("/push", routing.Wrap(s.handlePush))
 	})
+}
+
+func (s *Service) handleSync(c *contextmodel.ReqContext) response.Response {
+	repo := s.getRepo()
+	ctx := c.Req.Context()
+
+	if err := s.syncRepo(ctx, repo); err != nil {
+		return response.Error(500, "Failed to sync repository", err)
+	}
+
+	return response.Success("Repository synced successfully")
+}
+
+type PushRequest struct {
+	Branch  string          `json:"branch"`
+	Message string          `json:"message"`
+	Path    string          `json:"path"`
+	Data    json.RawMessage `json:"data"`
+}
+
+func (s *Service) handlePush(c *contextmodel.ReqContext) response.Response {
+	var req PushRequest
+	if err := web.Bind(c.Req, &req); err != nil {
+		return response.Error(400, "Failed to parse request", err)
+	}
+
+	ctx := c.Req.Context()
+	repo := s.getRepo()
+	githubClient := githubClientForRepo(repo)
+
+	owner, name, err := extractOwnerAndRepo(repo.url)
+	if err != nil {
+		return response.Error(400, "Failed to extract owner and repo", err)
+	}
+
+	branch := "main"
+	if req.Branch != "" {
+		// create branch if it does not exist
+		_, resp, err := githubClient.Repositories.GetBranch(ctx, owner, name, req.Branch, 0)
+		if err != nil && resp.StatusCode == 404 {
+			baseRef, _, err := githubClient.Repositories.GetBranch(ctx, owner, name, branch, 0)
+			if err != nil {
+				return response.Error(500, "Failed to get base branch", err)
+			}
+
+			if _, _, err := githubClient.Git.CreateRef(ctx, owner, name, &github.Reference{
+				Ref: github.String(fmt.Sprintf("refs/heads/%s", req.Branch)),
+				Object: &github.GitObject{
+					SHA: baseRef.Commit.SHA,
+				},
+			}); err != nil {
+				return response.Error(500, "Failed to create branch", err)
+			}
+		} else {
+			return response.Error(400, "Branch does not exist", nil)
+		}
+
+		branch = req.Branch
+	}
+
+	// commit data to path in repository for the main branch
+	file, _, resp, err := githubClient.Repositories.GetContents(ctx, owner, name, req.Path, &github.RepositoryContentGetOptions{
+		Ref: branch,
+	})
+	if err != nil && resp.StatusCode != 404 {
+		return response.Error(500, "Failed to get file content", err)
+	}
+
+	if file == nil {
+		options := &github.RepositoryContentFileOptions{
+			Message: github.String(req.Message),
+			Content: req.Data,
+			Branch:  github.String(branch),
+		}
+
+		if _, _, err := githubClient.Repositories.CreateFile(ctx, owner, name, req.Path, options); err != nil {
+			return response.Error(500, "Failed to create file", err)
+		}
+		s.logger.Info("File created", "path", req.Path, "branch", branch)
+	} else {
+		options := &github.RepositoryContentFileOptions{
+			Message: github.String(req.Message),
+			Content: req.Data,
+			Branch:  github.String(branch),
+			SHA:     file.SHA,
+		}
+		if _, _, err := githubClient.Repositories.UpdateFile(ctx, owner, name, req.Path, options); err != nil {
+			return response.Error(500, "Failed to update file", err)
+		}
+		s.logger.Info("File updated", "path", req.Path, "branch", branch)
+	}
+
+	return response.Success("File updated successfully")
 }
 
 func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
@@ -149,7 +237,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 	// TODO: how to deal with renamed repositories?
 	// TODO: how to do the same for renamed files?
 	// TODO: support for folders
-	repo := s.getRepoTODO()
+	repo := s.getRepo()
 
 	payload, err := github.ValidatePayload(c.Req, repo.webhookSecret)
 	if err != nil {
@@ -199,7 +287,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 
 			for _, file := range commit.Added {
 				s.logger.Info("File added", "file", file)
-				if s.isDashboard(file) {
+				if !s.isDashboard(file) {
 					s.logger.Info("New file is not a dashboard", "file", file)
 					continue
 				}
@@ -216,7 +304,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				if err := s.upsertDashboard(ctx, content, folder, repo.orgID, false); err != nil {
+				if _, err := s.upsertDashboard(ctx, content, folder, repo.orgID, false); err != nil {
 					return response.Error(500, "Failed to upsert dashboard", err)
 				}
 
@@ -242,7 +330,7 @@ func (s *Service) handleWebhook(c *contextmodel.ReqContext) response.Response {
 					return response.Error(500, "Failed to get file content", err)
 				}
 
-				if err := s.upsertDashboard(ctx, content, folder, repo.orgID, true); err != nil {
+				if _, err := s.upsertDashboard(ctx, content, folder, repo.orgID, true); err != nil {
 					return response.Error(500, "Failed to upsert dashboard", err)
 				}
 				s.logger.Info("Dashboard modified", "file", file, "content", content)
@@ -317,10 +405,10 @@ func (s *Service) ensureDashboardDoesNotExist(ctx context.Context, content strin
 	return nil
 }
 
-func (s *Service) upsertDashboard(ctx context.Context, content string, folder *folder.Folder, orgID int64, shouldExist bool) error {
+func (s *Service) upsertDashboard(ctx context.Context, content string, folder *folder.Folder, orgID int64, shouldExist bool) (*dashboards.Dashboard, error) {
 	json, err := simplejson.NewJson([]byte(content))
 	if err != nil {
-		return fmt.Errorf("failed to parse file content: %w", err)
+		return nil, fmt.Errorf("failed to parse file content: %w", err)
 	}
 
 	dashboard := dashboards.NewDashboardFromJson(json)
@@ -340,7 +428,7 @@ func (s *Service) upsertDashboard(ctx context.Context, content string, folder *f
 
 	existingDashboard, err := s.dashboardService.GetDashboard(ctx, query)
 	if err != nil && !errors.Is(err, dashboards.ErrDashboardNotFound) {
-		return fmt.Errorf("failed to get existing dashboard: %w", err)
+		return nil, fmt.Errorf("failed to get existing dashboard: %w", err)
 	}
 
 	if existingDashboard == nil {
@@ -366,50 +454,12 @@ func (s *Service) upsertDashboard(ctx context.Context, content string, folder *f
 		Dashboard: dashboard,
 	}
 
-	if _, err = s.dashboardService.ImportDashboard(ctx, dto); err != nil {
-		return fmt.Errorf("failed to import dashboard: %w", err)
-	}
-
-	return nil
-}
-
-func (s *Service) emptyFolder(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
-	getQuery := &folder.GetFolderQuery{
-		Title:        &name,
-		OrgID:        orgID,
-		SignedInUser: githubSyncUser(orgID),
-	}
-
-	syncFolder, err := s.folderService.Get(ctx, getQuery)
-	switch {
-	case err == nil:
-		deleteQuery := &folder.DeleteFolderCommand{
-			UID:          syncFolder.UID,
-			OrgID:        orgID,
-			SignedInUser: githubSyncUser(orgID),
-		}
-
-		if err := s.folderService.Delete(ctx, deleteQuery); err != nil {
-			return nil, fmt.Errorf("failed to delete folder: %w", err)
-		}
-		s.logger.Info("Existing folder deleted", "folder", syncFolder.UID)
-	case !errors.Is(err, dashboards.ErrFolderNotFound):
-		return nil, err
-	}
-
-	createQuery := &folder.CreateFolderCommand{
-		OrgID:        orgID,
-		UID:          util.GenerateShortUID(),
-		Title:        name,
-		SignedInUser: githubSyncUser(orgID),
-	}
-
-	f, err := s.folderService.Create(ctx, createQuery)
+	dashboard, err = s.dashboardService.ImportDashboard(ctx, dto)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to import dashboard: %w", err)
 	}
 
-	return f, nil
+	return dashboard, nil
 }
 
 func (s *Service) ensureFolderExists(ctx context.Context, orgID int64, name string) (*folder.Folder, error) {
@@ -492,50 +542,101 @@ func (s *Service) ensureWebhookExists(ctx context.Context, repo *repository) err
 	return nil
 }
 
-func (s *Service) syncRepo(ctx context.Context, repo *repository, client *github.Client, folder *folder.Folder, owner, name, path, branch string) error {
+func (s *Service) syncRepo(ctx context.Context, repo *repository) error {
+	client := githubClientForRepo(repo)
+
+	owner, name, err := extractOwnerAndRepo(repo.url)
+	if err != nil {
+		return fmt.Errorf("error extracting owner and repo from URL: %w", err)
+	}
+
+	folder, err := s.ensureFolderExists(ctx, repo.orgID, repo.name)
+	if err != nil {
+		return fmt.Errorf("error ensuring folder exists: %w", err)
+	}
+
+	existingDashboards, err := s.dashboardService.SearchDashboards(ctx, &dashboards.FindPersistedDashboardsQuery{
+		OrgId:        repo.orgID,
+		FolderUIDs:   []string{folder.UID},
+		SignedInUser: githubSyncUser(repo.orgID),
+	})
+	s.logger.Info("Existing dashboards", "dashboards", existingDashboards, "folder", folder.UID, "orgID", repo.orgID)
+
+	if err != nil {
+		return fmt.Errorf("error getting dashboards: %w", err)
+	}
+
+	createdOrUpdatedDashboards, err := s.walkSyncRepo(ctx, repo, client, folder, owner, name, "", "main")
+	if err != nil {
+		return fmt.Errorf("error walking repository: %w", err)
+	}
+
+	// delete all dashboards that are not in the repository
+	uids := make(map[string]bool)
+	for _, d := range createdOrUpdatedDashboards {
+		uids[d.UID] = true
+	}
+
+	for _, d := range existingDashboards {
+		if _, ok := uids[d.UID]; !ok {
+			if err := s.dashboardService.DeleteDashboard(ctx, d.ID, repo.orgID); err != nil {
+				return fmt.Errorf("error deleting dashboard: %w", err)
+			}
+
+			s.logger.Info("Deleted dashboard", "dashboard", d.UID)
+		}
+	}
+
+	return nil
+}
+
+func (s *Service) walkSyncRepo(ctx context.Context, repo *repository, client *github.Client, folder *folder.Folder, owner, name, path, branch string) ([]*dashboards.Dashboard, error) {
 	content, contents, _, err := client.Repositories.GetContents(ctx, owner, name, path, &github.RepositoryContentGetOptions{
 		Ref: branch,
 	})
 	if err != nil {
-		return fmt.Errorf("error getting contents for path '%s': %w", path, err)
+		return nil, fmt.Errorf("error getting contents for path '%s': %w", path, err)
 	}
 
 	if content.GetType() == "file" {
 		if !s.isDashboard(content.GetPath()) {
-			return nil
+			return nil, nil
 		}
 
 		fileContent, _, _, err := client.Repositories.GetContents(ctx, owner, name, content.GetPath(), &github.RepositoryContentGetOptions{
 			// TODO: branch could change during the sync
 			Ref: branch,
 		})
-
 		if err != nil {
-			return fmt.Errorf("error getting file content: %w", err)
+			return nil, fmt.Errorf("error getting file content: %w", err)
 		}
 
 		bytes, err := fileContent.GetContent()
 		if err != nil {
-			return fmt.Errorf("error getting file content: %w", err)
+			return nil, fmt.Errorf("error getting file content: %w", err)
 		}
 
 		// TODO: do something smarter to not update what's already there.
-		if err := s.upsertDashboard(ctx, bytes, folder, repo.orgID, true); err != nil {
-			return fmt.Errorf("error upserting dashboard: %w", err)
+		dashboard, err := s.upsertDashboard(ctx, bytes, folder, repo.orgID, true)
+		if err != nil {
+			return nil, fmt.Errorf("error upserting dashboard: %w", err)
 		}
 
 		s.logger.Info("Dashboard added or updated", "file", content.GetPath(), "folder", folder.UID, "content", content, "dashboard")
-		return nil
+		return []*dashboards.Dashboard{dashboard}, nil
 	}
 
 	s.logger.Info("Directory", "path", content.GetPath())
+	var result []*dashboards.Dashboard
 	for _, content := range contents {
-		if err := s.syncRepo(ctx, repo, client, folder, owner, name, content.GetPath(), branch); err != nil {
-			return err
+		dashboards, err := s.walkSyncRepo(ctx, repo, client, folder, owner, name, content.GetPath(), branch)
+		if err != nil {
+			return nil, err
 		}
+		result = append(result, dashboards...)
 	}
 
-	return nil
+	return result, nil
 }
 
 func githubClientForRepo(repo *repository) *github.Client {
@@ -560,6 +661,7 @@ func githubSyncUser(orgID int64) identity.Requester {
 			{Action: dashboards.ActionDashboardsCreate, Scope: dashboards.ScopeFoldersAll},
 			{Action: dashboards.ActionDashboardsWrite, Scope: dashboards.ScopeFoldersAll},
 			{Action: dashboards.ActionDashboardsDelete, Scope: dashboards.ScopeFoldersAll},
+			{Action: dashboards.ActionDashboardsRead, Scope: dashboards.ScopeFoldersAll},
 		},
 	)
 }
