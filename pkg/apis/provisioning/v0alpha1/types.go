@@ -98,3 +98,10 @@ type HelloWorld struct {
 
 	Whom string `json:"whom,omitempty"`
 }
+
+// This is a container type for any resource type
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type AnyResource struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+}

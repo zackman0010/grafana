@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
@@ -61,6 +62,11 @@ func (b *ProvisioningAPIBuilder) InstallSchema(scheme *runtime.Scheme) error {
 		return err
 	}
 
+	// The preview will return an unstructured resource (from any version???)
+	scheme.AddKnownTypes(v0alpha1.InternalGroupVersion,
+		&unstructured.Unstructured{},
+	)
+
 	// Only 1 version (for now?)
 	return scheme.SetVersionPriority(v0alpha1.SchemeGroupVersion)
 }
@@ -78,6 +84,9 @@ func (b *ProvisioningAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserv
 	storage := map[string]rest.Storage{}
 	storage[v0alpha1.RepositoryResourceInfo.StoragePath()] = repositoryStorage
 	storage[v0alpha1.RepositoryResourceInfo.StoragePath("hello")] = helloWorld
+	storage[v0alpha1.RepositoryResourceInfo.StoragePath("read")] = &readConnector{
+		getter: repositoryStorage,
+	}
 	apiGroupInfo.VersionedResourcesStorageMap[v0alpha1.VERSION] = storage
 	return nil
 }
