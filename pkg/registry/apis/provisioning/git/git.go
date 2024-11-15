@@ -22,15 +22,17 @@ type GitRepositoryManager interface {
 	//
 	// The repositoryURL given is expected to be a complete link to clone the repository.
 	// TODO: Does it need to be ssh? git protocol? https?
+	//
+	// Authentication is always provided in every authenticated method. This is to ensure the repository itself never has to manage secrets.
 	Open(
 		ctx context.Context,
 		owner GitOwner,
 		repositoryURL string,
-		// TODO: Authentication
-	) (GitRepository, error)
+		auth Authentication,
+	) (Repository, error)
 }
 
-type GitRepository interface {
+type Repository interface {
 	// Update the repository to the latest commit available.
 	//
 	// The forEach function is called on them all. If any forEach invocation returns an error, the context given to them all is cancelled.
@@ -39,6 +41,7 @@ type GitRepository interface {
 	UpdateRepository(
 		ctx context.Context,
 		forEach func(context.Context, FileDiff) error,
+		auth Authentication,
 	) error
 
 	// Updates the given files and pushes them to the repository.
@@ -49,6 +52,7 @@ type GitRepository interface {
 		ctx context.Context,
 		branch string,
 		files map[string][]byte,
+		auth Authentication,
 	) error
 
 	// Stream all files in the repository.
@@ -62,7 +66,12 @@ type GitRepository interface {
 		forEach func(context.Context, FileDiff) error,
 	)
 
-	// TODO: Should we expose the billy FS?
+	// TODO: Should we expose the billy FS? Maybe a better idea than streaming via the repository,
+	//   but we also might want to not store the entire repo locally (e.g. via a nanogit-like lib).
+}
+
+type Authentication struct {
+	// TODO :)
 }
 
 type FileDiff struct {
