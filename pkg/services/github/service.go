@@ -134,6 +134,7 @@ func (s *Service) registerRoutes() {
 		api.Post("/webhook", routing.Wrap(s.handleWebhook))
 		api.Post("/sync", routing.Wrap(s.handleSync))
 		api.Post("/push", routing.Wrap(s.handlePush))
+		api.Post("/preview", routing.Wrap(s.handlePreview))
 	})
 }
 
@@ -146,6 +147,51 @@ func (s *Service) handleSync(c *contextmodel.ReqContext) response.Response {
 	}
 
 	return response.Success("Repository synced successfully")
+}
+
+type PreviewRequest struct {
+	Path string `json:"path"`
+	Ref  string `json:"ref"`
+}
+
+type PreviewResponse struct {
+	Path string          `json:"path"`
+	Ref  string          `json:"ref"`
+	Data json.RawMessage `json:"data"`
+}
+
+func (s *Service) handlePreview(c *contextmodel.ReqContext) response.Response {
+	var req PreviewRequest
+	if err := web.Bind(c.Req, &req); err != nil {
+		return response.Error(400, "Failed to parse request", err)
+	}
+
+	ctx := c.Req.Context()
+	repo := s.getRepo()
+	githubClient := githubClientForRepo(repo)
+
+	owner, name, err := extractOwnerAndRepo(repo.url)
+	if err != nil {
+		return response.Error(400, "Failed to extract owner and repo", err)
+	}
+
+	content, _, _, err := githubClient.Repositories.GetContents(ctx, owner, name, req.Path, &github.RepositoryContentGetOptions{
+		Ref: req.Ref,
+	})
+	if err != nil {
+		return response.Error(500, "Failed to get file content", err)
+	}
+
+	data, err := content.GetContent()
+	if err != nil {
+		return response.Error(500, "Failed to get file content", err)
+	}
+
+	return response.JSON(200, &PreviewResponse{
+		Path: req.Path,
+		Ref:  req.Ref,
+		Data: json.RawMessage(data),
+	})
 }
 
 type PushRequest struct {
