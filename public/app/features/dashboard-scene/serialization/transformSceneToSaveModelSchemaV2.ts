@@ -1,4 +1,11 @@
-import { behaviors, SceneDataQuery, SceneDataTransformer, SceneVariableSet, VizPanel } from '@grafana/scenes';
+import {
+  behaviors,
+  dataLayers,
+  SceneDataQuery,
+  SceneDataTransformer,
+  SceneVariableSet,
+  VizPanel,
+} from '@grafana/scenes';
 
 import {
   DashboardV2Spec,
@@ -24,7 +31,10 @@ import {
   ConstantVariableKind,
   GroupByVariableKind,
   AdhocVariableKind,
+  AnnotationQueryKind,
+  defaultAnnotationPanelFilter,
 } from '../../../../../packages/grafana-schema/src/schema/dashboard/v2alpha0/dashboard.gen';
+import { DashboardDataLayerSet } from '../scene/DashboardDataLayerSet';
 import { DashboardScene, DashboardSceneState } from '../scene/DashboardScene';
 import { PanelTimeRange } from '../scene/PanelTimeRange';
 import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
@@ -41,6 +51,8 @@ type DeepPartial<T> = T extends object
       [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
+
+//TODO: alerts
 
 export function transformSceneToSaveModelSchemaV2(scene: DashboardScene, isSnapshot = false): Partial<DashboardV2Spec> {
   const oldDash = scene.state;
@@ -85,7 +97,7 @@ export function transformSceneToSaveModelSchemaV2(scene: DashboardScene, isSnaps
     // EOF elements
 
     // annotations
-    annotations: [], //FIXME
+    annotations: getAnnotations(oldDash),
     // EOF annotations
 
     // layout
@@ -366,6 +378,41 @@ function getVariables(oldDash: DashboardSceneState) {
   }
 
   return variables;
+}
+
+function getAnnotations(state: DashboardSceneState): AnnotationQueryKind[] {
+  const data = state.$data;
+
+  if (!(data instanceof DashboardDataLayerSet)) {
+    return [];
+  }
+
+  const annotations: AnnotationQueryKind[] = [];
+  for (const layer of data.state.annotationLayers) {
+    if (!(layer instanceof dataLayers.AnnotationsDataLayer)) {
+      continue;
+    }
+
+    const result: AnnotationQueryKind = {
+      kind: 'AnnotationQuery',
+      spec: {
+        name: layer.state.query.name,
+        datasource: layer.state.query.datasource!, // FIXME: this cannot be undefined
+        query: {
+          kind: layer.state.query.datasource?.type ?? 'default',
+          spec: layer.state.query,
+        },
+        enable: Boolean(layer.state.isEnabled),
+        hide: Boolean(layer.state.isHidden),
+        filter: layer.state.query.filter ?? defaultAnnotationPanelFilter(),
+        iconColor: layer.state.query.iconColor,
+      },
+    };
+
+    annotations.push(result);
+  }
+
+  return annotations;
 }
 
 // Function to know if the dashboard transformed is a valid DashboardV2Spec
