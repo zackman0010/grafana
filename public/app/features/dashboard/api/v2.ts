@@ -10,7 +10,7 @@ import {
   ResourceClient,
 } from 'app/features/apiserver/types';
 import { DeleteDashboardResponse } from 'app/features/manage-dashboards/types';
-import { DashboardDTO, SaveDashboardResponseDTO } from 'app/types';
+import { SaveDashboardResponseDTO } from 'app/types';
 
 import { SaveDashboardCommand } from '../components/SaveDashboard/types';
 
