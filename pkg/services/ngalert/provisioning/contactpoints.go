@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	alertingNotify "github.com/grafana/alerting/notify"
 	"github.com/prometheus/alertmanager/config"
 
@@ -22,6 +24,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/store"
 	"github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/util"
+	"github.com/grafana/grafana/pkg/util/cmputil"
 )
 
 type AlertRuleNotificationSettingsStore interface {
@@ -274,6 +277,14 @@ func (ecp *ContactPointService) UpdateContactPoint(ctx context.Context, orgID in
 	if storedProvenance != provenance && storedProvenance != models.ProvenanceNone {
 		return fmt.Errorf("cannot change provenance from '%s' to '%s'", storedProvenance, provenance)
 	}
+
+	d := diff(rawContactPoint, contactPoint)
+	if len(d) == 0 {
+		ecp.log.FromContext(ctx).Info("No changes detected in contact point", "uid", contactPoint.UID)
+		return nil
+	}
+	ecp.log.FromContext(ctx).Debug("Changes detected in contact point", "uid", contactPoint.UID, "diff", d.Paths())
+
 	// transform to internal model
 	extractedSecrets, err := RemoveSecretsForContactPoint(&contactPoint)
 	if err != nil {
@@ -594,4 +605,17 @@ func convertRecSvcErr(err error) error {
 		return legacy_storage.ErrNoAlertmanagerConfiguration.Errorf("")
 	}
 	return err
+}
+
+func diff(a, b apimodels.EmbeddedContactPoint) cmputil.DiffReport {
+	reporter := cmputil.DiffReporter{}
+	options := []cmp.Option{cmp.Reporter(&reporter), cmpopts.EquateEmpty(), cmp.Transformer("", func(j *simplejson.Json) any {
+		r, _ := j.Map()
+		return r
+	})}
+	equal := cmp.Equal(a, b, options...)
+	if equal {
+		return nil
+	}
+	return reporter.Diffs
 }
