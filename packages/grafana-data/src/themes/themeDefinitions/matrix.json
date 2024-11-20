@@ -1,0 +1,35 @@
+{
+  "name": "Debug",
+  "colors": {
+    "mode": "dark",
+    "background": {
+      "canvas": "#000000",
+      "primary": "#010101",
+      "secondary": "#020202"
+    },
+    "text": {
+      "primary": "#008f11",
+      "secondary": "#008f11",
+      "disabled": "#008f11",
+      "link": "#00ff41",
+      "maxContrast": "#00ff41"
+    },
+    "border": {
+      "weak": "#008f1144",
+      "medium": "#008f1188",
+      "strong": "#008f11ff"
+    },
+    "primary": {
+      "main": "#008f11"
+    }
+  },
+  "shape": {
+    "borderRadius": 0
+  },
+  "typography": {
+    "fontFamily": "monospace"
+  },
+  "spacing": {
+    "gridSize": 10
+  }
+}

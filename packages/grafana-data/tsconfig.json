@@ -3,6 +3,7 @@
     "jsx": "react-jsx",
     "declarationDir": "./compiled",
     "emitDeclarationOnly": true,
+    "resolveJsonModule": true,
     "isolatedModules": true,
     "rootDirs": ["."]
   },

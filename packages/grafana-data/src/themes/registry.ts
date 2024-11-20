@@ -2,6 +2,7 @@ import { Registry, RegistryItem } from '../utils/Registry';
 
 import { createColors } from './createColors';
 import { createTheme } from './createTheme';
+import matrix from './themeDefinitions/matrix.json';
 import { GrafanaTheme2 } from './types';
 
 export interface ThemeRegistryItem extends RegistryItem {
@@ -37,6 +38,7 @@ const themeRegistry = new Registry<ThemeRegistryItem>(() => {
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
     { id: 'debug', name: 'Debug', build: createDebug, isExtra: true },
+    { id: 'matrix', name: 'Matrix', build: createMatrix, isExtra: true },
   ];
 });
 
@@ -120,4 +122,34 @@ function createDebug(): GrafanaTheme2 {
       borderRadius: 8,
     },
   });
+}
+
+function createMatrix(): GrafanaTheme2 {
+  // return createTheme({
+  //   name: 'Debug',
+  //   colors: {
+  //     mode: 'dark',
+  //     background: {
+  //       canvas: '#000000',
+  //       primary: '#000000',
+  //       secondary: '#000000',
+  //     },
+  //     text: {
+  //       primary: '#008f11',
+  //       secondary: '#008f11',
+  //       disabled: '#008f11',
+  //       link: '#00ff41',
+  //       maxContrast: '#00ff41',
+  //     },
+  //     border: {
+  //       weak: '#008f1144',
+  //       medium: '#008f1188',
+  //       strong: '#008f11ff',
+  //     },
+  //   },
+  //   shape: {
+  //     borderRadius: 0,
+  //   },
+  // });
+  return createTheme(matrix);
 }
