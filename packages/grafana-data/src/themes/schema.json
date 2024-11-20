@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "DeepPartial<ThemeColorsBase<ThemeRichColor>>": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/DeepPartial<{selected:string;selectedBorder:string;hover:string;hoverOpacity:number;focus:string;disabledBackground:string;disabledText:string;disabledOpacity:number;}>"
+        },
+        "background": {
+          "$ref": "#/definitions/DeepPartial<{canvas:string;primary:string;secondary:string;}>"
+        },
+        "border": {
+          "$ref": "#/definitions/DeepPartial<{weak:string;medium:string;strong:string;}>"
+        },
+        "contrastThreshold": {
+          "type": "number"
+        },
+        "error": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        },
+        "gradients": {
+          "$ref": "#/definitions/DeepPartial<{brandVertical:string;brandHorizontal:string;}>"
+        },
+        "hoverFactor": {
+          "type": "number"
+        },
+        "info": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        },
+        "mode": {
+          "enum": ["dark", "light"],
+          "type": "string"
+        },
+        "primary": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        },
+        "secondary": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        },
+        "success": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        },
+        "text": {
+          "$ref": "#/definitions/DeepPartial<{primary:string;secondary:string;disabled:string;link:string;maxContrast:string;}>"
+        },
+        "tonalOffset": {
+          "type": "number"
+        },
+        "warning": {
+          "$ref": "#/definitions/DeepPartial<ThemeRichColor>"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<ThemeRichColor>": {
+      "additionalProperties": false,
+      "properties": {
+        "border": {
+          "description": "Used for borders",
+          "type": "string"
+        },
+        "borderTransparent": {
+          "description": "Used for weak colored borders like larger alert/banner boxes and smaller badges and tags",
+          "type": "string"
+        },
+        "contrastText": {
+          "description": "Text color for text ontop of main",
+          "type": "string"
+        },
+        "main": {
+          "description": "Main color",
+          "type": "string"
+        },
+        "name": {
+          "description": "color intent (primary, secondary, info, error, etc)",
+          "type": "string"
+        },
+        "shade": {
+          "description": "Used for hover",
+          "type": "string"
+        },
+        "text": {
+          "description": "Used for text",
+          "type": "string"
+        },
+        "transparent": {
+          "description": "Used subtly colored backgrounds",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<{brandVertical:string;brandHorizontal:string;}>": {
+      "additionalProperties": false,
+      "properties": {
+        "brandHorizontal": {
+          "type": "string"
+        },
+        "brandVertical": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<{canvas:string;primary:string;secondary:string;}>": {
+      "additionalProperties": false,
+      "properties": {
+        "canvas": {
+          "description": "Dashboard and body background",
+          "type": "string"
+        },
+        "primary": {
+          "description": "Primary content pane background (panels etc)",
+          "type": "string"
+        },
+        "secondary": {
+          "description": "Cards and elements that need to stand out on the primary background",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<{primary:string;secondary:string;disabled:string;link:string;maxContrast:string;}>": {
+      "additionalProperties": false,
+      "properties": {
+        "disabled": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "maxContrast": {
+          "description": "Used for auto white or dark text on colored backgrounds",
+          "type": "string"
+        },
+        "primary": {
+          "type": "string"
+        },
+        "secondary": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<{selected:string;selectedBorder:string;hover:string;hoverOpacity:number;focus:string;disabledBackground:string;disabledText:string;disabledOpacity:number;}>": {
+      "additionalProperties": false,
+      "properties": {
+        "disabledBackground": {
+          "description": "Used for disabled buttons and inputs",
+          "type": "string"
+        },
+        "disabledOpacity": {
+          "description": "Disablerd opacity",
+          "type": "number"
+        },
+        "disabledText": {
+          "description": "Disabled text",
+          "type": "string"
+        },
+        "focus": {
+          "description": "Used focused menu item / select option",
+          "type": "string"
+        },
+        "hover": {
+          "description": "Used for hovered menu item / select option",
+          "type": "string"
+        },
+        "hoverOpacity": {
+          "description": "Used for button/colored background hover opacity",
+          "type": "number"
+        },
+        "selected": {
+          "description": "Used for selected menu item / select option",
+          "type": "string"
+        },
+        "selectedBorder": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeepPartial<{weak:string;medium:string;strong:string;}>": {
+      "additionalProperties": false,
+      "properties": {
+        "medium": {
+          "type": "string"
+        },
+        "strong": {
+          "type": "string"
+        },
+        "weak": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ThemeShapeInput": {
+      "additionalProperties": false,
+      "properties": {
+        "borderRadius": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "ThemeTypographyInput": {
+      "additionalProperties": false,
+      "properties": {
+        "fontFamily": {
+          "type": "string"
+        },
+        "fontFamilyMonospace": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "number"
+        },
+        "fontWeightBold": {
+          "type": "number"
+        },
+        "fontWeightLight": {
+          "type": "number"
+        },
+        "fontWeightMedium": {
+          "type": "number"
+        },
+        "fontWeightRegular": {
+          "type": "number"
+        },
+        "htmlFontSize": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "colors": {
+      "$ref": "#/definitions/DeepPartial<ThemeColorsBase<ThemeRichColor>>"
+    },
+    "name": {
+      "type": "string"
+    },
+    "shape": {
+      "$ref": "#/definitions/ThemeShapeInput"
+    },
+    "spacing": {
+      "additionalProperties": false,
+      "properties": {
+        "gridSize": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "typography": {
+      "$ref": "#/definitions/ThemeTypographyInput"
+    }
+  },
+  "type": "object"
+}

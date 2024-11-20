@@ -1,13 +1,18 @@
 import { Registry, RegistryItem } from '../utils/Registry';
 
 import { createColors } from './createColors';
-import { createTheme } from './createTheme';
+import { createTheme, NewThemeOptions } from './createTheme';
 import matrix from './themeDefinitions/matrix.json';
 import { GrafanaTheme2 } from './types';
 
 export interface ThemeRegistryItem extends RegistryItem {
   isExtra?: boolean;
   build: () => GrafanaTheme2;
+}
+
+export function isValidTheme(themeInput: unknown): themeInput is NewThemeOptions {
+  // TODO validate themeInput against schema
+  return true;
 }
 
 /**
@@ -151,5 +156,5 @@ function createMatrix(): GrafanaTheme2 {
   //     borderRadius: 0,
   //   },
   // });
-  return createTheme(matrix);
+  return isValidTheme(matrix) ? createTheme(matrix) : createTheme();
 }
