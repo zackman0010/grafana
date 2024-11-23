@@ -152,16 +152,19 @@ export class DashboardEditPane extends SceneObjectBase<DashboardEditPaneState> {
 function getStyles(theme: GrafanaTheme2) {
   return {
     wrapper: css({
-      right: 0,
-      top: TOP_BAR_LEVEL_HEIGHT * 2,
-      bottom: 0,
-      width: 280,
-      position: 'fixed',
-      background: theme.colors.background.primary,
-      borderLeft: `1px solid ${theme.colors.border.weak}`,
-      zIndex: theme.zIndex.modal,
-      boxShadow: theme.shadows.z3,
-      overflowY: 'auto',
+      display: 'flex',
+      flexGrow: 1,
+      flexDirection: 'column',
+      // right: 0,
+      // top: TOP_BAR_LEVEL_HEIGHT * 2,
+      // bottom: 0,
+      // width: 280,
+      // position: 'fixed',
+      //    background: theme.colors.background.primary,
+      //      borderLeft: `1px solid ${theme.colors.border.weak}`,
+      //    zIndex: theme.zIndex.modal,
+      //  boxShadow: theme.shadows.z3,
+      //      overflowY: 'auto',
     }),
   };
 }

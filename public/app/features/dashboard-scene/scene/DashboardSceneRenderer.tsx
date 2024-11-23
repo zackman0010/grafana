@@ -5,13 +5,15 @@ import { useLocation } from 'react-router-dom-v5-compat';
 import { GrafanaTheme2, PageLayoutType } from '@grafana/data';
 import { useChromeHeaderHeight } from '@grafana/runtime';
 import { SceneComponentProps } from '@grafana/scenes';
-import { useStyles2 } from '@grafana/ui';
+import { CustomScrollbar, ScrollContainer, useStyles2 } from '@grafana/ui';
 import NativeScrollbar from 'app/core/components/NativeScrollbar';
 import { Page } from 'app/core/components/Page/Page';
 import { EntityNotFound } from 'app/core/components/PageNotFound/EntityNotFound';
 import { getNavModel } from 'app/core/selectors/navModel';
 import DashboardEmpty from 'app/features/dashboard/dashgrid/DashboardEmpty';
 import { useSelector } from 'app/types';
+
+import { DashboardEditWrapper } from '../edit-pane/DashboardEditWrapper';
 
 import { DashboardScene } from './DashboardScene';
 import { NavToolbarActions } from './NavToolbarActions';
@@ -65,53 +67,62 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
     );
   }
 
-  const emptyState = (
-    <DashboardEmpty dashboard={model} canCreate={!!model.state.meta.canEdit} key="dashboard-empty-state" />
-  );
+  function renderBody() {
+    if (meta.dashboardNotFound) {
+      return <EntityNotFound entity="Dashboard" key="dashboard-not-found" />;
+    }
 
-  const withPanels = (
-    <>
-      <div className={cx(styles.body, !hasControls && styles.bodyWithoutControls)} key="dashboard-panels">
-        <bodyToRender.Component model={bodyToRender} />
-      </div>
-      {isEditing && <editPane.Component model={editPane} />}
-    </>
-  );
+    if (panelSearch || panelsPerRow) {
+      return <PanelSearchLayout panelSearch={panelSearch} panelsPerRow={panelsPerRow} dashboard={model} />;
+    }
 
-  const notFound = meta.dashboardNotFound && <EntityNotFound entity="Dashboard" key="dashboard-not-found" />;
+    return (
+      <>
+        <DashboardAngularDeprecationBanner dashboard={model} key="angular-deprecation-banner" />
+        {isEmpty && (
+          <DashboardEmpty dashboard={model} canCreate={!!model.state.meta.canEdit} key="dashboard-empty-state" />
+        )}
+        <div className={cx(styles.body, !hasControls && styles.bodyWithoutControls)} key="dashboard-panels">
+          <bodyToRender.Component model={bodyToRender} />
+        </div>
+      </>
+    );
+  }
 
-  const angularBanner = <DashboardAngularDeprecationBanner dashboard={model} key="angular-deprecation-banner" />;
+  function renderCanvas() {
+    if (isEditing) {
+      return (
+        <DashboardEditWrapper dashboard={model}>
+          <NavToolbarActions dashboard={model} />
+          {controls && (
+            <div className={styles.controlsWrapper}>
+              <controls.Component model={controls} />
+            </div>
+          )}
+          <div className={cx(styles.canvasContent)}>{renderBody()}</div>
+        </DashboardEditWrapper>
+      );
+    }
 
-  let body: React.ReactNode = [angularBanner, withPanels];
-
-  if (notFound) {
-    body = [notFound];
-  } else if (isEmpty) {
-    body = [emptyState, withPanels];
-  } else if (panelSearch || panelsPerRow) {
-    body = <PanelSearchLayout panelSearch={panelSearch} panelsPerRow={panelsPerRow} dashboard={model} />;
+    return (
+      <NativeScrollbar divId="page-scrollbar" onSetScrollRef={model.onSetScrollRef}>
+        <div className={styles.pageContainer}>
+          <NavToolbarActions dashboard={model} />
+          {controls && (
+            <div className={cx(styles.controlsWrapper, styles.controlsWrapperSticky)}>
+              <controls.Component model={controls} />
+            </div>
+          )}
+          <div className={cx(styles.canvasContent)}>{renderBody()}</div>
+        </div>
+      </NativeScrollbar>
+    );
   }
 
   return (
     <Page navModel={navModel} pageNav={pageNav} layout={PageLayoutType.Custom}>
       {editPanel && <editPanel.Component model={editPanel} />}
-      {!editPanel && (
-        <NativeScrollbar divId="page-scrollbar" onSetScrollRef={model.onSetScrollRef}>
-          <div
-            className={cx(styles.pageContainer, hasControls && styles.pageContainerWithControls)}
-            onClick={editPane.onClick}
-            onFocus={editPane.onFocus}
-          >
-            <NavToolbarActions dashboard={model} />
-            {controls && (
-              <div className={styles.controlsWrapper}>
-                <controls.Component model={controls} />
-              </div>
-            )}
-            <div className={cx(styles.canvasContent)}>{body}</div>
-          </div>
-        </NativeScrollbar>
-      )}
+      {!editPanel && renderCanvas()}
       {overlay && <overlay.Component model={overlay} />}
     </Page>
   );
@@ -120,33 +131,20 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
 function getStyles(theme: GrafanaTheme2, headerHeight: number) {
   return {
     pageContainer: css({
-      display: 'grid',
-      gridTemplateAreas: `
-  "panels"`,
-      gridTemplateColumns: `1fr`,
-      gridTemplateRows: '1fr',
+      display: 'flex',
       flexGrow: 1,
-      [theme.breakpoints.down('sm')]: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
-    }),
-    pageContainerWithControls: css({
-      gridTemplateAreas: `
-        "controls"
-        "panels"`,
-      gridTemplateRows: 'auto 1fr',
+      flexDirection: 'column',
     }),
     controlsWrapper: css({
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 0,
-      gridArea: 'controls',
       padding: theme.spacing(2),
       ':empty': {
         display: 'none',
       },
-      // Make controls sticky on larger screens (> mobile)
+    }),
+    controlsWrapperSticky: css({
       [theme.breakpoints.up('md')]: {
         position: 'sticky',
         zIndex: theme.zIndex.activePanel,
@@ -160,9 +158,10 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       flexDirection: 'column',
       padding: theme.spacing(0.5, 2),
       flexBasis: '100%',
-      gridArea: 'panels',
       flexGrow: 1,
       minWidth: 0,
+      overflow: 'auto',
+      scrollbarWidth: 'thin',
     }),
     body: css({
       label: 'body',
