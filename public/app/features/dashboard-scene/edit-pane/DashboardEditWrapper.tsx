@@ -8,10 +8,11 @@ import { DashboardScene } from '../scene/DashboardScene';
 
 interface Props {
   dashboard: DashboardScene;
+  isEditing?: boolean;
   children: React.ReactNode;
 }
 
-export function DashboardEditWrapper({ dashboard, children }: Props) {
+export function DashboardEditWrapper({ dashboard, isEditing, children }: Props) {
   const styles = useStyles2(getStyles);
 
   const { containerProps, primaryProps, secondaryProps, splitterProps, splitterState, onToggleCollapse } =
@@ -28,16 +29,20 @@ export function DashboardEditWrapper({ dashboard, children }: Props) {
   return (
     <div
       {...containerProps}
-      className={cx(containerProps.className, styles.pageContainer)}
+      className={cx(containerProps.className, styles.pageContainer, isEditing && styles.pageContainerEditing)}
       onClick={dashboard.state.editPane.onClick}
     >
       <div {...primaryProps} className={cx(primaryProps.className, styles.body)}>
         {children}
       </div>
-      <div {...splitterProps} />
-      <div {...secondaryProps} className={cx(secondaryProps.className, styles.optionsPane)}>
-        <dashboard.state.editPane.Component model={dashboard.state.editPane} />
-      </div>
+      {isEditing && (
+        <>
+          <div {...splitterProps} />
+          <div {...secondaryProps} className={cx(secondaryProps.className, styles.optionsPane)}>
+            <dashboard.state.editPane.Component model={dashboard.state.editPane} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -45,11 +50,15 @@ export function DashboardEditWrapper({ dashboard, children }: Props) {
 function getStyles(theme: GrafanaTheme2) {
   return {
     pageContainer: css({
-      overflow: 'hidden',
+      label: 'edit-wrapper-page-container',
       flex: '1 1 0',
       //   position: 'absolute',
       //   width: '100%',
       //   height: '100%',
+    }),
+    pageContainerEditing: css({
+      label: 'edit-wrapper-page-container-editing',
+      overflow: 'hidden',
     }),
     body: css({
       display: 'flex',

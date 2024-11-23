@@ -1,4 +1,5 @@
 import { css, cx } from '@emotion/css';
+import { style } from 'd3-selection';
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom-v5-compat';
 
@@ -90,32 +91,16 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
   }
 
   function renderCanvas() {
-    if (isEditing) {
-      return (
-        <DashboardEditWrapper dashboard={model}>
-          <NavToolbarActions dashboard={model} />
-          {controls && (
-            <div className={styles.controlsWrapper}>
-              <controls.Component model={controls} />
-            </div>
-          )}
-          <div className={cx(styles.canvasContent)}>{renderBody()}</div>
-        </DashboardEditWrapper>
-      );
-    }
-
     return (
-      <NativeScrollbar divId="page-scrollbar" onSetScrollRef={model.onSetScrollRef}>
-        <div className={styles.pageContainer}>
-          <NavToolbarActions dashboard={model} />
-          {controls && (
-            <div className={cx(styles.controlsWrapper, styles.controlsWrapperSticky)}>
-              <controls.Component model={controls} />
-            </div>
-          )}
-          <div className={cx(styles.canvasContent)}>{renderBody()}</div>
-        </div>
-      </NativeScrollbar>
+      <DashboardEditWrapper dashboard={model} isEditing={isEditing}>
+        <NavToolbarActions dashboard={model} />
+        {controls && (
+          <div className={cx(styles.controlsWrapper, !isEditing && styles.controlsWrapperSticky)}>
+            <controls.Component model={controls} />
+          </div>
+        )}
+        <div className={cx(styles.canvasContent, isEditing && styles.canvasEditing)}>{renderBody()}</div>
+      </DashboardEditWrapper>
     );
   }
 
@@ -130,11 +115,6 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
 
 function getStyles(theme: GrafanaTheme2, headerHeight: number) {
   return {
-    pageContainer: css({
-      display: 'flex',
-      flexGrow: 1,
-      flexDirection: 'column',
-    }),
     controlsWrapper: css({
       display: 'flex',
       flexDirection: 'column',
@@ -162,6 +142,9 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       minWidth: 0,
       overflow: 'auto',
       scrollbarWidth: 'thin',
+    }),
+    canvasEditing: css({
+      overflow: 'auto',
     }),
     body: css({
       label: 'body',
