@@ -12,10 +12,9 @@ import { getNavModel } from 'app/core/selectors/navModel';
 import DashboardEmpty from 'app/features/dashboard/dashgrid/DashboardEmpty';
 import { useSelector } from 'app/types';
 
-import { DashboardEditWrapper } from '../edit-pane/DashboardEditWrapper';
+import { DashboardEditPaneSplitter } from '../edit-pane/DashboardEditPaneSplitter';
 
 import { DashboardScene } from './DashboardScene';
-import { NavToolbarActions } from './NavToolbarActions';
 import { PanelSearchLayout } from './PanelSearchLayout';
 import { DashboardAngularDeprecationBanner } from './angular/DashboardAngularDeprecationBanner';
 
@@ -32,14 +31,11 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
     panelsPerRow,
     isEditing,
   } = model.useState();
-  const headerHeight = useChromeHeaderHeight();
-  const styles = useStyles2(getStyles, headerHeight ?? 0);
   const location = useLocation();
   const navIndex = useSelector((state) => state.navIndex);
   const pageNav = model.getPageNav(location, navIndex);
   const bodyToRender = model.getBodyToRender();
   const navModel = getNavModel(navIndex, 'dashboards/browse');
-  const hasControls = controls?.hasControls();
   const isSettingsOpen = editview !== undefined;
 
   // Remember scroll pos when going into view panel, edit panel or settings
@@ -80,58 +76,29 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
         {isEmpty && (
           <DashboardEmpty dashboard={model} canCreate={!!model.state.meta.canEdit} key="dashboard-empty-state" />
         )}
-        <div
-          className={cx(styles.body, !hasControls && styles.bodyWithoutControls, isEditing && styles.bodyEditing)}
-          key="dashboard-panels"
-        >
-          <bodyToRender.Component model={bodyToRender} />
-        </div>
+        <bodyToRender.Component model={bodyToRender} />
       </>
-    );
-  }
-
-  function renderCanvas() {
-    return (
-      <DashboardEditWrapper dashboard={model} isEditing={isEditing}>
-        <NavToolbarActions dashboard={model} />
-        {controls && (
-          <div className={cx(styles.controlsWrapper, !isEditing && styles.controlsWrapperSticky)}>
-            <controls.Component model={controls} />
-          </div>
-        )}
-        <div className={cx(styles.canvasContent, isEditing && styles.canvasEditing)}>{renderBody()}</div>
-      </DashboardEditWrapper>
     );
   }
 
   return (
     <Page navModel={navModel} pageNav={pageNav} layout={PageLayoutType.Custom}>
       {editPanel && <editPanel.Component model={editPanel} />}
-      {!editPanel && renderCanvas()}
+      {!editPanel && (
+        <DashboardEditPaneSplitter
+          dashboard={model}
+          isEditing={isEditing}
+          controls={controls && <controls.Component model={controls} />}
+          body={renderBody()}
+        />
+      )}
       {overlay && <overlay.Component model={overlay} />}
     </Page>
   );
 }
 
-function getStyles(theme: GrafanaTheme2, headerHeight: number) {
+function getStyles(theme: GrafanaTheme2) {
   return {
-    controlsWrapper: css({
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 0,
-      padding: theme.spacing(2),
-      ':empty': {
-        display: 'none',
-      },
-    }),
-    controlsWrapperSticky: css({
-      [theme.breakpoints.up('md')]: {
-        position: 'sticky',
-        zIndex: theme.zIndex.activePanel,
-        background: theme.colors.background.canvas,
-        top: headerHeight,
-      },
-    }),
     canvasContent: css({
       label: 'canvas-content',
       display: 'flex',
