@@ -413,7 +413,7 @@ function getStyles(theme: GrafanaTheme2, direction: UseSplitterOptions['directio
       flexDirection: direction === 'row' ? 'row' : 'column',
       width: '100%',
       flexGrow: 1,
-      //      overflow: 'hidden',
+      overflow: 'hidden',
     }),
     panel: css({ display: 'flex', position: 'relative', flexBasis: 0 }),
   };

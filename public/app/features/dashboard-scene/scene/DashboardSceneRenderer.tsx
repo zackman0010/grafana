@@ -1,13 +1,11 @@
 import { css, cx } from '@emotion/css';
-import { style } from 'd3-selection';
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom-v5-compat';
 
 import { GrafanaTheme2, PageLayoutType } from '@grafana/data';
 import { useChromeHeaderHeight } from '@grafana/runtime';
 import { SceneComponentProps } from '@grafana/scenes';
-import { CustomScrollbar, ScrollContainer, useStyles2 } from '@grafana/ui';
-import NativeScrollbar from 'app/core/components/NativeScrollbar';
+import { useStyles2 } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
 import { EntityNotFound } from 'app/core/components/PageNotFound/EntityNotFound';
 import { getNavModel } from 'app/core/selectors/navModel';
@@ -33,7 +31,6 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
     panelSearch,
     panelsPerRow,
     isEditing,
-    editPane,
   } = model.useState();
   const headerHeight = useChromeHeaderHeight();
   const styles = useStyles2(getStyles, headerHeight ?? 0);
@@ -83,7 +80,10 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
         {isEmpty && (
           <DashboardEmpty dashboard={model} canCreate={!!model.state.meta.canEdit} key="dashboard-empty-state" />
         )}
-        <div className={cx(styles.body, !hasControls && styles.bodyWithoutControls)} key="dashboard-panels">
+        <div
+          className={cx(styles.body, !hasControls && styles.bodyWithoutControls, isEditing && styles.bodyEditing)}
+          key="dashboard-panels"
+        >
           <bodyToRender.Component model={bodyToRender} />
         </div>
       </>
@@ -156,6 +156,13 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
     }),
     bodyWithoutControls: css({
       paddingTop: theme.spacing(2),
+    }),
+    bodyEditing: css({
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
     }),
   };
 }
