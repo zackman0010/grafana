@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { config, useChromeHeaderHeight } from '@grafana/runtime';
@@ -24,7 +24,7 @@ export function DashboardEditPaneSplitter({ dashboard, isEditing, body, controls
     return (
       <div className={styles.canvasWrappperOld}>
         <NavToolbarActions dashboard={dashboard} />
-        <div className={cx(styles.controlsWrapper, styles.controlsWrapperSticky)}>{controls}</div>
+        <div className={styles.controlsWrapperSticky}>{controls}</div>
         <div className={styles.body}>{body}</div>
       </div>
     );
@@ -41,21 +41,20 @@ export function DashboardEditPaneSplitter({ dashboard, isEditing, body, controls
       },
     });
 
+  const containerStyle: CSSProperties = {};
+
   if (!isEditing) {
     primaryProps.style.flexGrow = 1;
     primaryProps.style.width = '100%';
     primaryProps.style.minWidth = 'unset';
+    containerStyle.overflow = 'unset';
   }
 
   return (
-    <div
-      {...containerProps}
-      className={cx(containerProps.className, styles.splitterContainer, isEditing && styles.splitterContainerEditing)}
-      onClick={dashboard.state.editPane.onClick}
-    >
+    <div {...containerProps} onClick={dashboard.state.editPane.onClick} style={containerStyle}>
       <div {...primaryProps} className={cx(primaryProps.className, styles.canvasWithSplitter)}>
         <NavToolbarActions dashboard={dashboard} />
-        <div className={cx(styles.controlsWrapper, !isEditing && styles.controlsWrapperSticky)}>{controls}</div>
+        <div className={cx(!isEditing && styles.controlsWrapperSticky)}>{controls}</div>
         <div className={styles.bodyWrapper}>
           <div className={cx(styles.body, isEditing && styles.bodyEditing)}>{body}</div>
         </div>
@@ -91,14 +90,6 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
-    }),
-    splitterContainer: css({
-      label: 'splitter-container',
-      overflow: 'unset',
-    }),
-    splitterContainerEditing: css({
-      label: 'splitter-container-editing',
-      overflow: 'hidden',
     }),
     canvasWithSplitter: css({
       overflow: 'unset',
@@ -145,15 +136,6 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       display: 'flex',
       flexDirection: 'column',
       padding: theme.spacing(2, 1),
-    }),
-    controlsWrapper: css({
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 0,
-      padding: theme.spacing(2),
-      ':empty': {
-        display: 'none',
-      },
     }),
     controlsWrapperSticky: css({
       [theme.breakpoints.up('md')]: {
