@@ -1,11 +1,8 @@
-import { css, cx } from '@emotion/css';
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom-v5-compat';
 
-import { GrafanaTheme2, PageLayoutType } from '@grafana/data';
-import { useChromeHeaderHeight } from '@grafana/runtime';
+import { PageLayoutType } from '@grafana/data';
 import { SceneComponentProps } from '@grafana/scenes';
-import { useStyles2 } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
 import { EntityNotFound } from 'app/core/components/PageNotFound/EntityNotFound';
 import { getNavModel } from 'app/core/selectors/navModel';
@@ -95,41 +92,4 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
       {overlay && <overlay.Component model={overlay} />}
     </Page>
   );
-}
-
-function getStyles(theme: GrafanaTheme2) {
-  return {
-    canvasContent: css({
-      label: 'canvas-content',
-      display: 'flex',
-      flexDirection: 'column',
-      flexBasis: '100%',
-      flexGrow: 1,
-      minWidth: 0,
-      position: 'relative',
-    }),
-    canvasEditing: css({
-      overflow: 'auto',
-    }),
-    body: css({
-      label: 'body',
-      flexGrow: 1,
-      display: 'flex',
-      gap: '8px',
-      boxSizing: 'border-box',
-      padding: theme.spacing(0.5, 2, 0.5, 2),
-    }),
-    bodyWithoutControls: css({
-      paddingTop: theme.spacing(2),
-    }),
-    bodyEditing: css({
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-      overflow: 'auto',
-      scrollbarWidth: 'thin',
-    }),
-  };
 }
