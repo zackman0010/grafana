@@ -1,7 +1,8 @@
 import { css, cx } from '@emotion/css';
+import React from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { ScrollContainer, ToolbarButton, useStyles2 } from '@grafana/ui';
+import { ToolbarButton, useStyles2 } from '@grafana/ui';
 
 import { useSnappingSplitter } from '../panel-edit/splitter/useSnappingSplitter';
 import { DashboardScene } from '../scene/DashboardScene';
@@ -41,7 +42,7 @@ export function DashboardEditWrapper({ dashboard, isEditing, children }: Props) 
       </div>
       {isEditing && (
         <>
-          <div {...splitterProps} />
+          <div {...splitterProps} data-edit-pane-splitter={true} />
           <div {...secondaryProps} className={cx(secondaryProps.className, styles.optionsPane)}>
             {splitterState.collapsed && (
               <div className={styles.expandOptionsWrapper}>

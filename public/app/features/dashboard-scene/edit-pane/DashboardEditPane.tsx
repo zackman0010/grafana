@@ -13,7 +13,6 @@ import {
   VizPanel,
 } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
-import { TOP_BAR_LEVEL_HEIGHT } from 'app/core/components/AppChrome/types';
 
 import { getDashboardSceneFor } from '../utils/utils';
 
@@ -121,7 +120,17 @@ export class DashboardEditPane extends SceneObjectBase<DashboardEditPaneState> {
     // }
   };
 
-  public onClickAway = () => {
+  public onClickAway = (evt: Event) => {
+    const target = evt.target;
+
+    /** Clicking the pane splitter should not clear selection */
+    if (target instanceof HTMLElement) {
+      const isSplitter = target.closest('[data-edit-pane-splitter]');
+      if (isSplitter) {
+        return;
+      }
+    }
+
     this.setState({ selectedObject: undefined });
 
     if (this.selectedHtmlElement) {

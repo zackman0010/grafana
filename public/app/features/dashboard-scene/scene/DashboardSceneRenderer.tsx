@@ -136,12 +136,10 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       label: 'canvas-content',
       display: 'flex',
       flexDirection: 'column',
-      padding: theme.spacing(0.5, 2),
       flexBasis: '100%',
       flexGrow: 1,
       minWidth: 0,
-      overflow: 'auto',
-      scrollbarWidth: 'thin',
+      position: 'relative',
     }),
     canvasEditing: css({
       overflow: 'auto',
@@ -151,8 +149,8 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       flexGrow: 1,
       display: 'flex',
       gap: '8px',
-      paddingBottom: theme.spacing(2),
       boxSizing: 'border-box',
+      padding: theme.spacing(0.5, 2, 0.5, 2),
     }),
     bodyWithoutControls: css({
       paddingTop: theme.spacing(2),
@@ -163,6 +161,8 @@ function getStyles(theme: GrafanaTheme2, headerHeight: number) {
       top: 0,
       right: 0,
       bottom: 0,
+      overflow: 'auto',
+      scrollbarWidth: 'thin',
     }),
   };
 }
