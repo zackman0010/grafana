@@ -93,33 +93,6 @@ export class DashboardEditPane extends SceneObjectBase<DashboardEditPaneState> {
     }
   };
 
-  public onFocus = (evt: React.FocusEvent<HTMLDivElement>) => {
-    // const target = evt.target as HTMLElement;
-    // const focusElement = target.closest('[tabindex]');
-    // const panelElement = target.closest('[data-viz-panel-key]');
-    // if (!panelElement) {
-    //   return;
-    // }
-    // const key = panelElement.getAttribute('data-viz-panel-key');
-    // if (!key) {
-    //   return;
-    // }
-    // if (!(focusElement instanceof HTMLElement)) {
-    //   console.log('Tried to select element that cannot be focused');
-    //   return;
-    // }
-    // const distance = getDistanceTo(target, panelElement);
-    // if (distance > 1) {
-    //   this.clearSelection();
-    //   console.log('distance too far', distance);
-    //   return;
-    // }
-    // const panel = sceneGraph.findByKey(this, key);
-    // if (panel instanceof VizPanel) {
-    //   this.toggleSelection(panel, focusElement);
-    // }
-  };
-
   public onClickAway = (evt: Event) => {
     const target = evt.target;
 
@@ -162,18 +135,9 @@ function getStyles(theme: GrafanaTheme2) {
   return {
     wrapper: css({
       display: 'flex',
-      flexGrow: 1,
       flexDirection: 'column',
-      // right: 0,
-      // top: TOP_BAR_LEVEL_HEIGHT * 2,
-      // bottom: 0,
-      // width: 280,
-      // position: 'fixed',
-      //    background: theme.colors.background.primary,
-      //      borderLeft: `1px solid ${theme.colors.border.weak}`,
-      //    zIndex: theme.zIndex.modal,
-      //  boxShadow: theme.shadows.z3,
-      //      overflowY: 'auto',
+      flex: '1 1 0',
+      overflow: 'auto',
     }),
   };
 }
