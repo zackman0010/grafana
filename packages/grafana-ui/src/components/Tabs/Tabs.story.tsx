@@ -1,15 +1,14 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
-import { TabsBar, Tab, TabContent, Counter as TabCounter } from '@grafana/ui';
+import { TabsBar, Tab, TabContent } from '@grafana/ui';
 
 import { DashboardStoryCanvas } from '../../utils/storybook/DashboardStoryCanvas';
 
-import { CounterProps } from './Counter';
 import mdx from './TabsBar.mdx';
 
 const meta: Meta = {
-  title: 'x_Layout/Tabs',
+  title: 'Navigation/Tabs',
   parameters: {
     docs: {
       page: mdx,
@@ -47,14 +46,6 @@ export const Simple: StoryFn = () => {
       </TabContent>
     </DashboardStoryCanvas>
   );
-};
-
-export const Counter: StoryFn<CounterProps> = (args) => {
-  return <TabCounter {...args} />;
-};
-
-Counter.args = {
-  value: 10,
 };
 
 export default meta;
