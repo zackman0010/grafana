@@ -6,7 +6,7 @@ import { CollapsableSection, Props } from './CollapsableSection';
 import mdx from './CollapsableSection.mdx';
 
 const meta: Meta<typeof CollapsableSection> = {
-  title: 'x_Layout/CollapsableSection',
+  title: 'Layout/CollapsableSection (TODO: deprecate one)',
   component: CollapsableSection,
   parameters: {
     docs: {

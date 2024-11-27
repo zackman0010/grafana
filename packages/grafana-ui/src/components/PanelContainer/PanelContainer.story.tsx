@@ -4,7 +4,7 @@ import { PanelContainer } from './PanelContainer';
 import mdx from './PanelContainer.mdx';
 
 const meta: Meta<typeof PanelContainer> = {
-  title: 'x_General/PanelContainer',
+  title: 'Layout/TODO: Deprecate/PanelContainer',
   component: PanelContainer,
   parameters: {
     docs: {

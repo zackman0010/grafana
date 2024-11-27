@@ -27,7 +27,7 @@ const Item = ({ color, text, height }: { color: string; text?: string | number; 
 };
 
 const meta: Meta<typeof Stack> = {
-  title: 'x_General/Layout/Stack',
+  title: 'Layout/Stack',
   component: Stack,
   parameters: {
     docs: {
