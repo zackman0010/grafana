@@ -47,24 +47,62 @@ const preview: Preview = {
       disable: true,
     },
     options: {
+      storySort: (a, b) => {
+        const aIsXStory = a.title.startsWith('x');
+        const bIsXStory = b.title.startsWith('x');
+
+        const aIsDivider = a.title.startsWith('---');
+        const bIsDivider = b.title.startsWith('---');
+
+        const aIsTodo = a.title.includes('TODO');
+        const bIsTodo = b.title.includes('TODO');
+
+        let aValue = 0;
+        if (aIsXStory) {
+          aValue = 1;
+        } else if (aIsTodo) {
+          aValue = 2;
+        } else if (aIsDivider) {
+          aValue = 3;
+        } else {
+          aValue = 4;
+        }
+
+        let bValue = 0;
+        if (bIsXStory) {
+          bValue = 1;
+        } else if (bIsTodo) {
+          bValue = 2;
+        } else if (bIsDivider) {
+          bValue = 3;
+        } else {
+          bValue = 4;
+        }
+
+        if (aValue === bValue) {
+          return a.id.localeCompare(b.id, undefined, { numeric: true });
+        }
+
+        return bValue - aValue;
+      },
       // Sort stories first by Docs Overview, then alphabetically
       // We should be able to use the builtin alphabetical sort, but is broken in SB 7.0
       // https://github.com/storybookjs/storybook/issues/22470
-      storySort: (a, b) => {
-        // Skip sorting for stories with nosort tag
-        if (a.tags.includes('nosort') || b.tags.includes('nosort')) {
-          return 0;
-        }
-        if (a.title.startsWith('Docs Overview')) {
-          if (b.title.startsWith('Docs Overview')) {
-            return 0;
-          }
-          return -1;
-        } else if (b.title.startsWith('Docs Overview')) {
-          return 1;
-        }
-        return a.id === b.id ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true });
-      },
+      // storySort: (a, b) => {
+      //   // Skip sorting for stories with nosort tag
+      //   if (a.tags.includes('nosort') || b.tags.includes('nosort')) {
+      //     return 0;
+      //   }
+      //   if (a.title.startsWith('Docs Overview')) {
+      //     if (b.title.startsWith('Docs Overview')) {
+      //       return 0;
+      //     }
+      //     return -1;
+      //   } else if (b.title.startsWith('Docs Overview')) {
+      //     return 1;
+      //   }
+      //   return a.id === b.id ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true });
+      // },
     },
   },
   globalTypes: {
