@@ -10,7 +10,7 @@ import { Dropdown } from './Dropdown';
 import mdx from './Dropdown.mdx';
 
 const meta: Meta<typeof Dropdown> = {
-  title: 'Overlays/Dropdown',
+  title: 'x_Overlays/Dropdown',
   component: Dropdown,
   parameters: {
     docs: {

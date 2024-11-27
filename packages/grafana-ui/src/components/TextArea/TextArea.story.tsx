@@ -5,7 +5,7 @@ import { TextArea } from '@grafana/ui';
 import mdx from './TextArea.mdx';
 
 const meta: Meta = {
-  title: 'Forms/TextArea',
+  title: 'x_Forms/TextArea',
   component: TextArea,
   parameters: {
     controls: {

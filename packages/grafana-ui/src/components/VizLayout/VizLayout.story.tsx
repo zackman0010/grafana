@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { VizLayout } from './VizLayout';
 
 const meta: Meta = {
-  title: 'Visualizations/VizLayout',
+  title: 'x_Visualizations/VizLayout',
   component: VizLayout,
   parameters: {
     docs: {},

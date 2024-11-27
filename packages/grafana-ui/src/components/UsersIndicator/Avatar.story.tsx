@@ -5,7 +5,7 @@ import { Avatar } from '@grafana/ui';
 import mdx from './Avatar.mdx';
 
 const meta: Meta<typeof Avatar> = {
-  title: 'General/UsersIndicator/Avatar',
+  title: 'x_General/UsersIndicator/Avatar',
   component: Avatar,
   parameters: {
     docs: { page: mdx },

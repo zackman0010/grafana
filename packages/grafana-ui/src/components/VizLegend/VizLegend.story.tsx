@@ -8,7 +8,7 @@ import { useTheme2, VizLegend } from '@grafana/ui';
 import { VizLegendItem } from './types';
 
 const meta: Meta = {
-  title: 'Visualizations/VizLegend',
+  title: 'x_Visualizations/VizLegend',
   component: VizLegend,
   args: {
     containerWidth: '100%',

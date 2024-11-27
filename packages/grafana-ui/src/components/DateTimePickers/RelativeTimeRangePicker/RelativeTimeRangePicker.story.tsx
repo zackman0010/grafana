@@ -5,7 +5,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { RelativeTimeRangePicker } from './RelativeTimeRangePicker';
 
 const meta: Meta<typeof RelativeTimeRangePicker> = {
-  title: 'Pickers and Editors/TimePickers/RelativeTimeRangePicker',
+  title: 'x_Pickers and Editors/TimePickers/RelativeTimeRangePicker',
   component: RelativeTimeRangePicker,
   parameters: {
     controls: {

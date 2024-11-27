@@ -6,7 +6,7 @@ import { FeatureBadge } from '@grafana/ui';
 import mdx from './FeatureBadge.mdx';
 
 const meta: Meta<typeof FeatureBadge> = {
-  title: 'Data Display/FeatureBadge',
+  title: 'x_Data Display/FeatureBadge',
   component: FeatureBadge,
   parameters: {
     docs: { page: mdx },

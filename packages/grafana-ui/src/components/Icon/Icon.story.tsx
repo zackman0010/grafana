@@ -11,7 +11,7 @@ import { getAvailableIcons } from '../../types';
 import mdx from './Icon.mdx';
 
 const meta: Meta<typeof Icon> = {
-  title: 'Docs overview/Icon',
+  title: 'x_Docs overview/Icon',
   component: Icon,
   parameters: {
     options: {

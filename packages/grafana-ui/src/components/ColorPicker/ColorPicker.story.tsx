@@ -7,7 +7,7 @@ import { SeriesColorPicker, ColorPicker, clearButtonStyles, useStyles2, ColorPic
 import mdx from './ColorPicker.mdx';
 
 const meta: Meta<typeof ColorPicker> = {
-  title: 'Pickers and Editors/ColorPicker',
+  title: 'x_Pickers and Editors/ColorPicker',
   component: ColorPicker,
   parameters: {
     docs: {

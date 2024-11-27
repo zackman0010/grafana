@@ -7,7 +7,7 @@ import { FeatureInfoBoxProps } from './FeatureInfoBox';
 import mdx from './InfoBox.mdx';
 
 const meta: Meta = {
-  title: 'Layout/InfoBox',
+  title: 'x_Layout/InfoBox',
   component: InfoBox,
   decorators: [],
   parameters: {

@@ -6,7 +6,7 @@ import { DataFrame } from '@grafana/data';
 import { TableInputCSV } from './TableInputCSV';
 
 const meta: Meta<typeof TableInputCSV> = {
-  title: 'Forms/TableInputCSV',
+  title: 'x_Forms/TableInputCSV',
   component: TableInputCSV,
 };
 

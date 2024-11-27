@@ -9,7 +9,7 @@ import { CounterProps } from './Counter';
 import mdx from './TabsBar.mdx';
 
 const meta: Meta = {
-  title: 'Layout/Tabs',
+  title: 'x_Layout/Tabs',
   parameters: {
     docs: {
       page: mdx,

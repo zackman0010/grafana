@@ -18,7 +18,7 @@ const prefixSuffixOpts = {
 };
 
 const meta: Meta = {
-  title: 'Forms/Input/AutoSizeInput',
+  title: 'x_Forms/Input/AutoSizeInput',
   component: AutoSizeInput,
   parameters: {
     docs: {

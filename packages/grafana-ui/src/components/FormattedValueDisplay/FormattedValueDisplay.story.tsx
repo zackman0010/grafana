@@ -4,7 +4,7 @@ import { FormattedValueDisplay } from './FormattedValueDisplay';
 import mdx from './FormattedValueDisplay.mdx';
 
 const meta: Meta<typeof FormattedValueDisplay> = {
-  title: 'Visualizations/FormattedValueDisplay',
+  title: 'x_Visualizations/FormattedValueDisplay',
   component: FormattedValueDisplay,
   parameters: {
     docs: {

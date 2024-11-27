@@ -6,7 +6,7 @@ import { Button, Drawer, Tab, TabsBar } from '@grafana/ui';
 import mdx from './Drawer.mdx';
 
 const meta: Meta<typeof Drawer> = {
-  title: 'Overlays/Drawer',
+  title: 'x_Overlays/Drawer',
   component: Drawer,
   parameters: {
     docs: {

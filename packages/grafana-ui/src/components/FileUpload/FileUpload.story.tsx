@@ -5,7 +5,7 @@ import { FileUpload } from '@grafana/ui';
 import mdx from './FileUpload.mdx';
 
 const meta: Meta<typeof FileUpload> = {
-  title: 'Forms/FileUpload',
+  title: 'x_Forms/FileUpload',
   component: FileUpload,
   parameters: {
     docs: {

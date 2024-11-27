@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { Slider } from '@grafana/ui';
 
 const meta: Meta<typeof Slider> = {
-  title: 'Forms/Slider',
+  title: 'x_Forms/Slider',
   component: Slider,
   parameters: {
     controls: {

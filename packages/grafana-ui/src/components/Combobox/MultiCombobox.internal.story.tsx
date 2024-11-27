@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { MultiCombobox } from './MultiCombobox';
 
 const meta: Meta<typeof MultiCombobox> = {
-  title: 'Forms/MultiCombobox',
+  title: 'x_Forms/MultiCombobox',
   component: MultiCombobox,
 };
 

@@ -8,7 +8,7 @@ import { FilterPill } from './FilterPill';
 import mdx from './FilterPill.mdx';
 
 const meta: Meta<typeof FilterPill> = {
-  title: 'General/FilterPill',
+  title: 'x_General/FilterPill',
   component: FilterPill,
   argTypes: {
     icon: { control: { type: 'select', options: getAvailableIcons() } },

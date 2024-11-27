@@ -8,7 +8,7 @@ import mdx from './ConfirmModal.mdx';
 const defaultExcludes = ['onConfirm', 'onDismiss', 'onAlternative'];
 
 const meta: Meta<typeof ConfirmModal> = {
-  title: 'Overlays/ConfirmModal',
+  title: 'x_Overlays/ConfirmModal',
   component: ConfirmModal,
   parameters: {
     docs: {

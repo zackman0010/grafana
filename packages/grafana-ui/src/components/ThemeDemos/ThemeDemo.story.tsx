@@ -4,7 +4,7 @@ import { EmotionPerfTest } from './EmotionPerfTest';
 import { ThemeDemo as NewThemeDemoComponent } from './ThemeDemo';
 
 const meta: Meta = {
-  title: 'Docs Overview/Theme',
+  title: 'x_Docs Overview/Theme',
   component: NewThemeDemoComponent,
   decorators: [],
   parameters: {

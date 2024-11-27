@@ -16,7 +16,7 @@ type PropsAndCustomArgs<T extends string | number = string> = ComponentProps<typ
 };
 
 const meta: Meta<PropsAndCustomArgs> = {
-  title: 'Forms/Combobox',
+  title: 'x_Forms/Combobox',
   component: Combobox,
   parameters: {
     docs: {

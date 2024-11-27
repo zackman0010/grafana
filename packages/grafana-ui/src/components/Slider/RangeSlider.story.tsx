@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { RangeSlider } from '@grafana/ui';
 
 const meta: Meta<typeof RangeSlider> = {
-  title: 'Forms/Slider/Range',
+  title: 'x_Forms/Slider/Range',
   component: RangeSlider,
   parameters: {
     controls: {

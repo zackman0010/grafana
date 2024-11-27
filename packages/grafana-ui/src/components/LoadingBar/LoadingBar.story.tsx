@@ -9,7 +9,7 @@ import { DashboardStoryCanvas } from '../../utils/storybook/DashboardStoryCanvas
 import mdx from './LoadingBar.mdx';
 
 const meta: Meta<typeof LoadingBar> = {
-  title: 'General/LoadingBar',
+  title: 'x_General/LoadingBar',
   component: LoadingBar,
   parameters: {
     controls: {},

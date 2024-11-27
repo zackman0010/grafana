@@ -6,7 +6,7 @@ import { dateTime } from '@grafana/data';
 import { TimeOfDayPicker } from '@grafana/ui';
 
 const meta: Meta<typeof TimeOfDayPicker> = {
-  title: 'Pickers and Editors/TimePickers/TimeOfDayPicker',
+  title: 'x_Pickers and Editors/TimePickers/TimeOfDayPicker',
   component: TimeOfDayPicker,
   parameters: {
     controls: {

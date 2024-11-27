@@ -9,7 +9,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { PageToolbar } from './PageToolbar';
 
 const meta: Meta<typeof PageToolbar> = {
-  title: 'Layout/PageToolbar',
+  title: 'x_Layout/PageToolbar',
   component: PageToolbar,
   parameters: {},
 };

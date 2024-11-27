@@ -6,7 +6,7 @@ import { Pagination } from '@grafana/ui';
 import mdx from './Pagination.mdx';
 
 const meta: Meta<typeof Pagination> = {
-  title: 'Buttons/Pagination',
+  title: 'x_Buttons/Pagination',
   component: Pagination,
   parameters: {
     docs: {

@@ -8,7 +8,7 @@ import { NamedColorsPalette } from './NamedColorsPalette';
 import SpectrumPalette from './SpectrumPalette';
 
 const meta: Meta = {
-  title: 'Pickers and Editors/ColorPicker/Palettes',
+  title: 'x_Pickers and Editors/ColorPicker/Palettes',
   parameters: {
     docs: {
       page: mdx,

@@ -4,7 +4,7 @@ import { Divider } from './Divider';
 import mdx from './Divider.mdx';
 
 const meta: Meta<typeof Divider> = {
-  title: 'General/Divider',
+  title: 'x_General/Divider',
   component: Divider,
   parameters: {
     docs: {

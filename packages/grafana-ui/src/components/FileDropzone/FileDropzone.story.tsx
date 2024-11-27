@@ -5,7 +5,7 @@ import { FileDropzone } from '@grafana/ui';
 import mdx from './FileDropzone.mdx';
 
 const meta: Meta<typeof FileDropzone> = {
-  title: 'Forms/FileDropzone',
+  title: 'x_Forms/FileDropzone',
   component: FileDropzone,
   parameters: {
     docs: {

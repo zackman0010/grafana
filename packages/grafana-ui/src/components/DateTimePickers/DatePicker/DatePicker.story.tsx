@@ -7,7 +7,7 @@ import { DatePicker, DatePickerProps } from './DatePicker';
 import mdx from './DatePicker.mdx';
 
 const meta: Meta<typeof DatePicker> = {
-  title: 'Pickers and Editors/TimePickers/Pickers And Editors/DatePicker',
+  title: 'x_Pickers and Editors/TimePickers/Pickers And Editors/DatePicker',
   component: DatePicker,
   argTypes: {
     minDate: { control: 'date' },

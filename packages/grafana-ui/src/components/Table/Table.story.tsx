@@ -22,7 +22,7 @@ import mdx from './Table.mdx';
 import { FooterItem, TableCellDisplayMode, TableCustomCellOptions } from './types';
 
 const meta: Meta<typeof Table> = {
-  title: 'Visualizations/Table',
+  title: 'x_Visualizations/Table',
   component: Table,
   parameters: {
     controls: {

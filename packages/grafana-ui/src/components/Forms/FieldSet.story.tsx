@@ -8,7 +8,7 @@ import { Props } from './FieldSet';
 import mdx from './FieldSet.mdx';
 
 const meta: Meta<typeof FieldSet> = {
-  title: 'Forms/FieldSet',
+  title: 'x_Forms/FieldSet',
   component: FieldSet,
   args: {
     label: 'Default label',

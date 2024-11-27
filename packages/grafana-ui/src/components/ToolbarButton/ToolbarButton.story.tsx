@@ -9,7 +9,7 @@ import mdx from './ToolbarButton.mdx';
 import { ToolbarButtonRow } from './ToolbarButtonRow';
 
 const meta: Meta<typeof ToolbarButton> = {
-  title: 'Buttons/ToolbarButton',
+  title: 'x_Buttons/ToolbarButton',
   component: ToolbarButton,
   parameters: {
     docs: {

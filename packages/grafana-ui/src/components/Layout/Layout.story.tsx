@@ -8,7 +8,7 @@ import { Layout, LayoutProps } from './Layout';
 import mdx from './Layout.mdx';
 
 const meta: Meta = {
-  title: 'Layout/Groups',
+  title: 'x_Layout/Groups',
   component: Layout,
   decorators: [withStoryContainer],
   // SB7 has broken subcomponent types due to dropping support for the feature

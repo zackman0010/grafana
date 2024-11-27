@@ -103,7 +103,7 @@ const pageableData: CarData[] = [
 ];
 
 const meta: Meta<typeof InteractiveTable<CarData>> = {
-  title: 'Experimental/InteractiveTable',
+  title: 'x_Experimental/InteractiveTable',
   component: InteractiveTable,
   parameters: {
     docs: {

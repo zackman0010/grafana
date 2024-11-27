@@ -6,7 +6,7 @@ import { PluginSignatureBadge } from '@grafana/ui';
 import mdx from './PluginSignatureBadge.mdx';
 
 const meta: Meta<typeof PluginSignatureBadge> = {
-  title: 'Data Display/PluginSignatureBadge',
+  title: 'x_Data Display/PluginSignatureBadge',
   component: PluginSignatureBadge,
   argTypes: {
     status: {

@@ -7,7 +7,7 @@ import { RefreshPicker } from '@grafana/ui';
 import mdx from './RefreshPicker.mdx';
 
 const meta: Meta<typeof RefreshPicker> = {
-  title: 'Pickers and Editors/RefreshPicker',
+  title: 'x_Pickers and Editors/RefreshPicker',
   component: RefreshPicker,
   parameters: {
     docs: {

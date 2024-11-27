@@ -8,7 +8,7 @@ import { ColorPickerPopover } from './ColorPickerPopover';
 import { SeriesColorPickerPopover } from './SeriesColorPickerPopover';
 
 const meta: Meta<typeof ColorPickerPopover> = {
-  title: 'Pickers and Editors/ColorPicker/Popovers',
+  title: 'x_Pickers and Editors/ColorPicker/Popovers',
   component: ColorPickerPopover,
   parameters: {
     docs: {

@@ -10,7 +10,7 @@ import { InlineFieldRow } from '../Forms/InlineFieldRow';
 import mdx from './Switch.mdx';
 
 const meta: Meta<typeof Switch> = {
-  title: 'Forms/Switch',
+  title: 'x_Forms/Switch',
   component: Switch,
   parameters: {
     docs: {

@@ -4,7 +4,7 @@ import { UserIcon } from './UserIcon';
 import mdx from './UserIcon.mdx';
 
 const meta: Meta<typeof UserIcon> = {
-  title: 'General/UsersIndicator/UserIcon',
+  title: 'x_General/UsersIndicator/UserIcon',
   component: UserIcon,
   argTypes: {},
   parameters: {

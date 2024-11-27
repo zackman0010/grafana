@@ -5,7 +5,7 @@ import { Legend } from '@grafana/ui';
 import mdx from './Legend.mdx';
 
 const meta: Meta<typeof Legend> = {
-  title: 'Forms/Legend',
+  title: 'x_Forms/Legend',
   component: Legend,
   parameters: {
     docs: {

@@ -7,7 +7,7 @@ import { EventsWithValidation } from '../../../../utils';
 import { Input } from './Input';
 
 const meta: Meta = {
-  title: 'Forms/Legacy/Input',
+  title: 'x_Forms/Legacy/Input',
   component: Input,
   parameters: {
     controls: {

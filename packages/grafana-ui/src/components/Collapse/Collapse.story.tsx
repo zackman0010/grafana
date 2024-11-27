@@ -8,7 +8,7 @@ import mdx from './Collapse.mdx';
 const EXCLUDED_PROPS = ['className', 'onToggle'];
 
 const meta: Meta<typeof Collapse> = {
-  title: 'Layout/Collapse',
+  title: 'x_Layout/Collapse',
   component: Collapse,
   parameters: {
     docs: {

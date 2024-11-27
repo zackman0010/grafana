@@ -35,7 +35,7 @@ const manyGroupedOptions = [
 ];
 
 const meta: Meta = {
-  title: 'Forms/Select',
+  title: 'x_Forms/Select',
   component: Select,
   // SB7 has broken subcomponent types due to dropping support for the feature
   // https://github.com/storybookjs/storybook/issues/20782

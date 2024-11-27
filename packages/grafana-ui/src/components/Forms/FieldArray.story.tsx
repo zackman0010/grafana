@@ -9,7 +9,7 @@ import { FieldArray } from './FieldArray';
 import mdx from './FieldArray.mdx';
 
 const meta: Meta = {
-  title: 'Forms/FieldArray',
+  title: 'x_Forms/FieldArray',
   component: FieldArray,
   decorators: [withStoryContainer],
   parameters: {

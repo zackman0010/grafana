@@ -10,7 +10,7 @@ import mdx from './Alert.mdx';
 const severities: AlertVariant[] = ['error', 'warning', 'info', 'success'];
 
 const meta: Meta<typeof Alert> = {
-  title: 'Overlays/Alert/Toast',
+  title: 'x_Overlays/Alert/Toast',
   component: Alert,
   parameters: {
     docs: {

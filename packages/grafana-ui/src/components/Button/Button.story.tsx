@@ -12,7 +12,7 @@ import { ButtonGroup } from './ButtonGroup';
 const sizes: ComponentSize[] = ['lg', 'md', 'sm'];
 
 export default {
-  title: 'Buttons/Button',
+  title: 'x_Buttons/Button',
   component: Button,
   parameters: {
     docs: {

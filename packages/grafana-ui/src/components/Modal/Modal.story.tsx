@@ -10,7 +10,7 @@ import { getAvailableIcons } from '../../types';
 import mdx from './Modal.mdx';
 
 const meta: Meta = {
-  title: 'Overlays/Modal',
+  title: 'x_Overlays/Modal',
   component: Modal,
   parameters: {
     docs: {

@@ -5,7 +5,7 @@ import { TypeaheadInput } from '../../types';
 import { QueryField, QueryFieldProps } from './QueryField';
 
 const meta: Meta<typeof QueryField> = {
-  title: 'Data Source/QueryField',
+  title: 'x_Data Source/QueryField',
   component: QueryField,
   parameters: {
     controls: {

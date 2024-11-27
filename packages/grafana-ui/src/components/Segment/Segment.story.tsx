@@ -58,7 +58,7 @@ export const ArrayOptions = () => {
 };
 
 const meta: Meta<typeof Segment> = {
-  title: 'Data Source/Segment/SegmentSync',
+  title: 'x_Data Source/Segment/SegmentSync',
   component: Segment,
 };
 

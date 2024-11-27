@@ -8,7 +8,7 @@ import { generateOptions } from '../Select/mockOptions';
 import mdx from './ValuePicker.mdx';
 
 const meta: Meta<typeof ValuePicker> = {
-  title: 'Pickers and Editors/ValuePicker',
+  title: 'x_Pickers and Editors/ValuePicker',
   component: ValuePicker,
   parameters: {
     docs: {

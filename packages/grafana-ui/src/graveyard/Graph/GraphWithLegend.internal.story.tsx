@@ -6,7 +6,7 @@ import { LegendDisplayMode } from '@grafana/schema';
 import { GraphWithLegend, GraphWithLegendProps } from './GraphWithLegend';
 
 export default {
-  title: 'Visualizations/Graph/GraphWithLegend',
+  title: 'x_Visualizations/Graph/GraphWithLegend',
   component: GraphWithLegend,
   parameters: {
     controls: {
