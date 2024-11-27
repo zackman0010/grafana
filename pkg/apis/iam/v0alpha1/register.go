@@ -144,6 +144,48 @@ var TeamBindingResourceInfo = utils.NewResourceInfo(
 	},
 )
 
+var RoleResourceInfo = utils.NewResourceInfo(
+	GROUP, VERSION, "roles", "role", "Role",
+	func() runtime.Object { return &Role{} },
+	func() runtime.Object { return &RoleList{} },
+	utils.TableColumns{
+		Definition: []metav1.TableColumnDefinition{
+			{Name: "Name", Type: "string", Format: "name"},
+			{Name: "Title", Type: "string"},
+		},
+		Reader: func(obj any) ([]interface{}, error) {
+			m, ok := obj.(*Role)
+			if !ok {
+				return nil, fmt.Errorf("expected role")
+			}
+			return []interface{}{
+				m.Name,
+				m.Spec.Title,
+			}, nil
+		},
+	},
+)
+
+var RoleBindingResourceInfo = utils.NewResourceInfo(
+	GROUP, VERSION, "rolebindings", "rolebinding", "RoleBinding",
+	func() runtime.Object { return &RoleBinding{} },
+	func() runtime.Object { return &RoleBindingList{} },
+	utils.TableColumns{
+		Definition: []metav1.TableColumnDefinition{
+			{Name: "Name", Type: "string", Format: "name"},
+		},
+		Reader: func(obj any) ([]interface{}, error) {
+			m, ok := obj.(*RoleBinding)
+			if !ok {
+				return nil, fmt.Errorf("expected role binding")
+			}
+			return []interface{}{
+				m.Name,
+			}, nil
+		},
+	},
+)
+
 var (
 	// SchemeGroupVersion is group version used to register these objects
 	SchemeGroupVersion = schema.GroupVersion{Group: GROUP, Version: VERSION}
@@ -172,6 +214,10 @@ func AddKnownTypes(scheme *runtime.Scheme, version string) {
 		&TeamBinding{},
 		&TeamBindingList{},
 		&TeamMemberList{},
+		&Role{},
+		&RoleList{},
+		&RoleBinding{},
+		&RoleBindingList{},
 	)
 }
 
