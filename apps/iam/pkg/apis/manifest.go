@@ -12,14 +12,17 @@ import (
 )
 
 var (
-	rawSchemaRolev0alpha1     = []byte(`{"spec":{"properties":{"title":{"type":"string"}},"required":["title"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object","x-kubernetes-preserve-unknown-fields":true}}`)
-	versionSchemaRolev0alpha1 app.VersionSchema
-	_                         = json.Unmarshal(rawSchemaRolev0alpha1, &versionSchemaRolev0alpha1)
+	rawSchemaRolev0alpha1            = []byte(`{"spec":{"properties":{"rules":{"items":{"properties":{"group":{"type":"string"},"name":{"type":"string"},"resource":{"type":"string"}},"required":["group"],"type":"object"},"type":"array"},"title":{"type":"string"}},"required":["title","rules"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object","x-kubernetes-preserve-unknown-fields":true}}`)
+	versionSchemaRolev0alpha1        app.VersionSchema
+	_                                = json.Unmarshal(rawSchemaRolev0alpha1, &versionSchemaRolev0alpha1)
+	rawSchemaRoleBindingv0alpha1     = []byte(`{"spec":{"properties":{"roleRef":{"properties":{"name":{"type":"string"}},"required":["name"],"type":"object"},"subjects":{"items":{"properties":{"name":{"type":"string"},"type":{"type":"string"}},"required":["name","type"],"type":"object"},"type":"array"}},"required":["subjects","roleRef"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object","x-kubernetes-preserve-unknown-fields":true}}`)
+	versionSchemaRoleBindingv0alpha1 app.VersionSchema
+	_                                = json.Unmarshal(rawSchemaRoleBindingv0alpha1, &versionSchemaRoleBindingv0alpha1)
 )
 
 var appManifestData = app.ManifestData{
-	AppName: "role",
-	Group:   "role.grafana.app",
+	AppName: "iam",
+	Group:   "iam.grafana.app",
 	Kinds: []app.ManifestKind{
 		{
 			Kind:       "Role",
@@ -29,6 +32,18 @@ var appManifestData = app.ManifestData{
 				{
 					Name:   "v0alpha1",
 					Schema: &versionSchemaRolev0alpha1,
+				},
+			},
+		},
+
+		{
+			Kind:       "RoleBinding",
+			Scope:      "Namespaced",
+			Conversion: false,
+			Versions: []app.ManifestKindVersion{
+				{
+					Name:   "v0alpha1",
+					Schema: &versionSchemaRoleBindingv0alpha1,
 				},
 			},
 		},
@@ -46,5 +61,5 @@ func LocalManifest() app.Manifest {
 }
 
 func RemoteManifest() app.Manifest {
-	return app.NewAPIServerManifest("role")
+	return app.NewAPIServerManifest("iam")
 }

@@ -12,17 +12,16 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.Role":                    schema_pkg_apis_role_v0alpha1_Role(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleList":                schema_pkg_apis_role_v0alpha1_RoleList(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleOperatorState":       schema_pkg_apis_role_v0alpha1_RoleOperatorState(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleRule":                schema_pkg_apis_role_v0alpha1_RoleRule(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleSpec":                schema_pkg_apis_role_v0alpha1_RoleSpec(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleStatus":              schema_pkg_apis_role_v0alpha1_RoleStatus(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RolestatusOperatorState": schema_pkg_apis_role_v0alpha1_RolestatusOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.Role":                    schema_pkg_apis_role_grafana_app_v0alpha1_Role(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleList":                schema_pkg_apis_role_grafana_app_v0alpha1_RoleList(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleOperatorState":       schema_pkg_apis_role_grafana_app_v0alpha1_RoleOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleSpec":                schema_pkg_apis_role_grafana_app_v0alpha1_RoleSpec(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleStatus":              schema_pkg_apis_role_grafana_app_v0alpha1_RoleStatus(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RolestatusOperatorState": schema_pkg_apis_role_grafana_app_v0alpha1_RolestatusOperatorState(ref),
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_Role(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_Role(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -51,13 +50,13 @@ func schema_pkg_apis_role_v0alpha1_Role(ref common.ReferenceCallback) common.Ope
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleSpec"),
+							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleStatus"),
+							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleStatus"),
 						},
 					},
 				},
@@ -65,11 +64,11 @@ func schema_pkg_apis_role_v0alpha1_Role(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleSpec", "github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleSpec", "github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_RoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_RoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -102,7 +101,7 @@ func schema_pkg_apis_role_v0alpha1_RoleList(ref common.ReferenceCallback) common
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.Role"),
+										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.Role"),
 									},
 								},
 							},
@@ -113,11 +112,11 @@ func schema_pkg_apis_role_v0alpha1_RoleList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_RoleOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_RoleOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -169,59 +168,13 @@ func schema_pkg_apis_role_v0alpha1_RoleOperatorState(ref common.ReferenceCallbac
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_RoleRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RoleRule defines model for RoleRule.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"group": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"resource": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"group"},
-			},
-		},
-	}
-}
-
-func schema_pkg_apis_role_v0alpha1_RoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_RoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "RoleSpec defines model for RoleSpec.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"rules": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleRule"),
-									},
-								},
-							},
-						},
-					},
 					"title": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -230,15 +183,13 @@ func schema_pkg_apis_role_v0alpha1_RoleSpec(ref common.ReferenceCallback) common
 						},
 					},
 				},
-				Required: []string{"rules", "title"},
+				Required: []string{"title"},
 			},
 		},
-		Dependencies: []string{
-			"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RoleRule"},
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_RoleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_RoleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -269,7 +220,7 @@ func schema_pkg_apis_role_v0alpha1_RoleStatus(ref common.ReferenceCallback) comm
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RolestatusOperatorState"),
+										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RolestatusOperatorState"),
 									},
 								},
 							},
@@ -279,11 +230,11 @@ func schema_pkg_apis_role_v0alpha1_RoleStatus(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/apps/iam/pkg/apis/role/v0alpha1.RolestatusOperatorState"},
+			"github.com/grafana/grafana/apps/iam/pkg/apis/role_grafana_app/v0alpha1.RolestatusOperatorState"},
 	}
 }
 
-func schema_pkg_apis_role_v0alpha1_RolestatusOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_role_grafana_app_v0alpha1_RolestatusOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{

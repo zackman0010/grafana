@@ -2,9 +2,9 @@ package core
 
 externalName: {
 	kind: "Role"
-	group: "role"
+	group: "iam"
 	apiResource: {
-		groupOverride: "role.grafana.app"
+		groupOverride: "iam.grafana.app"
 	}
 	codegen: {
 		frontend: false
@@ -15,8 +15,14 @@ externalName: {
 	versions: {
 		"v0alpha1": {
 			schema: {
+        #Rule: {
+          group: string
+          resource?: string
+          name?: string
+				}
 				spec: {
 					title: string
+          rules: [...#Rule]
 				}
 			}
 		}
