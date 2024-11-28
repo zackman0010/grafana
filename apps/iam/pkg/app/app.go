@@ -2,15 +2,12 @@ package app
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
 	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana-app-sdk/operator"
 	"github.com/grafana/grafana-app-sdk/resource"
 	"github.com/grafana/grafana-app-sdk/simple"
 	iamv0 "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1"
-	"github.com/grafana/grafana/pkg/services/apiserver/builder/runner"
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/klog/v2"
@@ -21,14 +18,6 @@ type IAMConfig struct {
 }
 
 func New(cfg app.Config) (app.App, error) {
-	runCfg, ok := cfg.SpecificConfig.(*runner.AppBuilderConfig)
-	if !ok {
-		fmt.Println(cfg.SpecificConfig)
-		return nil, errors.New("unexpected config")
-
-	}
-
-	iamCfg := runCfg.CustomConfig.(*IAMConfig)
 
 	simpleConfig := simple.AppConfig{
 		Name:       "iam2",
@@ -41,7 +30,7 @@ func New(cfg app.Config) (app.App, error) {
 		ManagedKinds: []simple.AppManagedKind{
 			{
 				Kind:    iamv0.RoleKind(),
-				Watcher: iamCfg.RoleWatcher,
+				Watcher: NewRoleWatcher(),
 			},
 			{
 				Kind: iamv0.RoleBindingKind(),

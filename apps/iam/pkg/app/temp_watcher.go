@@ -1,4 +1,4 @@
-package watchers
+package app
 
 import (
 	"context"
@@ -9,22 +9,16 @@ import (
 	"k8s.io/klog/v2"
 
 	iamv0 "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1"
-	"github.com/grafana/grafana/pkg/services/authz/zanzana"
-	"github.com/grafana/grafana/pkg/services/authz/zanzana/common"
-
-	authzextv1 "github.com/grafana/grafana/pkg/services/authz/proto/v1"
 )
 
 var _ operator.ResourceWatcher = &RoleWatcher{}
 
 type RoleWatcher struct {
-	c   zanzana.Client
 	log klog.Logger
 }
 
-func NewRoleWatcher(c zanzana.Client) *RoleWatcher {
+func NewRoleWatcher() *RoleWatcher {
 	return &RoleWatcher{
-		c:   c,
 		log: klog.NewKlogr().WithName("role_watcher"),
 	}
 }
@@ -36,17 +30,8 @@ func (s *RoleWatcher) Add(ctx context.Context, obj resource.Object) error {
 			obj.GetStaticMetadata().Name, obj.GetStaticMetadata().Namespace, obj.GetStaticMetadata().Kind)
 	}
 
-	writes := make([]*authzextv1.TupleKey, 0, len(object.Spec.Rules))
-	for _, r := range object.Spec.Rules {
-		writes = append(writes, ruleToTuple(object.GetName(), r))
-	}
-
-	return s.c.Write(ctx, &authzextv1.WriteRequest{
-		Namespace: obj.GetNamespace(),
-		Writes: &authzextv1.WriteRequestWrites{
-			TupleKeys: writes,
-		},
-	})
+	s.log.Info("Created resource", "name", object.GetStaticMetadata().Identifier().Name)
+	return nil
 }
 
 func (s *RoleWatcher) Update(ctx context.Context, oldObj resource.Object, rNew resource.Object) error {
@@ -87,14 +72,4 @@ func (s *RoleWatcher) Sync(ctx context.Context, obj resource.Object) error {
 
 	s.log.Info("Possible resource update", "name", object.GetStaticMetadata().Identifier().Name)
 	return nil
-}
-
-func ruleToTuple(roleName string, rule iamv0.RoleRule) *authzextv1.TupleKey {
-	subject := zanzana.NewTupleEntry(zanzana.TypeRole, roleName, zanzana.RelationAssignee)
-
-	if rule.Name != nil {
-		return zanzana.ToAuthzExtTupleKey(common.NewResourceTuple(subject, rule.Verb, rule.Group, rule.Resource, *rule.Name))
-	}
-
-	return zanzana.ToAuthzExtTupleKey(common.NewNamespaceResourceTuple(subject, rule.Verb, rule.Group, rule.Resource))
 }
