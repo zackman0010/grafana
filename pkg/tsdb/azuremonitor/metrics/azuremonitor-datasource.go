@@ -17,7 +17,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
-	"github.com/grafana/grafana-plugin-sdk-go/experimental/errorsource"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 
@@ -55,12 +54,12 @@ func (e *AzureMonitorDatasource) ExecuteTimeSeriesQuery(ctx context.Context, ori
 	for _, query := range originalQueries {
 		azureQuery, err := e.buildQuery(query, dsInfo)
 		if err != nil {
-			errorsource.AddErrorToResponse(query.RefID, result, err)
+			result.Responses[query.RefID] = backend.ErrorResponseWithErrorSource(err)
 			continue
 		}
 		res, err := e.executeQuery(ctx, azureQuery, dsInfo, client, url)
 		if err != nil {
-			errorsource.AddErrorToResponse(query.RefID, result, err)
+			result.Responses[query.RefID] = backend.ErrorResponseWithErrorSource(err)
 			continue
 		}
 		result.Responses[query.RefID] = *res
@@ -284,7 +283,11 @@ func (e *AzureMonitorDatasource) retrieveSubscriptionDetails(cli *http.Client, c
 	}
 
 	if res.StatusCode/100 != 2 {
-		return "", errorsource.SourceError(backend.ErrorSourceFromHTTPStatus(res.StatusCode), fmt.Errorf("request failed, status: %s, error: %s", res.Status, string(body)), false)
+		statusErr := fmt.Errorf("request failed, status: %s, error: %s", res.Status, string(body))
+		if backend.ErrorSourceFromHTTPStatus(res.StatusCode) == backend.ErrorSourceDownstream {
+			statusErr = backend.DownstreamError(statusErr)
+		}
+		return "", statusErr
 	}
 
 	var data types.SubscriptionsResponse
@@ -321,7 +324,7 @@ func (e *AzureMonitorDatasource) executeQuery(ctx context.Context, query *types.
 
 	res, err := cli.Do(req)
 	if err != nil {
-		return nil, errorsource.DownstreamError(err, false)
+		return nil, backend.DownstreamError(err)
 	}
 
 	defer func() {
@@ -366,7 +369,11 @@ func (e *AzureMonitorDatasource) unmarshalResponse(res *http.Response) (types.Az
 	}
 
 	if res.StatusCode/100 != 2 {
-		return types.AzureMonitorResponse{}, errorsource.SourceError(backend.ErrorSourceFromHTTPStatus(res.StatusCode), fmt.Errorf("request failed, status: %s, body: %s", res.Status, string(body)), false)
+		statusErr := fmt.Errorf("request failed, status: %s, body: %s", res.Status, string(body))
+		if backend.ErrorSourceFromHTTPStatus(res.StatusCode) == backend.ErrorSourceDownstream {
+			statusErr = backend.DownstreamError(statusErr)
+		}
+		return types.AzureMonitorResponse{}, statusErr
 	}
 
 	var data types.AzureMonitorResponse
