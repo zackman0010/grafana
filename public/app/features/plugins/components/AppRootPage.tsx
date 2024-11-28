@@ -23,6 +23,7 @@ import { useGrafana } from 'app/core/context/GrafanaContext';
 import { appEvents, contextSrv } from 'app/core/core';
 import { getNotFoundNav, getWarningNav, getExceptionNav } from 'app/core/navigation/errorModels';
 import { getMessageFromError } from 'app/core/utils/errors';
+import { UserStorage } from 'app/features/storage/userStorage';
 
 import {
   ExtensionRegistriesProvider,
@@ -98,7 +99,7 @@ export function AppRootPage({ pluginId, pluginNavSection }: Props) {
   }
 
   const pluginRoot = plugin.root && (
-    <PluginContextProvider meta={plugin.meta}>
+    <PluginContextProvider meta={plugin.meta} userStorage={new UserStorage(plugin.meta.id)}>
       <ExtensionRegistriesProvider
         registries={{
           addedLinksRegistry: addedLinksRegistry.readOnly(),

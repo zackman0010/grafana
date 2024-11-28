@@ -39,6 +39,7 @@ import { Trans, t } from 'app/core/internationalization';
 import { getTimeSrv } from 'app/features/dashboard/services/TimeSrv';
 import { DashboardModel } from 'app/features/dashboard/state/DashboardModel';
 import { PanelModel } from 'app/features/dashboard/state/PanelModel';
+import { UserStorage } from 'app/features/storage/userStorage';
 
 import { QueryActionComponent, RowActionComponents } from './QueryActionComponent';
 import { QueryEditorRowHeader } from './QueryEditorRowHeader';
@@ -287,7 +288,10 @@ export class QueryEditorRow<TQuery extends DataQuery> extends PureComponent<Prop
 
       if (QueryEditor) {
         return (
-          <DataSourcePluginContextProvider instanceSettings={this.props.dataSource}>
+          <DataSourcePluginContextProvider
+            instanceSettings={this.props.dataSource}
+            userStorage={new UserStorage(this.props.dataSource.meta.id)}
+          >
             <QueryEditor
               key={datasource?.name}
               query={query}

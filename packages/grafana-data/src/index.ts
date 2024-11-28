@@ -436,6 +436,7 @@ export {
   DataSourcePluginContextProvider,
 } from './context/plugins/DataSourcePluginContextProvider';
 export { usePluginContext } from './context/plugins/usePluginContext';
+export { usePluginUserStorage } from './context/plugins/useUserContext';
 export { isDataSourcePluginContext } from './context/plugins/guards';
 export { getLinksSupplier } from './field/fieldOverrides';
 
