@@ -7,7 +7,7 @@ import { iconOptions } from '../../utils/storybook/icons';
 import mdx from './Badge.mdx';
 
 const meta: Meta<typeof Badge> = {
-  title: 'x_Data Display/Badge',
+  title: 'Information/Badge',
   component: Badge,
   parameters: {
     docs: { page: mdx },

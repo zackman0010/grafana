@@ -6,7 +6,7 @@ import { Props } from './Spinner';
 import mdx from './Spinner.mdx';
 
 const meta: Meta = {
-  title: 'x_Visualizations/Spinner',
+  title: 'Information/Spinner',
   component: Spinner,
   parameters: {
     docs: {

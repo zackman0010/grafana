@@ -8,7 +8,7 @@ import { InlineToast as InlineToastImpl, InlineToastProps } from './InlineToast'
 import mdx from './InlineToast.mdx';
 
 const story: Meta = {
-  title: 'x_Uncategorised/InlineToast',
+  title: 'Information/InlineToast',
   component: InlineToastImpl,
   parameters: {
     docs: {

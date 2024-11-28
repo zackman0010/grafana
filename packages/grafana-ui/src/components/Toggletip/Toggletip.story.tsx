@@ -7,7 +7,7 @@ import mdx from '../Toggletip/Toggletip.mdx';
 import { Toggletip } from './Toggletip';
 
 const meta: Meta<typeof Toggletip> = {
-  title: 'x_Overlays/Toggletip',
+  title: 'Information/Toggletip',
   component: Toggletip,
   parameters: {
     docs: {

@@ -10,7 +10,7 @@ import mdx from './Alert.mdx';
 const severities: AlertVariant[] = ['error', 'warning', 'info', 'success'];
 
 const meta: Meta = {
-  title: 'x_Overlays/Alert/InlineBanner',
+  title: 'Information/Alert',
   component: Alert,
   parameters: {
     docs: {

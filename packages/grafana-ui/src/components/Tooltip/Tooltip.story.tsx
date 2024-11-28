@@ -7,7 +7,7 @@ import mdx from '../Tooltip/Tooltip.mdx';
 import { Tooltip } from './Tooltip';
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'x_Overlays/Tooltip',
+  title: 'Information/Tooltip',
   component: Tooltip,
   parameters: {
     docs: {

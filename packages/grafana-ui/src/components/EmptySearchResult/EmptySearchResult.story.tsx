@@ -4,7 +4,7 @@ import { EmptySearchResult } from './EmptySearchResult';
 import mdx from './EmptySearchResult.mdx';
 
 const meta: Meta<typeof EmptySearchResult> = {
-  title: 'x_Visualizations/EmptySearchResult',
+  title: 'Information/TODO: Deprecate/EmptySearchResult',
   component: EmptySearchResult,
   parameters: {
     docs: {

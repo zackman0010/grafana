@@ -6,7 +6,7 @@ import { Button } from '../Button/Button';
 import { CallToActionCard, CallToActionCardProps } from './CallToActionCard';
 
 const meta: Meta = {
-  title: 'x_Layout/CallToActionCard',
+  title: 'Information/TODO: Deprecate/CallToActionCard',
   component: CallToActionCard,
   parameters: {
     controls: {

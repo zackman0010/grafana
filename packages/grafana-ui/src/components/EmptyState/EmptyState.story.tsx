@@ -6,7 +6,7 @@ import { EmptyState } from './EmptyState';
 import mdx from './EmptyState.mdx';
 
 const meta: Meta<typeof EmptyState> = {
-  title: 'x_General/EmptyState',
+  title: 'Information/EmptyState',
   component: EmptyState,
   parameters: {
     docs: {
