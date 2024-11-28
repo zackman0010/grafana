@@ -2,7 +2,6 @@ package iam
 
 import (
 	"context"
-	"fmt"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -15,7 +14,6 @@ import (
 	"github.com/grafana/authlib/authz"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	iamv0 "github.com/grafana/grafana/pkg/apis/iam/v0alpha1"
-	"github.com/grafana/grafana/pkg/apiserver/registry/generic"
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/registry/apis/iam/legacy"
 	"github.com/grafana/grafana/pkg/registry/apis/iam/serviceaccount"
@@ -115,15 +113,6 @@ func (b *IdentityAccessManagementAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *ge
 		ssoResource := iamv0.SSOSettingResourceInfo
 		storage[ssoResource.StoragePath()] = sso.NewLegacyStore(b.sso)
 	}
-
-	roleResource := iamv0.RoleResourceInfo
-
-	store, err := generic.NewRegistryStore(opts.Scheme, roleResource, opts.OptsGetter)
-	if err != nil {
-		return fmt.Errorf("create role store: %w", err)
-	}
-
-	storage[roleResource.StoragePath()] = store
 
 	// The display endpoint -- NOTE, this uses a rewrite hack to allow requests without a name parameter
 	storage["display"] = user.NewLegacyDisplayREST(b.store)

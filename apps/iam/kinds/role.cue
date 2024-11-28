@@ -2,9 +2,9 @@ package core
 
 externalName: {
 	kind: "Role"
-	group: "iam"
+	group: "iam2"
 	apiResource: {
-		groupOverride: "iam.grafana.app"
+		groupOverride: "iam2.grafana.app"
 	}
 	codegen: {
 		frontend: false
