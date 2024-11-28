@@ -5,7 +5,8 @@ package v0alpha1
 type RoleRule struct {
 	Group    string  `json:"group"`
 	Name     *string `json:"name,omitempty"`
-	Resource *string `json:"resource,omitempty"`
+	Resource string  `json:"resource"`
+	Verb     string  `json:"verb"`
 }
 
 // RoleSpec defines model for RoleSpec.

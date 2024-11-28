@@ -16,8 +16,9 @@ externalName: {
 		"v0alpha1": {
 			schema: {
         #Rule: {
+          verb: string
           group: string
-          resource?: string
+          resource: string
           name?: string
 				}
 				spec: {

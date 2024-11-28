@@ -25,6 +25,8 @@ func New(cfg app.Config) (app.App, error) {
 		err             error
 	)
 
+	fmt.Println(cfg.SpecificConfig)
+
 	playlistConfig, ok := cfg.SpecificConfig.(*PlaylistConfig)
 	if ok && playlistConfig.EnableWatchers {
 		playlistWatcher, err = watchers.NewPlaylistWatcher()

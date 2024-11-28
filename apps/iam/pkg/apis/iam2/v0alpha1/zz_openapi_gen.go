@@ -527,12 +527,20 @@ func schema_pkg_apis_iam2_v0alpha1_RoleRule(ref common.ReferenceCallback) common
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"verb": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 				},
-				Required: []string{"group"},
+				Required: []string{"group", "resource", "verb"},
 			},
 		},
 	}
