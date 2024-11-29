@@ -5,6 +5,7 @@ roleBinding: {
 	group: "iam2"
 	apiResource: {
 		groupOverride: "iam2.grafana.app"
+		validation: operations:  ["create","update"]
 	}
 	codegen: {
 		frontend: false
@@ -16,7 +17,7 @@ roleBinding: {
 		"v0alpha1": {
 			schema: {
         #Subject: {
-          type: string
+					type: "user" | "team" @cuetsy(kind="enum")
           name: string
         }
         #RoleRef: {

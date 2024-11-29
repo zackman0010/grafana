@@ -5,6 +5,7 @@ externalName: {
 	group: "iam2"
 	apiResource: {
 		groupOverride: "iam2.grafana.app"
+		validation: operations:  ["create","update"]
 	}
 	codegen: {
 		frontend: false
@@ -16,7 +17,7 @@ externalName: {
 		"v0alpha1": {
 			schema: {
         #Rule: {
-          verb: string
+					verb: "get" | "create" | "update" | "delete" @cuetsy(kind="enum")
           group: string
           resource: string
           name?: string

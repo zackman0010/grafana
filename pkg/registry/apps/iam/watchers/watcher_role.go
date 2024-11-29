@@ -155,24 +155,26 @@ func (s *RoleWatcher) Sync(ctx context.Context, obj resource.Object) error {
 
 func ruleToTuple(roleName string, rule iamv0.RoleRule) *authzextv1.TupleKey {
 	subject := zanzana.NewTupleEntry(zanzana.TypeRole, roleName, zanzana.RelationAssignee)
+	relation := common.VerbMapping[string(rule.Verb)]
 
 	if rule.Name != nil {
-		return zanzana.ToAuthzExtTupleKey(common.NewResourceTuple(subject, rule.Verb, rule.Group, rule.Resource, *rule.Name))
+		return zanzana.ToAuthzExtTupleKey(common.NewResourceTuple(subject, relation, rule.Group, rule.Resource, *rule.Name))
 	}
 
-	return zanzana.ToAuthzExtTupleKey(common.NewNamespaceResourceTuple(subject, rule.Verb, rule.Group, rule.Resource))
+	return zanzana.ToAuthzExtTupleKey(common.NewNamespaceResourceTuple(subject, relation, rule.Group, rule.Resource))
 }
 
 // FIXME: cleanup this mess
 func ruleToTupleWithoutCondition(roleName string, rule iamv0.RoleRule) *authzextv1.TupleKeyWithoutCondition {
 	subject := zanzana.NewTupleEntry(zanzana.TypeRole, roleName, zanzana.RelationAssignee)
+	relation := common.VerbMapping[string(rule.Verb)]
 
 	if rule.Name != nil {
-		tuple := common.NewResourceTuple(subject, rule.Verb, rule.Group, rule.Resource, *rule.Name)
+		tuple := common.NewResourceTuple(subject, relation, rule.Group, rule.Resource, *rule.Name)
 		return zanzana.ToAuthzExtTupleKeyWithoutCondition(common.TupleKeyToTupleWithoutCondition(tuple))
 	}
 
-	tuple := common.NewNamespaceResourceTuple(subject, rule.Verb, rule.Group, rule.Resource)
+	tuple := common.NewNamespaceResourceTuple(subject, relation, rule.Group, rule.Resource)
 	return zanzana.ToAuthzExtTupleKeyWithoutCondition(common.TupleKeyToTupleWithoutCondition(tuple))
 }
 
@@ -186,7 +188,7 @@ func ruleToReadTuple(roleName string, rule iamv0.RoleRule) *authzextv1.ReadReque
 
 	return &authzextv1.ReadRequestTupleKey{
 		User:     zanzana.NewTupleEntry(zanzana.TypeRole, roleName, zanzana.RelationAssignee),
-		Relation: rule.Verb,
+		Relation: common.VerbMapping[string(rule.Verb)],
 		Object:   object,
 	}
 }

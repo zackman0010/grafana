@@ -1,5 +1,11 @@
 package v0alpha1
 
+// Defines values for RoleBindingSubjectType.
+const (
+	RoleBindingSubjectTypeTeam RoleBindingSubjectType = "team"
+	RoleBindingSubjectTypeUser RoleBindingSubjectType = "user"
+)
+
 // RoleBindingRoleRef defines model for RoleBindingRoleRef.
 // +k8s:openapi-gen=true
 type RoleBindingRoleRef struct {
@@ -16,6 +22,10 @@ type RoleBindingSpec struct {
 // RoleBindingSubject defines model for RoleBindingSubject.
 // +k8s:openapi-gen=true
 type RoleBindingSubject struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Name string                 `json:"name"`
+	Type RoleBindingSubjectType `json:"type"`
 }
+
+// RoleBindingSubjectType defines model for RoleBindingSubject.Type.
+// +k8s:openapi-gen=true
+type RoleBindingSubjectType string

@@ -9,10 +9,18 @@ import (
 	"github.com/grafana/grafana-app-sdk/resource"
 	"github.com/grafana/grafana-app-sdk/simple"
 	iamv0 "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1"
+	"github.com/grafana/grafana/apps/iam/pkg/app/validators"
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/klog/v2"
 )
+
+var allowedVerbs = map[string]struct{}{
+	"get":    {},
+	"update": {},
+	"create": {},
+	"delete": {},
+}
 
 type IAMConfig struct {
 	RoleWatcher        operator.ResourceWatcher
@@ -35,12 +43,14 @@ func New(cfg app.Config) (app.App, error) {
 		},
 		ManagedKinds: []simple.AppManagedKind{
 			{
-				Kind:    iamv0.RoleBindingKind(),
-				Watcher: iamCfg.RoleBindingWatcher,
+				Kind:      iamv0.RoleBindingKind(),
+				Validator: validators.NewRoleBindingValidator(),
+				Watcher:   iamCfg.RoleBindingWatcher,
 			},
 			{
-				Kind:    iamv0.RoleKind(),
-				Watcher: iamCfg.RoleWatcher,
+				Kind:      iamv0.RoleKind(),
+				Validator: validators.NewRoleValidator(),
+				Watcher:   iamCfg.RoleWatcher,
 			},
 		},
 	}
