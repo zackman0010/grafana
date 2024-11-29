@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 
 	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana-app-sdk/operator"
@@ -18,6 +19,10 @@ type IAMConfig struct {
 }
 
 func New(cfg app.Config) (app.App, error) {
+	iamCfg, ok := cfg.SpecificConfig.(*IAMConfig)
+	if !ok {
+		return nil, errors.New("unexpected config")
+	}
 
 	simpleConfig := simple.AppConfig{
 		Name:       "iam2",
@@ -30,7 +35,7 @@ func New(cfg app.Config) (app.App, error) {
 		ManagedKinds: []simple.AppManagedKind{
 			{
 				Kind:    iamv0.RoleKind(),
-				Watcher: NewRoleWatcher(),
+				Watcher: iamCfg.RoleWatcher,
 			},
 			{
 				Kind: iamv0.RoleBindingKind(),

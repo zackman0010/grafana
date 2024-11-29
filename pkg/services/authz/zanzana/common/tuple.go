@@ -106,6 +106,14 @@ func NewResourceTuple(subject, relation, group, resource, name string) *openfgav
 	}
 }
 
+func TupleKeyToTupleWithoutCondition(tuple *openfgav1.TupleKey) *openfgav1.TupleKeyWithoutCondition {
+	return &openfgav1.TupleKeyWithoutCondition{
+		User:     tuple.GetUser(),
+		Relation: tuple.GetRelation(),
+		Object:   tuple.GetObject(),
+	}
+}
+
 func isFolderResourceRelationSet(relation string) bool {
 	return relation == RelationFolderResourceSetView ||
 		relation == RelationFolderResourceSetEdit ||

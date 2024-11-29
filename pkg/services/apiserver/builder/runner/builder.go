@@ -64,6 +64,14 @@ func (b *appBuilder) InstallSchema(scheme *runtime.Scheme) error {
 		for _, kind := range kinds {
 			scheme.AddKnownTypeWithName(gv.WithKind(kind.Kind()), kind.ZeroValue())
 			scheme.AddKnownTypeWithName(gv.WithKind(kind.Kind()+"List"), kind.ZeroListValue())
+
+			gvInternal := schema.GroupVersion{
+				Group:   gv.Group,
+				Version: runtime.APIVersionInternal,
+			}
+			scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()), kind.ZeroValue())
+			scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()+"List"), kind.ZeroListValue())
+
 		}
 	}
 	return scheme.SetVersionPriority(gv)
