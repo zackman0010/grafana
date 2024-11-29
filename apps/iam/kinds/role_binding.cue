@@ -16,8 +16,8 @@ roleBinding: {
 		"v0alpha1": {
 			schema: {
         #Subject: {
-          name: string
           type: string
+          name: string
         }
         #RoleRef: {
           name: string

@@ -25,7 +25,7 @@ type RoleWatcher struct {
 func NewRoleWatcher(c zanzana.Client) *RoleWatcher {
 	return &RoleWatcher{
 		c:   c,
-		log: klog.NewKlogr().WithName("role_watcher"),
+		log: klog.NewKlogr().WithName("watcher_role"),
 	}
 }
 
@@ -41,7 +41,7 @@ func (s *RoleWatcher) Add(ctx context.Context, obj resource.Object) error {
 		writes = append(writes, ruleToTuple(object.GetName(), r))
 	}
 
-	s.log.Info("Create resource", "name", obj.GetStaticMetadata().Identifier().Name)
+	s.log.Info("Add resource", "name", obj.GetStaticMetadata().Identifier().Name)
 
 	err := s.c.Write(ctx, &authzextv1.WriteRequest{
 		Namespace: obj.GetNamespace(),
@@ -50,7 +50,10 @@ func (s *RoleWatcher) Add(ctx context.Context, obj resource.Object) error {
 		},
 	})
 
-	s.log.Info("Add: Tried to write role rules to zanzana", "err", err)
+	if err != nil {
+		s.log.Error(err, "Add: Tried to write role rules to zanzana")
+		return fmt.Errorf("add: tried to write role rules to zanzana: %w", err)
+	}
 
 	return nil
 }
@@ -67,6 +70,8 @@ func (s *RoleWatcher) Update(ctx context.Context, oldObj resource.Object, rNew r
 		return fmt.Errorf("provided object is not of type *iamv0.Role (name=%s, namespace=%s, kind=%s)",
 			rNew.GetStaticMetadata().Name, rNew.GetStaticMetadata().Namespace, rNew.GetStaticMetadata().Kind)
 	}
+
+	s.log.Info("Update resource", "name", oldObj.GetStaticMetadata().Identifier().Name)
 
 	// FIXME: don't be this lazy
 	deletes := make([]*authzextv1.TupleKeyWithoutCondition, 0, len(oldObject.Spec.Rules))
@@ -113,6 +118,8 @@ func (s *RoleWatcher) Delete(ctx context.Context, obj resource.Object) error {
 			obj.GetStaticMetadata().Name, obj.GetStaticMetadata().Namespace, obj.GetStaticMetadata().Kind)
 	}
 
+	s.log.Info("Delete resource", "name", object.GetStaticMetadata().Identifier().Name)
+
 	deletes := make([]*authzextv1.TupleKeyWithoutCondition, 0, len(object.Spec.Rules))
 	for _, rule := range object.Spec.Rules {
 		deletes = append(deletes, ruleToTupleWithoutCondition(object.GetName(), rule))
@@ -125,7 +132,11 @@ func (s *RoleWatcher) Delete(ctx context.Context, obj resource.Object) error {
 		},
 	})
 
-	s.log.Info("Delete: Tried to delete role rules from zanzana", "err", err)
+	if err != nil {
+		s.log.Error(err, "Delete: Tried to delete role rules from zanzana")
+		return fmt.Errorf("delete: tried to delete role rules from zanzana: %w", err)
+
+	}
 
 	return nil
 }
@@ -138,7 +149,7 @@ func (s *RoleWatcher) Sync(ctx context.Context, obj resource.Object) error {
 			obj.GetStaticMetadata().Name, obj.GetStaticMetadata().Namespace, obj.GetStaticMetadata().Kind)
 	}
 
-	s.log.Info("Possible resource update", "name", object.GetStaticMetadata().Identifier().Name)
+	s.log.Info("Sync: possible update", "name", object.GetStaticMetadata().Identifier().Name)
 	return nil
 }
 
