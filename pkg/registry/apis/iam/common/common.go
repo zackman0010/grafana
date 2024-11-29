@@ -4,6 +4,8 @@ import (
 	"context"
 	"strconv"
 
+	"k8s.io/apimachinery/pkg/runtime/schema"
+
 	"github.com/grafana/authlib/authz"
 	"github.com/grafana/authlib/claims"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
@@ -47,7 +49,7 @@ type ListFunc[T Resource] func(ctx context.Context, ns claims.NamespaceInfo, p P
 // prvovided with a claims.AccessClient.
 func List[T Resource](
 	ctx context.Context,
-	resourceName string,
+	gv schema.GroupResource,
 	ac authz.AccessClient,
 	p Pagination,
 	fn ListFunc[T],
@@ -66,7 +68,8 @@ func List[T Resource](
 	if ac != nil {
 		var err error
 		check, err = ac.Compile(ctx, ident, authz.ListRequest{
-			Resource:  resourceName,
+			Resource:  gv.Resource,
+			Group:     gv.Group,
 			Namespace: ns.Value,
 		})
 

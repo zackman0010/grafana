@@ -3,13 +3,16 @@ package authorizer
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/grafana/authlib/authz"
 	"github.com/grafana/authlib/claims"
+	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
 )
 
 func NewResourceAuthorizer(c authz.AccessClient) authorizer.Authorizer {
+	fmt.Println("build resource authorizer!!!")
 	return ResourceAuthorizer{c}
 }
 
@@ -19,7 +22,7 @@ type ResourceAuthorizer struct {
 }
 
 func (r ResourceAuthorizer) Authorize(ctx context.Context, attr authorizer.Attributes) (authorizer.Decision, string, error) {
-	if !attr.IsResourceRequest() {
+	if !attr.IsResourceRequest() || attr.GetVerb() == utils.VerbList {
 		return authorizer.DecisionNoOpinion, "", nil
 	}
 

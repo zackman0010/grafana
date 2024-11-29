@@ -15,7 +15,7 @@ type User struct {
 }
 
 func (u User) AuthID() string {
-	return fmt.Sprintf("%d", u.Spec.InternalID)
+	return fmt.Sprintf("%s", u.GetName())
 }
 
 type UserSpec struct {

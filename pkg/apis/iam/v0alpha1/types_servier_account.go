@@ -15,7 +15,7 @@ type ServiceAccount struct {
 }
 
 func (s ServiceAccount) AuthID() string {
-	return fmt.Sprintf("%d", s.Spec.InternalID)
+	return fmt.Sprintf("%s", s.GetName())
 }
 
 type ServiceAccountSpec struct {

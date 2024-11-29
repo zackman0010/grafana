@@ -20,8 +20,9 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/iam/sso"
 	"github.com/grafana/grafana/pkg/registry/apis/iam/team"
 	"github.com/grafana/grafana/pkg/registry/apis/iam/user"
-	"github.com/grafana/grafana/pkg/services/accesscontrol"
+	gfauthorizer "github.com/grafana/grafana/pkg/services/apiserver/auth/authorizer"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
+	"github.com/grafana/grafana/pkg/services/authz/zanzana"
 	"github.com/grafana/grafana/pkg/services/ssosettings"
 	"github.com/grafana/grafana/pkg/storage/legacysql"
 )
@@ -42,15 +43,14 @@ func RegisterAPIService(
 	apiregistration builder.APIRegistrar,
 	ssoService ssosettings.Service,
 	sql db.DB,
-	ac accesscontrol.AccessControl,
+	client zanzana.Client,
 ) (*IdentityAccessManagementAPIBuilder, error) {
 	store := legacy.NewLegacySQLStores(legacysql.NewDatabaseProvider(sql))
-	authorizer, client := newLegacyAuthorizer(ac, store)
 
 	builder := &IdentityAccessManagementAPIBuilder{
 		store:        store,
 		sso:          ssoService,
-		authorizer:   authorizer,
+		authorizer:   gfauthorizer.NewResourceAuthorizer(client),
 		accessClient: client,
 	}
 	apiregistration.RegisterAPI(builder)

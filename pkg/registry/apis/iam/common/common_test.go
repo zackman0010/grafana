@@ -6,6 +6,7 @@ import (
 
 	"github.com/grafana/authlib/claims"
 	"github.com/stretchr/testify/assert"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/endpoints/request"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
@@ -29,7 +30,7 @@ func TestList(t *testing.T) {
 	t.Run("should allow all items if no access client is passed", func(t *testing.T) {
 		ctx := newContext("stacks-1", newIdent())
 
-		res, err := List(ctx, "items", nil, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
+		res, err := List(ctx, schema.GroupResource{}, nil, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
 			return &ListResponse[item]{
 				Items: []item{{"1"}, {"2"}},
 			}, nil
@@ -45,7 +46,7 @@ func TestList(t *testing.T) {
 			Resource: "items",
 			Attr:     "uid",
 		})
-		res, err := List(ctx, "items", a, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
+		res, err := List(ctx, schema.GroupResource{}, a, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
 			return &ListResponse[item]{
 				Items: []item{{"1"}, {"2"}},
 			}, nil
@@ -67,7 +68,7 @@ func TestList(t *testing.T) {
 
 		var called bool
 
-		res, err := List(ctx, "items", a, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
+		res, err := List(ctx, schema.GroupResource{}, a, Pagination{Limit: 2}, func(ctx context.Context, ns claims.NamespaceInfo, p Pagination) (*ListResponse[item], error) {
 			if called {
 				return &ListResponse[item]{
 					Items: []item{{"3"}},
