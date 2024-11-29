@@ -29,7 +29,8 @@ func RegisterApp(
 		OpenAPIDefGetter: iamv0.GetOpenAPIDefinitions,
 		ManagedKinds:     iamapp.GetKinds(),
 		CustomConfig: any(&iamapp.IAMConfig{
-			RoleWatcher: watchers.NewRoleWatcher(c),
+			RoleWatcher:        watchers.NewRoleWatcher(c),
+			RoleBindingWatcher: watchers.NewRoleBindingWatcher(c),
 		}),
 	}
 	provider.Provider = simple.NewAppProvider(apis.LocalManifest(), appCfg, iamapp.New)

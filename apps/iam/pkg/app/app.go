@@ -15,7 +15,8 @@ import (
 )
 
 type IAMConfig struct {
-	RoleWatcher operator.ResourceWatcher
+	RoleWatcher        operator.ResourceWatcher
+	RoleBindingWatcher operator.ResourceWatcher
 }
 
 func New(cfg app.Config) (app.App, error) {
@@ -34,11 +35,12 @@ func New(cfg app.Config) (app.App, error) {
 		},
 		ManagedKinds: []simple.AppManagedKind{
 			{
-				Kind:    iamv0.RoleKind(),
-				Watcher: iamCfg.RoleWatcher,
+				Kind:    iamv0.RoleBindingKind(),
+				Watcher: iamCfg.RoleBindingWatcher,
 			},
 			{
-				Kind: iamv0.RoleBindingKind(),
+				Kind:    iamv0.RoleKind(),
+				Watcher: iamCfg.RoleWatcher,
 			},
 		},
 	}
