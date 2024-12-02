@@ -703,6 +703,7 @@ service ResourceStore {
   // This will perform best-effort filtering to increase performace.
   // NOTE: storage.Interface is ultimatly responsible for the final filtering
   rpc List(ListRequest) returns (ListResponse);
+  rpc List2(ListRequest) returns (ListResponse);
 
   // The results *may* include values that should not be returned to the user
   // This will perform best-effort filtering to increase performace.

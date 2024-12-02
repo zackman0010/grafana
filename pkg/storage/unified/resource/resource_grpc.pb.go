@@ -24,6 +24,7 @@ const (
 	ResourceStore_Update_FullMethodName = "/resource.ResourceStore/Update"
 	ResourceStore_Delete_FullMethodName = "/resource.ResourceStore/Delete"
 	ResourceStore_List_FullMethodName   = "/resource.ResourceStore/List"
+	ResourceStore_List2_FullMethodName  = "/resource.ResourceStore/List2"
 	ResourceStore_Watch_FullMethodName  = "/resource.ResourceStore/Watch"
 )
 
@@ -44,6 +45,7 @@ type ResourceStoreClient interface {
 	// This will perform best-effort filtering to increase performace.
 	// NOTE: storage.Interface is ultimatly responsible for the final filtering
 	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
+	List2(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
 	// The results *may* include values that should not be returned to the user
 	// This will perform best-effort filtering to increase performace.
 	// NOTE: storage.Interface is ultimatly responsible for the final filtering
@@ -108,6 +110,16 @@ func (c *resourceStoreClient) List(ctx context.Context, in *ListRequest, opts ..
 	return out, nil
 }
 
+func (c *resourceStoreClient) List2(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListResponse)
+	err := c.cc.Invoke(ctx, ResourceStore_List2_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *resourceStoreClient) Watch(ctx context.Context, in *WatchRequest, opts ...grpc.CallOption) (ResourceStore_WatchClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &ResourceStore_ServiceDesc.Streams[0], ResourceStore_Watch_FullMethodName, cOpts...)
@@ -158,6 +170,7 @@ type ResourceStoreServer interface {
 	// This will perform best-effort filtering to increase performace.
 	// NOTE: storage.Interface is ultimatly responsible for the final filtering
 	List(context.Context, *ListRequest) (*ListResponse, error)
+	List2(context.Context, *ListRequest) (*ListResponse, error)
 	// The results *may* include values that should not be returned to the user
 	// This will perform best-effort filtering to increase performace.
 	// NOTE: storage.Interface is ultimatly responsible for the final filtering
@@ -182,6 +195,9 @@ func (UnimplementedResourceStoreServer) Delete(context.Context, *DeleteRequest) 
 }
 func (UnimplementedResourceStoreServer) List(context.Context, *ListRequest) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedResourceStoreServer) List2(context.Context, *ListRequest) (*ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List2 not implemented")
 }
 func (UnimplementedResourceStoreServer) Watch(*WatchRequest, ResourceStore_WatchServer) error {
 	return status.Errorf(codes.Unimplemented, "method Watch not implemented")
@@ -288,6 +304,24 @@ func _ResourceStore_List_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ResourceStore_List2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResourceStoreServer).List2(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ResourceStore_List2_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResourceStoreServer).List2(ctx, req.(*ListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ResourceStore_Watch_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -335,6 +369,10 @@ var ResourceStore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _ResourceStore_List_Handler,
+		},
+		{
+			MethodName: "List2",
+			Handler:    _ResourceStore_List2_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

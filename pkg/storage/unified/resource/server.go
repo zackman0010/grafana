@@ -750,6 +750,10 @@ func (s *server) List(ctx context.Context, req *ListRequest) (*ListResponse, err
 	return rsp, err
 }
 
+func (s *server) List2(ctx context.Context, req *ListRequest) (*ListResponse, error) {
+	return nil, nil
+}
+
 func (s *server) initWatcher() error {
 	var err error
 	s.broadcaster, err = NewBroadcaster(s.ctx, func(out chan<- *WrittenEvent) error {
