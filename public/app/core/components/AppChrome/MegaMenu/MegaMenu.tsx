@@ -5,13 +5,15 @@ import { useLocation } from 'react-router-dom-v5-compat';
 
 import { GrafanaTheme2, NavModelItem } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
-import { config, reportInteraction } from '@grafana/runtime';
+import { config } from '@grafana/runtime';
 import { Icon, IconButton, ScrollContainer, useStyles2, Stack } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { t } from 'app/core/internationalization';
 import { setBookmark } from 'app/core/reducers/navBarTree';
 import { usePatchUserPreferencesMutation } from 'app/features/preferences/api/index';
 import { useDispatch, useSelector } from 'app/types';
+import { trackEvent } from 'app/tracking/trackingv2';
+import { generateTrackUtil } from 'app/tracking/tracking';
 
 import { MEGA_MENU_TOGGLE_ID } from '../TopBar/SingleTopBar';
 import { TOP_BAR_LEVEL_HEIGHT } from '../types';
@@ -99,10 +101,17 @@ export const MegaMenu = memo(
       if (url && config.featureToggles.pinNavItems) {
         const isSaved = isPinned(url);
         const newItems = isSaved ? pinnedItems.filter((i) => url !== i) : [...pinnedItems, url];
-        const interactionName = isSaved ? 'grafana_nav_item_unpinned' : 'grafana_nav_item_pinned';
-        reportInteraction(interactionName, {
-          path: url,
-        });
+        const interactionName: 'grafana_nav_item_pinned' | 'grafana_nav_item_unpinned' = isSaved
+          ? 'grafana_nav_item_unpinned'
+          : 'grafana_nav_item_pinned';
+
+        // --- v1 tracking ---
+        const track = generateTrackUtil(interactionName);
+        track({ path: url });
+
+        // --- v2 tracking ---
+        trackEvent({ name: interactionName, properties: { path: url } });
+
         patchPreferences({
           patchPrefsCmd: {
             navbar: {
