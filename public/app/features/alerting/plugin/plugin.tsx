@@ -13,7 +13,7 @@ const ExposedAlertingComponents = [
     title: 'List Contact Points',
     description:
       'This components will use renderProps to return all contact points for the built-in Grafana Alertmanager',
-    component: ListContactPointsV1Component,
+    component: ListContactPointsComponent,
   },
   {
     id: 'grafana/ContactPoint/v0',
@@ -25,13 +25,13 @@ const ExposedAlertingComponents = [
     title: 'Use this component to wrap your code that wants to use the AlertmanagerContext',
     component: AlertmanagerProvider,
   },
-] as PluginExtensionExposedComponentConfig[];
+] as const satisfies ReadonlyArray<PluginExtensionExposedComponentConfig<any>>;
 
-type ListContactPointsV1ComponentProps = {
+type ListContactPointsComponentProps = {
   children: (result: ReturnType<typeof useContactPointsWithStatus>) => ReactNode;
 };
 
-function ListContactPointsV1Component({ children }: ListContactPointsV1ComponentProps) {
+function ListContactPointsComponent({ children }: ListContactPointsComponentProps) {
   const result = useContactPointsWithStatus({
     alertmanager: GRAFANA_RULES_SOURCE_NAME,
     fetchStatuses: true,
@@ -40,6 +40,4 @@ function ListContactPointsV1Component({ children }: ListContactPointsV1Component
   return children(result);
 }
 
-export function getCoreAlertingConfigurations(): PluginExtensionExposedComponentConfig[] {
-  return ExposedAlertingComponents;
-}
+export const getCoreAlertingConfigurations = () => ExposedAlertingComponents;
