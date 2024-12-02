@@ -4,7 +4,6 @@ import { config } from '@grafana/runtime';
 import { contextSrv } from 'app/core/services/context_srv';
 
 import { addCustomRightAction } from '../../dashboard/components/DashNav/DashNav';
-import { initAlertingPlugin } from '../plugin/plugin';
 
 import { getRulesPermissions } from './utils/access-control';
 import { GRAFANA_RULES_SOURCE_NAME } from './utils/datasource';
@@ -29,7 +28,4 @@ export function initAlerting() {
       index: -2,
     });
   }
-
-  // init Alerting pseudo-plugin
-  initAlertingPlugin();
 }

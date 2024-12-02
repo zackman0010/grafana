@@ -8,6 +8,7 @@ import { isGrafanaDevMode } from '../utils';
 import { isAddedLinkMetaInfoMissing, isConfigureFnValid, isLinkPathValid } from '../validators';
 
 import { PluginExtensionConfigs, Registry, RegistryType } from './Registry';
+import { isCorePluginIdentifier } from './setup';
 
 const logPrefix = 'Could not register link extension. Reason:';
 
@@ -69,7 +70,11 @@ export class AddedLinksRegistry extends Registry<AddedLinkRegistryItem[], Plugin
         continue;
       }
 
-      if (pluginId !== 'grafana' && isGrafanaDevMode() && isAddedLinkMetaInfoMissing(pluginId, config, configLog)) {
+      if (
+        !isCorePluginIdentifier(pluginId) &&
+        isGrafanaDevMode() &&
+        isAddedLinkMetaInfoMissing(pluginId, config, configLog)
+      ) {
         continue;
       }
 

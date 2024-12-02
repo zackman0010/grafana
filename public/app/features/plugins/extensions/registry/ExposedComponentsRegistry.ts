@@ -6,7 +6,8 @@ import * as errors from '../errors';
 import { isGrafanaDevMode } from '../utils';
 import { isExposedComponentMetaInfoMissing } from '../validators';
 
-import { Registry, RegistryType, PluginExtensionConfigs } from './Registry';
+import { PluginExtensionConfigs, Registry, RegistryType } from './Registry';
+import { isCorePluginIdentifier } from './setup';
 
 const logPrefix = 'Could not register exposed component. Reason:';
 
@@ -47,7 +48,7 @@ export class ExposedComponentsRegistry extends Registry<
         pluginId,
       });
 
-      if (!id.startsWith(pluginId)) {
+      if (!id.startsWith(pluginId) && !isCorePluginIdentifier(pluginId)) {
         pointIdLog.error(`${logPrefix} ${errors.INVALID_EXPOSED_COMPONENT_ID}`);
         continue;
       }
@@ -63,7 +64,7 @@ export class ExposedComponentsRegistry extends Registry<
       }
 
       if (
-        pluginId !== 'grafana' &&
+        !isCorePluginIdentifier(pluginId) &&
         isGrafanaDevMode() &&
         isExposedComponentMetaInfoMissing(pluginId, config, pointIdLog)
       ) {

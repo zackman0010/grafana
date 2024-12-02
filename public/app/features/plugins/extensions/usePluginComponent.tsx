@@ -7,6 +7,7 @@ import { UsePluginComponentResult } from '@grafana/runtime';
 import { useExposedComponentsRegistry } from './ExtensionRegistriesContext';
 import * as errors from './errors';
 import { log } from './logs/log';
+import { hasCorePluginIdentifier } from './registry/setup';
 import { isGrafanaDevMode, wrapWithPluginContext } from './utils';
 import { isExposedComponentDependencyMissing } from './validators';
 
@@ -35,7 +36,7 @@ export function usePluginComponent<Props extends object = {}>(id: string): UsePl
       pluginId: registryItem.pluginId,
     });
 
-    if (enableRestrictions && isExposedComponentDependencyMissing(id, pluginContext)) {
+    if (enableRestrictions && isExposedComponentDependencyMissing(id, pluginContext) && !hasCorePluginIdentifier(id)) {
       componentLog.error(errors.EXPOSED_COMPONENT_DEPENDENCY_MISSING);
       return {
         isLoading: false,

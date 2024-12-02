@@ -2,7 +2,7 @@ import { css, cx, keyframes } from '@emotion/css';
 import { useMemo, useState } from 'react';
 
 import { GrafanaTheme2, SelectableValue } from '@grafana/data';
-import { Select, SelectCommonProps, Stack, Alert, IconButton, Text, useStyles2 } from '@grafana/ui';
+import { Alert, IconButton, Select, SelectCommonProps, Stack, Text, useStyles2 } from '@grafana/ui';
 import { ContactPointReceiverSummary } from 'app/features/alerting/unified/components/contact-points/ContactPoint';
 import { useAlertmanager } from 'app/features/alerting/unified/state/AlertmanagerContext';
 
@@ -40,7 +40,7 @@ export const ContactPointSelector = ({
       value: contactPoint,
       component: () => (
         <Text variant="bodySmall" color="secondary">
-          <ContactPointReceiverSummary receivers={contactPoint.grafana_managed_receiver_configs} limit={2} />
+          <ContactPointReceiverSummary receivers={contactPoint.grafana_managed_receiver_configs ?? []} limit={2} />
         </Text>
       ),
     };

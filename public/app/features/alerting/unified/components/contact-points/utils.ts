@@ -94,7 +94,7 @@ export interface ReceiverConfigWithMetadata extends GrafanaManagedReceiverConfig
 export interface ContactPointWithMetadata extends GrafanaManagedContactPoint {
   id: string;
   policies?: RouteReference[]; // now is optional as we don't have the data from the read-only endpoint
-  grafana_managed_receiver_configs: ReceiverConfigWithMetadata[];
+  grafana_managed_receiver_configs: ReceiverConfigWithMetadata[] | null; // can be empty for contact points with no integrations
 }
 
 type EnhanceContactPointsArgs = {
