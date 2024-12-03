@@ -12,21 +12,29 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.Role":                           schema_pkg_apis_iam2_v0alpha1_Role(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBinding":                    schema_pkg_apis_iam2_v0alpha1_RoleBinding(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingList":                schema_pkg_apis_iam2_v0alpha1_RoleBindingList(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingOperatorState":       schema_pkg_apis_iam2_v0alpha1_RoleBindingOperatorState(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingRoleRef":             schema_pkg_apis_iam2_v0alpha1_RoleBindingRoleRef(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingSpec":                schema_pkg_apis_iam2_v0alpha1_RoleBindingSpec(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingStatus":              schema_pkg_apis_iam2_v0alpha1_RoleBindingStatus(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingSubject":             schema_pkg_apis_iam2_v0alpha1_RoleBindingSubject(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingstatusOperatorState": schema_pkg_apis_iam2_v0alpha1_RoleBindingstatusOperatorState(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleList":                       schema_pkg_apis_iam2_v0alpha1_RoleList(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleOperatorState":              schema_pkg_apis_iam2_v0alpha1_RoleOperatorState(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleRule":                       schema_pkg_apis_iam2_v0alpha1_RoleRule(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleSpec":                       schema_pkg_apis_iam2_v0alpha1_RoleSpec(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleStatus":                     schema_pkg_apis_iam2_v0alpha1_RoleStatus(ref),
-		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RolestatusOperatorState":        schema_pkg_apis_iam2_v0alpha1_RolestatusOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.Role":                               schema_pkg_apis_iam2_v0alpha1_Role(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBinding":                        schema_pkg_apis_iam2_v0alpha1_RoleBinding(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingList":                    schema_pkg_apis_iam2_v0alpha1_RoleBindingList(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingOperatorState":           schema_pkg_apis_iam2_v0alpha1_RoleBindingOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingRoleRef":                 schema_pkg_apis_iam2_v0alpha1_RoleBindingRoleRef(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingSpec":                    schema_pkg_apis_iam2_v0alpha1_RoleBindingSpec(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingStatus":                  schema_pkg_apis_iam2_v0alpha1_RoleBindingStatus(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingSubject":                 schema_pkg_apis_iam2_v0alpha1_RoleBindingSubject(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleBindingstatusOperatorState":     schema_pkg_apis_iam2_v0alpha1_RoleBindingstatusOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleList":                           schema_pkg_apis_iam2_v0alpha1_RoleList(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleOperatorState":                  schema_pkg_apis_iam2_v0alpha1_RoleOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleRule":                           schema_pkg_apis_iam2_v0alpha1_RoleRule(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleSpec":                           schema_pkg_apis_iam2_v0alpha1_RoleSpec(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RoleStatus":                         schema_pkg_apis_iam2_v0alpha1_RoleStatus(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.RolestatusOperatorState":            schema_pkg_apis_iam2_v0alpha1_RolestatusOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBinding":                    schema_pkg_apis_iam2_v0alpha1_TempRoleBinding(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingList":                schema_pkg_apis_iam2_v0alpha1_TempRoleBindingList(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingOperatorState":       schema_pkg_apis_iam2_v0alpha1_TempRoleBindingOperatorState(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingRoleRef":             schema_pkg_apis_iam2_v0alpha1_TempRoleBindingRoleRef(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSpec":                schema_pkg_apis_iam2_v0alpha1_TempRoleBindingSpec(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingStatus":              schema_pkg_apis_iam2_v0alpha1_TempRoleBindingStatus(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSubject":             schema_pkg_apis_iam2_v0alpha1_TempRoleBindingSubject(ref),
+		"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingstatusOperatorState": schema_pkg_apis_iam2_v0alpha1_TempRoleBindingstatusOperatorState(ref),
 	}
 }
 
@@ -632,6 +640,347 @@ func schema_pkg_apis_iam2_v0alpha1_RolestatusOperatorState(ref common.ReferenceC
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "RolestatusOperatorState defines model for Rolestatus.#OperatorState.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"descriptiveState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "descriptiveState is an optional more descriptive state field which has no requirements on format",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"details": {
+						SchemaProps: spec.SchemaProps{
+							Description: "details contains any extra information that is operator-specific",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"object"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"lastEvaluation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastEvaluation is the ResourceVersion last evaluated",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state describes the state of the lastEvaluation. It is limited to three possible states for machine evaluation.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"lastEvaluation", "state"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBinding(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec", "status"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSpec", "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBinding"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingOperatorState defines model for TempRoleBindingOperatorState.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"descriptiveState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "descriptiveState is an optional more descriptive state field which has no requirements on format",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"details": {
+						SchemaProps: spec.SchemaProps{
+							Description: "details contains any extra information that is operator-specific",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"object"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"lastEvaluation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastEvaluation is the ResourceVersion last evaluated",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state describes the state of the lastEvaluation. It is limited to three possible states for machine evaluation.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"lastEvaluation", "state"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingRoleRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingRoleRef defines model for TempRoleBindingRoleRef.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingSpec defines model for TempRoleBindingSpec.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"roleRef": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingRoleRef"),
+						},
+					},
+					"subjects": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSubject"),
+									},
+								},
+							},
+						},
+					},
+					"ttlSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"roleRef", "subjects", "ttlSeconds"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingRoleRef", "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingSubject"},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingStatus defines model for TempRoleBindingStatus.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activated": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "date-time",
+						},
+					},
+					"additionalFields": {
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalFields is reserved for future use",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"object"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"operatorStates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorStates is a map of operator ID to operator state evaluations. Any operator which consumes this kind SHOULD add its state evaluation information to this field.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingstatusOperatorState"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1.TempRoleBindingstatusOperatorState"},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingSubject defines model for TempRoleBindingSubject.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name", "type"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_iam2_v0alpha1_TempRoleBindingstatusOperatorState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TempRoleBindingstatusOperatorState defines model for TempRoleBindingstatus.#OperatorState.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"descriptiveState": {

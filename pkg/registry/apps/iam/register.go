@@ -2,6 +2,8 @@ package iam
 
 import (
 	"github.com/grafana/grafana-app-sdk/app"
+	"github.com/grafana/grafana-app-sdk/k8s"
+	"github.com/grafana/grafana-app-sdk/operator"
 	"github.com/grafana/grafana-app-sdk/simple"
 
 	"github.com/grafana/grafana/apps/iam/pkg/apis"
@@ -31,6 +33,11 @@ func RegisterApp(
 		CustomConfig: any(&iamapp.IAMConfig{
 			RoleWatcher:        watchers.NewRoleWatcher(c),
 			RoleBindingWatcher: watchers.NewRoleBindingWatcher(c),
+			TempRoleBindingReconcilerFactory: func(cfg app.Config) operator.Reconciler {
+				reg := k8s.NewClientRegistry(cfg.KubeConfig, k8s.DefaultClientConfig())
+				rc, _ := reg.ClientFor(iamv0.TempRoleBindingKind())
+				return watchers.NewTimedRoleBindingReconciler(c, rc)
+			},
 		}),
 	}
 	provider.Provider = simple.NewAppProvider(apis.LocalManifest(), appCfg, iamapp.New)
