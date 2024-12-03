@@ -38,7 +38,7 @@ func (s *RoleBindingWatcher) Add(ctx context.Context, obj resource.Object) error
 
 	writes := make([]*authzextv1.TupleKey, 0, len(object.Spec.Subjects))
 	for _, subject := range object.Spec.Subjects {
-		writes = append(writes, newRolebindingTuple(object.Spec.RoleRef.Name, subject))
+		writes = append(writes, newRoleBindingTuple(object.Spec.RoleRef.Name, subject))
 	}
 
 	err := s.c.Write(ctx, &authzextv1.WriteRequest{
@@ -74,7 +74,7 @@ func (s *RoleBindingWatcher) Update(ctx context.Context, oldObj resource.Object,
 	// FIXME: don't be this lazy
 	deletes := make([]*authzextv1.TupleKeyWithoutCondition, 0, len(oldObject.Spec.Subjects))
 	for _, subject := range oldObject.Spec.Subjects {
-		deletes = append(deletes, newRolebindingTupleWithoutCondition(oldObject.Spec.RoleRef.Name, subject))
+		deletes = append(deletes, newRoleBindingTupleWithoutCondition(oldObject.Spec.RoleRef.Name, subject))
 	}
 
 	err := s.c.Write(ctx, &authzextv1.WriteRequest{
@@ -91,7 +91,7 @@ func (s *RoleBindingWatcher) Update(ctx context.Context, oldObj resource.Object,
 
 	writes := make([]*authzextv1.TupleKey, 0, len(newObject.Spec.Subjects))
 	for _, subject := range newObject.Spec.Subjects {
-		writes = append(writes, newRolebindingTuple(newObject.Spec.RoleRef.Name, subject))
+		writes = append(writes, newRoleBindingTuple(newObject.Spec.RoleRef.Name, subject))
 	}
 
 	err = s.c.Write(ctx, &authzextv1.WriteRequest{
@@ -121,7 +121,7 @@ func (s *RoleBindingWatcher) Delete(ctx context.Context, obj resource.Object) er
 	// FIXME: don't be this lazy
 	deletes := make([]*authzextv1.TupleKeyWithoutCondition, 0, len(object.Spec.Subjects))
 	for _, subject := range object.Spec.Subjects {
-		deletes = append(deletes, newRolebindingTupleWithoutCondition(object.Spec.RoleRef.Name, subject))
+		deletes = append(deletes, newRoleBindingTupleWithoutCondition(object.Spec.RoleRef.Name, subject))
 	}
 
 	err := s.c.Write(ctx, &authzextv1.WriteRequest{
@@ -150,17 +150,27 @@ func (s *RoleBindingWatcher) Sync(ctx context.Context, obj resource.Object) erro
 	return nil
 }
 
-func newRolebindingTuple(roleName string, subject iamv0.RoleBindingSubject) *authzextv1.TupleKey {
+func newRoleBindingTuple(roleName string, subject iamv0.RoleBindingSubject) *authzextv1.TupleKey {
+	user := zanzana.NewTupleEntry(string(subject.Type), subject.Name, "")
+	if subject.Type == iamv0.RoleBindingSubjectTypeTeam {
+		user = zanzana.NewTupleEntry(string(subject.Type), subject.Name, zanzana.RelationTeamMember)
+	}
+
 	return &authzextv1.TupleKey{
-		User:     zanzana.NewTupleEntry(string(subject.Type), subject.Name, ""),
+		User:     user,
 		Relation: zanzana.RelationAssignee,
 		Object:   zanzana.NewTupleEntry(zanzana.TypeRole, roleName, ""),
 	}
 }
 
-func newRolebindingTupleWithoutCondition(roleName string, subject iamv0.RoleBindingSubject) *authzextv1.TupleKeyWithoutCondition {
+func newRoleBindingTupleWithoutCondition(roleName string, subject iamv0.RoleBindingSubject) *authzextv1.TupleKeyWithoutCondition {
+	user := zanzana.NewTupleEntry(string(subject.Type), subject.Name, "")
+	if subject.Type == iamv0.RoleBindingSubjectTypeTeam {
+		user = zanzana.NewTupleEntry(string(subject.Type), subject.Name, zanzana.RelationTeamMember)
+	}
+
 	return &authzextv1.TupleKeyWithoutCondition{
-		User:     zanzana.NewTupleEntry(string(subject.Type), subject.Name, ""),
+		User:     user,
 		Relation: zanzana.RelationAssignee,
 		Object:   zanzana.NewTupleEntry(zanzana.TypeRole, roleName, ""),
 	}
