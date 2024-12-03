@@ -11,7 +11,9 @@ import { KioskMode } from 'app/types';
 
 import { RouteDescriptor } from '../../navigation/types';
 
+import { menuDocked, menuOpen } from './MegaMenu/eventsTracking';
 import { ReturnToPreviousProps } from './ReturnToPrevious/ReturnToPrevious';
+import { createReturnToPrevious, dismissReturnToPrevious } from './ReturnToPrevious/eventsTracking';
 import { TOP_BAR_LEVEL_HEIGHT } from './types';
 
 export interface AppChromeState {
@@ -119,10 +121,12 @@ export class AppChromeService {
 
   public setReturnToPrevious = (returnToPrevious: ReturnToPreviousProps) => {
     const previousPage = this.state.getValue().returnToPrevious;
-    reportInteraction('grafana_return_to_previous_button_created', {
-      page: returnToPrevious.href,
-      previousPage: previousPage?.href,
-    });
+    // reportInteraction('grafana_return_to_previous_button_created', {
+    //   page: returnToPrevious.href,
+    //   previousPage: previousPage?.href,
+    // });
+
+    createReturnToPrevious({ page: returnToPrevious.href, previousPage: previousPage?.href });
 
     this.update({ returnToPrevious });
     window.sessionStorage.setItem('returnToPrevious', JSON.stringify(returnToPrevious));
@@ -131,10 +135,11 @@ export class AppChromeService {
   public clearReturnToPrevious = (interactionAction: 'clicked' | 'dismissed' | 'auto_dismissed') => {
     const existingRtp = this.state.getValue().returnToPrevious;
     if (existingRtp) {
-      reportInteraction('grafana_return_to_previous_button_dismissed', {
-        action: interactionAction,
-        page: existingRtp.href,
-      });
+      // reportInteraction('grafana_return_to_previous_button_dismissed', {
+      //   action: interactionAction,
+      //   page: existingRtp.href,
+      // });
+      dismissReturnToPrevious({ action: interactionAction, page: existingRtp.href });
     }
 
     this.update({ returnToPrevious: undefined });
@@ -171,10 +176,11 @@ export class AppChromeService {
     if (megaMenuDocked) {
       store.set(DOCKED_MENU_OPEN_LOCAL_STORAGE_KEY, newOpenState);
     }
-    reportInteraction('grafana_mega_menu_open', {
-      state: newOpenState,
-      singleTopNav: Boolean(config.featureToggles.singleTopNav),
-    });
+    // reportInteraction('grafana_mega_menu_open', {
+    //   state: newOpenState,
+    //   singleTopNav: Boolean(config.featureToggles.singleTopNav),
+    // });
+    menuOpen({ state: newOpenState, singleTopNav: Boolean(config.featureToggles.singleTopNav) });
     this.update({
       megaMenuOpen: newOpenState,
     });
@@ -184,7 +190,8 @@ export class AppChromeService {
     if (updatePersistedState) {
       store.set(DOCKED_LOCAL_STORAGE_KEY, newDockedState);
     }
-    reportInteraction('grafana_mega_menu_docked', { state: newDockedState });
+    // reportInteraction('grafana_mega_menu_docked', { state: newDockedState });
+    menuDocked({ state: newDockedState });
     this.update({
       megaMenuDocked: newDockedState,
     });
