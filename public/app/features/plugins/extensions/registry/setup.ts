@@ -23,6 +23,7 @@ export function setupPluginExtensionRegistries(): PluginExtensionRegistries {
 
   pluginExtensionsRegistries.exposedComponentsRegistry.register({
     pluginId: GRAFANA_CORE_PLUGIN_ID,
+    // @ts-ignore
     configs: getCoreAlertingConfigurations(),
   });
 
