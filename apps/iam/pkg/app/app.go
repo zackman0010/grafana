@@ -23,9 +23,8 @@ var allowedVerbs = map[string]struct{}{
 }
 
 type IAMConfig struct {
-	RoleWatcher                      operator.ResourceWatcher
-	RoleBindingWatcher               operator.ResourceWatcher
-	TempRoleBindingReconcilerFactory func(cfg app.Config) operator.Reconciler
+	RoleWatcher        operator.ResourceWatcher
+	RoleBindingWatcher operator.ResourceWatcher
 }
 
 func New(cfg app.Config) (app.App, error) {
@@ -53,10 +52,6 @@ func New(cfg app.Config) (app.App, error) {
 				Validator: validators.NewRoleBindingValidator(),
 				Watcher:   iamCfg.RoleBindingWatcher,
 			},
-			{
-				Kind:       iamv0.TempRoleBindingKind(),
-				Reconciler: iamCfg.TempRoleBindingReconcilerFactory(cfg),
-			},
 		},
 	}
 
@@ -80,6 +75,6 @@ func GetKinds() map[schema.GroupVersion][]resource.Kind {
 		Version: iamv0.RoleKind().Version(),
 	}
 	return map[schema.GroupVersion][]resource.Kind{
-		gv: {iamv0.RoleKind(), iamv0.RoleBindingKind(), iamv0.TempRoleBindingKind()},
+		gv: {iamv0.RoleKind(), iamv0.RoleBindingKind()},
 	}
 }
