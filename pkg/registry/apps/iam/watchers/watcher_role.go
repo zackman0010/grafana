@@ -32,7 +32,7 @@ func NewRoleWatcher(c zanzana.Client) *RoleWatcher {
 func (s *RoleWatcher) Add(ctx context.Context, obj resource.Object) error {
 	object, ok := obj.(*iamv0.Role)
 	if !ok {
-		return fmt.Errorf("provided object is not of type *iamv0.Playlist (name=%s, namespace=%s, kind=%s)",
+		return fmt.Errorf("provided object is not of type *iamv0.Role (name=%s, namespace=%s, kind=%s)",
 			obj.GetStaticMetadata().Name, obj.GetStaticMetadata().Namespace, obj.GetStaticMetadata().Kind)
 	}
 

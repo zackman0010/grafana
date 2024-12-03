@@ -35,8 +35,10 @@ func RegisterApp(
 			RoleBindingWatcher: watchers.NewRoleBindingWatcher(c),
 			TempRoleBindingReconcilerFactory: func(cfg app.Config) operator.Reconciler {
 				reg := k8s.NewClientRegistry(cfg.KubeConfig, k8s.DefaultClientConfig())
-				rc, _ := reg.ClientFor(iamv0.TempRoleBindingKind())
-				return watchers.NewTimedRoleBindingReconciler(c, rc)
+				tc, _ := reg.ClientFor(iamv0.TempRoleBindingKind())
+				bc, _ := reg.ClientFor(iamv0.RoleBindingKind())
+
+				return watchers.NewTimedRoleBindingReconciler(c, tc, bc)
 			},
 		}),
 	}

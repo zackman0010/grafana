@@ -10,24 +10,25 @@ import (
 	"github.com/grafana/grafana-app-sdk/operator"
 	"github.com/grafana/grafana-app-sdk/resource"
 	iamv0 "github.com/grafana/grafana/apps/iam/pkg/apis/iam2/v0alpha1"
-	authzextv1 "github.com/grafana/grafana/pkg/services/authz/proto/v1"
 	"github.com/grafana/grafana/pkg/services/authz/zanzana"
 )
 
 var _ operator.Reconciler = (*TimedRoleBindingReconciler)(nil)
 
-func NewTimedRoleBindingReconciler(c zanzana.Client, rc resource.Client) *TimedRoleBindingReconciler {
+func NewTimedRoleBindingReconciler(zc zanzana.Client, tc, bc resource.Client) *TimedRoleBindingReconciler {
 	return &TimedRoleBindingReconciler{
-		c:   c,
-		rc:  rc,
+		zc:  zc,
+		tc:  tc,
+		bc:  bc,
 		log: klog.NewKlogr().WithName("reconciler_timed_role_binding"),
 	}
 
 }
 
 type TimedRoleBindingReconciler struct {
-	c   zanzana.Client
-	rc  resource.Client
+	zc  zanzana.Client
+	tc  resource.Client
+	bc  resource.Client
 	log klog.Logger
 }
 
@@ -35,7 +36,7 @@ type TimedRoleBindingReconciler struct {
 func (t *TimedRoleBindingReconciler) Reconcile(ctx context.Context, req operator.ReconcileRequest) (operator.ReconcileResult, error) {
 	binding, ok := req.Object.(*iamv0.TempRoleBinding)
 	if !ok {
-		return operator.ReconcileResult{}, fmt.Errorf("provided object is not of type *iamv0.Playlist (name=%s, namespace=%s, kind=%s)",
+		return operator.ReconcileResult{}, fmt.Errorf("provided object is not of type *iamv0.TempRoleBinding (name=%s, namespace=%s, kind=%s)",
 			req.Object.GetStaticMetadata().Name, req.Object.GetStaticMetadata().Namespace, req.Object.GetStaticMetadata().Kind)
 	}
 
@@ -62,36 +63,27 @@ func (t *TimedRoleBindingReconciler) Reconcile(ctx context.Context, req operator
 }
 
 func (t *TimedRoleBindingReconciler) addRoleBinding(ctx context.Context, binding *iamv0.TempRoleBinding) (operator.ReconcileResult, error) {
-	writes := make([]*authzextv1.TupleKey, 0, len(binding.Spec.Subjects))
-	for _, subject := range binding.Spec.Subjects {
-		writes = append(writes, newRolebindingTuple(binding.Spec.RoleRef.Name, iamv0.RoleBindingSubject{
-			Name: subject.Name,
-			Type: iamv0.RoleBindingSubjectType(subject.Type),
-		}))
-	}
-
-	err := t.c.Write(ctx, &authzextv1.WriteRequest{
-		Namespace: binding.GetNamespace(),
-		Writes: &authzextv1.WriteRequestWrites{
-			TupleKeys: writes,
+	ident := binding.GetStaticMetadata().Identifier()
+	_, err := t.bc.Create(ctx, resource.Identifier{
+		Namespace: ident.Namespace,
+		Name:      "temp-" + ident.Name,
+	}, &iamv0.RoleBinding{
+		Spec: iamv0.RoleBindingSpec{
+			RoleRef: iamv0.RoleBindingRoleRef{
+				Name: binding.Spec.RoleRef.Name,
+			},
+			Subjects: tempSubjectsToSubjects(binding.Spec.Subjects),
 		},
-	})
+	}, resource.CreateOptions{})
 
 	if err != nil {
-		t.log.Error(err, "Add: Tried to write role bindings to zanzana")
-		return operator.ReconcileResult{}, fmt.Errorf("add: tried to write role binding to zanzana: %w", err)
+		return operator.ReconcileResult{}, err
 	}
 
 	now := time.Now()
 	binding.TempRoleBindingStatus.Activated = &now
-	_, err = t.rc.Update(
-		ctx,
-		binding.GetStaticMetadata().Identifier(),
-		binding,
-		resource.UpdateOptions{},
-	)
 
-	if err != nil {
+	if _, err := t.tc.Update(ctx, ident, binding, resource.UpdateOptions{}); err != nil {
 		return operator.ReconcileResult{}, err
 	}
 
@@ -100,25 +92,29 @@ func (t *TimedRoleBindingReconciler) addRoleBinding(ctx context.Context, binding
 }
 
 func (t *TimedRoleBindingReconciler) removeRoleBinding(ctx context.Context, binding *iamv0.TempRoleBinding) (operator.ReconcileResult, error) {
-	// FIXME: don't be this lazy
-	deletes := make([]*authzextv1.TupleKeyWithoutCondition, 0, len(binding.Spec.Subjects))
-	for _, subject := range binding.Spec.Subjects {
-		deletes = append(deletes, newRolebindingTupleWithoutCondition(binding.Spec.RoleRef.Name, iamv0.RoleBindingSubject{
-			Name: subject.Name,
-			Type: iamv0.RoleBindingSubjectType(subject.Type),
-		}))
-	}
-
-	err := t.c.Write(ctx, &authzextv1.WriteRequest{
-		Namespace: binding.GetNamespace(),
-		Deletes: &authzextv1.WriteRequestDeletes{
-			TupleKeys: deletes,
-		},
+	ident := binding.GetStaticMetadata().Identifier()
+	err := t.bc.Delete(ctx, resource.Identifier{
+		Namespace: ident.Namespace,
+		Name:      "temp-" + ident.Name,
 	})
+
 	if err != nil {
-		t.log.Error(err, "Delete: Tried to delete role bindings from zanzana")
-		return operator.ReconcileResult{}, fmt.Errorf("delete: tried to delete role bindings from zanzana: %w", err)
+		return operator.ReconcileResult{}, fmt.Errorf("delete: failed to delete role binding: %w", err)
 	}
 
 	return operator.ReconcileResult{}, err
+}
+func tempSubjectsToSubjects(subjects []iamv0.TempRoleBindingSubject) []iamv0.RoleBindingSubject {
+	out := make([]iamv0.RoleBindingSubject, 0, len(subjects))
+	for _, s := range subjects {
+		out = append(out, tempSubjectToSubject(s))
+	}
+	return out
+}
+
+func tempSubjectToSubject(subject iamv0.TempRoleBindingSubject) iamv0.RoleBindingSubject {
+	return iamv0.RoleBindingSubject{
+		Name: subject.Name,
+		Type: iamv0.RoleBindingSubjectType(subject.Type),
+	}
 }
