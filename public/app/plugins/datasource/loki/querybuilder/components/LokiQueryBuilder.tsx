@@ -61,17 +61,19 @@ export const LokiQueryBuilder = memo<Props>(({ datasource, query, onChange, onRu
       (filter) => filter.op === '=' || (filter.op === '=~' && new RegExp(filter.value).test('') === false)
     );
     if (labelsToConsider.length === 0 || !hasEqualityOperation) {
-      return await datasource.languageProvider.fetchLabels({ timeRange });
+      let ret = await datasource.languageProvider.fetchLabels({ timeRange });
+      return ret.data;
     }
 
     const streamSelector = lokiQueryModeller.renderLabels(labelsToConsider);
-    const possibleLabelNames = await datasource.languageProvider.fetchLabels({
+    const ret = await datasource.languageProvider.fetchLabels({
       streamSelector,
       timeRange,
     });
     const labelsNamesToConsider = labelsToConsider.map((l) => l.label);
 
     // Filter out label names that are already selected
+    let possibleLabelNames = ret.data.concat(ret?.structured_metadata || []);
     return possibleLabelNames.filter((label) => !labelsNamesToConsider.includes(label)).sort();
   };
 

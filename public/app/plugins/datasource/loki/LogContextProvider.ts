@@ -328,12 +328,13 @@ export class LogContextProvider {
       // If there is no parser, we use getLabelKeys because it has better caching
       // and all labels should already be fetched
       await this.datasource.languageProvider.start(timeRange);
-      allLabels = this.datasource.languageProvider.getLabelKeys();
+      allLabels = this.datasource.languageProvider.getLabelKeys().stream;
     } else {
       // If we have parser, we use fetchLabels to fetch actual labels for selected stream
       const stream = getStreamSelectorsFromQuery(query.expr);
       // We are using stream[0] as log query can always have just 1 stream selector
-      allLabels = await this.datasource.languageProvider.fetchLabels({ streamSelector: stream[0], timeRange });
+      let ret = await this.datasource.languageProvider.fetchLabels({ streamSelector: stream[0], timeRange });
+      allLabels = ret.data;
     }
 
     const contextFilters: ContextFilter[] = [];

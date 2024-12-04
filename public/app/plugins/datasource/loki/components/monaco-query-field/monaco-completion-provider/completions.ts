@@ -16,6 +16,7 @@ export type CompletionType =
   | 'DURATION'
   | 'LABEL_NAME'
   | 'LABEL_VALUE'
+  | 'LABEL_NAME_METADATA'
   | 'PATTERN'
   | 'PARSER'
   | 'LINE_FILTER'
@@ -213,12 +214,27 @@ async function getLabelNamesForSelectorCompletions(
 ): Promise<Completion[]> {
   const labelNames = await dataProvider.getLabelNames(otherLabels);
 
-  return labelNames.map((label) => ({
-    type: 'LABEL_NAME',
-    label,
-    insertText: `${label}=`,
-    triggerOnInsert: true,
-  }));
+  let labels: Completion[] = [];
+  labels = labels.concat(
+    labelNames.stream.map((label) => ({
+      type: 'LABEL_NAME',
+      label: label,
+      insertText: `${label}=`,
+      triggerOnInsert: true,
+    }))
+  );
+  labels = labels.concat(
+    labelNames?.structured_metadata?.map((label) => ({
+      type: 'LABEL_NAME_METADATA',
+      label: `${label}`,
+      detail: 'Structured Metadata',
+      documentation: 'Value autocompletion is not available.',
+      insertText: `${label}=`,
+      triggerOnInsert: true,
+    })) || []
+  );
+
+  return labels;
 }
 
 async function getInGroupingCompletions(logQuery: string, dataProvider: CompletionDataProvider): Promise<Completion[]> {

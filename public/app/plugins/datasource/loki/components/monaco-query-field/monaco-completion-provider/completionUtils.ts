@@ -41,6 +41,8 @@ function getMonacoCompletionItemKind(type: CompletionType, monaco: Monaco): mona
       return monaco.languages.CompletionItemKind.Enum;
     case 'LABEL_VALUE':
       return monaco.languages.CompletionItemKind.EnumMember;
+    case 'LABEL_NAME_METADATA':
+      return monaco.languages.CompletionItemKind.Property;
     case 'PATTERN':
       return monaco.languages.CompletionItemKind.Constructor;
     case 'PARSER':

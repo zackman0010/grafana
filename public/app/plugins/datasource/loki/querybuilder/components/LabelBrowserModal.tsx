@@ -35,7 +35,7 @@ export const LabelBrowserModal = (props: Props) => {
 
     datasource.languageProvider.fetchLabels({ timeRange }).then((labels) => {
       setLabelsLoaded(true);
-      setHasLogLabels(labels.length > 0);
+      setHasLogLabels(labels.data.length > 0);
     });
   }, [datasource, isOpen, timeRange]);
 

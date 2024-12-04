@@ -20,6 +20,7 @@ const EMPTY_SELECTOR = '{}';
 
 export default class LokiLanguageProvider extends LanguageProvider {
   labelKeys: string[];
+  smKeys: string[];
   started = false;
   startedTimeRange?: TimeRange;
   datasource: LokiDatasource;
@@ -40,6 +41,7 @@ export default class LokiLanguageProvider extends LanguageProvider {
 
     this.datasource = datasource;
     this.labelKeys = [];
+    this.smKeys = [];
 
     Object.assign(this, initialValues);
   }
@@ -98,8 +100,11 @@ export default class LokiLanguageProvider extends LanguageProvider {
    *
    * @returns {string[]} An array of label keys or an empty array if labels have not been fetched.
    */
-  getLabelKeys(): string[] {
-    return this.labelKeys;
+  getLabelKeys(): { stream: string[]; structured_metadata?: string[] } {
+    return {
+      stream: this.labelKeys,
+      structured_metadata: this.smKeys,
+    };
   }
 
   importFromAbstractQuery(labelBasedQuery: AbstractQuery): LokiQuery {
@@ -146,14 +151,19 @@ export default class LokiLanguageProvider extends LanguageProvider {
    * @returns A promise containing an array of label keys.
    * @throws An error if the fetch operation fails.
    */
-  async fetchLabels(options?: { streamSelector?: string; timeRange?: TimeRange }): Promise<string[]> {
+  async fetchLabels(options?: {
+    streamSelector?: string;
+    timeRange?: TimeRange;
+  }): Promise<{ data: string[]; structured_metadata?: string[] }> {
     // If there is no stream selector - use /labels endpoint (https://github.com/grafana/loki/pull/11982)
-    if (!options || !options.streamSelector) {
-      return this.fetchLabelsByLabelsEndpoint(options);
-    } else {
-      const data = await this.fetchSeriesLabels(options.streamSelector, { timeRange: options.timeRange });
-      return Object.keys(data ?? {});
-    }
+    // if (!options || !options.streamSelector) {
+    //   return this.fetchLabelsByLabelsEndpoint(options);
+    // } else {
+    //   const data = await this.fetchSeriesLabels(options.streamSelector, { timeRange: options.timeRange });
+    //   return Object.keys(data ?? {});
+    // }
+
+    return this.fetchLabelsByLabelsEndpoint(options);
   }
 
   /**
@@ -166,22 +176,48 @@ export default class LokiLanguageProvider extends LanguageProvider {
    * @returns A promise containing an array of label keys.
    * @throws An error if the fetch operation fails.
    */
-  private async fetchLabelsByLabelsEndpoint(options?: { timeRange?: TimeRange }): Promise<string[]> {
+  private async fetchLabelsByLabelsEndpoint(options?: {
+    timeRange?: TimeRange;
+    streamSelector?: string;
+  }): Promise<{ data: string[]; structured_metadata?: string[] }> {
     const url = 'labels';
     const range = options?.timeRange ?? this.getDefaultTimeRange();
-    const timeRange = this.datasource.getTimeRangeParams(range);
+    const { start, end } = this.datasource.getTimeRangeParams(range);
+    const interpolatedMatch = options?.streamSelector && this.datasource.interpolateString(options?.streamSelector);
 
-    const res = await this.request(url, timeRange);
+    let params: Record<string, string | number>;
+    if (interpolatedMatch) {
+      params = { query: interpolatedMatch, start, end };
+    } else {
+      params = { start, end };
+    }
+
+    const res = await this.request(url, params);
     if (Array.isArray(res)) {
       const labels = res
         .slice()
         .sort()
         .filter((label: string) => label.startsWith('__') === false);
       this.labelKeys = labels;
-      return this.labelKeys;
+      return {
+        data: this.labelKeys,
+      };
     }
 
-    return [];
+    const streamLabels = res.data
+      .slice()
+      .sort()
+      .filter((label: string) => label.startsWith('__') === false);
+
+    this.labelKeys = streamLabels;
+
+    const smLabels = res?.structured_metadata?.slice().sort();
+    this.smKeys = smLabels;
+
+    return {
+      data: this.labelKeys,
+      structured_metadata: this.smKeys,
+    };
   }
 
   /**

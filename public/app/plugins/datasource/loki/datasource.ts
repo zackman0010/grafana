@@ -546,6 +546,15 @@ export class LokiDatasource
     if (!res.data && res.values) {
       return res.values ?? [];
     }
+
+    // If we have structured metadata, we append it to the data
+    if (res.structured_metadata) {
+      return {
+        data: res.data ?? [],
+        structured_metadata: res.structured_metadata,
+      };
+    }
+
     return res.data ?? [];
   }
 

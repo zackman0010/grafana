@@ -56,7 +56,11 @@ export class CompletionDataProvider {
       timeRange: this.timeRange,
     });
     const usedLabelNames = new Set(otherLabels.map((l) => l.name)); // names used in the query
-    return possibleLabelNames.filter((label) => !usedLabelNames.has(label));
+
+    return {
+      stream: possibleLabelNames.data.filter((label) => !usedLabelNames.has(label)),
+      structured_metadata: possibleLabelNames?.structured_metadata?.filter((label) => !usedLabelNames.has(label)),
+    };
   }
 
   async getLabelValues(labelName: string, otherLabels: Label[]) {
