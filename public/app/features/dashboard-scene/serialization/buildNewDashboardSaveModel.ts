@@ -24,7 +24,7 @@ export async function buildNewDashboardSaveModel(
   return buildNewDashboardSaveModelV1(urlFolderUid);
 }
 
-async function buildNewDashboardSaveModelV1(urlFolderUid?: string): Promise<DashboardDTO> {
+export async function buildNewDashboardSaveModelV1(urlFolderUid?: string): Promise<DashboardDTO> {
   let variablesList = defaultDashboard.templating?.list;
 
   if (config.featureToggles.newDashboardWithFiltersAndGroupBy) {
