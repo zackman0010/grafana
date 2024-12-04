@@ -42,6 +42,8 @@ export class SidecarService_EXPERIMENTAL {
 
   private mainOnAllowedRoute = false;
 
+  private currentMainContextGetter: (() => unknown) | undefined = undefined;
+
   constructor(mainLocationService: LocationService) {
     this._initialContext = new BehaviorSubject<unknown | undefined>(undefined);
     this.mainLocationService = mainLocationService;
@@ -80,21 +82,33 @@ export class SidecarService_EXPERIMENTAL {
       this.mainLocationService.getLocation().pathname.match(prefix)
     );
 
-    this.mainLocationService.getLocationObservable().subscribe((location) => {
-      if (!this.activePluginId) {
-        return;
-      }
-      this.mainOnAllowedRoute = ALLOW_ROUTES.some((prefix) => location.pathname.match(prefix));
+    // This is run during construction so we initialize stuff based on current state of the URL.
+    if (!this.mainOnAllowedRoute) {
+      this.closeApp();
+    } else if (this.activePluginId) {
+      this.mainLocationWhenOpened = this.mainLocationService.getLocation().pathname;
+    }
 
-      if (!this.mainOnAllowedRoute) {
-        this.closeApp();
-        return;
-      }
+    this.mainLocationService.getLocationObservable().subscribe((location) => {
+      this.mainOnAllowedRoute = ALLOW_ROUTES.some((prefix) => location.pathname.match(prefix));
 
       // We check if we moved to some other app or part of grafana from where we opened the sidecar.
       const isTheSameLocation = Boolean(
         this.mainLocationWhenOpened && location.pathname.startsWith(this.mainLocationWhenOpened)
       );
+
+      if (!isTheSameLocation) {
+        this.currentMainContextGetter = undefined;
+      }
+
+      if (!this.activePluginId) {
+        return;
+      }
+
+      if (!this.mainOnAllowedRoute) {
+        this.closeApp();
+        return;
+      }
 
       if (!(isTheSameLocation || this.follow)) {
         this.closeApp();
@@ -228,6 +242,21 @@ export class SidecarService_EXPERIMENTAL {
     const result = !!(this.activePluginId && (this.activePluginId === pluginId || getMainAppPluginId() === pluginId));
     reportInteraction('sidecar_service_is_app_opened', { pluginId, isOpened: result });
     return result;
+  }
+
+  getMainAppContext(): unknown {
+    if (!this.currentMainContextGetter) {
+      return;
+    }
+    return this.currentMainContextGetter();
+  }
+
+  registerContextGetter(getter: () => unknown) {
+    this.currentMainContextGetter = getter;
+  }
+
+  unregisterContextGetter() {
+    this.currentMainContextGetter = undefined;
   }
 }
 

@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { memo } from 'react';
 
 import { GrafanaTheme2, NavModelItem } from '@grafana/data';
+import { usePluginLinks } from '@grafana/runtime';
 import { Dropdown, Icon, Stack, ToolbarButton, useStyles2 } from '@grafana/ui';
 import { config } from 'app/core/config';
 import { useGrafana } from 'app/core/context/GrafanaContext';
@@ -72,6 +73,7 @@ export const SingleTopBar = memo(function SingleTopBar({
       <Stack gap={0.5} alignItems="center">
         <TopSearchBarCommandPaletteTrigger />
         <QuickAdd />
+        <ToolbarExtensions />
         {enrichedHelpNode && (
           <Dropdown overlay={() => <TopNavBarMenu node={enrichedHelpNode} />} placement="bottom-end">
             <ToolbarButton iconOnly icon="question-circle" aria-label="Help" />
@@ -99,6 +101,25 @@ export const SingleTopBar = memo(function SingleTopBar({
     </div>
   );
 });
+
+function ToolbarExtensions() {
+  const links = usePluginLinks({
+    extensionPointId: 'grafana/toolbar/actions/v1',
+    limitPerPlugin: 3,
+  });
+
+  if (links.isLoading || links.links.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {links.links.map((link) => {
+        return <ToolbarButton iconOnly icon={link.icon} aria-label={link.title} onClick={link.onClick} />;
+      })}
+    </>
+  );
+}
 
 const getStyles = (theme: GrafanaTheme2, menuDockedAndOpen: boolean) => ({
   layout: css({

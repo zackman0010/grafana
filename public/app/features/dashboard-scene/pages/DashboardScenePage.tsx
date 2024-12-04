@@ -1,9 +1,11 @@
 // Libraries
+import { pick } from 'lodash';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom-v5-compat';
 import { usePrevious } from 'react-use';
 
 import { PageLayoutType } from '@grafana/data';
+import { sidecarServiceSingleton_EXPERIMENTAL } from '@grafana/runtime';
 import { UrlSyncContextProvider } from '@grafana/scenes';
 import { Alert, Box } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
@@ -15,6 +17,7 @@ import { DashboardRoutes } from 'app/types';
 import { DashboardPrompt } from '../saving/DashboardPrompt';
 
 import { getDashboardScenePageStateManager } from './DashboardScenePageStateManager';
+import { DashboardScene } from '../scene/DashboardScene';
 
 export interface Props
   extends Omit<GrafanaRouteComponentProps<DashboardPageRouteParams, DashboardPageRouteSearchParams>, 'match'> {}
@@ -27,6 +30,23 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
   const { dashboard, isLoading, loadError } = stateManager.useState();
   // After scene migration is complete and we get rid of old dashboard we should refactor dashboardWatcher so this route reload is not need
   const routeReloadCounter = (location.state as any)?.routeReloadCounter;
+
+  useEffect(() => {
+    sidecarServiceSingleton_EXPERIMENTAL.registerContextGetter(() => {
+      let obj;
+      try {
+        obj = toSimpleObject(dashboard);
+      } catch (error) {
+        console.error('Failed to serialize dashboard state', error);
+        throw error;
+      }
+      return {
+        dashboard: JSON.stringify(obj),
+      };
+    });
+
+    return () => sidecarServiceSingleton_EXPERIMENTAL.unregisterContextGetter();
+  }, [dashboard]);
 
   useEffect(() => {
     if (route.routeName === DashboardRoutes.Normal && type === 'snapshot') {
@@ -73,6 +93,70 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
       <DashboardPrompt dashboard={dashboard} />
     </UrlSyncContextProvider>
   );
+}
+
+function toSimpleObject(dashboardScene?: DashboardScene): Record<string, unknown> {
+  if (!dashboardScene) {
+    return { err: 'No dashboard scene' };
+  }
+  const state = dashboardScene.state;
+  return {
+    ...pick(state, ['title', 'description', 'tags', 'meta']),
+    timeRange: {
+      ...pick(state.$timeRange?.state, ['from', 'to', 'timeZone']),
+    },
+    panels: state.body.state.grid.state.children.map((c) => {
+      const panel = c.state.body;
+
+      return {
+        ...pick(panel.state, ['panelId', 'panelId', 'title', 'pluginVersion']),
+        queries: panel.state.$data.state.$data.state.queries.map((q) => {
+          return {
+            ...pick(q, ['datasource', 'expr', 'instant']),
+          };
+        }),
+      };
+    }),
+  };
+}
+
+function toSimpleObject2(something: any, depth = 0): Record<string, unknown> {
+  const obj: Record<string, unknown> = {};
+  if (depth > 5) {
+    return { err: 'Max depth reached' };
+  }
+
+  for (const key of Object.keys(something)) {
+    const value = something[key];
+
+    console.log('processing', key);
+
+    if (!value) {
+      continue;
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      obj[key] = value;
+      continue;
+    }
+
+    if (value.state) {
+      obj[key] = toSimpleObject(value.state, depth + 1);
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      obj[key] = value.map((val) => toSimpleObject(val, depth + 1));
+      continue;
+    }
+
+    if (typeof value === 'object') {
+      obj[key] = toSimpleObject(value, depth + 1);
+      continue;
+    }
+  }
+
+  return obj;
 }
 
 export default DashboardScenePage;
