@@ -15,6 +15,7 @@ export type EventProperty = {
 export type EventDefinition = {
   owner: string;
   product: string;
+  eventName: string;
   description: string;
   properties: EventPropertyDefinition;
   stage: EventStage;
