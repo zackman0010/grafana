@@ -1,4 +1,4 @@
-import { Alert, LoadingPlaceholder } from '@grafana/ui';
+import { Alert, EmptyState, LoadingPlaceholder } from '@grafana/ui';
 
 import { useAlertmanager } from '../../state/AlertmanagerContext';
 import { isK8sApiEnabled } from '../../utils/k8s/utils';
@@ -12,7 +12,13 @@ export const NotificationTemplates = () => {
   const { selectedAlertmanager } = useAlertmanager();
   const kubernetesServerAPI = isK8sApiEnabled();
 
-  const { data: templates, isLoading, error } = useNotificationTemplates({ alertmanager: selectedAlertmanager ?? '' });
+  const {
+    currentData: templates,
+    isLoading,
+    error,
+    isUninitialized,
+  } = useNotificationTemplates({ alertmanager: selectedAlertmanager ?? '' });
+  const hasNoData = !isLoading && !isUninitialized && templates && templates.length === 0;
 
   if (error) {
     return <Alert title="Failed to fetch notification templates">{stringifyErrorLike(error)}</Alert>;
@@ -20,6 +26,10 @@ export const NotificationTemplates = () => {
 
   if (isLoading) {
     return <LoadingPlaceholder text="Loading notification templates" />;
+  }
+
+  if (hasNoData) {
+    return <EmptyState message="You don't seem to have any notification templates yet." variant="call-to-action" />;
   }
 
   if (templates && kubernetesServerAPI) {
