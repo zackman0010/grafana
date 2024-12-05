@@ -27,6 +27,12 @@ export function findFiles(directory: string, targetFile: string): string[] {
   return files;
 }
 
+/**
+ * Parses a file and extracts information about events and event functions.
+ * @param filePath Path to the file to parse
+ * @returns Object containing the extracted information
+ */
+
 export function getFileInformation(filePath: string): {} {
   const file = fs.readFileSync(path.resolve(filePath), 'utf8');
   const VARIABLE_NAME = 'eventsTracking';
@@ -72,40 +78,31 @@ export function getFileInformation(filePath: string): {} {
               element.properties.forEach((prop) => {
                 if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
                   const keyName = prop.key.name;
-
-                  // Extract 'owner'
-                  if (keyName === 'owner' && prop.value.type === 'StringLiteral') {
-                    owner = prop.value.value;
-                  }
-
-                  // Extract 'repo'
-                  if (keyName === 'repo' && prop.value.type === 'StringLiteral') {
-                    repo = prop.value.value;
-                  }
-
-                  // Extract 'product'
-                  if (keyName === 'product' && prop.value.type === 'StringLiteral') {
-                    product = prop.value.value;
-                  }
-
-                  // Extract 'eventName'
-                  if (keyName === 'eventName' && prop.value.type === 'StringLiteral') {
-                    eventName = prop.value.value;
-                  }
-
-                  // Extract 'description'
-                  if (keyName === 'description' && prop.value.type === 'StringLiteral') {
-                    description = prop.value.value;
-                  }
-
-                  // Extract 'stage'
-                  if (keyName === 'stage' && prop.value.type === 'StringLiteral') {
-                    stage = prop.value.value;
-                  }
-
-                  // Extract 'eventFunction'
-                  if (keyName === 'eventFunction' && prop.value.type === 'StringLiteral') {
-                    eventFunction = prop.value.value;
+                  if (prop.value.type === 'StringLiteral') {
+                    // Extract 'owner', 'repo', 'product', 'eventName', 'description', 'stage', 'eventFunction'
+                    switch (keyName) {
+                      case 'owner':
+                        owner = prop.value.value;
+                        break;
+                      case 'repo':
+                        repo = prop.value.value;
+                        break;
+                      case 'product':
+                        product = prop.value.value;
+                        break;
+                      case 'eventName':
+                        eventName = prop.value.value;
+                        break;
+                      case 'description':
+                        description = prop.value.value;
+                        break;
+                      case 'stage':
+                        stage = prop.value.value;
+                        break;
+                      case 'eventFunction':
+                        eventFunction = prop.value.value;
+                        break;
+                    }
                   }
 
                   // Extract 'properties'
@@ -128,14 +125,13 @@ export function getFileInformation(filePath: string): {} {
                             }
                           }
                         });
-
                         properties[propName] = propDef;
                       }
                     });
                   }
                 }
               });
-
+              //If eventName exists we add to the code to generate the source of truth
               if (eventName) {
                 const repoName = repo || 'grafana';
                 eventsListed.push({
@@ -162,6 +158,7 @@ export function getFileInformation(filePath: string): {} {
   });
   return { eventsListed, eventFunctionsArray };
 }
+
 /**
  * Generates the code for a function.
  * @returns The generated function code
@@ -229,6 +226,10 @@ export function ${eventFunction}(${func().allPropertiesToParams}): void {
   return generatedFunctions;
 }
 
+/**
+ * Generates the code for the source of truth.
+ * @returns The generated source of truth code
+ */
 export function generateInfo(
   events: Array<{ eventsListed: EventDefinition; eventFunctionsArray: EventFunctionInput }>
 ): string {

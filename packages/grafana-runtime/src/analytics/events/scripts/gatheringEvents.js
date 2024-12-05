@@ -175,9 +175,6 @@ function createEventDocsFromMultipleFiles(rootDirectory, targetFileName, outputF
           info = (0, utils_1.generateInfo)(getEventsTracking());
           if (info) {
             // Write new functions to the centralized file if there are any
-            //TODO check if the functions exist in the file before adding them
-            //TODO maintain the import of reportTrackingEvent
-            // fs.writeFileSync(sourceOfTruth, '\/\/This is the source of truth for events tracking', 'utf8');
             fs.writeFileSync(sourceOfTruth, 'const eventList = ', 'utf8');
             fs.appendFileSync(sourceOfTruth, info, 'utf8');
             fs.appendFileSync(sourceOfTruth, '\n', 'utf8');

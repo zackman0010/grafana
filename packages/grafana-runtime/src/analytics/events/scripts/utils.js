@@ -151,6 +151,11 @@ function findFiles(directory, targetFile) {
   });
   return files;
 }
+/**
+ * Parses a file and extracts information about events and event functions.
+ * @param filePath Path to the file to parse
+ * @returns Object containing the extracted information
+ */
 function getFileInformation(filePath) {
   var file = fs.readFileSync(path.resolve(filePath), 'utf8');
   var VARIABLE_NAME = 'eventsTracking';
@@ -186,33 +191,31 @@ function getFileInformation(filePath) {
               element.properties.forEach(function (prop) {
                 if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
                   var keyName = prop.key.name;
-                  // Extract 'owner'
-                  if (keyName === 'owner' && prop.value.type === 'StringLiteral') {
-                    owner_1 = prop.value.value;
-                  }
-                  // Extract 'repo'
-                  if (keyName === 'repo' && prop.value.type === 'StringLiteral') {
-                    repo_1 = prop.value.value;
-                  }
-                  // Extract 'product'
-                  if (keyName === 'product' && prop.value.type === 'StringLiteral') {
-                    product_1 = prop.value.value;
-                  }
-                  // Extract 'eventName'
-                  if (keyName === 'eventName' && prop.value.type === 'StringLiteral') {
-                    eventName_1 = prop.value.value;
-                  }
-                  // Extract 'description'
-                  if (keyName === 'description' && prop.value.type === 'StringLiteral') {
-                    description_1 = prop.value.value;
-                  }
-                  // Extract 'stage'
-                  if (keyName === 'stage' && prop.value.type === 'StringLiteral') {
-                    stage_1 = prop.value.value;
-                  }
-                  // Extract 'eventFunction'
-                  if (keyName === 'eventFunction' && prop.value.type === 'StringLiteral') {
-                    eventFunction_1 = prop.value.value;
+                  if (prop.value.type === 'StringLiteral') {
+                    // Extract 'owner', 'repo', 'product', 'eventName', 'description', 'stage', 'eventFunction'
+                    switch (keyName) {
+                      case 'owner':
+                        owner_1 = prop.value.value;
+                        break;
+                      case 'repo':
+                        repo_1 = prop.value.value;
+                        break;
+                      case 'product':
+                        product_1 = prop.value.value;
+                        break;
+                      case 'eventName':
+                        eventName_1 = prop.value.value;
+                        break;
+                      case 'description':
+                        description_1 = prop.value.value;
+                        break;
+                      case 'stage':
+                        stage_1 = prop.value.value;
+                        break;
+                      case 'eventFunction':
+                        eventFunction_1 = prop.value.value;
+                        break;
+                    }
                   }
                   // Extract 'properties'
                   if (keyName === 'properties' && prop.value.type === 'ObjectExpression') {
@@ -239,6 +242,7 @@ function getFileInformation(filePath) {
                   }
                 }
               });
+              //If eventName exists we add to the code to generate the source of truth
               if (eventName_1) {
                 var repoName = repo_1 || 'grafana';
                 eventsListed.push({
@@ -346,8 +350,8 @@ function generateFunctionCode(events) {
   });
 }
 /**
- * Generates the code for a function.
- * @returns The generated function code
+ * Generates the code for the source of truth.
+ * @returns The generated source of truth code
  */
 function generateInfo(events) {
   var eventsInfo = events.flatMap(function (eventItem) {

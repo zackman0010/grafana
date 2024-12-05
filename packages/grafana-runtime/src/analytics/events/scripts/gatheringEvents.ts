@@ -14,6 +14,7 @@ const sourceOfTruth = path.join(__dirname, 'eventsTrackingInformation.ts'); // C
  * @param rootDirectory Root directory to search
  * @param targetFileName Name of the file to search for
  * @param outputFile The centralized output file to save functions
+ * @param sourceOfTruth The centralized output file to save information
  */
 async function createEventDocsFromMultipleFiles(
   rootDirectory: string,
@@ -39,8 +40,8 @@ async function createEventDocsFromMultipleFiles(
 
   // Write new functions to the centralized file if there are any
   if ((await functionsToAdd).length > 0) {
-    //TODO check if the functions exist in the file before adding them
-    //TODO maintain the import of reportTrackingEvent
+    //TODO: check if the functions exist in the file before adding them
+    //TODO: maintain the import of reportTrackingEvent
     fs.writeFileSync(outputFile, "import { reportTrackingEvent } from '../events'; \n", 'utf8');
     fs.appendFileSync(outputFile, (await functionsToAdd).join('\n'), 'utf8');
     fs.appendFileSync(outputFile, '\n', 'utf8');
@@ -50,8 +51,9 @@ async function createEventDocsFromMultipleFiles(
   }
   //Get the information
   const info = generateInfo(getEventsTracking());
+  // Write new functions to the centralized file if there are any
+  // We don't need to check if the information exists in the file before adding it because it will be overwritten
   if (info) {
-    // Write new functions to the centralized file if there are any
     fs.writeFileSync(sourceOfTruth, 'const eventList = ', 'utf8');
     fs.appendFileSync(sourceOfTruth, info, 'utf8');
     fs.appendFileSync(sourceOfTruth, '\n', 'utf8');
