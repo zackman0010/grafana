@@ -1,7 +1,7 @@
 import { trimEnd } from 'lodash';
 
 import { escapeLabelValueInExactSelector } from '../../../languageUtils';
-import { isQueryWithParser } from '../../../queryUtils';
+import { getStreamSelectorsFromQuery, isQueryWithParser } from '../../../queryUtils';
 import { explainOperator } from '../../../querybuilder/operations';
 import { LokiOperationId } from '../../../querybuilder/types';
 import { AGGREGATION_OPERATORS, RANGE_VEC_FUNCTIONS, BUILT_IN_FUNCTIONS } from '../../../syntax';
@@ -223,16 +223,16 @@ async function getLabelNamesForSelectorCompletions(
       triggerOnInsert: true,
     }))
   );
-  labels = labels.concat(
-    labelNames?.structured_metadata?.map((label) => ({
-      type: 'LABEL_NAME_METADATA',
-      label: `${label}`,
-      detail: 'Structured Metadata',
-      documentation: 'Value autocompletion is not available.',
-      insertText: `${label}=`,
-      triggerOnInsert: true,
-    })) || []
-  );
+  // labels = labels.concat(
+  //   labelNames?.structured_metadata?.map((label) => ({
+  //     type: 'LABEL_NAME_METADATA',
+  //     label: `${label}`,
+  //     detail: 'Structured Metadata',
+  //     documentation: 'Value autocompletion is not available.',
+  //     insertText: `${label}=`,
+  //     triggerOnInsert: true,
+  //   })) || []
+  // );
 
   return labels;
 }
@@ -341,16 +341,28 @@ export async function getAfterSelectorCompletions(
   );
   const pipeOperations = getPipeOperationsCompletions(prefix);
 
-  const completions = [...parserCompletions, ...pipeOperations];
+  let completions: Completion[] = [];
 
-  structuredMetadataKeys.forEach((key) => {
+  const streamSelector = getStreamSelectorsFromQuery(query);
+  const structured_metadata = await dataProvider.getStructuredMetadataLabelNamesFromMatchers(streamSelector[0]);
+  structured_metadata?.forEach((key) => {
     completions.push({
-      type: 'LABEL_NAME',
-      label: `${key} (detected)`,
+      type: 'LABEL_NAME_METADATA',
+      label: `${key} (metadata)`,
       insertText: `${prefix}${key}`,
-      documentation: `"${key}" was suggested based on structured metadata attached to your loglines.`,
+      detail: 'Structured Metadata',
+      documentation: `"${key}" Value autocompletion is not available`,
     });
   });
+
+  // structuredMetadataKeys.forEach((key) => {
+  //   completions.push({
+  //     type: 'LABEL_NAME_METADATA',
+  //     label: `${key} (metadata)`,
+  //     insertText: `${prefix}${key}`,
+  //     documentation: `"${key}" was suggested based on structured metadata attached to your loglines.`,
+  //   });
+  // });
 
   // Let's show label options only if query has parser
   if (hasQueryParser) {
@@ -363,6 +375,8 @@ export async function getAfterSelectorCompletions(
       });
     });
   }
+
+  completions = completions.concat([...parserCompletions, ...pipeOperations]);
 
   // If we have parser, we don't need to consider line filters
   if (hasQueryParser) {

@@ -63,6 +63,15 @@ export class CompletionDataProvider {
     };
   }
 
+  async getStructuredMetadataLabelNamesFromMatchers(matchers: string) {
+    const { structured_metadata } = await this.languageProvider.fetchLabels({
+      streamSelector: matchers,
+      timeRange: this.timeRange,
+    });
+
+    return structured_metadata;
+  }
+
   async getLabelValues(labelName: string, otherLabels: Label[]) {
     return await this.languageProvider.fetchLabelValues(labelName, {
       streamSelector: this.buildSelector(otherLabels),
