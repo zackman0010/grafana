@@ -30,7 +30,7 @@ export const ListSection = ({
     <li className={styles.sectionWrapper} role="treeitem" aria-selected="false">
       <div className={styles.sectionTitle}>
         <Stack alignItems="center">
-          <Stack alignItems="center" gap={1}>
+          <Stack alignItems="center" gap={0}>
             <IconButton
               name={isCollapsed ? 'angle-right' : 'angle-down'}
               onClick={toggleCollapsed}
@@ -101,7 +101,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
 
     background: theme.colors.background.secondary,
-
     border: `solid 1px ${theme.colors.border.weak}`,
     borderRadius: theme.shape.radius.default,
   }),

@@ -1,9 +1,10 @@
-import init from '@bsull/augurs';
+import init from '@bsull/augurs/outlier';
 import { css } from '@emotion/css';
 import { isNumber, max, min, throttle } from 'lodash';
 import { useEffect } from 'react';
 
 import { DataFrame, FieldType, GrafanaTheme2, PanelData, SelectableValue } from '@grafana/data';
+import { config } from '@grafana/runtime';
 import {
   ConstantVariable,
   PanelBuilders,
@@ -33,6 +34,7 @@ import { AutoQueryDef } from '../AutomaticMetricQueries/types';
 import { BreakdownLabelSelector } from '../BreakdownLabelSelector';
 import { DataTrail } from '../DataTrail';
 import { MetricScene } from '../MetricScene';
+import { AddToExplorationButton } from '../MetricSelect/AddToExplorationsButton';
 import { StatusWrapper } from '../StatusWrapper';
 import { reportExploreMetrics } from '../interactions';
 import { updateOtelJoinWithGroupLeft } from '../otel/util';
@@ -40,6 +42,7 @@ import { getSortByPreference } from '../services/store';
 import { ALL_VARIABLE_VALUE } from '../services/variables';
 import {
   MDP_METRIC_PREVIEW,
+  RefreshMetricsEvent,
   trailDS,
   VAR_FILTERS,
   VAR_GROUP_BY,
@@ -94,6 +97,14 @@ export class LabelBreakdownScene extends SceneObjectBase<LabelBreakdownSceneStat
     init().then(() => console.debug('Grafana ML initialized'));
 
     const variable = this.getVariable();
+
+    if (config.featureToggles.enableScopesInMetricsExplore) {
+      this._subs.add(
+        this.subscribeToEvent(RefreshMetricsEvent, () => {
+          this.updateBody(this.getVariable());
+        })
+      );
+    }
 
     variable.subscribeToState((newState, oldState) => {
       if (
@@ -429,7 +440,10 @@ export function buildAllLayout(
           ],
         })
       )
-      .setHeaderActions(new SelectLabelAction({ labelName: String(option.value) }))
+      .setHeaderActions([
+        new SelectLabelAction({ labelName: String(option.value) }),
+        new AddToExplorationButton({ labelName: String(option.value) }),
+      ])
       .setUnit(unit)
       .setBehaviors([fixLegendForUnspecifiedLabelValueBehavior])
       .build();
@@ -480,7 +494,10 @@ function buildNormalLayout(
       .setTitle(getLabelValue(frame))
       .setData(new SceneDataNode({ data: { ...data, series: [frame] } }))
       .setColor({ mode: 'fixed', fixedColor: getColorByIndex(frameIndex) })
-      .setHeaderActions(new AddToFiltersGraphAction({ frame }))
+      .setHeaderActions([
+        new AddToFiltersGraphAction({ frame }),
+        new AddToExplorationButton({ labelName: getLabelValue(frame) }),
+      ])
       .setUnit(unit)
       .build();
 

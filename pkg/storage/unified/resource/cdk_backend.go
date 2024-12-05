@@ -108,6 +108,11 @@ func (s *cdkBackend) getPath(key *ResourceKey, rv int64) string {
 	return buffer.String()
 }
 
+// GetResourceStats implements Backend.
+func (s *cdkBackend) GetResourceStats(ctx context.Context, minCount int) ([]ResourceStats, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
 func (s *cdkBackend) WriteEvent(ctx context.Context, event WriteEvent) (rv int64, err error) {
 	// Scope the lock
 	{

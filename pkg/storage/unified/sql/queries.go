@@ -31,6 +31,7 @@ var (
 	sqlResourceInsert          = mustTemplate("resource_insert.sql")
 	sqlResourceUpdate          = mustTemplate("resource_update.sql")
 	sqlResourceRead            = mustTemplate("resource_read.sql")
+	sqlResourceStats           = mustTemplate("resource_stats.sql")
 	sqlResourceList            = mustTemplate("resource_list.sql")
 	sqlResourceHistoryList     = mustTemplate("resource_history_list.sql")
 	sqlResourceUpdateRV        = mustTemplate("resource_update_rv.sql")
@@ -55,6 +56,9 @@ var (
 		Isolation: sql.LevelReadCommitted,
 		ReadOnly:  true,
 	}
+	RepeatableRead = &sql.TxOptions{
+		Isolation: sql.LevelRepeatableRead,
+	}
 )
 
 type sqlResourceRequest struct {
@@ -65,6 +69,15 @@ type sqlResourceRequest struct {
 }
 
 func (r sqlResourceRequest) Validate() error {
+	return nil // TODO
+}
+
+type sqlStatsRequest struct {
+	sqltemplate.SQLTemplate
+	MinCount int
+}
+
+func (r sqlStatsRequest) Validate() error {
 	return nil // TODO
 }
 
@@ -98,7 +111,7 @@ func (r *sqlResourceHistoryPollRequest) Validate() error {
 func (r *sqlResourceHistoryPollRequest) Results() (*historyPollResponse, error) {
 	prevRV := r.Response.PreviousRV
 	if prevRV == nil {
-		*prevRV = int64(0)
+		prevRV = new(int64)
 	}
 	return &historyPollResponse{
 		Key: resource.ResourceKey{
