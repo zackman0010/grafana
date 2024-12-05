@@ -13,7 +13,6 @@ import { HelpModal } from '../../help/HelpModal';
 import { MEGA_MENU_TOGGLE_ID } from '../TopBar/SingleTopBar';
 
 import { DOCK_MENU_BUTTON_ID, MEGA_MENU_HEADER_TOGGLE_ID } from './MegaMenuHeader';
-import { trackEvent } from 'app/tracking/trackingv2';
 
 export const enrichHelpItem = (helpItem: NavModelItem) => {
   let menuItems = helpItem.children || [];
@@ -43,22 +42,11 @@ export const enrichWithInteractionTracking = (item: NavModelItem, megaMenuDocked
   const onClick = newItem.onClick;
   const trackClick = generateTrackUtil('grafana_navigation_item_clicked');
   newItem.onClick = () => {
-    // --- v1 tracking ---
     trackClick({
       path: newItem.url ?? newItem.id ?? '',
       menuIsDocked: megaMenuDockedState,
       itemIsBookmarked: Boolean(config.featureToggles.pinNavItems && newItem?.parentItem?.id === 'bookmarks'),
       bookmarkToggleOn: Boolean(config.featureToggles.pinNavItems),
-    });
-    // --- v2 tracking ---
-    trackEvent({
-      name: 'grafana_navigation_item_clicked',
-      properties: {
-        path: newItem.url ?? newItem.id ?? '',
-        menuIsDocked: megaMenuDockedState,
-        itemIsBookmarked: Boolean(config.featureToggles.pinNavItems && newItem?.parentItem?.id === 'bookmarks'),
-        bookmarkToggleOn: Boolean(config.featureToggles.pinNavItems),
-      },
     });
 
     onClick?.();
