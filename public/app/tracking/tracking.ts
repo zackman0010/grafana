@@ -1,55 +1,21 @@
 import { reportInteraction } from '@grafana/runtime';
-import { Codeowners, Codeowner } from './owners';
+import { Codeowner } from './owners';
+import { navigationEvents } from 'app/core/components/AppChrome/tracking';
+import { e2cEvents } from 'app/features/migrate-to-cloud/tracking';
 
 // todo: add some description of types here
-type EventType = 'featureUsage' | 'error' | 'performance' | 'experiment';
-type Event = {
+type EventType = 'featureUsage' | 'error' | 'performance' | 'experiment' | 'funnel';
+export type Event = {
   description: string;
   productArea?: string;
   owner: Codeowner;
   type: EventType;
-  properties: EventProperties;
-};
-type EventProperties = Grafana_navigation_item_clicked | Grafana_nav_item_pinned;
-
-type Grafana_navigation_item_clicked = {
-  //the target URL the user clicked on
-  path: string;
-  // true if the menu is docked, false otherwise
-  menuIsDocked: boolean;
-  // true is the user clicked on a bookmarked item
-  itemIsBookmarked?: boolean;
-  // true if the bookmark feature toggle is on
-  bookmarkToggleOn: boolean;
-};
-
-type Grafana_nav_item_pinned = {
-  // the target URL the user clicked on
-  path: string;
+  exampleProperties?: Record<string, string | boolean | number>;
 };
 
 const allEvents: { [key: string]: Event } = {
-  grafana_navigation_item_clicked: {
-    description: 'User clicked on a navigation item in the menu',
-    productArea: 'Navigation',
-    owner: Codeowners.grafanaFrontendPlatformSquad,
-    type: 'featureUsage',
-    properties: { path: '', menuIsDocked: true, bookmarkToggleOn: true } as Grafana_navigation_item_clicked,
-  },
-  grafana_nav_item_pinned: {
-    description: 'User pinned a navigation item',
-    productArea: 'Navigation',
-    owner: Codeowners.grafanaFrontendPlatformSquad,
-    type: 'featureUsage',
-    properties: { path: '' } as Grafana_nav_item_pinned,
-  },
-  grafana_nav_item_unpinned: {
-    description: 'User unpinned a navigation item',
-    productArea: 'Navigation',
-    owner: Codeowners.grafanaFrontendPlatformSquad,
-    type: 'featureUsage',
-    properties: { path: '' } as Grafana_nav_item_pinned,
-  },
+  ...navigationEvents,
+  ...e2cEvents,
 };
 
 export const generateTrackUtil = (name: string) => {
@@ -57,7 +23,11 @@ export const generateTrackUtil = (name: string) => {
   if (!event) {
     throw new Error(`Event ${name} not found`);
   }
-  return (properties: typeof event.properties) => {
-    reportInteraction(name, properties);
-  };
+  if (!event.exampleProperties) {
+    return () => reportInteraction(name);
+  } else {
+    return (properties?: typeof event.exampleProperties) => {
+      reportInteraction(name, properties);
+    };
+  }
 };

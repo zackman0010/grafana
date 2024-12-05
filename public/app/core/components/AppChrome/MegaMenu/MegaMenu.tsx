@@ -12,7 +12,6 @@ import { t } from 'app/core/internationalization';
 import { setBookmark } from 'app/core/reducers/navBarTree';
 import { usePatchUserPreferencesMutation } from 'app/features/preferences/api/index';
 import { useDispatch, useSelector } from 'app/types';
-import { trackEvent } from 'app/tracking/trackingv2';
 import { generateTrackUtil } from 'app/tracking/tracking';
 
 import { MEGA_MENU_TOGGLE_ID } from '../TopBar/SingleTopBar';
@@ -105,12 +104,7 @@ export const MegaMenu = memo(
           ? 'grafana_nav_item_unpinned'
           : 'grafana_nav_item_pinned';
 
-        // --- v1 tracking ---
-        const track = generateTrackUtil(interactionName);
-        track({ path: url });
-
-        // --- v2 tracking ---
-        trackEvent({ name: interactionName, properties: { path: url } });
+        generateTrackUtil(interactionName)({ path: url });
 
         patchPreferences({
           patchPrefsCmd: {

@@ -15,7 +15,7 @@ import { TokenErrorAlert } from '../TokenErrorAlert';
 import { CreateTokenModal } from './CreateTokenModal';
 import { DeleteTokenConfirmationModal } from './DeleteTokenConfirmationModal';
 import { TokenStatus } from './TokenStatus';
-import { trackEvent } from 'app/tracking/trackingv2';
+import { generateTrackUtil } from 'app/tracking/tracking';
 
 export const MigrationTokenPane = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -35,8 +35,7 @@ export const MigrationTokenPane = () => {
   const isLoading = getTokenQuery.isFetching || createTokenResponse.isLoading;
 
   const handleGenerateToken = useCallback(async () => {
-    reportInteraction('grafana_e2c_generate_token_clicked');
-    trackEvent('grafana_e2c_generate_token_clicked');
+    generateTrackUtil('grafana_e2c_generate_token_clicked')();
 
     const resp = await createTokenMutation();
 
@@ -50,8 +49,7 @@ export const MigrationTokenPane = () => {
       return;
     }
 
-    reportInteraction('grafana_e2c_delete_token_clicked');
-    trackEvent('grafana_e2c_delete_token_clicked');
+    generateTrackUtil('grafana_e2c_delete_token_clicked')();
     const resp = await deleteTokenMutation({ uid: getTokenQuery.data.id });
     if (!('error' in resp)) {
       setShowDeleteModal(false);
@@ -88,8 +86,7 @@ export const MigrationTokenPane = () => {
       <CreateTokenModal
         isOpen={showCreateModal}
         hideModal={() => {
-          reportInteraction('grafana_e2c_generated_token_modal_dismissed');
-          trackEvent('grafana_e2c_generated_token_modal_dismissed');
+          generateTrackUtil('grafana_e2c_generated_token_modal_dismissed')();
           setShowCreateModal(false);
         }}
         migrationToken={createTokenResponse.data?.token}
