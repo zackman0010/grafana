@@ -3482,6 +3482,7 @@ __metadata:
     esbuild: "npm:0.24.0"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
+    rimraf: "npm:^6.0.1"
     rollup: "npm:^4.22.4"
     rollup-plugin-dts: "npm:^6.1.1"
     rollup-plugin-esbuild: "npm:6.1.1"
@@ -28591,7 +28592,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:6.0.1":
+"rimraf@npm:6.0.1, rimraf@npm:^6.0.1":
   version: 6.0.1
   resolution: "rimraf@npm:6.0.1"
   dependencies:

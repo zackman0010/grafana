@@ -1,11 +1,11 @@
 import {
-  DataQuery,
   ReducerID,
   type AlertState,
+  type DataQuery,
   type DataSourceInstanceSettings,
   type SelectableValue,
 } from '@grafana/data';
-import { PromOptions } from '@grafana/prometheus';
+import { type PromOptions } from '@grafana/prometheus';
 import { config } from '@grafana/runtime';
 
 import {
@@ -19,6 +19,7 @@ import {
   RulerRuleDTO,
   RulerRuleGroupDTO,
 } from './alerting.dto';
+import { LokiOptions } from './loki';
 
 export type Alert = {
   activeAt: string;

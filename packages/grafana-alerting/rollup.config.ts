@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
 import { createRequire } from 'node:module';
-import path from 'path';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import { nodeExternals } from 'rollup-plugin-node-externals';
@@ -25,21 +24,7 @@ export default [
       }),
     ],
     output: [
-      {
-        format: 'cjs',
-        sourcemap: true,
-        dir: path.dirname(pkg.publishConfig.main),
-        ...legacyOutputDefaults,
-      },
-      {
-        format: 'esm',
-        sourcemap: true,
-        dir: path.dirname(pkg.publishConfig.module),
-        preserveModules: true,
-        // @ts-expect-error (TS cannot assure that `process.env.PROJECT_CWD` is a string)
-        preserveModulesRoot: path.join(process.env.PROJECT_CWD, `packages/grafana-ui/src`),
-        ...legacyOutputDefaults,
-      },
+
     ],
   },
   {

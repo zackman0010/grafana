@@ -10,6 +10,8 @@ import { useContactPointsWithStatus } from '../unified/components/contact-points
 import { AlertmanagerProvider } from '../unified/state/AlertmanagerContext';
 import { GRAFANA_RULES_SOURCE_NAME } from '../unified/utils/datasource';
 
+import { ListContactPointsComponentProps } from './runtime-overload';
+
 const ExposedAlertingComponents = [
   {
     id: 'grafana/listContactPoints/v0',
@@ -34,10 +36,6 @@ const ExposedAlertingComponents = [
     component: ListAlertRuleDefinitionsForNamespaceAndGroup,
   },
 ] as const satisfies ReadonlyArray<PluginExtensionExposedComponentConfig<any>>;
-
-type ListContactPointsComponentProps = {
-  children: (result: ReturnType<typeof useContactPointsWithStatus>) => ReactNode;
-};
 
 /** List Contact Points */
 function ListContactPointsComponent({ children }: ListContactPointsComponentProps) {
