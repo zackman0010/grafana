@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 
 import { NavModelItem } from '@grafana/data';
 import { config } from '@grafana/runtime';
+import { trackEvent } from '@grafana/runtime/src/analytics/utils';
 import { t } from 'app/core/internationalization';
 import { HOME_NAV_ID } from 'app/core/reducers/navModel';
-import { generateTrackUtil } from 'app/tracking/tracking';
 
 import { ShowModalReactEvent } from '../../../../types/events';
 import appEvents from '../../../app_events';
@@ -13,7 +13,6 @@ import { HelpModal } from '../../help/HelpModal';
 import { MEGA_MENU_TOGGLE_ID } from '../TopBar/SingleTopBar';
 
 import { DOCK_MENU_BUTTON_ID, MEGA_MENU_HEADER_TOGGLE_ID } from './MegaMenuHeader';
-import { trackEvent } from 'app/tracking/trackingv2';
 
 export const enrichHelpItem = (helpItem: NavModelItem) => {
   let menuItems = helpItem.children || [];
@@ -41,16 +40,7 @@ export const enrichWithInteractionTracking = (item: NavModelItem, megaMenuDocked
   // creating a new object here to not mutate the original item object
   const newItem = { ...item };
   const onClick = newItem.onClick;
-  const trackClick = generateTrackUtil('grafana_navigation_item_clicked');
   newItem.onClick = () => {
-    // --- v1 tracking ---
-    trackClick({
-      path: newItem.url ?? newItem.id ?? '',
-      menuIsDocked: megaMenuDockedState,
-      itemIsBookmarked: Boolean(config.featureToggles.pinNavItems && newItem?.parentItem?.id === 'bookmarks'),
-      bookmarkToggleOn: Boolean(config.featureToggles.pinNavItems),
-    });
-    // --- v2 tracking ---
     trackEvent({
       name: 'grafana_navigation_item_clicked',
       properties: {

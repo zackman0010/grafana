@@ -22,6 +22,7 @@ import { DOCK_MENU_BUTTON_ID, MegaMenuHeader } from './MegaMenuHeader';
 import { MegaMenuItem } from './MegaMenuItem';
 import { usePinnedItems } from './hooks';
 import { enrichWithInteractionTracking, findByUrl, getActiveItem } from './utils';
+import { truncate } from 'fs';
 
 export const MENU_WIDTH = '300px';
 
@@ -105,11 +106,6 @@ export const MegaMenu = memo(
           ? 'grafana_nav_item_unpinned'
           : 'grafana_nav_item_pinned';
 
-        // --- v1 tracking ---
-        const track = generateTrackUtil(interactionName);
-        track({ path: url });
-
-        // --- v2 tracking ---
         trackEvent({ name: interactionName, properties: { path: url } });
 
         patchPreferences({
