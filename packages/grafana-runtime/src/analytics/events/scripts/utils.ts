@@ -35,7 +35,7 @@ export function getFileInformation(filePath: string): {} {
     plugins: ['typescript', 'jsx'],
   });
 
-  const eventsGroupedByOwner: { [owner: string]: [] } = {};
+  const eventsListed: [{}] = [];
   const eventFunctionsArray: Array<{
     eventFunction: string;
     properties: EventPropertyDefinition;
@@ -57,83 +57,102 @@ export function getFileInformation(filePath: string): {} {
       ) {
         const eventsObject = declaration.declarations[0].init;
 
-        if (eventsObject && eventsObject.type === 'ObjectExpression') {
-          eventsObject.properties.forEach((property) => {
-            if (property.type === 'ObjectProperty' && property.key.type === 'Identifier') {
-              const eventKey = property.key.name;
-              const eventValue = property.value;
+        if (eventsObject && eventsObject.type === 'ArrayExpression') {
+          eventsObject.elements.forEach((element) => {
+            if (element.type === 'ObjectExpression') {
+              let owner = '';
+              let eventFunction = '';
+              let properties: EventPropertyDefinition = {};
+              let repo = '';
+              let product = '';
+              let eventName = '';
+              let description = '';
+              let stage: EventStage = 'timeboxed';
 
-              if (eventValue.type === 'ObjectExpression') {
-                let owner = '';
-                let eventFunction = '';
-                let properties: EventPropertyDefinition = {};
-                let repo = '';
-                let product = '';
+              element.properties.forEach((prop) => {
+                if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
+                  const keyName = prop.key.name;
 
-                eventValue.properties.forEach((prop) => {
-                  if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
-                    const keyName = prop.key.name;
+                  // Extract 'owner'
+                  if (keyName === 'owner' && prop.value.type === 'StringLiteral') {
+                    owner = prop.value.value;
+                  }
 
-                    // Extract 'owner'
-                    if (keyName === 'owner' && prop.value.type === 'StringLiteral') {
-                      owner = prop.value.value;
-                    }
+                  // Extract 'repo'
+                  if (keyName === 'repo' && prop.value.type === 'StringLiteral') {
+                    repo = prop.value.value;
+                  }
 
-                    // Extract 'repo'
-                    if (keyName === 'repo' && prop.value.type === 'StringLiteral') {
-                      repo = prop.value.value;
-                    }
+                  // Extract 'product'
+                  if (keyName === 'product' && prop.value.type === 'StringLiteral') {
+                    product = prop.value.value;
+                  }
 
-                    // Extract 'product'
-                    if (keyName === 'product' && prop.value.type === 'StringLiteral') {
-                      product = prop.value.value;
-                    }
+                  // Extract 'eventName'
+                  if (keyName === 'eventName' && prop.value.type === 'StringLiteral') {
+                    eventName = prop.value.value;
+                  }
 
-                    // Extract 'eventFunction'
-                    if (keyName === 'eventFunction' && prop.value.type === 'StringLiteral') {
-                      eventFunction = prop.value.value;
-                    }
+                  // Extract 'description'
+                  if (keyName === 'description' && prop.value.type === 'StringLiteral') {
+                    description = prop.value.value;
+                  }
 
-                    // Extract 'properties'
-                    if (keyName === 'properties' && prop.value.type === 'ObjectExpression') {
-                      prop.value.properties.forEach((propertyDef) => {
-                        if (
-                          propertyDef.type === 'ObjectProperty' &&
-                          propertyDef.key.type === 'Identifier' &&
-                          propertyDef.value.type === 'ObjectExpression'
-                        ) {
-                          const propName = propertyDef.key.name;
-                          const propDef: { description: string; type: string; required: boolean } = {};
+                  // Extract 'stage'
+                  if (keyName === 'stage' && prop.value.type === 'StringLiteral') {
+                    stage = prop.value.value;
+                  }
 
-                          propertyDef.value.properties.forEach((propAttr) => {
-                            if (propAttr.type === 'ObjectProperty' && propAttr.key.type === 'Identifier') {
-                              if (propAttr.value.type === 'StringLiteral') {
-                                propDef[propAttr.key.name] = propAttr.value.value;
-                              } else if (propAttr.value.type === 'BooleanLiteral') {
-                                propDef[propAttr.key.name] = propAttr.value.value;
-                              }
+                  // Extract 'eventFunction'
+                  if (keyName === 'eventFunction' && prop.value.type === 'StringLiteral') {
+                    eventFunction = prop.value.value;
+                  }
+
+                  // Extract 'properties'
+                  if (keyName === 'properties' && prop.value.type === 'ObjectExpression') {
+                    prop.value.properties.forEach((propertyDef) => {
+                      if (
+                        propertyDef.type === 'ObjectProperty' &&
+                        propertyDef.key.type === 'Identifier' &&
+                        propertyDef.value.type === 'ObjectExpression'
+                      ) {
+                        const propName = propertyDef.key.name;
+                        const propDef: { description: string; type: string; required: boolean } = {};
+
+                        propertyDef.value.properties.forEach((propAttr) => {
+                          if (propAttr.type === 'ObjectProperty' && propAttr.key.type === 'Identifier') {
+                            if (propAttr.value.type === 'StringLiteral') {
+                              propDef[propAttr.key.name] = propAttr.value.value;
+                            } else if (propAttr.value.type === 'BooleanLiteral') {
+                              propDef[propAttr.key.name] = propAttr.value.value;
                             }
-                          });
+                          }
+                        });
 
-                          properties[propName] = propDef;
-                        }
-                      });
-                    }
+                        properties[propName] = propDef;
+                      }
+                    });
                   }
+                }
+              });
+
+              if (eventName) {
+                const repoName = repo || 'grafana';
+                eventsListed.push({
+                  repoName,
+                  owner,
+                  product,
+                  eventName,
+                  description,
+                  properties,
+                  stage,
+                  eventFunction,
                 });
+              }
 
-                // Group by owner
-                if (owner) {
-                  if (!eventsGroupedByOwner[owner]) {
-                    eventsGroupedByOwner[owner] = [];
-                  }
-                  eventsGroupedByOwner[owner].push({ [eventKey]: eventValue });
-                }
-
-                // Add to eventFunctionsArray
-                if (eventFunction) {
-                  eventFunctionsArray.push({ repo, owner, product, eventFunction, properties });
-                }
+              // Add to eventFunctionsArray
+              if (eventFunction) {
+                eventFunctionsArray.push({ repo, owner, product, eventFunction, properties });
               }
             }
           });
@@ -141,94 +160,82 @@ export function getFileInformation(filePath: string): {} {
       }
     },
   });
-
-  return { eventsGroupedByOwner, eventFunctionsArray };
+  return { eventsListed, eventFunctionsArray };
 }
 /**
  * Generates the code for a function.
  * @returns The generated function code
  */
 export async function generateFunctionCode(
-  events: Array<{ eventsGroupByOwner: EventDefinition; eventFunctionsArray: EventFunctionInput }>
+  events: Array<{ eventsListed: EventDefinition; eventFunctionsArray: EventFunctionInput }>
 ) {
   const eventsFunctionsList = events.map((eventItem) => eventItem.eventFunctionsArray);
   const generatedFunctions: string[] = [];
+
+  const getFunctionFromEvent = (event: EventFunctionInput) => {
+    const { eventFunction, properties, repo, product, eventName } = event;
+    if (eventFunction && Object.entries(properties).length > 0) {
+      const func = () => {
+        const propertiesToParams: string[] = [];
+        let checkPossibleUndefined = '';
+        let propsToSend: string[] = [];
+        let propsNonRequired = [];
+
+        Object.entries(properties).forEach(([propName, propDef]) => {
+          if (propName) {
+            //@ts-ignore
+            if (propDef.required === false) {
+              checkPossibleUndefined += `const ${propName}Check = ${propName} || '';`;
+              propsToSend.push(`${propName}Check`);
+              //@ts-ignore
+              propsNonRequired.push(`${propName}?: ${propDef.type}`);
+            } else {
+              propsToSend.push(propName);
+              //@ts-ignore
+              propertiesToParams.push(`${propName}: ${propDef.type}`);
+            }
+          }
+        });
+        const allPropertiesToParams = propertiesToParams.concat(propsNonRequired);
+        return { allPropertiesToParams, checkPossibleUndefined, propsToSend };
+      };
+      //We need this indentation to have the correct format when generating the code in the specific file
+      const functionCode = ` 
+export function ${eventFunction}(${func().allPropertiesToParams}): void {
+  ${func().checkPossibleUndefined}
+  reportTrackingEvent({
+    repo: '${repo}',
+    product: '${product}',
+    eventName: '${eventFunction}',
+    properties: { ${func().propsToSend} }
+  })
+};
+`;
+      generatedFunctions.push(functionCode);
+    }
+  };
+
   eventsFunctionsList.forEach((item) => {
     if (Object.entries(item).length === 1) {
-      const { eventFunction, properties, repo, product } = item;
-      if (eventFunction && Object.entries(properties).length > 0) {
-        const func = () => {
-          const propertiesToParams: string[] = [];
-          const checkPossibleUndefined: string[] = [];
-          Object.entries(properties).forEach(([propName, propDef]) => {
-            if (propName) {
-              if (propDef.required === false) {
-                checkPossibleUndefined.push(`
-                  const ${propName}Check = ${propName} || '';
-                  `);
-              }
-              propertiesToParams.push(`${propName}${!propDef.required ? '?' : ''}: ${propDef.type}`);
-            }
-          });
-          return { propertiesToParams, checkPossibleUndefined };
-        };
-        const functionCode = `
-      export function ${eventFunction}(${func()}): void {
-        reportTrackingEvent({
-        repo: '${repo}',
-        product: '${product}',
-        eventName: '${eventFunction}',
-        properties: { ${Object.entries(properties).map(([propName, propDef]) => propName)} }
-      })
-    };
-      `;
-        generatedFunctions.push(functionCode);
-      }
+      generateFunctionFromEvent(item);
     } else if (Object.entries(item).length > 1) {
       Object.entries(item)
         .flat()
         .map((i) => {
-          //@ts-ignore
-          const { eventFunction, properties, repo, product } = i;
-          if (eventFunction && Object.entries(properties).length > 0) {
-            const func = () => {
-              const propertiesToParams: string[] = [];
-              let checkPossibleUndefined = '';
-              let propsToSend: string[] = [];
-
-              Object.entries(properties).forEach(([propName, propDef]) => {
-                if (propName) {
-                  //@ts-ignore
-                  if (propDef.required === false) {
-                    checkPossibleUndefined += `const ${propName}Check = ${propName} || '';`;
-                    propsToSend.push(`${propName}Check`);
-                    //@ts-ignore
-                    propertiesToParams.push(`${propName}?: ${propDef.type}`);
-                  } else {
-                    propsToSend.push(propName);
-                    //@ts-ignore
-                    propertiesToParams.push(`${propName}: ${propDef.type}`);
-                  }
-                }
-              });
-              return { propertiesToParams, checkPossibleUndefined, propsToSend };
-            };
-            //We need this indentation to have the correct format when generating the code in the specific file
-            const functionCode = ` 
-export function ${eventFunction}(${func().propertiesToParams}): void {
-  ${func().checkPossibleUndefined}
-    reportTrackingEvent({
-      repo: '${repo}',
-      product: '${product}',
-      eventName: '${eventFunction}',
-      properties: { ${func().propsToSend} }
-  })
-};
-`;
-            generatedFunctions.push(functionCode);
-          }
+          getFunctionFromEvent(i);
         });
     }
   });
   return generatedFunctions;
+}
+
+export function generateInfo(
+  events: Array<{ eventsListed: EventDefinition; eventFunctionsArray: EventFunctionInput }>
+): string {
+  const eventsInfo = events.flatMap((eventItem) => eventItem.eventsListed);
+  const generatedInfo: EventDefinition[] = [];
+  eventsInfo.forEach((item) => {
+    generatedInfo.push(item);
+  });
+  return JSON.stringify(generatedInfo, null, 2);
 }
