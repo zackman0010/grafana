@@ -152,31 +152,65 @@ type Stream struct {
 	Values []Sample          `json:"values"`
 }
 
+type TimeMillis time.Time
+
+func (t TimeMillis) MarshalJSON() ([]byte, error) {
+	str := fmt.Sprintf("%d", r.T.UnixNano())
+	return json.Marshal(str)
+}
+
+func (t TimeMillis) UnmarshalJSON() ([]byte, error) {
+	str := fmt.Sprintf("%d", r.T.UnixNano())
+	return json.Marshal(str)
+}
+
+
 type Sample struct {
 	T time.Time
 	V string
+
+	// Structured Metadata
+	M map[string]string
 }
 
+type sample
+
 func (r *Sample) MarshalJSON() ([]byte, error) {
-	return json.Marshal([2]string{
-		fmt.Sprintf("%d", r.T.UnixNano()), r.V,
-	})
+	items := make([]string, 0, 3)
+
+	items = append(items, fmt.Sprintf("%d", r.T.UnixNano()), r.V)
+
+	if r.M != nil {
+		items = append(items, r.M)
+	}
+
+	return json.Marshal(items)
 }
 
 func (r *Sample) UnmarshalJSON(b []byte) error {
 	// A Loki stream sample is formatted like a list with two elements, [At, Val]
 	// At is a string wrapping a timestamp, in nanosecond unix epoch.
 	// Val is a string containing the log line.
-	var tuple [2]string
+	var tuple []any
 	if err := json.Unmarshal(b, &tuple); err != nil {
 		return fmt.Errorf("failed to deserialize sample in Loki response: %w", err)
 	}
+	switch len(tuple) {
+	case 3:
+		r.V = tuple[1]
+	if len(tuple) < 2 {
+		return fmt.Errorf("failed to deserialize sample in Loki response: only %d items in sample tuple", len(tuple))
+	}
+
 	nano, err := strconv.ParseInt(tuple[0], 10, 64)
 	if err != nil {
 		return fmt.Errorf("timestamp in Loki sample not convertible to nanosecond epoch: %v", tuple[0])
 	}
 	r.T = time.Unix(0, nano)
 	r.V = tuple[1]
+
+	if len(tuple)
+	
 	return nil
 }
 
