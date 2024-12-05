@@ -1,9 +1,10 @@
 import { EventDefinition } from '@grafana/runtime/src/analytics/events/types';
 
-export const eventsTracking: { [key: string]: EventDefinition } = {
-  button_created: {
+export const eventsTracking: EventDefinition[] = [
+  {
     owner: 'Grafana Frontend Squad',
     product: 'return_to_previous',
+    eventName: 'button_created',
     description: 'User created a return to previous button',
     properties: {
       page: {
@@ -20,9 +21,10 @@ export const eventsTracking: { [key: string]: EventDefinition } = {
     stage: 'timeboxed',
     eventFunction: 'createReturnToPrevious',
   },
-  button_dismissed: {
+  {
     owner: 'Grafana Frontend Squad',
     product: 'return_to_previous',
+    eventName: 'button_dismissed',
     description: 'User dismissed a return to previous button',
     properties: {
       action: {
@@ -39,4 +41,4 @@ export const eventsTracking: { [key: string]: EventDefinition } = {
     stage: 'timeboxed',
     eventFunction: 'dismissReturnToPrevious',
   },
-};
+];

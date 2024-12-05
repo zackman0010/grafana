@@ -1,54 +1,69 @@
-// // import {
-// //   // EventProperty,
-// //   // reportTrackingEvent,
-// // } from '@grafana/runtime';
+import { EventDefinition } from '@grafana/runtime/src/analytics/events/types';
 
-// const OWNER = 'Grafana Frontend Squad';
-// const REPO = 'grafana';
-// const PRODUCT = 'navigation';
-
-// type itemClickedProps = {
-//   path?: string;
-//   menuIsDocked: boolean;
-//   itemIsBookmarked: boolean;
-//   bookmarkToggleOn: boolean;
-// };
-
-// type menuOpenProps = {
-//   state: boolean;
-//   singleTopNav: boolean;
-// };
-
-// type menuDockedProps = {
-//   state: boolean;
-// };
-
-// export const itemClicked = (props: itemClickedProps) => {
-//   // reportTrackingEvent({
-//   //   owner: OWNER,
-//   //   eventName: `${REPO}_${PRODUCT}_item_clicked`,
-//   //   description: 'User clicked on a navigation item',
-//   //   properties: props,
-//   //   stage: 'timeboxed',
-//   // });
-// };
-
-// export const menuOpen = (props: menuOpenProps) => {
-//   // reportTrackingEvent({
-//   //   owner: OWNER,
-//   //   eventName: `${REPO}_${PRODUCT}_menu_opened`,
-//   //   description: 'User opened the navigation menu',
-//   //   properties: props,
-//   //   stage: 'businessy',
-//   // });
-// };
-
-// export const menuDocked = (props: menuDockedProps) => {
-//   // reportTrackingEvent({
-//   //   owner: OWNER,
-//   //   eventName: `${REPO}_${PRODUCT}_menu_docked`,
-//   //   description: 'User docked the navigation menu',
-//   //   properties: props,
-//   //   stage: 'businessy',
-//   // });
-// };
+export const eventsTracking: EventDefinition[] = [
+  {
+    owner: 'Grafana Frontend Squad',
+    product: 'navigation',
+    eventName: 'item_clicked',
+    description: 'User clicked on a navigation item',
+    properties: {
+      path: {
+        description: 'The path of the clicked item',
+        type: 'string',
+        required: false,
+      },
+      menuIsDocked: {
+        description: 'The state of the navigation menu',
+        type: 'boolean',
+        required: true,
+      },
+      itemIsBookmarked: {
+        description: 'Whether the clicked item is bookmarked',
+        type: 'boolean',
+        required: true,
+      },
+      bookmarkToggleOn: {
+        description: 'Whether the bookmark toggle is on',
+        type: 'boolean',
+        required: true,
+      },
+    },
+    stage: 'timeboxed',
+    eventFunction: 'megaMenuItemClicked',
+  },
+  {
+    owner: 'Grafana Frontend Squad',
+    product: 'navigation',
+    eventName: 'menu_opened',
+    description: 'User opened the navigation menu',
+    properties: {
+      state: {
+        description: 'The state of the navigation menu',
+        type: 'boolean',
+        required: true,
+      },
+      singleTopNav: {
+        description: 'Whether the navigation menu is in single top nav mode',
+        type: 'boolean',
+        required: true,
+      },
+    },
+    stage: 'businessy',
+    eventFunction: 'megaMenuOpened',
+  },
+  {
+    owner: 'Grafana Frontend Squad',
+    product: 'navigation',
+    eventName: 'menu_docked',
+    description: 'User docked the navigation menu',
+    properties: {
+      state: {
+        description: 'The state of the navigation menu',
+        type: 'boolean',
+        required: true,
+      },
+    },
+    stage: 'businessy',
+    eventFunction: 'megaMenuDocked',
+  },
+];
