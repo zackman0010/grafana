@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 
-import { Dropdown, ToolbarButton, Button, Stack, Menu } from '@grafana/ui';
+import { Dropdown, ToolbarButton, Button, Stack, Menu, Checkbox } from '@grafana/ui';
 
 import { Spec } from '../../../../../../apps/feedback/plugin/src/feedback/v0alpha1/types.spec.gen';
 import { getFeedbackAPI } from '../../../../features/feedback/api';
@@ -37,6 +37,18 @@ const MenuActions = () => {
     }
   };
 
+  const [accessInstanceCheck, setAccessInstanceCheck] = useState(false);
+  const [contactCheck, setContactCheck] = useState(false);
+
+  const handleAccessInstanceCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("Access clicked");
+    console.log(e.target.checked);
+    setAccessInstanceCheck(e.target.checked);
+    console.log(accessInstanceCheck);
+  };
+  const handleContactCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setContactCheck(e.target.checked);
+  };
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -47,8 +59,8 @@ const MenuActions = () => {
       screenshot: formData.screenshot,
       imageType: formData.imageType,
       diagnosticData,
-      canContactReporter: false, // TODO
-      canAccessInstance: false, // TODO
+      canContactReporter: contactCheck,
+      canAccessInstance: accessInstanceCheck,
     };
 
     const feedbackApi = getFeedbackAPI();
@@ -60,6 +72,7 @@ const MenuActions = () => {
     e.stopPropagation();
   };
 
+
   return (
     <Menu>
       <div onClick={stopAutoClose}>
@@ -67,6 +80,8 @@ const MenuActions = () => {
 
         <Stack gap={2} direction={'column'}>
           <input onChange={onInputChange} placeholder="so what happened?"></input>
+          <Checkbox label="Can we access this instance?" value={accessInstanceCheck} onChange={handleAccessInstanceCheckboxChange}/>
+          <Checkbox label="Can we contact you?" value={contactCheck} onChange={handleContactCheckboxChange}/>
           <Button onClick={onTakeScreenshot}>Take Screenshot</Button>
           <Button type="submit" onClick={onSubmit}>
             Submit feedback
