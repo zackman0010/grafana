@@ -1,4 +1,4 @@
-import { EventDefinition } from '@grafana/runtime/src/analytics/events/types';
+import { EventDefinition } from '@grafana/runtime';
 
 export const E2CEvents: EventDefinition[] = [
   {
