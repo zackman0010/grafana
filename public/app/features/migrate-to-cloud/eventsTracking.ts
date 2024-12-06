@@ -8,7 +8,6 @@ export const eventsTracking: EventDefinition[] = [
     description: 'User clicked on the geenrate token button',
     state: 'featureUsage',
     eventFunction: 'trackGenerateTokenClicked',
-    properties: {},
   },
   {
     owner: 'Grafana Frontend Squad',

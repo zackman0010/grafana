@@ -27,7 +27,7 @@ const eventList = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'megaMenuItemClicked',
   },
   {
@@ -48,7 +48,7 @@ const eventList = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'megaMenuOpened',
   },
   {
@@ -64,7 +64,7 @@ const eventList = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'megaMenuDocked',
   },
   {
@@ -85,7 +85,7 @@ const eventList = [
         required: false,
       },
     },
-    stage: 'timeboxed',
+    state: 'funnel',
     eventFunction: 'createReturnToPrevious',
   },
   {
@@ -106,7 +106,7 @@ const eventList = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'funnel',
     eventFunction: 'dismissReturnToPrevious',
   },
   {
@@ -116,7 +116,7 @@ const eventList = [
     eventName: 'generate_token_clicked',
     description: 'User clicked on the geenrate token button',
     properties: {},
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'trackGenerateTokenClicked',
   },
   {
@@ -126,7 +126,7 @@ const eventList = [
     eventName: 'delete_token_clicked',
     description: 'User clicked on the delete token button',
     properties: {},
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'trackDeleteTokenClicked',
   },
 ];

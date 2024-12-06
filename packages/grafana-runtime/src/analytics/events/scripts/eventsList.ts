@@ -51,3 +51,21 @@ export function dismissReturnToPrevious(action: string, page: string): void {
     properties: { action, page },
   });
 }
+
+export function trackGenerateTokenClicked(): void {
+  reportTrackingEvent({
+    repo: '',
+    product: 'e2c',
+    eventName: 'trackGenerateTokenClicked',
+    properties: {},
+  });
+}
+
+export function trackDeleteTokenClicked(): void {
+  reportTrackingEvent({
+    repo: '',
+    product: 'e2c',
+    eventName: 'trackDeleteTokenClicked',
+    properties: {},
+  });
+}

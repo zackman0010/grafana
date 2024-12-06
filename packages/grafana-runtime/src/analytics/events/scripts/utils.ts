@@ -73,7 +73,7 @@ export function getFileInformation(filePath: string): {} {
               let product = '';
               let eventName = '';
               let description = '';
-              let stage: EventStage = 'timeboxed';
+              let state = 'featureUsage';
 
               element.properties.forEach((prop) => {
                 if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
@@ -96,8 +96,8 @@ export function getFileInformation(filePath: string): {} {
                       case 'description':
                         description = prop.value.value;
                         break;
-                      case 'stage':
-                        stage = prop.value.value;
+                      case 'state':
+                        state = prop.value.value;
                         break;
                       case 'eventFunction':
                         eventFunction = prop.value.value;
@@ -141,7 +141,7 @@ export function getFileInformation(filePath: string): {} {
                   eventName,
                   description,
                   properties,
-                  stage,
+                  state,
                   eventFunction,
                 });
               }
@@ -171,7 +171,7 @@ export async function generateFunctionCode(
 
   const getFunctionFromEvent = (event: EventFunctionInput) => {
     const { eventFunction, properties, repo, product, eventName } = event;
-    if (eventFunction && Object.entries(properties).length > 0) {
+    if (eventFunction) {
       const func = () => {
         const propertiesToParams: string[] = [];
         let checkPossibleUndefined = '';
