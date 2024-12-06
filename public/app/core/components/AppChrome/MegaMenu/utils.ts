@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { NavModelItem } from '@grafana/data';
-import { config, megaMenuItemClicked } from '@grafana/runtime';
+import { config } from '@grafana/runtime';
 import { t } from 'app/core/internationalization';
 import { HOME_NAV_ID } from 'app/core/reducers/navModel';
 
@@ -40,12 +40,12 @@ export const enrichWithInteractionTracking = (item: NavModelItem, megaMenuDocked
   const newItem = { ...item };
   const onClick = newItem.onClick;
   newItem.onClick = () => {
-    megaMenuItemClicked(
-      megaMenuDockedState,
-      Boolean(config.featureToggles.pinNavItems && newItem?.parentItem?.id === 'bookmarks'),
-      Boolean(config.featureToggles.pinNavItems),
-      newItem.url ?? newItem.id
-    );
+    // megaMenuItemClicked(
+    //   megaMenuDockedState,
+    //   Boolean(config.featureToggles.pinNavItems && newItem?.parentItem?.id === 'bookmarks'),
+    //   Boolean(config.featureToggles.pinNavItems),
+    //   newItem.url ?? newItem.id
+    // );
     onClick?.();
   };
   if (newItem.children) {

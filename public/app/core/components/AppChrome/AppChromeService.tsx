@@ -2,15 +2,7 @@ import { useObservable } from 'react-use';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 
 import { AppEvents, NavModel, NavModelItem, PageLayoutType, UrlQueryValue } from '@grafana/data';
-import {
-  config,
-  createReturnToPrevious,
-  dismissReturnToPrevious,
-  locationService,
-  megaMenuDocked,
-  megaMenuOpened,
-  reportInteraction,
-} from '@grafana/runtime';
+import { config, locationService, reportInteraction } from '@grafana/runtime';
 import appEvents from 'app/core/app_events';
 import { t } from 'app/core/internationalization';
 import store from 'app/core/store';
@@ -126,9 +118,9 @@ export class AppChromeService {
   }
 
   public setReturnToPrevious = (returnToPrevious: ReturnToPreviousProps) => {
-    const previousPage = this.state.getValue().returnToPrevious;
+    //const previousPage = this.state.getValue().returnToPrevious;
 
-    createReturnToPrevious(returnToPrevious.href, previousPage?.href);
+    //createReturnToPrevious(returnToPrevious.href, previousPage?.href);
 
     this.update({ returnToPrevious });
     window.sessionStorage.setItem('returnToPrevious', JSON.stringify(returnToPrevious));
@@ -137,7 +129,7 @@ export class AppChromeService {
   public clearReturnToPrevious = (interactionAction: 'clicked' | 'dismissed' | 'auto_dismissed') => {
     const existingRtp = this.state.getValue().returnToPrevious;
     if (existingRtp) {
-      dismissReturnToPrevious(interactionAction, existingRtp.href);
+      //dismissReturnToPrevious(interactionAction, existingRtp.href);
     }
 
     this.update({ returnToPrevious: undefined });
@@ -174,7 +166,7 @@ export class AppChromeService {
     if (megaMenuDocked) {
       store.set(DOCKED_MENU_OPEN_LOCAL_STORAGE_KEY, newOpenState);
     }
-    megaMenuOpened(newOpenState, Boolean(config.featureToggles.singleTopNav));
+    //megaMenuOpened(newOpenState, Boolean(config.featureToggles.singleTopNav));
     this.update({
       megaMenuOpen: newOpenState,
     });
@@ -184,7 +176,7 @@ export class AppChromeService {
     if (updatePersistedState) {
       store.set(DOCKED_LOCAL_STORAGE_KEY, newDockedState);
     }
-    megaMenuDocked(newDockedState);
+    //megaMenuDocked(newDockedState);
     this.update({
       megaMenuDocked: newDockedState,
     });
