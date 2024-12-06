@@ -3,23 +3,11 @@ import { EventDefinition } from '@grafana/runtime/src/analytics/events/types';
 export const eventsTracking: EventDefinition[] = [
   {
     owner: 'Grafana Frontend Squad',
-    product: 'return_to_previous',
-    eventName: 'button_created',
-    description: 'User created a return to previous button',
-    properties: {
-      page: {
-        description: 'The page the user was on when the button was created',
-        type: 'string',
-        required: true,
-      },
-      previousPage: {
-        description: 'The previous page the user was on before the current page',
-        type: 'string',
-        required: false,
-      },
-    },
-    state: 'funnel',
-    eventFunction: 'createReturnToPrevious',
+    product: 'e2c',
+    eventName: 'delete_token_clicked',
+    description: 'User clicked on the delete token button',
+    state: 'featureUsage',
+    eventFunction: 'trackDeleteTokenClicked',
   },
   {
     owner: 'Grafana Frontend Squad',
@@ -38,7 +26,7 @@ export const eventsTracking: EventDefinition[] = [
         required: true,
       },
     },
-    state: 'funnel',
+    state: 'featureUsage',
     eventFunction: 'dismissReturnToPrevious',
   },
 ];

@@ -28,7 +28,7 @@ export const eventsTracking: EventDefinition[] = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'featureUsage',
     eventFunction: 'megaMenuItemClicked',
   },
   {
@@ -48,7 +48,7 @@ export const eventsTracking: EventDefinition[] = [
         required: true,
       },
     },
-    stage: 'businessy',
+    state: 'featureUsage',
     eventFunction: 'megaMenuOpened',
   },
   {
@@ -63,7 +63,7 @@ export const eventsTracking: EventDefinition[] = [
         required: true,
       },
     },
-    stage: 'businessy',
+    state: 'featureUsage',
     eventFunction: 'megaMenuDocked',
   },
 ];
