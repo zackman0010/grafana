@@ -1,13 +1,13 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { writeFileSync, appendFileSync } from 'fs';
+import { join } from 'path';
 
 import { findFiles, getFileInformation, generateFunctionCode, generateInfo } from './utils';
 
 // Configuration
 const rootDirectory = './'; // Root directory to search for the files
 const targetFileName = 'eventsTracking.ts'; // Name of the files containing the objects
-const outputFile = path.join(__dirname, 'eventsList.ts'); // Centralized file for the functions
-const sourceOfTruth = path.join(__dirname, 'eventsTrackingInformation.ts'); // Centralized file for the information
+const outputFile = join(__dirname, 'eventsList.ts'); // Centralized file for the functions
+const sourceOfTruth = join(__dirname, 'eventsTrackingInformation.ts'); // Centralized file for the information
 
 /**
  * Main function to search for files, process them, and generate the centralized file.
@@ -42,9 +42,9 @@ async function createEventDocsFromMultipleFiles(
   if ((await functionsToAdd).length > 0) {
     //TODO: check if the functions exist in the file before adding them
     //TODO: maintain the import of reportTrackingEvent
-    fs.writeFileSync(outputFile, "import { reportTrackingEvent } from '../events'; \n", 'utf8');
-    fs.appendFileSync(outputFile, (await functionsToAdd).join('\n'), 'utf8');
-    fs.appendFileSync(outputFile, '\n', 'utf8');
+    writeFileSync(outputFile, "import { reportTrackingEvent } from '../events'; \n", 'utf8');
+    appendFileSync(outputFile, (await functionsToAdd).join('\n'), 'utf8');
+    appendFileSync(outputFile, '\n', 'utf8');
     console.log('New functions added to the centralized file.');
   } else {
     console.log('No new functions to add.');
@@ -54,9 +54,9 @@ async function createEventDocsFromMultipleFiles(
   // Write new functions to the centralized file if there are any
   // We don't need to check if the information exists in the file before adding it because it will be overwritten
   if (info) {
-    fs.writeFileSync(sourceOfTruth, 'const eventList = ', 'utf8');
-    fs.appendFileSync(sourceOfTruth, info, 'utf8');
-    fs.appendFileSync(sourceOfTruth, '\n', 'utf8');
+    writeFileSync(sourceOfTruth, 'const eventList = ', 'utf8');
+    appendFileSync(sourceOfTruth, info, 'utf8');
+    appendFileSync(sourceOfTruth, '\n', 'utf8');
   }
 }
 
