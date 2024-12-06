@@ -76,12 +76,9 @@ export function generateFunctionCode(events: EventDefinition[]): string[] {
     //We need this indentation to have the correct format when generating the code in the specific file
     const functionCode = ` 
 export function ${eventFunction}(${allPropertiesToParams}): void {
-  ${checkPossibleUndefined}reportUserEvent({
-    repo: '${repo}',
-    product: '${product}',
-    eventName: '${eventName}',
+  ${checkPossibleUndefined}reportInteraction('${repo}'_'${product}'_'${eventName}',
     properties: { ${propsToSend} }
-  })
+  )
 };
 `;
     generatedFunctions.push(functionCode);
@@ -101,33 +98,7 @@ function createEventDocs(outputFile: string, sourceOfTruth: string): void {
 
   // Write new functions to the centralized file if there are any
   if (functionsToAdd.length > 0) {
-    const trackingFunction =
-      `import { config } from '../config';
-import { getEchoSrv, EchoEventType } from '../services/EchoSrv';
-import { EventTrackingProps } from '@grafana/runtime';
-
-/**
- * New helper function to report user events to the {@link EchoSrv}.
- * 
- * @param event - strongly typed event object
- */
-const reportUserEvent = (event: EventTrackingProps) => {
-  // get static reporting context and append it to properties
-  if (config.reportingStaticContext && config.reportingStaticContext instanceof Object) {
-    properties = { ...properties, ...config.reportingStaticContext };
-  }
-  getEchoSrv().addEvent<InteractionEchoEvent>({
-    type: EchoEventType.Interaction,
-    payload: {
-      ` +
-      "`${event.repo || 'grafana'}_${event.product}_${event.eventName}`" +
-      `,
-      event.properties,
-    },
-  });
-};
-  `;
-    writeFileSync(outputFile, trackingFunction, 'utf8');
+    writeFileSync(outputFile, `import { reportInteraction } from '@grafana/runtime';`, 'utf8');
     appendFileSync(outputFile, functionsToAdd.join('\n'), 'utf8');
     appendFileSync(outputFile, '\n', 'utf8');
     console.log('New functions added to the centralized file.');
