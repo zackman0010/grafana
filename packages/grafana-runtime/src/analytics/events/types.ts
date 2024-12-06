@@ -6,7 +6,12 @@ export type EventPropertyDefinition = {
   };
 };
 
-export type EventStage = 'timeboxed' | 'businessy' | 'experimental';
+export type EventStage =
+  | 'featureUsage' // gathering general usage data
+  | 'error' // error tracking
+  | 'performance' // for tracking performance
+  | 'experiment' // time boxed event used to make a go / no go decision on a feature - should be removed after the experiment is complete
+  | 'funnel'; // start or end event of a funnel, used for conversion rate tracking
 
 export type EventProperty = {
   [name: string]: string | number | boolean;
@@ -17,8 +22,8 @@ export type EventDefinition = {
   product: string;
   eventName: string;
   description: string;
-  properties: EventPropertyDefinition;
-  stage: EventStage;
+  properties?: EventPropertyDefinition;
+  state: EventStage;
   eventFunction: string;
 };
 
