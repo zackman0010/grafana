@@ -18,7 +18,7 @@ export const eventsTracking: EventDefinition[] = [
         required: false,
       },
     },
-    stage: 'timeboxed',
+    state: 'funnel',
     eventFunction: 'createReturnToPrevious',
   },
   {
@@ -38,7 +38,7 @@ export const eventsTracking: EventDefinition[] = [
         required: true,
       },
     },
-    stage: 'timeboxed',
+    state: 'funnel',
     eventFunction: 'dismissReturnToPrevious',
   },
 ];
