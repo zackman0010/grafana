@@ -228,3 +228,5 @@ public/mockServiceWorker.js
 
 # Ignore transpiled JavaScript resulting from the generateEventsTracking.ts script.
 /packages/grafana-runtime/src/analytics/*.js
+**/allEvents.js
+**/eventsTracking.js
