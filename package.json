@@ -64,7 +64,7 @@
     "plugin:build:dev": "nx run-many -t dev --projects='tag:scope:plugin' --maxParallel=100",
     "generate-icons": "nx run grafana-icons:generate",
     "generate-apis": "rtk-query-codegen-openapi ./scripts/generate-rtk-apis.ts",
-    "gather-events": "yarn tsc packages/grafana-runtime/src/analytics/events/scripts/gatheringEvents.ts && node packages/grafana-runtime/src/analytics/events/scripts/gatheringEvents.js"
+    "gather-events": "yarn tsc packages/grafana-runtime/src/analytics/generateEventsTracking.ts && node packages/grafana-runtime/src/analytics/generateEventsTracking.js"
   },
   "grafana": {
     "whatsNewUrl": "https://grafana.com/docs/grafana/next/whatsnew/whats-new-in-v11-4/",

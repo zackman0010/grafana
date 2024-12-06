@@ -8,8 +8,7 @@ export * from './config';
 export * from './analytics/types';
 export { loadPluginCss, type PluginCssOptions, setPluginImportUtils, getPluginImportUtils } from './utils/plugin';
 export { reportMetaAnalytics, reportInteraction, reportPageview, reportExperimentView } from './analytics/utils';
-export { reportTrackingEvent } from './analytics/events/events';
-export * from './analytics/events/scripts/eventsList';
+export type { EventTrackingProps, EventDefinition } from './analytics/generateEventsTracking';
 export { featureEnabled } from './utils/licensing';
 export { logInfo, logDebug, logWarning, logError, createMonitoringLogger } from './utils/logging';
 export {

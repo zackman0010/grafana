@@ -1,6 +1,6 @@
 import { EventDefinition } from '@grafana/runtime/src/analytics/events/types';
 
-export const eventsTracking: EventDefinition[] = [
+export const ReturnToPreviousTracking: EventDefinition[] = [
   {
     owner: 'Grafana Frontend Squad',
     product: 'return_to_previous',
