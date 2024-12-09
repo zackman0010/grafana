@@ -18,11 +18,6 @@ import { Trans } from 'app/core/internationalization';
 // eslint-disable-next-line no-console
 init()?.then(() => console.debug('augurs changepoints initialized'));
 
-interface MetricState {
-  changepointCount: number;
-  isComplexMetric: boolean;
-}
-
 export interface Changepoint {
   idx: number;
   time: number;
@@ -38,8 +33,9 @@ interface SceneChangepointDetectorState extends SceneObjectState {
   lookbackFactor?: number;
   lookbackFactorOptions: Array<{ label: string; value: number }>;
   onChangepointDetected?: (changepoint: Changepoint) => void;
+  onBeginChangepointDetection?: () => void;
+  onCompleteChangepointDetection?: () => void;
   onComplexMetric?: () => void;
-  metricStates?: { [metric: string]: MetricState };
 }
 
 // TODO: make this customisable.
@@ -113,6 +109,7 @@ export class SceneChangepointDetector
 // produce a new frame with the changepoint annotations.
 const changepointProcessor: (detector: SceneChangepointDetector) => ExtraQueryDataProcessor =
   (detector) => (_, secondary) => {
+    detector.state.onBeginChangepointDetection?.();
     const annotations = secondary.series.map((series) => {
       // handle complex metrics
       if (series.fields.length > 2) {
@@ -128,12 +125,14 @@ const changepointProcessor: (detector: SceneChangepointDetector) => ExtraQueryDa
       // handle regular metrics with changepoint detection
       return createChangepointAnnotations(series, detector.state.onChangepointDetected);
     });
+    detector.state.onCompleteChangepointDetection?.();
     return of({ timeRange: secondary.timeRange, series: [], state: secondary.state, annotations });
   };
 
 function createChangepointAnnotations(
   frame: DataFrame,
-  onChangepointDetected: ((changepoint: Changepoint) => void) | undefined
+  onChangepointDetected: ((changepoint: Changepoint) => void) | undefined,
+  onCompleteChangepointDetection?: () => void
 ): DataFrame {
   const annotationTimes = [];
   const annotationTexts = [];
@@ -156,6 +155,7 @@ function createChangepointAnnotations(
       onChangepointDetected?.({ idx: cp + 1, time, field });
     }
   }
+
   return {
     fields: [
       {

@@ -20,14 +20,12 @@ import { SceneChangepointDetector } from './SceneChangepointDetector';
 import { SortByScene, SortCriteriaChanged } from './SortByChangepointsScene';
 import { hideEmptyPanels } from './hideEmptyPanels';
 
-const changepointDetector = new SceneChangepointDetector({
-  enabled: true,
-});
-
 const groupByOptions = {
   none: 'None',
   dashboard: 'Dashboard',
 };
+
+type SortBy = 'anomalies' | 'alphabetical' | 'alphabetical-reversed';
 
 /**
  * Extracts all metric names from a PromQL expression
@@ -76,18 +74,30 @@ interface MetricWithMeta {
 interface DashboardPanelMetrics {
   byDashboard: { [key: string]: MetricWithMeta[] };
   byDatasource: { [key: string]: MetricWithMeta[] };
+  uniqueMetrics: MetricWithMeta[];
+}
+
+interface MetricState {
+  changepointCount: number;
+  isComplexMetric: boolean;
 }
 
 export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
   // Cache panel instances by metric+datasource key to avoid recreation during sorting
   private panelInstances: Map<string, SceneCSSGridItem> = new Map();
   private panelInstancesToIngore: Set<string> = new Set();
+  private changepointDetector = new SceneChangepointDetector({
+    enabled: true,
+  });
+  private metricStates: { [metric: string]: MetricState } = {};
+  private changepointDetectionComplete: { [metric: string]: boolean } = {};
 
   constructor(state: Partial<AnomaliesSceneState>) {
     super({
       dashboardPanelMetrics: {
         byDashboard: {},
         byDatasource: {},
+        uniqueMetrics: [],
       },
       body: new SceneCSSGridLayout({
         children: [],
@@ -109,13 +119,10 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
   _onActivate() {
     this.setState({ loading: 'pending' });
     this._subs.add(
-      this.subscribeToEvent(SortCriteriaChanged, (event) => {
-        this.sortPanels(event.sortBy);
+      this.subscribeToEvent(SortCriteriaChanged, () => {
+        this.sortPanels('anomalies');
       })
     );
-    changepointDetector.setState({
-      metricStates: {},
-    });
     // Get all metrics used in dashboards that query Prometheus data sources
     getBackendSrv()
       .get<DashboardSearchItem[]>('/api/search', {
@@ -185,11 +192,18 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
               newMetrics.byDashboard[dashboard.uid] = metricsInDashboard;
             }
 
+            const allMetrics = Object.values(newMetrics.byDashboard).flat();
+            // deduplicate metrics that appear in multiple dashboards
+            const uniqueMetrics = Array.from(
+              new Map(allMetrics.map((m) => [`${m.metric}-${m.datasource.uid}`, m])).values()
+            );
+
             this.setState({
               loading: 'fulfilled',
               dashboardPanelMetrics: {
                 byDashboard: newMetrics.byDashboard,
                 byDatasource: newMetrics.byDatasource,
+                uniqueMetrics,
               },
             });
           })
@@ -215,18 +229,7 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * in multiple dashboards.
    */
   private displayAllDashboardMetrics() {
-    if (!Object.keys(this.state.dashboardPanelMetrics.byDashboard).length) {
-      return;
-    }
-
-    const allMetrics = Object.values(this.state.dashboardPanelMetrics.byDashboard).flat();
-
-    // deduplicate metrics that appear in multiple dashboards
-    const uniqueMetrics = Array.from(new Map(allMetrics.map((m) => [`${m.metric}-${m.datasource.uid}`, m])).values());
-
-    const sortedMetrics = this.sortMetrics(uniqueMetrics);
-
-    const children = sortedMetrics
+    const children = this.state.dashboardPanelMetrics.uniqueMetrics
       .map(({ metric, datasource: { uid } }, idx) => this.getOrCreatePanelForMetric(metric, uid, idx))
       .filter(isGridItem);
 
@@ -251,7 +254,7 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * - 'alphabetical-reversed': Z-A by metric name
    * - default: by number of changepoints (highest first), with complex metrics at the end
    */
-  private sortMetrics(metrics: MetricWithMeta[], sortBy?: string): MetricWithMeta[] {
+  private sortMetrics(metrics: MetricWithMeta[], sortBy?: SortBy): MetricWithMeta[] {
     if (sortBy === 'alphabetical') {
       return [...metrics].sort((a, b) => a.metric.localeCompare(b.metric));
     }
@@ -263,8 +266,8 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
     // Default to changepoints sorting
     return [...metrics].sort((a, b) => {
       // Put complex metrics at the end
-      const aState = changepointDetector.state.metricStates?.[a.metric];
-      const bState = changepointDetector.state.metricStates?.[b.metric];
+      const aState = this.metricStates[a.metric];
+      const bState = this.metricStates[b.metric];
 
       if (aState?.isComplexMetric && !bState?.isComplexMetric) {
         return 1;
@@ -281,11 +284,8 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * Sort and rerender panels based on the current sort criteria.
    * Uses cached panel instances to prevent unnecessary recreation.
    */
-  private sortPanels(sortBy: string) {
-    const allMetrics = Object.values(this.state.dashboardPanelMetrics.byDashboard).flat();
-    const uniqueMetrics = Array.from(new Map(allMetrics.map((m) => [`${m.metric}-${m.datasource.uid}`, m])).values());
-
-    const sortedMetrics = this.sortMetrics(uniqueMetrics, sortBy);
+  private sortPanels(sortBy: SortBy) {
+    const sortedMetrics = this.sortMetrics(this.state.dashboardPanelMetrics.uniqueMetrics, sortBy);
 
     const children = sortedMetrics
       .map(({ metric, datasource: { uid } }, idx) => this.getOrCreatePanelForMetric(metric, uid, idx))
@@ -309,13 +309,24 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
     // If we already have a panel for this metric+datasource, use it
     let panel = this.panelInstances.get(key);
     if (!panel) {
-      const detector = changepointDetector.clone();
+      const detector = this.changepointDetector.clone();
       detector.setState({
         onChangepointDetected: () => {
           this.handleChangepointDetected(metric);
         },
         onComplexMetric: () => {
           this.handleComplexMetric(metric);
+        },
+        onBeginChangepointDetection: () => {
+          this.changepointDetectionComplete[metric] = false;
+        },
+        onCompleteChangepointDetection: () => {
+          this.changepointDetectionComplete[metric] = true;
+
+          // wait to sort panels until all metrics have completed changepoint detection
+          if (Object.values(this.changepointDetectionComplete).every(Boolean)) {
+            this.sortPanels('anomalies');
+          }
         },
       });
 
@@ -347,17 +358,10 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * (e.g., histograms or multi-field metrics)
    */
   private handleComplexMetric = (metric: string) => {
-    const currentStates = changepointDetector.state.metricStates ?? {};
-    changepointDetector.setState({
-      metricStates: {
-        ...currentStates,
-        [metric]: {
-          changepointCount: 0,
-          isComplexMetric: true,
-        },
-      },
-    });
-    this.sortPanels(this.state.sortBy.state.sortBy);
+    this.metricStates[metric] = {
+      changepointCount: 0,
+      isComplexMetric: true,
+    };
   };
 
   /**
@@ -365,22 +369,15 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * Updates the metric's changepoint count and triggers a resort.
    */
   private handleChangepointDetected = (metric: string) => {
-    const currentStates = changepointDetector.state.metricStates ?? {};
-    const currentMetricState = currentStates[metric] ?? {
+    const currentMetricState = this.metricStates[metric] ?? {
       changepointCount: 0,
       isComplexMetric: false,
     };
 
-    changepointDetector.setState({
-      metricStates: {
-        ...currentStates,
-        [metric]: {
-          ...currentMetricState,
-          changepointCount: currentMetricState.changepointCount + 1,
-        },
-      },
-    });
-    this.sortPanels(this.state.sortBy.state.sortBy);
+    this.metricStates[metric] = {
+      ...currentMetricState,
+      changepointCount: currentMetricState.changepointCount + 1,
+    };
   };
 
   public ignorePanel(metric: string, datasourceUid: string) {
