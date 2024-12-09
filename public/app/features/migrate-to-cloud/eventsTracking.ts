@@ -12,10 +12,10 @@ export const E2CEvents: EventDefinition[] = [
   {
     owner: 'Grafana Frontend Squad',
     product: 'e2c',
-    eventName: 'delete_token_clicked',
-    description: 'User clicked on the delete token button',
+    eventName: 'generate_token_clicked',
+    description: 'User clicked on the generate token button',
     state: 'featureUsage',
-    eventFunction: 'trackDeleteTokenClicked',
+    eventFunction: 'trackGenerateTokenClicked',
     properties: {},
   },
 ];

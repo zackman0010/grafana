@@ -1,7 +1,77 @@
-import { writeFileSync, appendFileSync } from 'fs';
+import { writeFileSync, appendFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-import { allEvents } from '../../../../public/analytics/allEvents';
+// import { allEvents } from './allEvents';
+//import * as allEvents from 'allEvents.json'
+const allEvents = JSON.parse(readFileSync('./allEvents.json', 'utf-8'));
+
+// const allEvents: EventDefinition[] = [
+//   {
+//     owner: 'Grafana Frontend Squad',
+//     product: 'navigation',
+//     eventName: 'item_clicked',
+//     description: 'User clicked on a navigation item',
+//     properties: {
+//       path: {
+//         description: 'The path of the clicked item',
+//         type: 'string',
+//         required: false,
+//       },
+//       menuIsDocked: {
+//         description: 'The state of the navigation menu',
+//         type: 'boolean',
+//         required: true,
+//       },
+//       itemIsBookmarked: {
+//         description: 'Whether the clicked item is bookmarked',
+//         type: 'boolean',
+//         required: true,
+//       },
+//       bookmarkToggleOn: {
+//         description: 'Whether the bookmark toggle is on',
+//         type: 'boolean',
+//         required: true,
+//       },
+//     },
+//     state: 'featureUsage',
+//     eventFunction: 'megaMenuItemClicked',
+//   },
+//   {
+//     owner: 'Grafana Frontend Squad',
+//     product: 'navigation',
+//     eventName: 'menu_opened',
+//     description: 'User opened the navigation menu',
+//     properties: {
+//       state: {
+//         description: 'The state of the navigation menu',
+//         type: 'boolean',
+//         required: true,
+//       },
+//       singleTopNav: {
+//         description: 'Whether the navigation menu is in single top nav mode',
+//         type: 'boolean',
+//         required: true,
+//       },
+//     },
+//     state: 'featureUsage',
+//     eventFunction: 'megaMenuOpened',
+//   },
+//   {
+//     owner: 'Grafana Frontend Squad',
+//     product: 'navigation',
+//     eventName: 'menu_docked',
+//     description: 'User docked the navigation menu',
+//     properties: {
+//       state: {
+//         description: 'The state of the navigation menu',
+//         type: 'boolean',
+//         required: true,
+//       },
+//     },
+//     state: 'featureUsage',
+//     eventFunction: 'megaMenuDocked',
+//   },
+// ];
 
 type EventPropertyDefinition = {
   [name: string]: {
@@ -18,10 +88,6 @@ type EventState =
   | 'experiment' // time boxed event used to make a go / no go decision on a feature - should be removed after the experiment is complete
   | 'funnel'; // start or end event of a funnel, used for conversion rate tracking
 
-type EventProperty = {
-  [name: string]: string | number | boolean;
-};
-
 export type EventDefinition = {
   repo?: string;
   owner: string;
@@ -31,13 +97,6 @@ export type EventDefinition = {
   properties?: EventPropertyDefinition;
   state: EventState;
   eventFunction: string;
-};
-
-export type EventTrackingProps = {
-  repo?: string;
-  product: string;
-  eventName: string;
-  properties: EventProperty;
 };
 
 // Configuration
@@ -74,10 +133,11 @@ export function generateFunctionCode(events: EventDefinition[]): string[] {
     const allPropertiesToParams = propertiesToParams.concat(propsNonRequired);
 
     //We need this indentation to have the correct format when generating the code in the specific file
+    const eventFullName = `${repo || 'grafana'}_${product}_${eventName}`;
     const functionCode = ` 
 export function ${eventFunction}(${allPropertiesToParams}): void {
-  ${checkPossibleUndefined}reportInteraction('${repo}'_'${product}'_'${eventName}',
-    properties: { ${propsToSend} }
+  ${checkPossibleUndefined}reportInteraction('${eventFullName}',
+    { ${propsToSend} }
   )
 };
 `;
