@@ -4276,6 +4276,12 @@
           "options": {
             "$ref": "#/components/schemas/ReportOptions"
           },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/ReportPage"
+            },
+            "type": "array"
+          },
           "recipients": {
             "type": "string"
           },
@@ -9527,6 +9533,12 @@
             "format": "int64",
             "type": "integer"
           },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/ReportPage"
+            },
+            "type": "array"
+          },
           "recipients": {
             "type": "string"
           },
@@ -9637,6 +9649,20 @@
           },
           "pdfShowTemplateVariables": {
             "type": "boolean"
+          },
+          "timeRange": {
+            "$ref": "#/components/schemas/ReportTimeRange"
+          }
+        },
+        "type": "object"
+      },
+      "ReportPage": {
+        "properties": {
+          "pageUrl": {
+            "type": "string"
+          },
+          "reportVariables": {
+            "type": "object"
           },
           "timeRange": {
             "$ref": "#/components/schemas/ReportTimeRange"
