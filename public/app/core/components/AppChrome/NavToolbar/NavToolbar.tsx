@@ -11,7 +11,7 @@ import { useSelector } from 'app/types';
 
 import { Breadcrumbs } from '../../Breadcrumbs/Breadcrumbs';
 import { buildBreadcrumbs } from '../../Breadcrumbs/utils';
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 import { NavToolbarSeparator } from './NavToolbarSeparator';
 
@@ -84,6 +84,7 @@ export function NavToolbar({
 }
 
 const getStyles = (theme: GrafanaTheme2) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   return {
     breadcrumbsWrapper: css({
       display: 'flex',

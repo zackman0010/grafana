@@ -7,7 +7,7 @@ import { t } from 'app/core/internationalization';
 
 import { Branding } from '../../Branding/Branding';
 import { OrganizationSwitcher } from '../OrganizationSwitcher/OrganizationSwitcher';
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 export interface Props {
   handleMegaMenu: () => void;
@@ -63,32 +63,35 @@ export function MegaMenuHeader({ handleMegaMenu, handleDockedMenu, onClose }: Pr
 
 MegaMenuHeader.displayName = 'MegaMenuHeader';
 
-const getStyles = (theme: GrafanaTheme2) => ({
-  dockMenuButton: css({
-    display: 'none',
-
-    [theme.breakpoints.up('xl')]: {
-      display: 'inline-flex',
-    },
-  }),
-  header: css({
-    alignItems: 'center',
-    borderBottom: `1px solid ${theme.colors.border.weak}`,
-    display: 'flex',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
-    padding: theme.spacing(0, 1, 0, 0.75),
-    height: TOP_BAR_LEVEL_HEIGHT,
-    minHeight: TOP_BAR_LEVEL_HEIGHT,
-  }),
-  img: css({
-    alignSelf: 'center',
-    height: theme.spacing(3),
-    width: theme.spacing(3),
-  }),
-  mobileCloseButton: css({
-    [theme.breakpoints.up('md')]: {
+const getStyles = (theme: GrafanaTheme2) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
+  return {
+    dockMenuButton: css({
       display: 'none',
-    },
-  }),
-});
+
+      [theme.breakpoints.up('xl')]: {
+        display: 'inline-flex',
+      },
+    }),
+    header: css({
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.colors.border.weak}`,
+      display: 'flex',
+      gap: theme.spacing(1),
+      justifyContent: 'space-between',
+      padding: theme.spacing(0, 1, 0, 0.75),
+      height: TOP_BAR_LEVEL_HEIGHT,
+      minHeight: TOP_BAR_LEVEL_HEIGHT,
+    }),
+    img: css({
+      alignSelf: 'center',
+      height: theme.spacing(3),
+      width: theme.spacing(3),
+    }),
+    mobileCloseButton: css({
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    }),
+  };
+};

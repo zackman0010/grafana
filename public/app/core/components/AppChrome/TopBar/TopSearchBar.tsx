@@ -15,7 +15,7 @@ import { enrichHelpItem } from '../MegaMenu/utils';
 import { NewsContainer } from '../News/NewsContainer';
 import { OrganizationSwitcher } from '../OrganizationSwitcher/OrganizationSwitcher';
 import { QuickAdd } from '../QuickAdd/QuickAdd';
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 import { SignInLink } from './SignInLink';
 import { TopNavBarMenu } from './TopNavBarMenu';
@@ -74,37 +74,40 @@ export const TopSearchBar = memo(function TopSearchBar() {
   );
 });
 
-const getStyles = (theme: GrafanaTheme2) => ({
-  layout: css({
-    height: TOP_BAR_LEVEL_HEIGHT,
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    padding: theme.spacing(0, 1, 0, 2),
-    borderBottom: `1px solid ${theme.colors.border.weak}`,
-    justifyContent: 'space-between',
+const getStyles = (theme: GrafanaTheme2) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
+  return {
+    layout: css({
+      height: TOP_BAR_LEVEL_HEIGHT,
+      display: 'flex',
+      gap: theme.spacing(1),
+      alignItems: 'center',
+      padding: theme.spacing(0, 1, 0, 2),
+      borderBottom: `1px solid ${theme.colors.border.weak}`,
+      justifyContent: 'space-between',
 
-    [theme.breakpoints.up('sm')]: {
-      gridTemplateColumns: '1.5fr minmax(240px, 1fr) 1.5fr', // search should not be smaller than 240px
-      display: 'grid',
+      [theme.breakpoints.up('sm')]: {
+        gridTemplateColumns: '1.5fr minmax(240px, 1fr) 1.5fr', // search should not be smaller than 240px
+        display: 'grid',
 
-      justifyContent: 'flex-start',
-    },
-  }),
-  img: css({
-    height: theme.spacing(3),
-    width: theme.spacing(3),
-  }),
-  logo: css({
-    display: 'flex',
-  }),
-  profileButton: css({
-    padding: theme.spacing(0, 0.25),
-    img: {
-      borderRadius: theme.shape.radius.circle,
-      height: '24px',
-      marginRight: 0,
-      width: '24px',
-    },
-  }),
-});
+        justifyContent: 'flex-start',
+      },
+    }),
+    img: css({
+      height: theme.spacing(3),
+      width: theme.spacing(3),
+    }),
+    logo: css({
+      display: 'flex',
+    }),
+    profileButton: css({
+      padding: theme.spacing(0, 0.25),
+      img: {
+        borderRadius: theme.shape.radius.circle,
+        height: '24px',
+        marginRight: 0,
+        width: '24px',
+      },
+    }),
+  };
+};

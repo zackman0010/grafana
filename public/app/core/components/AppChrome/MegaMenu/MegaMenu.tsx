@@ -14,7 +14,7 @@ import { usePatchUserPreferencesMutation } from 'app/features/preferences/api/in
 import { useDispatch, useSelector } from 'app/types';
 
 import { MEGA_MENU_TOGGLE_ID } from '../TopBar/SingleTopBar';
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 import { DOCK_MENU_BUTTON_ID, MegaMenuHeader } from './MegaMenuHeader';
 import { MegaMenuItem } from './MegaMenuItem';
@@ -173,6 +173,7 @@ MegaMenu.displayName = 'MegaMenu';
 
 const getStyles = (theme: GrafanaTheme2) => {
   const isSingleTopNav = config.featureToggles.singleTopNav;
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   return {
     content: css({
       display: 'flex',

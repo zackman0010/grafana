@@ -5,7 +5,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { Components } from '@grafana/e2e-selectors';
 import { Stack, useStyles2 } from '@grafana/ui';
 
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 export function SingleTopBarActions({ children }: PropsWithChildren) {
   const styles = useStyles2(getStyles);
@@ -20,6 +20,7 @@ export function SingleTopBarActions({ children }: PropsWithChildren) {
 }
 
 const getStyles = (theme: GrafanaTheme2) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   return {
     actionsBar: css({
       alignItems: 'center',

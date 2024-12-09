@@ -1,5 +1,5 @@
-import { NavModelItem } from '@grafana/data';
-export const TOP_BAR_LEVEL_HEIGHT = 40;
+import { GrafanaTheme2, NavModelItem } from '@grafana/data';
+export const getTopBarHeight = (theme: GrafanaTheme2) => 5 * theme.spacing.gridSize;
 
 export interface ToolbarUpdateProps {
   pageNav?: NavModelItem;

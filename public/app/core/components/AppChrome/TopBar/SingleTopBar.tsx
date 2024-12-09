@@ -17,7 +17,7 @@ import { buildBreadcrumbs } from '../../Breadcrumbs/utils';
 import { enrichHelpItem } from '../MegaMenu/utils';
 import { NewsContainer } from '../News/NewsContainer';
 import { QuickAdd } from '../QuickAdd/QuickAdd';
-import { TOP_BAR_LEVEL_HEIGHT } from '../types';
+import { getTopBarHeight } from '../types';
 
 import { SignInLink } from './SignInLink';
 import { TopNavBarMenu } from './TopNavBarMenu';
@@ -100,48 +100,51 @@ export const SingleTopBar = memo(function SingleTopBar({
   );
 });
 
-const getStyles = (theme: GrafanaTheme2, menuDockedAndOpen: boolean) => ({
-  layout: css({
-    height: TOP_BAR_LEVEL_HEIGHT,
-    display: 'flex',
-    gap: theme.spacing(2),
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    paddingLeft: menuDockedAndOpen ? theme.spacing(3.5) : theme.spacing(0.75),
-    borderBottom: `1px solid ${theme.colors.border.weak}`,
-    justifyContent: 'space-between',
+const getStyles = (theme: GrafanaTheme2, menuDockedAndOpen: boolean) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
+  return {
+    layout: css({
+      height: TOP_BAR_LEVEL_HEIGHT,
+      display: 'flex',
+      gap: theme.spacing(2),
+      alignItems: 'center',
+      padding: theme.spacing(0, 1),
+      paddingLeft: menuDockedAndOpen ? theme.spacing(3.5) : theme.spacing(0.75),
+      borderBottom: `1px solid ${theme.colors.border.weak}`,
+      justifyContent: 'space-between',
 
-    [theme.breakpoints.up('lg')]: {
-      gridTemplateColumns: '2fr minmax(440px, 1fr)',
-      display: 'grid',
+      [theme.breakpoints.up('lg')]: {
+        gridTemplateColumns: '2fr minmax(440px, 1fr)',
+        display: 'grid',
 
-      justifyContent: 'flex-start',
-    },
-  }),
-  breadcrumbsWrapper: css({
-    display: 'flex',
-    overflow: 'hidden',
-    [theme.breakpoints.down('sm')]: {
-      minWidth: '40%',
-    },
-  }),
-  img: css({
-    alignSelf: 'center',
-    height: theme.spacing(3),
-    width: theme.spacing(3),
-  }),
-  profileButton: css({
-    padding: theme.spacing(0, 0.5),
-    img: {
-      borderRadius: theme.shape.radius.circle,
-      height: '24px',
-      marginRight: 0,
-      width: '24px',
-    },
-  }),
-  kioskToggle: css({
-    [theme.breakpoints.down('lg')]: {
-      display: 'none',
-    },
-  }),
-});
+        justifyContent: 'flex-start',
+      },
+    }),
+    breadcrumbsWrapper: css({
+      display: 'flex',
+      overflow: 'hidden',
+      [theme.breakpoints.down('sm')]: {
+        minWidth: '40%',
+      },
+    }),
+    img: css({
+      alignSelf: 'center',
+      height: theme.spacing(3),
+      width: theme.spacing(3),
+    }),
+    profileButton: css({
+      padding: theme.spacing(0, 0.5),
+      img: {
+        borderRadius: theme.shape.radius.circle,
+        height: '24px',
+        marginRight: 0,
+        width: '24px',
+      },
+    }),
+    kioskToggle: css({
+      [theme.breakpoints.down('lg')]: {
+        display: 'none',
+      },
+    }),
+  };
+};

@@ -12,7 +12,7 @@ import { KioskMode } from 'app/types';
 import { RouteDescriptor } from '../../navigation/types';
 
 import { ReturnToPreviousProps } from './ReturnToPrevious/ReturnToPrevious';
-import { TOP_BAR_LEVEL_HEIGHT } from './types';
+import { getTopBarHeight } from './types';
 
 export interface AppChromeState {
   chromeless?: boolean;
@@ -38,6 +38,7 @@ export class AppChromeService {
   private currentRoute?: RouteDescriptor;
   private routeChangeHandled = true;
   private isSingleTopNav = config.featureToggles.singleTopNav;
+  private TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(config.theme2);
 
   private megaMenuDocked = Boolean(
     window.innerWidth >= config.theme2.breakpoints.values.xl &&
@@ -66,17 +67,17 @@ export class AppChromeService {
           if (kioskMode || chromeless) {
             return 0;
           } else if (actions) {
-            return TOP_BAR_LEVEL_HEIGHT * 2;
+            return this.TOP_BAR_LEVEL_HEIGHT * 2;
           } else {
-            return TOP_BAR_LEVEL_HEIGHT;
+            return this.TOP_BAR_LEVEL_HEIGHT;
           }
         } else {
           if (kioskMode || chromeless) {
             return 0;
           } else if (searchBarHidden) {
-            return TOP_BAR_LEVEL_HEIGHT;
+            return this.TOP_BAR_LEVEL_HEIGHT;
           } else {
-            return TOP_BAR_LEVEL_HEIGHT * 2;
+            return this.TOP_BAR_LEVEL_HEIGHT * 2;
           }
         }
       })

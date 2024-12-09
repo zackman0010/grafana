@@ -14,7 +14,7 @@ import { KioskMode } from 'app/types';
 
 import { MegaMenu, MENU_WIDTH } from './MegaMenu/MegaMenu';
 import { TOGGLE_BUTTON_ID } from './NavToolbar/NavToolbar';
-import { TOP_BAR_LEVEL_HEIGHT } from './types';
+import { getTopBarHeight } from './types';
 
 interface Props {}
 
@@ -87,6 +87,7 @@ export function AppChromeMenu({}: Props) {
 }
 
 const getStyles = (theme: GrafanaTheme2, searchBarHidden?: boolean) => {
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   let topPosition = searchBarHidden ? TOP_BAR_LEVEL_HEIGHT : TOP_BAR_LEVEL_HEIGHT * 2;
 
   if (config.featureToggles.singleTopNav) {

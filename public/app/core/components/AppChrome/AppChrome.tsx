@@ -21,7 +21,7 @@ import { ReturnToPrevious } from './ReturnToPrevious/ReturnToPrevious';
 import { SingleTopBar } from './TopBar/SingleTopBar';
 import { SingleTopBarActions } from './TopBar/SingleTopBarActions';
 import { TopSearchBar } from './TopBar/TopSearchBar';
-import { TOP_BAR_LEVEL_HEIGHT } from './types';
+import { getTopBarHeight } from './types';
 
 export interface Props extends PropsWithChildren<{}> {}
 
@@ -164,6 +164,7 @@ export function AppChrome({ children }: Props) {
 
 const getStyles = (theme: GrafanaTheme2, searchBarHidden: boolean, hasActions: boolean) => {
   const isSingleTopNav = config.featureToggles.singleTopNav;
+  const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   return {
     content: css({
       display: 'flex',
