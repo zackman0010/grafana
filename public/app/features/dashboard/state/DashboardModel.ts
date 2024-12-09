@@ -527,7 +527,7 @@ export class DashboardModel implements TimeModel {
     }
   }
 
-  getPanelById(id: number, includeCollapsed = false): PanelModel | null {
+  getPanelById(id: number | string, includeCollapsed = false): PanelModel | null {
     if (this.panelInEdit && this.panelInEdit.id === id) {
       return this.panelInEdit;
     }

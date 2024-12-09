@@ -99,7 +99,7 @@ export function runSharedRequest(options: QueryRunnerOptions, query: DashboardQu
   });
 }
 
-function getPanelIdFromQuery(queries: DataQuery[]): number | undefined {
+function getPanelIdFromQuery(queries: DataQuery[]): number | string | undefined {
   if (!queries || !queries.length) {
     return undefined;
   }

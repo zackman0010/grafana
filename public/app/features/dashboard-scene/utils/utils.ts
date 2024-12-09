@@ -22,7 +22,7 @@ import { panelMenuBehavior } from '../scene/PanelMenuBehavior';
 export const NEW_PANEL_HEIGHT = 8;
 export const NEW_PANEL_WIDTH = 12;
 
-export function getVizPanelKeyForPanelId(panelId: number) {
+export function getVizPanelKeyForPanelId(panelId: number | string) {
   return `panel-${panelId}`;
 }
 

@@ -49,7 +49,7 @@ export interface QueryRunnerOptions<
 > {
   datasource: DataSourceRef | DataSourceApi<TQuery, TOptions> | null;
   queries: TQuery[];
-  panelId?: number;
+  panelId?: number | string;
   panelPluginId?: string;
   dashboardUID?: string;
   timezone: TimeZone;
@@ -346,7 +346,7 @@ export class PanelQueryRunner {
 
   private pipeToSubject(
     observable: Observable<PanelData>,
-    panelId?: number,
+    panelId?: number | string,
     skipPreProcess = false,
     addErroDSVariable = false
   ) {
