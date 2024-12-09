@@ -13,6 +13,7 @@ import { Marker } from './Marker';
 import { Node } from './Node';
 import { ViewControls } from './ViewControls';
 import { Config, defaultConfig, useLayout } from './layout';
+import { EdgeNameOverrides, NodeNameOverrides } from './panelcfg.gen';
 import { EdgeDatumLayout, NodeDatum, NodesMarker, ZoomMode } from './types';
 import { useCategorizeFrames } from './useCategorizeFrames';
 import { useContextMenu } from './useContextMenu';
@@ -113,8 +114,18 @@ interface Props {
   nodeLimit?: number;
   panelId?: string;
   zoomMode?: ZoomMode;
+  nodeNameOverrides?: NodeNameOverrides;
+  edgeNameOverrides?: EdgeNameOverrides;
 }
-export function NodeGraph({ getLinks, dataFrames, nodeLimit, panelId, zoomMode }: Props) {
+export function NodeGraph({
+  getLinks,
+  dataFrames,
+  nodeLimit,
+  panelId,
+  zoomMode,
+  nodeNameOverrides,
+  edgeNameOverrides,
+}: Props) {
   const nodeCountLimit = nodeLimit || defaultNodeCountLimit;
   const { edges: edgesDataFrames, nodes: nodesDataFrames } = useCategorizeFrames(dataFrames);
 
@@ -134,8 +145,8 @@ export function NodeGraph({ getLinks, dataFrames, nodeLimit, panelId, zoomMode }
   // TODO we should be able to allow multiple dataframes for both edges and nodes, could be issue with node ids which in
   //  that case should be unique or figure a way to link edges and nodes dataframes together.
   const processed = useMemo(
-    () => processNodes(firstNodesDataFrame, firstEdgesDataFrame),
-    [firstEdgesDataFrame, firstNodesDataFrame]
+    () => processNodes(firstNodesDataFrame, firstEdgesDataFrame, nodeNameOverrides, edgeNameOverrides),
+    [firstEdgesDataFrame, firstNodesDataFrame, nodeNameOverrides, edgeNameOverrides]
   );
 
   // We need hover state here because for nodes we also highlight edges and for edges have labels separate to make

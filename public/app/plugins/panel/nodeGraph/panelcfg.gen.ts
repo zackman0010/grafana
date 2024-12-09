@@ -24,7 +24,34 @@ export enum ZoomMode {
   Greedy = 'greedy',
 }
 
+export interface NodeNameOverrides {
+  arc?: string;
+  color?: string;
+  details?: string;
+  highlighted?: string;
+  icon?: string;
+  id?: string;
+  mainStat?: string;
+  nodeRadius?: string;
+  secondaryStat?: string;
+  subTitle?: string;
+  title?: string;
+}
+
+export interface EdgeNameOverrides {
+  color?: string;
+  details?: string;
+  highlighted?: string;
+  id?: string;
+  mainStat?: string;
+  secondaryStat?: string;
+  source?: string;
+  target?: string;
+  thickness?: string;
+}
+
 export interface Options {
+  edgeNameOverrides?: EdgeNameOverrides;
   edges?: {
     /**
      * Unit for the main stat to override what ever is set in the data frame.
@@ -35,6 +62,7 @@ export interface Options {
      */
     secondaryStatUnit?: string;
   };
+  nodeNameOverrides?: NodeNameOverrides;
   nodes?: {
     /**
      * Unit for the main stat to override what ever is set in the data frame.

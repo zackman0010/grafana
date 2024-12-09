@@ -44,11 +44,37 @@ composableKinds: PanelCfg: {
 					secondaryStatUnit?: string
 				}
 				ZoomMode: "cooperative" | "greedy" @cuetsy(kind="enum")
+				NodeNameOverrides: {
+					id?:            string
+					title?:         string
+					subTitle?:      string
+					mainStat?:      string
+					secondaryStat?: string
+					arc?:           string
+					details?:       string
+					color?:         string
+					icon?:          string
+					nodeRadius?:    string
+					highlighted?:   string
+				} @cuetsy(kind="interface")
+				EdgeNameOverrides: {
+					id?:            string
+					mainStat?:      string
+					secondaryStat?: string
+					details?:       string
+					color?:         string
+					target?:        string
+					source?:        string
+					highlighted?:   string
+					thickness?:     string
+				} @cuetsy(kind="interface")
 				Options: {
 					nodes?: NodeOptions
 					edges?: EdgeOptions
 					// How to handle zoom/scroll events in the node graph
-					zoomMode?: ZoomMode
+					zoomMode?:          ZoomMode
+					nodeNameOverrides?: NodeNameOverrides
+					edgeNameOverrides?: EdgeNameOverrides
 				} @cuetsy(kind="interface")
 			}
 		}]

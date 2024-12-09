@@ -14,7 +14,7 @@ import {
 
 describe('processNodes', () => {
   it('handles empty args', async () => {
-    expect(processNodes(undefined, undefined)).toEqual({ nodes: [], edges: [] });
+    expect(processNodes(undefined, undefined, undefined, undefined)).toEqual({ nodes: [], edges: [] });
   });
 
   it('returns proper nodes and edges', async () => {
@@ -24,7 +24,9 @@ describe('processNodes', () => {
         { source: '0', target: '1' },
         { source: '0', target: '2' },
         { source: '1', target: '2' },
-      ])
+      ]),
+      undefined,
+      undefined
     );
 
     expect(nodes).toEqual([
@@ -54,7 +56,9 @@ describe('processNodes', () => {
         { source: '0', target: '1', mainstat: 1, secondarystat: 1 },
         { source: '0', target: '2', mainstat: 1, secondarystat: 1 },
         { source: '1', target: '2', mainstat: 1, secondarystat: 1 },
-      ])
+      ]),
+      undefined,
+      undefined
     );
 
     expect(nodes).toEqual([
@@ -154,6 +158,57 @@ describe('processNodes', () => {
       ],
     });
     const edgeFields = getEdgeFields(edgeFrame);
+    expect(edgeFields.id).toBeDefined();
+    expect(edgeFields.source).toBeDefined();
+    expect(edgeFields.target).toBeDefined();
+    expect(edgeFields.mainStat).toBeDefined();
+    expect(edgeFields.secondaryStat).toBeDefined();
+  });
+
+  it('gets nodes when field names are overridden', () => {
+    const nodeFrame = createDataFrame({
+      refId: 'nodes',
+      fields: [
+        { name: 'qwe', type: FieldType.string, values: ['id'] },
+        { name: 'asd', type: FieldType.string, values: ['title'] },
+        { name: 'zxc', type: FieldType.string, values: ['subTitle'] },
+        { name: 'ert', type: FieldType.string, values: ['mainStat'] },
+        { name: 'sdf', type: FieldType.string, values: ['secondaryStat'] },
+        { name: 'xcv', type: FieldType.number, values: [20] },
+      ],
+    });
+
+    const nodeFields = getNodeFields(nodeFrame, {
+      id: 'qwe',
+      title: 'asd',
+      subTitle: 'zxc',
+      mainStat: 'ert',
+      secondaryStat: 'sdf',
+      nodeRadius: 'xcv',
+    });
+    expect(nodeFields.id).toBeDefined();
+    expect(nodeFields.title).toBeDefined();
+    expect(nodeFields.subTitle).toBeDefined();
+    expect(nodeFields.mainStat).toBeDefined();
+    expect(nodeFields.secondaryStat).toBeDefined();
+
+    const edgeFrame = createDataFrame({
+      refId: 'nodes',
+      fields: [
+        { name: 'qwe', type: FieldType.string, values: ['id'] },
+        { name: 'asd', type: FieldType.string, values: ['source'] },
+        { name: 'zxc', type: FieldType.string, values: ['target'] },
+        { name: 'rty', type: FieldType.string, values: ['mainStat'] },
+        { name: 'fgh', type: FieldType.string, values: ['secondaryStat'] },
+      ],
+    });
+    const edgeFields = getEdgeFields(edgeFrame, {
+      id: 'qwe',
+      source: 'asd',
+      target: 'zxc',
+      mainStat: 'rty',
+      secondaryStat: 'fgh',
+    });
     expect(edgeFields.id).toBeDefined();
     expect(edgeFields.source).toBeDefined();
     expect(edgeFields.target).toBeDefined();
@@ -277,7 +332,9 @@ describe('finds connections', () => {
         { source: '0', target: '1' },
         { source: '0', target: '2' },
         { source: '1', target: '2' },
-      ])
+      ]),
+      undefined,
+      undefined
     );
 
     const linked = findConnectedNodesForEdge(nodes, edges, edges[0].id);
@@ -291,7 +348,9 @@ describe('finds connections', () => {
         { source: '0', target: '1' },
         { source: '0', target: '2' },
         { source: '1', target: '2' },
-      ])
+      ]),
+      undefined,
+      undefined
     );
 
     const linked = findConnectedNodesForNode(nodes, edges, nodes[0].id);
