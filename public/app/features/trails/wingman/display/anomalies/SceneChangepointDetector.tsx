@@ -22,7 +22,9 @@ export interface Changepoint {
   idx: number;
   time: number;
   field: Field<number>;
+  magnitude: number;
   isComplex?: boolean;
+  isRate?: boolean;
 }
 
 interface SceneChangepointDetectorState extends SceneObjectState {
@@ -131,8 +133,7 @@ const changepointProcessor: (detector: SceneChangepointDetector) => ExtraQueryDa
 
 function createChangepointAnnotations(
   frame: DataFrame,
-  onChangepointDetected: ((changepoint: Changepoint) => void) | undefined,
-  onCompleteChangepointDetection?: () => void
+  onChangepointDetected: ((changepoint: Changepoint) => void) | undefined
 ): DataFrame {
   const annotationTimes = [];
   const annotationTexts = [];
@@ -140,19 +141,75 @@ function createChangepointAnnotations(
   if (!timeField) {
     return { fields: [], length: 0 };
   }
+
   for (const field of frame.fields) {
     if (field.type !== FieldType.number) {
       continue;
     }
-    // TODO: Pass through params to the detector.
+
     const cpd = ChangepointDetector.defaultArgpcp();
     const values = new Float64Array(field.values);
     const cps = cpd.detectChangepoints(values);
+
     for (const cp of cps.indices) {
       const time = timeField.values[cp + 1];
+
+      // use a window of points before and after for more stable calculations
+      const windowSize = 5;
+      const beforePoints = values.slice(Math.max(0, cp - windowSize + 1), cp + 1);
+      const afterPoints = values.slice(cp + 1, Math.min(cp + windowSize + 1, values.length));
+
+      const beforeAvg = beforePoints.reduce((a, b) => a + b, 0) / beforePoints.length;
+      const afterAvg = afterPoints.reduce((a, b) => a + b, 0) / afterPoints.length;
+
+      // calculate relative change (percent change)
+      let magnitude;
+      if (beforeAvg === 0) {
+        // handle division by zero - if beforeAvg is 0, use absolute change
+        magnitude = Math.abs(afterAvg);
+      } else {
+        magnitude = Math.abs((afterAvg - beforeAvg) / beforeAvg) * 100;
+      }
+
+      // For counter metrics that only increase, we might want to consider the rate of change
+      // Calculate rate of change per second using the time field
+      const beforeTime = timeField.values[Math.max(0, cp - windowSize + 1)];
+      const afterTime = timeField.values[Math.min(cp + windowSize, values.length - 1)];
+      const timeDiffSeconds = (afterTime - beforeTime) / 1000; // Convert to seconds
+
+      // if the metric is monotonically increasing (like a counter)
+      const isMonotonicIncreasing =
+        beforePoints.every((val, i) => i === 0 || val >= beforePoints[i - 1]) &&
+        afterPoints.every((val, i) => i === 0 || val >= afterPoints[i - 1]);
+
+      if (isMonotonicIncreasing) {
+        // for counters, look at the change in rate
+        const beforeRate = (beforePoints[beforePoints.length - 1] - beforePoints[0]) / timeDiffSeconds;
+        const afterRate = (afterPoints[afterPoints.length - 1] - afterPoints[0]) / timeDiffSeconds;
+
+        if (beforeRate === 0) {
+          magnitude = Math.abs(afterRate);
+        } else {
+          magnitude = Math.abs((afterRate - beforeRate) / beforeRate) * 100;
+        }
+      }
+
+      // add a weight factor based on the significance of the change
+      // this helps prioritize larger relative changes
+      const significanceThreshold = 10; // 10% change
+      const weight = magnitude > significanceThreshold ? 1.5 : 1;
+      magnitude *= weight;
+
       annotationTimes.push(time);
       annotationTexts.push('Changepoint detected');
-      onChangepointDetected?.({ idx: cp + 1, time, field });
+
+      onChangepointDetected?.({
+        idx: cp + 1,
+        time,
+        field,
+        magnitude,
+        isRate: isMonotonicIncreasing,
+      });
     }
   }
 

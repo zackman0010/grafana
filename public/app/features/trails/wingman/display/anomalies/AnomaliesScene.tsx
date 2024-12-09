@@ -16,7 +16,7 @@ import { Trans } from 'app/core/internationalization';
 import { getPreviewPanelFor } from '../../../MetricSelect/previewPanel';
 import { ROW_PREVIEW_HEIGHT } from '../../MetricSelectSceneForWingman';
 
-import { SceneChangepointDetector } from './SceneChangepointDetector';
+import { Changepoint, SceneChangepointDetector } from './SceneChangepointDetector';
 import { SortByScene, SortCriteriaChanged } from './SortByChangepointsScene';
 import { hideEmptyPanels } from './hideEmptyPanels';
 
@@ -80,6 +80,8 @@ interface DashboardPanelMetrics {
 interface MetricState {
   changepointCount: number;
   isComplexMetric: boolean;
+  maxChangepointMagnitude: number;
+  averageChangepointMagnitude: number;
 }
 
 export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
@@ -263,7 +265,7 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
       return [...metrics].sort((a, b) => b.metric.localeCompare(a.metric));
     }
 
-    // Default to changepoints sorting
+    // Default to changepoints sorting (by change magnitude)
     return [...metrics].sort((a, b) => {
       // Put complex metrics at the end
       const aState = this.metricStates[a.metric];
@@ -276,10 +278,15 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
         return -1;
       }
 
-      return (bState?.changepointCount || 0) - (aState?.changepointCount || 0);
+      // sort by max magnitude first, then by average magnitude if max is equal
+      const maxMagnitudeDiff = (bState?.maxChangepointMagnitude || 0) - (aState?.maxChangepointMagnitude || 0);
+      if (maxMagnitudeDiff !== 0) {
+        return maxMagnitudeDiff;
+      }
+
+      return (bState?.averageChangepointMagnitude || 0) - (aState?.averageChangepointMagnitude || 0);
     });
   }
-
   /**
    * Sort and rerender panels based on the current sort criteria.
    * Uses cached panel instances to prevent unnecessary recreation.
@@ -311,8 +318,8 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
     if (!panel) {
       const detector = this.changepointDetector.clone();
       detector.setState({
-        onChangepointDetected: () => {
-          this.handleChangepointDetected(metric);
+        onChangepointDetected: (changepoint) => {
+          this.handleChangepointDetected(metric, changepoint);
         },
         onComplexMetric: () => {
           this.handleComplexMetric(metric);
@@ -361,6 +368,8 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
     this.metricStates[metric] = {
       changepointCount: 0,
       isComplexMetric: true,
+      maxChangepointMagnitude: 0,
+      averageChangepointMagnitude: 0,
     };
   };
 
@@ -368,15 +377,24 @@ export class AnomaliesScene extends SceneObjectBase<AnomaliesSceneState> {
    * Handle when a changepoint is detected in a metric's data.
    * Updates the metric's changepoint count and triggers a resort.
    */
-  private handleChangepointDetected = (metric: string) => {
+  private handleChangepointDetected = (metric: string, changepoint: Changepoint) => {
     const currentMetricState = this.metricStates[metric] ?? {
       changepointCount: 0,
+      maxChangepointMagnitude: 0,
+      averageChangepointMagnitude: 0,
       isComplexMetric: false,
     };
 
+    const newChangepointCount = currentMetricState.changepointCount + 1;
+    const newMaxMagnitude = Math.max(currentMetricState.maxChangepointMagnitude, changepoint.magnitude);
+    const newTotalMagnitude =
+      currentMetricState.averageChangepointMagnitude * currentMetricState.changepointCount + changepoint.magnitude;
+
     this.metricStates[metric] = {
       ...currentMetricState,
-      changepointCount: currentMetricState.changepointCount + 1,
+      changepointCount: newChangepointCount,
+      maxChangepointMagnitude: newMaxMagnitude,
+      averageChangepointMagnitude: newTotalMagnitude / newChangepointCount,
     };
   };
 
