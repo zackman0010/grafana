@@ -42,7 +42,7 @@ export class SidecarService_EXPERIMENTAL {
 
   private mainOnAllowedRoute = false;
 
-  private currentMainContextGetter: (() => unknown) | undefined = undefined;
+  private currentMainContextGetter: (() => { context: unknown; tools?: unknown }) | undefined = undefined;
 
   constructor(mainLocationService: LocationService) {
     this._initialContext = new BehaviorSubject<unknown | undefined>(undefined);
@@ -244,14 +244,14 @@ export class SidecarService_EXPERIMENTAL {
     return result;
   }
 
-  getMainAppContext(): unknown {
+  getMainAppContext(): { context: unknown; tools?: unknown } | undefined {
     if (!this.currentMainContextGetter) {
-      return;
+      return undefined;
     }
     return this.currentMainContextGetter();
   }
 
-  registerContextGetter(getter: () => unknown) {
+  registerContextGetter(getter: () => { context: unknown; tools?: unknown }) {
     this.currentMainContextGetter = getter;
   }
 

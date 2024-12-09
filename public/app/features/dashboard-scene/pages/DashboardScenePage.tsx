@@ -31,6 +31,114 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
   // After scene migration is complete and we get rid of old dashboard we should refactor dashboardWatcher so this route reload is not need
   const routeReloadCounter = (location.state as any)?.routeReloadCounter;
 
+  function getPanel(key: string) {
+    const state = dashboard!.state;
+    return state.body.state.grid.state.children
+      .map((c) => c.state.body)
+      .find((panel) => {
+        return panel.state.key === key;
+      });
+  }
+
+  const tools = [
+    {
+      call: (args: { panelKey: string; query: string }) => {
+        const panel = getPanel(args.panelKey);
+        const queries = panel!.state.$data.state.$data.state.queries;
+
+        panel!.state.$data.state.$data.setState({
+          queries: [
+            {
+              ...queries[0],
+              expr: args.query,
+            },
+          ],
+        });
+        panel!.state.$data.state.$data.runQueries();
+      },
+      definition: {
+        type: 'function',
+        function: {
+          name: 'modify_query',
+          description: 'Modifies query in the panel defined by the panelId parameter',
+          parameters: {
+            type: 'object',
+            properties: {
+              panelKey: {
+                type: 'string',
+                description: 'Key of the dashboard panel which query should be modified',
+              },
+              query: {
+                type: 'string',
+                description: 'The new query to be set in the panel',
+              },
+            },
+            required: ['panelKey', 'query'],
+            additionalProperties: false,
+          },
+        },
+      },
+    },
+    {
+      call: (args: {
+        panelKey: string;
+        config: { color?: string; thresholds?: { steps: Array<{ color: string; value: number }> } };
+      }) => {
+        const panel = getPanel(args.panelKey);
+
+        const newDefaults = {};
+        if (args.config.color) {
+          newDefaults.color = args.config.color;
+        }
+        panel.setState({
+          fieldConfig: {
+            ...panel.state,
+            defaults: {
+              ...panel.state.defaults,
+              color: {
+                mode: 'fixed',
+                fixedColor: args.config.color,
+              },
+            },
+          },
+        });
+        panel!.state.$data.state.$data.runQueries();
+      },
+      definition: {
+        type: 'function',
+        function: {
+          name: 'modify_panel_config',
+          description: 'Modifies panel configuration which includes changing color and thresholds.',
+          parameters: {
+            type: 'object',
+            properties: {
+              panelKey: {
+                type: 'string',
+                description: 'Key of the dashboard panel which query should be modified',
+              },
+              config: {
+                type: 'object',
+                properties: {
+                  color: {
+                    type: 'string',
+                    description: 'Color of the graph line in the panel',
+                  },
+                  threshold: {
+                    type: 'object',
+                    description: 'Definition of the thresholds applied to the panel',
+                    properties: {},
+                  },
+                },
+              },
+            },
+            required: ['panelKey', 'config'],
+            additionalProperties: false,
+          },
+        },
+      },
+    },
+  ];
+
   useEffect(() => {
     sidecarServiceSingleton_EXPERIMENTAL.registerContextGetter(() => {
       let obj;
@@ -41,12 +149,15 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
         throw error;
       }
       return {
-        dashboard: JSON.stringify(obj),
+        context: {
+          dashboard: JSON.stringify(obj),
+        },
+        tools: tools,
       };
     });
 
     return () => sidecarServiceSingleton_EXPERIMENTAL.unregisterContextGetter();
-  }, [dashboard]);
+  }, [dashboard, tools]);
 
   useEffect(() => {
     if (route.routeName === DashboardRoutes.Normal && type === 'snapshot') {
@@ -109,7 +220,7 @@ function toSimpleObject(dashboardScene?: DashboardScene): Record<string, unknown
       const panel = c.state.body;
 
       return {
-        ...pick(panel.state, ['panelId', 'panelId', 'title', 'pluginVersion']),
+        ...pick(panel.state, ['key', 'title', 'pluginVersion']),
         queries: panel.state.$data.state.$data.state.queries.map((q) => {
           return {
             ...pick(q, ['datasource', 'expr', 'instant']),
@@ -120,43 +231,45 @@ function toSimpleObject(dashboardScene?: DashboardScene): Record<string, unknown
   };
 }
 
-function toSimpleObject2(something: any, depth = 0): Record<string, unknown> {
-  const obj: Record<string, unknown> = {};
-  if (depth > 5) {
-    return { err: 'Max depth reached' };
-  }
-
-  for (const key of Object.keys(something)) {
-    const value = something[key];
-
-    console.log('processing', key);
-
-    if (!value) {
-      continue;
-    }
-
-    if (typeof value === 'string' || typeof value === 'number') {
-      obj[key] = value;
-      continue;
-    }
-
-    if (value.state) {
-      obj[key] = toSimpleObject(value.state, depth + 1);
-      continue;
-    }
-
-    if (Array.isArray(value)) {
-      obj[key] = value.map((val) => toSimpleObject(val, depth + 1));
-      continue;
-    }
-
-    if (typeof value === 'object') {
-      obj[key] = toSimpleObject(value, depth + 1);
-      continue;
-    }
-  }
-
-  return obj;
-}
+// function toSimpleObject2(something: any, depth = 0): Record<string, unknown> {
+//   const obj: Record<string, unknown> = {};
+//   if (depth > 5) {
+//     return { err: 'Max depth reached' };
+//   }
+//
+//   for (const key of Object.keys(something)) {
+//     const value = something[key];
+//
+//     console.log('processing', key);
+//
+//     if (!value) {
+//       continue;
+//     }
+//
+//     if (typeof value === 'string' || typeof value === 'number') {
+//       obj[key] = value;
+//       continue;
+//     }
+//
+//     if (value.state) {
+//       obj[key] = toSimpleObject(value.state, depth + 1);
+//       continue;
+//     }
+//
+//     if (Array.isArray(value)) {
+//       obj[key] = value.map((val) => toSimpleObject(val, depth + 1));
+//       continue;
+//     }
+//
+//     if (typeof value === 'object') {
+//       obj[key] = toSimpleObject(value, depth + 1);
+//       continue;
+//     }
+//   }
+//
+//   return obj;
+// }
 
 export default DashboardScenePage;
+
+// "{"title":"grot","description":"","tags":[],"meta":{"type":"db","canSave":true,"canEdit":true,"canAdmin":true,"canStar":true,"canDelete":true,"slug":"grot","url":"/d/de5uwbhpvkiyod/grot","expires":"0001-01-01T00:00:00Z","created":"2024-12-04T13:59:33+01:00","updated":"2024-12-04T13:59:33+01:00","updatedBy":"admin","createdBy":"admin","version":1,"hasAcl":false,"isFolder":false,"folderId":0,"folderUid":"","folderTitle":"General","folderUrl":"","provisioned":false,"provisionedExternalId":"","annotationsPermissions":{"dashboard":{"canAdd":true,"canEdit":true,"canDelete":true},"organization":{"canAdd":true,"canEdit":true,"canDelete":true}},"canShare":true,"showSettings":true,"canMakeEditable":false,"hasUnsavedFolderChange":false},"timeRange":{"from":"now-6h","to":"now","timeZone":"browser"},"panels":[{"title":"Panel Title","pluginVersion":"11.4.0-pre","queries":[{"datasource":{"type":"prometheus","uid":"cc1afed6-6493-4f84-9a45-4b607943e6ae"},"expr":"prometheus_http_requests_total","instant":false}]}]}"
