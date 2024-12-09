@@ -21,6 +21,10 @@
     },
     "primary": {
       "main": "#008f11"
+    },
+    "gradients": {
+      "brandVertical": "linear-gradient(0deg, #008f11 0%, #00ff41 100%)",
+      "brandHorizontal": "linear-gradient(90deg, #008f11 0%, #00ff41 100%)"
     }
   },
   "shape": {
