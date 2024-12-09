@@ -367,11 +367,7 @@ export class LokiDatasource
       return this.runLiveQueryThroughBackend(fixedRequest);
     }
 
-    if (
-      config.featureToggles.lokiShardSplitting &&
-      requestSupportsSharding(fixedRequest.targets) &&
-      fixedRequest.app === CoreApp.Explore
-    ) {
+    if (config.featureToggles.lokiShardSplitting && requestSupportsSharding(fixedRequest.targets)) {
       return runShardSplitQuery(this, fixedRequest);
     } else if (config.featureToggles.lokiQuerySplitting && requestSupportsSplitting(fixedRequest.targets)) {
       return runSplitQuery(this, fixedRequest);
@@ -581,7 +577,7 @@ export class LokiDatasource
     if (isQueryWithError(this.interpolateString(query.expr, placeHolderScopedVars))) {
       return undefined;
     }
-    
+
     const labelMatchers = getStreamSelectorsFromQuery(query.expr);
     let statsForAll: QueryStats = { streams: 0, chunks: 0, bytes: 0, entries: 0 };
 
