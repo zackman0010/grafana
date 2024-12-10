@@ -88,17 +88,32 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
 
         const newDefaults = {};
         if (args.config.color) {
-          newDefaults.color = args.config.color;
+          newDefaults.color = {
+            mode: 'fixed',
+            fixedColor: args.config.color,
+          };
         }
+
+        if (args.config.thresholds) {
+          newDefaults.thresholds = {
+            mode: 'absolute',
+            steps: [{ color: 'green', value: -Infinity }, ...args.config.thresholds.steps],
+          };
+
+          newDefaults.custom = {
+            ...panel.state.fieldConfig.defaults.custom,
+            thresholdsStyle: {
+              mode: 'area',
+            },
+          };
+        }
+
         panel.setState({
           fieldConfig: {
-            ...panel.state,
+            ...panel.state.fieldConfig,
             defaults: {
-              ...panel.state.defaults,
-              color: {
-                mode: 'fixed',
-                fixedColor: args.config.color,
-              },
+              ...panel.state.fieldConfig.defaults,
+              ...newDefaults,
             },
           },
         });
@@ -120,13 +135,34 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
                 type: 'object',
                 properties: {
                   color: {
-                    type: 'string',
                     description: 'Color of the graph line in the panel',
+                    type: 'string',
                   },
-                  threshold: {
-                    type: 'object',
+                  thresholds: {
                     description: 'Definition of the thresholds applied to the panel',
-                    properties: {},
+                    type: 'object',
+                    required: ['steps'],
+                    properties: {
+                      steps: {
+                        description: 'Array of threshold steps',
+                        type: 'array',
+                        items: {
+                          description: 'Definition of single threshold step',
+                          required: ['color', 'value'],
+                          type: 'object',
+                          properties: {
+                            color: {
+                              type: 'string',
+                              description: 'Color of the threshold line',
+                            },
+                            value: {
+                              type: 'number',
+                              description: 'Value of the threshold',
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
