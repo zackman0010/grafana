@@ -1,5 +1,5 @@
 import { LegacyGraphHoverClearEvent, SetPanelAttentionEvent, locationUtil } from '@grafana/data';
-import { LocationService } from '@grafana/runtime';
+import { config, LocationService, ShowThemeEditorEvent } from '@grafana/runtime';
 import appEvents from 'app/core/app_events';
 import { getExploreUrl } from 'app/core/utils/explore';
 import { SaveDashboardDrawer } from 'app/features/dashboard/components/SaveDashboard/SaveDashboardDrawer';
@@ -55,6 +55,10 @@ export class KeybindingSrv {
 
     this.bind('c t', () => toggleTheme(false));
     this.bind('c r', () => toggleTheme(true));
+    const isDevEnv = config.buildInfo.env === 'development';
+    if (isDevEnv) {
+      this.bind('u i', this.showThemeEditor);
+    }
   }
 
   bindGlobalEsc() {
@@ -113,6 +117,10 @@ export class KeybindingSrv {
 
   private showHelpModal() {
     appEvents.publish(new ShowModalReactEvent({ component: HelpModal }));
+  }
+
+  private showThemeEditor() {
+    appEvents.publish(new ShowThemeEditorEvent());
   }
 
   private exit() {

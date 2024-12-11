@@ -3,22 +3,35 @@ import * as React from 'react';
 import { SkeletonTheme } from 'react-loading-skeleton';
 
 import { GrafanaTheme2, ThemeContext } from '@grafana/data';
-import { ThemeChangedEvent, config } from '@grafana/runtime';
+import { ShowThemeEditorEvent, ThemeChangedEvent, config } from '@grafana/runtime';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { Drawer } from '@grafana/ui';
 
 import { appEvents } from '../core';
 
-import 'react-loading-skeleton/dist/skeleton.css';
+import ThemeEditor from './ThemeEditor';
 
 export const ThemeProvider = ({ children, value }: { children: React.ReactNode; value: GrafanaTheme2 }) => {
   const [theme, setTheme] = useState(value);
+  const [showThemeEditor, setShowThemeEditor] = useState(false);
+  const isDevEnv = config.buildInfo.env === 'development';
 
   useEffect(() => {
-    const sub = appEvents.subscribe(ThemeChangedEvent, (event) => {
-      config.theme2 = event.payload;
-      setTheme(event.payload);
-    });
+    const subs = [
+      appEvents.subscribe(ThemeChangedEvent, (event) => {
+        config.theme2 = event.payload;
+        setTheme(event.payload);
+      }),
+      appEvents.subscribe(ShowThemeEditorEvent, () => {
+        setShowThemeEditor(true);
+      }),
+    ];
 
-    return () => sub.unsubscribe();
+    return () => {
+      for (const sub of subs) {
+        sub.unsubscribe();
+      }
+    };
   }, []);
 
   return (
@@ -29,6 +42,11 @@ export const ThemeProvider = ({ children, value }: { children: React.ReactNode; 
         borderRadius={theme.shape.radius.default}
       >
         {children}
+        {isDevEnv && showThemeEditor && (
+          <Drawer title="Theme editor" onClose={() => setShowThemeEditor(false)}>
+            <ThemeEditor />
+          </Drawer>
+        )}
       </SkeletonTheme>
     </ThemeContext.Provider>
   );

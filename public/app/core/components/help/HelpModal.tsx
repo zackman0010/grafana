@@ -2,11 +2,14 @@ import { css } from '@emotion/css';
 import { useMemo } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
+import { config } from '@grafana/runtime';
 import { Grid, Modal, useStyles2, Text } from '@grafana/ui';
 import { t, Trans } from 'app/core/internationalization';
 import { getModKey } from 'app/core/utils/browser';
 
 const getShortcuts = (modKey: string) => {
+  const isDevEnv = config.buildInfo.env === 'development';
+
   return [
     {
       category: t('help-modal.shortcuts-category.global', 'Global'),
@@ -31,6 +34,7 @@ const getShortcuts = (modKey: string) => {
           description: t('help-modal.shortcuts-description.show-all-shortcuts', 'Show all keyboard shortcuts'),
         },
         { keys: ['c', 't'], description: t('help-modal.shortcuts-description.change-theme', 'Change theme') },
+        { keys: ['u', 'i'], description: 'Open theme editor (dev only)', hide: !isDevEnv },
       ],
     },
     {
@@ -174,20 +178,23 @@ export const HelpModal = ({ onDismiss }: HelpModalProps): JSX.Element => {
                 </tr>
               </thead>
               <tbody>
-                {shortcuts.map(({ keys, description }) => (
-                  <tr key={keys.join()}>
-                    <td className={styles.keys}>
-                      {keys.map((key) => (
-                        <Key key={key}>{key}</Key>
-                      ))}
-                    </td>
-                    <td>
-                      <Text variant="bodySmall" element="p">
-                        {description}
-                      </Text>
-                    </td>
-                  </tr>
-                ))}
+                {shortcuts.map(
+                  ({ keys, description, hide }) =>
+                    !hide && (
+                      <tr key={keys.join()}>
+                        <td className={styles.keys}>
+                          {keys.map((key) => (
+                            <Key key={key}>{key}</Key>
+                          ))}
+                        </td>
+                        <td>
+                          <Text variant="bodySmall" element="p">
+                            {description}
+                          </Text>
+                        </td>
+                      </tr>
+                    )
+                )}
               </tbody>
             </table>
           </section>

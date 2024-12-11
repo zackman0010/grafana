@@ -19,6 +19,15 @@ export class ThemeChangedEvent extends BusEventWithPayload<GrafanaTheme2> {
 }
 
 /**
+ * Called when showing the theme editor (dev only)
+ *
+ * @private
+ */
+export class ShowThemeEditorEvent extends BusEventBase {
+  static type = 'show-theme-editor';
+}
+
+/**
  * Called when time range is updated
  *
  * @public
