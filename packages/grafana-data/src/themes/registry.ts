@@ -126,6 +126,9 @@ function createDebug(): GrafanaTheme2 {
     shape: {
       borderRadius: 8,
     },
+    spacing: {
+      gridSize: 10,
+    },
   });
 }
 
