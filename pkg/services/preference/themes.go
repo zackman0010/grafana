@@ -11,6 +11,8 @@ var themes = []ThemeDTO{
 	{ID: "dark", Type: "dark"},
 	{ID: "system", Type: "dark"},
 	{ID: "debug", Type: "dark", IsExtra: true},
+	// TODO add these dynamically!
+	{ID: "matrix", Type: "dark", IsExtra: true},
 }
 
 func GetThemeByID(id string) *ThemeDTO {

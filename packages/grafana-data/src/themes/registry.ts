@@ -1,8 +1,11 @@
+import Ajv from 'ajv';
+
 import { Registry, RegistryItem } from '../utils/Registry';
 
 import { createColors } from './createColors';
 import { createTheme, NewThemeOptions } from './createTheme';
-import matrix from './themeDefinitions/matrix.json';
+import schema from './schema.json';
+import * as extraThemes from './themeDefinitions/index';
 import { GrafanaTheme2 } from './types';
 
 export interface ThemeRegistryItem extends RegistryItem {
@@ -10,9 +13,12 @@ export interface ThemeRegistryItem extends RegistryItem {
   build: () => GrafanaTheme2;
 }
 
+const ajv = new Ajv();
+const validate = ajv.compile(schema);
+
 export function isValidTheme(themeInput: unknown): themeInput is NewThemeOptions {
-  // TODO validate themeInput against schema
-  return true;
+  const isValid = validate(themeInput);
+  return isValid;
 }
 
 /**
@@ -29,13 +35,24 @@ export function getThemeById(id: string): GrafanaTheme2 {
  * For internal use only
  */
 export function getBuiltInThemes(includeExtras?: boolean) {
-  return themeRegistry.list().filter((item) => {
+  const themes = themeRegistry.list().filter((item) => {
     return includeExtras ? true : !item.isExtra;
   });
+  // sort themes alphabetically, but put built-in themes (default, dark, light, system) first
+  const sortedThemes = themes.sort((a, b) => {
+    if (a.isExtra && !b.isExtra) {
+      return 1;
+    } else if (!a.isExtra && b.isExtra) {
+      return -1;
+    } else {
+      return a.name.localeCompare(b.name);
+    }
+  });
+  return sortedThemes;
 }
 
 /**
- * There is also a backend list at services/perferences/themes.go
+ * There is also a backend list at services/preference/themes.go
  */
 const themeRegistry = new Registry<ThemeRegistryItem>(() => {
   return [
@@ -43,9 +60,21 @@ const themeRegistry = new Registry<ThemeRegistryItem>(() => {
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
     { id: 'debug', name: 'Debug', build: createDebug, isExtra: true },
-    { id: 'matrix', name: 'Matrix', build: createMatrix, isExtra: true },
   ];
 });
+
+for (const [id, theme] of Object.entries(extraThemes)) {
+  if (isValidTheme(theme)) {
+    themeRegistry.register({
+      // TODO add a field for id in the schema?
+      id,
+      // TODO make name required in the schema
+      name: theme.name ?? '',
+      build: () => createTheme(theme),
+      isExtra: true,
+    });
+  }
+}
 
 function getSystemPreferenceTheme() {
   const mediaResult = window.matchMedia('(prefers-color-scheme: dark)');
@@ -130,34 +159,4 @@ function createDebug(): GrafanaTheme2 {
       gridSize: 10,
     },
   });
-}
-
-function createMatrix(): GrafanaTheme2 {
-  // return createTheme({
-  //   name: 'Debug',
-  //   colors: {
-  //     mode: 'dark',
-  //     background: {
-  //       canvas: '#000000',
-  //       primary: '#000000',
-  //       secondary: '#000000',
-  //     },
-  //     text: {
-  //       primary: '#008f11',
-  //       secondary: '#008f11',
-  //       disabled: '#008f11',
-  //       link: '#00ff41',
-  //       maxContrast: '#00ff41',
-  //     },
-  //     border: {
-  //       weak: '#008f1144',
-  //       medium: '#008f1188',
-  //       strong: '#008f11ff',
-  //     },
-  //   },
-  //   shape: {
-  //     borderRadius: 0,
-  //   },
-  // });
-  return isValidTheme(matrix) ? createTheme(matrix) : createTheme();
 }
