@@ -43,7 +43,7 @@ export const ThemeProvider = ({ children, value }: { children: React.ReactNode; 
       >
         {children}
         {isDevEnv && showThemeEditor && (
-          <Drawer title="Theme editor" onClose={() => setShowThemeEditor(false)}>
+          <Drawer title="Edit theme" onClose={() => setShowThemeEditor(false)}>
             <ThemeEditor />
           </Drawer>
         )}
