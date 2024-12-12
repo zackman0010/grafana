@@ -11,7 +11,7 @@ import (
 	genericapiserver "k8s.io/apiserver/pkg/server"
 	common "k8s.io/kube-openapi/pkg/common"
 
-	secret "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
+	secretV1Alpha1 "github.com/grafana/grafana/pkg/apis/secret/v1alpha1"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/reststorage"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
@@ -51,26 +51,30 @@ func RegisterAPIService(
 
 // GetGroupVersion returns the tuple of `group` and `version` for the API which uniquely identifies it.
 func (b *SecretAPIBuilder) GetGroupVersion() schema.GroupVersion {
-	return secret.SchemeGroupVersion
+	// return secret.SchemeGroupVersion
+	return secretV1Alpha1.SchemeGroupVersion
 }
 
 // InstallSchema is called by the `apiserver` which exposes the defined kinds.
 func (b *SecretAPIBuilder) InstallSchema(scheme *runtime.Scheme) error {
-	secret.AddKnownTypes(scheme, secret.VERSION)
+	// secret.AddKnownTypes(scheme, secret.VERSION)
+	secretV1Alpha1.AddKnownTypes(scheme, secretV1Alpha1.VERSION)
 
 	// Link this version to the internal representation.
 	// This is used for server-side-apply (PATCH), and avoids the error:
 	// "no kind is registered for the type"
-	secret.AddKnownTypes(scheme, runtime.APIVersionInternal)
+	// secret.AddKnownTypes(scheme, runtime.APIVersionInternal)
+	secretV1Alpha1.AddKnownTypes(scheme, runtime.APIVersionInternal)
 
 	// Internal Kubernetes metadata API. Presumably to display the available APIs?
 	// e.g. http://localhost:3000/apis/secret.grafana.app/v0alpha1
-	metav1.AddToGroupVersion(scheme, secret.SchemeGroupVersion)
+	// metav1.AddToGroupVersion(scheme, secret.SchemeGroupVersion)
+	metav1.AddToGroupVersion(scheme, secretV1Alpha1.SchemeGroupVersion)
 
 	// This sets the priority in case we have multiple versions.
 	// By default Kubernetes will only let you use `kubectl get <resource>` with one version.
 	// In case there are multiple versions, we'd need to pass the full path with the `--raw` flag.
-	if err := scheme.SetVersionPriority(secret.SchemeGroupVersion); err != nil {
+	if err := scheme.SetVersionPriority(secretV1Alpha1.SchemeGroupVersion); err != nil {
 		return fmt.Errorf("scheme set version priority: %w", err)
 	}
 
@@ -79,7 +83,7 @@ func (b *SecretAPIBuilder) InstallSchema(scheme *runtime.Scheme) error {
 
 // UpdateAPIGroupInfo is called when creating a generic API server for this group of kinds.
 func (b *SecretAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver.APIGroupInfo, opts builder.APIGroupOptions) error {
-	secureValueResource := secret.SecureValuesResourceInfo
+	secureValueResource := secretV1Alpha1.SecureValuesResourceInfo
 
 	// rest.Storage is a generic interface for RESTful storage services.
 	// The constructors need to at least implement this interface, but will most likely implement
@@ -104,13 +108,25 @@ func (b *SecretAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver.API
 		return fmt.Errorf("secret manager init storage: %w", err)
 	}
 
-	apiGroupInfo.VersionedResourcesStorageMap[secret.VERSION] = secureValueStorage
+	// apiGroupInfo.VersionedResourcesStorageMap[secret.VERSION] = secureValueStorage
+	apiGroupInfo.VersionedResourcesStorageMap[secretV1Alpha1.VERSION] = secureValueStorage
 	return nil
 }
 
 // GetOpenAPIDefinitions, is this only for documentation?
 func (b *SecretAPIBuilder) GetOpenAPIDefinitions() common.GetOpenAPIDefinitions {
-	return secret.GetOpenAPIDefinitions
+	// defs := make(map[string]common.OpenAPIDefinition, 0)
+	// for k, v := range secret.GetOpenAPIDefinitions(nil) {
+	// 	defs[k] = v
+	// }
+	// for k, v := range secretV1Alpha1.GetOpenAPIDefinitions(nil) {
+	// 	defs[k] = v
+	// }
+
+	// return common.GetOpenAPIDefinitions(func(rc common.ReferenceCallback) map[string]common.OpenAPIDefinition {
+	// 	return defs
+	// })
+	return secretV1Alpha1.GetOpenAPIDefinitions
 }
 
 // GetAuthorizer: [TODO] who can create secrets? must be multi-tenant first
