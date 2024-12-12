@@ -42,17 +42,19 @@ export function isMathString(text: string | DateTime | Date): boolean {
  * @param text
  * @param roundUp See parseDateMath function.
  * @param timezone Only string 'utc' is acceptable here, for anything else, local timezone is used.
+ * @param now DateTimeInput to use as now. Useful when parsing multiple values and now needs to be the same.
  */
 export function parse(
   text?: string | DateTime | Date | null,
   roundUp?: boolean,
   timezone?: TimeZone,
-  fiscalYearStartMonth?: number
+  fiscalYearStartMonth?: number,
+  now?: DateTimeInput
 ): DateTime | undefined {
   if (!text) {
     return undefined;
   }
-  return toDateTime(text, { roundUp, timezone, fiscalYearStartMonth });
+  return toDateTime(text, { roundUp, timezone, fiscalYearStartMonth, now });
 }
 
 export interface ConversionOptions {
