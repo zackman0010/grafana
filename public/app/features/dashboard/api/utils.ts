@@ -45,7 +45,3 @@ export function isDashboardV2Spec(obj: object): obj is DashboardV2Spec {
 export function isDashboardV0Spec(obj: object): obj is DashboardDataDTO {
   return !isDashboardV2Spec(obj); // not v2 spec means it's v0 spec
 }
-
-export function isDashboardV2Spec(obj: object): obj is DashboardV2Spec {
-  return 'elements' in obj;
-}
