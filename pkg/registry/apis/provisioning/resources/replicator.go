@@ -176,20 +176,17 @@ func (r *replicator) ReplicateFile(ctx context.Context, fileInfo *repository.Fil
 		return fmt.Errorf("failed to create folder path: %w", err)
 	}
 
-	_, err = file.Client.Get(ctx, file.Obj.GetName(), metav1.GetOptions{})
-	// FIXME: Remove the 'false &&' when .Get returns 404 on 404 instead of 500. Until then, this is a really ugly workaround.
-	if false && err != nil && !apierrors.IsNotFound(err) {
-		return fmt.Errorf("failed to check if object already exists: %w", err)
-	}
-
 	if parent != "" {
 		file.Meta.SetFolder(parent)
 	}
 
-	if err != nil { // IsNotFound
+	switch file.Action {
+	case provisioning.ResourceActionCreate:
 		_, err = file.Client.Create(ctx, file.Obj, metav1.CreateOptions{})
-	} else { // already exists
+	case provisioning.ResourceActionUpdate:
 		_, err = file.Client.Update(ctx, file.Obj, metav1.UpdateOptions{})
+	case provisioning.ResourceActionDelete:
+		err = file.Client.Delete(ctx, file.Obj.GetName(), metav1.DeleteOptions{})
 	}
 
 	if err != nil {
@@ -278,14 +275,9 @@ func (r *replicator) DeleteFile(ctx context.Context, fileInfo *repository.FileIn
 		return err
 	}
 
-	_, err = file.Client.Get(ctx, file.Obj.GetName(), metav1.GetOptions{})
-	// FIXME: Remove the 'false &&' when .Get returns 404 on 404 instead of 500. Until then, this is a really ugly workaround.
-	if false && err != nil && !apierrors.IsNotFound(err) {
-		return fmt.Errorf("failed to check if object already exists: %w", err)
-	}
-
-	if err != nil { // IsNotFound
-		return fmt.Errorf("get object to delete: %w", err)
+	if file.Existing == nil {
+		// does not exist
+		return nil
 	}
 
 	if err = file.Client.Delete(ctx, file.Obj.GetName(), metav1.DeleteOptions{}); err != nil {
@@ -331,7 +323,7 @@ func (r *replicator) Export(ctx context.Context) error {
 	logger := r.logger
 	dashboardIface := r.client.Resource(schema.GroupVersionResource{
 		Group:    "dashboard.grafana.app",
-		Version:  "v2alpha1",
+		Version:  "v1alpha1", // v1 is more stable (v2 experimental)
 		Resource: "dashboards",
 	})
 
