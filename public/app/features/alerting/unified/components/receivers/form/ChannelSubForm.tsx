@@ -103,15 +103,15 @@ export function ChannelSubForm<R extends ChannelValues>({
 
   const typeOptions = useMemo(
     (): SelectableValue[] =>
-      sortBy(notifiers, ({ dto, meta }) => [meta?.order ?? 0, dto.name])
-        // .notifiers.sort((a, b) => a.dto.name.localeCompare(b.dto.name))
-        .map<SelectableValue>(({ dto: { name, type }, meta }) => ({
+      sortBy(notifiers, ({ dto, meta }) => [meta?.order ?? 0, dto.name]).map<SelectableValue>(
+        ({ dto: { name, type }, meta }) => ({
           label: name,
           value: type,
           description: meta?.description,
           isDisabled: meta ? !meta.enabled : false,
           imgUrl: meta?.iconUrl,
-        })),
+        })
+      ),
     [notifiers]
   );
 
