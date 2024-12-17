@@ -9,10 +9,12 @@ import appEvents from 'app/core/app_events';
 export function ThemeEditor() {
   const {
     colors: {
-      // typescript thinks whiteBase can't be here, but it definitely is
+      // typescript thinks whiteBase/blackBase can't be here, but it definitely is
       // TODO investigate whether we actually want it in the theme or not
       // @ts-expect-error
       whiteBase,
+      // @ts-expect-error
+      blackBase,
       ...colors
     },
     spacing,
