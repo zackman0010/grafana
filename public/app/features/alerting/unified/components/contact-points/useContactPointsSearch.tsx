@@ -5,6 +5,8 @@ import { useMemo } from 'react';
 import { RECEIVER_META_KEY } from 'app/features/alerting/unified/components/contact-points/constants';
 import { ContactPointWithMetadata } from 'app/features/alerting/unified/components/contact-points/utils';
 
+import { ContactPointsFilterState } from './components/useContactPointsFilter';
+
 const fuzzyFinder = new uFuzzy({
   intraMode: 1,
   intraIns: 1,
@@ -16,8 +18,11 @@ const fuzzyFinder = new uFuzzy({
 // let's search in two different haystacks, the name of the contact point and the type of the receiver(s)
 export const useContactPointsSearch = (
   contactPoints: ContactPointWithMetadata[],
-  search?: string | null
+  filters: ContactPointsFilterState = {}
 ): ContactPointWithMetadata[] => {
+  const hasFilters = Object.values(filters).some(Boolean);
+  const { search, type } = filters;
+
   const nameHaystack = useMemo(() => {
     return contactPoints.map((contactPoint) => contactPoint.name);
   }, [contactPoints]);
@@ -29,14 +34,23 @@ export const useContactPointsSearch = (
     );
   }, [contactPoints]);
 
-  if (!search) {
+  if (!hasFilters) {
     return contactPoints;
   }
 
-  const nameHits = fuzzyFinder.filter(nameHaystack, search) ?? [];
-  const typeHits = fuzzyFinder.filter(typeHaystack, search) ?? [];
+  const results: ContactPointWithMetadata[] = [];
 
-  const hits = [...nameHits, ...typeHits];
+  if (search) {
+    fuzzyFinder.filter(nameHaystack, search)?.forEach((id) => {
+      results.push(contactPoints[id]);
+    });
+  }
 
-  return uniq(hits).map((id) => contactPoints[id]) ?? [];
+  if (type) {
+    fuzzyFinder.filter(typeHaystack, type)?.forEach((id) => {
+      results.push(contactPoints[id]);
+    });
+  }
+
+  return uniq(results);
 };

@@ -32,6 +32,7 @@ import { ContactPoint } from './ContactPoint';
 import { NotificationTemplates } from './NotificationTemplates';
 import { ContactPointsFilter } from './components/ContactPointsFilter';
 import { GlobalConfigAlert } from './components/GlobalConfigAlert';
+import { ContactPointsFilterState, useContactPointsFilter } from './components/useContactPointsFilter';
 import { useContactPointsWithStatus } from './useContactPoints';
 import { useContactPointsSearch } from './useContactPointsSearch';
 import { ALL_CONTACT_POINTS, useExportContactPoint } from './useExportContactPoint';
@@ -46,7 +47,8 @@ const DEFAULT_PAGE_SIZE = 10;
 
 const ContactPointsTab = () => {
   const { selectedAlertmanager } = useAlertmanager();
-  const [queryParams] = useURLSearchParams();
+  const { filters } = useContactPointsFilter();
+  console.log(filters);
 
   // If we're using the K8S API, then we don't need to fetch the policies info within the hook,
   // as we get metadata about this from the API
@@ -68,8 +70,6 @@ const ContactPointsTab = () => {
   );
 
   const [ExportDrawer, showExportDrawer] = useExportContactPoint();
-
-  const search = queryParams.get('search');
 
   if (isLoading) {
     return <LoadingPlaceholder text="Loading..." />;
@@ -129,7 +129,7 @@ const ContactPointsTab = () => {
         </Stack>
       </Stack>
       {error && <Alert title="Failed to fetch contact points">{stringifyErrorLike(error)}</Alert>}
-      {!error && <ContactPointsList contactPoints={contactPoints} search={search} pageSize={DEFAULT_PAGE_SIZE} />}
+      {!error && <ContactPointsList contactPoints={contactPoints} filters={filters} pageSize={DEFAULT_PAGE_SIZE} />}
       {/* Grafana manager Alertmanager does not support global config, Mimir and Cortex do */}
       {!isGrafanaManagedAlertmanager && <GlobalConfigAlert alertManagerName={selectedAlertmanager!} />}
       {ExportDrawer}
@@ -235,12 +235,12 @@ export const ContactPointsPageContents = () => {
 
 interface ContactPointsListProps {
   contactPoints: ContactPointWithMetadata[];
-  search?: string | null;
+  filters?: ContactPointsFilterState;
   pageSize?: number;
 }
 
-const ContactPointsList = ({ contactPoints, search, pageSize = DEFAULT_PAGE_SIZE }: ContactPointsListProps) => {
-  const searchResults = useContactPointsSearch(contactPoints, search);
+const ContactPointsList = ({ contactPoints, filters, pageSize = DEFAULT_PAGE_SIZE }: ContactPointsListProps) => {
+  const searchResults = useContactPointsSearch(contactPoints, filters);
   const { page, pageItems, numberOfPages, onPageChange } = usePagination(searchResults, 1, pageSize);
 
   if (pageItems.length === 0) {
