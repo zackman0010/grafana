@@ -136,7 +136,7 @@ export function AppChrome({ children }: Props) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, searchBarHidden: boolean, hasActions: boolean) => {
+const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
   const TOP_BAR_LEVEL_HEIGHT = getTopBarHeight(theme);
   return {
     content: css({
