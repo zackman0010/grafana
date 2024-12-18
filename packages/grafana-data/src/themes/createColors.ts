@@ -91,18 +91,18 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   mode: ThemeColorsMode = 'dark';
 
   // Used to get more white opacity colors
-  whiteBase = '204, 204, 220';
+  #whiteBase = '204, 204, 220';
 
   border = {
-    weak: `rgba(${this.whiteBase}, 0.12)`,
-    medium: `rgba(${this.whiteBase}, 0.20)`,
-    strong: `rgba(${this.whiteBase}, 0.30)`,
+    weak: `rgba(${this.#whiteBase}, 0.12)`,
+    medium: `rgba(${this.#whiteBase}, 0.20)`,
+    strong: `rgba(${this.#whiteBase}, 0.30)`,
   };
 
   text = {
-    primary: `rgb(${this.whiteBase})`,
-    secondary: `rgba(${this.whiteBase}, 0.65)`,
-    disabled: `rgba(${this.whiteBase}, 0.6)`,
+    primary: `rgb(${this.#whiteBase})`,
+    secondary: `rgba(${this.#whiteBase}, 0.65)`,
+    disabled: `rgba(${this.#whiteBase}, 0.6)`,
     link: palette.blueDarkText,
     maxContrast: palette.white,
   };
@@ -114,12 +114,12 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   secondary = {
-    main: `rgba(${this.whiteBase}, 0.10)`,
-    shade: `rgba(${this.whiteBase}, 0.14)`,
-    transparent: `rgba(${this.whiteBase}, 0.08)`,
+    main: `rgba(${this.#whiteBase}, 0.10)`,
+    shade: `rgba(${this.#whiteBase}, 0.14)`,
+    transparent: `rgba(${this.#whiteBase}, 0.08)`,
     text: this.text.primary,
-    contrastText: `rgb(${this.whiteBase})`,
-    border: `rgba(${this.whiteBase}, 0.08)`,
+    contrastText: `rgb(${this.#whiteBase})`,
+    border: `rgba(${this.#whiteBase}, 0.08)`,
   };
 
   info = this.primary;
@@ -146,13 +146,13 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   action = {
-    hover: `rgba(${this.whiteBase}, 0.16)`,
-    selected: `rgba(${this.whiteBase}, 0.12)`,
+    hover: `rgba(${this.#whiteBase}, 0.16)`,
+    selected: `rgba(${this.#whiteBase}, 0.12)`,
     selectedBorder: palette.orangeDarkMain,
-    focus: `rgba(${this.whiteBase}, 0.16)`,
+    focus: `rgba(${this.#whiteBase}, 0.16)`,
     hoverOpacity: 0.08,
     disabledText: this.text.disabled,
-    disabledBackground: `rgba(${this.whiteBase}, 0.04)`,
+    disabledBackground: `rgba(${this.#whiteBase}, 0.04)`,
     disabledOpacity: 0.38,
   };
 
@@ -169,7 +169,7 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
 class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   mode: ThemeColorsMode = 'light';
 
-  blackBase = '36, 41, 46';
+  #blackBase = '36, 41, 46';
 
   primary = {
     main: palette.blueLightMain,
@@ -178,24 +178,24 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   text = {
-    primary: `rgba(${this.blackBase}, 1)`,
-    secondary: `rgba(${this.blackBase}, 0.75)`,
-    disabled: `rgba(${this.blackBase}, 0.64)`,
+    primary: `rgba(${this.#blackBase}, 1)`,
+    secondary: `rgba(${this.#blackBase}, 0.75)`,
+    disabled: `rgba(${this.#blackBase}, 0.64)`,
     link: this.primary.text,
     maxContrast: palette.black,
   };
 
   border = {
-    weak: `rgba(${this.blackBase}, 0.12)`,
-    medium: `rgba(${this.blackBase}, 0.30)`,
-    strong: `rgba(${this.blackBase}, 0.40)`,
+    weak: `rgba(${this.#blackBase}, 0.12)`,
+    medium: `rgba(${this.#blackBase}, 0.30)`,
+    strong: `rgba(${this.#blackBase}, 0.40)`,
   };
 
   secondary = {
-    main: `rgba(${this.blackBase}, 0.08)`,
-    shade: `rgba(${this.blackBase}, 0.15)`,
-    transparent: `rgba(${this.blackBase}, 0.08)`,
-    contrastText: `rgba(${this.blackBase},  1)`,
+    main: `rgba(${this.#blackBase}, 0.08)`,
+    shade: `rgba(${this.#blackBase}, 0.15)`,
+    transparent: `rgba(${this.#blackBase}, 0.08)`,
+    contrastText: `rgba(${this.#blackBase},  1)`,
     text: this.text.primary,
     border: this.border.weak,
   };
@@ -228,12 +228,12 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   action = {
-    hover: `rgba(${this.blackBase}, 0.12)`,
-    selected: `rgba(${this.blackBase}, 0.08)`,
+    hover: `rgba(${this.#blackBase}, 0.12)`,
+    selected: `rgba(${this.#blackBase}, 0.08)`,
     selectedBorder: palette.orangeLightMain,
     hoverOpacity: 0.08,
-    focus: `rgba(${this.blackBase}, 0.12)`,
-    disabledBackground: `rgba(${this.blackBase}, 0.04)`,
+    focus: `rgba(${this.#blackBase}, 0.12)`,
+    disabledBackground: `rgba(${this.#blackBase}, 0.04)`,
     disabledText: this.text.disabled,
     disabledOpacity: 0.38,
   };
