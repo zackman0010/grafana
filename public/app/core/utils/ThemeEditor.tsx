@@ -61,7 +61,7 @@ export function ThemeEditor() {
           }}
           value={JSON.stringify(minimalTheme, undefined, 2)}
           language="json"
-          showMiniMap={true}
+          showMiniMap={false}
           showLineNumbers={true}
           onBlur={onThemeChanged}
         />
