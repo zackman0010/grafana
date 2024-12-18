@@ -350,10 +350,11 @@ func (r *Replicator) Export(ctx context.Context) error {
 	})
 
 	// TODO: handle pagination
-	folders, err := r.fetchRepoFolderTree(ctx)
+	folders, err := r.client.BuildFolderTree(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to list folders: %w", err)
 	}
+	repoFolder := r.repository.Config().Spec.Folder
 
 	// TODO: handle pagination
 	dashboardList, err := dashboardIface.List(ctx, metav1.ListOptions{})
@@ -377,7 +378,7 @@ func (r *Replicator) Export(ctx context.Context) error {
 
 		folder := item.GetAnnotations()[apiutils.AnnoKeyFolder]
 		logger = logger.With("folder", folder)
-		if !folders.In(folder) {
+		if !folders.ContainedInTree(repoFolder, folder) {
 			logger.DebugContext(ctx, "folder of item was not in tree of repository")
 			continue
 		}
@@ -387,7 +388,7 @@ func (r *Replicator) Export(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("failed to marshal dashboard %s: %w", name, err)
 		}
-		fileName := filepath.Join(folders.DirPath(folder), baseFileName)
+		fileName := filepath.Join(folders.DirPath(repoFolder, folder), baseFileName)
 		logger = logger.With("file_name", fileName)
 		if logger.Enabled(ctx, slog.LevelDebug) {
 			bodyStr := string(marshalledBody)
@@ -417,88 +418,6 @@ func (r *Replicator) Export(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-type folderTree struct {
-	tree       map[string]string
-	repoFolder string
-}
-
-func (t *folderTree) In(folder string) bool {
-	_, ok := t.tree[folder]
-	return ok
-}
-
-// DirPath creates the path to the directory with slashes.
-// The repository folder is not included in the path.
-// If In(folder) is false, this will panic, because it would be undefined behaviour.
-func (t *folderTree) DirPath(folder string) string {
-	if folder == t.repoFolder {
-		return ""
-	}
-	if !t.In(folder) {
-		panic("undefined behaviour")
-	}
-
-	dirPath := folder
-	parent := t.tree[folder]
-	for parent != "" && parent != t.repoFolder {
-		dirPath = path.Join(parent, dirPath)
-		parent = t.tree[parent]
-	}
-	// Not using Clean here is intentional. We don't want `.` or similar.
-	return dirPath
-}
-
-func (r *Replicator) fetchRepoFolderTree(ctx context.Context) (*folderTree, error) {
-	iface := r.client.Resource(schema.GroupVersionResource{
-		Group:    "folder.grafana.app",
-		Version:  "v0alpha1",
-		Resource: "folders",
-	})
-
-	// TODO: handle pagination
-	rawFolders, err := iface.List(ctx, metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	folders := make(map[string]string, len(rawFolders.Items))
-	for _, rf := range rawFolders.Items {
-		name := rf.GetName()
-		// TODO: Can I use MetaAccessor here?
-		parent := rf.GetAnnotations()[apiutils.AnnoKeyFolder]
-		folders[name] = parent
-	}
-
-	// folders now includes a map[folder name]parent name
-	// The top-most folder has a parent of "". Any folders below have parent refs.
-	// We want to find only folders which are or start in repoFolder.
-	repoFolder := r.repository.Config().Spec.Folder
-	for folder, parent := range folders {
-		if folder == repoFolder {
-			continue
-		}
-
-		hasRepoRoot := false
-		for parent != "" {
-			if parent == repoFolder {
-				hasRepoRoot = true
-				break
-			}
-			parent = folders[parent]
-		}
-		if !hasRepoRoot {
-			delete(folders, folder)
-		}
-	}
-
-	// folders now only includes the tree of the repoFolder.
-
-	return &folderTree{
-		tree:       folders,
-		repoFolder: repoFolder,
-	}, nil
 }
 
 func (*Replicator) marshalPreferredFormat(obj any, name string, repo repository.Repository) (body []byte, fileName string, err error) {
