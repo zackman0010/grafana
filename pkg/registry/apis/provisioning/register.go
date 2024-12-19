@@ -434,6 +434,25 @@ func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Contex
 		// In this case, we need to know if it is owned by this repository.
 
 		// TODO: Store folder annotations or similar in the tree...
+		if owner, ok := folderTree.FindRepositoryOwner(cfg.Spec.Folder); ok {
+			if owner == cfg.Name {
+				// We own it. This is fine!
+				return false, nil
+			}
+
+			// We do not own it. This is bad!
+			return false, apierrors.NewConflict(provisioning.RepositoryResourceInfo.GroupResource(), cfg.Name, fmt.Errorf("the folder is already owned by another repository"))
+		}
+
+		// This isn't marked as owned yet.
+		toWrite := folderTree.Entries[cfg.Spec.Folder].Folder
+		annotations := toWrite.GetAnnotations()
+		annotations[apiutils.AnnoKeyRepoName] = cfg.Name
+		toWrite.SetAnnotations(annotations)
+		_, err := folderIface.Update(ctx, &toWrite, metav1.UpdateOptions{})
+		if err != nil {
+			return false, fmt.Errorf("failed to claim folder as ours: %w", err)
+		}
 		return false, nil
 	}
 	// The folder does not exist and will need to be created.

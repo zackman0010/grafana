@@ -6,6 +6,7 @@ import (
 
 	apiutils "github.com/grafana/grafana/pkg/apimachinery/utils"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -13,7 +14,29 @@ import (
 // The tree is constructed with a child having exactly 1 parent.
 // The root entry, "", is always present in the tree and represents the tree itself.
 type FolderTree struct {
-	Tree map[string]string
+	Tree    map[string]string
+	Entries map[string]FolderEntry
+}
+
+type FolderEntry struct {
+	// Name is the Kubernetes name. Not to be confused with Title.
+	Name string
+	// Namespace is the Kubernetes namespace. The namespace should always be the same as the requesting ns.
+	Namespace string
+	// Annotations contains the Kubernetes annotations. This may include data like repository owners.
+	Annotations map[string]string
+	// Labels contains the Kubernetes labels.
+	Labels map[string]string
+	// Parent contains the Name of the parent folder, if one exists. "" means this is at the top-level.
+	Parent string
+
+	// Title is part of the folder spec.
+	Title string
+	// Description is part of the folder spec.
+	Description string
+
+	// Folder contains the raw Folder object that we got.
+	Folder unstructured.Unstructured
 }
 
 // ContainedInTree checks if the needle is found under the root in the tree anywhere.
@@ -72,6 +95,25 @@ func (t *FolderTree) DirPath(root, needle string) string {
 	return dirPath
 }
 
+// FindRepositoryOwner finds the repository that owns the needle folder.
+// If the needle is not in the tree (i.e. ContainedInTree("", needle) returns false), this panics.
+// If one is found, the string is populated and the bool is true.
+// Otherwise, an empty string and a false is returned.
+func (t *FolderTree) FindRepositoryOwner(needle string) (string, bool) {
+	if !t.ContainedInTree("", needle) {
+		panic("undefined behaviour")
+	}
+
+	entry, ok := t.Entries[needle]
+	for ok {
+		if repo, ok := entry.Annotations[apiutils.AnnoKeyRepoName]; ok {
+			return repo, ok
+		}
+		entry, ok = t.Entries[entry.Parent]
+	}
+	return "", false
+}
+
 // BuildFolderTree creates a FolderTree out of the current folder structure in the Grafana instance.
 // The tree can be used to build directory paths and check subtrees.
 func (c *DynamicClient) BuildFolderTree(ctx context.Context) (*FolderTree, error) {
@@ -90,13 +132,29 @@ func (c *DynamicClient) BuildFolderTree(ctx context.Context) (*FolderTree, error
 		return nil, err
 	}
 
-	folders := make(map[string]string, len(rawFolders.Items))
+	tree := &FolderTree{
+		Tree:    make(map[string]string, len(rawFolders.Items)),
+		Entries: make(map[string]FolderEntry, len(rawFolders.Items)),
+	}
 	for _, rf := range rawFolders.Items {
 		name := rf.GetName()
 		// TODO: Can I use MetaAccessor here?
 		parent := rf.GetAnnotations()[apiutils.AnnoKeyFolder]
-		folders[name] = parent
+		tree.Tree[name] = parent
+
+		title, _, _ := unstructured.NestedString(rf.Object, "spec", "title")
+		description, _, _ := unstructured.NestedString(rf.Object, "spec", "description")
+		tree.Entries[name] = FolderEntry{
+			Name:        name,
+			Namespace:   rf.GetNamespace(),
+			Annotations: rf.GetAnnotations(),
+			Labels:      rf.GetLabels(),
+			Parent:      parent,
+			Title:       title,
+			Description: description,
+			Folder:      rf,
+		}
 	}
 
-	return &FolderTree{Tree: folders}, nil
+	return tree, nil
 }
