@@ -80,6 +80,22 @@ export abstract class LokiAndPromQueryModellerBase implements VisualQueryModelle
     return result + this.renderQuery(binaryQuery.query, true);
   }
 
+  /**
+   * Renders a label expression for a given filter.
+   *
+   * @param filter - The filter object containing the label, operator, and value.
+   * @returns The formatted label expression as a string.
+   * @example
+   * ```typescript
+   * const filter1 = { label: 'status', op: '=', value: '200' };
+   * renderLabelExpression(filter1); // returns 'status="200"'
+   * ```
+   * @example
+   * ```
+   * const filter2 = { label: 'method', op: '=~', value: 'GET|POST' };
+   * renderLabelExpression(filter2); // returns 'method=~"GET|POST"'
+   * ```
+   */
   renderLabelExpression(filter: QueryBuilderLabelFilter): string {
     const usingRegexOperator = filter.op === '=~' || filter.op === '!~';
     const shouldEscapeLabelValue = config.featureToggles.prometheusSpecialCharsInLabelValues && !usingRegexOperator;
@@ -89,6 +105,21 @@ export abstract class LokiAndPromQueryModellerBase implements VisualQueryModelle
     return labelExpression;
   }
 
+  /**
+   * Renders a string representation of the provided label filters.
+   *
+   * @param labels - An array of `QueryBuilderLabelFilter` objects to be rendered.
+   * @returns A string representation of the label filters in the format `'{k1="v1", k2="v2", ...}'`.
+   *
+   * @example
+   * ```typescript
+   * const labels = [
+   *   { key: 'status', operator: '=', value: 'success' },
+   *   { key: 'method', operator: '=', value: 'GET' }
+   * ];
+   * renderLabels(labels); // returns '{status="success", method="GET"}'
+   * ```
+   */
   renderLabels(labels: QueryBuilderLabelFilter[]) {
     if (labels.length === 0) {
       return '';
