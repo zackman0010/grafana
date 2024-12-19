@@ -68,7 +68,7 @@ func (c *ClientFactory) New(ns string) (*DynamicClient, KindsLookup, error) {
 }
 
 type DynamicClient struct {
-	inner     *dynamic.DynamicClient
+	inner     dynamic.Interface // most often a *dynamic.DynamicClient
 	namespace string
 }
 

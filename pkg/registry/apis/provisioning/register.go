@@ -28,6 +28,7 @@ import (
 	"k8s.io/kube-openapi/pkg/validation/spec"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	apiutils "github.com/grafana/grafana/pkg/apimachinery/utils"
 	provisioning "github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1"
 	grafanaregistry "github.com/grafana/grafana/pkg/apiserver/registry/generic"
 	clientset "github.com/grafana/grafana/pkg/generated/clientset/versioned"
@@ -194,6 +195,7 @@ func (b *ProvisioningAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserv
 		b.urlProvider,
 	))
 
+	repositoryStorage.BeginCreate = b.beforeCreate
 	repositoryStorage.AfterCreate = b.afterCreate
 	// AfterUpdate doesn't have the old object, so we have to use BeginUpdate
 	repositoryStorage.BeginUpdate = b.beginUpdate
@@ -325,6 +327,22 @@ func (b *ProvisioningAPIBuilder) AsRepository(ctx context.Context, r *provisioni
 	}
 }
 
+func (b *ProvisioningAPIBuilder) beforeCreate(ctx context.Context, obj runtime.Object, options *metav1.CreateOptions) (registry.FinishFunc, error) {
+	finishNothing := func(ctx context.Context, success bool) {}
+
+	cfg, ok := obj.(*provisioning.Repository)
+	if !ok {
+		return finishNothing, fmt.Errorf("got a non-Repository object")
+	}
+	logger := b.logger.With("repository", cfg.GetName(), "namespace", cfg.GetNamespace())
+
+	if cfg.Spec.Folder != "" {
+		logger.InfoContext(ctx, "todo here. idk how to impl this yet")
+	}
+
+	return finishNothing, nil
+}
+
 func (b *ProvisioningAPIBuilder) afterCreate(obj runtime.Object, opts *metav1.CreateOptions) {
 	cfg, ok := obj.(*provisioning.Repository)
 	if !ok {
@@ -340,7 +358,7 @@ func (b *ProvisioningAPIBuilder) afterCreate(obj runtime.Object, opts *metav1.Cr
 		return
 	}
 
-	if err := b.ensureRepositoryFolderExists(ctx, cfg); err != nil {
+	if _, err := b.ensureRepositoryFolderExists(ctx, cfg); err != nil {
 		logger.Error("failed to ensure repository folder exists", "error", err)
 		return
 	}
@@ -371,7 +389,7 @@ func (b *ProvisioningAPIBuilder) beginUpdate(ctx context.Context, obj, old runti
 		return nil, fmt.Errorf("get old repository: %w", err)
 	}
 
-	if err := b.ensureRepositoryFolderExists(ctx, objCfg); err != nil {
+	if _, err := b.ensureRepositoryFolderExists(ctx, objCfg); err != nil {
 		return nil, fmt.Errorf("failed to ensure the configured folder '%s' in '%s' exists: %w", objCfg.GetName(), objCfg.GetNamespace(), err)
 	}
 
@@ -389,15 +407,15 @@ func (b *ProvisioningAPIBuilder) beginUpdate(ctx context.Context, obj, old runti
 	}, nil
 }
 
-func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Context, cfg *provisioning.Repository) error {
+func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Context, cfg *provisioning.Repository) (created bool, err error) {
 	if cfg.Spec.Folder == "" {
 		// The root folder can't not exist, so we don't have to do anything.
-		return nil
+		return false, nil
 	}
 
 	client, _, err := b.client.New(cfg.GetNamespace())
 	if err != nil {
-		return err
+		return false, err
 	}
 	// FIXME: make sure folders are actually enabled in the apiserver.
 	folderIface := client.Resource(schema.GroupVersionResource{
@@ -406,13 +424,19 @@ func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Contex
 		Resource: "folders",
 	})
 
-	_, err = folderIface.Get(ctx, cfg.Spec.Folder, metav1.GetOptions{})
-	if err == nil {
-		// The folder exists and doesn't need to be created.
-		return nil
-	} else if !apierrors.IsNotFound(err) {
-		return fmt.Errorf("failed to search for existing repo folder: %w", err)
+	folderTree, err := client.BuildFolderTree(ctx)
+	if err != nil {
+		return false, fmt.Errorf("failed to search for existing repo folder '%s': %w", cfg.Spec.Folder, err)
 	}
+
+	if folderTree.ContainedInTree("", cfg.Spec.Folder) {
+		// The folder exists and doesn't need to be created.
+		// In this case, we need to know if it is owned by this repository.
+
+		// TODO: Store folder annotations or similar in the tree...
+		return false, nil
+	}
+	// The folder does not exist and will need to be created.
 
 	title := cfg.Spec.Title
 	if title == "" {
@@ -424,6 +448,9 @@ func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Contex
 			"metadata": map[string]any{
 				"name":      cfg.Spec.Folder,
 				"namespace": cfg.GetNamespace(),
+				"annotations": map[string]string{
+					apiutils.AnnoKeyRepoName: cfg.GetName(),
+				},
 			},
 			"spec": map[string]any{
 				"title":       title,
@@ -431,7 +458,7 @@ func (b *ProvisioningAPIBuilder) ensureRepositoryFolderExists(ctx context.Contex
 			},
 		},
 	}, metav1.CreateOptions{})
-	return err
+	return true, err
 }
 
 func (b *ProvisioningAPIBuilder) afterDelete(obj runtime.Object, opts *metav1.DeleteOptions) {
