@@ -2,7 +2,6 @@ package secret
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strings"
@@ -18,17 +17,12 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/tests/apis"
 	"github.com/grafana/grafana/pkg/tests/testinfra"
-	"github.com/grafana/grafana/pkg/tests/testsuite"
 )
 
-var gvr = schema.GroupVersionResource{
+var gvrSecureValues = schema.GroupVersionResource{
 	Group:    "secret.grafana.app",
 	Version:  "v0alpha1",
 	Resource: "securevalues",
-}
-
-func TestMain(m *testing.M) {
-	testsuite.Run(m)
 }
 
 func TestIntegrationSecureValue(t *testing.T) {
@@ -45,25 +39,32 @@ func TestIntegrationSecureValue(t *testing.T) {
 		},
 	})
 
-	t.Run("check discovery client", func(t *testing.T) {
-		disco := helper.NewDiscoveryClient()
+	t.Run("creating a secure value without a name generates one", func(t *testing.T) {
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
 
-		resources, err := disco.ServerResourcesForGroupVersion("secret.grafana.app/v0alpha1")
+		client := helper.GetResourceClient(apis.ResourceClientArgs{
+			// #TODO: figure out permissions topic
+			User: helper.Org1.Admin,
+			GVR:  gvrSecureValues,
+		})
+
+		testDataSecureValue := helper.LoadYAMLOrJSONFile("testdata/secure-value-generate.yaml")
+
+		raw, err := client.Resource.Create(ctx, testDataSecureValue, metav1.CreateOptions{})
 		require.NoError(t, err)
+		require.NotNil(t, raw)
 
-		v1Disco, err := json.MarshalIndent(resources, "", "  ")
+		t.Cleanup(func() {
+			require.NoError(t, client.Resource.Delete(ctx, raw.GetName(), metav1.DeleteOptions{}))
+		})
+
+		secureValue := new(secretv0alpha1.SecureValue)
+		err = runtime.DefaultUnstructuredConverter.FromUnstructured(raw.Object, secureValue)
 		require.NoError(t, err)
+		require.NotNil(t, secureValue)
 
-		var apiResourceList map[string]any
-		require.NoError(t, json.Unmarshal(v1Disco, &apiResourceList))
-
-		groupVersion, ok := apiResourceList["groupVersion"].(string)
-		require.True(t, ok)
-		require.Equal(t, "secret.grafana.app/v0alpha1", groupVersion)
-
-		apiResources, ok := apiResourceList["resources"].([]any)
-		require.True(t, ok)
-		require.Len(t, apiResources, 2) // securevalue + keeper + (subresources...)
+		require.NotEmpty(t, secureValue.Name)
 	})
 
 	t.Run("creating a secure value returns it without any of the value or ref", func(t *testing.T) {
@@ -73,7 +74,7 @@ func TestIntegrationSecureValue(t *testing.T) {
 		client := helper.GetResourceClient(apis.ResourceClientArgs{
 			// #TODO: figure out permissions topic
 			User: helper.Org1.Admin,
-			GVR:  gvr,
+			GVR:  gvrSecureValues,
 		})
 
 		testDataSecureValueXyz := helper.LoadYAMLOrJSONFile("testdata/secure-value-xyz.yaml")
@@ -145,6 +146,27 @@ func TestIntegrationSecureValue(t *testing.T) {
 		})
 	})
 
+	t.Run("creating an invalid secure value fails validation and returns an error", func(t *testing.T) {
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
+
+		client := helper.GetResourceClient(apis.ResourceClientArgs{
+			// #TODO: figure out permissions topic
+			User: helper.Org1.Admin,
+			GVR:  gvrSecureValues,
+		})
+
+		testDataSecureValue := helper.LoadYAMLOrJSONFile("testdata/secure-value-xyz.yaml")
+		testDataSecureValue.Object["spec"].(map[string]any)["title"] = ""
+
+		raw, err := client.Resource.Create(ctx, testDataSecureValue, metav1.CreateOptions{})
+		require.Error(t, err)
+		require.Nil(t, raw)
+
+		var statusErr *apierrors.StatusError
+		require.True(t, errors.As(err, &statusErr))
+	})
+
 	t.Run("reading a secure value that does not exist returns a 404", func(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		t.Cleanup(cancel)
@@ -152,7 +174,7 @@ func TestIntegrationSecureValue(t *testing.T) {
 		client := helper.GetResourceClient(apis.ResourceClientArgs{
 			// #TODO: figure out permissions topic
 			User: helper.Org1.Admin,
-			GVR:  gvr,
+			GVR:  gvrSecureValues,
 		})
 
 		raw, err := client.Resource.Get(ctx, "some-secure-value-that-does-not-exist", metav1.GetOptions{})
@@ -171,7 +193,7 @@ func TestIntegrationSecureValue(t *testing.T) {
 		client := helper.GetResourceClient(apis.ResourceClientArgs{
 			// #TODO: figure out permissions topic
 			User: helper.Org1.Admin,
-			GVR:  gvr,
+			GVR:  gvrSecureValues,
 		})
 
 		err := client.Resource.Delete(ctx, "some-secure-value-that-does-not-exist", metav1.DeleteOptions{})
@@ -185,7 +207,7 @@ func TestIntegrationSecureValue(t *testing.T) {
 		client := helper.GetResourceClient(apis.ResourceClientArgs{
 			// #TODO: figure out permissions topic
 			User: helper.Org1.Admin,
-			GVR:  gvr,
+			GVR:  gvrSecureValues,
 		})
 
 		generatePrefix := "generated-"
