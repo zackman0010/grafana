@@ -1,9 +1,14 @@
 package secretkeepers
 
-import "context"
+import (
+	"context"
+
+	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
+	"github.com/grafana/grafana/pkg/registry/apis/secret"
+)
 
 type KeeperService interface {
-	Store(ctx context.Context, exposedValueOrRef string) (string, error) // TODO: right args and returns
-	Expose(ctx context.Context, id string) (string, error)               // TODO: right args and returns
-	Delete(ctx context.Context, id string) error                         // TODO: right args and returns
+	Store(ctx context.Context, exposedValueOrRef string) (secret.ExternalID, error)
+	Expose(ctx context.Context, id secret.ExternalID) (secretv0alpha1.ExposedSecureValue, error)
+	Delete(ctx context.Context, id secret.ExternalID) error
 }
