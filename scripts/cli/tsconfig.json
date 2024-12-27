@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "module": "commonjs"
+    "module": "commonjs",
+    "target": "ES2020"
   },
   "extends": "../../tsconfig.json",
   "ts-node": {
