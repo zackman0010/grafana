@@ -2,8 +2,10 @@ import { groupBy } from 'lodash';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { Dropdown, Icon, IconButton, Menu, Stack, Text } from '@grafana/ui';
-import { GrafanaRulesSourceSymbol } from 'app/types/unified-alerting';
+import { GrafanaRuleGroupIdentifier, GrafanaRulesSourceSymbol } from 'app/types/unified-alerting';
 import { GrafanaPromRuleGroupDTO } from 'app/types/unified-alerting-dto';
+
+import { GrafanaRulesSource } from '../utils/datasource';
 
 import { GrafanaRuleLoader } from './GrafanaRuleLoader';
 import { DataSourceSection } from './components/DataSourceSection';
@@ -78,6 +80,15 @@ interface GrafanaRuleGroupListItemProps {
   namespaceName: string;
 }
 export function GrafanaRuleGroupListItem({ group, namespaceName }: GrafanaRuleGroupListItemProps) {
+  const groupIdentifier: GrafanaRuleGroupIdentifier = {
+    rulesSource: GrafanaRulesSource,
+    groupName: group.name,
+    namespace: {
+      uid: group.folderUid,
+    },
+    groupOrigin: 'grafana',
+  };
+
   return (
     <ListGroup
       key={group.name}
@@ -102,7 +113,14 @@ export function GrafanaRuleGroupListItem({ group, namespaceName }: GrafanaRuleGr
       }
     >
       {group.rules.map((rule) => {
-        return <GrafanaRuleLoader key={rule.uid} rule={rule} groupName={group.name} namespaceName={namespaceName} />;
+        return (
+          <GrafanaRuleLoader
+            key={rule.uid}
+            rule={rule}
+            namespaceName={namespaceName}
+            groupIdentifier={groupIdentifier}
+          />
+        );
       })}
     </ListGroup>
   );
