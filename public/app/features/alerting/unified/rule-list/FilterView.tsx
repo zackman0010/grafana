@@ -1,11 +1,14 @@
-import { take, tap, withAbort } from 'ix/asynciterable/operators';
+import * as comlink from 'comlink';
+import { tap, withAbort } from 'ix/asynciterable/operators';
 import { useEffect, useRef, useState, useTransition } from 'react';
 
 import { Card, EmptyState, Stack, Text } from '@grafana/ui';
 import { Trans } from 'app/core/internationalization';
+import { CorsWorker as Worker } from 'app/core/utils/CorsWorker';
 
 import { isLoading, useAsync } from '../hooks/useAsync';
 import { RulesFilter } from '../search/rulesSearchParser';
+import { getExternalRulesSources } from '../utils/datasource';
 import { hashRule } from '../utils/rule-id';
 
 import { DataSourceRuleLoader } from './DataSourceRuleLoader';
@@ -13,6 +16,7 @@ import { GrafanaRuleLoader } from './GrafanaRuleLoader';
 import LoadMoreHelper from './LoadMoreHelper';
 import { UnknownRuleListItem } from './components/AlertRuleListItem';
 import { AlertRuleListItemLoader } from './components/AlertRuleListItemLoader';
+import { PrometheusGroupsProvider } from './hooks/groupsIterator.worker';
 import {
   GrafanaRuleWithOrigin,
   PromRuleWithOrigin,
@@ -26,6 +30,12 @@ interface FilterViewProps {
 
 const FRONTENT_PAGE_SIZE = 40;
 const API_PAGE_SIZE = 500;
+
+// CorsWorker is needed as a workaround for CORS issue caused
+// by static assets served from an url different from origin
+export const createWorker = () => new Worker(new URL('./hooks/groupsIterator.worker.ts', import.meta.url));
+
+const GroupsProvider = comlink.wrap<typeof PrometheusGroupsProvider>(createWorker());
 
 export function FilterView({ filterState }: FilterViewProps) {
   // ⚠️ We use a key to force the component to unmount and remount when the filter state changes
@@ -58,6 +68,7 @@ function FilterViewResults({ filterState }: FilterViewProps) {
   /* this is the abort controller that allows us to stop an AsyncIterable */
   const controller = useRef(new AbortController());
 
+  const groupsProvider = useRef<comlink.Remote<PrometheusGroupsProvider> | null>(null);
   /**
    * This an iterator that we can use to populate the search results.
    * It also uses the signal from the AbortController above to cancel retrieving more results and sets up a
@@ -73,16 +84,38 @@ function FilterViewResults({ filterState }: FilterViewProps) {
   const [rules, setRules] = useState<KeyedRuleWithOrigin[]>([]);
   const [doneSearching, setDoneSearching] = useState(false);
 
+  // const [{ execute: initGroupsProvider }, { result: groupsProvider }] = useAsync(async () => {
+  //   return await new GroupsProvider(getExternalRulesSources(), filterState);
+  // });
+
   /* This function will fetch a page of results from the iterable */
   const [{ execute: loadResultPage }, state] = useAsync(async () => {
-    for await (const rule of rulesIterator.current.pipe(take(FRONTENT_PAGE_SIZE))) {
+    if (!groupsProvider.current) {
+      groupsProvider.current = await new GroupsProvider(getExternalRulesSources(), filterState);
+    }
+
+    for (let i = 0; i < FRONTENT_PAGE_SIZE; i++) {
+      const rule = await groupsProvider.current.takeNext();
+      if (!rule) {
+        setDoneSearching(true);
+        break;
+      }
       startTransition(() => {
-        // Rule key could be computed on the fly, but we do it here to avoid recalculating it with each render
-        // It's a not trivial computation because it involves hashing the rule
         setRules((rules) => rules.concat({ key: getRuleKey(rule), ...rule }));
       });
     }
+    // for await (const rule of rulesIterator.current.pipe(take(FRONTENT_PAGE_SIZE))) {
+    //   startTransition(() => {
+    //     // Rule key could be computed on the fly, but we do it here to avoid recalculating it with each render
+    //     // It's a not trivial computation because it involves hashing the rule
+    //     setRules((rules) => rules.concat({ key: getRuleKey(rule), ...rule }));
+    //   });
+    // }
   });
+
+  // useEffect(() => {
+  //   initGroupsProvider();
+  // }, [initGroupsProvider]);
 
   /* When we unmount the component we make sure to abort all iterables */
   useEffect(() => {

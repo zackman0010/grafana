@@ -184,7 +184,7 @@ export interface ExternalRulesSourceIdentifier {
   ruleSourceType: 'external';
 }
 export interface GrafanaRulesSourceIdentifier {
-  uid: typeof GrafanaRulesSourceSymbol;
+  uid: typeof GrafanaRulesSourceSymbol | 'grafana';
   name: 'grafana';
   // discriminator
   ruleSourceType: 'grafana';
