@@ -13,6 +13,16 @@ type Keeper interface {
 	Delete(ctx context.Context, id ExternalID) error
 }
 
+type KeeperType string
+
+const (
+	SQLKeeperType       KeeperType = "sql"
+	AWSKeeperType       KeeperType = "aws"
+	AzureKeeperType     KeeperType = "azure"
+	GCPKeeperType       KeeperType = "gcp"
+	HashiCorpKeeperType KeeperType = "hashicorp"
+)
+
 // ExternalID represents either the secure value's GUID or ref (in case of external secret references).
 // This is saved in the secure_value metadata storage as `external_id`.
 // TODO: this does not belong in the k8s spec, but it is used by us internally. Place it somewhere appropriate.

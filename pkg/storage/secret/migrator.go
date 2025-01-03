@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	TableNameSecureValue = "secret_secure_value"
-	TableNameKeeper      = "secret_keeper"
+	TableNameSecureValue    = "secret_secure_value"
+	TableNameKeeper         = "secret_keeper"
+	TableNameEncryptedValue = "secret_encrypted_value"
 )
 
 func migrateSecretSQL(engine *xorm.Engine, cfg *setting.Cfg) error {
@@ -77,6 +78,15 @@ func initSecretStore(mg *migrator.Migrator) string {
 		},
 		Indices: []*migrator.Index{
 			{Cols: []string{"namespace", "name"}, Type: migrator.UniqueIndex},
+		},
+	})
+
+	tables = append(tables, migrator.Table{
+		Name: TableNameEncryptedValue,
+		Columns: []*migrator.Column{
+			{Name: "uid", Type: migrator.DB_NVarchar, Length: 36, IsPrimaryKey: true}, // Fixed size of a UUID.
+			{Name: "encrypted_data", Type: migrator.DB_Text, Nullable: false},
+			{Name: "created", Type: migrator.DB_BigInt, Nullable: false},
 		},
 	})
 
