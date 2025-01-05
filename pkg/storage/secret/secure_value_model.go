@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
+	"github.com/grafana/grafana/pkg/registry/apis/secret"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/xkube"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -90,7 +91,7 @@ func (sv *secureValueDB) toKubernetes() (*secretv0alpha1.SecureValue, error) {
 }
 
 // toCreateRow maps a Kubernetes resource into a DB row for new resources being created/inserted.
-func toCreateRow(sv *secretv0alpha1.SecureValue, actorUID, externalID string) (*secureValueDB, error) {
+func toCreateRow(sv *secretv0alpha1.SecureValue, actorUID string, externalID secret.ExternalID) (*secureValueDB, error) {
 	row, err := toRow(sv, externalID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create: %w", err)
@@ -108,7 +109,7 @@ func toCreateRow(sv *secretv0alpha1.SecureValue, actorUID, externalID string) (*
 }
 
 // toUpdateRow maps a Kubernetes resource into a DB row for existing resources being updated.
-func toUpdateRow(currentRow *secureValueDB, newSecureValue *secretv0alpha1.SecureValue, actorUID, externalID string) (*secureValueDB, error) {
+func toUpdateRow(currentRow *secureValueDB, newSecureValue *secretv0alpha1.SecureValue, actorUID string, externalID secret.ExternalID) (*secureValueDB, error) {
 	row, err := toRow(newSecureValue, externalID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create: %w", err)
@@ -126,7 +127,7 @@ func toUpdateRow(currentRow *secureValueDB, newSecureValue *secretv0alpha1.Secur
 }
 
 // toRow maps a Kubernetes resource into a DB row.
-func toRow(sv *secretv0alpha1.SecureValue, externalID string) (*secureValueDB, error) {
+func toRow(sv *secretv0alpha1.SecureValue, externalID secret.ExternalID) (*secureValueDB, error) {
 	var annotations string
 	if len(sv.Annotations) > 0 {
 		cleanedAnnotations := xkube.CleanAnnotations(sv.Annotations)
@@ -190,6 +191,6 @@ func toRow(sv *secretv0alpha1.SecureValue, externalID string) (*secureValueDB, e
 		Title:      sv.Spec.Title,
 		Keeper:     sv.Spec.Keeper,
 		Audiences:  audiences,
-		ExternalID: externalID,
+		ExternalID: externalID.String(),
 	}, nil
 }

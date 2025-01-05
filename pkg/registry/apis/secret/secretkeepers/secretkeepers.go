@@ -7,18 +7,19 @@ import (
 )
 
 type Service interface {
-	Provide() (secret.Keeper, error)
+	// TODO: pass context, type, config
+	GetKeeper() (secret.Keeper, error)
 }
 
 type OSSKeeperService struct {
-	// TODO: db
 	db db.DB
 }
 
-func ProvideService() OSSKeeperService {
-	return OSSKeeperService{}
+func ProvideService(db db.DB) (OSSKeeperService, error) {
+	return OSSKeeperService{db: db}, nil
 }
 
-func (ks OSSKeeperService) Provide() (secret.Keeper, error) {
+func (ks OSSKeeperService) GetKeeper() (secret.Keeper, error) {
+	// Default keeper
 	return sqlkeeper.NewSQLKeeper(ks.db)
 }

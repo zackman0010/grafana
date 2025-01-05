@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/registry/apis/secret"
@@ -17,9 +18,13 @@ var (
 )
 
 type secretEncryptedValueDB struct {
-	UID            string `xorm:"pk 'uid'"`
-	EncryptedValue string `xorm:"encrypted_value"`
-	Created        int64  `xorm:"created"`
+	UID           string `xorm:"pk 'uid'"`
+	EncryptedData string `xorm:"encrypted_data"`
+	Created       int64  `xorm:"created"`
+}
+
+func (*secretEncryptedValueDB) TableName() string {
+	return "secret_encrypted_value"
 }
 
 type SQLKeeper struct {
@@ -34,10 +39,10 @@ func NewSQLKeeper(db db.DB) (*SQLKeeper, error) {
 
 func (s *SQLKeeper) Store(ctx context.Context, exposedValueOrRef string) (secret.ExternalID, error) {
 	// TODO: encrypt exposedValueOrRef and obtain encrypted value
-	encrypted_value := exposedValueOrRef
+	encrypted_data := exposedValueOrRef
 
 	// Insert in DB
-	row := &secretEncryptedValueDB{EncryptedValue: encrypted_value, Created: time.Now().Unix()}
+	row := &secretEncryptedValueDB{UID: uuid.New().String(), EncryptedData: encrypted_data, Created: time.Now().Unix()}
 	err := s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
 		if _, err := sess.Insert(row); err != nil {
 			return fmt.Errorf("failed to insert row: %w", err)
@@ -74,7 +79,7 @@ func (s *SQLKeeper) Expose(ctx context.Context, id secret.ExternalID) (secretv0a
 	// TODO: decrypt row.EncryptedValue
 
 	// Return exposed value
-	return secretv0alpha1.NewExposedSecureValue(row.EncryptedValue), nil
+	return secretv0alpha1.NewExposedSecureValue(row.EncryptedData), nil
 }
 
 func (s *SQLKeeper) Delete(ctx context.Context, id secret.ExternalID) error {

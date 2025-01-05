@@ -7,7 +7,9 @@ import (
 	"github.com/grafana/authlib/claims"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
 	"github.com/grafana/grafana/pkg/infra/db"
+	"github.com/grafana/grafana/pkg/registry/apis/secret"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
+	"github.com/grafana/grafana/pkg/registry/apis/secret/secretkeepers"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/xkube"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/sqlstore"
@@ -16,7 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-func ProvideSecureValueStorage(db db.DB, cfg *setting.Cfg, features featuremgmt.FeatureToggles) (contracts.SecureValueStorage, error) {
+func ProvideSecureValueStorage(db db.DB, cfg *setting.Cfg, features featuremgmt.FeatureToggles, keeperService secretkeepers.Service) (contracts.SecureValueStorage, error) {
 	if !features.IsEnabledGlobally(featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs) ||
 		!features.IsEnabledGlobally(featuremgmt.FlagSecretsManagementAppPlatform) {
 		return &storage{}, nil
@@ -26,12 +28,13 @@ func ProvideSecureValueStorage(db db.DB, cfg *setting.Cfg, features featuremgmt.
 		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
-	return &storage{db: db}, nil
+	return &storage{db: db, keeperService: keeperService}, nil
 }
 
 // storage is the actual implementation of the secure value (metadata) storage.
 type storage struct {
-	db db.DB
+	db            db.DB
+	keeperService secretkeepers.Service
 }
 
 func (s *storage) Create(ctx context.Context, sv *secretv0alpha1.SecureValue) (*secretv0alpha1.SecureValue, error) {
@@ -40,8 +43,18 @@ func (s *storage) Create(ctx context.Context, sv *secretv0alpha1.SecureValue) (*
 		return nil, fmt.Errorf("missing auth info in context")
 	}
 
+	// TODO: get keeper from keeper storage
+	keeper, err := s.keeperService.GetKeeper()
+	if err != nil {
+		return nil, err
+	}
+	externalID, err := keeper.Store(ctx, string(sv.Spec.Value))
+	if err != nil {
+		return nil, fmt.Errorf("storing secure value in keeper: %w", err)
+	}
+
 	// This should come from the keeper. From this point on, we should not have a need to read value/ref.
-	externalID := "TODO"
+	// externalID := "TODO"
 	sv.Spec.Value = ""
 	sv.Spec.Ref = ""
 
@@ -100,7 +113,7 @@ func (s *storage) Update(ctx context.Context, newSecureValue *secretv0alpha1.Sec
 	}
 
 	// This should come from the keeper.
-	externalID := "TODO2"
+	externalID := secret.ExternalID("TODO2")
 	newSecureValue.Spec.Value = ""
 	newSecureValue.Spec.Ref = ""
 
