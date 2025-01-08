@@ -13,12 +13,14 @@ import (
 	"go.opentelemetry.io/otel"
 
 	"github.com/grafana/grafana/pkg/api/dtos"
+	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/infra/metrics"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
 	"github.com/grafana/grafana/pkg/services/annotations"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
+	"github.com/grafana/grafana/pkg/services/folder"
 	"github.com/grafana/grafana/pkg/services/licensing"
 	"github.com/grafana/grafana/pkg/services/publicdashboards"
 	. "github.com/grafana/grafana/pkg/services/publicdashboards/models"
@@ -64,9 +66,10 @@ func ProvideService(
 	ac accesscontrol.AccessControl,
 	serviceWrapper publicdashboards.ServiceWrapper,
 	dashboardService dashboards.DashboardService,
+	folderService folder.Service,
 	license licensing.Licensing,
 ) *PublicDashboardServiceImpl {
-	return &PublicDashboardServiceImpl{
+	pb := &PublicDashboardServiceImpl{
 		log:                log.New(LogPrefix),
 		cfg:                cfg,
 		features:           features,
@@ -79,6 +82,60 @@ func ProvideService(
 		dashboardService:   dashboardService,
 		license:            license,
 	}
+	if err := folderService.RegisterService(pb); err != nil {
+		return nil
+	}
+	return pb
+}
+
+// always return 0, we do not want to add additional blockers on deleting a folder, we simply want to delete
+func (pd *PublicDashboardServiceImpl) CountInFolders(ctx context.Context, orgID int64, folderUIDs []string, user identity.Requester) (int64, error) {
+	dashs, err := pd.dashboardService.SearchDashboards(ctx, &dashboards.FindPersistedDashboardsQuery{
+		OrgId:        orgID,
+		FolderUIDs:   folderUIDs,
+		SignedInUser: user,
+	})
+	if err != nil {
+		return 0, err
+	}
+	return int64(dashs.Len()), nil
+}
+
+func (pd *PublicDashboardServiceImpl) DeleteInFolders(ctx context.Context, orgID int64, folderUIDs []string, user identity.Requester) error {
+	// get all dashboards in the given folders
+	dashs, err := pd.dashboardService.SearchDashboards(ctx, &dashboards.FindPersistedDashboardsQuery{
+		OrgId:        orgID,
+		FolderUIDs:   folderUIDs,
+		SignedInUser: user,
+	})
+	if err != nil {
+		return err
+	}
+
+	uids := make([]string, len(dashs))
+	for i, dash := range dashs {
+		uids[i] = dash.UID
+	}
+
+	// get all associated public dashboards
+	pubdashes, err := pd.store.FindByDashboardUids(ctx, orgID, uids)
+	if err != nil {
+		return err
+	}
+
+	// delete each pubdash
+	for _, pubdash := range pubdashes {
+		err = pd.serviceWrapper.Delete(ctx, pubdash.Uid)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (pd *PublicDashboardServiceImpl) Kind() string {
+	return "public_dashboard"
 }
 
 func (pd *PublicDashboardServiceImpl) GetPublicDashboardForView(ctx context.Context, accessToken string) (*dtos.DashboardFullWithMeta, error) {
@@ -462,37 +519,6 @@ func (pd *PublicDashboardServiceImpl) Delete(ctx context.Context, uid string, da
 func (pd *PublicDashboardServiceImpl) DeleteByDashboard(ctx context.Context, dashboard *dashboards.Dashboard) error {
 	ctx, span := tracer.Start(ctx, "publicdashboards.DeleteByDashboard")
 	defer span.End()
-	if dashboard.IsFolder {
-		// get all dashboards in the folder
-		dashs, err := pd.dashboardService.SearchDashboards(ctx, &dashboards.FindPersistedDashboardsQuery{
-			OrgId:      dashboard.OrgID,
-			FolderUIDs: []string{dashboard.UID},
-		})
-		if err != nil {
-			return err
-		}
-
-		uids := make([]string, len(dashs))
-		for i, dash := range dashs {
-			uids[i] = dash.UID
-		}
-
-		// get all associated public dashboards
-		pubdashes, err := pd.store.FindByDashboardUids(ctx, dashboard.OrgID, uids)
-		if err != nil {
-			return err
-		}
-
-		// delete each pubdash
-		for _, pubdash := range pubdashes {
-			err = pd.serviceWrapper.Delete(ctx, pubdash.Uid)
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	}
 
 	pubdash, err := pd.store.FindByDashboardUid(ctx, dashboard.OrgID, dashboard.UID)
 	if err != nil {

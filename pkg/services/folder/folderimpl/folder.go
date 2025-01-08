@@ -888,6 +888,10 @@ func (s *Service) Delete(ctx context.Context, cmd *folder.DeleteFolderCommand) e
 			if alertRulesInFolder > 0 {
 				return folder.ErrFolderNotEmpty.Errorf("folder contains %d alert rules", alertRulesInFolder)
 			}
+
+			if err := s.deleteChildrenInFolder(ctx, cmd.OrgID, folders, cmd.SignedInUser); err != nil {
+				return err
+			}
 		}
 
 		if err = s.legacyDelete(ctx, cmd, folders); err != nil {
