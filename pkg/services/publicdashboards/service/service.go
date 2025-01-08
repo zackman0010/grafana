@@ -462,22 +462,6 @@ func (pd *PublicDashboardServiceImpl) Delete(ctx context.Context, uid string, da
 func (pd *PublicDashboardServiceImpl) DeleteByDashboard(ctx context.Context, dashboard *dashboards.Dashboard) error {
 	ctx, span := tracer.Start(ctx, "publicdashboards.DeleteByDashboard")
 	defer span.End()
-	if dashboard.IsFolder {
-		// get all pubdashes for the folder
-		pubdashes, err := pd.store.FindByFolder(ctx, dashboard.OrgID, dashboard.UID)
-		if err != nil {
-			return err
-		}
-		// delete each pubdash
-		for _, pubdash := range pubdashes {
-			err = pd.serviceWrapper.Delete(ctx, pubdash.Uid)
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	}
 
 	pubdash, err := pd.store.FindByDashboardUid(ctx, dashboard.OrgID, dashboard.UID)
 	if err != nil {
