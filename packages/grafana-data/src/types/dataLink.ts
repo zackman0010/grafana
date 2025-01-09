@@ -55,6 +55,8 @@ export interface DataLink<T extends DataQuery = any> {
     correlationData?: ExploreCorrelationHelperData;
     transformations?: DataLinkTransformationConfig[];
   };
+
+  oneClick?: boolean;
 }
 
 /**
