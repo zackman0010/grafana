@@ -27,7 +27,7 @@ export const enum TooltipHoverMode {
   xyOne,
 }
 
-type GeDataLinksCallback = (seriesIdx: number, dataIdx: number) => LinkModel[];
+type GetDataLinksCallback = (seriesIdx: number, dataIdx: number) => LinkModel[];
 
 interface TooltipPlugin2Props {
   config: UPlotConfigBuilder;
@@ -42,7 +42,7 @@ interface TooltipPlugin2Props {
   clientZoom?: boolean;
 
   onSelectRange?: OnSelectRangeCallback;
-  getDataLinks?: GeDataLinksCallback;
+  getDataLinks?: GetDataLinksCallback;
 
   render: (
     u: uPlot,
@@ -106,7 +106,7 @@ const MIN_ZOOM_DIST = 5;
 
 const maybeZoomAction = (e?: MouseEvent | null) => e != null && !e.ctrlKey && !e.metaKey;
 
-const getDataLinksFallback: GeDataLinksCallback = () => [];
+const getDataLinksFallback: GetDataLinksCallback = () => [];
 
 /**
  * @alpha
