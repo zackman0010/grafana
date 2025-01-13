@@ -58,7 +58,15 @@ export class UnifiedSearcher implements GrafanaSearcher {
     if (query.facet?.length) {
       throw new Error('facets not supported!');
     }
+
+    if (this.fallback(query)) {
+      return this.fallbackSearcher.search(query);
+    }
     return this.doSearchQuery(query);
+  }
+
+  fallback(query: SearchQuery): boolean {
+    return query.kind?.some((kind) => kind !== 'dashboards' && kind !== 'folders') || false;
   }
 
   async starred(query: SearchQuery): Promise<QueryResponse> {
