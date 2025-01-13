@@ -46,6 +46,7 @@ type SearchAPIResponse = {
 };
 
 const folderViewSort = 'name_sort';
+const supportedKinds = ['dashboards', 'folders'];
 
 export class UnifiedSearcher implements GrafanaSearcher {
   locationInfo: Promise<Record<string, LocationInfo>>;
@@ -66,7 +67,7 @@ export class UnifiedSearcher implements GrafanaSearcher {
   }
 
   fallback(query: SearchQuery): boolean {
-    return query.kind?.some((kind) => kind !== 'dashboards' && kind !== 'folders') || false;
+    return query.kind?.some((kind) => !supportedKinds.includes(kind)) || false;
   }
 
   async starred(query: SearchQuery): Promise<QueryResponse> {
