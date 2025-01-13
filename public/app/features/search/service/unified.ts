@@ -46,7 +46,7 @@ type SearchAPIResponse = {
 };
 
 const folderViewSort = 'name_sort';
-const supportedKinds = ['dashboards', 'folders'];
+const supportedKinds = ['dashboard', 'folder'];
 
 export class UnifiedSearcher implements GrafanaSearcher {
   locationInfo: Promise<Record<string, LocationInfo>>;
