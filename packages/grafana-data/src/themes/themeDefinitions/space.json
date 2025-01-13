@@ -1,0 +1,73 @@
+{
+  "name": "Space",
+  "colors": {
+    "mode": "dark",
+    "border": {
+      "weak": "#5A4C67",
+      "medium": "#40334F",
+      "strong": "#2E2439"
+    },
+    "text": {
+      "primary": "#E5E5E5",
+      "secondary": "#A2A2A2",
+      "disabled": "#7D7D7D",
+      "link": "#6A96F3",
+      "maxContrast": "#FFFFFF"
+    },
+    "primary": {
+      "main": "#2E2439"
+    },
+    "secondary": {
+      "main": "#40334F"
+    },
+    "info": {
+      "main": "#6A96F3"
+    },
+    "error": {
+      "main": "#F44336"
+    },
+    "success": {
+      "main": "#4CAF50"
+    },
+    "warning": {
+      "main": "#FF9800"
+    },
+    "background": {
+      "canvas": "#0D0B12",
+      "primary": "#1A1425",
+      "secondary": "#2B1D34"
+    },
+    "action": {
+      "hover": "#40334F",
+      "selected": "#2E2439",
+      "selectedBorder": "#6A96F3",
+      "focus": "#6A96F3",
+      "hoverOpacity": 0.1,
+      "disabledText": "#7D7D7D",
+      "disabledBackground": "#2B1D34",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #6A96F3 0%, #2E2439 100%)",
+      "brandVertical": "linear-gradient(0.01deg, #6A96F3 0.01%, #2E2439 99.99%)"
+    },
+    "contrastThreshold": 4,
+    "hoverFactor": 0.07,
+    "tonalOffset": 0.15
+  },
+  "spacing": {
+    "gridSize": 8
+  },
+  "shape": {
+    "borderRadius": 6
+  },
+  "typography": {
+    "fontFamily": "\"Arial\", \"Helvetica\", sans-serif",
+    "fontFamilyMonospace": "'Courier New', monospace",
+    "fontSize": 14,
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500,
+    "fontWeightBold": 700
+  }
+}
