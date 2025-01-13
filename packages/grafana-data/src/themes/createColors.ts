@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 
-import { alpha, darken, emphasize, getContrastRatio, lighten } from './colorManipulator';
+import { getContrastRatio } from './colorManipulator';
 import { palette } from './palette';
 import { DeepPartial, ThemeRichColor } from './types';
 
@@ -87,22 +87,98 @@ export interface ThemeColors extends ThemeColorsBase<ThemeRichColor> {
 /** @internal */
 export type ThemeColorsInput = DeepPartial<ThemeColorsBase<ThemeRichColor>>;
 
+export class VariableColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
+  mode: ThemeColorsMode = 'dark';
+
+  border = {
+    weak: 'var(--gf-theme-border-weak)',
+    medium: 'var(--gf-theme-border-medium)',
+    strong: 'var(--gf-theme-border-strong)',
+  };
+
+  text = {
+    primary: 'var(--gf-theme-text-primary)',
+    secondary: 'var(--gf-theme-text-secondary)',
+    disabled: 'var(--gf-theme-text-disabled)',
+    link: 'var(--gf-theme-text-link)',
+    maxContrast: 'var(--gf-theme-text-maxContrast)',
+  };
+
+  primary = {
+    main: 'var(--gf-theme-primary-main)',
+    text: 'var(--gf-theme-primary-text)',
+    border: 'var(--gf-theme-primary-border)',
+  };
+
+  secondary = {
+    main: 'var(--gf-theme-secondary-main)',
+    shade: 'var(--gf-theme-secondary-shade)',
+    transparent: 'var(--gf-theme-secondary-transparent)',
+    text: 'var(--gf-theme-secondary-text)',
+    contrastText: 'var(--gf-theme-secondary-contrastText)',
+    border: 'var(--gf-theme-secondary-border)',
+  };
+
+  info = this.primary;
+
+  error = {
+    main: 'var(--gf-theme-error-main)',
+    text: 'var(--gf-theme-error-text)',
+  };
+
+  success = {
+    main: 'var(--gf-theme-success-main)',
+    text: 'var(--gf-theme-success-text)',
+  };
+
+  warning = {
+    main: 'var(--gf-theme-warning-main)',
+    text: 'var(--gf-theme-warning-text)',
+  };
+
+  background = {
+    canvas: 'var(--gf-theme-background-canvas)',
+    primary: 'var(--gf-theme-background-primary)',
+    secondary: 'var(--gf-theme-background-secondary)',
+  };
+
+  action = {
+    hover: 'var(--gf-theme-action-hover)',
+    selected: 'var(--gf-theme-action-selected)',
+    selectedBorder: 'var(--gf-theme-action-selectedBorder)',
+    focus: 'var(--gf-theme-action-focus)',
+    hoverOpacity: 'var(--gf-theme-action-hoverOpacity)',
+    disabledText: 'var(--gf-theme-action-disabledText)',
+    disabledBackground: 'var(--gf-theme-action-disabledBackground)',
+    disabledOpacity: 'var(--gf-theme-action-disabledOpacity)',
+  };
+
+  gradients = {
+    brandHorizontal: 'var(--gf-theme-gradients-brandHorizontal)',
+    brandVertical: 'var(--gf-theme-gradients-brandVertical)',
+  };
+
+  contrastThreshold = 'var(--gf-theme-contrastThreshold)';
+  hoverFactor = 'var(--gf-theme-hoverFactor)';
+  tonalOffset = 'var(--gf-theme-tonalOffset)';
+}
+
 class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   mode: ThemeColorsMode = 'dark';
 
   // Used to get more white opacity colors
-  whiteBase = '204, 204, 220';
+  #whiteBase = '204, 204, 220';
 
   border = {
-    weak: `rgba(${this.whiteBase}, 0.12)`,
-    medium: `rgba(${this.whiteBase}, 0.2)`,
-    strong: `rgba(${this.whiteBase}, 0.30)`,
+    weak: `rgba(${this.#whiteBase}, 0.12)`,
+    medium: `rgba(${this.#whiteBase}, 0.2)`,
+    strong: `rgba(${this.#whiteBase}, 0.30)`,
   };
 
   text = {
-    primary: `rgb(${this.whiteBase})`,
-    secondary: `rgba(${this.whiteBase}, 0.65)`,
-    disabled: `rgba(${this.whiteBase}, 0.6)`,
+    primary: `rgb(${this.#whiteBase})`,
+    secondary: `rgba(${this.#whiteBase}, 0.65)`,
+    disabled: `rgba(${this.#whiteBase}, 0.6)`,
     link: palette.blueDarkText,
     maxContrast: palette.white,
   };
@@ -114,12 +190,12 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   secondary = {
-    main: `rgba(${this.whiteBase}, 0.10)`,
-    shade: `rgba(${this.whiteBase}, 0.14)`,
-    transparent: `rgba(${this.whiteBase}, 0.08)`,
+    main: `rgba(${this.#whiteBase}, 0.10)`,
+    shade: `rgba(${this.#whiteBase}, 0.14)`,
+    transparent: `rgba(${this.#whiteBase}, 0.08)`,
     text: this.text.primary,
-    contrastText: `rgb(${this.whiteBase})`,
-    border: `rgba(${this.whiteBase}, 0.08)`,
+    contrastText: `rgb(${this.#whiteBase})`,
+    border: `rgba(${this.#whiteBase}, 0.08)`,
   };
 
   info = this.primary;
@@ -146,13 +222,13 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   action = {
-    hover: `rgba(${this.whiteBase}, 0.16)`,
-    selected: `rgba(${this.whiteBase}, 0.12)`,
+    hover: `rgba(${this.#whiteBase}, 0.16)`,
+    selected: `rgba(${this.#whiteBase}, 0.12)`,
     selectedBorder: palette.orangeDarkMain,
-    focus: `rgba(${this.whiteBase}, 0.16)`,
+    focus: `rgba(${this.#whiteBase}, 0.16)`,
     hoverOpacity: 0.08,
     disabledText: this.text.disabled,
-    disabledBackground: `rgba(${this.whiteBase}, 0.04)`,
+    disabledBackground: `rgba(${this.#whiteBase}, 0.04)`,
     disabledOpacity: 0.38,
   };
 
@@ -169,7 +245,7 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
 class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   mode: ThemeColorsMode = 'light';
 
-  blackBase = '36, 41, 46';
+  #blackBase = '36, 41, 46';
 
   primary = {
     main: palette.blueLightMain,
@@ -178,24 +254,24 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   text = {
-    primary: `rgba(${this.blackBase}, 1)`,
-    secondary: `rgba(${this.blackBase}, 0.75)`,
-    disabled: `rgba(${this.blackBase}, 0.64)`,
+    primary: `rgba(${this.#blackBase}, 1)`,
+    secondary: `rgba(${this.#blackBase}, 0.75)`,
+    disabled: `rgba(${this.#blackBase}, 0.64)`,
     link: this.primary.text,
     maxContrast: palette.black,
   };
 
   border = {
-    weak: `rgba(${this.blackBase}, 0.12)`,
-    medium: `rgba(${this.blackBase}, 0.3)`,
-    strong: `rgba(${this.blackBase}, 0.4)`,
+    weak: `rgba(${this.#blackBase}, 0.12)`,
+    medium: `rgba(${this.#blackBase}, 0.3)`,
+    strong: `rgba(${this.#blackBase}, 0.4)`,
   };
 
   secondary = {
-    main: `rgba(${this.blackBase}, 0.08)`,
-    shade: `rgba(${this.blackBase}, 0.15)`,
-    transparent: `rgba(${this.blackBase}, 0.08)`,
-    contrastText: `rgba(${this.blackBase},  1)`,
+    main: `rgba(${this.#blackBase}, 0.08)`,
+    shade: `rgba(${this.#blackBase}, 0.15)`,
+    transparent: `rgba(${this.#blackBase}, 0.08)`,
+    contrastText: `rgba(${this.#blackBase},  1)`,
     text: this.text.primary,
     border: this.border.weak,
   };
@@ -228,12 +304,12 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   action = {
-    hover: `rgba(${this.blackBase}, 0.12)`,
-    selected: `rgba(${this.blackBase}, 0.08)`,
+    hover: `rgba(${this.#blackBase}, 0.12)`,
+    selected: `rgba(${this.#blackBase}, 0.08)`,
     selectedBorder: palette.orangeLightMain,
     hoverOpacity: 0.08,
-    focus: `rgba(${this.blackBase}, 0.12)`,
-    disabledBackground: `rgba(${this.blackBase}, 0.04)`,
+    focus: `rgba(${this.#blackBase}, 0.12)`,
+    disabledBackground: `rgba(${this.#blackBase}, 0.04)`,
     disabledText: this.text.disabled,
     disabledOpacity: 0.38,
   };
@@ -286,16 +362,24 @@ export function createColors(colors: ThemeColorsInput): ThemeColors {
       color.border = color.text;
     }
     if (!color.shade) {
-      color.shade = base.mode === 'light' ? darken(color.main, tonalOffset) : lighten(color.main, tonalOffset);
+      // color.shade = base.mode === 'light' ? darken(color.main, tonalOffset) : lighten(color.main, tonalOffset);
+      color.shade =
+        base.mode === 'light'
+          ? `hsl from ${color.main} h s calc(l - ${tonalOffset})`
+          : `hsl from ${color.main} h s calc(l + ${tonalOffset})`;
     }
     if (!color.transparent) {
-      color.transparent = alpha(color.main, 0.15);
+      // color.transparent = alpha(color.main, 0.15);
+      color.transparent = `hsla from ${color.main} h s l / 0.15`;
     }
     if (!color.contrastText) {
-      color.contrastText = getContrastText(color.main);
+      // TODO fix this
+      // color.contrastText = getContrastText(color.main);
+      color.contrastText = '#fff';
     }
     if (!color.borderTransparent) {
-      color.borderTransparent = alpha(color.border, 0.25);
+      // color.borderTransparent = alpha(color.border, 0.25);
+      color.borderTransparent = `hsla from ${color.border} h s l / 0.25`;
     }
     return color as ThemeRichColor;
   };
@@ -311,7 +395,9 @@ export function createColors(colors: ThemeColorsInput): ThemeColors {
       warning: getRichColor({ color: warning, name: 'warning' }),
       getContrastText,
       emphasize: (color: string, factor?: number) => {
-        return emphasize(color, factor ?? hoverFactor);
+        // return emphasize(color, factor ?? hoverFactor);
+        // TODO this isn't exactly the same as emphasize
+        return `hsl from ${color} h s calc(l + ${factor ?? hoverFactor})`;
       },
     },
     other

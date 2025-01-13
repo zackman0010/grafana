@@ -1,5 +1,6 @@
 import { Registry, RegistryItem } from '../utils/Registry';
 
+import { VariableColors } from './createColors';
 import { createTheme } from './createTheme';
 import * as extraThemes from './themeDefinitions';
 import { GrafanaTheme2 } from './types';
@@ -44,7 +45,9 @@ export function getBuiltInThemes(includeExtras?: boolean) {
  */
 const themeRegistry = new Registry<ThemeRegistryItem>(() => {
   return [
-    { id: 'system', name: 'System preference', build: getSystemPreferenceTheme },
+    // { id: 'system', name: 'System preference', build: getSystemPreferenceTheme },
+    // TODO stop using system as a hack
+    { id: 'system', name: 'System preference', build: () => createTheme({ colors: new VariableColors() }) },
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
   ];

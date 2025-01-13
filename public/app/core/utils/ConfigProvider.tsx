@@ -9,13 +9,16 @@ import { appEvents } from '../core';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 
+export const VARIABLE_PREFIX = '--gf-theme';
+
 export const ThemeProvider = ({ children, value }: { children: React.ReactNode; value: GrafanaTheme2 }) => {
   const [theme, setTheme] = useState(value);
 
   useEffect(() => {
     const sub = appEvents.subscribe(ThemeChangedEvent, (event) => {
-      config.theme2 = event.payload;
-      setTheme(event.payload);
+      // config.theme2 = event.payload;
+      // setTheme(event.payload);
+      setThemeVariables(event.payload.colors, VARIABLE_PREFIX);
     });
 
     return () => sub.unsubscribe();
@@ -39,3 +42,34 @@ export const provideTheme = <P extends {}>(component: React.ComponentType<P>, th
     return <ThemeProvider value={theme}>{React.createElement(component, { ...props })}</ThemeProvider>;
   };
 };
+
+export function setThemeVariables(themeColors: GrafanaTheme2['colors'], prefix: string, element?: HTMLElement) {
+  if (!element) {
+    element = document.documentElement;
+  }
+
+  for (const [key, value] of Object.entries(themeColors)) {
+    if (typeof value === 'string' || typeof value === 'number') {
+      element.style.setProperty(`${prefix}-${key}`, `${value}`);
+      if (value === 'color') {
+        element.style.setProperty('color', `${value}`);
+      }
+    } else {
+      setThemeVariables(themeColors[key], `${prefix}-${key}`, element);
+    }
+  }
+}
+
+export function clearThemeVariables(prefix: string, element?: HTMLElement) {
+  if (!element) {
+    element = document.documentElement;
+  }
+
+  element.style.cssText = '';
+
+  // for (const key of element.style) {
+  //   if (key.startsWith(prefix)) {
+  //     element.style.removeProperty(key);
+  //   }
+  // }
+}

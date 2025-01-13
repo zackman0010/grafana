@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom-v5-compat';
 import { usePrevious } from 'react-use';
 
-import { PageLayoutType } from '@grafana/data';
+import { getThemeById, PageLayoutType } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import { UrlSyncContextProvider } from '@grafana/scenes';
 import { Alert, Box } from '@grafana/ui';
@@ -13,6 +13,7 @@ import { GrafanaRouteComponentProps } from 'app/core/navigation/types';
 import { DashboardPageRouteParams, DashboardPageRouteSearchParams } from 'app/features/dashboard/containers/types';
 import { DashboardRoutes } from 'app/types';
 
+import { clearThemeVariables, setThemeVariables, VARIABLE_PREFIX } from '../../../core/utils/ConfigProvider';
 import { DashboardPrompt } from '../saving/DashboardPrompt';
 
 import { getDashboardScenePageStateManager } from './DashboardScenePageStateManager';
@@ -40,10 +41,12 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
         route: route.routeName as DashboardRoutes,
         urlFolderUid: queryParams.folderUid,
       });
+      setThemeVariables(getThemeById('debug').colors, VARIABLE_PREFIX, document.getElementById('pageContent')!);
     }
 
     return () => {
       stateManager.clearState();
+      clearThemeVariables(VARIABLE_PREFIX, document.getElementById('pageContent')!);
     };
   }, [stateManager, uid, route.routeName, queryParams.folderUid, routeReloadCounter, slug, type]);
 
