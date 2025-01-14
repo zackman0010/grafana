@@ -141,7 +141,10 @@ export class TableContainer extends PureComponent<Props, State> {
                         </Trans>
                       }
                       tooltip={
-                        'Showing too many columns in a single table may impact performance and make data harder to read. Consider refining your queries.'
+                        <Trans i18nKey={'table.container.show-all-series-tooltip'}>
+                          Showing too many columns in a single table may impact performance and make data harder to
+                          read. Consider refining your queries.
+                        </Trans>
                       }
                       buttonLabel={<Trans i18nKey={'table.container.show-all-series'}>Show all columns</Trans>}
                     />
