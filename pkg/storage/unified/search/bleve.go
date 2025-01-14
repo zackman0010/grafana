@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +19,8 @@ import (
 	"k8s.io/apimachinery/pkg/selection"
 
 	"github.com/grafana/authlib/authz"
+	"github.com/grafana/authlib/claims"
+	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
 
@@ -381,7 +384,7 @@ func (b *bleveIndex) Search(
 	}
 
 	// convert protobuf request to bleve request
-	searchrequest, e := toBleveSearchRequest(req, access)
+	searchrequest, e := toBleveSearchRequest(ctx, req, access)
 	if e != nil {
 		response.Error = e
 		return response, nil
@@ -483,7 +486,7 @@ func (b *bleveIndex) getIndex(
 	return b.index, nil
 }
 
-func toBleveSearchRequest(req *resource.ResourceSearchRequest, access authz.AccessClient) (*bleve.SearchRequest, *resource.ErrorResult) {
+func (b *bleveIndex) toBleveSearchRequest(ctx context.Context, req *resource.ResourceSearchRequest, access authz.AccessClient) (*bleve.SearchRequest, *resource.ErrorResult) {
 	facets := bleve.FacetsRequest{}
 	for _, f := range req.Facet {
 		facets[f.Field] = bleve.NewFacetRequest(f.Field, int(f.Limit))
@@ -525,12 +528,32 @@ func toBleveSearchRequest(req *resource.ResourceSearchRequest, access authz.Acce
 	}
 
 	if access != nil {
+		auth, ok := claims.From(ctx)
+		if !ok {
+			return nil, &resource.ErrorResult{
+				Code:    http.StatusUnauthorized,
+				Message: "no user found in context",
+			}
+		}
+		checker, err := access.Compile(ctx, auth, authz.ListRequest{
+			Namespace: b.key.Namespace,
+			Group:     b.key.Group,
+			Resource:  b.key.Resource,
+			Verb:      utils.VerbList,
+		})
+		if err != nil {
+			return nil, resource.AsErrorResult(err)
+		}
+
+		// TODO: add a filter that checks each value
+		_ = checker(b.key.Namespace, "itemname", "folderid")
+
 		// TODO AUTHZ!!!!
 		// Need to add an authz filter into the mix
 		// See: https://github.com/grafana/grafana/blob/v11.3.0/pkg/services/searchV2/bluge.go
 		// NOTE, we likely want to pass in the already called checker because the resource server
 		// will first need to check if we can see anything (or everything!) for this resource
-		fmt.Printf("TODO... check authorization\n")
+		fmt.Printf("TODO... check authorization: %v\n", checker)
 	}
 
 	switch len(queries) {
