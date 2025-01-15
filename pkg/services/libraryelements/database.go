@@ -422,10 +422,10 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 		builder := db.NewSqlBuilder(l.Cfg, l.features, l.SQLStore.GetDialect(), recursiveQueriesAreSupported)
 		if folderFilter.includeGeneralFolder {
 			builder.Write(selectLibraryElementDTOWithMeta)
-			builder.Write(", 'General' as folder_name ")
-			builder.Write(", '' as folder_uid ")
+			// builder.Write(", 'General' as folder_name ")
+			// builder.Write(", '' as folder_uid ")
 			builder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
-			builder.Write(` WHERE le.org_id=?  AND le.folder_id=0`, signedInUser.GetOrgID())
+			builder.Write(` WHERE le.org_id=?  AND le.folder_id=0 OR (le.folder_uid = "" OR le.folder_uid="General" OR le.folder_uid IS NULL)`, signedInUser.GetOrgID())
 			writeKindSQL(query, &builder)
 			writeSearchStringSQL(query, l.SQLStore, &builder)
 			writeExcludeSQL(query, &builder)
@@ -433,8 +433,8 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 			builder.Write(" UNION ")
 		}
 		builder.Write(selectLibraryElementDTOWithMeta)
-		builder.Write(", dashboard.title as folder_name ")
-		builder.Write(", dashboard.uid as folder_uid ")
+		// builder.Write(", dashboard.title as folder_name ")
+		// builder.Write(", dashboard.uid as folder_uid ")
 		builder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
 		builder.Write(" INNER JOIN dashboard AS dashboard on le.folder_id = dashboard.id AND le.folder_id<>0")
 		builder.Write(` WHERE le.org_id=?`, signedInUser.GetOrgID())
@@ -442,7 +442,7 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 		writeSearchStringSQL(query, l.SQLStore, &builder)
 		writeExcludeSQL(query, &builder)
 		writeTypeFilterSQL(typeFilter, &builder)
-		if err := folderFilter.writeFolderFilterSQL(false, &builder); err != nil {
+		if err := folderFilter.writeFolderFilterSQL(folderFilter.includeGeneralFolder, &builder); err != nil {
 			return err
 		}
 		if !signedInUser.HasRole(org.RoleAdmin) {
@@ -460,6 +460,7 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 
 		metrics.MFolderIDsServiceCount.WithLabelValues(metrics.LibraryElements).Inc()
 		retDTOs := make([]model.LibraryElementDTO, 0)
+		var counts int64
 		for _, element := range elements {
 			retDTOs = append(retDTOs, model.LibraryElementDTO{
 				ID:          element.ID,
@@ -474,7 +475,7 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 				Model:       element.Model,
 				Version:     element.Version,
 				Meta: model.LibraryElementDTOMeta{
-					FolderName:          element.FolderName,
+					FolderName:          element.FolderUID,
 					FolderUID:           element.FolderUID,
 					ConnectedDashboards: element.ConnectedDashboards,
 					Created:             element.Created,
@@ -491,37 +492,47 @@ func (l *LibraryElementService) getAllLibraryElements(c context.Context, signedI
 					},
 				},
 			})
+			if query.FolderFilter == "0" && (element.FolderName != dashboards.RootFolderName) {
+				continue
+			}
+			counts++
 		}
 
-		var libraryElements []model.LibraryElement
-		countBuilder := db.SQLBuilder{}
-		if folderFilter.includeGeneralFolder {
-			countBuilder.Write(selectLibraryElementDTOWithMeta)
-			countBuilder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
-			countBuilder.Write(` WHERE le.org_id=? AND le.folder_id=0`, signedInUser.GetOrgID())
-			writeKindSQL(query, &countBuilder)
-			writeSearchStringSQL(query, l.SQLStore, &countBuilder)
-			writeExcludeSQL(query, &countBuilder)
-			writeTypeFilterSQL(typeFilter, &countBuilder)
-			countBuilder.Write(" UNION ")
-		}
-		countBuilder.Write(selectLibraryElementDTOWithMeta)
-		countBuilder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
-		countBuilder.Write(" INNER JOIN dashboard AS dashboard on le.folder_id = dashboard.id and le.folder_id<>0")
-		countBuilder.Write(` WHERE le.org_id=?`, signedInUser.GetOrgID())
-		writeKindSQL(query, &countBuilder)
-		writeSearchStringSQL(query, l.SQLStore, &countBuilder)
-		writeExcludeSQL(query, &countBuilder)
-		writeTypeFilterSQL(typeFilter, &countBuilder)
-		if err := folderFilter.writeFolderFilterSQL(true, &countBuilder); err != nil {
-			return err
-		}
-		if err := session.SQL(countBuilder.GetSQLString(), countBuilder.GetParams()...).Find(&libraryElements); err != nil {
-			return err
-		}
+		// var libraryElements []model.LibraryElement
+		// countBuilder := db.SQLBuilder{}
+		// // if folderFilter.includeGeneralFolder {
+		// // 	countBuilder.Write(selectLibraryElementDTOWithMeta)
+		// // 	countBuilder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
+		// // 	countBuilder.Write(` WHERE le.org_id=? AND le.folder_id=0`, signedInUser.GetOrgID())
+		// // 	writeKindSQL(query, &countBuilder)
+		// // 	writeSearchStringSQL(query, l.SQLStore, &countBuilder)
+		// // 	writeExcludeSQL(query, &countBuilder)
+		// // 	writeTypeFilterSQL(typeFilter, &countBuilder)
+		// // 	countBuilder.Write(" UNION ")
+		// // }
+		// countBuilder.Write(selectLibraryElementDTOWithMeta)
+		// countBuilder.Write(getFromLibraryElementDTOWithMeta(l.SQLStore.GetDialect()))
+		// // countBuilder.Write(" INNER JOIN dashboard AS dashboard on le.folder_id = dashboard.id and le.folder_id<>0")
+		// // countBuilder.Write(` WHERE le.org_id=?`, signedInUser.GetOrgID())
+		// writeKindSQL(query, &countBuilder)
+		// writeSearchStringSQL(query, l.SQLStore, &countBuilder)
+		// writeExcludeSQL(query, &countBuilder)
+		// writeTypeFilterSQL(typeFilter, &countBuilder)
+		// if err := folderFilter.writeFolderFilterSQL(true, &countBuilder); err != nil {
+		// 	return err
+		// }
+
+		// fmt.Println("COUNT QUERY", countBuilder.GetSQLString())
+		// fmt.Println("COUNT PARAMS", countBuilder.GetParams())
+		// if err := session.SQL(countBuilder.GetSQLString(), countBuilder.GetParams()...).Find(&libraryElements); err != nil {
+		// 	return err
+		// }
+
+		fmt.Println("len", len(elements))
+		fmt.Println("das", int64(len(elements)))
 
 		result = model.LibraryElementSearchResult{
-			TotalCount: int64(len(libraryElements)),
+			TotalCount: counts,
 			Elements:   retDTOs,
 			Page:       query.Page,
 			PerPage:    query.PerPage,
