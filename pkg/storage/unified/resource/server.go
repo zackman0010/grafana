@@ -94,6 +94,13 @@ type StorageBackend interface {
 	// but are the the final answer.
 	ListIterator(context.Context, *ListRequest, func(ListIterator) error) (int64, error)
 
+	// List historical values from storage (authz will be applied after)
+	HistoryIterator(ctx context.Context,
+		key *ResourceKey,
+		page string, // from continue token
+		trash bool, // only show deleted items (key will not have a name)
+		iter func(ListIterator) error) (int64, error)
+
 	// Get all events from the store
 	// For HA setups, this will be more events than the local WriteEvent above!
 	WatchWriteEvents(ctx context.Context) (<-chan *WrittenEvent, error)
@@ -763,6 +770,76 @@ func (s *server) List(ctx context.Context, req *ListRequest) (*ListResponse, err
 	return rsp, err
 }
 
+// History implements ResourceServer.
+func (s *server) History(ctx context.Context, req *HistoryRequest) (*HistoryResponse, error) {
+	ctx, span := s.tracer.Start(ctx, "storage_server.history")
+	defer span.End()
+
+	user, ok := claims.From(ctx)
+	if !ok || user == nil {
+		return &HistoryResponse{
+			Error: &ErrorResult{
+				Message: "no user found in context",
+				Code:    http.StatusUnauthorized,
+			}}, nil
+	}
+
+	if req.Limit < 1 {
+		req.Limit = 50 // default max 50 items in a page
+	}
+
+	key := req.Key
+	checker, err := s.access.Compile(ctx, user, authz.ListRequest{
+		Group:     key.Group,
+		Resource:  key.Resource,
+		Namespace: key.Namespace,
+	})
+	if err != nil {
+		return &HistoryResponse{Error: AsErrorResult(err)}, nil
+	}
+	if checker == nil {
+		return &HistoryResponse{Error: &ErrorResult{
+			Code: http.StatusForbidden,
+		}}, nil
+	}
+
+	rsp := &HistoryResponse{}
+	rv, err := s.backend.HistoryIterator(ctx, req.Key, req.NextPageToken, req.Trash,
+		func(iter ListIterator) error {
+			for iter.Next() {
+				if err := iter.Error(); err != nil {
+					return err
+				}
+
+				if !checker(iter.Namespace(), iter.Name(), iter.Folder()) {
+					continue
+				}
+
+				if len(rsp.Items) >= int(req.Limit) {
+					rsp.NextPageToken = iter.ContinueToken()
+					break
+				}
+
+				rsp.Items = append(rsp.Items, iter.Value())
+			}
+			return nil
+		})
+	if err != nil {
+		rsp.Error = AsErrorResult(err)
+		return rsp, nil
+	}
+
+	if rv < 1 {
+		rsp.Error = &ErrorResult{
+			Code:    http.StatusInternalServerError,
+			Message: fmt.Sprintf("invalid resource version for history: %v", rv),
+		}
+		return rsp, nil
+	}
+	rsp.ResourceVersion = rv
+	return rsp, err
+}
+
 func (s *server) Restore(ctx context.Context, req *RestoreRequest) (*RestoreResponse, error) {
 	ctx, span := s.tracer.Start(ctx, "storage_server.List")
 	defer span.End()
@@ -1067,11 +1144,6 @@ func (s *server) GetStats(ctx context.Context, req *ResourceStatsRequest) (*Reso
 		return nil, fmt.Errorf("search index not configured")
 	}
 	return s.search.GetStats(ctx, req)
-}
-
-// History implements ResourceServer.
-func (s *server) History(ctx context.Context, req *HistoryRequest) (*HistoryResponse, error) {
-	return s.search.History(ctx, req)
 }
 
 func (s *server) ListRepositoryObjects(ctx context.Context, req *ListRepositoryObjectsRequest) (*ListRepositoryObjectsResponse, error) {

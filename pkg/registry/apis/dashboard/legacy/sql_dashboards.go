@@ -119,7 +119,7 @@ func (a *dashboardSqlAccess) getRows(ctx context.Context, sql *legacysql.LegacyD
 	}, err
 }
 
-var _ resource.ListIterator = (*rowsWrapper)(nil)
+var _ resource.ListIterator[[]byte] = (*rowsWrapper)(nil)
 
 type rowsWrapper struct {
 	a    *dashboardSqlAccess

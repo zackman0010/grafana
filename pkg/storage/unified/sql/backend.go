@@ -180,9 +180,17 @@ func (b *backend) create(ctx context.Context, event resource.WriteEvent) (int64,
 	guid := uuid.New().String()
 	err := b.db.WithTx(ctx, ReadCommitted, func(ctx context.Context, tx db.Tx) error {
 		folder := ""
+		message := ""
+		timestamp := int64(0)
 		if event.Object != nil {
 			folder = event.Object.GetFolder()
+			message = event.Object.GetMessage()
+			timestamp = event.Object.GetCreationTimestamp().UnixMilli()
+			if timestamp < 10 {
+				timestamp = time.Now().UnixMilli()
+			}
 		}
+
 		// 1. Insert into resource
 		if _, err := dbutil.Exec(ctx, tx, sqlResourceInsert, sqlResourceRequest{
 			SQLTemplate: sqltemplate.New(b.dialect),
@@ -199,6 +207,8 @@ func (b *backend) create(ctx context.Context, event resource.WriteEvent) (int64,
 			WriteEvent:  event,
 			Folder:      folder,
 			GUID:        guid,
+			Message:     message,
+			Timestamp:   timestamp,
 		}); err != nil {
 			return fmt.Errorf("insert into resource history: %w", err)
 		}
@@ -241,8 +251,17 @@ func (b *backend) update(ctx context.Context, event resource.WriteEvent) (int64,
 	guid := uuid.New().String()
 	err := b.db.WithTx(ctx, ReadCommitted, func(ctx context.Context, tx db.Tx) error {
 		folder := ""
+		message := ""
+		timestamp := int64(0)
 		if event.Object != nil {
 			folder = event.Object.GetFolder()
+			message = event.Object.GetMessage()
+			ts, _ := event.Object.GetUpdatedTimestamp()
+			if ts != nil {
+				timestamp = ts.UnixMilli()
+			} else {
+				timestamp = time.Now().UnixMilli()
+			}
 		}
 		// 1. Update resource
 		_, err := dbutil.Exec(ctx, tx, sqlResourceUpdate, sqlResourceRequest{
@@ -261,6 +280,8 @@ func (b *backend) update(ctx context.Context, event resource.WriteEvent) (int64,
 			WriteEvent:  event,
 			Folder:      folder,
 			GUID:        guid,
+			Message:     message,
+			Timestamp:   timestamp,
 		}); err != nil {
 			return fmt.Errorf("insert into resource history: %w", err)
 		}
@@ -305,8 +326,15 @@ func (b *backend) delete(ctx context.Context, event resource.WriteEvent) (int64,
 
 	err := b.db.WithTx(ctx, ReadCommitted, func(ctx context.Context, tx db.Tx) error {
 		folder := ""
+		message := ""
+		timestamp := time.Now().UnixMilli()
 		if event.Object != nil {
 			folder = event.Object.GetFolder()
+			message = event.Object.GetMessage()
+			ts := event.Object.GetDeletionTimestamp()
+			if ts != nil {
+				timestamp = ts.UnixMilli()
+			}
 		}
 		// 1. delete from resource
 		_, err := dbutil.Exec(ctx, tx, sqlResourceDelete, sqlResourceRequest{
@@ -324,6 +352,8 @@ func (b *backend) delete(ctx context.Context, event resource.WriteEvent) (int64,
 			WriteEvent:  event,
 			Folder:      folder,
 			GUID:        guid,
+			Message:     message,
+			Timestamp:   timestamp,
 		}); err != nil {
 			return fmt.Errorf("insert into resource history: %w", err)
 		}
@@ -476,8 +506,8 @@ func (b *backend) ReadResource(ctx context.Context, req *resource.ReadRequest) *
 	return res
 }
 
-func (b *backend) ListIterator(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator) error) (int64, error) {
-	_, span := b.tracer.Start(ctx, tracePrefix+"List")
+func (b *backend) ListIterator(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator[[]byte]) error) (int64, error) {
+	ctx, span := b.tracer.Start(ctx, tracePrefix+"List")
 	defer span.End()
 
 	if req.Options == nil || req.Options.Key.Group == "" || req.Options.Key.Resource == "" {
@@ -494,7 +524,25 @@ func (b *backend) ListIterator(ctx context.Context, req *resource.ListRequest, c
 	return b.listLatest(ctx, req, cb)
 }
 
-type listIter struct {
+func (b *backend) HistoryIterator(ctx context.Context,
+	key *resource.ResourceKey,
+	page string, // from continue token
+	trash bool, // only show deleted items (key will not have a name)
+	cb func(resource.ListIterator[*resource.HistoryResponse_Item],
+	) error) (int64, error) {
+	ctx, span := b.tracer.Start(ctx, tracePrefix+"History")
+	defer span.End()
+
+	if page != "" {
+		return 0, fmt.Errorf("paging not yet supported")
+	}
+
+	fmt.Printf("TODO... actually get history!!!")
+
+	return 0, nil
+}
+
+type listIter[T any] struct {
 	rows   db.Rows
 	offset int64
 	listRV int64
@@ -504,45 +552,45 @@ type listIter struct {
 
 	// The row
 	rv        int64
-	value     []byte
+	value     T
 	namespace string
 	name      string
 	folder    string
 }
 
 // ContinueToken implements resource.ListIterator.
-func (l *listIter) ContinueToken() string {
+func (l *listIter[T]) ContinueToken() string {
 	return ContinueToken{ResourceVersion: l.listRV, StartOffset: l.offset}.String()
 }
 
-func (l *listIter) Error() error {
+func (l *listIter[T]) Error() error {
 	return l.err
 }
 
-func (l *listIter) Name() string {
+func (l *listIter[T]) Name() string {
 	return l.name
 }
 
-func (l *listIter) Namespace() string {
+func (l *listIter[T]) Namespace() string {
 	return l.namespace
 }
 
-func (l *listIter) Folder() string {
+func (l *listIter[T]) Folder() string {
 	return l.folder
 }
 
 // ResourceVersion implements resource.ListIterator.
-func (l *listIter) ResourceVersion() int64 {
+func (l *listIter[T]) ResourceVersion() int64 {
 	return l.rv
 }
 
 // Value implements resource.ListIterator.
-func (l *listIter) Value() []byte {
+func (l *listIter[T]) Value() T {
 	return l.value
 }
 
 // Next implements resource.ListIterator.
-func (l *listIter) Next() bool {
+func (l *listIter[T]) Next() bool {
 	if l.rows.Next() {
 		l.offset++
 		l.err = l.rows.Scan(&l.rv, &l.namespace, &l.name, &l.folder, &l.value)
@@ -551,10 +599,8 @@ func (l *listIter) Next() bool {
 	return false
 }
 
-var _ resource.ListIterator = (*listIter)(nil)
-
 // listLatest fetches the resources from the resource table.
-func (b *backend) listLatest(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator) error) (int64, error) {
+func (b *backend) listLatest(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator[[]byte]) error) (int64, error) {
 	if req.NextPageToken != "" {
 		return 0, fmt.Errorf("only works for the first page")
 	}
@@ -562,7 +608,7 @@ func (b *backend) listLatest(ctx context.Context, req *resource.ListRequest, cb 
 		return 0, fmt.Errorf("only works for the 'latest' resource version")
 	}
 
-	iter := &listIter{}
+	iter := &listIter[[]byte]{}
 	err := b.db.WithTx(ctx, ReadCommittedRO, func(ctx context.Context, tx db.Tx) error {
 		var err error
 		iter.listRV, err = fetchLatestRV(ctx, tx, b.dialect, req.Options.Key.Group, req.Options.Key.Resource)
@@ -595,9 +641,9 @@ func (b *backend) listLatest(ctx context.Context, req *resource.ListRequest, cb 
 }
 
 // listAtRevision fetches the resources from the resource_history table at a specific revision.
-func (b *backend) listAtRevision(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator) error) (int64, error) {
+func (b *backend) listAtRevision(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator[[]byte]) error) (int64, error) {
 	// Get the RV
-	iter := &listIter{listRV: req.ResourceVersion}
+	iter := &listIter[[]byte]{listRV: req.ResourceVersion}
 	if req.NextPageToken != "" {
 		continueToken, err := GetContinueToken(req.NextPageToken)
 		if err != nil {

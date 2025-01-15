@@ -349,7 +349,7 @@ func (s *Storage) Get(ctx context.Context, key string, opts storage.GetOptions, 
 // The returned contents may be delayed, but it is guaranteed that they will
 // match 'opts.ResourceVersion' according 'opts.ResourceVersionMatch'.
 func (s *Storage) GetList(ctx context.Context, key string, opts storage.ListOptions, listObj runtime.Object) error {
-	k, err := s.getKey(key)
+	k, err := s.getKey(key) // will not include name
 	if err != nil {
 		return err
 	}
@@ -357,6 +357,15 @@ func (s *Storage) GetList(ctx context.Context, key string, opts storage.ListOpti
 	req, predicate, err := toListRequest(k, opts)
 	if err != nil {
 		return err
+	}
+
+	// Check for history request
+	if req.Options.Labels != nil {
+		for _, p := range req.Options.Labels {
+			if p.Key == utils.LabelKeyHistory {
+				return s.getHistory(ctx, req, listObj) // use field selector for name?
+			}
+		}
 	}
 
 	rsp, err := s.store.List(ctx, req)
@@ -418,6 +427,71 @@ func (s *Storage) GetList(ctx context.Context, key string, opts storage.ListOpti
 		remainingItems = &rsp.RemainingItemCount
 	}
 	if err := s.versioner.UpdateList(listObj, uint64(rsp.ResourceVersion), rsp.NextPageToken, remainingItems); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Storage) getHistory(ctx context.Context, listReq *resource.ListRequest, listObj runtime.Object) error {
+	req := &resource.HistoryRequest{
+		Key:   listReq.Options.Key,
+		Limit: listReq.Limit,
+	}
+
+	if len(listReq.Options.Labels) != 1 {
+		return apierrors.NewBadRequest("history may only have a single label selector")
+	}
+	sel := listReq.Options.Labels[0]
+	if sel.Operator != "=" || len(sel.Values) != 1 {
+		return apierrors.NewBadRequest("history only supports equal to one value")
+	}
+	req.Trash = sel.Values[0] == "trash"
+	if req.Trash {
+		if sel.Values[0] == "" {
+			return apierrors.NewBadRequest("history should be field name or trash")
+		}
+		req.Key.Name = sel.Values[0]
+	} else if req.Key.Name != "" {
+		return apierrors.NewBadRequest("not expecting name and trash at the same time")
+	}
+
+	rsp, err := s.store.History(ctx, req)
+	if err != nil {
+		return err
+	}
+	if rsp.Error != nil {
+		return resource.GetError(rsp.Error)
+	}
+
+	listPtr, err := meta.GetItemsPtr(listObj)
+	if err != nil {
+		return err
+	}
+	v, err := conversion.EnforcePtr(listPtr)
+	if err != nil {
+		return err
+	}
+
+	if v.IsNil() {
+		v.Set(reflect.MakeSlice(v.Type(), 0, 0))
+	}
+
+	for _, item := range rsp.Items {
+		obj := s.newFunc()
+		meta, err := utils.MetaAccessor(obj)
+		if err != nil {
+			return err
+		}
+		meta.SetName(item.Key.Name)
+		meta.SetNamespace(item.Key.Namespace)
+		meta.SetResourceVersionInt64(item.ResourceVersion)
+		meta.SetCreationTimestamp(metaV1.NewTime(time.UnixMilli(item.Time)))
+		meta.SetMessage(item.Message)
+
+		v.Set(reflect.Append(v, reflect.ValueOf(obj).Elem()))
+	}
+
+	if err := s.versioner.UpdateList(listObj, uint64(rsp.ResourceVersion), rsp.NextPageToken, nil); err != nil {
 		return err
 	}
 	return nil

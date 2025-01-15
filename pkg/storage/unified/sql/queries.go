@@ -72,6 +72,8 @@ type sqlResourceRequest struct {
 	GUID       string
 	WriteEvent resource.WriteEvent
 	Folder     string
+	Message    string
+	Timestamp  int64
 }
 
 func (r sqlResourceRequest) Validate() error {

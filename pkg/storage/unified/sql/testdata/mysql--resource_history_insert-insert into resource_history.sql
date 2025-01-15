@@ -8,7 +8,9 @@ INSERT INTO `resource_history`
         `folder`,
         `previous_resource_version`,
         `value`,
-        `action`
+        `action`,
+        `message`,
+        `timestamp`
     )
     VALUES (
         '',
@@ -20,5 +22,7 @@ INSERT INTO `resource_history`
         1234,
         '[]',
         'UNKNOWN'
+        'msg'
+        4567
     )
 ;

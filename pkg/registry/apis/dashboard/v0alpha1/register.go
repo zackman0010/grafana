@@ -146,10 +146,6 @@ func (b *DashboardsAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver
 
 	storage := map[string]rest.Storage{}
 	storage[dash.StoragePath()] = legacyStore
-	storage[dash.StoragePath("history")] = apistore.NewHistoryConnector(
-		b.legacy.Server, // as client???
-		dashboardv0alpha1.DashboardResourceInfo.GroupResource(),
-	)
 
 	if optsGetter == nil {
 		return errors.New("missing RESTOptionsGetter")

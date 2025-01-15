@@ -143,10 +143,6 @@ func (b *DashboardsAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver
 
 	storage := map[string]rest.Storage{}
 	storage[dash.StoragePath()] = legacyStore
-	storage[dash.StoragePath("history")] = apistore.NewHistoryConnector(
-		b.legacy.Server, // as client???
-		dashboardv2alpha1.DashboardResourceInfo.GroupResource(),
-	)
 
 	// Dual writes if a RESTOptionsGetter is provided
 	if optsGetter != nil && dualWriteBuilder != nil {

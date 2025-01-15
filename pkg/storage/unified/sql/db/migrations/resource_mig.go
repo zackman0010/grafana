@@ -149,5 +149,12 @@ func initResourceTables(mg *migrator.Migrator) string {
 		Name: "folder", Type: migrator.DB_NVarchar, Length: 253, Nullable: false, Default: "''",
 	}))
 
+	mg.AddMigration("Add column message to resource_history", migrator.NewAddColumnMigration(resource_history_table, &migrator.Column{
+		Name: "message", Type: migrator.DB_Text, Nullable: false, Default: "''",
+	}))
+	mg.AddMigration("Add column timestamp to resource_history", migrator.NewAddColumnMigration(resource_history_table, &migrator.Column{
+		Name: "timestamp", Type: migrator.DB_BigInt, Nullable: false, Default: "0",
+	}))
+
 	return marker
 }

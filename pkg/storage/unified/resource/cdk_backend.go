@@ -217,13 +217,18 @@ func isDeletedMarker(raw []byte) bool {
 	return false
 }
 
-func (s *cdkBackend) ListIterator(ctx context.Context, req *ListRequest, cb func(ListIterator) error) (int64, error) {
+func (s *cdkBackend) ListIterator(ctx context.Context, req *ListRequest, cb func(ListIterator[[]byte]) error) (int64, error) {
 	resources, err := buildTree(ctx, s, req.Options.Key)
 	if err != nil {
 		return 0, err
 	}
 	err = cb(resources)
 	return resources.listRV, err
+}
+
+// HistoryIterator implements StorageBackend.
+func (s *cdkBackend) HistoryIterator(ctx context.Context, key *ResourceKey, page string, trash bool, iter func(ListIterator[*HistoryResponse_Item]) error) (int64, error) {
+	return 0, fmt.Errorf("history not implemented in CDK backend")
 }
 
 func (s *cdkBackend) WatchWriteEvents(ctx context.Context) (<-chan *WrittenEvent, error) {
@@ -329,7 +334,7 @@ func (c *cdkListIterator) Folder() string {
 	return "" // TODO: implement this
 }
 
-var _ ListIterator = (*cdkListIterator)(nil)
+var _ ListIterator[[]byte] = (*cdkListIterator)(nil)
 
 func buildTree(ctx context.Context, s *cdkBackend, key *ResourceKey) (*cdkListIterator, error) {
 	byPrefix := make(map[string]*cdkResource)
