@@ -194,3 +194,29 @@ func alertRuleToAlertRuleVersion(rule alertRule) alertRuleVersion {
 		Metadata:             rule.Metadata,
 	}
 }
+
+func alertRuleVersionToAlertRule(version alertRuleVersion) alertRule {
+	return alertRule{
+		ID:                   version.ID,
+		OrgID:                version.RuleOrgID,
+		UID:                  version.RuleUID,
+		NamespaceUID:         version.RuleNamespaceUID,
+		RuleGroup:            version.RuleGroup,
+		RuleGroupIndex:       version.RuleGroupIndex,
+		Version:              version.Version,
+		Updated:              version.Created,
+		Title:                version.Title,
+		Condition:            version.Condition,
+		Data:                 version.Data,
+		IntervalSeconds:      version.IntervalSeconds,
+		Record:               version.Record,
+		NoDataState:          version.NoDataState,
+		ExecErrState:         version.ExecErrState,
+		For:                  version.For,
+		Annotations:          version.Annotations,
+		Labels:               version.Labels,
+		IsPaused:             version.IsPaused,
+		NotificationSettings: version.NotificationSettings,
+		Metadata:             version.Metadata,
+	}
+}
