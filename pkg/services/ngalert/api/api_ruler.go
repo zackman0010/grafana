@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"sort"
 	"strings"
 	"time"
 
@@ -325,6 +326,28 @@ func (srv RulerSrv) RouteGetRuleByUID(c *contextmodel.ReqContext, ruleUID string
 
 	result := toGettableExtendedRuleNode(rule, map[string]ngmodels.Provenance{rule.ResourceID(): provenance})
 
+	return response.JSON(http.StatusOK, result)
+}
+
+func (srv RulerSrv) RouteGetRuleHistoryByUID(c *contextmodel.ReqContext, ruleUID string) response.Response {
+	ctx := c.Req.Context()
+	rules, err := srv.store.GetAlertRuleVersions(ctx, ngmodels.AlertRuleKey{OrgID: c.OrgID, UID: ruleUID})
+	if err != nil {
+		return response.ErrOrFallback(http.StatusInternalServerError, "failed to get rule history", err)
+	}
+	if len(rules) == 0 {
+		return response.Empty(http.StatusNotFound)
+	}
+	sort.Slice(rules, func(i, j int) bool { return rules[i].ID > rules[j].ID })
+	mostRecentRule := rules[0]
+	if err := srv.authz.AuthorizeAccessInFolder(ctx, c.SignedInUser, mostRecentRule); err != nil {
+		return response.ErrOrFallback(http.StatusInternalServerError, "failed to authorize user access to the rule", err)
+	}
+	result := make([]apimodels.GettableExtendedRuleNode, 0, len(rules))
+	for _, rule := range rules {
+		// do not provide provenance status because we do not have historical changes for it
+		result = append(result, toGettableExtendedRuleNode(*rule, map[string]ngmodels.Provenance{}))
+	}
 	return response.JSON(http.StatusOK, result)
 }
 
