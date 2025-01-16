@@ -40,6 +40,11 @@ func (s *ExposedSecureValue) DangerouslyExposeAndConsumeValue() string {
 	return string(tmp)
 }
 
+// Empty values are invalid
+func (s ExposedSecureValue) Valid() bool {
+	return len(s) > 0
+}
+
 // String must not return the exposed secure value.
 func (s ExposedSecureValue) String() string {
 	return redacted
