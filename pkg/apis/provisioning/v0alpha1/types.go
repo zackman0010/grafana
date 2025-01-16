@@ -59,15 +59,20 @@ type GitHubRepositoryConfig struct {
 	PullRequestLinter bool `json:"pullRequestLinter,omitempty"`
 }
 
+type ClassicRepositoryConfig struct {
+	Path string `json:"path,omitempty"`
+}
+
 // RepositoryType defines the types of Repository
 // +enum
 type RepositoryType string
 
 // RepositoryType values
 const (
-	LocalRepositoryType  RepositoryType = "local"
-	S3RepositoryType     RepositoryType = "s3"
-	GitHubRepositoryType RepositoryType = "github"
+	LocalRepositoryType   RepositoryType = "local"
+	S3RepositoryType      RepositoryType = "s3"
+	GitHubRepositoryType  RepositoryType = "github"
+	ClassicRepositoryType RepositoryType = "classic"
 )
 
 type RepositorySpec struct {
@@ -107,6 +112,9 @@ type RepositorySpec struct {
 	// Mutually exclusive with local and s3.
 	// TODO: github or just 'git'??
 	GitHub *GitHubRepositoryConfig `json:"github,omitempty"`
+
+	// This repository is managed via
+	Classic *S3RepositoryConfig `json:"classic,omitempty"`
 }
 
 type EditingOptions struct {
