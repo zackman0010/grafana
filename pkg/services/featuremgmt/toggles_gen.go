@@ -950,4 +950,8 @@ const (
 	// FlagDatasourceConnectionsTab
 	// Shows defined connections for a data source in the plugins detail page
 	FlagDatasourceConnectionsTab = "datasourceConnectionsTab"
+
+	// FlagAlertingRuleVersionHistory
+	// Enables the alert rule version history feature
+	FlagAlertingRuleVersionHistory = "alertingRuleVersionHistory"
 )
