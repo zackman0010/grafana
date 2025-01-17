@@ -91,17 +91,15 @@ export function dedupLogRows(rows: LogRowModel[], strategy?: LogsDedupStrategy):
     return rows;
   }
 
-  return rows.reduce((result: LogRowModel[], row: LogRowModel, index) => {
-    const rowCopy = { ...row };
-    const previous = result[result.length - 1];
-    if (index > 0 && isDuplicateRow(row, previous, strategy)) {
-      previous.duplicates!++;
+  const uniqueRows: LogRowModel[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    if (i > 0 && isDuplicateRow(rows[i], uniqueRows[uniqueRows.length-1], strategy)) {
+      uniqueRows[uniqueRows.length-1].duplicates!++;
     } else {
-      rowCopy.duplicates = 0;
-      result.push(rowCopy);
+      uniqueRows.push({ ...rows[i], duplicates: 0 });
     }
-    return result;
-  }, []);
+  }
+  return uniqueRows;
 }
 
 export function filterLogLevels(logRows: LogRowModel[], hiddenLogLevels: Set<LogLevel>): LogRowModel[] {
