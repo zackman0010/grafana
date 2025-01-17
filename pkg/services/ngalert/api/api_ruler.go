@@ -403,7 +403,7 @@ func (srv RulerSrv) updateAlertRulesInGroup(c *contextmodel.ReqContext, groupKey
 		userNamespace := c.SignedInUser.GetIdentityType()
 
 		logger := srv.log.New("namespace_uid", groupKey.NamespaceUID, "group",
-			groupKey.RuleGroup, "org_id", groupKey.OrgID, "user_id", id, "userNamespace", userNamespace)
+			groupKey.RuleGroup, "org_id", groupKey.OrgID, "user_id", id, "user_uid", c.SignedInUser.UserUID, "userNamespace", userNamespace)
 		groupChanges, err := store.CalculateChanges(tranCtx, srv.store, groupKey, rules)
 		if err != nil {
 			return err
@@ -446,7 +446,7 @@ func (srv RulerSrv) updateAlertRulesInGroup(c *contextmodel.ReqContext, groupKey
 			return err
 		}
 
-		finalChanges = store.UpdateCalculatedRuleFields(groupChanges)
+		finalChanges = store.UpdateCalculatedRuleFields(groupChanges, c.SignedInUser)
 		logger.Debug("Updating database with the authorized changes", "add", len(finalChanges.New), "update", len(finalChanges.New), "delete", len(finalChanges.Delete))
 
 		// Delete first as this could prevent future unique constraint violations.
