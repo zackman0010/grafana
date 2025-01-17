@@ -331,18 +331,20 @@ func (srv RulerSrv) RouteGetRuleByUID(c *contextmodel.ReqContext, ruleUID string
 
 func (srv RulerSrv) RouteGetRuleHistoryByUID(c *contextmodel.ReqContext, ruleUID string) response.Response {
 	ctx := c.Req.Context()
+
+	_, err := srv.getAuthorizedRuleByUid(ctx, c, ruleUID)
+	if err != nil {
+		if errors.Is(err, ngmodels.ErrAlertRuleNotFound) {
+			return response.Empty(http.StatusNotFound)
+		}
+		return response.ErrOrFallback(http.StatusInternalServerError, "failed to get rule by UID", err)
+	}
+
 	rules, err := srv.store.GetAlertRuleVersions(ctx, ngmodels.AlertRuleKey{OrgID: c.OrgID, UID: ruleUID})
 	if err != nil {
 		return response.ErrOrFallback(http.StatusInternalServerError, "failed to get rule history", err)
 	}
-	if len(rules) == 0 {
-		return response.Empty(http.StatusNotFound)
-	}
 	sort.Slice(rules, func(i, j int) bool { return rules[i].ID > rules[j].ID })
-	mostRecentRule := rules[0]
-	if err := srv.authz.AuthorizeAccessInFolder(ctx, c.SignedInUser, mostRecentRule); err != nil {
-		return response.ErrOrFallback(http.StatusInternalServerError, "failed to authorize user access to the rule", err)
-	}
 	result := make([]apimodels.GettableExtendedRuleNode, 0, len(rules))
 	for _, rule := range rules {
 		// do not provide provenance status because we do not have historical changes for it
