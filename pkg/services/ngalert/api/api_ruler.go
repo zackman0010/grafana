@@ -28,6 +28,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/provisioning"
 	"github.com/grafana/grafana/pkg/services/ngalert/store"
 	"github.com/grafana/grafana/pkg/services/quota"
+	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
 )
@@ -54,6 +55,7 @@ type RulerSrv struct {
 	cfg                *setting.UnifiedAlertingSettings
 	conditionValidator ConditionValidator
 	authz              RuleAccessControlService
+	userService        user.Service
 
 	amConfigStore  AMConfigStore
 	amRefresher    AMRefresher
@@ -212,7 +214,7 @@ func (srv RulerSrv) RouteGetNamespaceRulesConfig(c *contextmodel.ReqContext, nam
 	result := apimodels.NamespaceConfigResponse{}
 
 	for groupKey, rules := range ruleGroups {
-		result[namespace.Fullpath] = append(result[namespace.Fullpath], toGettableRuleGroupConfig(groupKey.RuleGroup, rules, provenanceRecords))
+		result[namespace.Fullpath] = append(result[namespace.Fullpath], toGettableRuleGroupConfig(groupKey.RuleGroup, rules, provenanceRecords, srv.resolveUserIdToNameFn(c.Req.Context())))
 	}
 
 	return response.JSON(http.StatusAccepted, result)
@@ -247,7 +249,7 @@ func (srv RulerSrv) RouteGetRulesGroupConfig(c *contextmodel.ReqContext, namespa
 
 	result := apimodels.RuleGroupConfigResponse{
 		// nolint:staticcheck
-		GettableRuleGroupConfig: toGettableRuleGroupConfig(finalRuleGroup, rules, provenanceRecords),
+		GettableRuleGroupConfig: toGettableRuleGroupConfig(finalRuleGroup, rules, provenanceRecords, srv.resolveUserIdToNameFn(c.Req.Context())),
 	}
 	return response.JSON(http.StatusAccepted, result)
 }
@@ -301,7 +303,7 @@ func (srv RulerSrv) RouteGetRulesConfig(c *contextmodel.ReqContext) response.Res
 			srv.log.Error("Namespace not visible to the user", "user", id, "userNamespace", userNamespace, "namespace", groupKey.NamespaceUID)
 			continue
 		}
-		result[folder.Fullpath] = append(result[folder.Fullpath], toGettableRuleGroupConfig(groupKey.RuleGroup, rules, provenanceRecords))
+		result[folder.Fullpath] = append(result[folder.Fullpath], toGettableRuleGroupConfig(groupKey.RuleGroup, rules, provenanceRecords, srv.resolveUserIdToNameFn(c.Req.Context())))
 	}
 	return response.JSON(http.StatusOK, result)
 }
@@ -324,7 +326,7 @@ func (srv RulerSrv) RouteGetRuleByUID(c *contextmodel.ReqContext, ruleUID string
 		return response.ErrOrFallback(http.StatusInternalServerError, "failed to get rule provenance", err)
 	}
 
-	result := toGettableExtendedRuleNode(rule, map[string]ngmodels.Provenance{rule.ResourceID(): provenance})
+	result := toGettableExtendedRuleNode(rule, map[string]ngmodels.Provenance{rule.ResourceID(): provenance}, srv.resolveUserIdToNameFn(ctx))
 
 	return response.JSON(http.StatusOK, result)
 }
@@ -348,7 +350,7 @@ func (srv RulerSrv) RouteGetRuleHistoryByUID(c *contextmodel.ReqContext, ruleUID
 	result := make([]apimodels.GettableExtendedRuleNode, 0, len(rules))
 	for _, rule := range rules {
 		// do not provide provenance status because we do not have historical changes for it
-		result = append(result, toGettableExtendedRuleNode(*rule, map[string]ngmodels.Provenance{}))
+		result = append(result, toGettableExtendedRuleNode(*rule, map[string]ngmodels.Provenance{}, srv.resolveUserIdToNameFn(ctx)))
 	}
 	return response.JSON(http.StatusOK, result)
 }
@@ -558,7 +560,7 @@ func changesToResponse(finalChanges *store.GroupDelta) response.Response {
 	return response.JSON(http.StatusAccepted, body)
 }
 
-func toGettableRuleGroupConfig(groupName string, rules ngmodels.RulesGroup, provenanceRecords map[string]ngmodels.Provenance) apimodels.GettableRuleGroupConfig {
+func toGettableRuleGroupConfig(groupName string, rules ngmodels.RulesGroup, provenanceRecords map[string]ngmodels.Provenance, userIdToName userIDToUserInfoFn) apimodels.GettableRuleGroupConfig {
 	rules.SortByGroupIndex()
 	ruleNodes := make([]apimodels.GettableExtendedRuleNode, 0, len(rules))
 	var interval time.Duration
@@ -566,7 +568,7 @@ func toGettableRuleGroupConfig(groupName string, rules ngmodels.RulesGroup, prov
 		interval = time.Duration(rules[0].IntervalSeconds) * time.Second
 	}
 	for _, r := range rules {
-		ruleNodes = append(ruleNodes, toGettableExtendedRuleNode(*r, provenanceRecords))
+		ruleNodes = append(ruleNodes, toGettableExtendedRuleNode(*r, provenanceRecords, userIdToName))
 	}
 	return apimodels.GettableRuleGroupConfig{
 		Name:     groupName,
@@ -575,7 +577,7 @@ func toGettableRuleGroupConfig(groupName string, rules ngmodels.RulesGroup, prov
 	}
 }
 
-func toGettableExtendedRuleNode(r ngmodels.AlertRule, provenanceRecords map[string]ngmodels.Provenance) apimodels.GettableExtendedRuleNode {
+func toGettableExtendedRuleNode(r ngmodels.AlertRule, provenanceRecords map[string]ngmodels.Provenance, userIdToName userIDToUserInfoFn) apimodels.GettableExtendedRuleNode {
 	provenance := ngmodels.ProvenanceNone
 	if prov, exists := provenanceRecords[r.ResourceID()]; exists {
 		provenance = prov
@@ -589,6 +591,7 @@ func toGettableExtendedRuleNode(r ngmodels.AlertRule, provenanceRecords map[stri
 			Condition:            r.Condition,
 			Data:                 ApiAlertQueriesFromAlertQueries(r.Data),
 			Updated:              r.Updated,
+			UpdatedBy:            userIdToName(r.UpdatedBy),
 			IntervalSeconds:      r.IntervalSeconds,
 			Version:              r.Version,
 			UID:                  r.UID,
@@ -748,4 +751,33 @@ func (srv RulerSrv) searchAuthorizedAlertRules(ctx context.Context, q authorized
 		}
 	}
 	return byGroupKey, totalGroups, nil
+}
+
+type userIDToUserInfoFn func(id *ngmodels.UserUID) *apimodels.UserInfo
+
+// getIdentityName returns name of either user or service account
+func (srv RulerSrv) resolveUserIdToNameFn(ctx context.Context) userIDToUserInfoFn {
+	return func(id *ngmodels.UserUID) *apimodels.UserInfo {
+		if id == nil {
+			return nil
+		}
+		u, err := srv.userService.GetByUID(ctx, &user.GetUserByUIDQuery{
+			UID: string(*id),
+		})
+		var result string
+		if err != nil {
+			srv.log.FromContext(ctx).Error("Failed to get user by uid", "uid", id, "error", err)
+			result = fmt.Sprintf("uid=%s", string(*id))
+		} else {
+			if u.IsServiceAccount {
+				result = u.Name
+			} else {
+				result = u.Login
+			}
+		}
+		return &apimodels.UserInfo{
+			UID:  string(*id),
+			Name: result,
+		}
+	}
 }
