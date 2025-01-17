@@ -138,8 +138,12 @@ func (s *Storage) prepareObjectForUpdate(ctx context.Context, updateObject runti
 		return nil, err
 	}
 	obj.SetRepositoryInfo(repo)
-	obj.SetUpdatedBy(user.GetUID())
-	obj.SetUpdatedTimestampMillis(time.Now().UnixMilli())
+
+	// Bump metadata when the spec changes (not the status)
+	if previous.GetGeneration() != obj.GetGeneration() {
+		obj.SetUpdatedBy(user.GetUID())
+		obj.SetUpdatedTimestampMillis(time.Now().UnixMilli())
+	}
 
 	var buf bytes.Buffer
 	if err = s.codec.Encode(updateObject, &buf); err != nil {
