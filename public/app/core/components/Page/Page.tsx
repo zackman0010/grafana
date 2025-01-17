@@ -94,6 +94,7 @@ Page.Contents = PageContents;
 const getStyles = (theme: GrafanaTheme2) => {
   return {
     wrapper: css({
+      backgroundColor: theme.colors.background.canvas,
       label: 'page-wrapper',
       display: 'flex',
       flex: '1 1 0',

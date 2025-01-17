@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom-v5-compat';
 import { usePrevious } from 'react-use';
 
-import { PageLayoutType } from '@grafana/data';
+import { getThemeById, PageLayoutType } from '@grafana/data';
+import { config } from '@grafana/runtime';
 import { UrlSyncContextProvider } from '@grafana/scenes';
 import { Alert, Box } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
@@ -12,6 +13,7 @@ import { GrafanaRouteComponentProps } from 'app/core/navigation/types';
 import { DashboardPageRouteParams, DashboardPageRouteSearchParams } from 'app/features/dashboard/containers/types';
 import { DashboardRoutes } from 'app/types';
 
+import { ThemeProvider } from '../../../core/utils/ConfigProvider';
 import { DashboardPrompt } from '../saving/DashboardPrompt';
 
 import { getDashboardScenePageStateManager } from './DashboardScenePageStateManager';
@@ -69,8 +71,10 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
 
   return (
     <UrlSyncContextProvider scene={dashboard} updateUrlOnInit={true} createBrowserHistorySteps={true}>
-      <dashboard.Component model={dashboard} key={dashboard.state.key} />
-      <DashboardPrompt dashboard={dashboard} />
+      <ThemeProvider value={dashboard.state.meta.theme ? getThemeById(dashboard.state.meta.theme) : config.theme2}>
+        <dashboard.Component model={dashboard} key={dashboard.state.key} />
+        <DashboardPrompt dashboard={dashboard} />
+      </ThemeProvider>
     </UrlSyncContextProvider>
   );
 }

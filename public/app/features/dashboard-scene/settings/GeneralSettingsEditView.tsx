@@ -1,12 +1,14 @@
 import { ChangeEvent } from 'react';
 
-import { PageLayoutType } from '@grafana/data';
+import { getBuiltInThemes, PageLayoutType } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import { SceneComponentProps, SceneObjectBase, behaviors, sceneGraph } from '@grafana/scenes';
 import { TimeZone } from '@grafana/schema';
 import {
   Box,
   CollapsableSection,
+  Combobox,
+  ComboboxOption,
   Field,
   Input,
   Label,
@@ -112,6 +114,14 @@ export class GeneralSettingsEditView
     this._dashboard.setState({ meta: newMeta });
   };
 
+  public onThemeChange = (newTheme: ComboboxOption<string>) => {
+    const newMeta = {
+      ...this._dashboard.state.meta,
+      theme: newTheme.value,
+    };
+    this._dashboard.setState({ meta: newMeta });
+  };
+
   public onEditableChange = (value: boolean) => {
     this._dashboard.setState({ editable: value });
   };
@@ -177,6 +187,13 @@ export class GeneralSettingsEditView
     const { intervals } = model.getRefreshPicker().useState();
     const { hideTimeControls } = model.getDashboardControls().useState();
     const { enabled: liveNow } = model.getLiveNowTimer().useState();
+    const themeOptions = getBuiltInThemes(config.featureToggles.extraThemes).map((theme) => ({
+      value: theme.id,
+      label: theme.id,
+    }));
+
+    // Add default option
+    themeOptions.unshift({ value: '', label: t('shared-preferences.theme.default-label', 'Default') });
 
     return (
       <Page navModel={navModel} pageNav={pageNav} layout={PageLayoutType.Standard}>
@@ -234,6 +251,10 @@ export class GeneralSettingsEditView
                 enableCreateNew
                 skipInitialLoad
               />
+            </Field>
+
+            <Field label="Theme">
+              <Combobox options={themeOptions} value={meta.theme} onChange={model.onThemeChange} id="dashboard-theme" />
             </Field>
 
             <Field
