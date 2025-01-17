@@ -2,7 +2,6 @@ package authz
 
 import (
 	"context"
-	"errors"
 
 	"github.com/fullstorydev/grpchan"
 	"github.com/fullstorydev/grpchan/inprocgrpc"
@@ -28,40 +27,56 @@ import (
 // `authzService` is hardcoded in authz-service
 const authzServiceAudience = "authzService"
 
+type Client interface {
+	authzlib.AccessClient
+}
+
 // ProvideAuthZClient provides an AuthZ client and creates the AuthZ service.
 func ProvideAuthZClient(
 	cfg *setting.Cfg, features featuremgmt.FeatureToggles, grpcServer grpcserver.Provider,
 	tracer tracing.Tracer, db db.DB,
-) (authzlib.AccessClient, error) {
+) (Client, error) {
+	if !features.IsEnabledGlobally(featuremgmt.FlagAuthZGRPCServer) {
+		return nil, nil
+	}
+
 	authCfg, err := ReadCfg(cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	isRemoteServer := authCfg.mode == ModeCloud || authCfg.mode == ModeGRPC
-	if !features.IsEnabledGlobally(featuremgmt.FlagAuthZGRPCServer) && isRemoteServer {
-		return nil, errors.New("authZGRPCServer feature toggle is required for cloud and grpc mode")
-	}
+	var client Client
 
 	// Register the server
 	sql := legacysql.NewDatabaseProvider(db)
 	server := rbac.NewService(sql, legacy.NewLegacySQLStores(sql), log.New("authz-grpc-server"), tracer)
 
 	switch authCfg.mode {
+	case ModeInProc:
+		client, err = newInProcLegacyClient(server, tracer)
+		if err != nil {
+			return nil, err
+		}
 	case ModeGRPC:
-		return newGrpcLegacyClient(authCfg, tracer)
+		client, err = newGrpcLegacyClient(authCfg, tracer)
+		if err != nil {
+			return nil, err
+		}
 	case ModeCloud:
-		return newCloudLegacyClient(authCfg, tracer)
-	default:
-		return newInProcLegacyClient(server, tracer)
+		client, err = newCloudLegacyClient(authCfg, tracer)
+		if err != nil {
+			return nil, err
+		}
 	}
+
+	return client, err
 }
 
 // ProvideStandaloneAuthZClient provides a standalone AuthZ client, without registering the AuthZ service.
 // You need to provide a remote address in the configuration
 func ProvideStandaloneAuthZClient(
 	cfg *setting.Cfg, features featuremgmt.FeatureToggles, tracer tracing.Tracer,
-) (authzlib.AccessClient, error) {
+) (Client, error) {
 	if !features.IsEnabledGlobally(featuremgmt.FlagAuthZGRPCServer) {
 		return nil, nil
 	}
