@@ -58,16 +58,26 @@ import {
 import getFactors from 'app/core/utils/factors';
 //FIXME just a util function, not complexity here
 import kbn from 'app/core/utils/kbn';
+// FIXME just to initialize the singleton in case is not set yet
 import { DatasourceSrv } from 'app/features/plugins/datasource_srv';
+// FIXME just types
 import {
   RefIdTransformerOptions,
   TimeSeriesTableTransformerOptions,
 } from 'app/features/transformers/timeSeriesTable/timeSeriesTableTransformer';
+// FIXME just type checks - assert if the variable is constant or it supports multi value
 import { isConstant, isMulti } from 'app/features/variables/guard';
+// FIXME it converts variable.current value and text to array of values 
 import { alignCurrentWithMulti } from 'app/features/variables/shared/multiOptions';
+// FIXME just types
 import { CloudWatchMetricsQuery, LegacyAnnotationQuery } from 'app/plugins/datasource/cloudwatch/types';
+// FIXME just a constant
 import { MIXED_DATASOURCE_NAME } from 'app/plugins/datasource/mixed/MixedDataSource';
+// FIXME this is JS classes that we can't use out of TS. In case we need them the specific operations for that plugin should happen during the migration
+// For example: initialize default config or migrate angular to react panel
 import { plugin as gaugePanelPlugin } from 'app/plugins/panel/gauge/module';
+// FIXME this is JS classes that we can't use out of TS. In case we need them the specific operations for that plugin should happen during the migration
+// For example: initialize default config or migrate angular to react panel
 import { plugin as statPanelPlugin } from 'app/plugins/panel/stat/module';
 
 import {
@@ -76,7 +86,12 @@ import {
   migrateMultipleStatsMetricsQuery,
 } from '../../../plugins/datasource/cloudwatch/migrations/dashboardMigrations';
 
+// FIXME this abstraction on the JSON should not be used
 import { DashboardModel } from './DashboardModel';
+// FIXME this might be the most problematic piece
+// This manages the logic of changing the type of the visualization
+// This fetches plugin specific handlers like angular migration to react panel or default options for the plugin. This might be happening already in runtime, so we should check if we really need it
+// This risk is independent of where we run the migration because this dependency creates strong coupling between PanelModel and the DashboardMigrator
 import { PanelModel } from './PanelModel';
 
 standardEditorsRegistry.setInit(getAllOptionEditors);
