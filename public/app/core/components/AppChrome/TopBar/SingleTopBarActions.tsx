@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { Components } from '@grafana/e2e-selectors';
-import { Stack, useStyles2 } from '@grafana/ui';
+import { Stack, ToolbarButton, useStyles2 } from '@grafana/ui';
 
 import { TOP_BAR_LEVEL_HEIGHT } from '../types';
 
@@ -15,6 +15,7 @@ export function SingleTopBarActions({ children }: PropsWithChildren) {
       <Stack alignItems="center" justifyContent="flex-end" flex={1} wrap="nowrap" minWidth={0}>
         {children}
       </Stack>
+      <ToolbarButton icon="web-section-alt" onClick={() => {}} />
     </div>
   );
 }
