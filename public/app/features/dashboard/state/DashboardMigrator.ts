@@ -27,13 +27,24 @@ import {
   ValueMapping,
   VariableHide,
 } from '@grafana/data';
+// FIXME transformer.id - it import the transformers just to get the id, we could use the string id directly
 import { labelsToFieldsTransformer } from '@grafana/data/src/transformations/transformers/labelsToFields';
+// FIXME transformer.id - it import the transformers just to get the id, we could use the string id directly
 import { mergeTransformer } from '@grafana/data/src/transformations/transformers/merge';
+// FIXME defaultDs: it get the default datasource to remove the null
+// FIXME datasource: replace datasource string name by ref {uid, type}
 import { getDataSourceSrv, setDataSourceSrv } from '@grafana/runtime';
+//FIXME this is a type that should be migrated
 import { DataTransformerConfig } from '@grafana/schema';
+//FIXME this is a type that should be migrated
 import { AxisPlacement, GraphFieldConfig } from '@grafana/ui';
+//FIXME this function transforms displayMode to their respective types and modes
 import { migrateTableDisplayModeToCellOptions } from '@grafana/ui/src/components/Table/utils';
+// FIXME it's use for initializing the editors and might be used for defautls in the panels.fieldConfig (need to confirm)
 import { getAllOptionEditors, getAllStandardFieldConfigs } from 'app/core/components/OptionsUI/registry';
+// FIXME this is use to check if singlestat, gauge and stat panel exist in the config.panels, however the biggest issue
+// here is we are using PanelModel instance, regardless of the schemaVersion, we get the latest changes from PanelModel
+// class
 import { config } from 'app/core/config';
 import {
   DEFAULT_PANEL_SPAN,
@@ -43,7 +54,9 @@ import {
   GRID_COLUMN_COUNT,
   MIN_PANEL_HEIGHT,
 } from 'app/core/constants';
+//FIXME just a util function, math funciton, not complexity here
 import getFactors from 'app/core/utils/factors';
+//FIXME just a util function, not complexity here
 import kbn from 'app/core/utils/kbn';
 import { DatasourceSrv } from 'app/features/plugins/datasource_srv';
 import {
@@ -478,9 +491,9 @@ export class DashboardMigrator {
           // (ie. [1,2,3,4,6,12,24] for 24 columns)
           panel.maxPerRow =
             factors[
-              findIndex(factors, (o) => {
-                return o > max;
-              }) - 1
+            findIndex(factors, (o) => {
+              return o > max;
+            }) - 1
             ];
         }
 
@@ -728,6 +741,7 @@ export class DashboardMigrator {
         if (panel.transformations) {
           for (const t of panel.transformations) {
             if (t.id === labelsToFieldsTransformer.id) {
+              //FIXME: This should be replaced with the Id `DataTransformerID.labelsToFields` of the transformer instead of RXJS
               return appendTransformerAfter(panel, labelsToFieldsTransformer.id, {
                 id: mergeTransformer.id,
                 options: {},
@@ -783,6 +797,7 @@ export class DashboardMigrator {
       }
 
       // Migrate datasource: null to current default
+      // FIXME: We should have access to the datasource srv config or instance
       const defaultDs = getDataSourceSrv().getInstanceSettings(null);
       if (defaultDs) {
         for (const variable of this.dashboard.templating.list) {
