@@ -881,11 +881,33 @@
       "redirect-link": "List in Grafana Alerting",
       "subtitle": "Alert rules related to this dashboard"
     },
-    "edit-pane": {
-      "row": {
+    "default-layout": {
+      "row-actions": {
+        "delete": "Delete row",
+        "modal": {
+          "alt-action": "Delete row only",
+          "text": "Are you sure you want to remove this row and all its panels?",
+          "title": "Delete row"
+        },
         "repeat": {
-          "learn-more": "Learn more",
-          "warning": "Panels in this row use the {{SHARED_DASHBOARD_QUERY}} data source. These panels will reference the panel in the original row, not the ones in the repeated rows."
+          "warning": {
+            "learn-more": "Learn more",
+            "text": "Panels in this row use the {{SHARED_DASHBOARD_QUERY}} data source. These panels will reference the panel in the original row, not the ones in the repeated rows."
+          }
+        }
+      },
+      "row-options": {
+        "button": {
+          "label": "Row options"
+        },
+        "form": {
+          "cancel": "Cancel",
+          "repeat-for": "Repeat for",
+          "title": "Title",
+          "update": "Update"
+        },
+        "modal": {
+          "title": "Row options"
         }
       }
     },
@@ -951,6 +973,14 @@
       "request-time": "Total request time",
       "rows": "Total number rows",
       "table-title": "Stats"
+    },
+    "rows-layout": {
+      "row": {
+        "repeat": {
+          "learn-more": "Learn more",
+          "warning": "Panels in this row use the {{SHARED_DASHBOARD_QUERY}} data source. These panels will reference the panel in the original row, not the ones in the repeated rows."
+        }
+      }
     },
     "toolbar": {
       "add": "Add",
