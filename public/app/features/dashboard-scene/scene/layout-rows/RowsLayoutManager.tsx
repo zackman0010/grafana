@@ -17,6 +17,7 @@ import { DashboardGridItem } from '../layout-default/DashboardGridItem';
 import { DefaultGridLayoutManager } from '../layout-default/DefaultGridLayoutManager';
 import { RowRepeaterBehavior } from '../layout-default/RowRepeaterBehavior';
 import { ResponsiveGridLayoutManager } from '../layout-responsive-grid/ResponsiveGridLayoutManager';
+import { isRepeatedSceneObject } from '../layouts-shared/repeatUtils';
 import { DashboardLayoutManager, LayoutRegistryItem } from '../types';
 
 import { RowItem } from './RowItem';
@@ -130,6 +131,8 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
   }
 
   public static createFromLayout(layout: DashboardLayoutManager): RowsLayoutManager {
+    let rows: RowItem[];
+
     if (layout instanceof DefaultGridLayoutManager) {
       const config: Array<{
         title?: string;
@@ -147,17 +150,17 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
         }
 
         if (child instanceof SceneGridRow) {
-          if (!child.state.key?.includes('-clone-')) {
+          if (!isRepeatedSceneObject(child)) {
             const behaviour = child.state.$behaviors?.find((b) => b instanceof RowRepeaterBehavior);
 
-          config.push({
-            title: child.state.title,
-            isCollapsed: !!child.state.isCollapsed,
-            isDraggable: child.state.isDraggable,
-            isResizable: child.state.isResizable,
-            children: child.state.children,
-            repeat: behaviour?.state.variableName,
-          });
+            config.push({
+              title: child.state.title,
+              isCollapsed: !!child.state.isCollapsed,
+              isDraggable: child.state.isDraggable,
+              isResizable: child.state.isResizable,
+              children: child.state.children,
+              repeat: behaviour?.state.variableName,
+            });
 
             // Since we encountered a row item, any subsequent panels should be added to a new row
             children = undefined;
@@ -172,7 +175,7 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
         }
       });
 
-      const rows = config.map(
+      rows = config.map(
         (rowConfig) =>
           new RowItem({
             title: rowConfig.title ?? 'Row title',
@@ -182,15 +185,14 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
               rowConfig.isDraggable,
               rowConfig.isResizable
             ),
+            $behaviors: rowConfig.repeat ? [new RowItemRepeaterBehavior({ variableName: rowConfig.repeat })] : [],
           })
       );
-
-      return new RowsLayoutManager({ rows });
+    } else {
+      rows = [new RowItem({ layout: layout.clone(), title: 'Row title' })];
     }
 
-    const row = new RowItem({ layout: layout.clone(), title: 'Row title' });
-
-    return new RowsLayoutManager({ rows: [row] });
+    return new RowsLayoutManager({ rows });
   }
 
   public static Component = ({ model }: SceneComponentProps<RowsLayoutManager>) => {

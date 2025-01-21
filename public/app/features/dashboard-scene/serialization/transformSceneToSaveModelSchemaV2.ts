@@ -167,7 +167,7 @@ function getGridLayoutItems(state: DashboardSceneState, isSnapshot?: boolean): G
       // TODO: OLD transformer code
       // if (child instanceof SceneGridRow) {
       //   // Skip repeat clones or when generating a snapshot
-      //   if (child.state.key!.indexOf('-clone-') > 0 && !isSnapshot) {
+      //   if (isRepeatedSceneObject(child) && !isSnapshot) {
       //     continue;
       //   }
       //   gridRowToSaveModel(child, panels, isSnapshot);
