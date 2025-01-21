@@ -176,8 +176,9 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
       zIndex: theme.zIndex.navbarFixed,
       left: 0,
       right: 0,
-      background: theme.colors.background.primary,
+      background: theme.colors.background.secondary,
       flexDirection: 'column',
+      borderBottom: `1px solid ${theme.colors.border.weak}`,
     }),
     topNavMenuDocked: css({
       left: MENU_WIDTH,

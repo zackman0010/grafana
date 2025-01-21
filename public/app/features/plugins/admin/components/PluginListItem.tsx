@@ -90,7 +90,8 @@ export const getStyles = (theme: GrafanaTheme2) => {
       gridTemplateRows: 'auto',
       gap: theme.spacing(2),
       gridAutoFlow: 'row',
-      background: theme.colors.background.secondary,
+      background: theme.colors.background.primary,
+      border: `1px solid ${theme.colors.border.weak}`,
       borderRadius: theme.shape.radius.default,
       padding: theme.spacing(3),
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {

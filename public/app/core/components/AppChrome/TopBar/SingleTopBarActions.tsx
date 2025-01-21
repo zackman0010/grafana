@@ -15,7 +15,7 @@ export function SingleTopBarActions({ children }: PropsWithChildren) {
       <Stack alignItems="center" justifyContent="flex-end" flex={1} wrap="nowrap" minWidth={0}>
         {children}
       </Stack>
-      <ToolbarButton icon="web-section-alt" onClick={() => {}} />
+      {/* <ToolbarButton icon="web-section-alt" onClick={() => {}} /> */}
     </div>
   );
 }
@@ -24,8 +24,6 @@ const getStyles = (theme: GrafanaTheme2) => {
   return {
     actionsBar: css({
       alignItems: 'center',
-      backgroundColor: theme.colors.background.primary,
-      borderBottom: `1px solid ${theme.colors.border.weak}`,
       display: 'flex',
       height: TOP_BAR_LEVEL_HEIGHT,
       padding: theme.spacing(0, 1, 0, 2),

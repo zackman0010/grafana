@@ -222,7 +222,7 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   };
 
   background = {
-    canvas: palette.gray90,
+    canvas: palette.white,
     primary: palette.white,
     secondary: palette.gray100,
   };
