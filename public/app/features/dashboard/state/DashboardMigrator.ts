@@ -35,7 +35,7 @@ import { mergeTransformer } from '@grafana/data/src/transformations/transformers
 // FIXME datasource: replace datasource string name by ref {uid, type}
 import { getDataSourceSrv, setDataSourceSrv } from '@grafana/runtime';
 //FIXME this is a type that should be migrated
-import { DataTransformerConfig } from '@grafana/schema';
+import { Dashboard, DataTransformerConfig, Panel } from '@grafana/schema';
 //FIXME this is a type that should be migrated
 import { AxisPlacement, GraphFieldConfig } from '@grafana/ui';
 //FIXME this function transforms displayMode to their respective types and modes
@@ -122,7 +122,7 @@ export class DashboardMigrator {
     }
   }
 
-  updateSchema(old: any) {
+  updateSchema(old: Dashboard) {
     let i, j, k, n;
     const oldVersion = this.dashboard.schemaVersion;
     const panelUpgrades: PanelSchemeUpgradeHandler[] = [];
@@ -134,14 +134,18 @@ export class DashboardMigrator {
 
     // version 2 schema changes
     if (oldVersion < 2) {
+      // @ts-expect-error
       if (old.services) {
+        // @ts-expect-error
         if (old.services.filter) {
+          // @ts-expect-error
           this.dashboard.time = old.services.filter.time;
+          // @ts-expect-error
           this.dashboard.templating.list = old.services.filter.list || [];
         }
       }
 
-      panelUpgrades.push((panel: any) => {
+      panelUpgrades.push((panel: Panel) => {
         // rename panel type
         if (panel.type === 'graphite') {
           panel.type = 'graph';
@@ -221,6 +225,7 @@ export class DashboardMigrator {
 
     if (oldVersion < 6) {
       // move drop-downs to new schema
+      // @ts-expect-error
       const annotations = find(old.pulldowns, { type: 'annotations' });
 
       if (annotations) {
@@ -352,6 +357,7 @@ export class DashboardMigrator {
 
     if (oldVersion < 12) {
       // update template variables
+      // FIXME: This is using variables from Redux state, we should use the dashboard JSON instead
       each(this.dashboard.getVariables(), (templateVariable) => {
         if ('refresh' in templateVariable) {
           if (templateVariable.refresh) {
@@ -629,6 +635,7 @@ export class DashboardMigrator {
     }
 
     if (oldVersion < 23) {
+      // FIXME: Just bring utils here
       for (const variable of this.dashboard.templating.list) {
         if (!isMulti(variable)) {
           continue;
