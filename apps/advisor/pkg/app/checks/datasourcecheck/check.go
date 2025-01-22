@@ -1,42 +1,48 @@
-package datasource
+package datasourcecheck
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"k8s.io/klog/v2"
+
 	advisor "github.com/grafana/grafana/apps/advisor/pkg/apis/advisor/v0alpha1"
-	"github.com/grafana/grafana/apps/advisor/pkg/app/checks"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	"github.com/grafana/grafana/pkg/plugins"
+	"github.com/grafana/grafana/pkg/registry/apis/datasource"
 	"github.com/grafana/grafana/pkg/services/datasources"
+	"github.com/grafana/grafana/pkg/services/pluginsintegration/pluginstore"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/util"
-	"k8s.io/klog/v2"
 )
 
-func init() {
-	checks.AddFactory(&factory{})
+type Check struct {
+	DatasourceSvc         datasources.DataSourceService
+	PluginStore           pluginstore.Store
+	PluginContextProvider datasource.PluginContextWrapper
+	PluginClient          plugins.Client
 }
 
-type factory struct{}
-
-func (r *factory) New(cfg *checks.AdvisorConfig) checks.Check {
-	return &check{cfg}
+func New(datasourceSvc datasources.DataSourceService, pluginStore pluginstore.Store,
+	pluginContextProvider datasource.PluginContextWrapper, pluginClient plugins.Client) *Check {
+	return &Check{
+		DatasourceSvc:         datasourceSvc,
+		PluginStore:           pluginStore,
+		PluginContextProvider: pluginContextProvider,
+		PluginClient:          pluginClient,
+	}
 }
 
-type check struct {
-	cfg *checks.AdvisorConfig
-}
-
-func (c *check) Type() string {
+func (c *Check) Type() string {
 	return "datasource"
 }
 
-func (c *check) Run(ctx context.Context, obj *advisor.CheckSpec) (*advisor.CheckV0alpha1StatusReport, error) {
+func (c *Check) Run(ctx context.Context, obj *advisor.CheckSpec) (*advisor.CheckV0alpha1StatusReport, error) {
 	// Optionally read the check input encoded in the object
 	// fmt.Println(obj.Data)
 
-	dss, err := c.cfg.DatasourceSvc.GetAllDataSources(ctx, &datasources.GetAllDataSourcesQuery{})
+	dss, err := c.DatasourceSvc.GetAllDataSources(ctx, &datasources.GetAllDataSourcesQuery{})
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +62,7 @@ func (c *check) Run(ctx context.Context, obj *advisor.CheckSpec) (*advisor.Check
 		// Health check execution
 		id := &user.SignedInUser{OrgID: int64(1), Login: "admin"}
 		ctx = identity.WithRequester(ctx, id)
-		pCtx, err := c.cfg.PluginContextProvider.PluginContextForDataSource(ctx, &backend.DataSourceInstanceSettings{
+		pCtx, err := c.PluginContextProvider.PluginContextForDataSource(ctx, &backend.DataSourceInstanceSettings{
 			Type:       ds.Type,
 			UID:        ds.UID,
 			APIVersion: ds.APIVersion,
@@ -69,7 +75,7 @@ func (c *check) Run(ctx context.Context, obj *advisor.CheckSpec) (*advisor.Check
 			PluginContext: pCtx,
 			Headers:       map[string]string{},
 		}
-		resp, err := c.cfg.PluginClient.CheckHealth(ctx, req)
+		resp, err := c.PluginClient.CheckHealth(ctx, req)
 		if err != nil {
 			fmt.Println("Error checking health", err)
 			continue

@@ -1,4 +1,4 @@
-package datasource
+package datasourcecheck
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func TestCheck_Run(t *testing.T) {
 			PluginClient:          mockPluginClient,
 		}
 
-		check := &check{cfg: cfg}
+		check := &Check{cfg: cfg}
 
 		report, err := check.Run(context.Background(), &advisor.CheckSpec{})
 
@@ -54,7 +54,7 @@ func TestCheck_Run(t *testing.T) {
 			PluginClient:          mockPluginClient,
 		}
 
-		check := &check{cfg: cfg}
+		check := &Check{cfg: cfg}
 
 		report, err := check.Run(context.Background(), &advisor.CheckSpec{})
 
@@ -79,7 +79,7 @@ func TestCheck_Run(t *testing.T) {
 			PluginClient:          mockPluginClient,
 		}
 
-		check := &check{cfg: cfg}
+		check := &Check{cfg: cfg}
 
 		report, err := check.Run(context.Background(), &advisor.CheckSpec{})
 
