@@ -63,15 +63,7 @@ type schedule struct {
 
 	clock clock.Clock
 
-	// evalApplied is only used for tests: test code can set it to non-nil
-	// function, and then it'll be called from the event loop whenever the
-	// message from evalApplied is handled.
-	evalAppliedFunc func(ngmodels.AlertRuleKey, time.Time)
-
-	// stopApplied is only used for tests: test code can set it to non-nil
-	// function, and then it'll be called from the event loop whenever the
-	// message from stopApplied is handled.
-	stopAppliedFunc func(ngmodels.AlertRuleKey)
+	ruleLifecycler RuleLifecycler
 
 	log log.Logger
 
@@ -119,6 +111,7 @@ type SchedulerCfg struct {
 	Tracer               tracing.Tracer
 	Log                  log.Logger
 	RecordingWriter      RecordingWriter
+	RuleLifecycler       RuleLifecycler
 }
 
 // NewScheduler returns a new scheduler.
@@ -148,6 +141,7 @@ func NewScheduler(cfg SchedulerCfg, stateManager *state.Manager) *schedule {
 		alertsSender:          cfg.AlertSender,
 		tracer:                cfg.Tracer,
 		recordingWriter:       cfg.RecordingWriter,
+		ruleLifecycler:        cfg.RuleLifecycler,
 	}
 
 	return &sch
@@ -274,8 +268,7 @@ func (sch *schedule) processTick(ctx context.Context, dispatcherGroup *errgroup.
 		sch.log,
 		sch.tracer,
 		sch.recordingWriter,
-		sch.evalAppliedFunc,
-		sch.stopAppliedFunc,
+		nil,
 	)
 	for _, item := range alertRules {
 		ruleRoutine, newRoutine := sch.registry.getOrCreate(ctx, item, ruleFactory)

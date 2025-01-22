@@ -64,14 +64,13 @@ func newRuleFactory(
 	logger log.Logger,
 	tracer tracing.Tracer,
 	recordingWriter RecordingWriter,
-	evalAppliedHook evalAppliedFunc,
-	stopAppliedHook stopAppliedFunc,
+	lifecycler RuleLifecycler,
 ) ruleFactoryFunc {
 	return func(ctx context.Context, rule *ngmodels.AlertRule) Rule {
 		if rule.Type() == ngmodels.RuleTypeRecording {
 			return newRecordingRule(
 				ctx,
-				rule.GetKey(),
+				rule.GetKeyWithGroup(),
 				maxAttempts,
 				clock,
 				evalFactory,
@@ -80,8 +79,7 @@ func newRuleFactory(
 				met,
 				tracer,
 				recordingWriter,
-				evalAppliedHook,
-				stopAppliedHook,
+				lifecycler,
 			)
 		}
 		return newAlertRule(
@@ -98,26 +96,42 @@ func newRuleFactory(
 			met,
 			logger,
 			tracer,
-			evalAppliedHook,
-			stopAppliedHook,
+			lifecycler,
 		)
 	}
 }
-
-type evalAppliedFunc = func(ngmodels.AlertRuleKey, time.Time)
-type stopAppliedFunc = func(ngmodels.AlertRuleKey)
 
 type ruleProvider interface {
 	get(ngmodels.AlertRuleKey) *ngmodels.AlertRule
 }
 
+type RuleLifecycler interface {
+	// OnEval is triggered just before the rule's evaluation routine starts.
+	OnEval(ctx context.Context, logger log.Logger, key ngmodels.AlertRuleKeyWithGroup, scheduledAt time.Time) error
+	// OnStop is triggered just before the rule's routine exits.
+	// The "reason" might be the context error (e.g. errRuleDeleted).
+	// Return (proceed, error). If proceed=false, the default code is skipped.
+	OnStop(ctx context.Context, logger log.Logger, key ngmodels.AlertRuleKeyWithGroup, reason error) (bool, error)
+}
+
+type defaultLifecycle struct{}
+
+func (d *defaultLifecycle) OnEval(ctx context.Context, _ log.Logger, _ ngmodels.AlertRuleKeyWithGroup, _ time.Time) error {
+	return nil
+}
+
+func (d *defaultLifecycle) OnStop(ctx context.Context, _ log.Logger, _ ngmodels.AlertRuleKeyWithGroup, _ error) (bool, error) {
+	return true, nil
+}
+
 type alertRule struct {
 	key ngmodels.AlertRuleKeyWithGroup
 
-	evalCh   chan *Evaluation
-	updateCh chan RuleVersionAndPauseStatus
-	ctx      context.Context
-	stopFn   util.CancelCauseFunc
+	evalCh     chan *Evaluation
+	updateCh   chan RuleVersionAndPauseStatus
+	ctx        context.Context
+	stopFn     util.CancelCauseFunc
+	lifecycler RuleLifecycler
 
 	appURL               *url.URL
 	disableGrafanaFolder bool
@@ -128,10 +142,6 @@ type alertRule struct {
 	stateManager *state.Manager
 	evalFactory  eval.EvaluatorFactory
 	ruleProvider ruleProvider
-
-	// Event hooks that are only used in tests.
-	evalAppliedHook evalAppliedFunc
-	stopAppliedHook stopAppliedFunc
 
 	metrics *metrics.Scheduler
 	logger  log.Logger
@@ -152,16 +162,21 @@ func newAlertRule(
 	met *metrics.Scheduler,
 	logger log.Logger,
 	tracer tracing.Tracer,
-	evalAppliedHook func(ngmodels.AlertRuleKey, time.Time),
-	stopAppliedHook func(ngmodels.AlertRuleKey),
+	lifecycler RuleLifecycler,
 ) *alertRule {
 	ctx, stop := util.WithCancelCause(ngmodels.WithRuleKey(parent, key.AlertRuleKey))
+
+	if lifecycler == nil {
+		lifecycler = &defaultLifecycle{}
+	}
+
 	return &alertRule{
 		key:                  key,
 		evalCh:               make(chan *Evaluation),
 		updateCh:             make(chan RuleVersionAndPauseStatus),
 		ctx:                  ctx,
 		stopFn:               stop,
+		lifecycler:           lifecycler,
 		appURL:               appURL,
 		disableGrafanaFolder: disableGrafanaFolder,
 		maxAttempts:          maxAttempts,
@@ -170,8 +185,6 @@ func newAlertRule(
 		stateManager:         stateManager,
 		evalFactory:          evalFactory,
 		ruleProvider:         ruleProvider,
-		evalAppliedHook:      evalAppliedHook,
-		stopAppliedHook:      stopAppliedHook,
 		metrics:              met,
 		logger:               logger.FromContext(ctx),
 		tracer:               tracer,
@@ -243,7 +256,6 @@ func (a *alertRule) Run() error {
 	a.logger.Debug("Alert rule routine started")
 
 	var currentFingerprint fingerprint
-	defer a.stopApplied()
 	for {
 		select {
 		// used by external services (API) to notify that rule is updated.
@@ -275,7 +287,12 @@ func (a *alertRule) Run() error {
 				evalStart := a.clock.Now()
 				defer func() {
 					evalDuration.Observe(a.clock.Now().Sub(evalStart).Seconds())
-					a.evalApplied(ctx.scheduledAt)
+					if a.lifecycler != nil {
+						err := a.lifecycler.OnEval(grafanaCtx, logger, a.key, ctx.scheduledAt)
+						if err != nil {
+							logger.Error("Alert rule lifecycler OnEval failed", "err", err)
+						}
+					}
 				}()
 
 				for attempt := int64(1); attempt <= a.maxAttempts; attempt++ {
@@ -345,19 +362,40 @@ func (a *alertRule) Run() error {
 			}()
 
 		case <-grafanaCtx.Done():
-			// clean up the state only if the reason for stopping the evaluation loop is that the rule was deleted
-			if errors.Is(grafanaCtx.Err(), errRuleDeleted) {
-				// We do not want a context to be unbounded which could potentially cause a go routine running
-				// indefinitely. 1 minute is an almost randomly chosen timeout, big enough to cover the majority of the
-				// cases.
-				ctx, cancelFunc := context.WithTimeout(context.Background(), time.Minute)
-				defer cancelFunc()
-				states := a.stateManager.DeleteStateByRuleUID(ngmodels.WithRuleKey(ctx, a.key.AlertRuleKey), a.key, ngmodels.StateReasonRuleDeleted)
-				a.expireAndSend(grafanaCtx, states)
-			}
-			a.logger.Debug("Stopping alert rule routine")
+			a.stop(grafanaCtx)
 			return nil
 		}
+	}
+}
+
+// stop stops the rule evaluation routine.
+// First it runs the lifecycle OnStop method, if the lifecycler is set.
+// If it reurns false, all other stopping code is skipped.
+func (a *alertRule) stop(ctx context.Context) {
+	a.logger.Debug("Stopping alert rule routine")
+
+	reason := ctx.Err()
+
+	if a.lifecycler != nil {
+		proceed, err := a.lifecycler.OnStop(context.Background(), a.logger, a.key, reason)
+		if err != nil {
+			a.logger.Error("Alert rule lifecycle OnStop failed", "err", err)
+		}
+		if err == nil && !proceed {
+			a.logger.Debug("Returning early from the alert stopping code because lifecycle OnStop returned do not proceed")
+			return
+		}
+	}
+
+	// clean up the state only if the reason for stopping the evaluation loop is that the rule was deleted
+	if errors.Is(ctx.Err(), errRuleDeleted) {
+		// We do not want a context to be unbounded which could potentially cause a go routine running
+		// indefinitely. 1 minute is an almost randomly chosen timeout, big enough to cover the majority of the
+		// cases.
+		ctx, cancelFunc := context.WithTimeout(context.Background(), time.Minute)
+		defer cancelFunc()
+		states := a.stateManager.DeleteStateByRuleUID(ngmodels.WithRuleKey(ctx, a.key.AlertRuleKey), a.key, ngmodels.StateReasonRuleDeleted)
+		a.expireAndSend(ctx, states)
 	}
 }
 
@@ -488,24 +526,6 @@ func (a *alertRule) resetState(ctx context.Context, isPaused bool) {
 	}
 	states := a.stateManager.ResetStateByRuleUID(ctx, rule, reason)
 	a.expireAndSend(ctx, states)
-}
-
-// evalApplied is only used on tests.
-func (a *alertRule) evalApplied(now time.Time) {
-	if a.evalAppliedHook == nil {
-		return
-	}
-
-	a.evalAppliedHook(a.key.AlertRuleKey, now)
-}
-
-// stopApplied is only used on tests.
-func (a *alertRule) stopApplied() {
-	if a.stopAppliedHook == nil {
-		return
-	}
-
-	a.stopAppliedHook(a.key.AlertRuleKey)
 }
 
 func SchedulerUserFor(orgID int64) *user.SignedInUser {

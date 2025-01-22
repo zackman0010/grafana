@@ -30,7 +30,7 @@ type RuleStatus struct {
 }
 
 type recordingRule struct {
-	key ngmodels.AlertRuleKey
+	key ngmodels.AlertRuleKeyWithGroup
 
 	ctx                 context.Context
 	evalCh              chan *Evaluation
@@ -39,6 +39,7 @@ type recordingRule struct {
 	lastError           *atomic.Error
 	evaluationTimestamp *atomic.Time
 	evaluationDuration  *atomic.Duration
+	lifecycler          RuleLifecycler
 
 	maxAttempts int64
 
@@ -47,22 +48,31 @@ type recordingRule struct {
 	cfg         setting.RecordingRuleSettings
 	writer      RecordingWriter
 
-	// Event hooks that are only used in tests.
-	evalAppliedHook evalAppliedFunc
-	stopAppliedHook stopAppliedFunc
-
 	logger  log.Logger
 	metrics *metrics.Scheduler
 	tracer  tracing.Tracer
 }
 
-func newRecordingRule(parent context.Context, key ngmodels.AlertRuleKey, maxAttempts int64, clock clock.Clock, evalFactory eval.EvaluatorFactory, cfg setting.RecordingRuleSettings, logger log.Logger, metrics *metrics.Scheduler, tracer tracing.Tracer, writer RecordingWriter, evalAppliedHook evalAppliedFunc, stopAppliedHook stopAppliedFunc) *recordingRule {
-	ctx, stop := util.WithCancelCause(ngmodels.WithRuleKey(parent, key))
+func newRecordingRule(
+	parent context.Context,
+	key ngmodels.AlertRuleKeyWithGroup,
+	maxAttempts int64,
+	clock clock.Clock,
+	evalFactory eval.EvaluatorFactory,
+	cfg setting.RecordingRuleSettings,
+	logger log.Logger,
+	metrics *metrics.Scheduler,
+	tracer tracing.Tracer,
+	writer RecordingWriter,
+	lifecycler RuleLifecycler,
+) *recordingRule {
+	ctx, stop := util.WithCancelCause(ngmodels.WithRuleKey(parent, key.AlertRuleKey))
 	return &recordingRule{
 		key:                 key,
 		ctx:                 ctx,
 		evalCh:              make(chan *Evaluation),
 		stopFn:              stop,
+		lifecycler:          lifecycler,
 		health:              atomic.NewString("unknown"),
 		lastError:           atomic.NewError(nil),
 		evaluationTimestamp: atomic.NewTime(time.Time{}),
@@ -71,8 +81,6 @@ func newRecordingRule(parent context.Context, key ngmodels.AlertRuleKey, maxAtte
 		evalFactory:         evalFactory,
 		cfg:                 cfg,
 		maxAttempts:         maxAttempts,
-		evalAppliedHook:     evalAppliedHook,
-		stopAppliedHook:     stopAppliedHook,
 		logger:              logger.FromContext(ctx),
 		metrics:             metrics,
 		tracer:              tracer,
@@ -123,8 +131,6 @@ func (r *recordingRule) Run() error {
 	ctx := r.ctx
 	r.logger.Debug("Recording rule routine started")
 
-	defer r.stopApplied()
-
 	for {
 		select {
 		case eval, ok := <-r.evalCh:
@@ -141,8 +147,22 @@ func (r *recordingRule) Run() error {
 
 			r.doEvaluate(ctx, eval)
 		case <-ctx.Done():
-			r.logger.Debug("Stopping recording rule routine")
+			r.stop(ctx)
 			return nil
+		}
+	}
+}
+
+func (r *recordingRule) stop(ctx context.Context) {
+	r.logger.Debug("Stopping recording rule routine")
+	if r.lifecycler != nil {
+		proceed, err := r.lifecycler.OnStop(ctx, r.logger, r.key, nil)
+		if err != nil {
+			r.logger.Error("Alert rule lifecycle OnStop failed", "err", err)
+		}
+		if err == nil && !proceed {
+			r.logger.Debug("Returning early from the alert stopping code because lifecycle OnStop returned do not proceed")
+			return
 		}
 	}
 }
@@ -165,7 +185,12 @@ func (r *recordingRule) doEvaluate(ctx context.Context, ev *Evaluation) {
 		r.evaluationTimestamp.Store(end)
 		r.evaluationDuration.Store(dur)
 
-		r.evaluationDoneTestHook(ev)
+		if r.lifecycler != nil {
+			err := r.lifecycler.OnEval(ctx, logger, r.key, ev.scheduledAt)
+			if err != nil {
+				logger.Error("Recording rule lifecycler OnEval failed", "err", err)
+			}
+		}
 	}()
 
 	if ev.rule.IsPaused {
@@ -296,14 +321,6 @@ func (r *recordingRule) buildAndExecutePipeline(ctx context.Context, evalCtx eva
 	return results, err
 }
 
-func (r *recordingRule) evaluationDoneTestHook(ev *Evaluation) {
-	if r.evalAppliedHook == nil {
-		return
-	}
-
-	r.evalAppliedHook(r.key, ev.scheduledAt)
-}
-
 // frameRef gets frames from a QueryDataResponse for a particular refID. It returns an error if the frames do not exist or have no data.
 func (r *recordingRule) frameRef(refID string, resp *backend.QueryDataResponse) (data.Frames, error) {
 	if len(resp.Responses) == 0 {
@@ -320,13 +337,4 @@ func (r *recordingRule) frameRef(refID string, resp *backend.QueryDataResponse) 
 	}
 
 	return targetNode.Frames, nil
-}
-
-// stopApplied is only used on tests.
-func (r *recordingRule) stopApplied() {
-	if r.stopAppliedHook == nil {
-		return
-	}
-
-	r.stopAppliedHook(r.key)
 }

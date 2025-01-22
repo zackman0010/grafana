@@ -156,14 +156,16 @@ func blankRecordingRuleForTests(ctx context.Context) *recordingRule {
 	st := setting.RecordingRuleSettings{
 		Enabled: true,
 	}
-	return newRecordingRule(context.Background(), models.AlertRuleKey{}, 0, nil, nil, st, log.NewNopLogger(), nil, nil, writer.FakeWriter{}, nil, nil)
+	return newRecordingRule(context.Background(), models.AlertRuleKeyWithGroup{}, 0, nil, nil, st, log.NewNopLogger(), nil, nil, writer.FakeWriter{}, nil)
 }
 
 func TestRecordingRule_Integration(t *testing.T) {
 	gen := models.RuleGen.With(models.RuleGen.WithAllRecordingRules(), models.RuleGen.WithOrgID(123))
 	ruleStore := newFakeRulesStore()
 	reg := prometheus.NewPedanticRegistry()
-	sch := setupScheduler(t, ruleStore, nil, reg, nil, nil)
+	evalDoneChan := make(chan time.Time)
+	lifecycler := newEvalNotifier(nil, evalDoneChan)
+	sch := setupScheduler(t, ruleStore, nil, reg, nil, nil, lifecycler)
 	writeTarget := writer.NewTestRemoteWriteTarget(t)
 	defer writeTarget.Close()
 	writerReg := prometheus.NewPedanticRegistry()
@@ -177,10 +179,6 @@ func TestRecordingRule_Integration(t *testing.T) {
 		ruleFactory := ruleFactoryFromScheduler(sch)
 
 		process := ruleFactory.new(context.Background(), rule)
-		evalDoneChan := make(chan time.Time)
-		process.(*recordingRule).evalAppliedHook = func(_ models.AlertRuleKey, t time.Time) {
-			evalDoneChan <- t
-		}
 		now := time.Now()
 
 		go func() {
@@ -316,10 +314,6 @@ func TestRecordingRule_Integration(t *testing.T) {
 		ruleFactory := ruleFactoryFromScheduler(sch)
 
 		process := ruleFactory.new(context.Background(), rule)
-		evalDoneChan := make(chan time.Time)
-		process.(*recordingRule).evalAppliedHook = func(_ models.AlertRuleKey, t time.Time) {
-			evalDoneChan <- t
-		}
 		now := time.Now()
 
 		go func() {
@@ -454,10 +448,6 @@ func TestRecordingRule_Integration(t *testing.T) {
 		ruleFactory := ruleFactoryFromScheduler(sch)
 
 		process := ruleFactory.new(context.Background(), rule)
-		evalDoneChan := make(chan time.Time)
-		process.(*recordingRule).evalAppliedHook = func(_ models.AlertRuleKey, t time.Time) {
-			evalDoneChan <- t
-		}
 		now := time.Now()
 
 		go func() {

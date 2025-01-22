@@ -37,6 +37,31 @@ type evalAppliedInfo struct {
 	now         time.Time
 }
 
+type evalInfoNotifier struct {
+	evalAppliedChan chan<- evalAppliedInfo
+	evalDoneChan    chan<- models.AlertRuleKey
+}
+
+func newEvalInfoNotifier(appliedChan chan<- evalAppliedInfo, doneChan chan<- models.AlertRuleKey) *evalInfoNotifier {
+	return &evalInfoNotifier{
+		evalAppliedChan: appliedChan,
+		evalDoneChan:    doneChan,
+	}
+}
+
+func (e *evalInfoNotifier) OnEval(ctx context.Context, logger log.Logger, key models.AlertRuleKeyWithGroup, scheduledAt time.Time) error {
+	e.evalAppliedChan <- evalAppliedInfo{
+		alertDefKey: key.AlertRuleKey,
+		now:         scheduledAt,
+	}
+	return nil
+}
+
+func (e *evalInfoNotifier) OnStop(ctx context.Context, logger log.Logger, key models.AlertRuleKeyWithGroup, reason error) (bool, error) {
+	e.evalDoneChan <- key.AlertRuleKey
+	return true, nil
+}
+
 func TestProcessTicks(t *testing.T) {
 	testTracer := tracing.InitializeTracerForTest()
 	reg := prometheus.NewPedanticRegistry()
@@ -69,6 +94,10 @@ func TestProcessTicks(t *testing.T) {
 		Enabled: true,
 	}
 
+	evalAppliedCh := make(chan evalAppliedInfo, 1)
+	stopAppliedCh := make(chan models.AlertRuleKey, 1)
+	lifecycler := newEvalInfoNotifier(evalAppliedCh, stopAppliedCh)
+
 	schedCfg := SchedulerCfg{
 		BaseInterval:      cfg.BaseInterval,
 		C:                 mockedClock,
@@ -80,6 +109,7 @@ func TestProcessTicks(t *testing.T) {
 		RecordingRulesCfg: rrSet,
 		Tracer:            testTracer,
 		Log:               log.New("ngalert.scheduler"),
+		RuleLifecycler:    lifecycler,
 	}
 	managerCfg := state.ManagerCfg{
 		Metrics:       testMetrics.GetStateMetrics(),
@@ -94,16 +124,6 @@ func TestProcessTicks(t *testing.T) {
 	st := state.NewManager(managerCfg, state.NewNoopPersister())
 
 	sched := NewScheduler(schedCfg, st)
-
-	evalAppliedCh := make(chan evalAppliedInfo, 1)
-	stopAppliedCh := make(chan models.AlertRuleKey, 1)
-
-	sched.evalAppliedFunc = func(alertDefKey models.AlertRuleKey, now time.Time) {
-		evalAppliedCh <- evalAppliedInfo{alertDefKey: alertDefKey, now: now}
-	}
-	sched.stopAppliedFunc = func(alertDefKey models.AlertRuleKey) {
-		stopAppliedCh <- alertDefKey
-	}
 
 	tick := time.Time{}
 	gen := models.RuleGen
@@ -558,7 +578,7 @@ func TestProcessTicks(t *testing.T) {
 func TestSchedule_updateRulesMetrics(t *testing.T) {
 	ruleStore := newFakeRulesStore()
 	reg := prometheus.NewPedanticRegistry()
-	sch := setupScheduler(t, ruleStore, nil, reg, nil, nil)
+	sch := setupScheduler(t, ruleStore, nil, reg, nil, nil, nil)
 	ctx := context.Background()
 	const firstOrgID int64 = 1
 
@@ -919,7 +939,7 @@ func TestSchedule_updateRulesMetrics(t *testing.T) {
 func TestSchedule_deleteAlertRule(t *testing.T) {
 	t.Run("when rule exists", func(t *testing.T) {
 		t.Run("it should stop evaluation loop and remove the controller from registry", func(t *testing.T) {
-			sch := setupScheduler(t, nil, nil, nil, nil, nil)
+			sch := setupScheduler(t, nil, nil, nil, nil, nil, nil)
 			ruleFactory := ruleFactoryFromScheduler(sch)
 			rule := models.RuleGen.GenerateRef()
 			key := rule.GetKey()
@@ -931,14 +951,36 @@ func TestSchedule_deleteAlertRule(t *testing.T) {
 	})
 	t.Run("when rule does not exist", func(t *testing.T) {
 		t.Run("should exit", func(t *testing.T) {
-			sch := setupScheduler(t, nil, nil, nil, nil, nil)
+			sch := setupScheduler(t, nil, nil, nil, nil, nil, nil)
 			key := models.GenerateRuleKey(rand.Int63())
 			sch.deleteAlertRule(key)
 		})
 	})
 }
 
-func setupScheduler(t *testing.T, rs *fakeRulesStore, is *state.FakeInstanceStore, registry *prometheus.Registry, senderMock *SyncAlertsSenderMock, evalMock eval.EvaluatorFactory) *schedule {
+type evalNotifier struct {
+	evalAppliedChan chan<- time.Time
+	evalDoneChan    chan<- time.Time
+}
+
+func newEvalNotifier(appliedChan, doneChan chan<- time.Time) *evalNotifier {
+	return &evalNotifier{
+		evalAppliedChan: appliedChan,
+		evalDoneChan:    doneChan,
+	}
+}
+
+func (e *evalNotifier) OnEval(ctx context.Context, logger log.Logger, key models.AlertRuleKeyWithGroup, scheduledAt time.Time) error {
+	e.evalAppliedChan <- scheduledAt
+	return nil
+}
+
+func (e *evalNotifier) OnStop(ctx context.Context, logger log.Logger, key models.AlertRuleKeyWithGroup, reason error) (bool, error) {
+	e.evalDoneChan <- time.Now()
+	return true, nil
+}
+
+func setupScheduler(t *testing.T, rs *fakeRulesStore, is *state.FakeInstanceStore, registry *prometheus.Registry, senderMock *SyncAlertsSenderMock, evalMock eval.EvaluatorFactory, ruleLifecycler RuleLifecycler) *schedule {
 	t.Helper()
 	testTracer := tracing.InitializeTracerForTest()
 
@@ -995,6 +1037,7 @@ func setupScheduler(t *testing.T, rs *fakeRulesStore, is *state.FakeInstanceStor
 		Tracer:            testTracer,
 		Log:               log.New("ngalert.scheduler"),
 		RecordingWriter:   fakeRecordingWriter,
+		RuleLifecycler:    ruleLifecycler,
 	}
 	managerCfg := state.ManagerCfg{
 		Metrics:                 m.GetStateMetrics(),
