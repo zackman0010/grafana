@@ -6,6 +6,7 @@ import { usePrevious } from 'react-use';
 import { PageLayoutType } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import { UrlSyncContextProvider } from '@grafana/scenes';
+import { SceneContext } from '@grafana/scenes-react';
 import { Alert, Box } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
 import PageLoader from 'app/core/components/PageLoader/PageLoader';
@@ -72,8 +73,10 @@ export function DashboardScenePage({ route, queryParams, location }: Props) {
 
   return (
     <UrlSyncContextProvider scene={dashboard} updateUrlOnInit={true} createBrowserHistorySteps={true}>
-      <dashboard.Component model={dashboard} key={dashboard.state.key} />
-      <DashboardPrompt dashboard={dashboard} />
+      <SceneContext.Provider value={dashboard.state.context!}>
+        <dashboard.Component model={dashboard} key={dashboard.state.key} />
+        <DashboardPrompt dashboard={dashboard} />
+      </SceneContext.Provider>
     </UrlSyncContextProvider>
   );
 }

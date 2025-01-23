@@ -24,6 +24,7 @@ import {
   SceneVariableDependencyConfigLike,
   VizPanel,
 } from '@grafana/scenes';
+import { SceneContextObject } from '@grafana/scenes-react';
 import { Dashboard, DashboardLink, LibraryPanel } from '@grafana/schema';
 import { DashboardV2Spec } from '@grafana/schema/dist/esm/schema/dashboard/v2alpha0';
 import appEvents from 'app/core/app_events';
@@ -141,6 +142,10 @@ export interface DashboardSceneState extends SceneObjectState {
   panelsPerRow?: number;
   /** options pane */
   editPane: DashboardEditPane;
+  /**
+   * Context object to support scenes-react hooks
+   */
+  context?: SceneContextObject;
 }
 
 export class DashboardScene extends SceneObjectBase<DashboardSceneState> {
@@ -193,10 +198,10 @@ export class DashboardScene extends SceneObjectBase<DashboardSceneState> {
       links: state.links ?? [],
       ...state,
       editPane: new DashboardEditPane(),
+      context: new SceneContextObject({}),
     });
 
     this._scopesFacade = getClosestScopesFacade(this);
-
     this._changeTracker = new DashboardSceneChangeTracker(this);
 
     this.addActivationHandler(() => this._activationHandler());

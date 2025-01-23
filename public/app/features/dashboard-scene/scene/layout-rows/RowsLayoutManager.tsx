@@ -1,23 +1,29 @@
 import { css } from '@emotion/css';
+import { useEffect, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import {
+  LocalValueVariable,
+  MultiValueVariable,
   SceneComponentProps,
   sceneGraph,
   SceneGridItemLike,
   SceneGridRow,
   SceneObjectBase,
   SceneObjectState,
+  SceneVariableSet,
+  VariableValueSingle,
   VizPanel,
 } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
+import { getMultiVariableValues } from '../../utils/utils';
 import { DashboardScene } from '../DashboardScene';
 import { DashboardGridItem } from '../layout-default/DashboardGridItem';
 import { DefaultGridLayoutManager } from '../layout-default/DefaultGridLayoutManager';
 import { RowRepeaterBehavior } from '../layout-default/RowRepeaterBehavior';
 import { ResponsiveGridLayoutManager } from '../layout-responsive-grid/ResponsiveGridLayoutManager';
-import { isRepeatedSceneObject } from '../layouts-shared/repeatUtils';
+import { getRepeatKeyForSceneObject, isRepeatedSceneObject } from '../layouts-shared/repeatUtils';
 import { DashboardLayoutManager, LayoutRegistryItem } from '../types';
 
 import { RowItem } from './RowItem';
@@ -180,12 +186,12 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
           new RowItem({
             title: rowConfig.title ?? 'Row title',
             isCollapsed: !!rowConfig.isCollapsed,
+            repeatByVariable: rowConfig.repeat,
             layout: DefaultGridLayoutManager.fromGridItems(
               rowConfig.children,
               rowConfig.isDraggable,
               rowConfig.isResizable
             ),
-            $behaviors: rowConfig.repeat ? [new RowItemRepeaterBehavior({ variableName: rowConfig.repeat })] : [],
           })
       );
     } else {
@@ -202,11 +208,81 @@ export class RowsLayoutManager extends SceneObjectBase<RowsLayoutManagerState> i
     return (
       <div className={styles.wrapper}>
         {rows.map((row) => (
-          <RowItem.Component model={row} key={row.state.key!} />
+          <RenderRow row={row} key={row.state.key} />
         ))}
       </div>
     );
   };
+}
+
+function RenderRow({ row }: { row: RowItem }) {
+  const { repeatByVariable } = row.useState();
+  if (!repeatByVariable) {
+    return <RowItem.Component model={row} key={row.state.key!} />;
+  }
+
+  const variable = sceneGraph.lookupVariable(repeatByVariable, row.parent!);
+
+  if (!(variable instanceof MultiValueVariable)) {
+    return <RowItem.Component model={row} key={row.state.key!} />;
+  }
+
+  const { values, texts } = getMultiVariableValues(variable);
+
+  variable.useState();
+
+  return (
+    <>
+      {values.map((value, index) => (
+        <RenderRowClone row={row} variable={variable} value={value} text={texts[index]} key={index} />
+      ))}
+    </>
+  );
+}
+
+function RenderRowClone({
+  row,
+  variable,
+  value,
+  text,
+}: {
+  row: RowItem;
+  variable: MultiValueVariable;
+  value: VariableValueSingle;
+  text: VariableValueSingle;
+}) {
+  const rowState = row.useState();
+  const cloneKey = getRepeatKeyForSceneObject(row, value);
+
+  useEffect(() => {
+    const $variables = new SceneVariableSet({
+      variables: [
+        new LocalValueVariable({
+          name: variable.state.name,
+          value,
+          text: String(text),
+          isMulti: variable.state.isMulti,
+          includeAll: variable.state.includeAll,
+        }),
+      ],
+    });
+
+    const clone = row.clone({ key: cloneKey, $variables });
+
+    row.setState({ repeats: [clone, ...(row.state.repeats ?? [])] });
+
+    return () => {
+      row.setState({ repeats: row.state.repeats?.filter((r) => r.state.key !== cloneKey) });
+    };
+  }, [row, value, text, variable, rowState, cloneKey]);
+
+  const clone = rowState.repeats?.find((r) => r.state.key === cloneKey);
+
+  if (!clone) {
+    return null;
+  }
+
+  return <RowItem.Component model={clone} key={clone.state.key!} />;
 }
 
 function getStyles(theme: GrafanaTheme2) {

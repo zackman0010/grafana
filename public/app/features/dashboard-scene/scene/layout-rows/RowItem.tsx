@@ -26,7 +26,6 @@ import { DashboardScene } from '../DashboardScene';
 import { useLayoutCategory } from '../layouts-shared/DashboardLayoutSelector';
 import { DashboardLayoutManager, EditableDashboardElement, LayoutParent } from '../types';
 
-import { RowItemRepeaterBehavior } from './RowItemRepeaterBehavior';
 import { RowsLayoutManager } from './RowsLayoutManager';
 
 export interface RowItemState extends SceneObjectState {
@@ -36,6 +35,8 @@ export interface RowItemState extends SceneObjectState {
   isHeaderHidden?: boolean;
   isClone?: boolean;
   height?: 'expand' | 'min';
+  repeatByVariable?: string;
+  repeats?: RowItem[];
 }
 
 export class RowItem extends SceneObjectBase<RowItemState> implements LayoutParent, EditableDashboardElement {
@@ -271,12 +272,7 @@ export function RowHeightSelect({ row }: { row: RowItem }) {
 }
 
 export function RowRepeatSelect({ row, dashboard }: { row: RowItem; dashboard: DashboardScene }) {
-  const { layout, $behaviors } = row.useState();
-
-  let repeatBehavior: RowItemRepeaterBehavior | undefined = $behaviors?.find(
-    (b) => b instanceof RowItemRepeaterBehavior
-  );
-  const { variableName } = repeatBehavior?.state ?? {};
+  const { layout, repeatByVariable } = row.useState();
 
   const isAnyPanelUsingDashboardDS = layout.getVizPanels().some((vizPanel) => {
     const runner = getQueryRunnerFor(vizPanel);
@@ -287,20 +283,9 @@ export function RowRepeatSelect({ row, dashboard }: { row: RowItem; dashboard: D
     <>
       <RepeatRowSelect2
         sceneContext={dashboard}
-        repeat={variableName}
+        repeat={repeatByVariable}
         onChange={(repeat) => {
-          if (repeat) {
-            // Remove repeat behavior if it exists to trigger repeat when adding new one
-            if (repeatBehavior) {
-              repeatBehavior.removeBehavior();
-            }
-
-            repeatBehavior = new RowItemRepeaterBehavior({ variableName: repeat });
-            row.setState({ $behaviors: [...(row.state.$behaviors ?? []), repeatBehavior] });
-            repeatBehavior.activate();
-          } else {
-            repeatBehavior?.removeBehavior();
-          }
+          row.setState({ repeatByVariable: repeat });
         }}
       />
       {isAnyPanelUsingDashboardDS ? (
