@@ -15,7 +15,6 @@ type RepositorySpecApplyConfiguration struct {
 	Description *string                                   `json:"description,omitempty"`
 	Folder      *string                                   `json:"folder,omitempty"`
 	Editing     *EditingOptionsApplyConfiguration         `json:"editing,omitempty"`
-	UnsyncMode  *provisioningv0alpha1.UnsyncMode          `json:"unsyncMode,omitempty"`
 	Type        *provisioningv0alpha1.RepositoryType      `json:"type,omitempty"`
 	Linting     *bool                                     `json:"linting,omitempty"`
 	Local       *LocalRepositoryConfigApplyConfiguration  `json:"local,omitempty"`
@@ -58,14 +57,6 @@ func (b *RepositorySpecApplyConfiguration) WithFolder(value string) *RepositoryS
 // If called multiple times, the Editing field is set to the value of the last call.
 func (b *RepositorySpecApplyConfiguration) WithEditing(value *EditingOptionsApplyConfiguration) *RepositorySpecApplyConfiguration {
 	b.Editing = value
-	return b
-}
-
-// WithUnsyncMode sets the UnsyncMode field in the declarative configuration to the given value
-// and returns the receiver, so that objects can be built by chaining "With" function invocations.
-// If called multiple times, the UnsyncMode field is set to the value of the last call.
-func (b *RepositorySpecApplyConfiguration) WithUnsyncMode(value provisioningv0alpha1.UnsyncMode) *RepositorySpecApplyConfiguration {
-	b.UnsyncMode = &value
 	return b
 }
 

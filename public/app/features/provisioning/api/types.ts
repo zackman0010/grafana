@@ -29,7 +29,6 @@ export type RepositorySpec = {
   local?: LocalRepositoryConfig;
   s3?: S3RepositoryConfig;
   type: 'github' | 'local' | 's3';
-  unsyncMode: 'keepAll' | 'removeAll' | 'clearFolder';
   editing: EditingOptions;
   linting?: boolean;
 };

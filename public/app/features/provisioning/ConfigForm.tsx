@@ -15,7 +15,6 @@ import {
   ControlledCollapse,
   FieldSet,
   Stack,
-  ComboboxOption,
 } from '@grafana/ui';
 import { FormPrompt } from 'app/core/components/FormPrompt/FormPrompt';
 import { FolderPicker } from 'app/core/components/Select/FolderPicker';
@@ -26,12 +25,6 @@ import { RepositoryFormData } from './types';
 import { dataToSpec, specToData } from './utils/data';
 
 const typeOptions = ['GitHub', 'Local', 'S3'].map((label) => ({ label, value: label.toLowerCase() }));
-const unsyncModes: ComboboxOption[] = [
-  { label: 'Keep all', value: 'keepAll' },
-  { label: 'Remove all', value: 'removeAll' },
-  { label: 'Clear folder', value: 'clearFolder' },
-];
-
 const appEvents = getAppEvents();
 
 function getDefaultValues(repository?: RepositorySpec): RepositoryFormData {
@@ -43,7 +36,6 @@ function getDefaultValues(repository?: RepositorySpec): RepositoryFormData {
       owner: '',
       repository: '',
       branch: '',
-      unsyncMode: 'removeAll',
       linting: false,
       branchWorkflow: false,
       editing: {
@@ -213,22 +205,6 @@ export function ConfigForm({ data }: ConfigFormProps) {
       </Field>
       <Field label={'Linting'}>
         <Switch {...register('linting')} id={'linting'} />
-      </Field>
-      <Field label={'Unsync mode'}>
-        <Controller
-          name={'unsyncMode'}
-          control={control}
-          render={({ field: { ref, onChange, ...field } }) => {
-            return (
-              <Combobox
-                options={unsyncModes}
-                onChange={(value) => onChange(value?.value)}
-                placeholder={'Select unsyncMode type'}
-                {...field}
-              />
-            );
-          }}
-        />
       </Field>
       <FieldSet label={'Editing options'}>
         <Field label={'Create'} description={'Enable creating files on repository'}>
