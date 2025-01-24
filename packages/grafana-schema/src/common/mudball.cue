@@ -230,6 +230,7 @@ GraphFieldConfig: {
 	thresholdsStyle?: GraphThresholdsStyleConfig
 	transform?:       GraphTransform
 	insertNulls?:     bool | number
+	colorMode?: BigValueColorMode
 } @cuetsy(kind="interface")
 
 // TODO docs

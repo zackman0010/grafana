@@ -612,6 +612,7 @@ export enum SortOrder {
  * TODO docs
  */
 export interface GraphFieldConfig extends LineConfig, FillConfig, PointsConfig, AxisConfig, BarConfig, StackableFieldConfig, HideableFieldConfig {
+  colorMode?: BigValueColorMode;
   drawStyle?: GraphDrawStyle;
   gradientMode?: GraphGradientMode;
   insertNulls?: (boolean | number);

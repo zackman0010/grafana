@@ -5,6 +5,11 @@ import {
   identityOverrideProcessor,
   SetFieldConfigOptionsArgs,
   Field,
+  FieldOverrideContext,
+  standardEditorsRegistry,
+  ReducerID,
+  getFieldDisplayName,
+  escapeStringForRegex,
 } from '@grafana/data';
 import {
   BarAlignment,
@@ -17,6 +22,7 @@ import {
   StackingMode,
   GraphThresholdsStyleMode,
   GraphTransform,
+  BigValueColorMode,
 } from '@grafana/schema';
 import { graphFieldOptions, commonOptionsBuilder } from '@grafana/ui';
 
@@ -232,6 +238,65 @@ export function getGraphFieldConfig(cfg: GraphFieldConfig, isTime = true): SetFi
           isClearable: true,
         },
         hideFromDefaults: true,
+      });
+
+      builder.addSelect({
+        path: 'colorMode',
+        name: 'Color mode',
+        defaultValue: BigValueColorMode.None,
+        category: categoryStyles,
+        settings: {
+          options: [
+            { value: BigValueColorMode.None, label: 'None' },
+            { value: BigValueColorMode.Background, label: 'Background Gradient' },
+            { value: BigValueColorMode.BackgroundSolid, label: 'Background Solid' },
+          ],
+        },
+      });
+
+      builder.addCustomEditor({
+        id: 'backgroundColorCalculation',
+        path: 'backgroundColorCalculation',
+        name: 'Calculation',
+        description: 'Choose a reducer function / calculation for the background color',
+        category: categoryStyles,
+        editor: standardEditorsRegistry.get('stats-picker').editor,
+        // TODO: Get ReducerID from generated schema one day?
+        defaultValue: [ReducerID.lastNotNull],
+        // Hides it when all values mode is on
+        showIf: (currentConfig) => currentConfig.colorMode !== BigValueColorMode.None,
+        override: standardEditorsRegistry.get('stats-picker').editor,
+        process: () => true,
+        shouldApply: () => true,
+      });
+
+      builder.addSelect({
+        path: 'backgroundColorCalcFields',
+        name: 'Fields',
+        description: 'Select the fields that should be included in the calculation for the background color',
+        category: categoryStyles,
+        showIf: (currentConfig) => currentConfig.colorMode !== BigValueColorMode.None,
+        settings: {
+          allowCustomValue: true,
+          options: [],
+          getOptions: async (context: FieldOverrideContext) => {
+            const options = [
+              { value: '', label: 'Numeric Fields' },
+              { value: '/.*/', label: 'All Fields' },
+            ];
+            if (context && context.data) {
+              for (const frame of context.data) {
+                for (const field of frame.fields) {
+                  const name = getFieldDisplayName(field, frame, context.data);
+                  const value = `/^${escapeStringForRegex(name)}$/`;
+                  options.push({ value, label: name });
+                }
+              }
+            }
+            return Promise.resolve(options);
+          },
+        },
+        defaultValue: '',
       });
 
       commonOptionsBuilder.addAxisConfig(builder, cfg);

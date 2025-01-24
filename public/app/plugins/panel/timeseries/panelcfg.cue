@@ -26,6 +26,7 @@ composableKinds: PanelCfg: lineage: {
 				legend:       common.VizLegendOptions
 				tooltip:      common.VizTooltipOptions
 				orientation?: common.VizOrientation
+				colorMode:              common.BigValueColorMode & (*"value" | _)
 			} @cuetsy(kind="interface")
 
 			FieldConfig: common.GraphFieldConfig & {} @cuetsy(kind="interface")
