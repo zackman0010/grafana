@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ListChildComponentProps, VariableSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 
@@ -33,6 +33,8 @@ interface Props {
   wrapLogMessage: boolean;
 }
 
+type InfiniteLoaderState = 'loading' | 'out-of-bounds' | 'idle';
+
 export const LogList = ({
   app,
   containerElement,
@@ -53,31 +55,24 @@ export const LogList = ({
   const theme = useTheme2();
   const listRef = useRef<VariableSizeList | null>(null);
   const widthRef = useRef(containerElement.clientWidth);
-  const infiniteLoaderStateRef = useRef<'loading' | 'out-of-bounds' | 'idle'>('idle');
+  const logsRef = useRef<LogRowModel[]>([]);
+  const infiniteLoaderStateRef = useRef<InfiniteLoaderState>('idle');
 
   useEffect(() => {
     initVirtualization(theme);
   }, [theme]);
 
   useEffect(() => {
-    const subscription = eventBus.subscribe(ScrollToLogsEvent, (e: ScrollToLogsEvent) => {
-      if (e.payload.scrollTo === 'top') {
-        listRef.current?.scrollTo(0);
-      } else {
-        listRef.current?.scrollToItem(processedLogs.length - 1);
-      }
-    });
+    const subscription = eventBus.subscribe(ScrollToLogsEvent, (e: ScrollToLogsEvent) =>
+      handleScrollToEvent(e, processedLogs.length, listRef.current)
+    );
     return () => subscription.unsubscribe();
   }, [eventBus, processedLogs.length]);
 
   useEffect(() => {
     setProcessedLogs(preProcessLogs(logs, { wrap: wrapLogMessage, escape: forceEscape, order: sortOrder, timeZone }));
-    listRef.current?.resetAfterIndex(0);
-    if (infiniteLoaderStateRef.current === 'idle') {
-      listRef.current?.scrollTo(0);
-    } else {
-      infiniteLoaderStateRef.current = 'idle';
-    }
+    handleNewLogsReceived(logs, logsRef.current, listRef.current, infiniteLoaderStateRef);
+    logsRef.current = logs;
   }, [forceEscape, logs, sortOrder, timeZone, wrapLogMessage]);
 
   useEffect(() => {
@@ -112,20 +107,23 @@ export const LogList = ({
 
   const isItemLoaded = useCallback(
     (index: number) => {
-      return processedLogs[index] != null || infiniteLoaderStateRef.current === 'loading';
+      return processedLogs[index] != null || infiniteLoaderStateRef.current !== 'idle';
     },
     [infiniteLoaderStateRef, processedLogs]
   );
 
   const handleLoadMore = useCallback(() => {
-    const newRange = canScrollBottom(getVisibleRange(logs), timeRange, timeZone, sortOrder);
+    if (infiniteLoaderStateRef.current === 'out-of-bounds') {
+      return;
+    }
+    const newRange = canScrollBottom(getVisibleRange(processedLogs), timeRange, timeZone, sortOrder);
     if (!newRange) {
       infiniteLoaderStateRef.current = 'out-of-bounds';
       return;
     }
-    loadMore?.(newRange);
     infiniteLoaderStateRef.current = 'loading';
-  }, [loadMore, logs, sortOrder, timeRange, timeZone]);
+    loadMore?.(newRange);
+  }, [loadMore, processedLogs, sortOrder, timeRange, timeZone]);
 
   const Renderer = useCallback(
     ({ index, style }: ListChildComponentProps) => {
@@ -162,14 +160,14 @@ export const LogList = ({
   return (
     <InfiniteLoader
       isItemLoaded={isItemLoaded}
-      itemCount={processedLogs.length ? processedLogs.length + 1 : 0}
+      itemCount={processedLogs.length && loadMore ? processedLogs.length + 1 : processedLogs.length}
       loadMoreItems={handleLoadMore}
       threshold={1}
     >
       {({ onItemsRendered, ref }) => (
         <VariableSizeList
           height={listHeight}
-          itemCount={processedLogs.length ? processedLogs.length + 1 : 0}
+          itemCount={processedLogs.length && loadMore ? processedLogs.length + 1 : processedLogs.length}
           itemSize={getLogLineSize.bind(null, processedLogs, containerElement, { wrap: wrapLogMessage, showTime })}
           itemKey={(index: number) => (processedLogs[index] ? processedLogs[index].uid : index)}
           layout="vertical"
@@ -187,3 +185,26 @@ export const LogList = ({
     </InfiniteLoader>
   );
 };
+
+function handleScrollToEvent(event: ScrollToLogsEvent, logsCount: number, list: VariableSizeList | null) {
+  if (event.payload.scrollTo === 'top') {
+    list?.scrollTo(0);
+  } else {
+    list?.scrollToItem(logsCount - 1);
+  }
+}
+
+function handleNewLogsReceived(
+  newLogs: LogRowModel[],
+  prevLogs: LogRowModel[],
+  list: VariableSizeList | null,
+  infiniteLoaderStateRef: MutableRefObject<InfiniteLoaderState>
+) {
+  list?.resetAfterIndex(0);
+  if (infiniteLoaderStateRef.current === 'idle' || infiniteLoaderStateRef.current === 'out-of-bounds') {
+    list?.scrollTo(0);
+    infiniteLoaderStateRef.current = 'idle';
+  } else if (infiniteLoaderStateRef.current === 'loading') {
+    infiniteLoaderStateRef.current = newLogs.length === prevLogs.length ? 'out-of-bounds' : 'idle';
+  }
+}
