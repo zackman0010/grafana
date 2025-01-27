@@ -108,7 +108,8 @@ export function getLogLineSize(
   if (!container) {
     return 0;
   }
-  if (!wrap) {
+  // !logs[index] means infinite scrolling loading state or out of bounds message.
+  if (!wrap || !logs[index]) {
     return lineHeight + paddingBottom;
   }
   const storedSize = retrieveLogLineSize(logs[index].uid, container);

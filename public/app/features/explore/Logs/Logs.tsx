@@ -1074,9 +1074,11 @@ const UnthemedLogs: React.FunctionComponent<Props> = (props: Props) => {
                     containerElement={logsContainerRef.current}
                     eventBus={eventBus}
                     forceEscape={forceEscape}
+                    loadMore={infiniteScrollAvailable ? loadMoreLogs : undefined}
                     logs={dedupedRows}
                     showTime={showTime}
                     sortOrder={logsSortOrder}
+                    timeRange={props.range}
                     timeZone={timeZone}
                     wrapLogMessage={wrapLogMessage}
                   />

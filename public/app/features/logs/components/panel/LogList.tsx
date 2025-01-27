@@ -1,11 +1,15 @@
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ListChildComponentProps, VariableSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 
-import { CoreApp, EventBus, LogRowModel, LogsSortOrder } from '@grafana/data';
-import { useTheme2 } from '@grafana/ui';
+import { AbsoluteTimeRange, CoreApp, EventBus, LogRowModel, LogsSortOrder, TimeRange } from '@grafana/data';
+import { Spinner, useTheme2 } from '@grafana/ui';
+
+import { canScrollBottom, getVisibleRange } from '../InfiniteScroll';
 
 import { LogLine } from './LogLine';
+import { LogLineMessage } from './LogLineMessage';
 import { preProcessLogs, ProcessedLogModel } from './processing';
 import {
   getLogLineSize,
@@ -21,8 +25,10 @@ interface Props {
   containerElement: HTMLDivElement;
   eventBus: EventBus;
   forceEscape?: boolean;
+  loadMore?: (range: AbsoluteTimeRange) => void;
   showTime: boolean;
   sortOrder: LogsSortOrder;
+  timeRange: TimeRange;
   timeZone: string;
   wrapLogMessage: boolean;
 }
@@ -30,11 +36,13 @@ interface Props {
 export const LogList = ({
   app,
   containerElement,
+  loadMore,
   logs,
   eventBus,
   forceEscape = false,
   showTime,
   sortOrder,
+  timeRange,
   timeZone,
   wrapLogMessage,
 }: Props) => {
@@ -45,6 +53,7 @@ export const LogList = ({
   const theme = useTheme2();
   const listRef = useRef<VariableSizeList | null>(null);
   const widthRef = useRef(containerElement.clientWidth);
+  const infiniteLoaderStateRef = useRef<'loading' | 'out-of-bounds' | 'idle'>('idle');
 
   useEffect(() => {
     initVirtualization(theme);
@@ -64,7 +73,11 @@ export const LogList = ({
   useEffect(() => {
     setProcessedLogs(preProcessLogs(logs, { wrap: wrapLogMessage, escape: forceEscape, order: sortOrder, timeZone }));
     listRef.current?.resetAfterIndex(0);
-    listRef.current?.scrollTo(0);
+    if (infiniteLoaderStateRef.current === 'idle') {
+      listRef.current?.scrollTo(0);
+    } else {
+      infiniteLoaderStateRef.current = 'idle';
+    }
   }, [forceEscape, logs, sortOrder, timeZone, wrapLogMessage]);
 
   useEffect(() => {
@@ -97,8 +110,36 @@ export const LogList = ({
     [containerElement]
   );
 
+  const isItemLoaded = useCallback(
+    (index: number) => {
+      return processedLogs[index] != null || infiniteLoaderStateRef.current === 'loading';
+    },
+    [infiniteLoaderStateRef, processedLogs]
+  );
+
+  const handleLoadMore = useCallback(() => {
+    const newRange = canScrollBottom(getVisibleRange(logs), timeRange, timeZone, sortOrder);
+    if (!newRange) {
+      infiniteLoaderStateRef.current = 'out-of-bounds';
+      return;
+    }
+    loadMore?.(newRange);
+    infiniteLoaderStateRef.current = 'loading';
+  }, [loadMore, logs, sortOrder, timeRange, timeZone]);
+
   const Renderer = useCallback(
     ({ index, style }: ListChildComponentProps) => {
+      if (!processedLogs[index]) {
+        const message =
+          infiniteLoaderStateRef.current === 'loading' ? (
+            <>
+              Loading {sortOrder === LogsSortOrder.Ascending ? 'newer' : 'older'} logs <Spinner inline />
+            </>
+          ) : (
+            <>End of the selected time range.</>
+          );
+        return <LogLineMessage style={style}>{message}</LogLineMessage>;
+      }
       return (
         <LogLine
           index={index}
@@ -110,7 +151,7 @@ export const LogList = ({
         />
       );
     },
-    [handleOverflow, processedLogs, showTime, wrapLogMessage]
+    [handleOverflow, infiniteLoaderStateRef, processedLogs, showTime, sortOrder, wrapLogMessage]
   );
 
   if (!containerElement || listHeight == null) {
@@ -119,17 +160,30 @@ export const LogList = ({
   }
 
   return (
-    <VariableSizeList
-      height={listHeight}
-      itemCount={processedLogs.length}
-      itemSize={getLogLineSize.bind(null, processedLogs, containerElement, { wrap: wrapLogMessage, showTime })}
-      itemKey={(index: number) => processedLogs[index].uid}
-      layout="vertical"
-      ref={listRef}
-      style={{ overflowY: 'scroll' }}
-      width="100%"
+    <InfiniteLoader
+      isItemLoaded={isItemLoaded}
+      itemCount={processedLogs.length ? processedLogs.length + 1 : 0}
+      loadMoreItems={handleLoadMore}
+      threshold={1}
     >
-      {Renderer}
-    </VariableSizeList>
+      {({ onItemsRendered, ref }) => (
+        <VariableSizeList
+          height={listHeight}
+          itemCount={processedLogs.length ? processedLogs.length + 1 : 0}
+          itemSize={getLogLineSize.bind(null, processedLogs, containerElement, { wrap: wrapLogMessage, showTime })}
+          itemKey={(index: number) => (processedLogs[index] ? processedLogs[index].uid : index)}
+          layout="vertical"
+          onItemsRendered={onItemsRendered}
+          ref={(element) => {
+            ref(element);
+            listRef.current = element;
+          }}
+          style={{ overflowY: 'scroll' }}
+          width="100%"
+        >
+          {Renderer}
+        </VariableSizeList>
+      )}
+    </InfiniteLoader>
   );
 };
