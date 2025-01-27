@@ -31,10 +31,8 @@ export const ui = {
       contactPoint: byTestId('contact-point-picker'),
       routingOptions: byText(/muting, grouping and timings \(optional\)/i),
     },
-    switchModeBasic: (stepNo: GrafanaRuleFormStep) =>
-      byTestId(selectors.components.AlertRules.stepAdvancedModeSwitch(stepNo.toString())),
-    switchModeAdvanced: (stepNo: GrafanaRuleFormStep) =>
-      byTestId(selectors.components.AlertRules.stepAdvancedModeSwitch(stepNo.toString())),
+    switchModeBasic: (stepNo: GrafanaRuleFormStep) => byTestId(`advanced-switch-${stepNo}-basic`),
+    switchModeAdvanced: (stepNo: GrafanaRuleFormStep) => byTestId(`advanced-switch-${stepNo}-advanced`),
   },
   buttons: {
     saveAndExit: byRole('button', { name: 'Save rule and exit' }),
