@@ -237,6 +237,65 @@ func TestSearchHandlerFields(t *testing.T) {
 	})
 }
 
+func TestSearchHandlerTypes(t *testing.T) {
+	mockClient := &MockClient{}
+	searchHandler := SearchHandler{
+		log:    log.New("test", "test"),
+		client: mockClient,
+		tracer: tracing.NewNoopTracerService(),
+	}
+	t.Run("should search for dashboards when no type is specified", func(t *testing.T) {
+		rr := httptest.NewRecorder()
+		req := httptest.NewRequest("GET", "/search?type=dashboard", nil)
+		req.Header.Add("content-type", "application/json")
+		req = req.WithContext(identity.WithRequester(req.Context(), &user.SignedInUser{Namespace: "test"}))
+
+		searchHandler.DoSearch(rr, req)
+
+		if mockClient.LastSearchRequest == nil {
+			t.Fatalf("expected Search to be called, but it was not")
+		}
+		expectedFields := []string{"title", "folder", "tags"}
+		if fmt.Sprintf("%v", mockClient.LastSearchRequest.Fields) != fmt.Sprintf("%v", expectedFields) {
+			t.Errorf("expected fields %v, got %v", expectedFields, mockClient.LastSearchRequest.Fields)
+		}
+	})
+
+	t.Run("should search for dashboards when type is specified", func(t *testing.T) {
+		rr := httptest.NewRecorder()
+		req := httptest.NewRequest("GET", "/search?type=dashboard", nil)
+		req.Header.Add("content-type", "application/json")
+		req = req.WithContext(identity.WithRequester(req.Context(), &user.SignedInUser{Namespace: "test"}))
+
+		searchHandler.DoSearch(rr, req)
+
+		if mockClient.LastSearchRequest == nil {
+			t.Fatalf("expected Search to be called, but it was not")
+		}
+		expectedFields := []string{"title", "folder", "tags"}
+		if fmt.Sprintf("%v", mockClient.LastSearchRequest.Fields) != fmt.Sprintf("%v", expectedFields) {
+			t.Errorf("expected fields %v, got %v", expectedFields, mockClient.LastSearchRequest.Fields)
+		}
+	})
+
+	t.Run("should search for specific type when specified", func(t *testing.T) {
+		rr := httptest.NewRecorder()
+		req := httptest.NewRequest("GET", "/search?type=dash-folder", nil)
+		req.Header.Add("content-type", "application/json")
+		req = req.WithContext(identity.WithRequester(req.Context(), &user.SignedInUser{Namespace: "test"}))
+
+		searchHandler.DoSearch(rr, req)
+
+		if mockClient.LastSearchRequest == nil {
+			t.Fatalf("expected Search to be called, but it was not")
+		}
+		expectedFields := []string{"title", "folder", "tags"}
+		if fmt.Sprintf("%v", mockClient.LastSearchRequest.Fields) != fmt.Sprintf("%v", expectedFields) {
+			t.Errorf("expected fields %v, got %v", expectedFields, mockClient.LastSearchRequest.Fields)
+		}
+	})
+}
+
 // MockClient implements the ResourceIndexClient interface for testing
 type MockClient struct {
 	resource.ResourceIndexClient

@@ -360,7 +360,7 @@ func asResourceKey(ns string, k string) (*resource.ResourceKey, error) {
 		return nil, apierrors.NewBadRequest("missing namespace")
 	}
 	switch k {
-	case "folders", "folder":
+	case "folders", "folder", "dash-folder":
 		return &resource.ResourceKey{
 			Namespace: ns,
 			Group:     "folder.grafana.app",
