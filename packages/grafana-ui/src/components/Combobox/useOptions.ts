@@ -9,8 +9,6 @@ type AsyncOptions<T extends string | number> =
   | Array<ComboboxOption<T>>
   | ((inputValue: string) => Promise<Array<ComboboxOption<T>>>);
 
-const asyncNoop = () => Promise.resolve([]);
-
 /**
  * Abstracts away sync/async options for MultiCombobox (and later Combobox).
  * It also filters options based on the user's input.
@@ -23,12 +21,32 @@ const asyncNoop = () => Promise.resolve([]);
 export function useOptions<T extends string | number>(rawOptions: AsyncOptions<T>) {
   const isAsync = typeof rawOptions === 'function';
 
-  const loadOptions = useLatestAsyncCall(isAsync ? rawOptions : asyncNoop);
+  const loadOptionsBase = useCallback(
+    (searchTerm: string) => {
+      if (isAsync) {
+        return rawOptions(searchTerm);
+      }
+
+      return rawOptions.filter(itemFilter(searchTerm));
+    },
+    [rawOptions, isAsync]
+  );
+
+  const loadOptions = useLatestAsyncCall(loadOptionsBase);
 
   const debouncedLoadOptions = useMemo(
     () =>
       debounce((searchTerm: string) => {
-        return loadOptions(searchTerm)
+        console.log('debouncedLoadOptions', searchTerm);
+        const result = loadOptions(searchTerm);
+
+        if (!(result instanceof Promise)) {
+          setAsyncLoading(false);
+          setAsyncOptions(result);
+          return;
+        }
+
+        result
           .then((options) => {
             setAsyncOptions(options);
             setAsyncLoading(false);
@@ -52,31 +70,17 @@ export function useOptions<T extends string | number>(rawOptions: AsyncOptions<T
   const [asyncLoading, setAsyncLoading] = useState(false);
   const [asyncError, setAsyncError] = useState(false);
 
-  // This hook keeps its own inputValue state (rather than accepting it as an arg) because it needs to be
-  // told it for async options loading anyway.
-  const [userTypedSearch, setUserTypedSearch] = useState('');
-
   const updateOptions = useCallback(
     (inputValue: string) => {
-      if (!isAsync) {
-        setUserTypedSearch(inputValue);
-        return;
-      }
-
-      setAsyncLoading(true);
-
+      setAsyncLoading(true); // Set loading while it's debouncing
       debouncedLoadOptions(inputValue);
     },
-    [debouncedLoadOptions, isAsync]
+    [debouncedLoadOptions]
   );
 
   const finalOptions = useMemo(() => {
-    if (isAsync) {
-      return asyncOptions;
-    } else {
-      return rawOptions.filter(itemFilter(userTypedSearch));
-    }
-  }, [rawOptions, asyncOptions, isAsync, userTypedSearch]);
+    return asyncOptions;
+  }, [asyncOptions]);
 
   return { options: finalOptions, updateOptions, asyncLoading, asyncError };
 }

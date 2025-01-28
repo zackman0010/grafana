@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-type AsyncFn<T, V> = (value: T) => Promise<V>;
+type AsyncFn<T, V> = (value: T) => V | Promise<V>;
 
 /**
  * Wraps an async function to ensure that only the latest call is resolved.
@@ -14,17 +14,18 @@ export function useLatestAsyncCall<T, V>(fn: AsyncFn<T, V>): AsyncFn<T, V> {
       latestValueCount.current++;
       const requestCount = latestValueCount.current;
 
-      return new Promise<V>((resolve, reject) => {
-        fn(value)
-          .then((result) => {
-            // Only resolve if the value is still the latest
-            if (requestCount === latestValueCount.current) {
-              resolve(result);
-            } else {
-              reject(new StaleResultError());
-            }
-          })
-          .catch(reject);
+      const maybePromise = fn(value);
+      // No need do the requestCount if it's a sync function
+      if (!(maybePromise instanceof Promise)) {
+        return maybePromise;
+      }
+
+      return maybePromise.then((result) => {
+        if (requestCount === latestValueCount.current) {
+          return result;
+        }
+
+        throw new StaleResultError();
       });
     },
     [fn]

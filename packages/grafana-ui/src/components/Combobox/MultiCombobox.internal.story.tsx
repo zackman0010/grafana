@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { useArgs, useEffect, useState } from '@storybook/preview-api';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import Chance from 'chance';
 
 import { Field } from '../Forms/Field';
 
@@ -16,14 +17,12 @@ const meta: Meta<typeof MultiCombobox> = {
 const loadOptionsAction = action('options called');
 const onChangeAction = action('onChange called');
 
+const chance = new Chance();
+const countries = chance.get('countries');
+console.log(countries);
+
 const commonArgs = {
-  options: [
-    { label: 'wasd - 1', value: 'option1' },
-    { label: 'wasd - 2', value: 'option2' },
-    { label: 'wasd - 3', value: 'option3' },
-    { label: 'asdf - 1', value: 'option4' },
-    { label: 'asdf - 2', value: 'option5' },
-  ],
+  options: countries.map((country: any) => ({ label: country.name, value: country.abbreviation })),
   value: ['option2'],
   placeholder: 'Select multiple options...',
 };
@@ -79,6 +78,7 @@ const ManyOptionsStory: StoryFn<ManyOptionsArgs> = ({ numberOfOptions = 1e4, ...
   useEffect(() => {
     setTimeout(async () => {
       const options = await generateOptions(numberOfOptions);
+
       setOptions(options);
     }, 1000);
   }, [numberOfOptions]);
