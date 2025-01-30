@@ -208,14 +208,7 @@ export function ConfigForm({ data }: ConfigFormProps) {
           name={'sync.target'}
           control={control}
           render={({ field: { ref, onChange, ...field } }) => {
-            return (
-              <RadioButtonGroup
-                options={targetOptions}
-                onChange={onChange}
-                //  disabled={!!data?.spec}
-                {...field}
-              />
-            );
+            return <RadioButtonGroup options={targetOptions} onChange={onChange} {...field} />;
           }}
         />
       </Field>
