@@ -28,7 +28,31 @@ type KerberosAuth struct {
 
 func GetKerberosSettings(settings backend.DataSourceInstanceSettings) (kerberosAuth KerberosAuth, err error) {
 	err = json.Unmarshal(settings.JSONData, &kerberosAuth)
-	return kerberosAuth, err
+	if err != nil {
+		return kerberosAuth, err
+	}
+
+	// Environment variables take precedence over JSON settings
+	if envVal := os.Getenv("KRB5_UDP_PREFERENCE_LIMIT"); envVal != "" {
+		kerberosAuth.UDPConnectionLimit = envVal
+	}
+	if envVal := os.Getenv("KRB5_CC_LOOKUP_FILE"); envVal != "" {
+		kerberosAuth.CredentialCacheLookupFile = envVal
+	}
+	if envVal := os.Getenv("KRB5_DNS_LOOKUP_KDC"); envVal != "" {
+		kerberosAuth.EnableDNSLookupKDC = envVal
+	}
+	if envVal := os.Getenv("KRB5_CLIENT_KTNAME"); envVal != "" {
+		kerberosAuth.KeytabFilePath = envVal
+	}
+	if envVal := os.Getenv("KRB5CCNAME"); envVal != "" {
+		kerberosAuth.CredentialCache = envVal
+	}
+	if envVal := os.Getenv("KRB5_CONFIG"); envVal != "" {
+		kerberosAuth.ConfigFilePath = envVal
+	}
+
+	return kerberosAuth, nil
 }
 
 func Krb5ParseAuthCredentials(host string, port string, db string, user string, pass string, kerberosAuth KerberosAuth) string {
