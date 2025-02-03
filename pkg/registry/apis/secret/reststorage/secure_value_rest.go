@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -124,7 +125,18 @@ func (s *SecureValueRest) Create(
 		return nil, fmt.Errorf("failed to create secure value: %w", err)
 	}
 
-	return createdSecureValue, nil
+	return &metav1.Status{
+		TypeMeta: createdSecureValue.TypeMeta,
+		Status:   metav1.StatusSuccess,
+		Message:  fmt.Sprintf("%s/%s created", createdSecureValue.GroupVersionKind().Group, createdSecureValue.Name),
+		Details: &metav1.StatusDetails{
+			Name:  createdSecureValue.Name,
+			Group: createdSecureValue.GroupVersionKind().Group,
+			Kind:  createdSecureValue.Kind,
+			UID:   createdSecureValue.UID,
+		},
+		Code: http.StatusAccepted,
+	}, nil
 }
 
 // Update a `securevalue`'s `value`. The second return parameter indicates whether the resource was newly created.

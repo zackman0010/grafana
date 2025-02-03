@@ -3,6 +3,7 @@ package secret
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"testing"
 
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
@@ -12,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func TestMain(m *testing.M) {
@@ -72,6 +74,12 @@ func mustGenerateSecureValue(t *testing.T, helper *apis.K8sTestHelper, user apis
 	raw, err := secureValueClient.Resource.Create(ctx, testSecureValue, metav1.CreateOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, raw)
+
+	status := new(metav1.Status)
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(raw.Object, status)
+	require.NoError(t, err)
+	require.NotNil(t, status)
+	require.Equal(t, http.StatusAccepted, status.Code)
 
 	t.Cleanup(func() {
 		require.NoError(t, secureValueClient.Resource.Delete(ctx, raw.GetName(), metav1.DeleteOptions{}))
