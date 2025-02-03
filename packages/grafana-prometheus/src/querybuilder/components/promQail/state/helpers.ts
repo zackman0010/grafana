@@ -6,10 +6,9 @@ import { reportInteraction } from '@grafana/runtime';
 
 import { PrometheusDatasource } from '../../../../datasource';
 import { getMetadataHelp, getMetadataType } from '../../../../language_provider';
-import { promQueryModeller } from '../../../PromQueryModeller';
+import { promQueryModeller } from '../../../context';
 import { buildVisualQueryFromString } from '../../../parsing';
 import { PromVisualQuery } from '../../../types';
-import { updateInteraction } from '../PromQail';
 import {
   ExplainSystemPrompt,
   GetExplainUserPrompt,
@@ -17,6 +16,7 @@ import {
   GetSuggestUserPrompt,
   SuggestUserPromptParams,
 } from '../prompts';
+import { updateInteraction } from '../state/state';
 import { Interaction, QuerySuggestion, SuggestionType } from '../types';
 
 import { createInteraction } from './state';

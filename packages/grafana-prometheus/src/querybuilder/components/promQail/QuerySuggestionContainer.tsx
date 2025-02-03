@@ -6,8 +6,9 @@ import { Button, useTheme2 } from '@grafana/ui';
 
 import { PromVisualQuery } from '../../types';
 
-import { getStyles, queryAssistanttestIds } from './PromQail';
 import { QuerySuggestionItem } from './QuerySuggestionItem';
+import { getStyles } from './shared/styles';
+import { queryAssistanttestIds } from './shared/testIds';
 import { QuerySuggestion, SuggestionType } from './types';
 
 export type Props = {

@@ -2,7 +2,7 @@
 import { AbstractLabelOperator, dateTime, TimeRange } from '@grafana/data';
 
 import { DEFAULT_SERIES_LIMIT } from './components/PrometheusMetricsBrowser';
-import { Label } from './components/monaco-query-field/monaco-completion-provider/situation';
+import { Label } from './components/monaco-query-field/completion-provider/situation';
 import { PrometheusDatasource } from './datasource';
 import LanguageProvider, { removeQuotesIfExist } from './language_provider';
 import { getClientCacheDurationInMinutes, getPrometheusTime, getRangeSnapInterval } from './language_utils';

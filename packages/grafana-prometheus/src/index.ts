@@ -18,13 +18,8 @@ export { PromVariableQueryEditor } from './components/VariableQueryEditor';
 
 // CONFIGURATION/
 // Main export
-export {
-  ConfigEditor,
-  docsTip,
-  overhaulStyles,
-  validateInput,
-  PROM_CONFIG_LABEL_WIDTH,
-} from './configuration/ConfigEditor';
+export { ConfigEditor, docsTip, overhaulStyles, validateInput } from './configuration/ConfigEditor';
+export { PROM_CONFIG_LABEL_WIDTH } from './constants';
 // The parts
 export { AlertingSettingsOverhaul } from './configuration/AlertingSettingsOverhaul';
 export { DataSourceHttpSettingsOverhaul } from './configuration/DataSourceHttpSettingsOverhaul';
@@ -85,11 +80,3 @@ export {
   type StandardPromVariableQuery,
 } from './types';
 export { PrometheusVariableSupport } from './variables';
-
-// For explore metrics
-export { default as PromQlLanguageProvider } from './language_provider';
-export { getPrometheusTime } from './language_utils';
-export { isValidLegacyName, utf8Support, wrapUtf8Filters } from './utf8_support';
-export { buildVisualQueryFromString } from './querybuilder/parsing';
-export { PromQueryModeller } from './querybuilder/PromQueryModeller';
-export { type QueryBuilderLabelFilter } from './querybuilder/shared/types';

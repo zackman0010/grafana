@@ -9,7 +9,7 @@ import { Button, RadioButtonList, Spinner, TextArea, Toggletip, useTheme2 } from
 import { buildVisualQueryFromString } from '../../parsing';
 import { PromVisualQuery } from '../../types';
 
-import { getStyles } from './PromQail';
+import { getStyles } from './shared/styles';
 import { QuerySuggestion } from './types';
 
 export type Props = {

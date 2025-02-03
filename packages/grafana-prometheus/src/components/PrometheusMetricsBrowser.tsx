@@ -17,8 +17,8 @@ import {
   withTheme2,
 } from '@grafana/ui';
 
+import { escapeLabelValueInExactSelector, escapeLabelValueInRegexSelector } from '../language/shared-utils';
 import PromQlLanguageProvider from '../language_provider';
-import { escapeLabelValueInExactSelector, escapeLabelValueInRegexSelector } from '../language_utils';
 import { isValidLegacyName, utf8Support } from '../utf8_support';
 
 // Hard limit on labels to render

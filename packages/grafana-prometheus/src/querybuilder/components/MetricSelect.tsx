@@ -22,6 +22,7 @@ import {
   useTheme2,
 } from '@grafana/ui';
 
+import { PROMETHEUS_QUERY_BUILDER_MAX_RESULTS } from '../../constants';
 import { PrometheusDatasource } from '../../datasource';
 import { truncateResult } from '../../language_utils';
 import { regexifyLabelValuesQueryString } from '../parsingUtils';
@@ -44,8 +45,6 @@ export interface MetricSelectProps {
   onBlur?: () => void;
   variableEditor?: boolean;
 }
-
-export const PROMETHEUS_QUERY_BUILDER_MAX_RESULTS = 1000;
 
 export function MetricSelect({
   datasource,

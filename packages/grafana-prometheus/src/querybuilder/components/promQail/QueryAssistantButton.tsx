@@ -3,8 +3,8 @@ import { selectors } from '@grafana/e2e-selectors';
 import { reportInteraction } from '@grafana/runtime';
 import { Button, Tooltip, useTheme2 } from '@grafana/ui';
 
-import { getStyles } from './PromQail';
 import AI_Logo_color from './resources/AI_Logo_color.svg';
+import { getStyles } from './shared/styles';
 
 export type Props = {
   llmAppEnabled: boolean;

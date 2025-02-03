@@ -8,7 +8,7 @@ import { PrometheusDatasource } from '../../datasource';
 import PromQlLanguageProvider from '../../language_provider';
 import { EmptyLanguageProviderMock } from '../../language_provider.mock';
 import { PromOptions } from '../../types';
-import { promQueryModeller } from '../PromQueryModeller';
+import { promQueryModeller } from '../context';
 import { addOperationInQueryBuilder } from '../testUtils';
 import { PromVisualQuery } from '../types';
 

@@ -4,19 +4,17 @@ import { useState } from 'react';
 import { DataSourceApi, SelectableValue, toOption } from '@grafana/data';
 import { Select } from '@grafana/ui';
 
-import { promQueryModeller } from '../PromQueryModeller';
-import { getOperationParamId } from '../operationUtils';
+import { getQueryModeller } from '../shared/modeller-types';
+import { getOperationParamId } from '../shared/param-utils';
 import { QueryBuilderLabelFilter, QueryBuilderOperationParamEditorProps } from '../shared/types';
-import { PromVisualQuery } from '../types';
+import { PromVisualQuery, PromQueryModellerInterface } from '../types';
 
-export function LabelParamEditor({
-  onChange,
-  index,
-  operationId,
-  value,
-  query,
-  datasource,
-}: QueryBuilderOperationParamEditorProps) {
+interface Props extends QueryBuilderOperationParamEditorProps {
+  queryModeller: PromQueryModellerInterface;
+}
+
+// Internal component with all props
+function LabelParamEditorInternal({ onChange, index, operationId, value, query, datasource, queryModeller }: Props) {
   const [state, setState] = useState<{
     options?: SelectableValue[];
     isLoading?: boolean;
@@ -29,7 +27,7 @@ export function LabelParamEditor({
       openMenuOnFocus
       onOpenMenu={async () => {
         setState({ isLoading: true });
-        const options = await loadGroupByLabels(query, datasource);
+        const options = await loadGroupByLabels(query, datasource, queryModeller);
         setState({ options, isLoading: undefined });
       }}
       isLoading={state.isLoading}
@@ -43,7 +41,16 @@ export function LabelParamEditor({
   );
 }
 
-async function loadGroupByLabels(query: PromVisualQuery, datasource: DataSourceApi): Promise<SelectableValue[]> {
+// Public component that injects queryModeller
+export const LabelParamEditor = (props: QueryBuilderOperationParamEditorProps) => {
+  return <LabelParamEditorInternal {...props} queryModeller={getQueryModeller()} />;
+};
+
+async function loadGroupByLabels(
+  query: PromVisualQuery,
+  datasource: DataSourceApi,
+  modeller: PromQueryModellerInterface
+): Promise<SelectableValue[]> {
   let labels: QueryBuilderLabelFilter[] = query.labels;
 
   // This function is used by both Prometheus and Loki and this the only difference.
@@ -51,7 +58,7 @@ async function loadGroupByLabels(query: PromVisualQuery, datasource: DataSourceA
     labels = [{ label: '__name__', op: '=', value: query.metric }, ...query.labels];
   }
 
-  const expr = promQueryModeller.renderLabels(labels);
+  const expr = modeller.renderLabels(labels);
   const result = await datasource.languageProvider.fetchLabelsWithMatch(expr);
 
   return Object.keys(result).map((x) => ({

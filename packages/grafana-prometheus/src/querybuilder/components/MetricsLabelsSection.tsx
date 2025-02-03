@@ -7,7 +7,7 @@ import { config } from '@grafana/runtime';
 import { PrometheusDatasource } from '../../datasource';
 import { getMetadataString } from '../../language_provider';
 import { truncateResult } from '../../language_utils';
-import { promQueryModeller } from '../PromQueryModeller';
+import { promQueryModeller } from '../context';
 import { regexifyLabelValuesQueryString } from '../parsingUtils';
 import { QueryBuilderLabelFilter } from '../shared/types';
 import { PromVisualQuery } from '../types';

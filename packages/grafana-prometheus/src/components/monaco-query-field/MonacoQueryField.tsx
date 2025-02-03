@@ -12,10 +12,10 @@ import { selectors } from '@grafana/e2e-selectors';
 import { Monaco, monacoTypes, ReactMonacoEditor, useTheme2 } from '@grafana/ui';
 
 import { Props } from './MonacoQueryFieldProps';
+import { DataProvider } from './completion-provider/data_provider';
+import { getCompletionProvider, getSuggestOptions } from './completion-provider/monaco-completion-provider';
+import { placeHolderScopedVars, validateQuery } from './completion-provider/validation';
 import { getOverrideServices } from './getOverrideServices';
-import { getCompletionProvider, getSuggestOptions } from './monaco-completion-provider';
-import { DataProvider } from './monaco-completion-provider/data_provider';
-import { placeHolderScopedVars, validateQuery } from './monaco-completion-provider/validation';
 import { language, languageConfiguration } from './promql';
 
 const options: monacoTypes.editor.IStandaloneEditorConstructionOptions = {

@@ -10,7 +10,8 @@ import { EmptyLanguageProviderMock } from '../../../language_provider.mock';
 import { PromOptions } from '../../../types';
 import { PromVisualQuery } from '../../types';
 
-import { PromQail, queryAssistanttestIds } from './PromQail';
+import { PromQail } from './PromQail';
+import { queryAssistanttestIds } from './shared/testIds';
 
 // don't care about interaction tracking in our unit tests
 jest.mock('@grafana/runtime', () => ({
