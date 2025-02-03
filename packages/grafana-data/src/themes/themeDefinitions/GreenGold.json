@@ -1,5 +1,5 @@
 {
-  "name": "G12 Green",
+  "name": "Green & Gold",
   "colors": {
     "mode": "dark",
     "border": {
@@ -98,10 +98,10 @@
     "tonalOffset": 0.15
   },
   "spacing": {
-    "gridSize": 7.5
+    "gridSize": 8
   },
   "shape": {
-    "borderRadius": 6
+    "borderRadius": 5
   },
   "typography": {
     "fontFamily": "\"Inter\", \"Helvetica\", \"Arial\", sans-serif",

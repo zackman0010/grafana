@@ -1,11 +1,12 @@
 export { default as aubergine } from './aubergine.json';
 export { default as mars } from './mars.json';
 export { default as matrix } from './matrix.json';
-export { default as g12 } from './g12.json';
-export { default as g12Green } from './g12Green.json';
-export { default as g12Pastel } from './g12Pastel.json';
 export { default as space } from './space.json';
 export { default as synthwave } from './synthwave.json';
 export { default as tron } from './tron.json';
 export { default as victorian } from './victorian.json';
 export { default as zen } from './zen.json';
+export { default as GreenGold } from './GreenGold.json';
+export { default as Grafana12Dark } from './Grafana12Dark.json';
+export { default as Grafana12Light } from './Grafana12Light.json';
+export { default as GrafanaCON } from './GrafanaCON.json';
