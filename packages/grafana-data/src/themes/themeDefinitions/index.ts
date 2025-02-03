@@ -6,3 +6,7 @@ export { default as synthwave } from './synthwave.json';
 export { default as tron } from './tron.json';
 export { default as victorian } from './victorian.json';
 export { default as zen } from './zen.json';
+export { default as GreenGold } from './GreenGold.json';
+export { default as Grafana12Dark } from './Grafana12Dark.json';
+export { default as Grafana12Light } from './Grafana12Light.json';
+export { default as GrafanaCON } from './GrafanaCON.json';
