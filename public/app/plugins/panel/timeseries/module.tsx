@@ -4,14 +4,14 @@ import { optsWithHideZeros } from '@grafana/ui/src/options/builder/tooltip';
 
 import { TimeSeriesPanel } from './TimeSeriesPanel';
 import { TimezonesEditor } from './TimezonesEditor';
-import { defaultGraphConfig, getGraphFieldConfig } from './config';
+import { defaultTimeseriesGraphConfig, getGraphFieldConfig } from './config';
 import { graphPanelChangedHandler } from './migrations';
-import { FieldConfig, Options } from './panelcfg.gen';
+import { TimeSeriesFieldConfig, Options } from './panelcfg.gen';
 import { TimeSeriesSuggestionsSupplier } from './suggestions';
 
-export const plugin = new PanelPlugin<Options, FieldConfig>(TimeSeriesPanel)
+export const plugin = new PanelPlugin<Options, TimeSeriesFieldConfig>(TimeSeriesPanel)
   .setPanelChangeHandler(graphPanelChangedHandler)
-  .useFieldConfig(getGraphFieldConfig(defaultGraphConfig))
+  .useFieldConfig(getGraphFieldConfig(defaultTimeseriesGraphConfig))
   .setPanelOptions((builder) => {
     commonOptionsBuilder.addTooltipOptions(builder, false, true, optsWithHideZeros);
     commonOptionsBuilder.addLegendOptions(builder);

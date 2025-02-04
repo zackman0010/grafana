@@ -16,4 +16,12 @@ export interface Options extends common.OptionsWithTimezones {
   tooltip: common.VizTooltipOptions;
 }
 
-export interface FieldConfig extends common.GraphFieldConfig {}
+export interface TimeSeriesFieldConfig extends common.GraphFieldConfig {
+  backgroundColorCalcFields?: string;
+  backgroundColorCalculation?: Array<string>;
+  colorMode?: common.BigValueColorMode;
+}
+
+export const defaultTimeSeriesFieldConfig: Partial<TimeSeriesFieldConfig> = {
+  backgroundColorCalculation: [],
+};

@@ -28,7 +28,11 @@ composableKinds: PanelCfg: lineage: {
 				orientation?: common.VizOrientation
 			} @cuetsy(kind="interface")
 
-			FieldConfig: common.GraphFieldConfig & {} @cuetsy(kind="interface")
+			TimeSeriesFieldConfig: common.GraphFieldConfig & {
+				colorMode?: common.BigValueColorMode
+				backgroundColorCalculation?: [...string]
+				backgroundColorCalcFields?: string
+			} @cuetsy(kind="interface")
 		}
 	}]
 	lenses: []
