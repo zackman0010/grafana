@@ -28,13 +28,15 @@ import (
 var _ builder.APIGroupBuilder = (*SecretAPIBuilder)(nil)
 
 type SecretAPIBuilder struct {
+	config             *setting.Cfg
 	tracer             tracing.Tracer
 	secureValueStorage contracts.SecureValueStorage
 	keeperStorage      contracts.KeeperStorage
+	decryptStorage     contracts.DecryptStorage
 }
 
-func NewSecretAPIBuilder(tracer tracing.Tracer, secureValueStorage contracts.SecureValueStorage, keeperStorage contracts.KeeperStorage) *SecretAPIBuilder {
-	return &SecretAPIBuilder{tracer, secureValueStorage, keeperStorage}
+func NewSecretAPIBuilder(config *setting.Cfg, tracer tracing.Tracer, secureValueStorage contracts.SecureValueStorage, keeperStorage contracts.KeeperStorage, decryptStorage contracts.DecryptStorage) *SecretAPIBuilder {
+	return &SecretAPIBuilder{config, tracer, secureValueStorage, keeperStorage, decryptStorage}
 }
 
 func RegisterAPIService(
@@ -44,6 +46,7 @@ func RegisterAPIService(
 	tracer tracing.Tracer,
 	secureValueStorage contracts.SecureValueStorage,
 	keeperStorage contracts.KeeperStorage,
+	decryptStorage contracts.DecryptStorage,
 ) (*SecretAPIBuilder, error) {
 	// Skip registration unless opting into experimental apis and the secrets management app platform flag.
 	if !features.IsEnabledGlobally(featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs) ||
@@ -59,7 +62,7 @@ func RegisterAPIService(
 		keeperStorage = reststorage.NewFakeKeeperStore(cfg.SecretsManagement.DeveloperStubLatency)
 	}
 
-	builder := NewSecretAPIBuilder(tracer, secureValueStorage, keeperStorage)
+	builder := NewSecretAPIBuilder(cfg, tracer, secureValueStorage, keeperStorage, decryptStorage)
 	apiregistration.RegisterAPI(builder)
 	return builder, nil
 }
@@ -107,6 +110,10 @@ func (b *SecretAPIBuilder) UpdateAPIGroupInfo(apiGroupInfo *genericapiserver.API
 
 		// The `reststorage.KeeperRest` struct will implement interfaces for CRUDL operations on `keeper`.
 		keeperResource.StoragePath(): reststorage.NewKeeperRest(b.keeperStorage, keeperResource),
+
+		// TODO: only for testing purposes; remove it in favour of the grpc handler.
+		// This is a subresource from `securevalue`. It gets accessed like `securevalue/xyz/decrypt`.
+		secureValueResource.StoragePath("decrypt"): reststorage.NewDecryptRest(b.config, secureValueResource, b.decryptStorage),
 	}
 
 	apiGroupInfo.VersionedResourcesStorageMap[secretv0alpha1.VERSION] = secureRestStorage

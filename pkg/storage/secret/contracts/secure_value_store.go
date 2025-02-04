@@ -1,4 +1,4 @@
-package secret
+package contracts
 
 import (
 	"context"
@@ -8,30 +8,41 @@ import (
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
+	"github.com/grafana/grafana/pkg/registry/apis/secret/secretkeeper"
+	keepertypes "github.com/grafana/grafana/pkg/registry/apis/secret/secretkeeper/types"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/xkube"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/sqlstore"
 	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/storage/secret/migrator"
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-func ProvideSecureValueStorage(db db.DB, cfg *setting.Cfg, features featuremgmt.FeatureToggles) (contracts.SecureValueStorage, error) {
+var defaultKeeper = "default-sql"
+
+func ProvideSecureValueStorage(db db.DB, cfg *setting.Cfg, features featuremgmt.FeatureToggles, keeperService secretkeeper.Service) (contracts.SecureValueStorage, error) {
 	if !features.IsEnabledGlobally(featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs) ||
 		!features.IsEnabledGlobally(featuremgmt.FlagSecretsManagementAppPlatform) {
 		return &secureValueStorage{}, nil
 	}
 
-	if err := migrateSecretSQL(db.GetEngine(), cfg); err != nil {
+	if err := migrator.MigrateSecretSQL(db.GetEngine(), cfg); err != nil {
 		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
-	return &secureValueStorage{db: db}, nil
+	keepers, err := keeperService.GetKeepers()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get keepers: %w", err)
+	}
+
+	return &secureValueStorage{db: db, keepers: keepers}, nil
 }
 
 // secureValueStorage is the actual implementation of the secure value (metadata) storage.
 type secureValueStorage struct {
-	db db.DB
+	db      db.DB
+	keepers map[keepertypes.KeeperType]keepertypes.Keeper
 }
 
 func (s *secureValueStorage) Create(ctx context.Context, sv *secretv0alpha1.SecureValue) (*secretv0alpha1.SecureValue, error) {
@@ -40,26 +51,33 @@ func (s *secureValueStorage) Create(ctx context.Context, sv *secretv0alpha1.Secu
 		return nil, fmt.Errorf("missing auth info in context")
 	}
 
-	// This should come from the keeper. From this point on, we should not have a need to read value.
-	externalID := "TODO"
+	// Store in selected keeper.
+	externalID, err := s.storeInKeeper(ctx, sv)
+	if err != nil {
+		return nil, fmt.Errorf("failed to store in keeper: %w", err)
+	}
+
+	// From this point on, we should not have a need to read value.
 	sv.Spec.Value = ""
 
-	row, err := toCreateRow(sv, authInfo.GetUID(), externalID)
+	row, err := toCreateRow(sv, authInfo.GetUID(), externalID.String())
 	if err != nil {
 		return nil, fmt.Errorf("to create row: %w", err)
 	}
 
 	err = s.db.WithTransactionalDbSession(ctx, func(sess *sqlstore.DBSession) error {
 		// Validate before inserting that the chosen `keeper` exists.
-		keeperRow := &keeperDB{Name: row.Keeper, Namespace: row.Namespace}
+		if row.Keeper != defaultKeeper {
+			keeperRow := &keeperDB{Name: row.Keeper, Namespace: row.Namespace}
 
-		keeperExists, err := sess.Table(keeperRow.TableName()).ForUpdate().Exist(keeperRow)
-		if err != nil {
-			return fmt.Errorf("check keeper existence: %w", err)
-		}
+			keeperExists, err := sess.Table(keeperRow.TableName()).ForUpdate().Exist(keeperRow)
+			if err != nil {
+				return fmt.Errorf("check keeper existence: %w", err)
+			}
 
-		if !keeperExists {
-			return contracts.ErrKeeperNotFound
+			if !keeperExists {
+				return contracts.ErrKeeperNotFound
+			}
 		}
 
 		if _, err := sess.Insert(row); err != nil {
@@ -121,15 +139,17 @@ func (s *secureValueStorage) Update(ctx context.Context, newSecureValue *secretv
 
 	err = s.db.WithTransactionalDbSession(ctx, func(sess *sqlstore.DBSession) error {
 		// Validate before updating that the new `keeper` exists.
-		keeperRow := &keeperDB{Name: newRow.Keeper, Namespace: newRow.Namespace}
+		if newRow.Keeper != defaultKeeper {
+			keeperRow := &keeperDB{Name: newRow.Keeper, Namespace: newRow.Namespace}
 
-		keeperExists, err := sess.Table(keeperRow.TableName()).ForUpdate().Exist(keeperRow)
-		if err != nil {
-			return fmt.Errorf("check keeper existence: %w", err)
-		}
+			keeperExists, err := sess.Table(keeperRow.TableName()).ForUpdate().Exist(keeperRow)
+			if err != nil {
+				return fmt.Errorf("check keeper existence: %w", err)
+			}
 
-		if !keeperExists {
-			return contracts.ErrKeeperNotFound
+			if !keeperExists {
+				return contracts.ErrKeeperNotFound
+			}
 		}
 
 		cond := &secureValueDB{Name: nn.Name, Namespace: nn.Namespace.String()}
@@ -247,4 +267,19 @@ func (s *secureValueStorage) readInternal(ctx context.Context, nn xkube.NameName
 	}
 
 	return row, nil
+}
+
+func (s *secureValueStorage) storeInKeeper(ctx context.Context, sv *secretv0alpha1.SecureValue) (keepertypes.ExternalID, error) {
+	if sv.Spec.Keeper == defaultKeeper {
+		externalID, err := s.keepers[keepertypes.SQLKeeperType].Store(
+			ctx, nil, sv.Namespace, sv.Spec.Value.DangerouslyExposeAndConsumeValue(),
+		)
+		if err != nil {
+			return "", fmt.Errorf("failed to store in default keeper: %w", err)
+		}
+		return externalID, nil
+	}
+
+	// TODO: implement storing in other keepers.
+	return "", nil
 }

@@ -10,18 +10,18 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/secret/encryption"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/encryption/manager"
 	keepertypes "github.com/grafana/grafana/pkg/registry/apis/secret/secretkeeper/types"
-	secretStorage "github.com/grafana/grafana/pkg/storage/secret"
+	encryptionstorage "github.com/grafana/grafana/pkg/storage/secret/encryption"
 )
 
 type SQLKeeper struct {
 	tracer            tracing.Tracer
 	encryptionManager *manager.EncryptionManager
-	store             secretStorage.EncryptedValueStorage
+	store             encryptionstorage.EncryptedValueStorage
 }
 
 var _ keepertypes.Keeper = (*SQLKeeper)(nil)
 
-func NewSQLKeeper(tracer tracing.Tracer, encryptionManager *manager.EncryptionManager, store secretStorage.EncryptedValueStorage) (*SQLKeeper, error) {
+func NewSQLKeeper(tracer tracing.Tracer, encryptionManager *manager.EncryptionManager, store encryptionstorage.EncryptedValueStorage) (*SQLKeeper, error) {
 	return &SQLKeeper{
 		tracer:            tracer,
 		encryptionManager: encryptionManager,
@@ -30,8 +30,8 @@ func NewSQLKeeper(tracer tracing.Tracer, encryptionManager *manager.EncryptionMa
 }
 
 func (s *SQLKeeper) Store(ctx context.Context, cfg secretv0alpha1.KeeperConfig, namespace string, exposedValueOrRef string) (keepertypes.ExternalID, error) {
-	ctx, span := s.tracer.Start(ctx, "sqlKeeper.Store")
-	defer span.End()
+	// ctx, span := s.tracer.Start(ctx, "sqlKeeper.Store")
+	// defer span.End()
 
 	encryptedData, err := s.encryptionManager.Encrypt(ctx, namespace, []byte(exposedValueOrRef), encryption.WithoutScope())
 	if err != nil {
@@ -47,12 +47,12 @@ func (s *SQLKeeper) Store(ctx context.Context, cfg secretv0alpha1.KeeperConfig, 
 }
 
 func (s *SQLKeeper) Expose(ctx context.Context, cfg secretv0alpha1.KeeperConfig, namespace string, externalID keepertypes.ExternalID) (secretv0alpha1.ExposedSecureValue, error) {
-	ctx, span := s.tracer.Start(ctx, "sqlKeeper.Expose")
-	defer span.End()
+	// ctx, span := s.tracer.Start(ctx, "sqlKeeper.Expose")
+	// defer span.End()
 
 	encryptedValue, err := s.store.Get(ctx, externalID.String())
 	if err != nil {
-		if errors.Is(err, secretStorage.ErrEncryptedValueNotFound) {
+		if errors.Is(err, encryptionstorage.ErrEncryptedValueNotFound) {
 			return "", keepertypes.ErrSecretNotFound
 		}
 		return "", fmt.Errorf("unable to get encrypted value: %w", err)
@@ -68,8 +68,8 @@ func (s *SQLKeeper) Expose(ctx context.Context, cfg secretv0alpha1.KeeperConfig,
 }
 
 func (s *SQLKeeper) Delete(ctx context.Context, cfg secretv0alpha1.KeeperConfig, namespace string, externalID keepertypes.ExternalID) error {
-	ctx, span := s.tracer.Start(ctx, "sqlKeeper.Delete")
-	defer span.End()
+	// ctx, span := s.tracer.Start(ctx, "sqlKeeper.Delete")
+	// defer span.End()
 
 	err := s.store.Delete(ctx, externalID.String())
 	if err != nil {

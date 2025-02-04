@@ -157,7 +157,8 @@ import (
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/services/user/userimpl"
 	"github.com/grafana/grafana/pkg/setting"
-	"github.com/grafana/grafana/pkg/storage/secret"
+	secretstorage "github.com/grafana/grafana/pkg/storage/secret/contracts"
+	encryptionstorage "github.com/grafana/grafana/pkg/storage/secret/encryption"
 	"github.com/grafana/grafana/pkg/storage/unified"
 	unifiedsearch "github.com/grafana/grafana/pkg/storage/unified/search"
 	"github.com/grafana/grafana/pkg/tsdb/azuremonitor"
@@ -275,10 +276,11 @@ var wireBasicSet = wire.NewSet(
 	jaeger.ProvideService,
 	datasourceservice.ProvideCacheService,
 	wire.Bind(new(datasources.CacheService), new(*datasourceservice.CacheServiceImpl)),
-	secret.ProvideSecureValueStorage,
-	secret.ProvideDataKeyStorageStorage,
-	secret.ProvideKeeperStorage,
-	secret.ProvideEncryptedValueStorage,
+	secretstorage.ProvideSecureValueStorage,
+	secretstorage.ProvideKeeperStorage,
+	secretstorage.ProvideDecryptStorage,
+	encryptionstorage.ProvideDataKeyStorageStorage,
+	encryptionstorage.ProvideEncryptedValueStorage,
 	manager.NewEncryptionManager,
 	encryptionservice.ProvideEncryptionService,
 	wire.Bind(new(encryption.Internal), new(*encryptionservice.Service)),
