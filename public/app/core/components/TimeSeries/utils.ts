@@ -12,6 +12,7 @@ import {
   getDisplayProcessor,
   FieldColorModeId,
   DecimalCount,
+  getFieldDisplayValues,
 } from '@grafana/data';
 // eslint-disable-next-line import/order
 import {
@@ -27,6 +28,7 @@ import {
   AxisColorMode,
   GraphGradientMode,
   VizOrientation,
+  BigValueColorMode,
 } from '@grafana/schema';
 
 // unit lookup needed to determine if we want power-of-2 or power-of-10 axis ticks
@@ -59,6 +61,7 @@ for (let i = 0; i < BIN_INCRS.length; i++) {
   BIN_INCRS[i] = 2 ** i;
 }
 
+import { getTextColorForAlphaBackground } from '@grafana/ui';
 import { UPlotConfigBuilder, UPlotConfigPrepFn } from '@grafana/ui/src/components/uPlot/config/UPlotConfigBuilder';
 import { getScaleGradientFn } from '@grafana/ui/src/components/uPlot/config/gradientFills';
 import { buildScaleKey } from '@grafana/ui/src/components/uPlot/internal';
@@ -230,7 +233,23 @@ export const preparePlotConfigBuilder: UPlotConfigPrepFn = ({
     const scaleKey = buildScaleKey(config, field.type);
     const colorMode = getFieldColorModeForField(field);
     const scaleColor = getFieldSeriesColor(field, theme);
-    const seriesColor = scaleColor.color;
+    let seriesColor = scaleColor.color;
+    const fieldColorMode = field.config.custom.colorMode;
+
+    const valueColor = getFieldDisplayValues({
+      data: [frame],
+      reduceOptions: {
+        calcs: field.config.custom.backgroundColorCalculation,
+        fields: field.config.custom.backgroundColorCalcFields,
+      },
+      fieldConfig: { defaults: field.config, overrides: [] },
+      replaceVariables: (str) => str,
+      theme,
+    })[0].display.color;
+
+    if (valueColor) {
+      seriesColor = getTextColorForAlphaBackground(valueColor, true);
+    }
 
     // The builder will manage unique scaleKeys and combine where appropriate
     builder.addScale(
@@ -273,16 +292,20 @@ export const preparePlotConfigBuilder: UPlotConfigPrepFn = ({
     if (customConfig.axisPlacement !== AxisPlacement.Hidden) {
       let axisColor: uPlot.Axis.Stroke | undefined;
 
-      if (customConfig.axisColorMode === AxisColorMode.Series) {
-        if (
-          colorMode.isByValue &&
-          field.config.custom?.gradientMode === GraphGradientMode.Scheme &&
-          colorMode.id === FieldColorModeId.Thresholds
-        ) {
-          axisColor = getScaleGradientFn(1, theme, colorMode, field.config.thresholds);
-        } else {
-          axisColor = seriesColor;
+      if (fieldColorMode !== BigValueColorMode.None) {
+        if (customConfig.axisColorMode === AxisColorMode.Series) {
+          if (
+            colorMode.isByValue &&
+            field.config.custom?.gradientMode === GraphGradientMode.Scheme &&
+            colorMode.id === FieldColorModeId.Thresholds
+          ) {
+            axisColor = getScaleGradientFn(1, theme, colorMode, field.config.thresholds);
+          } else {
+            axisColor = seriesColor;
+          }
         }
+      } else {
+        axisColor = seriesColor;
       }
 
       const axisDisplayOptions = {

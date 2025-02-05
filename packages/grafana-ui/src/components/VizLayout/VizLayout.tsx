@@ -17,6 +17,7 @@ export interface VizLayoutProps {
   width: number;
   height: number;
   legend?: React.ReactElement<VizLayoutLegendProps> | null;
+  styles?: CSSProperties;
   children: (width: number, height: number) => React.ReactNode;
 }
 
@@ -30,13 +31,14 @@ export interface VizLayoutComponentType extends FC<VizLayoutProps> {
 /**
  * @beta
  */
-export const VizLayout: VizLayoutComponentType = ({ width, height, legend, children }) => {
+export const VizLayout: VizLayoutComponentType = ({ width, height, legend, styles: stylesProp, children }) => {
   const theme = useTheme2();
   const styles = useStyles2(getVizStyles);
   const containerStyle: CSSProperties = {
     display: 'flex',
     width: `${width}px`,
     height: `${height}px`,
+    ...stylesProp,
   };
   const [legendRef, legendMeasure] = useMeasure<HTMLDivElement>();
 

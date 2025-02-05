@@ -2,8 +2,14 @@ import { useMemo, useState } from 'react';
 
 import { PanelProps, DataFrameType, DashboardCursorSync, getFieldDisplayValues } from '@grafana/data';
 import { PanelDataErrorView } from '@grafana/runtime';
-import { TooltipDisplayMode, VizOrientation } from '@grafana/schema';
-import { EventBusPlugin, KeyboardPlugin, TooltipPlugin2, usePanelContext } from '@grafana/ui';
+import { BigValueColorMode, TooltipDisplayMode, VizOrientation } from '@grafana/schema';
+import {
+  EventBusPlugin,
+  getTextColorForAlphaBackground,
+  KeyboardPlugin,
+  TooltipPlugin2,
+  usePanelContext,
+} from '@grafana/ui';
 import { TimeRange2, TooltipHoverMode } from '@grafana/ui/src/components/uPlot/plugins/TooltipPlugin2';
 import { TimeSeries } from 'app/core/components/TimeSeries/TimeSeries';
 import { config } from 'app/core/config';
@@ -57,15 +63,25 @@ export const TimeSeriesPanel = ({
     return undefined;
   }, [frames, id]);
 
-  const wat = data.series[0].fields[0].config.custom;
+  const customFieldConfig = data.series[0].fields[0].config.custom;
 
-  const wat2 = getFieldDisplayValues({
-    data: frames ?? undefined,
-    reduceOptions: { calcs: wat.backgroundColorCalculation, fields: wat.backgroundColorCalcFields },
-    fieldConfig,
-    replaceVariables,
-    theme: config.theme2,
-  });
+  let customBackgroundColor = undefined;
+  if (customFieldConfig.colorMode !== BigValueColorMode.None) {
+    const valueColor = getFieldDisplayValues({
+      data: frames ?? undefined,
+      reduceOptions: {
+        calcs: customFieldConfig.backgroundColorCalculation,
+        fields: customFieldConfig.backgroundColorCalcFields,
+      },
+      fieldConfig,
+      replaceVariables,
+      theme: config.theme2,
+    })[0].display.color;
+
+    if (valueColor) {
+      customBackgroundColor = valueColor;
+    }
+  }
 
   const enableAnnotationCreation = Boolean(canAddAnnotations && canAddAnnotations());
   const [newAnnotationRange, setNewAnnotationRange] = useState<TimeRange2 | null>(null);
@@ -98,6 +114,7 @@ export const TimeSeriesPanel = ({
       replaceVariables={replaceVariables}
       dataLinkPostProcessor={dataLinkPostProcessor}
       cursorSync={cursorSync}
+      styles={{ backgroundColor: customBackgroundColor }}
     >
       {(uplotConfig, alignedFrame) => {
         return (

@@ -246,7 +246,7 @@ export class GraphNG extends Component<GraphNGProps, GraphNGState> {
   }
 
   render() {
-    const { width, height, children, renderLegend } = this.props;
+    const { width, height, children, renderLegend, styles } = this.props;
     const { config, alignedFrame, alignedData } = this.state;
 
     if (!config) {
@@ -254,7 +254,7 @@ export class GraphNG extends Component<GraphNGProps, GraphNGState> {
     }
 
     return (
-      <VizLayout width={width} height={height} legend={renderLegend(config)}>
+      <VizLayout width={width} height={height} legend={renderLegend(config)} styles={styles}>
         {(vizWidth: number, vizHeight: number) => (
           <UPlotChart
             config={config}
