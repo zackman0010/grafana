@@ -20,8 +20,8 @@ import * as libAPI from 'app/features/library-panels/state/api';
 
 import { DashboardScene } from '../scene/DashboardScene';
 import { LibraryPanelBehavior } from '../scene/LibraryPanelBehavior';
-import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from '../scene/layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from '../scene/layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from '../scene/layouts/layout-default/DefaultGridLayoutManager';
 import { vizPanelToPanel } from '../serialization/transformSceneToSaveModel';
 import { activateFullSceneTree } from '../utils/test-utils';
 import { findVizPanelByKey, getQueryRunnerFor } from '../utils/utils';

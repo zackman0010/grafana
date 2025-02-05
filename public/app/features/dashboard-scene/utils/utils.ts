@@ -18,7 +18,7 @@ import { DashboardScene } from '../scene/DashboardScene';
 import { LibraryPanelBehavior } from '../scene/LibraryPanelBehavior';
 import { VizPanelLinks, VizPanelLinksMenu } from '../scene/PanelLinks';
 import { panelMenuBehavior } from '../scene/PanelMenuBehavior';
-import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
+import { DashboardGridItem } from '../scene/layouts/layout-default/DashboardGridItem';
 import { DashboardLayoutManager, isDashboardLayoutManager } from '../scene/types/DashboardLayoutManager';
 
 import { getLastKeyFromClone, getOriginalKey } from './clone';

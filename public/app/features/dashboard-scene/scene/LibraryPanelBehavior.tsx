@@ -14,7 +14,7 @@ import { panelLinksBehavior } from './PanelMenuBehavior';
 import { PanelNotices } from './PanelNotices';
 import { PanelTimeRange } from './PanelTimeRange';
 import { AngularDeprecation } from './angular/AngularDeprecation';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
 
 export interface LibraryPanelBehaviorState extends SceneObjectState {
   uid: string;

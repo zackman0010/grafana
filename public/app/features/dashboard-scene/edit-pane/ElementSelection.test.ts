@@ -1,7 +1,7 @@
 import { SceneTimeRange, VizPanel } from '@grafana/scenes';
 
 import { DashboardScene } from '../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import { DashboardEditableElement } from './DashboardEditableElement';
 import { ElementSelection } from './ElementSelection';

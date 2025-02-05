@@ -30,9 +30,9 @@ import { DashboardDataDTO } from 'app/types';
 import { DashboardDataLayerSet } from '../scene/DashboardDataLayerSet';
 import { LibraryPanelBehavior } from '../scene/LibraryPanelBehavior';
 import { PanelTimeRange } from '../scene/PanelTimeRange';
-import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from '../scene/layout-default/DefaultGridLayoutManager';
-import { RowRepeaterBehavior } from '../scene/layout-default/RowRepeaterBehavior';
+import { DashboardGridItem } from '../scene/layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from '../scene/layouts/layout-default/DefaultGridLayoutManager';
+import { RowRepeaterBehavior } from '../scene/layouts/layout-default/RowRepeaterBehavior';
 import { NEW_LINK } from '../settings/links/utils';
 import { getQueryRunnerFor } from '../utils/utils';
 

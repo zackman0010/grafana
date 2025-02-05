@@ -32,9 +32,9 @@ import { DashboardControls } from './DashboardControls';
 import { DashboardScene, DashboardSceneState } from './DashboardScene';
 import { LibraryPanelBehavior } from './LibraryPanelBehavior';
 import { PanelTimeRange } from './PanelTimeRange';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
-import { RowActions } from './layout-default/row-actions/RowActions';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
+import { RowActions } from './layouts/layout-default/row-actions/RowActions';
 
 jest.mock('../settings/version-history/HistorySrv');
 jest.mock('../serialization/transformSaveModelToScene');

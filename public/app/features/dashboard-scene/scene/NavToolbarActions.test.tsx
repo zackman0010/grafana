@@ -13,7 +13,7 @@ import { buildPanelEditScene } from '../panel-edit/PanelEditor';
 
 import { DashboardScene } from './DashboardScene';
 import { ToolbarActions } from './NavToolbarActions';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 jest.mock('app/features/playlist/PlaylistSrv', () => ({
   playlistSrv: {

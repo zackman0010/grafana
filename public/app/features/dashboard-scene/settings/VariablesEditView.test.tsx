@@ -22,7 +22,7 @@ import { mockDataSource } from 'app/features/alerting/unified/mocks';
 import { LegacyVariableQueryEditor } from 'app/features/variables/editor/LegacyVariableQueryEditor';
 
 import { DashboardScene } from '../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../scene/layouts/layout-default/DefaultGridLayoutManager';
 import { activateFullSceneTree } from '../utils/test-utils';
 
 import { VariablesEditView } from './VariablesEditView';

@@ -20,7 +20,7 @@ import { activateFullSceneTree } from '../utils/test-utils';
 import { DashboardDatasourceBehaviour } from './DashboardDatasourceBehaviour';
 import { DashboardScene } from './DashboardScene';
 import { LibraryPanelBehavior } from './LibraryPanelBehavior';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 const grafanaDs = {
   id: 1,

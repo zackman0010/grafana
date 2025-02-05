@@ -4,9 +4,9 @@ import { Select } from '@grafana/ui';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
-import { DashboardLayoutManager } from '../types/DashboardLayoutManager';
-import { isLayoutParent } from '../types/LayoutParent';
-import { LayoutRegistryItem } from '../types/LayoutRegistryItem';
+import { DashboardLayoutManager } from '../../types/DashboardLayoutManager';
+import { isLayoutParent } from '../../types/LayoutParent';
+import { LayoutRegistryItem } from '../../types/LayoutRegistryItem';
 
 import { layoutRegistry } from './layoutRegistry';
 import { findParentLayout } from './utils';

@@ -4,7 +4,7 @@ import { selectors as e2eSelectors } from '@grafana/e2e-selectors';
 import { SceneTimeRange, VizPanel } from '@grafana/scenes';
 
 import { DashboardScene } from '../../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../../scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import ExportMenu from './ExportMenu';
 

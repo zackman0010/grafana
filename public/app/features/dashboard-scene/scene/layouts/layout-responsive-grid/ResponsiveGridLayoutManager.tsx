@@ -4,9 +4,9 @@ import { Select } from '@grafana/ui';
 import { t } from 'app/core/internationalization';
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
-import { getDashboardSceneFor, getPanelIdForVizPanel, getVizPanelKeyForPanelId } from '../../utils/utils';
+import { getDashboardSceneFor, getPanelIdForVizPanel, getVizPanelKeyForPanelId } from '../../../utils/utils';
+import { DashboardLayoutManager } from '../../types/DashboardLayoutManager';
 import { RowsLayoutManager } from '../layout-rows/RowsLayoutManager';
-import { DashboardLayoutManager } from '../types/DashboardLayoutManager';
 
 import { ResponsiveGridItem } from './ResponsiveGridItem';
 

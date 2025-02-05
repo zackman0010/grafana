@@ -1,7 +1,7 @@
 import { SceneGridItemLike, SceneGridLayout, SceneGridRow, SceneQueryRunner, VizPanel } from '@grafana/scenes';
 
-import { findVizPanelByKey } from '../../utils/utils';
-import { DashboardScene } from '../DashboardScene';
+import { findVizPanelByKey } from '../../../utils/utils';
+import { DashboardScene } from '../../DashboardScene';
 
 import { DashboardGridItem } from './DashboardGridItem';
 import { DefaultGridLayoutManager } from './DefaultGridLayoutManager';

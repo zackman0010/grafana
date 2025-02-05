@@ -15,8 +15,8 @@ import { DashboardScene } from './DashboardScene';
 import { LibraryPanelBehavior } from './LibraryPanelBehavior';
 import { VizPanelLinks } from './PanelLinks';
 import { PanelTimeRange } from './PanelTimeRange';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 setPluginImportUtils({
   importPanelPlugin: (id: string) => Promise.resolve(getPanelPlugin({})),

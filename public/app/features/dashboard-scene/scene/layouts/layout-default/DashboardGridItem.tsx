@@ -23,10 +23,10 @@ import {
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'app/core/constants';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
 
-import { getCloneKey } from '../../utils/clone';
-import { getMultiVariableValues, getQueryRunnerFor } from '../../utils/utils';
-import { DashboardLayoutItem } from '../types/DashboardLayoutItem';
-import { DashboardRepeatsProcessedEvent } from '../types/DashboardRepeatsProcessedEvent';
+import { getCloneKey } from '../../../utils/clone';
+import { getMultiVariableValues, getQueryRunnerFor } from '../../../utils/utils';
+import { DashboardLayoutItem } from '../../types/DashboardLayoutItem';
+import { DashboardRepeatsProcessedEvent } from '../../types/DashboardRepeatsProcessedEvent';
 
 import { getDashboardGridItemOptions } from './DashboardGridItemEditor';
 

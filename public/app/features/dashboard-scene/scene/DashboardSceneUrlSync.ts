@@ -18,7 +18,7 @@ import { findVizPanelByKey, getLibraryPanelBehavior } from '../utils/utils';
 import { DashboardScene, DashboardSceneState } from './DashboardScene';
 import { LibraryPanelBehavior } from './LibraryPanelBehavior';
 import { ViewPanelScene } from './ViewPanelScene';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 import { DashboardRepeatsProcessedEvent } from './types/DashboardRepeatsProcessedEvent';
 
 export class DashboardSceneUrlSync implements SceneObjectUrlSyncHandler {

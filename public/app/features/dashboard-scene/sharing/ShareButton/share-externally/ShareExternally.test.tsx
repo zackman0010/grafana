@@ -14,7 +14,7 @@ import {
   VizPanelState,
 } from '@grafana/scenes';
 import { shareDashboardType } from 'app/features/dashboard/components/ShareModal/utils';
-import { DefaultGridLayoutManager } from 'app/features/dashboard-scene/scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from 'app/features/dashboard-scene/scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import { contextSrv } from '../../../../../core/services/context_srv';
 import * as sharePublicDashboardUtils from '../../../../dashboard/components/ShareModal/SharePublicDashboard/SharePublicDashboardUtils';

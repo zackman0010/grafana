@@ -3,9 +3,9 @@ import { setPluginImportUtils } from '@grafana/runtime';
 import { SceneGridLayout, SceneVariableSet, TestVariable, VizPanel } from '@grafana/scenes';
 import { ALL_VARIABLE_TEXT, ALL_VARIABLE_VALUE } from 'app/features/variables/constants';
 
-import { isInCloneChain } from '../../utils/clone';
-import { activateFullSceneTree, buildPanelRepeaterScene } from '../../utils/test-utils';
-import { DashboardScene } from '../DashboardScene';
+import { isInCloneChain } from '../../../utils/clone';
+import { activateFullSceneTree, buildPanelRepeaterScene } from '../../../utils/test-utils';
+import { DashboardScene } from '../../DashboardScene';
 
 import { DashboardGridItem, DashboardGridItemState } from './DashboardGridItem';
 import { DefaultGridLayoutManager } from './DefaultGridLayoutManager';

@@ -15,7 +15,7 @@ import { getPanelIdForVizPanel } from '../utils/utils';
 
 import { DashboardScene } from './DashboardScene';
 import { onRemovePanel, toggleVizPanelLegend } from './PanelMenuBehavior';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 export function setupKeyboardShortcuts(scene: DashboardScene) {
   const keybindings = new KeybindingSet();

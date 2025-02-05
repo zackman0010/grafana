@@ -69,8 +69,8 @@ import { LibraryPanelBehavior } from './LibraryPanelBehavior';
 import { ViewPanelScene } from './ViewPanelScene';
 import { isUsingAngularDatasourcePlugin, isUsingAngularPanelPlugin } from './angular/AngularDeprecation';
 import { setupKeyboardShortcuts } from './keyboardShortcuts';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 import { DashboardLayoutManager } from './types/DashboardLayoutManager';
 
 export const PERSISTED_PROPS = ['title', 'description', 'tags', 'editable', 'graphTooltip', 'links', 'meta', 'preload'];

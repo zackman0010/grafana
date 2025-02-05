@@ -11,9 +11,9 @@ import {
   VariableValueSingle,
 } from '@grafana/scenes';
 
-import { isClonedKeyOf, getCloneKey } from '../../utils/clone';
-import { getMultiVariableValues } from '../../utils/utils';
-import { DashboardRepeatsProcessedEvent } from '../types/DashboardRepeatsProcessedEvent';
+import { isClonedKeyOf, getCloneKey } from '../../../utils/clone';
+import { getMultiVariableValues } from '../../../utils/utils';
+import { DashboardRepeatsProcessedEvent } from '../../types/DashboardRepeatsProcessedEvent';
 
 import { RowItem } from './RowItem';
 import { RowsLayoutManager } from './RowsLayoutManager';

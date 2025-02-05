@@ -13,7 +13,7 @@ import {
 import { GRID_COLUMN_COUNT } from 'app/core/constants';
 import { t } from 'app/core/internationalization';
 
-import { isClonedKey, joinCloneKeys } from '../../utils/clone';
+import { isClonedKey, joinCloneKeys } from '../../../utils/clone';
 import {
   forceRenderChildren,
   getPanelIdForVizPanel,
@@ -22,8 +22,8 @@ import {
   getVizPanelKeyForPanelId,
   getGridItemKeyForPanelId,
   getDashboardSceneFor,
-} from '../../utils/utils';
-import { DashboardLayoutManager } from '../types/DashboardLayoutManager';
+} from '../../../utils/utils';
+import { DashboardLayoutManager } from '../../types/DashboardLayoutManager';
 
 import { DashboardGridItem } from './DashboardGridItem';
 import { RowRepeaterBehavior } from './RowRepeaterBehavior';

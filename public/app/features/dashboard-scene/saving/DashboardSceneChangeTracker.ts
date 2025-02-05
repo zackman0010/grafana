@@ -21,7 +21,7 @@ import { DashboardScene, PERSISTED_PROPS } from '../scene/DashboardScene';
 import { LibraryPanelBehavior } from '../scene/LibraryPanelBehavior';
 import { VizPanelLinks } from '../scene/PanelLinks';
 import { PanelTimeRange } from '../scene/PanelTimeRange';
-import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
+import { DashboardGridItem } from '../scene/layouts/layout-default/DashboardGridItem';
 import { transformSceneToSaveModel } from '../serialization/transformSceneToSaveModel';
 import { isSceneVariableInstance } from '../settings/variables/utils';
 

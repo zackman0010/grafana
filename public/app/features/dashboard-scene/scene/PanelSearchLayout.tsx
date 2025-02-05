@@ -10,8 +10,8 @@ import { Trans } from 'app/core/internationalization';
 import { forceActivateFullSceneObjectTree } from '../utils/utils';
 
 import { DashboardScene } from './DashboardScene';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 export interface Props {
   dashboard: DashboardScene;

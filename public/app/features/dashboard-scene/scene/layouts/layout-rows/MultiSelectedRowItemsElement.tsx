@@ -6,7 +6,7 @@ import { t, Trans } from 'app/core/internationalization';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
-import { MultiSelectedEditableDashboardElement } from '../types/MultiSelectedEditableDashboardElement';
+import { MultiSelectedEditableDashboardElement } from '../../types/MultiSelectedEditableDashboardElement';
 
 import { RowItem } from './RowItem';
 

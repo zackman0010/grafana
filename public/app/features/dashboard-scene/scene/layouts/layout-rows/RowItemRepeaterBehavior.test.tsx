@@ -12,9 +12,9 @@ import {
 import { ALL_VARIABLE_TEXT, ALL_VARIABLE_VALUE } from 'app/features/variables/constants';
 import { TextMode } from 'app/plugins/panel/text/panelcfg.gen';
 
-import { getCloneKey, isInCloneChain, joinCloneKeys } from '../../utils/clone';
-import { activateFullSceneTree } from '../../utils/test-utils';
-import { DashboardScene } from '../DashboardScene';
+import { getCloneKey, isInCloneChain, joinCloneKeys } from '../../../utils/clone';
+import { activateFullSceneTree } from '../../../utils/test-utils';
+import { DashboardScene } from '../../DashboardScene';
 import { DashboardGridItem } from '../layout-default/DashboardGridItem';
 import { DefaultGridLayoutManager } from '../layout-default/DefaultGridLayoutManager';
 

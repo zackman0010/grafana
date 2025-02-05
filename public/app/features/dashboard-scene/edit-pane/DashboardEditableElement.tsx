@@ -6,7 +6,7 @@ import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
 import { DashboardScene } from '../scene/DashboardScene';
-import { useLayoutCategory } from '../scene/layouts-shared/DashboardLayoutSelector';
+import { useLayoutCategory } from '../scene/layouts/layouts-shared/DashboardLayoutSelector';
 import { EditableDashboardElement } from '../scene/types/EditableDashboardElement';
 
 export class DashboardEditableElement implements EditableDashboardElement {

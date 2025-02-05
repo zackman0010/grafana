@@ -6,8 +6,8 @@ import { KioskMode } from 'app/types';
 import { getCloneKey } from '../utils/clone';
 
 import { DashboardScene } from './DashboardScene';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 import { DashboardRepeatsProcessedEvent } from './types/DashboardRepeatsProcessedEvent';
 
 describe('DashboardSceneUrlSync', () => {

@@ -13,9 +13,9 @@ import {
 } from '@grafana/scenes';
 import { ALL_VARIABLE_TEXT, ALL_VARIABLE_VALUE } from 'app/features/variables/constants';
 
-import { getCloneKey, isInCloneChain, joinCloneKeys } from '../../utils/clone';
-import { activateFullSceneTree } from '../../utils/test-utils';
-import { DashboardScene } from '../DashboardScene';
+import { getCloneKey, isInCloneChain, joinCloneKeys } from '../../../utils/clone';
+import { activateFullSceneTree } from '../../../utils/test-utils';
+import { DashboardScene } from '../../DashboardScene';
 
 import { RepeatDirection } from './DashboardGridItem';
 import { DefaultGridLayoutManager } from './DefaultGridLayoutManager';

@@ -8,7 +8,7 @@ import { config } from '../../../../core/config';
 import { AccessControlAction } from '../../../../types';
 import { grantUserPermissions } from '../../../alerting/unified/mocks';
 import { DashboardScene, DashboardSceneState } from '../../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../../scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import ShareMenu from './ShareMenu';
 

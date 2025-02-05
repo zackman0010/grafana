@@ -7,7 +7,7 @@ import { SceneTimeRange, VizPanel } from '@grafana/scenes';
 
 import { userEvent } from '../../../../../test/test-utils';
 import { DashboardScene } from '../../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../../scene/layouts/layout-default/DefaultGridLayoutManager';
 import { activateFullSceneTree } from '../../utils/test-utils';
 
 import { SharePanelInternally } from './SharePanelInternally';

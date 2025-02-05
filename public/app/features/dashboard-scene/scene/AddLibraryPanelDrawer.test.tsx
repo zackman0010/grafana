@@ -6,7 +6,7 @@ import { activateFullSceneTree } from '../utils/test-utils';
 import { AddLibraryPanelDrawer } from './AddLibraryPanelDrawer';
 import { DashboardScene } from './DashboardScene';
 import { LibraryPanelBehavior } from './LibraryPanelBehavior';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual('@grafana/runtime'),

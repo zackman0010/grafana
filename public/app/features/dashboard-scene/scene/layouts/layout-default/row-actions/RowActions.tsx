@@ -16,8 +16,8 @@ import { SHARED_DASHBOARD_QUERY } from 'app/plugins/datasource/dashboard/constan
 import { MIXED_DATASOURCE_NAME } from 'app/plugins/datasource/mixed/MixedDataSource';
 import { ShowConfirmModalEvent } from 'app/types/events';
 
-import { getDashboardSceneFor, getQueryRunnerFor } from '../../../utils/utils';
-import { DashboardScene } from '../../DashboardScene';
+import { getDashboardSceneFor, getQueryRunnerFor } from '../../../../utils/utils';
+import { DashboardScene } from '../../../DashboardScene';
 import { DashboardGridItem } from '../DashboardGridItem';
 import { DefaultGridLayoutManager } from '../DefaultGridLayoutManager';
 import { RowRepeaterBehavior } from '../RowRepeaterBehavior';

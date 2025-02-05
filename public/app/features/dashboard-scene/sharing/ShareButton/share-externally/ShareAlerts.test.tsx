@@ -12,7 +12,7 @@ import {
 } from '@grafana/scenes';
 import { contextSrv } from 'app/core/core';
 import { DashboardScene, DashboardSceneState } from 'app/features/dashboard-scene/scene/DashboardScene';
-import { DefaultGridLayoutManager } from 'app/features/dashboard-scene/scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from 'app/features/dashboard-scene/scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import { ShareDrawerContext } from '../../ShareDrawer/ShareDrawerContext';
 

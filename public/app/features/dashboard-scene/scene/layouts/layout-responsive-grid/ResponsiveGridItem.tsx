@@ -7,7 +7,7 @@ import { t } from 'app/core/internationalization';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
-import { DashboardLayoutItem } from '../types/DashboardLayoutItem';
+import { DashboardLayoutItem } from '../../types/DashboardLayoutItem';
 
 export interface ResponsiveGridItemState extends SceneObjectState {
   body: VizPanel;

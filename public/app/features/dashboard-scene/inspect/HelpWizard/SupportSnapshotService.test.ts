@@ -4,7 +4,7 @@ import { SceneQueryRunner, SceneTimeRange, VizPanel, VizPanelMenu } from '@grafa
 import { DashboardScene } from '../../scene/DashboardScene';
 import { VizPanelLinks, VizPanelLinksMenu } from '../../scene/PanelLinks';
 import { panelMenuBehavior } from '../../scene/PanelMenuBehavior';
-import { DefaultGridLayoutManager } from '../../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../../scene/layouts/layout-default/DefaultGridLayoutManager';
 
 import { SnapshotTab, SupportSnapshotService } from './SupportSnapshotService';
 

@@ -30,7 +30,7 @@ import { buildPanelEditScene } from '../panel-edit/PanelEditor';
 import { DashboardScene } from './DashboardScene';
 import { VizPanelLinks, VizPanelLinksMenu } from './PanelLinks';
 import { panelMenuBehavior } from './PanelMenuBehavior';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 const mocks = {
   contextSrv: jest.mocked(contextSrv),

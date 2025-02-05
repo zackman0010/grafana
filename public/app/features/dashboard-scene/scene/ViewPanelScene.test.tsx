@@ -2,8 +2,8 @@ import { LocalValueVariable, SceneGridLayout, SceneGridRow, SceneVariableSet, Vi
 
 import { DashboardScene } from './DashboardScene';
 import { ViewPanelScene } from './ViewPanelScene';
-import { DashboardGridItem } from './layout-default/DashboardGridItem';
-import { DefaultGridLayoutManager } from './layout-default/DefaultGridLayoutManager';
+import { DashboardGridItem } from './layouts/layout-default/DashboardGridItem';
+import { DefaultGridLayoutManager } from './layouts/layout-default/DefaultGridLayoutManager';
 
 jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual('@grafana/runtime'),

@@ -26,17 +26,17 @@ import { t, Trans } from 'app/core/internationalization';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 import { RepeatRowSelect2 } from 'app/features/dashboard/components/RepeatRowSelect/RepeatRowSelect';
+import { isClonedKey } from 'app/features/dashboard-scene/utils/clone';
+import { getDashboardSceneFor, getDefaultVizPanel, getQueryRunnerFor } from 'app/features/dashboard-scene/utils/utils';
 import { SHARED_DASHBOARD_QUERY } from 'app/plugins/datasource/dashboard/constants';
 import { MIXED_DATASOURCE_NAME } from 'app/plugins/datasource/mixed/MixedDataSource';
 
-import { isClonedKey } from '../../utils/clone';
-import { getDashboardSceneFor, getDefaultVizPanel, getQueryRunnerFor } from '../../utils/utils';
-import { DashboardScene } from '../DashboardScene';
+import { DashboardScene } from '../../DashboardScene';
+import { BulkActionElement } from '../../types/BulkActionElement';
+import { DashboardLayoutManager } from '../../types/DashboardLayoutManager';
+import { EditableDashboardElement } from '../../types/EditableDashboardElement';
+import { LayoutParent } from '../../types/LayoutParent';
 import { useLayoutCategory } from '../layouts-shared/DashboardLayoutSelector';
-import { BulkActionElement } from '../types/BulkActionElement';
-import { DashboardLayoutManager } from '../types/DashboardLayoutManager';
-import { EditableDashboardElement } from '../types/EditableDashboardElement';
-import { LayoutParent } from '../types/LayoutParent';
 
 import { MultiSelectedRowItemsElement } from './MultiSelectedRowItemsElement';
 import { RowItemRepeaterBehavior } from './RowItemRepeaterBehavior';

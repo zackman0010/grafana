@@ -3,7 +3,7 @@ import { ContextSrv, setContextSrv } from 'app/core/services/context_srv';
 
 import { DashboardControls } from '../scene/DashboardControls';
 import { DashboardScene, DashboardSceneState } from '../scene/DashboardScene';
-import { DefaultGridLayoutManager } from '../scene/layout-default/DefaultGridLayoutManager';
+import { DefaultGridLayoutManager } from '../scene/layouts/layout-default/DefaultGridLayoutManager';
 import { transformSceneToSaveModel } from '../serialization/transformSceneToSaveModel';
 
 import { ignoreChanges } from './DashboardPrompt';

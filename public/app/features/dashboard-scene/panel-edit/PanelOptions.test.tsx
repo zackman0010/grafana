@@ -12,7 +12,7 @@ import { overrideRuleTooltipDescription } from 'app/features/dashboard/component
 
 import { DashboardScene } from '../scene/DashboardScene';
 import { LibraryPanelBehavior } from '../scene/LibraryPanelBehavior';
-import { DashboardGridItem } from '../scene/layout-default/DashboardGridItem';
+import { DashboardGridItem } from '../scene/layouts/layout-default/DashboardGridItem';
 import { vizPanelToPanel } from '../serialization/transformSceneToSaveModel';
 import { activateFullSceneTree } from '../utils/test-utils';
 import * as utils from '../utils/utils';
