@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { PanelProps, DataFrameType, DashboardCursorSync } from '@grafana/data';
+import { PanelProps, DataFrameType, DashboardCursorSync, getFieldDisplayValues } from '@grafana/data';
 import { PanelDataErrorView } from '@grafana/runtime';
 import { TooltipDisplayMode, VizOrientation } from '@grafana/schema';
 import { EventBusPlugin, KeyboardPlugin, TooltipPlugin2, usePanelContext } from '@grafana/ui';
@@ -56,6 +56,16 @@ export const TimeSeriesPanel = ({
     }
     return undefined;
   }, [frames, id]);
+
+  const wat = data.series[0].fields[0].config.custom;
+
+  const wat2 = getFieldDisplayValues({
+    data: frames ?? undefined,
+    reduceOptions: { calcs: wat.backgroundColorCalculation, fields: wat.backgroundColorCalcFields },
+    fieldConfig,
+    replaceVariables,
+    theme: config.theme2,
+  });
 
   const enableAnnotationCreation = Boolean(canAddAnnotations && canAddAnnotations());
   const [newAnnotationRange, setNewAnnotationRange] = useState<TimeRange2 | null>(null);

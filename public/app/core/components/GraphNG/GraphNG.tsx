@@ -51,6 +51,7 @@ export interface GraphNGProps extends Themeable2 {
   replaceVariables: InterpolateFunction;
   dataLinkPostProcessor?: DataLinkPostProcessor;
   cursorSync?: DashboardCursorSync;
+  styles?: React.CSSProperties;
 
   // Remove fields that are hidden from the visualization before rendering
   // The fields will still be available for other things like data links

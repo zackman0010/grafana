@@ -52,11 +52,15 @@ export interface FieldConfig extends GraphFieldConfig {}
 
 export interface TimeSeriesGraphFieldConfig extends GraphFieldConfig {
   colorMode: BigValueColorMode;
+  backgroundColorCalculation: [string];
+  backgroundColorCalcFields: string;
 }
 
 export const defaultTimeseriesGraphConfig: TimeSeriesGraphFieldConfig = {
   ...defaultGraphConfig,
   colorMode: BigValueColorMode.None,
+  backgroundColorCalculation: [ReducerID.lastNotNull],
+  backgroundColorCalcFields: '',
 };
 
 const categoryStyles = ['Graph styles'];
