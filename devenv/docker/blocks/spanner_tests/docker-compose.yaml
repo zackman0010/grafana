@@ -1,0 +1,19 @@
+  spannertests:
+    image: gcr.io/cloud-spanner-emulator/emulator:1.5.24
+    ports:
+      - "9010:9010"
+      - "9020:9020"
+  spannertests_gcloud:
+    image: google/cloud-sdk:509.0.0
+    environment:
+      SPANNER_EMULATOR_HOST: spannertests:9010
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sleep 5
+        gcloud config set auth/disable_credentials true
+        gcloud config set project grafanatest
+        gcloud config set api_endpoint_overrides/spanner http://spannertests:9020/
+        gcloud spanner instances create grafanatest --config=emulator-config --description="For integration tests" --nodes=1
+        gcloud spanner databases create --instance grafanatest grafanatest
