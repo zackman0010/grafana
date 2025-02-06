@@ -94,6 +94,7 @@ export class BigValue extends PureComponent<Props> {
     const panelStyles = layout.getPanelStyles();
     const valueAndTitleContainerStyles = layout.getValueAndTitleContainerStyles();
     const valueStyles = layout.getValueStyles();
+    console.log(valueStyles.color);
     const titleStyles = layout.getTitleStyles();
     const textValues = layout.textValues;
     const percentChange = this.props.value.percentChange;

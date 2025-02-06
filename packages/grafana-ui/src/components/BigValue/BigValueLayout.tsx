@@ -11,6 +11,7 @@ import { Sparkline } from '../Sparkline/Sparkline';
 
 import { BigValueColorMode, Props, BigValueJustifyMode, BigValueTextMode } from './BigValue';
 import { percentChangeString } from './PercentChange';
+import { getBackgroundColor } from './utils';
 
 const LINE_HEIGHT = 1.2;
 const MAX_TITLE_SIZE = 30;
@@ -203,27 +204,7 @@ export abstract class BigValueLayout {
       display: 'flex',
     };
 
-    const themeFactor = theme.isDark ? 1 : -0.7;
-
-    switch (colorMode) {
-      case BigValueColorMode.Background:
-        const bgColor2 = tinycolor(this.valueColor)
-          .darken(15 * themeFactor)
-          .spin(8)
-          .toRgbString();
-        const bgColor3 = tinycolor(this.valueColor)
-          .darken(5 * themeFactor)
-          .spin(-8)
-          .toRgbString();
-        panelStyles.background = `linear-gradient(120deg, ${bgColor2}, ${bgColor3})`;
-        break;
-      case BigValueColorMode.BackgroundSolid:
-        panelStyles.background = tinycolor(this.valueColor).toString();
-        break;
-      case BigValueColorMode.Value:
-        panelStyles.background = `transparent`;
-        break;
-    }
+    panelStyles.background = getBackgroundColor(colorMode, this.valueColor, theme.isDark);
 
     if (this.justifyCenter) {
       panelStyles.alignItems = 'center';

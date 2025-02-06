@@ -15,7 +15,7 @@ type TimeSeriesProps = Omit<GraphNGProps, 'prepConfig' | 'propsToDiff' | 'render
 
 export class UnthemedTimeSeries extends Component<TimeSeriesProps> {
   prepConfig = (alignedFrame: DataFrame, allFrames: DataFrame[], getTimeRange: () => TimeRange) => {
-    const { theme, timeZone, options, renderers, tweakAxis, tweakScale } = this.props;
+    const { theme, timeZone, options, renderers, tweakAxis, tweakScale, backgroundColor } = this.props;
 
     return preparePlotConfigBuilder({
       frame: alignedFrame,
@@ -28,6 +28,7 @@ export class UnthemedTimeSeries extends Component<TimeSeriesProps> {
       tweakAxis,
       hoverProximity: options?.tooltip?.hoverProximity,
       orientation: options?.orientation,
+      backgroundColor: backgroundColor,
     });
   };
 

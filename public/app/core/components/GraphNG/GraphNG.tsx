@@ -51,7 +51,7 @@ export interface GraphNGProps extends Themeable2 {
   replaceVariables: InterpolateFunction;
   dataLinkPostProcessor?: DataLinkPostProcessor;
   cursorSync?: DashboardCursorSync;
-  styles?: React.CSSProperties;
+  backgroundColor?: string;
 
   // Remove fields that are hidden from the visualization before rendering
   // The fields will still be available for other things like data links
@@ -246,7 +246,7 @@ export class GraphNG extends Component<GraphNGProps, GraphNGState> {
   }
 
   render() {
-    const { width, height, children, renderLegend, styles } = this.props;
+    const { width, height, children, renderLegend, backgroundColor } = this.props;
     const { config, alignedFrame, alignedData } = this.state;
 
     if (!config) {
@@ -254,7 +254,12 @@ export class GraphNG extends Component<GraphNGProps, GraphNGState> {
     }
 
     return (
-      <VizLayout width={width} height={height} legend={renderLegend(config)} styles={styles}>
+      <VizLayout
+        width={width}
+        height={height}
+        legend={renderLegend(config)}
+        styles={{ backgroundColor: backgroundColor }}
+      >
         {(vizWidth: number, vizHeight: number) => (
           <UPlotChart
             config={config}

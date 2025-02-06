@@ -3,13 +3,8 @@ import { useMemo, useState } from 'react';
 import { PanelProps, DataFrameType, DashboardCursorSync, getFieldDisplayValues } from '@grafana/data';
 import { PanelDataErrorView } from '@grafana/runtime';
 import { BigValueColorMode, TooltipDisplayMode, VizOrientation } from '@grafana/schema';
-import {
-  EventBusPlugin,
-  getTextColorForAlphaBackground,
-  KeyboardPlugin,
-  TooltipPlugin2,
-  usePanelContext,
-} from '@grafana/ui';
+import { EventBusPlugin, KeyboardPlugin, TooltipPlugin2, usePanelContext } from '@grafana/ui';
+import { getBackgroundColor } from '@grafana/ui/src/components/BigValue/utils';
 import { TimeRange2, TooltipHoverMode } from '@grafana/ui/src/components/uPlot/plugins/TooltipPlugin2';
 import { TimeSeries } from 'app/core/components/TimeSeries/TimeSeries';
 import { config } from 'app/core/config';
@@ -63,10 +58,10 @@ export const TimeSeriesPanel = ({
     return undefined;
   }, [frames, id]);
 
-  const customFieldConfig = data.series[0].fields[0].config.custom;
+  const customFieldConfig = data.series[0]?.fields[0]?.config.custom;
 
   let customBackgroundColor = undefined;
-  if (customFieldConfig.colorMode !== BigValueColorMode.None) {
+  if ((customFieldConfig?.colorMode ?? BigValueColorMode.None) !== BigValueColorMode.None) {
     const valueColor = getFieldDisplayValues({
       data: frames ?? undefined,
       reduceOptions: {
@@ -79,7 +74,7 @@ export const TimeSeriesPanel = ({
     })[0].display.color;
 
     if (valueColor) {
-      customBackgroundColor = valueColor;
+      customBackgroundColor = getBackgroundColor(customFieldConfig.colorMode, valueColor, config.theme2.isDark);
     }
   }
 
@@ -114,7 +109,7 @@ export const TimeSeriesPanel = ({
       replaceVariables={replaceVariables}
       dataLinkPostProcessor={dataLinkPostProcessor}
       cursorSync={cursorSync}
-      styles={{ backgroundColor: customBackgroundColor }}
+      backgroundColor={customBackgroundColor}
     >
       {(uplotConfig, alignedFrame) => {
         return (
