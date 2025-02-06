@@ -436,7 +436,7 @@ func TestExpandTemplate(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			v, err := Expand(context.Background(), "test", c.text, NewData(c.labels, c.alertInstance), externalURL, c.alertInstance.EvaluatedAt)
+			v, err := Expand(context.Background(), "test", c.text, NewData(c.labels, c.alertInstance), externalURL, c.alertInstance.EvaluatedAt, nil)
 			if c.expectedError != nil {
 				require.NotNil(t, err)
 				require.EqualError(t, c.expectedError, err.Error())

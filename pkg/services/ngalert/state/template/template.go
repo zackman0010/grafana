@@ -3,12 +3,15 @@ package template
 import (
 	"context"
 	"fmt"
+	"maps"
 	"math"
 	"net/url"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	textTemplate "text/template"
 
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/model/timestamp"
@@ -71,6 +74,7 @@ func NewValues(captures map[string]eval.NumberValueCapture) map[string]Value {
 }
 
 type Data struct {
+	Now    model.Time
 	Labels Labels
 	Values map[string]Value
 	Value  string
@@ -78,6 +82,7 @@ type Data struct {
 
 func NewData(labels map[string]string, res eval.Result) Data {
 	return Data{
+		Now:    model.Time(timestamp.FromTime(res.EvaluatedAt)),
 		Labels: labels,
 		Values: NewValues(res.Values),
 		Value:  res.EvaluationString,
@@ -95,7 +100,7 @@ func (e ExpandError) Error() string {
 	return fmt.Sprintf("failed to expand template '%s': %s", e.Tmpl, e.Err)
 }
 
-func Expand(ctx context.Context, name, tmpl string, data Data, externalURL *url.URL, evaluatedAt time.Time) (string, error) {
+func Expand(ctx context.Context, name, tmpl string, data Data, externalURL *url.URL, evaluatedAt time.Time, fn any) (string, error) {
 	if !strings.Contains(tmpl, "{{") { // If it is not a template, skip expanding it.
 		return tmpl, nil
 	}
@@ -113,7 +118,14 @@ func Expand(ctx context.Context, name, tmpl string, data Data, externalURL *url.
 	options := []string{"missingkey=invalid"}
 
 	expander := template.NewTemplateExpander(ctx, tmpl, name, data, tm, queryFunc, externalURL, options)
-	expander.Funcs(defaultFuncs)
+	if fn != nil {
+		fns := textTemplate.FuncMap{}
+		maps.Copy(defaultFuncs, fns)
+		fns["exploreLink"] = fn
+		expander.Funcs(fns)
+	} else {
+		expander.Funcs(defaultFuncs)
+	}
 
 	result, err := expander.Expand()
 	if err != nil {

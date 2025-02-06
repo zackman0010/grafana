@@ -8,11 +8,16 @@ import (
 	"slices"
 	"strings"
 	"text/template"
+	"time"
+
+	"github.com/grafana/grafana/pkg/services/ngalert/models"
 )
 
 type query struct {
 	Datasource string `json:"datasource"`
 	Expr       string `json:"expr"`
+	From       string `json:"from"`
+	To         string `json:"to"`
 }
 
 const (
@@ -36,6 +41,22 @@ var (
 		MergeLabelValuesFuncName: mergeLabelValuesFunc,
 	}
 )
+
+func NewExploreLinkFn(rule *models.AlertRule, now time.Time) func(string) string {
+	return func(refID string) string {
+		for _, q := range rule.Data {
+			if q.RefID != refID {
+				continue
+			}
+			abs := q.RelativeTimeRange.ToTimeRange().AbsoluteTime(now)
+			dsUID := q.DatasourceUID
+			expr := string(q.Model)
+
+			return fmt.Sprintf(`/explore?left={"datasource":%[1]q,"queries":[%s],"range":{"from":"%d","to":"%d""}}`, dsUID, expr, abs.From.UnixMilli(), abs.To.UnixMilli())
+		}
+		return ""
+	}
+}
 
 // filterLabelsFunc removes all labels that do not match the string.
 func filterLabelsFunc(m Labels, match string) Labels {
@@ -67,7 +88,16 @@ func graphLinkFunc(data string) string {
 	}
 	datasource := url.QueryEscape(q.Datasource)
 	expr := url.QueryEscape(q.Expr)
-	return fmt.Sprintf(`/explore?left={"datasource":%[1]q,"queries":[{"datasource":%[1]q,"expr":%q,"instant":false,"range":true,"refId":"A"}],"range":{"from":"now-1h","to":"now"}}`, datasource, expr)
+	if q.From == "" {
+		q.From = "now-1h"
+	}
+	from := url.QueryEscape(q.From)
+	if q.To == "" {
+		q.To = "now"
+	}
+	to := url.QueryEscape(q.From)
+	expr = fmt.Sprintf(`%s{__name__=~"%s"}`, expr, q.Expr)
+	return fmt.Sprintf(`/explore?left={"datasource":%[1]q,"queries":[{"datasource":%[1]q,"expr":%q,"instant":false,"range":true,"refId":"A"}],"range":{"from":%q,"to":%q}}`, datasource, expr, from, to)
 }
 
 // removeLabelsFunc removes all labels that match the string.

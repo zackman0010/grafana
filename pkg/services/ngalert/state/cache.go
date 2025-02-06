@@ -103,10 +103,12 @@ func expandAnnotationsAndLabels(ctx context.Context, log log.Logger, alertRule *
 	// of labels that can be expanded in custom labels and annotations.
 	templateData := template.NewData(mergeLabels(extraLabels, resultLabels), result)
 
+	fn := template.NewExploreLinkFn(alertRule, result.EvaluatedAt)
+
 	// For now, do nothing with these errors as they are already logged in expand.
 	// In the future, we want to show these errors to the user somehow.
-	labels, _ := expand(ctx, log, alertRule.Title, alertRule.Labels, templateData, externalURL, result.EvaluatedAt)
-	annotations, _ := expand(ctx, log, alertRule.Title, alertRule.Annotations, templateData, externalURL, result.EvaluatedAt)
+	labels, _ := expand(ctx, log, alertRule.Title, alertRule.Labels, templateData, externalURL, result.EvaluatedAt, fn)
+	annotations, _ := expand(ctx, log, alertRule.Title, alertRule.Annotations, templateData, externalURL, result.EvaluatedAt, fn)
 
 	lbs := make(data.Labels, len(extraLabels)+len(labels)+len(resultLabels))
 	dupes := make(data.Labels)
@@ -222,13 +224,13 @@ func (c *cache) create(ctx context.Context, log log.Logger, alertRule *ngModels.
 // If a template cannot be expanded due to an error in the template the original template is
 // maintained and an error is added to the multierror. All errors in the multierror are
 // template.ExpandError errors.
-func expand(ctx context.Context, log log.Logger, name string, original map[string]string, data template.Data, externalURL *url.URL, evaluatedAt time.Time) (map[string]string, error) {
+func expand(ctx context.Context, log log.Logger, name string, original map[string]string, data template.Data, externalURL *url.URL, evaluatedAt time.Time, fn any) (map[string]string, error) {
 	var (
 		errs     error
 		expanded = make(map[string]string, len(original))
 	)
 	for k, v := range original {
-		result, err := template.Expand(ctx, name, v, data, externalURL, evaluatedAt)
+		result, err := template.Expand(ctx, name, v, data, externalURL, evaluatedAt, fn)
 		if err != nil {
 			log.Error("Error in expanding template", "error", err)
 			errs = errors.Join(errs, err)
