@@ -30,6 +30,19 @@ func TestAllowQuery(t *testing.T) {
 	}
 }
 
+func TestAllowQueryAgainstDjangoQueries(t *testing.T) {
+	for _, tc := range django_allow_tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := AllowQuery(tc.query)
+			if !tc.allow {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
 var example_metrics_query = `WITH
   metrics_this_month AS (
     SELECT
