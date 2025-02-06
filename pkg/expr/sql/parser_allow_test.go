@@ -3,6 +3,7 @@ package sql
 import (
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,6 +35,9 @@ func TestAllowQueryAgainstDjangoQueries(t *testing.T) {
 	for _, tc := range django_allow_tests {
 		t.Run(tc.name, func(t *testing.T) {
 			_, err := AllowQuery(tc.query)
+			if err != nil {
+				spew.Dump(err)
+			}
 			if !tc.allow {
 				require.Error(t, err)
 			} else {
