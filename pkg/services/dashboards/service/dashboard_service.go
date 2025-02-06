@@ -1786,7 +1786,7 @@ func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Contex
 		return nil, err
 	}
 
-	return dashboardsearch.ParseResults(res, 0)
+	return dashboardsearch.NewResultsTransformer(query.OrgId, dr.folderService).ParseResults(ctx, res, 0)
 }
 
 type dashboardProvisioningWithUID struct {

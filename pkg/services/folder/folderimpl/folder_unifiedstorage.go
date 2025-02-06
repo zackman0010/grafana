@@ -235,7 +235,7 @@ func (s *Service) searchFoldersFromApiServer(ctx context.Context, query folder.S
 		return nil, err
 	}
 
-	parsedResults, err := dashboardsearch.ParseResults(res, 0)
+	parsedResults, err := dashboardsearch.NewResultsTransformer(query.OrgID, nil).ParseResults(ctx, res, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -305,7 +305,7 @@ func (s *Service) getFolderByIDFromApiServer(ctx context.Context, id int64, orgI
 		return nil, err
 	}
 
-	hits, err := dashboardsearch.ParseResults(res, 0)
+	hits, err := dashboardsearch.NewResultsTransformer(orgID, nil).ParseResults(ctx, res, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -369,7 +369,7 @@ func (s *Service) getFolderByTitleFromApiServer(ctx context.Context, orgID int64
 		return nil, err
 	}
 
-	hits, err := dashboardsearch.ParseResults(res, 0)
+	hits, err := dashboardsearch.NewResultsTransformer(orgID, nil).ParseResults(ctx, res, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -721,7 +721,7 @@ func (s *Service) deleteFromApiServer(ctx context.Context, cmd *folder.DeleteFol
 					return folder.ErrInternal.Errorf("failed to fetch dashboards: %w", err)
 				}
 
-				hits, err := dashboardsearch.ParseResults(res, 0)
+				hits, err := dashboardsearch.NewResultsTransformer(cmd.OrgID, nil).ParseResults(ctx, res, 0)
 				if err != nil {
 					return folder.ErrInternal.Errorf("failed to fetch dashboards: %w", err)
 				}

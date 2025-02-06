@@ -342,7 +342,7 @@ func (s *SearchHandler) DoSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parsedResults, err := dashboardsearch.ParseResults(result, searchRequest.Offset)
+	parsedResults, err := dashboardsearch.NewResultsTransformer(user.GetOrgID(), nil).ParseResults(ctx, result, searchRequest.Offset)
 	if err != nil {
 		errhttp.Write(ctx, err, w)
 		return

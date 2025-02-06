@@ -1,11 +1,14 @@
 package dashboardsearch
 
 import (
+	"context"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
 
 	common "github.com/grafana/grafana/pkg/apimachinery/apis/common/v0alpha1"
+	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	"github.com/grafana/grafana/pkg/services/folder"
 
 	"github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
@@ -36,7 +39,19 @@ var (
 	}
 )
 
-func ParseResults(result *resource.ResourceSearchResponse, offset int64) (*v0alpha1.SearchResults, error) {
+type ResultsTransformer struct {
+	folderLookup folder.Service
+	orgID        int64
+}
+
+func NewResultsTransformer(orgID int64, folderLookup folder.Service) *ResultsTransformer {
+	return &ResultsTransformer{
+		folderLookup: folderLookup,
+		orgID:        orgID,
+	}
+}
+
+func (s ResultsTransformer) ParseResults(ctx context.Context, result *resource.ResourceSearchResponse, offset int64) (*v0alpha1.SearchResults, error) {
 	if result == nil {
 		return nil, nil
 	} else if result.Error != nil {
@@ -74,6 +89,8 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (*v0alp
 		Hits:      make([]v0alpha1.DashboardHit, len(result.Results.Rows)),
 	}
 
+	folderUIDs := []string{}
+	folderSet := map[string]bool{}
 	for i, row := range result.Results.Rows {
 		fields := &common.Unstructured{}
 		for colIndex, col := range result.Results.Columns {
@@ -99,6 +116,10 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (*v0alp
 		}
 		if folderIDX > 0 && row.Cells[folderIDX] != nil {
 			hit.Folder = string(row.Cells[folderIDX])
+			if hit.Resource == v0alpha1.RESOURCE && hit.Folder != "" && folderSet[hit.Folder] == false {
+				folderUIDs = append(folderUIDs, hit.Folder)
+				folderSet[hit.Folder] = true
+			}
 		}
 		if tagsIDX > 0 && row.Cells[tagsIDX] != nil {
 			_ = json.Unmarshal(row.Cells[tagsIDX], &hit.Tags)
@@ -111,6 +132,21 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (*v0alp
 		}
 
 		sr.Hits[i] = *hit
+	}
+
+	folderNameLookup, err := s.folderNameLookup(ctx, folderUIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(folderNameLookup) > 0 { // add folder names to search results
+		for i, hit := range sr.Hits {
+			if hit.Resource == v0alpha1.RESOURCE {
+				if folderName, ok := folderNameLookup[hit.Folder]; ok {
+					sr.Hits[i].Folder = folderName
+				}
+			}
+		}
 	}
 
 	// Add facet results
@@ -133,4 +169,25 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (*v0alp
 	}
 
 	return sr, nil
+}
+
+func (s ResultsTransformer) folderNameLookup(ctx context.Context, folderUIDs []string) (map[string]string, error) {
+	folderNames := map[string]string{}
+	if len(folderUIDs) > 0 && s.folderLookup != nil {
+		// call this with elevated permissions so we can get folder names where user does not have access
+		// some dashboards are shared directly with user, but the folder is not accessible via the folder permissions
+		serviceCtx, serviceIdent := identity.WithServiceIdentity(ctx, s.orgID)
+		folders, err := s.folderLookup.GetFolders(serviceCtx, folder.GetFoldersQuery{
+			UIDs:         folderUIDs,
+			OrgID:        s.orgID,
+			SignedInUser: serviceIdent,
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, folder := range folders {
+			folderNames[folder.UID] = folder.Title
+		}
+	}
+	return folderNames, nil
 }

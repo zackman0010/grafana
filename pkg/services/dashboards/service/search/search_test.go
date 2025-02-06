@@ -1,6 +1,7 @@
 package dashboardsearch
 
 import (
+	"context"
 	"testing"
 
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
@@ -48,6 +49,6 @@ func TestParseResults(t *testing.T) {
 		TotalHits: 1,
 	}
 
-	_, err := ParseResults(resSearchResp, 0)
+	_, err := NewResultsTransformer(1, nil).ParseResults(context.Background(), resSearchResp, 0)
 	require.NoError(t, err)
 }
