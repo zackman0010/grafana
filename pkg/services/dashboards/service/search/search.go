@@ -39,12 +39,16 @@ var (
 	}
 )
 
+type FolderLookup interface {
+	GetFolders(ctx context.Context, query folder.GetFoldersQuery) ([]*folder.Folder, error)
+}
+
 type ResultsTransformer struct {
-	folderLookup folder.Service
+	folderLookup FolderLookup
 	orgID        int64
 }
 
-func NewResultsTransformer(orgID int64, folderLookup folder.Service) *ResultsTransformer {
+func NewResultsTransformer(orgID int64, folderLookup FolderLookup) *ResultsTransformer {
 	return &ResultsTransformer{
 		folderLookup: folderLookup,
 		orgID:        orgID,
