@@ -80,6 +80,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       background: theme.colors.background.primary,
       boxShadow: theme.shadows.z3,
       display: 'inline-block',
+      padding: theme.spacing(0.5),
       borderRadius: theme.shape.radius.default,
     }),
     pushLeft: css({
