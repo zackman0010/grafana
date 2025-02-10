@@ -8,6 +8,10 @@ import { LoadingState } from '@grafana/data';
 
 import { DashboardStoryCanvas } from '../../utils/storybook/DashboardStoryCanvas';
 import { Button } from '../Button';
+import {
+  ElementSelectionContext,
+  ElementSelectionContextState,
+} from '../ElementSelectionContext/ElementSelectionContext';
 import { RadioButtonGroup } from '../Forms/RadioButtonGroup/RadioButtonGroup';
 import { Icon } from '../Icon/Icon';
 import { Stack } from '../Layout/Stack/Stack';
@@ -265,11 +269,31 @@ export const Examples = () => {
               </Button>
             ),
           })}
+          <CanBeSelected />
         </Stack>
       </div>
     </DashboardStoryCanvas>
   );
 };
+
+function CanBeSelected() {
+  const [selected, setSelected] = useState(false);
+  const contextValue: ElementSelectionContextState = {
+    enabled: true,
+    onSelect: () => setSelected(!selected),
+    selected: [{ id: '1' }],
+  };
+
+  return (
+    <ElementSelectionContext.Provider value={contextValue}>
+      {renderPanel('Click header', {
+        title: 'Can be selected',
+        menu,
+        selectionId: '1',
+      })}
+    </ElementSelectionContext.Provider>
+  );
+}
 
 export const ExamplesHoverHeader = () => {
   return (
