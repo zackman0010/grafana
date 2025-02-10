@@ -23,13 +23,14 @@ import {
   GrafanaTheme2,
   IconName,
   LinkModel,
+  PluginExtensionPoints,
   TraceKeyValuePair,
   TraceLog,
 } from '@grafana/data';
 import { TraceToProfilesOptions } from '@grafana/o11y-ds-frontend';
-import { config, locationService, reportInteraction } from '@grafana/runtime';
+import { config, locationService, reportInteraction, usePluginLinks } from '@grafana/runtime';
 import { TimeZone } from '@grafana/schema';
-import { DataLinkButton, Divider, Icon, TextArea, useStyles2 } from '@grafana/ui';
+import { DataLinkButton, Divider, Icon, IconButton, TextArea, useStyles2 } from '@grafana/ui';
 import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
 
 import { pyroscopeProfileIdTagKey } from '../../../createSpanLink';
@@ -346,6 +347,29 @@ export default function SpanDetail(props: SpanDetailProps) {
     }
   }
 
+  const exploreProfilesPluginId = 'grafana-pyroscope-app';
+  const extensionPointId = PluginExtensionPoints.TraceViewDetails;
+  const context = {};
+  const { links } = usePluginLinks({ extensionPointId, context, limitPerPlugin: 1 });
+  const link = links.find((link) => link.pluginId === exploreProfilesPluginId);
+
+  let exploreProfilesButton: JSX.Element | null = null;
+
+  if (link) {
+    exploreProfilesButton = (
+      <IconButton
+        tooltip={link.description}
+        key={link.id}
+        name={link.icon ?? 'panel-add'}
+        onClick={(e) => {
+          if (link.onClick) {
+            link.onClick(e);
+          }
+        }}
+      />
+    );
+  }
+
   const focusSpanLink = createFocusSpanLink(traceID, spanID);
   return (
     <div data-testid="span-detail-component">
@@ -358,6 +382,7 @@ export default function SpanDetail(props: SpanDetailProps) {
         </div>
       </div>
       <div className={styles.linkList}>
+        {exploreProfilesButton}
         {logLinkButton}
         {profileLinkButton}
         {sessionLinkButton}
