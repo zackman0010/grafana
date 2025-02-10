@@ -123,6 +123,38 @@ func (api *API) authorize(method, path string) web.Handler {
 	case http.MethodPost + "/api/v1/rule/test/{DatasourceUID}":
 		eval = ac.EvalPermission(ac.ActionAlertingRuleExternalRead, datasources.ScopeProvider.GetResourceScopeUID(ac.Parameter(":DatasourceUID")))
 
+	// convert/prometheus API paths
+	case http.MethodGet + "/api/convert/prometheus/config/v1/rules/{NamespaceTitle}/{Group}",
+		http.MethodGet + "/api/convert/prometheus/config/v1/rules/{NamespaceTitle}":
+		eval = ac.EvalAll(
+			ac.EvalPermission(ac.ActionAlertingRuleRead, dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))),
+			ac.EvalPermission(dashboards.ActionFoldersRead, dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))),
+		)
+
+	case http.MethodGet + "/api/convert/prometheus/config/v1/rules":
+		eval = ac.EvalPermission(ac.ActionAlertingRuleRead)
+
+	case http.MethodPost + "/api/convert/prometheus/config/v1/rules/{NamespaceTitle}":
+		scope := dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))
+		// more granular permissions are enforced by the handler via "authorizeRuleChanges"
+		eval = ac.EvalAll(
+			ac.EvalPermission(ac.ActionAlertingRuleRead, scope),
+			ac.EvalPermission(dashboards.ActionFoldersRead, scope),
+			ac.EvalAny(
+				ac.EvalPermission(ac.ActionAlertingRuleUpdate, scope),
+				ac.EvalPermission(ac.ActionAlertingRuleCreate, scope),
+				ac.EvalPermission(ac.ActionAlertingRuleDelete, scope),
+			),
+		)
+
+	case http.MethodDelete + "/api/convert/prometheus/config/v1/rules/{NamespaceTitle}/{Group}",
+		http.MethodDelete + "/api/convert/prometheus/config/v1/rules/{NamespaceTitle}":
+		eval = ac.EvalAll(
+			ac.EvalPermission(ac.ActionAlertingRuleDelete, dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))),
+			ac.EvalPermission(ac.ActionAlertingRuleRead, dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))),
+			ac.EvalPermission(dashboards.ActionFoldersRead, dashboards.ScopeFoldersProvider.GetResourceScopeName(ac.Parameter(":NamespaceTitle"))),
+		)
+
 	// Alert Instances and Silences
 
 	// Silences for Grafana paths.
