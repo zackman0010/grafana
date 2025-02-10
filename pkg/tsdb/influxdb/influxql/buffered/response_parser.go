@@ -1,6 +1,7 @@
 package buffered
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -10,7 +11,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/influxdata/influxql"
-	jsoniter "github.com/json-iterator/go"
 
 	"github.com/grafana/grafana/pkg/tsdb/influxdb/influxql/util"
 	"github.com/grafana/grafana/pkg/tsdb/influxdb/models"
@@ -65,11 +65,7 @@ func parse(buf io.Reader, statusCode int, query *models.Query) *backend.DataResp
 func parseJSON(buf io.Reader) (models.Response, error) {
 	var response models.Response
 
-	json := jsoniter.ConfigCompatibleWithStandardLibrary
-
-	dec := json.NewDecoder(buf)
-
-	err := dec.Decode(&response)
+	err := json.NewDecoder(buf).Decode(&response)
 
 	return response, err
 }

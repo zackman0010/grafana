@@ -1,17 +1,15 @@
 package ml
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	jsoniter "github.com/json-iterator/go"
 
 	"github.com/grafana/grafana/pkg/api/response"
 )
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type CommandType string
 

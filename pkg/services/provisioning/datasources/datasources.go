@@ -2,6 +2,7 @@ package datasources
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -9,7 +10,6 @@ import (
 	"github.com/grafana/grafana/pkg/services/correlations"
 	"github.com/grafana/grafana/pkg/services/datasources"
 	"github.com/grafana/grafana/pkg/services/org"
-	jsoniter "github.com/json-iterator/go"
 )
 
 type BaseDataSourceService interface {
@@ -199,7 +199,6 @@ func makeCreateCorrelationCommand(correlation map[string]any, SourceUID string, 
 		corrType = correlations.CorrelationType("query")
 	}
 
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	createCommand := correlations.CreateCorrelationCommand{
 		SourceUID:   SourceUID,
 		Label:       correlation["label"].(string),

@@ -18,7 +18,6 @@ import (
 	"github.com/gobwas/glob"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/live"
-	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/grafana/grafana/pkg/api/dtos"
@@ -570,11 +569,6 @@ func (g *GrafanaLive) HandleDatasourceUpdate(orgID int64, dsUID string) {
 	}
 }
 
-// Use a configuration that's compatible with the standard library
-// to minimize the risk of introducing bugs. This will make sure
-// that map keys is ordered.
-var jsonStd = jsoniter.ConfigCompatibleWithStandardLibrary
-
 func (g *GrafanaLive) handleOnRPC(client *centrifuge.Client, e centrifuge.RPCEvent) (centrifuge.RPCReply, error) {
 	logger.Debug("Client calls RPC", "user", client.UserID(), "client", client.ID(), "method", e.Method)
 	if e.Method != "grafana.query" {
@@ -602,7 +596,7 @@ func (g *GrafanaLive) handleOnRPC(client *centrifuge.Client, e centrifuge.RPCEve
 		}
 		return centrifuge.RPCReply{}, centrifuge.ErrorInternal
 	}
-	data, err := jsonStd.Marshal(resp)
+	data, err := json.Marshal(resp)
 	if err != nil {
 		logger.Error("Error marshaling query response", "user", client.UserID(), "client", client.ID(), "method", e.Method, "error", err)
 		return centrifuge.RPCReply{}, centrifuge.ErrorInternal

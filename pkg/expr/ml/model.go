@@ -1,17 +1,17 @@
 package ml
 
 import (
+	"encoding/json"
 	"strings"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	jsoniter "github.com/json-iterator/go"
 )
 
 type CommandConfiguration struct {
-	Type       string              `json:"type"`
-	IntervalMs *uint               `json:"intervalMs,omitempty"`
-	Config     jsoniter.RawMessage `json:"config"`
+	Type       string          `json:"type"`
+	IntervalMs *uint           `json:"intervalMs,omitempty"`
+	Config     json.RawMessage `json:"config"`
 }
 
 type OutlierCommandConfiguration struct {

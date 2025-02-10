@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
 	amConfig "github.com/prometheus/alertmanager/config"
 	"github.com/prometheus/common/model"
 
@@ -412,12 +411,11 @@ func MuteTimeIntervalExportFromMuteTiming(orgID int64, m definitions.MuteTimeInt
 // Converts definitions.MuteTimeIntervalExport to definitions.MuteTimeIntervalExportHcl using JSON marshalling. Returns error if structure could not be marshalled\unmarshalled
 func MuteTimingIntervalToMuteTimeIntervalHclExport(m definitions.MuteTimeIntervalExport) (definitions.MuteTimeIntervalExportHcl, error) {
 	result := definitions.MuteTimeIntervalExportHcl{}
-	j := jsoniter.ConfigCompatibleWithStandardLibrary
-	mdata, err := j.Marshal(m)
+	mdata, err := json.Marshal(m)
 	if err != nil {
 		return result, err
 	}
-	err = j.Unmarshal(mdata, &result)
+	err = json.Unmarshal(mdata, &result)
 	return result, err
 }
 

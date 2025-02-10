@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"reflect"
 
-	jsoniter "github.com/json-iterator/go"
 	"gopkg.in/yaml.v3"
 
 	"github.com/grafana/grafana/pkg/apimachinery/errutil"
@@ -157,12 +156,7 @@ func (r StreamingResponse) WriteTo(ctx *contextmodel.ReqContext) {
 	}
 	ctx.Resp.WriteHeader(r.status)
 
-	// Use a configuration that's compatible with the standard library
-	// to minimize the risk of introducing bugs. This will make sure
-	// that map keys is ordered.
-	jsonCfg := jsoniter.ConfigCompatibleWithStandardLibrary
-	enc := jsonCfg.NewEncoder(ctx.Resp)
-	if err := enc.Encode(r.body); err != nil {
+	if err := json.NewEncoder(ctx.Resp).Encode(r.body); err != nil {
 		ctx.Logger.Error("Error writing to response", "err", err)
 	}
 }
