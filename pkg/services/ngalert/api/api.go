@@ -121,24 +121,27 @@ func (api *API) RegisterAPIEndpoints(m *metrics.API) {
 		NewLotexProm(proxy, logger),
 		&PrometheusSrv{log: logger, manager: api.StateManager, status: api.Scheduler, store: api.RuleStore, authz: ruleAuthzService},
 	), m)
+
+	rulerSrv := &RulerSrv{
+		conditionValidator: api.ConditionValidator,
+		QuotaService:       api.QuotaService,
+		store:              api.RuleStore,
+		provenanceStore:    api.ProvenanceStore,
+		xactManager:        api.TransactionManager,
+		log:                logger,
+		cfg:                &api.Cfg.UnifiedAlerting,
+		authz:              ruleAuthzService,
+		amConfigStore:      api.AlertingStore,
+		amRefresher:        api.MultiOrgAlertmanager,
+		featureManager:     api.FeatureManager,
+		userService:        api.UserService,
+	}
+
 	// Register endpoints for proxying to Cortex Ruler-compatible backends.
 	api.RegisterRulerApiEndpoints(NewForkingRuler(
 		api.DatasourceCache,
 		NewLotexRuler(proxy, logger),
-		&RulerSrv{
-			conditionValidator: api.ConditionValidator,
-			QuotaService:       api.QuotaService,
-			store:              api.RuleStore,
-			provenanceStore:    api.ProvenanceStore,
-			xactManager:        api.TransactionManager,
-			log:                logger,
-			cfg:                &api.Cfg.UnifiedAlerting,
-			authz:              ruleAuthzService,
-			amConfigStore:      api.AlertingStore,
-			amRefresher:        api.MultiOrgAlertmanager,
-			featureManager:     api.FeatureManager,
-			userService:        api.UserService,
-		},
+		rulerSrv,
 	), m)
 	api.RegisterTestingApiEndpoints(NewTestingApi(
 		&TestingApiSrv{
@@ -188,7 +191,9 @@ func (api *API) RegisterAPIEndpoints(m *metrics.API) {
 
 	if api.FeatureManager.IsEnabledGlobally(featuremgmt.FlagAlertingConversionAPI) {
 		api.RegisterConvertPrometheusApiEndpoints(NewConvertPrometheusApi(&ConvertPrometheusSrv{
-			logger: logger,
+			logger:          logger,
+			ruleStore:       api.RuleStore,
+			grafanaRulerSrv: rulerSrv,
 		}), m)
 	}
 }

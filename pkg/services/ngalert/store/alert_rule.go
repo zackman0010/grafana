@@ -541,6 +541,13 @@ func (st DBstore) ListAlertRules(ctx context.Context, query *ngmodels.ListAlertR
 			}
 		}
 
+		if query.ImportedPrometheusRule != nil {
+			q, err = st.filterImportedPrometheusRules(*query.ImportedPrometheusRule, q)
+			if err != nil {
+				return err
+			}
+		}
+
 		q = q.Asc("namespace_uid", "rule_group", "rule_group_idx", "id")
 
 		alertRules := make([]*ngmodels.AlertRule, 0)
@@ -577,6 +584,14 @@ func (st DBstore) ListAlertRules(ctx context.Context, query *ngmodels.ListAlertR
 				if !slices.ContainsFunc(converted.NotificationSettings, func(settings ngmodels.NotificationSettings) bool {
 					return slices.Contains(settings.MuteTimeIntervals, query.TimeIntervalName)
 				}) {
+					continue
+				}
+			}
+			if query.ImportedPrometheusRule != nil { // remove false-positive hits from the result
+				hasOriginalRuleDefinition := converted.Metadata.PrometheusStyleRule != nil && len(converted.Metadata.PrometheusStyleRule.OriginalRuleDefinition) > 0
+				if *query.ImportedPrometheusRule && !hasOriginalRuleDefinition {
+					continue
+				} else if !*query.ImportedPrometheusRule && hasOriginalRuleDefinition {
 					continue
 				}
 			}
@@ -663,6 +678,51 @@ func (st DBstore) GetNamespaceByUID(ctx context.Context, uid string, orgID int64
 		return nil, dashboards.ErrFolderAccessDenied
 	}
 	return f[0], nil
+}
+
+// GetNamespaceByFullpath gets namespace by its fullpath.
+func (st DBstore) GetNamespaceByFullpath(ctx context.Context, fullpath string, orgID int64, user identity.Requester) (*folder.Folder, error) {
+	folders, err := st.FolderService.GetFolders(ctx, folder.GetFoldersQuery{
+		OrgID:        orgID,
+		WithFullpath: true,
+		SignedInUser: user,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, folder := range folders {
+		if folder.Fullpath == fullpath {
+			return folder, nil
+		}
+	}
+
+	return nil, dashboards.ErrFolderNotFound
+}
+
+// GetOrCreateNamespaceByTitle gets or creates a namespace by title in the _root_ folder.
+func (st DBstore) GetOrCreateNamespaceByTitle(ctx context.Context, title string, orgID int64, user identity.Requester) (*folder.Folder, error) {
+	var f *folder.Folder
+	var err error
+
+	f, err = st.GetNamespaceByFullpath(ctx, title, orgID, user)
+	if err != nil && !errors.Is(err, dashboards.ErrFolderNotFound) {
+		return nil, err
+	}
+
+	if f == nil {
+		cmd := &folder.CreateFolderCommand{
+			OrgID:        orgID,
+			Title:        title,
+			SignedInUser: user,
+		}
+		f, err = st.FolderService.Create(ctx, cmd)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return f, nil
 }
 
 func (st DBstore) GetAlertRulesKeysForScheduling(ctx context.Context) ([]ngmodels.AlertRuleKeyWithVersion, error) {
@@ -943,6 +1003,23 @@ func (st DBstore) filterByContentInNotificationSettings(value string, sess *xorm
 		search = strings.ReplaceAll(strings.ReplaceAll(search, `\`, `\\`), `"`, `\"`)
 	}
 	return sess.And(fmt.Sprintf("notification_settings %s ?", st.SQLStore.GetDialect().LikeStr()), "%"+search+"%"), nil
+}
+
+func (st DBstore) filterImportedPrometheusRules(value bool, sess *xorm.Session) (*xorm.Session, error) {
+	if value {
+		// Filter for rules that have both prometheus_style_rule and original_rule_definition in metadata
+		return sess.And(
+			"metadata LIKE ? AND metadata LIKE ?",
+			"%prometheus_style_rule%",
+			"%original_rule_definition%",
+		), nil
+	}
+	// Filter for rules that don't have prometheus_style_rule and original_rule_definition in metadata
+	return sess.And(
+		"metadata NOT LIKE ? AND metadata NOT LIKE ?",
+		"%prometheus_style_rule%",
+		"%original_rule_definition%",
+	), nil
 }
 
 func (st DBstore) RenameReceiverInNotificationSettings(ctx context.Context, orgID int64, oldReceiver, newReceiver string, validateProvenance func(ngmodels.Provenance) bool, dryRun bool) ([]ngmodels.AlertRuleKey, []ngmodels.AlertRuleKey, error) {

@@ -722,6 +722,8 @@ type ListAlertRulesQuery struct {
 
 	ReceiverName     string
 	TimeIntervalName string
+
+	ImportedPrometheusRule *bool
 }
 
 // CountAlertRulesQuery is the query for counting alert rules

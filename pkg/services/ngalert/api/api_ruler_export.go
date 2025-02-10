@@ -121,7 +121,7 @@ func (srv RulerSrv) getRuleGroupWithFolderFullPath(c *contextmodel.ReqContext, r
 	if err != nil {
 		return ngmodels.AlertRuleGroupWithFolderFullpath{}, errors.Join(errFolderAccess, err)
 	}
-	rules, err := srv.getAuthorizedRuleGroup(c.Req.Context(), c, ruleGroupKey)
+	rules, err := srv.getAuthorizedRuleGroup(c.Req.Context(), c, ruleGroupKey, nil)
 	if err != nil {
 		return ngmodels.AlertRuleGroupWithFolderFullpath{}, err
 	}

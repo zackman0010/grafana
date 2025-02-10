@@ -1,5 +1,9 @@
 package definitions
 
+import (
+	"github.com/prometheus/common/model"
+)
+
 // swagger:route GET /convert/prometheus/config/v1/rules convert_prometheus RouteConvertPrometheusGetRules
 //
 // Gets all namespaces with their rule groups in Prometheus format.
@@ -99,19 +103,20 @@ type PrometheusNamespace struct {
 
 // swagger:model
 type PrometheusRuleGroup struct {
-	Name  string           `yaml:"name" json:"name"`
-	Rules []PrometheusRule `yaml:"rules" json:"rules"`
+	Name     string           `yaml:"name"`
+	Interval model.Duration   `yaml:"interval"`
+	Rules    []PrometheusRule `yaml:"rules"`
 }
 
 // swagger:model
 type PrometheusRule struct {
-	Alert         string            `yaml:"alert" json:"alert"`
-	Expr          string            `yaml:"expr" json:"expr"`
-	For           string            `yaml:"for" json:"for"`
-	KeepFiringFor string            `yaml:"keep_firing_for" json:"keep_firing_for"`
-	Labels        map[string]string `yaml:"labels" json:"labels"`
-	Annotations   map[string]string `yaml:"annotations" json:"annotations"`
-	Record        string            `yaml:"record" json:"record"`
+	Alert         string            `yaml:"alert,omitempty"`
+	Expr          string            `yaml:"expr"`
+	For           string            `yaml:"for,omitempty"`
+	KeepFiringFor string            `yaml:"keep_firing_for,omitempty"`
+	Labels        map[string]string `yaml:"labels,omitempty"`
+	Annotations   map[string]string `yaml:"annotations,omitempty"`
+	Record        string            `yaml:"record,omitempty"`
 }
 
 // swagger:parameters RouteConvertPrometheusDeleteRuleGroup RouteConvertPrometheusGetRuleGroup
