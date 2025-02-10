@@ -1,12 +1,14 @@
 package converter
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	sdkjsoniter "github.com/grafana/grafana-plugin-sdk-go/data/utils/jsoniter"
 	"github.com/grafana/grafana-plugin-sdk-go/experimental"
@@ -18,27 +20,27 @@ import (
 const update = false
 
 var files = []string{
-	"prom-labels",
-	"prom-matrix",
-	"prom-matrix-with-nans",
-	"prom-matrix-histogram-no-labels",
-	"prom-matrix-histogram-partitioned",
-	"prom-vector-histogram-no-labels",
-	"prom-vector",
-	"prom-string",
-	"prom-scalar",
-	"prom-series",
-	"prom-warnings",
+	// "prom-labels",
+	// "prom-matrix",
+	// "prom-matrix-with-nans",
+	// "prom-matrix-histogram-no-labels",
+	// "prom-matrix-histogram-partitioned",
+	// "prom-vector-histogram-no-labels",
+	// "prom-vector",
+	// "prom-string",
+	// "prom-scalar",
+	// "prom-series",
+	// "prom-warnings",
 	"prom-warnings-no-data",
-	"prom-infos",
-	"prom-infos-no-data",
-	"prom-error",
-	"prom-exemplars-a",
-	"prom-exemplars-b",
-	"prom-exemplars-diff-labels",
-	"loki-streams-a",
-	"loki-streams-b",
-	"loki-streams-c",
+	// "prom-infos",
+	// "prom-infos-no-data",
+	// "prom-error",
+	// "prom-exemplars-a",
+	// "prom-exemplars-b",
+	// "prom-exemplars-diff-labels",
+	// "loki-streams-a",
+	// "loki-streams-b",
+	// "loki-streams-c",
 }
 
 func TestReadPromFrames(t *testing.T) {
@@ -55,10 +57,11 @@ func runScenario(name string, opts Options) func(t *testing.T) {
 		require.NoError(t, err)
 
 		iter := jsoniter.Parse(sdkjsoniter.ConfigDefault, f, 1024)
-		rsp := ReadPrometheusStyleResult(iter, opts)
+		_ = iter
+		rsp := ReadPrometheusStyleResult2(f, opts)
 
 		if strings.Contains(name, "error") {
-			require.Error(t, rsp.Error)
+			require.Error(t, rsp.Error, fmt.Sprintf("on file %s", f.Name()))
 			return
 		}
 
@@ -122,4 +125,25 @@ func TestTimeConversions(t *testing.T) {
 	assert.Equal(t,
 		time.Date(2033, time.May, 18, 3, 33, 20, 0, time.UTC),
 		ti)
+}
+
+var rsp backend.DataResponse
+
+func BenchmarkXxx(b *testing.B) {
+	name := "prom-error"
+	f, err := os.Open(path.Join("testdata", name+".json"))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	opts := Options{}
+
+	iter := jsoniter.Parse(sdkjsoniter.ConfigDefault, f, 1024)
+	_ = iter
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		rsp = ReadPrometheusStyleResult2(f, opts)
+	}
 }

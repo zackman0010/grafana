@@ -3,6 +3,7 @@ package converter
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"slices"
 	"strconv"
 	"time"
@@ -25,6 +26,207 @@ type Options struct {
 
 func rspErr(e error) backend.DataResponse {
 	return backend.DataResponse{Error: e, ErrorSource: status.SourceDownstream}
+}
+
+func ReadPrometheusStyleResult2(r io.Reader, opt Options) backend.DataResponse {
+	var rsp backend.DataResponse
+
+	status := "unknown"
+	errorType := ""
+	promErrString := ""
+	warnings := []data.Notice{}
+	infos := []data.Notice{}
+
+	dec := json.NewDecoder(r)
+
+	objStart, err := dec.Token()
+	if err != nil {
+		return rspErr(fmt.Errorf("response from prometheus couldn't be parsed. it is non-json: %w", err))
+	}
+
+	if objStart != json.Delim('{') {
+		return rspErr(fmt.Errorf("response from prometheus couldn't be parsed. it is non-json: %w", err))
+	}
+
+	openCurly := 1
+
+lFields:
+	for dec.More() || openCurly != 0 {
+		field, err := dec.Token()
+		if err != nil {
+			return rspErr(fmt.Errorf("response from prometheus couldn't be parsed. it is non-json: %w", err))
+		}
+
+		switch field {
+		case "status":
+			v, err := dec.Token()
+			if err != nil {
+				return rspErr(err)
+			}
+
+			vString, ok := v.(string)
+			if !ok {
+				return rspErr(fmt.Errorf("promErrString: expected value of type string found %T", v))
+			}
+
+			status = vString
+
+		case "data":
+			// TODO
+
+		case "error":
+			{
+				v, err := dec.Token()
+				if err != nil {
+					return rspErr(err)
+				}
+
+				vString, ok := v.(string)
+				if !ok {
+					return rspErr(fmt.Errorf("promErrString: expected value of type string found %T", v))
+				}
+
+				promErrString = vString
+			}
+
+		case "errorType":
+			{
+				v, err := dec.Token()
+				if err != nil {
+					return rspErr(err)
+				}
+
+				vString, ok := v.(string)
+				if !ok {
+					return rspErr(fmt.Errorf("errorType: expected value of type string found %T", v))
+				}
+
+				errorType = vString
+			}
+
+		case "warnings":
+			{
+				openSquare, err := dec.Token()
+				if err != nil {
+					return rspErr(err)
+				}
+
+				if openSquare != json.Delim('[') {
+					return rspErr(err)
+				}
+
+				for dec.More() {
+					v, err := dec.Token()
+					if err != nil {
+						return rspErr(err)
+					}
+
+					vString, ok := v.(string)
+					if !ok {
+						// Skip??
+						continue
+					}
+
+					warnings = append(warnings, data.Notice{
+						Severity: data.NoticeSeverityWarning,
+						Text:     vString,
+					})
+				}
+
+				// After finishing reading the array, read the next token which should be a ]
+				closingSquare, err := dec.Token()
+				if err != nil {
+					return rspErr(fmt.Errorf("how is this possible"))
+				}
+
+				if closingSquare != json.Delim(']') {
+					return rspErr(fmt.Errorf("this should be a closing square brackets"))
+				}
+			}
+
+		case "infos":
+			{
+				openSquare, err := dec.Token()
+				if err != nil {
+					return rspErr(err)
+				}
+
+				if openSquare != json.Delim('[') {
+					return rspErr(err)
+				}
+
+				for dec.More() {
+					v, err := dec.Token()
+					if err != nil {
+						return rspErr(err)
+					}
+
+					vString, ok := v.(string)
+					if !ok {
+						// Skip??
+						continue
+					}
+
+					infos = append(infos, data.Notice{
+						Severity: data.NoticeSeverityInfo,
+						Text:     vString,
+					})
+				}
+
+				// After finishing reading the array, read the next token which should be a ]
+				closingSquare, err := dec.Token()
+				if err != nil {
+					return rspErr(fmt.Errorf("how is this possible"))
+				}
+
+				if closingSquare != json.Delim(']') {
+					return rspErr(fmt.Errorf("this should be a closing square brackets"))
+				}
+			}
+
+		case "":
+			break lFields
+
+		// Nested fields
+		case json.Delim('}'):
+			openCurly--
+
+		// Anything else
+		default:
+			v, err := dec.Token()
+			if err != nil {
+				rsp.Error = err
+				return rsp
+			}
+
+			logf("[ROOT] TODO, support key: %s / %v\n", field, v)
+		}
+	}
+
+	if status == "error" {
+		return backend.DataResponse{
+			Error: fmt.Errorf("%s: %s", errorType, promErrString),
+		}
+	}
+
+	if len(infos) > 0 {
+		warnings = append(warnings, infos...)
+	}
+
+	if len(warnings) > 0 {
+		if len(rsp.Frames) == 0 {
+			rsp.Frames = append(rsp.Frames, data.NewFrame("Warnings"))
+		}
+
+		for _, frame := range rsp.Frames {
+			if frame.Meta == nil {
+				frame.Meta = &data.FrameMeta{}
+			}
+			frame.Meta.Notices = warnings
+		}
+	}
+
+	return rsp
 }
 
 // ReadPrometheusStyleResult will read results from a prometheus or loki server and return data frames
