@@ -31,11 +31,11 @@ var files = []string{
 	// "prom-scalar",
 	// "prom-series",
 	// "prom-warnings",
-	"prom-warnings-no-data",
+	// "prom-warnings-no-data",
 	// "prom-infos",
 	// "prom-infos-no-data",
 	// "prom-error",
-	// "prom-exemplars-a",
+	"prom-exemplars-a",
 	// "prom-exemplars-b",
 	// "prom-exemplars-diff-labels",
 	// "loki-streams-a",
@@ -58,7 +58,7 @@ func runScenario(name string, opts Options) func(t *testing.T) {
 
 		iter := jsoniter.Parse(sdkjsoniter.ConfigDefault, f, 1024)
 		_ = iter
-		rsp := ReadPrometheusStyleResult2(f, opts)
+		rsp := ReadPrometheusStyleResult3(f, opts)
 
 		if strings.Contains(name, "error") {
 			require.Error(t, rsp.Error, fmt.Sprintf("on file %s", f.Name()))
@@ -130,7 +130,7 @@ func TestTimeConversions(t *testing.T) {
 var rsp backend.DataResponse
 
 func BenchmarkXxx(b *testing.B) {
-	name := "prom-error"
+	name := "prom-exemplars-a"
 	f, err := os.Open(path.Join("testdata", name+".json"))
 	if err != nil {
 		b.Fatal(err)
@@ -144,6 +144,6 @@ func BenchmarkXxx(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		rsp = ReadPrometheusStyleResult2(f, opts)
+		rsp = ReadPrometheusStyleResult(iter, opts)
 	}
 }
