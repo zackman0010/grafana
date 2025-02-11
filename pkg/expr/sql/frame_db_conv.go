@@ -10,8 +10,10 @@ import (
 
 	mysql "github.com/dolthub/go-mysql-server/sql"
 	"github.com/dolthub/go-mysql-server/sql/types"
+	"github.com/dolthub/vitess/go/vt/proto/query"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/shopspring/decimal"
+	"vitess.io/vitess/go/sqltypes"
 )
 
 // TODO: Should this accept a row limit and converters, like sqlutil.FrameFromRows?
@@ -55,6 +57,10 @@ func convertToDataFrame(ctx *mysql.Context, iter mysql.RowIter, schema mysql.Sch
 func MySQLColToFieldType(col *mysql.Column) (data.FieldType, error) {
 	var fT data.FieldType
 
+	varChar64 := types.MustCreateString(query.Type(sqltypes.VarChar), 64, mysql.Collation_utf8mb3_general_ci)
+
+	//enumForInfoSchema := types.MustCreateEnumType([]string{"BASE TABLE", "VIEW", "SYSTEM VIEW"}, mysql.Collation_utf8mb3_general_ci)
+
 	switch col.Type {
 	case types.Int8:
 		fT = data.FieldTypeInt8
@@ -75,7 +81,7 @@ func MySQLColToFieldType(col *mysql.Column) (data.FieldType, error) {
 	case types.Float64:
 		fT = data.FieldTypeFloat64
 	// StringType represents all string types, including VARCHAR and BLOB.
-	case types.Text, types.LongText:
+	case types.Text, types.LongText, varChar64:
 		fT = data.FieldTypeString
 	case types.Timestamp:
 		fT = data.FieldTypeTime
@@ -84,9 +90,14 @@ func MySQLColToFieldType(col *mysql.Column) (data.FieldType, error) {
 	case types.Boolean:
 		fT = data.FieldTypeBool
 	default:
-		if types.IsDecimal(col.Type) {
+		switch {
+		case types.IsDecimal(col.Type):
 			fT = data.FieldTypeFloat64
-		} else {
+		case types.IsEnum(col.Type):
+			fT = data.FieldTypeString // Enum?
+		case types.IsText(col.Type):
+			fT = data.FieldTypeString
+		default:
 			return fT, fmt.Errorf("unsupported type for column %s of type %v", col.Name, col.Type)
 		}
 	}
@@ -232,10 +243,10 @@ func fieldValFromRowVal(fieldType data.FieldType, val interface{}) (interface{},
 	// ----------------------------
 	case data.FieldTypeInt32:
 		v, ok := val.(int32)
-		if !ok {
-			return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected int32", val, val)
+		if ok {
+			return v, nil
 		}
-		return v, nil
+		return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected int32", val, val)
 
 	case data.FieldTypeNullableInt32:
 		vP, ok := val.(*int32)
@@ -245,6 +256,11 @@ func fieldValFromRowVal(fieldType data.FieldType, val interface{}) (interface{},
 		v, ok := val.(int32)
 		if ok {
 			return &v, nil
+		}
+		vi, ok := val.(int)
+		if ok {
+			i32 := int32(vi)
+			return &i32, nil
 		}
 		return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected int32 or *int32", val, val)
 
@@ -266,6 +282,11 @@ func fieldValFromRowVal(fieldType data.FieldType, val interface{}) (interface{},
 		v, ok := val.(uint32)
 		if ok {
 			return &v, nil
+		}
+		vi, ok := val.(int)
+		if ok {
+			i := uint32(vi)
+			return &i, nil
 		}
 		return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected uint32 or *uint32", val, val)
 
@@ -309,7 +330,12 @@ func fieldValFromRowVal(fieldType data.FieldType, val interface{}) (interface{},
 		if ok {
 			return &v, nil
 		}
-		return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected uint64 or *uint64", val, val)
+		vi, ok := val.(int)
+		if ok {
+			i32 := uint64(vi)
+			return &i32, nil
+		}
+		return nil, fmt.Errorf("unexpected value type for interface %v of type %T, expected int, uint64, or *uint64", val, val)
 
 	// ----------------------------
 	// Float64 / Nullable Float64
