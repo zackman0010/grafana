@@ -43,7 +43,7 @@ export function DashboardEditPaneSplitter({ dashboard, isEditing, body, controls
     useSnappingSplitter({
       direction: 'row',
       dragPosition: 'end',
-      initialSize: 0.8,
+      initialSize: 0.75,
       handleSize: 'sm',
       collapsed: isCollapsed,
 

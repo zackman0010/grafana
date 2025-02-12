@@ -77,6 +77,8 @@ export function AppChrome({ children }: Props) {
     chrome.setKioskModeFromUrl(queryParams.kiosk);
   }, [chrome, search]);
 
+  const singleTopNav = true;
+
   // Chromeless routes are without topNav, mega menu, search & command palette
   // We check chromeless twice here instead of having a separate path so {children}
   // doesn't get re-mounted when chromeless goes from true to false.
@@ -101,7 +103,7 @@ export function AppChrome({ children }: Props) {
               onToggleMegaMenu={handleMegaMenu}
               onToggleKioskMode={chrome.onToggleKioskMode}
             />
-            {state.actions && <SingleTopBarActions>{state.actions}</SingleTopBarActions>}
+            {!singleTopNav && state.actions && <SingleTopBarActions>{state.actions}</SingleTopBarActions>}
           </header>
         </>
       )}
@@ -141,7 +143,7 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
     content: css({
       display: 'flex',
       flexDirection: 'column',
-      paddingTop: hasActions ? TOP_BAR_LEVEL_HEIGHT * 2 : TOP_BAR_LEVEL_HEIGHT,
+      paddingTop: TOP_BAR_LEVEL_HEIGHT,
       flexGrow: 1,
       height: 'auto',
     }),

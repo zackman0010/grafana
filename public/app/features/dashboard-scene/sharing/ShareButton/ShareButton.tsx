@@ -16,7 +16,15 @@ import { buildShareUrl } from './utils';
 
 const newShareButtonSelector = e2eSelectors.pages.Dashboard.DashNav.newShareButton;
 
-export default function ShareButton({ dashboard, panel }: { dashboard: DashboardScene; panel?: VizPanel }) {
+export default function ShareButton({
+  dashboard,
+  panel,
+  isEditing,
+}: {
+  dashboard: DashboardScene;
+  panel?: VizPanel;
+  isEditing?: boolean;
+}) {
   const styles = useStyles2(getStyles);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,6 +50,7 @@ export default function ShareButton({ dashboard, panel }: { dashboard: Dashboard
         size="sm"
         tooltip={t('share-dashboard.share-button-tooltip', 'Copy link')}
         onClick={buildUrl}
+        variant={isEditing ? 'secondary' : 'primary'}
       >
         <Trans i18nKey="share-dashboard.share-button">Share</Trans>
       </Button>
@@ -49,6 +58,7 @@ export default function ShareButton({ dashboard, panel }: { dashboard: Dashboard
         <Button
           aria-label="share-dropdown-menu"
           data-testid={newShareButtonSelector.arrowMenu}
+          variant={isEditing ? 'secondary' : 'primary'}
           size="sm"
           icon={isOpen ? 'angle-up' : 'angle-down'}
         />

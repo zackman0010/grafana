@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { memo } from 'react';
 
 import { GrafanaTheme2, NavModelItem } from '@grafana/data';
-import { Dropdown, Icon, Stack, ToolbarButton, useStyles2 } from '@grafana/ui';
+import { Dropdown, Icon, Stack, ToolbarButton, ToolbarButtonRow, useStyles2 } from '@grafana/ui';
 import { config } from 'app/core/config';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { contextSrv } from 'app/core/core';
@@ -54,7 +54,7 @@ export const SingleTopBar = memo(function SingleTopBar({
 
   return (
     <div className={styles.layout}>
-      <Stack minWidth={0} gap={0.5} alignItems="center">
+      <Stack minWidth={0} gap={0.5} alignItems="center" grow={1}>
         {!menuDockedAndOpen && (
           <ToolbarButton
             narrow
@@ -69,23 +69,27 @@ export const SingleTopBar = memo(function SingleTopBar({
           </ToolbarButton>
         )}
         <Breadcrumbs breadcrumbs={breadcrumbs} className={styles.breadcrumbsWrapper} />
+        {state.breadcrumbActions && <ToolbarButtonRow alignment="left">{state.breadcrumbActions}</ToolbarButtonRow>}
       </Stack>
 
-      <Stack gap={0.5} alignItems="center">
-        <TopSearchBarCommandPaletteTrigger />
-        {unifiedHistoryEnabled && <HistoryContainer />}
-        <QuickAdd />
-        {enrichedHelpNode && (
-          <Dropdown overlay={() => <TopNavBarMenu node={enrichedHelpNode} />} placement="bottom-end">
-            <ToolbarButton iconOnly icon="question-circle" aria-label="Help" />
-          </Dropdown>
-        )}
-        <ToolbarButton
-          icon="monitor"
-          className={styles.kioskToggle}
-          onClick={onToggleKioskMode}
-          tooltip="Enable kiosk mode"
-        />
+      <Stack gap={0.5} alignItems="center" justifyContent={'flex-end'}>
+        <ToolbarButtonRow alignment="right">
+          <TopSearchBarCommandPaletteTrigger />
+          {unifiedHistoryEnabled && <HistoryContainer />}
+          {/* <QuickAdd /> */}
+          {enrichedHelpNode && (
+            <Dropdown overlay={() => <TopNavBarMenu node={enrichedHelpNode} />} placement="bottom-end">
+              <ToolbarButton iconOnly icon="question-circle" aria-label="Help" />
+            </Dropdown>
+          )}
+          <ToolbarButton
+            icon="monitor"
+            className={styles.kioskToggle}
+            onClick={onToggleKioskMode}
+            tooltip="Enable kiosk mode"
+          />
+          {state.actions}
+        </ToolbarButtonRow>
         {!contextSrv.user.isSignedIn && <SignInLink />}
         {profileNode && <ProfileButton profileNode={profileNode} />}
       </Stack>

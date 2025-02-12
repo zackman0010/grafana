@@ -28,6 +28,7 @@ export interface AppChromeState {
     title: ReturnToPreviousProps['title'];
     href: ReturnToPreviousProps['href'];
   };
+  breadcrumbActions?: React.ReactNode;
 }
 
 export const DOCKED_LOCAL_STORAGE_KEY = 'grafana.navigation.docked';
@@ -63,7 +64,7 @@ export class AppChromeService {
         if (kioskMode || chromeless) {
           return 0;
         } else if (actions) {
-          return TOP_BAR_LEVEL_HEIGHT * 2;
+          return TOP_BAR_LEVEL_HEIGHT;
         } else {
           return TOP_BAR_LEVEL_HEIGHT;
         }
