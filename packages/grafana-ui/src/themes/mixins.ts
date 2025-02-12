@@ -90,3 +90,15 @@ export const getExternalRadius = (radius: string, padding: number, borderWidth?:
 export const getInternalRadius = (radius: string, padding: number, borderWidth?: number): number => {
   return parseInt(radius.replace('px', ''), 10) - padding - (borderWidth ?? 0);
 };
+
+interface OffsetRadiusOptions {
+  referenceBorderRadius?: number;
+  referenceBorderWidth?: number;
+  offset: number;
+}
+
+export const getOffsetRadius = (theme: GrafanaTheme2, options: OffsetRadiusOptions) => {
+  const { referenceBorderRadius, referenceBorderWidth = 1, offset } = options;
+  const referenceBorderRadiusPx = referenceBorderRadius ? `${referenceBorderRadius}px` : theme.shape.radius.default;
+  return `calc(max(0px, ${referenceBorderRadiusPx} + ${offset}px - ${referenceBorderWidth}px))`;
+};
