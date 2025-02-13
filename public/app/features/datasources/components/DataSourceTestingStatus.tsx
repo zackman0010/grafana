@@ -10,6 +10,8 @@ import { Trans } from 'app/core/internationalization';
 import { contextSrv } from '../../../core/core';
 import { trackCreateDashboardClicked } from '../tracking';
 
+import { AlertSuccessExploreLink } from './AlertSuccessExploreLink';
+
 export type Props = {
   testingStatus?: TestingStatus;
   exploreUrl: string;
@@ -56,76 +58,14 @@ const AlertSuccessMessage = ({ title, exploreUrl, dataSource, onDashboardLinkCli
         >
           building a dashboard
         </Link>
-        , or by querying data in the <AlertSuccessExploreLink exploreUrl={exploreUrl} dataSource={dataSource} />.
+        , or by querying data in the
       </Trans>
+      <AlertSuccessExploreLink exploreUrl={exploreUrl} dataSource={dataSource} />
     </div>
   );
 };
 
 AlertSuccessMessage.displayName = 'AlertSuccessMessage';
-
-type AlertSuccessExploreLinkProps = {
-  exploreUrl: string;
-  dataSource: DataSourceSettingsType;
-};
-
-export type DataSourceTestSuccessExploreLinkContextV1 = {
-  dataSource: DataSourceSettingsType;
-};
-
-function AlertSuccessExploreLink(props: AlertSuccessExploreLinkProps): React.ReactElement {
-  const { exploreUrl, dataSource } = props;
-  const theme = useTheme2();
-  const styles = getStyles(theme, false);
-  const canExploreDataSources = contextSrv.hasAccessToExplore();
-  const extensionContext = useMemo<DataSourceTestSuccessExploreLinkContextV1>(() => ({ dataSource }), [dataSource]);
-
-  const { isLoading, links } = usePluginLinks({
-    extensionPointId: PluginExtensionPoints.DataSourceConfigTestSuccessfulExploreLink,
-    context: extensionContext,
-  });
-
-  if (isLoading) {
-    return <div>return some kind of loading state..</div>;
-  }
-
-  const exploreLink = useMemo(() => {
-    // maybe have some kind of sorting that select link to use based on
-    // some criteria. Maybe use the explore-logs if it is available but select
-    // another link if it is not available.
-    return links.find((link) => link.pluginId === 'explore-logs');
-  }, [links]);
-
-  if (!exploreLink) {
-    // This is the default case. But maybe we should hide the link if no link is available?
-    return (
-      <Link
-        aria-label={`Explore data`}
-        className={cx('external-link', {
-          [`${styles.disabled}`]: !canExploreDataSources,
-          'test-disabled': !canExploreDataSources,
-        })}
-        href={exploreUrl}
-      >
-        Explore view
-      </Link>
-    );
-  }
-
-  return (
-    <Link
-      aria-label={exploreLink.title}
-      className={cx('external-link', {
-        [`${styles.disabled}`]: !canExploreDataSources,
-        'test-disabled': !canExploreDataSources,
-      })}
-      href={exploreLink.path}
-      onClick={exploreLink.onClick}
-    >
-      {exploreLink.title}
-    </Link>
-  );
-}
 
 interface ErrorDetailsLinkProps extends HTMLAttributes<HTMLDivElement> {
   link?: string;
