@@ -102,12 +102,13 @@ func (s *SQLPermissionsStore) GetUserPermissions(ctx context.Context, ns types.N
 
 var _ PermissionStore = (*StaticPermissionStore)(nil)
 
-func NewStaticPermissionStore(ac accesscontrol.Service) *StaticPermissionStore {
-	return &StaticPermissionStore{ac}
+func NewStaticPermissionStore(ac accesscontrol.Service, basicRoleCoverageAuthzService *BasicRoleCoverageAuthzService) *StaticPermissionStore {
+	return &StaticPermissionStore{basicRoleCoverageAuthzService, ac}
 }
 
 type StaticPermissionStore struct {
-	ac accesscontrol.Service
+	basicRoleCoverageAuthzService *BasicRoleCoverageAuthzService
+	ac                            accesscontrol.Service
 }
 
 func (s *StaticPermissionStore) GetUserPermissions(ctx context.Context, ns types.NamespaceInfo, query PermissionsQuery) ([]accesscontrol.Permission, error) {
@@ -120,6 +121,20 @@ func (s *StaticPermissionStore) GetUserPermissions(ctx context.Context, ns types
 
 	var permissions []accesscontrol.Permission
 	for _, name := range roles {
+
+		// // check if basic role should include app permissions defined in the yaml
+		// how would i get what app this is related to?
+		// is it in the ns.Value? slo.grafana.app/ - or where is the namespace defined?
+		appPermissions, err := s.basicRoleCoverageAuthzService.GetBasicRolePermissions(ctx, ns, name)
+		if err != nil {
+			return nil, err
+		}
+		for _, p := range appPermissions {
+			// no need to check if the action matches
+			// we add the permissions from the yaml file
+			permissions = append(permissions, p)
+		}
+
 		r, ok := static[name]
 		if !ok {
 			continue

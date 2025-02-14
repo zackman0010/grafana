@@ -1,0 +1,16 @@
+apps:
+  - name: "slo.grafana.app"
+    basicRoleCoverageEnabled: true
+    # Makes it explicit that these permissions belong to your “basic” coverage, not your standard RBAC.
+    basicRolePermissions:
+      Scope: "slo.grafana.app/slo:*"
+      Admin:
+        Action:
+          - "slo.grafana.app/slo:*"
+      Editor:
+        Action:
+          - "slo.grafana.app/slo:read"
+          - "slo.grafana.app/slo:write"
+      Viewer:
+        Action:
+          - "slo.grafana.app/slo:read"

@@ -53,6 +53,8 @@ func ProvideAuthZClient(
 		return nil, errors.New("authZGRPCServer feature toggle is required for cloud and grpc mode")
 	}
 
+	basicRoleCoverageAuthzService := store.NewBasicRoleCoverageAuthzService()
+
 	switch authCfg.mode {
 	case ModeGRPC:
 		return newGrpcLegacyClient(authCfg, tracer)
@@ -66,7 +68,7 @@ func ProvideAuthZClient(
 			sql,
 			legacy.NewLegacySQLStores(sql),
 			store.NewUnionPermissionStore(
-				store.NewStaticPermissionStore(acService),
+				store.NewStaticPermissionStore(acService, basicRoleCoverageAuthzService),
 				store.NewSQLPermissionStore(sql, tracer),
 			),
 			log.New("authz-grpc-server"),

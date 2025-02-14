@@ -197,8 +197,8 @@ type BuiltinRole struct {
 type Permission struct {
 	ID     int64  `json:"-" xorm:"pk autoincr 'id'"`
 	RoleID int64  `json:"-" xorm:"role_id"`
-	Action string `json:"action"`
-	Scope  string `json:"scope"`
+	Action string `json:"action"` // e.g. "folders:read", "dashboards:create", "users:edit"
+	Scope  string `json:"scope"`  // e.g. "folders:*", "folders:uid:123", "dashboards:uid:456"
 
 	Kind       string `json:"-"`
 	Attribute  string `json:"-"`
