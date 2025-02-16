@@ -274,8 +274,6 @@ func withLabels(labels data.Labels) forEachState {
 }
 
 func TestRouteGetRuleStatuses(t *testing.T) {
-	//	t.Skip() // TODO: Flaky test: https://github.com/grafana/grafana/issues/69146
-
 	timeNow = func() time.Time { return time.Date(2022, 3, 10, 14, 0, 0, 0, time.UTC) }
 	orgID := int64(1)
 	gen := ngmodels.RuleGen
@@ -1183,15 +1181,13 @@ func TestRouteGetRuleStatuses(t *testing.T) {
 	})
 
 	t.Run("test with filters on state", func(t *testing.T) {
-		t.Skip() // TODO: Flaky test: https://github.com/grafana/grafana/issues/69146
-
 		fakeStore, fakeAIM, api := setupAPI(t)
-		// create two rules in the same Rule Group to keep assertions simple
+		// create three rules in the same Rule Group to keep assertions simple
 		rules := gen.With(gen.WithGroupKey(ngmodels.AlertRuleGroupKey{
 			NamespaceUID: "Folder-1",
 			RuleGroup:    "Rule-Group-1",
 			OrgID:        orgID,
-		})).GenerateManyRef(2)
+		})).GenerateManyRef(3)
 		// Need to sort these so we add alerts to the rules as ordered in the response
 		ngmodels.AlertRulesBy(ngmodels.AlertRulesByIndex).Sort(rules)
 		// The last two rules will have errors, however the first will be alerting
