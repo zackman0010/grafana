@@ -14,6 +14,7 @@ import { RawTimeRange, TimeZone } from './time';
 export enum PluginExtensionTypes {
   link = 'link',
   component = 'component',
+  function = 'function',
 }
 
 type PluginExtensionBase = {
@@ -31,12 +32,19 @@ export type PluginExtensionLink = PluginExtensionBase & {
   category?: string;
 };
 
+export type PluginExtensionComponentMeta = Omit<PluginExtensionComponent, 'component'>;
+
 export type PluginExtensionComponent<Props = {}> = PluginExtensionBase & {
   type: PluginExtensionTypes.component;
   component: React.ComponentType<Props>;
 };
 
-export type PluginExtension = PluginExtensionLink | PluginExtensionComponent;
+export type PluginExtensionFunction<Signature = () => void> = PluginExtensionBase & {
+  type: PluginExtensionTypes.function;
+  fn: Signature;
+};
+
+export type PluginExtension = PluginExtensionLink | PluginExtensionComponent | PluginExtensionFunction;
 
 // Objects used for registering extensions (in app plugins)
 // --------------------------------------------------------
@@ -73,6 +81,17 @@ export type PluginExtensionAddedComponentConfig<Props = {}> = PluginExtensionCon
    * The React component that will added to the target extension points
    */
   component: React.ComponentType<Props>;
+};
+export type PluginExtensionAddedFunctionConfig<Signature = unknown> = PluginExtensionConfigBase & {
+  /**
+   * The target extension points where the component will be added
+   */
+  targets: string | string[];
+
+  /**
+   * The function to be executed
+   */
+  fn: Signature;
 };
 
 export type PluginAddedLinksConfigureFunc<Context extends object> = (context: Readonly<Context> | undefined) =>

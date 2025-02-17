@@ -105,7 +105,6 @@ export interface FeatureToggles {
   enableNativeHTTPHistogram?: boolean;
   disableClassicHTTPHistogram?: boolean;
   formatString?: boolean;
-  transformationsVariableSupport?: boolean;
   kubernetesPlaylists?: boolean;
   kubernetesSnapshots?: boolean;
   kubernetesDashboards?: boolean;
@@ -247,15 +246,17 @@ export interface FeatureToggles {
   ABTestFeatureToggleA?: boolean;
   templateVariablesUsesCombobox?: boolean;
   ABTestFeatureToggleB?: boolean;
-  queryLibraryDashboards?: boolean;
   grafanaAdvisor?: boolean;
   elasticsearchImprovedParsing?: boolean;
   exploreMetricsUseExternalAppPlugin?: boolean;
   datasourceConnectionsTab?: boolean;
   fetchRulesUsingPost?: boolean;
+  alertingConversionAPI?: boolean;
   alertingAlertmanagerExtraDedupStage?: boolean;
   alertingAlertmanagerExtraDedupStageStopPipeline?: boolean;
   newLogsPanel?: boolean;
   grafanaconThemes?: boolean;
   pluginsCDNSyncLoader?: boolean;
+  alertingJiraIntegration?: boolean;
+  alertingRuleVersionHistoryRestore?: boolean;
 }
