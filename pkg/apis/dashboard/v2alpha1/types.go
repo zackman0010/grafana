@@ -15,13 +15,27 @@ type Dashboard struct {
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// The dashboard body (unstructured for now)
+	// The dashboard matching v2 spec
 	Spec DashboardSpec `json:"spec"`
+
+	// Optional status when conversion issues exist
+	Status *DashboardStatus `json:"status,omitempty"`
 }
 
 type DashboardSpec struct {
 	Title               string `json:"title"`
 	common.Unstructured `json:",inline"`
+}
+type DashboardStatus struct {
+	// When conversion issues exist, clients may need to manually convert the spec
+	ConversionIssues `json:"conversionIssues,omitempty"`
+}
+
+type ConversionIssues struct {
+	// The original apiVersion
+	SourceVersion string   `json:"sourceVersion,omitempty"`
+	Errors        []string `json:"errors,omitempty"`
+	Warnings      []string `json:"warnings,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
