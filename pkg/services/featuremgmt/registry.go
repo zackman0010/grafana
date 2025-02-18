@@ -1810,6 +1810,15 @@ var (
 			HideFromAdminPage: true,
 			HideFromDocs:      true,
 		},
+		{
+			Name:              "unifiedNavbars",
+			Description:       "Unifies the breadcrumbs and the action toolbar into a simplified single level",
+			FrontendOnly:      true,
+			Stage:             FeatureStagePublicPreview,
+			Owner:             grafanaDashboardsSquad,
+			HideFromAdminPage: false,
+			HideFromDocs:      false,
+		},
 	}
 )
 

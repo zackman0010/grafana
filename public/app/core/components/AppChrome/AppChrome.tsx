@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { PropsWithChildren, useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { locationSearchToObject, locationService } from '@grafana/runtime';
+import { config, locationSearchToObject, locationService } from '@grafana/runtime';
 import { useStyles2, LinkButton, useTheme2 } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
@@ -20,7 +20,6 @@ import { ReturnToPrevious } from './ReturnToPrevious/ReturnToPrevious';
 import { SingleTopBar } from './TopBar/SingleTopBar';
 import { SingleTopBarActions } from './TopBar/SingleTopBarActions';
 import { TOP_BAR_LEVEL_HEIGHT } from './types';
-
 export interface Props extends PropsWithChildren<{}> {}
 
 export function AppChrome({ children }: Props) {
@@ -77,8 +76,6 @@ export function AppChrome({ children }: Props) {
     chrome.setKioskModeFromUrl(queryParams.kiosk);
   }, [chrome, search]);
 
-  const singleTopNav = true;
-
   // Chromeless routes are without topNav, mega menu, search & command palette
   // We check chromeless twice here instead of having a separate path so {children}
   // doesn't get re-mounted when chromeless goes from true to false.
@@ -103,7 +100,9 @@ export function AppChrome({ children }: Props) {
               onToggleMegaMenu={handleMegaMenu}
               onToggleKioskMode={chrome.onToggleKioskMode}
             />
-            {!singleTopNav && state.actions && <SingleTopBarActions>{state.actions}</SingleTopBarActions>}
+            {!config.featureToggles.unifiedNavbars && state.actions && (
+              <SingleTopBarActions>{state.actions}</SingleTopBarActions>
+            )}
           </header>
         </>
       )}
@@ -143,7 +142,7 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
     content: css({
       display: 'flex',
       flexDirection: 'column',
-      paddingTop: TOP_BAR_LEVEL_HEIGHT,
+      paddingTop: hasActions && !config.featureToggles.unifiedNavbars ? TOP_BAR_LEVEL_HEIGHT * 2 : TOP_BAR_LEVEL_HEIGHT,
       flexGrow: 1,
       height: 'auto',
     }),

@@ -1,5 +1,7 @@
 import { NavModelItem } from '@grafana/data';
-export const TOP_BAR_LEVEL_HEIGHT = 48;
+import { config } from '@grafana/runtime';
+
+export const TOP_BAR_LEVEL_HEIGHT = config.featureToggles.unifiedNavbars ? 48 : 40;
 
 export interface ToolbarUpdateProps {
   pageNav?: NavModelItem;

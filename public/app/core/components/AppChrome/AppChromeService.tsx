@@ -63,8 +63,8 @@ export class AppChromeService {
       map(({ actions, chromeless, kioskMode }) => {
         if (kioskMode || chromeless) {
           return 0;
-        } else if (actions) {
-          return TOP_BAR_LEVEL_HEIGHT;
+        } else if (actions && !config.featureToggles.unifiedNavbars) {
+          return TOP_BAR_LEVEL_HEIGHT * 2;
         } else {
           return TOP_BAR_LEVEL_HEIGHT;
         }

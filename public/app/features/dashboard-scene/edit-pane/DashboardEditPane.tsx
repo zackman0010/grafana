@@ -4,16 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneObjectState, SceneObjectBase, SceneObject, sceneGraph, useSceneObjectState } from '@grafana/scenes';
-import {
-  Box,
-  Button,
-  ElementSelectionContextItem,
-  ElementSelectionContextState,
-  Tab,
-  TabsBar,
-  ToolbarButton,
-  useStyles2,
-} from '@grafana/ui';
+import { ElementSelectionContextItem, ElementSelectionContextState, ToolbarButton, useStyles2 } from '@grafana/ui';
 import { t } from 'app/core/internationalization';
 
 import { isInCloneChain } from '../utils/clone';
@@ -195,15 +186,6 @@ export function DashboardEditPaneRenderer({ editPane, isCollapsed, onToggleColla
 
   return (
     <div className={styles.wrapper} ref={paneRef}>
-      <Box padding={1} alignItems={'center'} justifyContent={'center'} display="flex" gap={2}>
-        <Button variant="secondary" icon="code-branch" />
-        <Button fullWidth>Save dashboard</Button>
-      </Box>
-      <TabsBar>
-        <Tab label="Add" icon="plus" />
-        <Tab label="Configure" active={true} />
-        <Tab label="Outline" />
-      </TabsBar>
       <ElementEditPane element={editableElement} key={editableElement.typeName} />
     </div>
   );

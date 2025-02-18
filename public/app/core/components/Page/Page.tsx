@@ -105,13 +105,13 @@ const getStyles = (theme: GrafanaTheme2) => {
       flexGrow: 1,
     }),
     primaryBg: css({
-      background: theme.colors.background.canvas,
+      background: theme.colors.background.primary,
     }),
     pageInner: css({
       label: 'page-inner',
       padding: theme.spacing(2),
       borderBottom: 'none',
-      background: theme.colors.background.canvas,
+      background: theme.colors.background.primary,
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,

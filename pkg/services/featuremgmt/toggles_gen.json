@@ -3991,6 +3991,19 @@
     },
     {
       "metadata": {
+        "name": "unifiedNavbars",
+        "resourceVersion": "1739801714507",
+        "creationTimestamp": "2025-02-17T14:15:14Z"
+      },
+      "spec": {
+        "description": "Unifies the breadcrumbs and the action toolbar into a simplified single level",
+        "stage": "preview",
+        "codeowner": "@grafana/dashboards-squad",
+        "frontend": true
+      }
+    },
+    {
+      "metadata": {
         "name": "unifiedRequestLog",
         "resourceVersion": "1731688509416",
         "creationTimestamp": "2023-03-31T13:38:09Z",

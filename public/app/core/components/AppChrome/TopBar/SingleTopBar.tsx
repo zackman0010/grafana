@@ -51,6 +51,7 @@ export const SingleTopBar = memo(function SingleTopBar({
   const homeNav = useSelector((state) => state.navIndex)[HOME_NAV_ID];
   const breadcrumbs = buildBreadcrumbs(sectionNav, pageNav, homeNav);
   const unifiedHistoryEnabled = config.featureToggles.unifiedHistory;
+  const unifiedNavbars = config.featureToggles.unifiedNavbars;
 
   return (
     <div className={styles.layout}>
@@ -73,10 +74,10 @@ export const SingleTopBar = memo(function SingleTopBar({
       </Stack>
 
       <Stack gap={0.5} alignItems="center" justifyContent={'flex-end'}>
+        <TopSearchBarCommandPaletteTrigger />
         <ToolbarButtonRow alignment="right">
-          <TopSearchBarCommandPaletteTrigger />
           {unifiedHistoryEnabled && <HistoryContainer />}
-          {/* <QuickAdd /> */}
+          <QuickAdd />
           {enrichedHelpNode && (
             <Dropdown overlay={() => <TopNavBarMenu node={enrichedHelpNode} />} placement="bottom-end">
               <ToolbarButton iconOnly icon="question-circle" aria-label="Help" />
@@ -88,7 +89,7 @@ export const SingleTopBar = memo(function SingleTopBar({
             onClick={onToggleKioskMode}
             tooltip="Enable kiosk mode"
           />
-          {state.actions}
+          {unifiedNavbars && state.actions}
         </ToolbarButtonRow>
         {!contextSrv.user.isSignedIn && <SignInLink />}
         {profileNode && <ProfileButton profileNode={profileNode} />}

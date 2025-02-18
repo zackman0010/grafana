@@ -259,4 +259,5 @@ export interface FeatureToggles {
   pluginsCDNSyncLoader?: boolean;
   alertingJiraIntegration?: boolean;
   alertingRuleVersionHistoryRestore?: boolean;
+  unifiedNavbars?: boolean;
 }

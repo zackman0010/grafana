@@ -970,4 +970,8 @@ const (
 	// FlagAlertingRuleVersionHistoryRestore
 	// Enables the alert rule version history restore feature
 	FlagAlertingRuleVersionHistoryRestore = "alertingRuleVersionHistoryRestore"
+
+	// FlagUnifiedNavbars
+	// Unifies the breadcrumbs and the action toolbar into a simplified single level
+	FlagUnifiedNavbars = "unifiedNavbars"
 )
