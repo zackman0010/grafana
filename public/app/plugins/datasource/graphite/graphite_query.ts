@@ -78,18 +78,14 @@ export default class GraphiteQuery {
     try {
       this.parseTargetRecursive(astNode, null);
       if (this.target.target) {
-        const oldQuery = this.target.target;
-        const newQuery = this.generateQueryString();
+        const oldSanitizedQuery = this.target.target;
+        const newSanitizedQuery = this.generateQueryString();
 
-        // Spaces, quotes, and commas are used when rendering the AST back into a string.
-        // We are removing these for less false positives of query changes.
-        const sanitizeQuery = (o: string): string => o.replace(/\s|'|"|,/g, '');
-        const oldSanitized = sanitizeQuery(oldQuery);
-        const newSanitized = sanitizeQuery(newQuery);
-        if (oldSanitized && newSanitized && oldSanitized !== newSanitized) {
-          throw new Error(
-            `Failed to make a visual query builder query that is equivalent to the query.\nOriginal query: ${oldQuery}\nQuery builder query: ${newQuery}`
-          );
+        const sanitizeQuery = (o: string): string => {
+          return o.replace(/\s|'|"|,/g, '');
+        }
+        if (sanitizeQuery(oldSanitizedQuery) !== sanitizeQuery(newSanitizedQuery)) {
+          throw new Error(`Failed to make a visual query builder query that is equivalent to the query.\nOriginal query: ${oldSanitizedQuery}\nQuery builder query: ${newSanitizedQuery}`);
         }
       }
     } catch (err) {
@@ -202,13 +198,13 @@ export default class GraphiteQuery {
         return this.templateSrv ? this.templateSrv.replace(value, this.scopedVars) : value;
       });
     };
-    const metricPath = this.getSegmentPathUpTo(this.segments.length).replace(/\.?select metric$/, '');
-    return reduce(this.functions, wrapFunction, metricPath);
+      const metricPath = this.getSegmentPathUpTo(this.segments.length).replace(/\.?select metric$/, '');
+      return reduce(this.functions, wrapFunction, metricPath);
   }
 
   updateModelTarget(targets: any) {
     if (!this.target.textEditor) {
-      this.target.target = this.generateQueryString();
+      this.target.target = this.generateQueryString()
     }
 
     this.updateRenderedTarget(this.target, targets);
