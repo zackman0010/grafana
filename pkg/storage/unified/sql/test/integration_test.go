@@ -31,42 +31,76 @@ func TestMain(m *testing.M) {
 	testsuite.Run(m)
 }
 
-func newServer(t *testing.T, cfg *setting.Cfg) (sql.Backend, resource.ResourceServer) {
+func newServer(t *testing.T, b resource.StorageBackend) resource.ResourceServer {
 	t.Helper()
-	if cfg == nil {
-		cfg = setting.NewCfg()
-	}
-
-	dbstore := infraDB.InitTestDB(t)
-
-	eDB, err := dbimpl.ProvideResourceDB(dbstore, cfg, nil)
-	require.NoError(t, err)
-	require.NotNil(t, eDB)
-
-	ret, err := sql.NewBackend(sql.BackendOptions{
-		DBProvider: eDB,
-	})
-	require.NoError(t, err)
-	require.NotNil(t, ret)
-
-	err = ret.Init(testutil.NewDefaultTestContext(t))
-	require.NoError(t, err)
 
 	server, err := resource.NewResourceServer(resource.ResourceServerOptions{
-		Backend:     ret,
-		Diagnostics: ret,
-		Lifecycle:   ret,
+		Backend: b,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, server)
 
-	return ret, server
+	return server
 }
 
-func TestIntegrationBackendHappyPath(t *testing.T) {
-	// if infraDB.IsTestDbSQLite() {
-	// 	t.Skip("TODO: test blocking, skipping to unblock Enterprise until we fix this")
-	// }
+// TestStorageBackend is a test for the StorageBackend interface.
+func TestSQLStorageBackend(t *testing.T) {
+	dbstore := infraDB.InitTestDB(t)
+	eDB, err := dbimpl.ProvideResourceDB(dbstore, setting.NewCfg(), nil)
+	require.NoError(t, err)
+	require.NotNil(t, eDB)
+
+	backend, err := sql.NewBackend(sql.BackendOptions{
+		DBProvider: eDB,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, backend)
+	err = backend.Init(testutil.NewDefaultTestContext(t))
+	require.NoError(t, err)
+	RunStorageBackendTest(t, backend)
+}
+
+// TestCase defines a test case for the storage backend
+type TestCase struct {
+	name string
+	fn   func(*testing.T, resource.StorageBackend)
+}
+
+// StorageBackendTestSuite defines the test suite for storage backend
+type StorageBackendTestSuite struct {
+	backend resource.StorageBackend
+	cases   []TestCase
+}
+
+// NewStorageBackendTestSuite creates a new test suite
+func NewStorageBackendTestSuite(backend resource.StorageBackend) *StorageBackendTestSuite {
+	return &StorageBackendTestSuite{
+		backend: backend,
+		cases: []TestCase{
+			{"happy path", runTestIntegrationBackendHappyPath},
+			{"watch write events from latest", runTestIntegrationBackendWatchWriteEventsFromLastest},
+			{"list", runTestIntegrationBackendList},
+			{"blob support", runTestIntegrationBlobSupport},
+		},
+	}
+}
+
+// Run executes all test cases in the suite
+func (s *StorageBackendTestSuite) Run(t *testing.T) {
+	for _, tc := range s.cases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.fn(t, s.backend)
+		})
+	}
+}
+
+// RunStorageBackendTest runs the storage backend test suite
+func RunStorageBackendTest(t *testing.T, backend resource.StorageBackend) {
+	suite := NewStorageBackendTestSuite(backend)
+	suite.Run(t)
+}
+
+func runTestIntegrationBackendHappyPath(t *testing.T, backend resource.StorageBackend) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
@@ -78,7 +112,7 @@ func TestIntegrationBackendHappyPath(t *testing.T) {
 		Rest: authn.AccessTokenClaims{},
 	}))
 
-	backend, server := newServer(t, nil)
+	server := newServer(t, backend)
 
 	stream, err := backend.WatchWriteEvents(context.Background()) // Using a different context to avoid canceling the stream after the DefaultContextTimeout
 	require.NoError(t, err)
@@ -182,7 +216,7 @@ func TestIntegrationBackendHappyPath(t *testing.T) {
 	})
 }
 
-func TestIntegrationBackendWatchWriteEventsFromLastest(t *testing.T) {
+func runTestIntegrationBackendWatchWriteEventsFromLastest(t *testing.T, backend resource.StorageBackend) {
 	if infraDB.IsTestDbSQLite() {
 		t.Skip("TODO: test blocking, skipping to unblock Enterprise until we fix this")
 	}
@@ -191,7 +225,6 @@ func TestIntegrationBackendWatchWriteEventsFromLastest(t *testing.T) {
 	}
 
 	ctx := testutil.NewTestContext(t, time.Now().Add(5*time.Second))
-	backend, _ := newServer(t, nil)
 
 	// Create a few resources before initing the watch
 	_, err := writeEvent(ctx, backend, "item1", resource.WatchEvent_ADDED)
@@ -207,7 +240,7 @@ func TestIntegrationBackendWatchWriteEventsFromLastest(t *testing.T) {
 	require.Equal(t, "item2", (<-stream).Key.Name)
 }
 
-func TestIntegrationBackendList(t *testing.T) {
+func runTestIntegrationBackendList(t *testing.T, backend resource.StorageBackend) {
 	if infraDB.IsTestDbSQLite() {
 		t.Skip("TODO: test blocking, skipping to unblock Enterprise until we fix this")
 	}
@@ -216,7 +249,7 @@ func TestIntegrationBackendList(t *testing.T) {
 	}
 
 	ctx := testutil.NewTestContext(t, time.Now().Add(5*time.Second))
-	backend, server := newServer(t, nil)
+	server := newServer(t, backend)
 
 	// Create a few resources before starting the watch
 	rv1, _ := writeEvent(ctx, backend, "item1", resource.WatchEvent_ADDED)
@@ -430,13 +463,13 @@ func TestIntegrationBackendList(t *testing.T) {
 	})
 }
 
-func TestIntegrationBlobSupport(t *testing.T) {
+func runTestIntegrationBlobSupport(t *testing.T, backend resource.StorageBackend) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
 
 	ctx := testutil.NewTestContext(t, time.Now().Add(5*time.Second))
-	backend, server := newServer(t, nil)
+	server := newServer(t, backend)
 	store, ok := backend.(resource.BlobSupport)
 	require.True(t, ok)
 
@@ -550,7 +583,7 @@ func TestClientServer(t *testing.T) {
 	})
 }
 
-func writeEvent(ctx context.Context, store sql.Backend, name string, action resource.WatchEvent_Type) (int64, error) {
+func writeEvent(ctx context.Context, store resource.StorageBackend, name string, action resource.WatchEvent_Type) (int64, error) {
 	res := &unstructured.Unstructured{
 		Object: map[string]any{},
 	}
