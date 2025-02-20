@@ -17,8 +17,6 @@ trigger = {
     ],
     "paths": {
         "exclude": [
-            "*.md",
-            "docs/**",
             "latest.json",
         ],
         "include": ["scripts/**/*.sh"],
