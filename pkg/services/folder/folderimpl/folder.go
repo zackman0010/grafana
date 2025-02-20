@@ -618,11 +618,10 @@ func (s *Service) getAvailableNonRootFolders(ctx context.Context, q *folder.GetC
 		})
 	} else {
 		dashFolders, err = s.GetFolders(ctx, folder.GetFoldersQuery{
-			UIDs:             folderUids,
-			OrgID:            q.OrgID,
-			SignedInUser:     q.SignedInUser,
-			OrderByTitle:     true,
-			WithFullpathUIDs: true,
+			UIDs:         folderUids,
+			OrgID:        q.OrgID,
+			SignedInUser: q.SignedInUser,
+			OrderByTitle: true,
 		})
 	}
 	if err != nil {
