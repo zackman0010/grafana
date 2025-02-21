@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -90,7 +91,7 @@ func main() {
 			for i, tag := range tags {
 				if tag == "stable" {
 					log.Println("removing stable tag")
-					op["tags"] = append(tags[:i], tags[i+1:]...)
+					op["tags"] = slices.Delete(tags, i, i+1)
 				}
 			}
 		}

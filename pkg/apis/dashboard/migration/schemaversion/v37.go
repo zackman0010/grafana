@@ -4,21 +4,21 @@ package schemaversion
 // - Converts boolean legend values to object format
 // - Standardizes hidden legends to use showLegend: false with displayMode: list
 // - Ensures visible legends have showLegend: true
-func V37(dashboard map[string]interface{}) error {
+func V37(dashboard map[string]any) error {
 	dashboard["schemaVersion"] = int(37)
 
-	panels, ok := dashboard["panels"].([]interface{})
+	panels, ok := dashboard["panels"].([]any)
 	if !ok {
 		return nil
 	}
 
 	for _, panel := range panels {
-		p, ok := panel.(map[string]interface{})
+		p, ok := panel.(map[string]any)
 		if !ok {
 			continue
 		}
 
-		options, ok := p["options"].(map[string]interface{})
+		options, ok := p["options"].(map[string]any)
 		if !ok {
 			continue
 		}
@@ -31,7 +31,7 @@ func V37(dashboard map[string]interface{}) error {
 
 		// Convert boolean legend to object format
 		if legendBool, ok := legendValue.(bool); ok {
-			options["legend"] = map[string]interface{}{
+			options["legend"] = map[string]any{
 				"displayMode": "list",
 				"showLegend":  legendBool,
 			}
@@ -39,7 +39,7 @@ func V37(dashboard map[string]interface{}) error {
 		}
 
 		// Handle object format legend
-		legend, ok := legendValue.(map[string]interface{})
+		legend, ok := legendValue.(map[string]any)
 		if !ok {
 			continue
 		}

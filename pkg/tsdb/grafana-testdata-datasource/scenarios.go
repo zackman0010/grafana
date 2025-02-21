@@ -20,6 +20,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/grafana/grafana/pkg/tsdb/grafana-testdata-datasource/kinds"
+	"maps"
 )
 
 type Scenario struct {
@@ -280,9 +281,7 @@ func (s *Service) handleFallbackScenario(ctx context.Context, req *backend.Query
 			if sResp, err := handler(ctx, sReq); err != nil {
 				ctxLogger.Error("Failed to handle scenario", "scenarioId", scenarioID, "error", err)
 			} else {
-				for refID, dr := range sResp.Responses {
-					resp.Responses[refID] = dr
-				}
+				maps.Copy(resp.Responses, sResp.Responses)
 			}
 		}
 	}
@@ -300,7 +299,7 @@ func (s *Service) handleRandomWalkScenario(ctx context.Context, req *backend.Que
 		}
 		seriesCount := model.SeriesCount
 
-		for i := 0; i < seriesCount; i++ {
+		for i := range seriesCount {
 			respD := resp.Responses[q.RefID]
 			respD.Frames = append(respD.Frames, RandomWalk(q, model, i))
 			resp.Responses[q.RefID] = respD
@@ -368,7 +367,7 @@ func (s *Service) handleCSVMetricValuesScenario(ctx context.Context, req *backen
 			step = (endTime - startTime) / int64(count-1)
 		}
 
-		for i := 0; i < count; i++ {
+		for i := range count {
 			t := time.Unix(startTime/int64(1e+3), (startTime%int64(1e+3))*int64(1e+6))
 			timeField.Set(i, t)
 			startTime += step
@@ -754,7 +753,7 @@ func RandomWalk(query backend.DataQuery, model kinds.TestDataQuery, index int) *
 	)
 
 	frame.SetMeta(&data.FrameMeta{
-		Custom: map[string]interface{}{
+		Custom: map[string]any{
 			"customStat": 10,
 		},
 	})
@@ -871,7 +870,7 @@ func predictableCSVWave(query backend.DataQuery, model kinds.TestDataQuery) ([]*
 		valuesLen := int64(len(values))
 		getValue := func(mod int64) (*float64, error) {
 			var i int64
-			for i = 0; i < valuesLen; i++ {
+			for i = range valuesLen {
 				if mod == i*subQ.TimeStep {
 					return values[i], nil
 				}
@@ -951,7 +950,7 @@ func predictablePulse(query backend.DataQuery, model kinds.TestDataQuery) (*data
 	timeStep *= 1000                             // Seconds to Milliseconds
 	onFor := func(mod int64) (*float64, error) { // How many items in the cycle should get the on value
 		var i int64
-		for i = 0; i < onCount; i++ {
+		for i = range onCount {
 			if mod == i*timeStep {
 				return onValue, nil
 			}
@@ -973,7 +972,7 @@ func predictablePulse(query backend.DataQuery, model kinds.TestDataQuery) (*data
 func randomHeatmapData(query backend.DataQuery, fnBucketGen func(index int) float64) *data.Frame {
 	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	frame := data.NewFrame("data", data.NewField("time", nil, []*time.Time{}))
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		frame.Fields = append(frame.Fields, data.NewField(strconv.FormatInt(int64(fnBucketGen(i)), 10), nil, []*float64{}))
 	}
 

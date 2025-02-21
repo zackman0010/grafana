@@ -189,7 +189,7 @@ func NewTree() *Tree {
 }
 
 func (t *Tree) addLeaf(pattern string, handle Handle) *Leaf {
-	for i := 0; i < len(t.leaves); i++ {
+	for i := range t.leaves {
 		if t.leaves[i].pattern == pattern {
 			return t.leaves[i]
 		}
@@ -223,7 +223,7 @@ func (t *Tree) addLeaf(pattern string, handle Handle) *Leaf {
 }
 
 func (t *Tree) addSubtree(segment, pattern string, handle Handle) *Leaf {
-	for i := 0; i < len(t.subtrees); i++ {
+	for i := range t.subtrees {
 		if t.subtrees[i].pattern == segment {
 			return t.subtrees[i].addNextSegment(pattern, handle)
 		}
@@ -265,7 +265,7 @@ func (t *Tree) matchLeaf(globLevel int, url string, params map[string]string) (H
 	if err != nil {
 		return nil, false
 	}
-	for i := 0; i < len(t.leaves); i++ {
+	for i := range t.leaves {
 		switch t.leaves[i].typ {
 		case _PATTERN_STATIC:
 			if t.leaves[i].pattern == url {
@@ -278,7 +278,7 @@ func (t *Tree) matchLeaf(globLevel int, url string, params map[string]string) (H
 				break
 			}
 
-			for j := 0; j < len(t.leaves[i].wildcards); j++ {
+			for j := range t.leaves[i].wildcards {
 				params[t.leaves[i].wildcards[j]] = results[j+1]
 			}
 			return t.leaves[i].handle, true
@@ -308,7 +308,7 @@ func (t *Tree) matchSubtree(globLevel int, segment, url string, params map[strin
 	if err != nil {
 		return nil, false
 	}
-	for i := 0; i < len(t.subtrees); i++ {
+	for i := range t.subtrees {
 		switch t.subtrees[i].typ {
 		case _PATTERN_STATIC:
 			if t.subtrees[i].pattern == unescapedSegment {
@@ -322,7 +322,7 @@ func (t *Tree) matchSubtree(globLevel int, segment, url string, params map[strin
 				break
 			}
 
-			for j := 0; j < len(t.subtrees[i].wildcards); j++ {
+			for j := range t.subtrees[i].wildcards {
 				params[t.subtrees[i].wildcards[j]] = results[j+1]
 			}
 			if handle, ok := t.subtrees[i].matchNextSegment(globLevel, url, params); ok {

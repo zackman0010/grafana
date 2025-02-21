@@ -126,7 +126,7 @@ func testScenarioWithQueryInQueryHistory(t *testing.T, desc string, fn func(t *t
 	testScenario(t, desc, false, false, func(t *testing.T, sc scenarioContext) {
 		command := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: testDsUID1,
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"expr": "test",
 				},
@@ -147,7 +147,7 @@ func testScenarioWithMultipleQueriesInQueryHistory(t *testing.T, desc string, fn
 		sc.service.now = func() time.Time { return start }
 		command1 := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: testDsUID1,
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"expr": "test",
 				},
@@ -166,7 +166,7 @@ func testScenarioWithMultipleQueriesInQueryHistory(t *testing.T, desc string, fn
 		sc.service.now = func() time.Time { return start.Add(time.Second) }
 		command2 := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: testDsUID1,
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"expr": "test2",
 				},
@@ -181,7 +181,7 @@ func testScenarioWithMultipleQueriesInQueryHistory(t *testing.T, desc string, fn
 		sc.service.now = func() time.Time { return start.Add(2 * time.Second) }
 		command3 := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: testDsUID2,
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"expr": "test2",
 				},
@@ -208,7 +208,7 @@ func testScenarioWithMixedQueriesInQueryHistory(t *testing.T, desc string, fn fu
 		sc.service.now = func() time.Time { return start }
 		command1 := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: "-- Mixed --",
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"datasource": map[string]any{"uid": testDsUID1},
 					"expr":       "test",
@@ -225,7 +225,7 @@ func testScenarioWithMixedQueriesInQueryHistory(t *testing.T, desc string, fn fu
 
 		command2 := CreateQueryInQueryHistoryCommand{
 			DatasourceUID: testDsUID2,
-			Queries: simplejson.NewFromAny([]interface{}{
+			Queries: simplejson.NewFromAny([]any{
 				map[string]any{
 					"datasource": map[string]any{"uid": testDsUID2},
 					"expr":       "test2",

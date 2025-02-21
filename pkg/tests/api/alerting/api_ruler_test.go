@@ -1491,7 +1491,7 @@ func TestIntegrationRuleGroupSequence(t *testing.T) {
 		movedRule := convertGettableRuleToPostable(group2Get.Rules[3])
 		// now shuffle the rules
 		postableGroup1 := convertGettableRuleGroupToPostable(group1Get.GettableRuleGroupConfig)
-		postableGroup1.Rules = append(append(append([]apimodels.PostableExtendedRuleNode{}, postableGroup1.Rules[0:1]...), movedRule), postableGroup1.Rules[2:]...)
+		postableGroup1.Rules = append(append(slices.Clone(postableGroup1.Rules[0:1]), movedRule), postableGroup1.Rules[2:]...)
 		expectedUids := make([]string, 0, len(postableGroup1.Rules))
 		for _, rule := range postableGroup1.Rules {
 			expectedUids = append(expectedUids, rule.GrafanaManagedAlert.UID)

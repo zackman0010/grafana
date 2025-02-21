@@ -41,7 +41,7 @@ func TestServerLock(t *testing.T) {
 		expectedLastExecution := first.LastExecution
 		var latest *serverLock
 
-		for i := 0; i < 3; i++ {
+		for range 3 {
 			latest, err = sl.getOrCreate(context.Background(), operationUID)
 			require.NoError(t, err)
 			assert.Equal(t, operationUID, first.OperationUID)

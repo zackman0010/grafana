@@ -42,7 +42,7 @@ var (
 // MakeErrTimeIntervalInvalid creates an error with the ErrTimeIntervalInvalid template
 func MakeErrTimeIntervalInvalid(err error) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"Error": err.Error(),
 		},
 		Error: err,
@@ -73,7 +73,7 @@ func MakeErrTimeIntervalInUse(usedByRoutes bool, rules []models.AlertRuleKey) er
 // MakeErrTimeIntervalInvalid creates an error with the ErrTimeIntervalInvalid template
 func MakeErrTemplateInvalid(err error) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"Error": err.Error(),
 		},
 		Error: err,

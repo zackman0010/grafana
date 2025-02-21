@@ -31,7 +31,7 @@ func GetSupportedReduceFuncs() []ReducerID {
 
 func Sum(fv *Float64Field) *float64 {
 	var sum float64
-	for i := 0; i < fv.Len(); i++ {
+	for i := range fv.Len() {
 		f := fv.GetValue(i)
 		if f == nil || math.IsNaN(*f) {
 			nan := math.NaN()
@@ -54,7 +54,7 @@ func Min(fv *Float64Field) *float64 {
 		nan := math.NaN()
 		return &nan
 	}
-	for i := 0; i < fv.Len(); i++ {
+	for i := range fv.Len() {
 		v := fv.GetValue(i)
 		if v == nil || math.IsNaN(*v) {
 			nan := math.NaN()
@@ -73,7 +73,7 @@ func Max(fv *Float64Field) *float64 {
 		nan := math.NaN()
 		return &nan
 	}
-	for i := 0; i < fv.Len(); i++ {
+	for i := range fv.Len() {
 		v := fv.GetValue(i)
 		if v == nil || math.IsNaN(*v) {
 			nan := math.NaN()
@@ -102,7 +102,7 @@ func Last(fv *Float64Field) *float64 {
 
 func Median(fv *Float64Field) *float64 {
 	values := make([]float64, 0, fv.Len())
-	for i := 0; i < fv.Len(); i++ {
+	for i := range fv.Len() {
 		v := fv.GetValue(i)
 		if v == nil || math.IsNaN(*v) {
 			nan := math.NaN()
@@ -183,7 +183,7 @@ type ReduceMapper interface {
 // mapSeries creates a series where all points are mapped using the provided map function ReduceMapper.MapInput
 func mapSeries(s Series, mapper ReduceMapper) Series {
 	newSeries := NewSeries(s.Frame.RefID, s.GetLabels(), 0)
-	for i := 0; i < s.Len(); i++ {
+	for i := range s.Len() {
 		f := s.GetValue(i)
 		f = mapper.MapInput(f)
 		if f == nil {

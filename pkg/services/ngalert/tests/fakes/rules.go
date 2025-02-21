@@ -113,11 +113,8 @@ func (f *RuleStore) DeleteAlertRulesByUID(_ context.Context, orgID int64, UIDs .
 
 	for _, rule := range rules {
 		add := true
-		for _, UID := range UIDs {
-			if rule.UID == UID {
-				add = false
-				break
-			}
+		if slices.Contains(UIDs, rule.UID) {
+			add = false
 		}
 		if add {
 			result = append(result, rule)

@@ -113,7 +113,7 @@ func (out *ThresholdOutput) OutputFrame(_ context.Context, vars Vars, frame *dat
 	f3 := data.NewFieldFromFieldType(data.FieldTypeString, 0)
 	f3.Name = "color"
 
-	for i := 0; i < frame.Fields[currentFrameFieldIndex].Len(); i++ {
+	for i := range frame.Fields[currentFrameFieldIndex].Len() {
 		// TODO: support other numeric types.
 		value, ok := frame.Fields[currentFrameFieldIndex].At(i).(*float64)
 		if !ok {

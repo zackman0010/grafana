@@ -1014,10 +1014,7 @@ func (d *dashboardStore) FindDashboards(ctx context.Context, query *dashboards.F
 		limit = 1000
 	}
 
-	page := query.Page
-	if page < 1 {
-		page = 1
-	}
+	page := max(query.Page, 1)
 
 	sql, params := sb.ToSQL(limit, page)
 

@@ -29,7 +29,7 @@ var RepositoryResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Type", Type: "string"},
 			{Name: "Target", Type: "string"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*Repository)
 			if !ok {
 				return nil, errors.New("expected Repository")
@@ -43,7 +43,7 @@ var RepositoryResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 				target = m.Spec.GitHub.URL
 			}
 
-			return []interface{}{
+			return []any{
 				m.Name, // may our may not be nice to read
 				m.CreationTimestamp.UTC().Format(time.RFC3339),
 				m.Spec.Title, // explicitly configured title that can change
@@ -65,13 +65,13 @@ var JobResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "State", Type: "string"},
 			{Name: "Message", Type: "string"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*Job)
 			if !ok {
 				return nil, errors.New("expected Repository")
 			}
 
-			return []interface{}{
+			return []any{
 				m.Name, // may our may not be nice to read
 				m.CreationTimestamp.UTC().Format(time.RFC3339),
 				m.Spec.Action,

@@ -89,11 +89,11 @@ func TransformInstantMetricsResponse(query *dataquery.TempoQuery, resp tempopb.Q
 			},
 		}
 
-		labelValues := make([]interface{}, len(labels))
+		labelValues := make([]any, len(labels))
 		for idx, key := range labelKeys {
 			labelValues[idx] = strings.Trim(labels[key], "\"")
 		}
-		row := append([]interface{}{time.Now()}, append(labelValues, series.GetValue())...)
+		row := append([]any{time.Now()}, append(labelValues, series.GetValue())...)
 		frame.AppendRow(row...)
 
 		frames[i] = frame

@@ -532,7 +532,7 @@ func (s GettableGrafanaSilence) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 
-	var data map[string]interface{}
+	var data map[string]any
 	if err := json.Unmarshal(gettable, &data); err != nil {
 		return nil, err
 	}
@@ -640,7 +640,7 @@ type DatasourceUIDReference struct {
 type PostableUserConfig struct {
 	TemplateFiles      map[string]string         `yaml:"template_files" json:"template_files"`
 	AlertmanagerConfig PostableApiAlertingConfig `yaml:"alertmanager_config" json:"alertmanager_config"`
-	amSimple           map[string]interface{}    `yaml:"-" json:"-"`
+	amSimple           map[string]any            `yaml:"-" json:"-"`
 }
 
 func (c *PostableUserConfig) UnmarshalJSON(b []byte) error {
@@ -655,7 +655,7 @@ func (c *PostableUserConfig) UnmarshalJSON(b []byte) error {
 	}
 
 	type intermediate struct {
-		AlertmanagerConfig map[string]interface{} `yaml:"alertmanager_config" json:"alertmanager_config"`
+		AlertmanagerConfig map[string]any `yaml:"alertmanager_config" json:"alertmanager_config"`
 	}
 
 	var tmp intermediate
@@ -721,7 +721,7 @@ func (c *PostableUserConfig) GetGrafanaReceiverMap() map[string]*PostableGrafana
 }
 
 // MarshalYAML implements yaml.Marshaller.
-func (c *PostableUserConfig) MarshalYAML() (interface{}, error) {
+func (c *PostableUserConfig) MarshalYAML() (any, error) {
 	yml, err := yaml.Marshal(c.amSimple)
 	if err != nil {
 		return nil, err
@@ -767,7 +767,7 @@ type GettableUserConfig struct {
 	// amSimple stores a map[string]interface of the decoded alertmanager config.
 	// This enables circumventing the underlying alertmanager secret type
 	// which redacts itself during encoding.
-	amSimple map[string]interface{} `yaml:"-" json:"-"`
+	amSimple map[string]any `yaml:"-" json:"-"`
 }
 
 func (c *GettableUserConfig) UnmarshalYAML(value *yaml.Node) error {
@@ -797,8 +797,8 @@ func (c *GettableUserConfig) UnmarshalYAML(value *yaml.Node) error {
 
 func (c *GettableUserConfig) MarshalJSON() ([]byte, error) {
 	type plain struct {
-		TemplateFiles      map[string]string      `yaml:"template_files" json:"template_files"`
-		AlertmanagerConfig map[string]interface{} `yaml:"alertmanager_config" json:"alertmanager_config"`
+		TemplateFiles      map[string]string `yaml:"template_files" json:"template_files"`
+		AlertmanagerConfig map[string]any    `yaml:"alertmanager_config" json:"alertmanager_config"`
 	}
 
 	tmp := plain{

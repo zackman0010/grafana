@@ -10,6 +10,7 @@ import (
 	"github.com/grafana/grafana/pkg/tsdb/cloudwatch/models/resources"
 	"github.com/grafana/grafana/pkg/tsdb/cloudwatch/services"
 	"github.com/patrickmn/go-cache"
+	"slices"
 )
 
 func shouldSkipFetchingWildcards(ctx context.Context, q *models.CloudWatchQuery) bool {
@@ -103,7 +104,7 @@ func copyQueries(origQueries []*models.CloudWatchQuery) []*models.CloudWatchQuer
 		newQuery := *origQuery
 		newQuery.Dimensions = map[string][]string{}
 		for key, val := range origQuery.Dimensions {
-			newQuery.Dimensions[key] = append([]string{}, val...)
+			newQuery.Dimensions[key] = slices.Clone(val)
 		}
 		newQueries = append(newQueries, &newQuery)
 	}

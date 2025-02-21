@@ -65,7 +65,7 @@ func TestIntegrationTeamCommandsAndQueries(t *testing.T) {
 			var err error
 
 			setup := func() {
-				for i := 0; i < 5; i++ {
+				for i := range 5 {
 					userCmd = user.CreateUserCommand{
 						Email: fmt.Sprint("user", i, "@test.com"),
 						Name:  fmt.Sprint("user", i),
@@ -581,7 +581,7 @@ func TestIntegrationSQLStore_GetTeamMembers_ACFilter(t *testing.T) {
 		)
 		require.NoError(t, err)
 
-		for i := 0; i < 4; i++ {
+		for i := range 4 {
 			userCmd := user.CreateUserCommand{
 				Email: fmt.Sprint("user", i, "@example.org"),
 				Name:  fmt.Sprint("user", i),

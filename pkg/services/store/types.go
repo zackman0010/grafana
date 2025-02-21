@@ -90,7 +90,7 @@ func (s *StorageListFrame) GetFileNames() []string {
 		return fileNames
 	}
 
-	for i := 0; i < field.Len(); i++ {
+	for i := range field.Len() {
 		if stringValue, ok := field.At(i).(string); ok {
 			fileNames = append(fileNames, stringValue)
 		}

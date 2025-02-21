@@ -397,7 +397,7 @@ func (ss *FolderStoreImpl) GetHeight(ctx context.Context, foldrUID string, orgID
 	for len(queue) > 0 && height <= folder.MaxNestedFolderDepth {
 		length := len(queue)
 		height++
-		for i := 0; i < length; i++ {
+		for range length {
 			ele := queue[0]
 			queue = queue[1:]
 			if parentUID != nil && *parentUID == ele {
@@ -660,10 +660,7 @@ func batch(count, batchSize int, eachFn func(start, end int) error) error {
 	}
 
 	for i := 0; i < count; {
-		end := i + batchSize
-		if end > count {
-			end = count
-		}
+		end := min(i+batchSize, count)
 
 		if err := eachFn(i, end); err != nil {
 			return err

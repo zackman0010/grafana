@@ -31,11 +31,11 @@ var DashboardResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Title", Type: "string", Format: "string", Description: "The dashboard name"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			dash, ok := obj.(*Dashboard)
 			if ok {
 				if dash != nil {
-					return []interface{}{
+					return []any{
 						dash.Name,
 						dash.Spec.GetNestedString("title"),
 						dash.CreationTimestamp.UTC().Format(time.RFC3339),
@@ -58,11 +58,11 @@ var LibraryPanelResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Type", Type: "string", Description: "the panel type"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			dash, ok := obj.(*LibraryPanel)
 			if ok {
 				if dash != nil {
-					return []interface{}{
+					return []any{
 						dash.Name,
 						dash.Spec.Title,
 						dash.Spec.Type,

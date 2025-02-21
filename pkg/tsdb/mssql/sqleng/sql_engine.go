@@ -19,6 +19,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
+	"slices"
 )
 
 // MetaKeyExecutedQueryString is the key where the executed query should get stored
@@ -436,11 +437,8 @@ func (e *DataSourceHandler) newProcessCfg(query backend.DataQuery, queryContext 
 	}
 
 	for i, col := range qm.columnNames {
-		for _, tc := range e.timeColumnNames {
-			if col == tc {
-				qm.timeIndex = i
-				break
-			}
+		if slices.Contains(e.timeColumnNames, col) {
+			qm.timeIndex = i
 		}
 
 		if qm.Format == dataQueryFormatTable && strings.EqualFold(col, "timeend") {
@@ -526,7 +524,7 @@ func convertSQLTimeColumnToEpochMS(frame *data.Frame, timeIndex int) error {
 	newField.Labels = origin.Labels
 
 	valueLength := origin.Len()
-	for i := 0; i < valueLength; i++ {
+	for i := range valueLength {
 		v, err := origin.NullableFloatAt(i)
 		if err != nil {
 			return fmt.Errorf("unable to convert data to a time field")
@@ -559,7 +557,7 @@ func convertSQLValueColumnToFloat(frame *data.Frame, Index int) (*data.Frame, er
 	newField.Name = origin.Name
 	newField.Labels = origin.Labels
 
-	for i := 0; i < origin.Len(); i++ {
+	for i := range origin.Len() {
 		v, err := origin.NullableFloatAt(i)
 		if err != nil {
 			return frame, err

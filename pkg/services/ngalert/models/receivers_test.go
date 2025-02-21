@@ -354,7 +354,7 @@ func TestReceiver_Fingerprint(t *testing.T) {
 		reflectVal := reflect.ValueOf(&completelyDifferentReceiver).Elem()
 
 		receiverType := reflect.TypeOf((*Receiver)(nil)).Elem()
-		for i := 0; i < receiverType.NumField(); i++ {
+		for i := range receiverType.NumField() {
 			field := receiverType.Field(i).Name
 			if _, ok := excludedFields[field]; ok {
 				continue
@@ -382,7 +382,7 @@ func TestReceiver_Fingerprint(t *testing.T) {
 
 		reflectVal = reflect.ValueOf(completelyDifferentReceiver.Integrations[0]).Elem()
 		integrationType := reflect.TypeOf((*Integration)(nil)).Elem()
-		for i := 0; i < integrationType.NumField(); i++ {
+		for i := range integrationType.NumField() {
 			field := integrationType.Field(i).Name
 			if _, ok := excludedFields[field]; ok {
 				continue

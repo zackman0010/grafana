@@ -51,7 +51,7 @@ func TestScanRow(t *testing.T) {
 		require.Equal(t, "Test Dashboard", row.Dash.Name)
 		require.Equal(t, version, row.RV) // rv should be the dashboard version
 		require.Equal(t, v0alpha1.Unstructured{
-			Object: map[string]interface{}{"key": "value"},
+			Object: map[string]any{"key": "value"},
 		}, row.Dash.Spec)
 		require.Equal(t, "default", row.Dash.Namespace)
 		require.Equal(t, &continueToken{orgId: int64(1), id: id}, row.token)

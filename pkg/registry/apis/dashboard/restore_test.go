@@ -109,7 +109,7 @@ func TestRestore(t *testing.T) {
 			ResourceVersion: 123,
 		}, nil).Once()
 
-		mockResponder.On("Object", http.StatusOK, mock.MatchedBy(func(obj interface{}) bool {
+		mockResponder.On("Object", http.StatusOK, mock.MatchedBy(func(obj any) bool {
 			metadata, ok := obj.(*metav1.PartialObjectMetadata)
 			return ok &&
 				metadata.ObjectMeta.Name == "uid" &&

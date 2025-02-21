@@ -10,6 +10,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/services/datasources"
 	"github.com/grafana/grafana/pkg/services/ngalert/models"
+	"maps"
 )
 
 func TestPrometheusRulesToGrafana(t *testing.T) {
@@ -132,9 +133,7 @@ func TestPrometheusRulesToGrafana(t *testing.T) {
 				require.Equal(t, expectedFor, grafanaRule.For, tc.name)
 
 				expectedLabels := make(map[string]string, len(promRule.Labels)+1)
-				for k, v := range promRule.Labels {
-					expectedLabels[k] = v
-				}
+				maps.Copy(expectedLabels, promRule.Labels)
 
 				require.Equal(t, expectedLabels, grafanaRule.Labels, tc.name)
 				require.Equal(t, promRule.Annotations, grafanaRule.Annotations, tc.name)

@@ -50,7 +50,7 @@ func TimeSeriesFromFrames(frames ...*data.Frame) []prompb.TimeSeries {
 			labels := createLabels(field.Labels)
 			key := makeMetricKey(metricName, labels)
 
-			for i := 0; i < field.Len(); i++ {
+			for i := range field.Len() {
 				val, ok := field.ConcreteAt(i)
 				if !ok {
 					continue
@@ -111,7 +111,7 @@ func TimeSeriesFromFramesLabelsColumn(frames ...*data.Frame) []prompb.TimeSeries
 		if isLabelsColumnFrame {
 			labelsField := frame.Fields[0]
 			labels = make([][]prompb.Label, labelsField.Len())
-			for i := 0; i < labelsField.Len(); i++ {
+			for i := range labelsField.Len() {
 				val, ok := labelsField.ConcreteAt(i)
 				if !ok {
 					continue
@@ -139,7 +139,7 @@ func TimeSeriesFromFramesLabelsColumn(frames ...*data.Frame) []prompb.TimeSeries
 				continue
 			}
 
-			for i := 0; i < field.Len(); i++ {
+			for i := range field.Len() {
 				var labelsCopy []prompb.Label
 				if isLabelsColumnFrame && labels != nil {
 					labelsCopy = make([]prompb.Label, len(labels[i]), len(labels[i])+1)

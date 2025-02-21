@@ -54,7 +54,7 @@ func (r *restoreREST) ProducesMIMETypes(verb string) []string {
 	return nil
 }
 
-func (r *restoreREST) ProducesObject(verb string) interface{} {
+func (r *restoreREST) ProducesObject(verb string) any {
 	return &metav1.PartialObjectMetadataList{}
 }
 

@@ -26,7 +26,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{
+						Object: map[string]any{
 							"id": float64(1),
 						},
 					},
@@ -42,7 +42,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{},
+						Object: map[string]any{},
 					},
 				},
 				TypeMeta: metav1.TypeMeta{
@@ -61,7 +61,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{
+						Object: map[string]any{
 							"id": float64(1),
 						},
 					},
@@ -77,7 +77,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{},
+						Object: map[string]any{},
 					},
 				},
 				TypeMeta: metav1.TypeMeta{
@@ -96,7 +96,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{
+						Object: map[string]any{
 							"id":      float64(1),
 							"testing": "this",
 						},
@@ -113,7 +113,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{
+						Object: map[string]any{
 							"testing": "this",
 						},
 					},
@@ -134,7 +134,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{
+						Object: map[string]any{
 							"id": float64(0),
 						},
 					},
@@ -150,7 +150,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 				Spec: v2alpha1.DashboardSpec{
 					Title: "test",
 					Unstructured: common.Unstructured{
-						Object: map[string]interface{}{},
+						Object: map[string]any{},
 					},
 				},
 				TypeMeta: metav1.TypeMeta{

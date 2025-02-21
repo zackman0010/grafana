@@ -113,7 +113,7 @@ func (l *Loader) Load(ctx context.Context, src plugins.PluginSource) ([]*plugins
 			<-limit
 		}(bootstrappedPlugin)
 	}
-	for i := 0; i < len(bootstrappedPlugins); i++ {
+	for range bootstrappedPlugins {
 		r := <-validateResults
 		if r.err != nil {
 			l.recordError(ctx, r.bootstrappedPlugin, r.err)

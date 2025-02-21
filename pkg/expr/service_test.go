@@ -24,6 +24,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/pluginstore"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 func TestService(t *testing.T) {
@@ -87,7 +88,7 @@ func TestService(t *testing.T) {
 
 	// Service currently doesn't care about order of datas in the return.
 	trans := cmp.Transformer("Sort", func(in []*data.Frame) []*data.Frame {
-		out := append([]*data.Frame(nil), in...) // Copy input to avoid mutating it
+		out := slices.Clone(in) // Copy input to avoid mutating it
 		sort.SliceStable(out, func(i, j int) bool {
 			return out[i].RefID > out[j].RefID
 		})

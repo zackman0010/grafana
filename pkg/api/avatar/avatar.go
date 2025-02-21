@@ -212,7 +212,7 @@ func (t *Thunder) init() {
 		t.QueueSize = 1
 	}
 	t.q = make(chan *thunderTask, t.QueueSize)
-	for i := 0; i < t.QueueSize; i++ {
+	for range t.QueueSize {
 		go func() {
 			for {
 				task := <-t.q

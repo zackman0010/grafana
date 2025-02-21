@@ -104,12 +104,9 @@ func (s *Service) Get(ctx context.Context, query *dashver.GetDashboardVersionQue
 }
 
 func (s *Service) DeleteExpired(ctx context.Context, cmd *dashver.DeleteExpiredVersionsCommand) error {
-	versionsToKeep := s.cfg.DashboardVersionsToKeep
-	if versionsToKeep < 1 {
-		versionsToKeep = 1
-	}
+	versionsToKeep := max(s.cfg.DashboardVersionsToKeep, 1)
 
-	for batch := 0; batch < maxVersionDeletionBatches; batch++ {
+	for range maxVersionDeletionBatches {
 		versionIdsToDelete, batchErr := s.store.GetBatch(ctx, cmd, maxVersionsToDeletePerBatch, versionsToKeep)
 		if batchErr != nil {
 			return batchErr

@@ -148,7 +148,7 @@ func TestZipkinClient_Traces(t *testing.T) {
 		name           string
 		serviceName    string
 		spanName       string
-		mockResponse   interface{}
+		mockResponse   any
 		mockStatusCode int
 		expectedResult [][]model.SpanModel
 		expectError    bool

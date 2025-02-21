@@ -19,6 +19,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/eval"
 	ngModels "github.com/grafana/grafana/pkg/services/ngalert/models"
 	"github.com/grafana/grafana/pkg/util"
+	"maps"
 )
 
 func Test_StateToPostableAlert(t *testing.T) {
@@ -107,9 +108,7 @@ func Test_StateToPostableAlert(t *testing.T) {
 					result := StateToPostableAlert(alertState, appURL)
 
 					expected := make(models.LabelSet, len(alertState.Annotations)+1)
-					for k, v := range alertState.Annotations {
-						expected[k] = v
-					}
+					maps.Copy(expected, alertState.Annotations)
 					expected["__value_string__"] = expectedValueString
 
 					require.Equal(t, expected, result.Annotations)
@@ -128,9 +127,7 @@ func Test_StateToPostableAlert(t *testing.T) {
 					result := StateToPostableAlert(alertState, appURL)
 
 					expected := make(models.LabelSet, len(alertState.Annotations)+1)
-					for k, v := range alertState.Annotations {
-						expected[k] = v
-					}
+					maps.Copy(expected, alertState.Annotations)
 					expected[alertingModels.ImageTokenAnnotation] = alertState.Image.Token
 					expected[alertingModels.ImageURLAnnotation] = alertState.Image.URL
 
@@ -149,9 +146,7 @@ func Test_StateToPostableAlert(t *testing.T) {
 					result := StateToPostableAlert(alertState, appURL)
 
 					expected := make(models.LabelSet, len(alertState.Annotations)+1)
-					for k, v := range alertState.Annotations {
-						expected[k] = v
-					}
+					maps.Copy(expected, alertState.Annotations)
 
 					require.Equal(t, expected, result.Annotations)
 				})
@@ -175,9 +170,7 @@ func Test_StateToPostableAlert(t *testing.T) {
 					result := StateToPostableAlert(alertState, appURL)
 
 					expected := make(models.LabelSet, len(alertState.Labels)+1)
-					for k, v := range alertState.Labels {
-						expected[k] = v
-					}
+					maps.Copy(expected, alertState.Labels)
 					expected[model.AlertNameLabel] = NoDataAlertName
 					expected[Rulename] = alertName
 
@@ -204,9 +197,7 @@ func Test_StateToPostableAlert(t *testing.T) {
 					result := StateToPostableAlert(alertState, appURL)
 
 					expected := make(models.LabelSet, len(alertState.Labels)+1)
-					for k, v := range alertState.Labels {
-						expected[k] = v
-					}
+					maps.Copy(expected, alertState.Labels)
 					expected[model.AlertNameLabel] = ErrorAlertName
 					expected[Rulename] = alertName
 
@@ -319,7 +310,7 @@ func Test_FromAlertsStateToStoppedAlert(t *testing.T) {
 func randomMapOfStrings() map[string]string {
 	max := 5
 	result := make(map[string]string, max)
-	for i := 0; i < max; i++ {
+	for range max {
 		result[util.GenerateShortUID()] = util.GenerateShortUID()
 	}
 	return result

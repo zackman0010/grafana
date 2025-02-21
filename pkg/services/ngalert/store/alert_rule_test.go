@@ -1588,7 +1588,7 @@ func TestIncreaseVersionForAllRulesInNamespaces(t *testing.T) {
 	gen = gen.With(gen.WithIntervalMatching(store.Cfg.BaseInterval)).With(gen.WithOrgID(orgID))
 
 	alertRules := make([]*models.AlertRule, 0, 5)
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		alertRules = append(alertRules, createRule(t, store, gen))
 	}
 	alertRuleNamespaceUIDs := make([]string, 0, len(alertRules))
@@ -1660,7 +1660,7 @@ func TestGetRuleVersions(t *testing.T) {
 	})
 
 	t.Run("should not remove versions without diff", func(t *testing.T) {
-		for i := 0; i < rand.Intn(2)+1; i++ {
+		for range rand.Intn(2) + 1 {
 			r, err := store.GetAlertRuleByUID(context.Background(), &models.GetAlertRuleByUIDQuery{UID: ruleV2.UID})
 			require.NoError(t, err)
 			rn := models.CopyRule(r)

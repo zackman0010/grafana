@@ -83,12 +83,7 @@ func (s *tankSim) GetValues(t time.Time) map[string]any {
 			v -= (elapsed * s.cfg.DrainRate)
 		}
 
-		p := v / s.cfg.TankCapacity
-		if p > 1 {
-			p = 1
-		} else if p < 0 {
-			p = 0
-		}
+		p := min(v/s.cfg.TankCapacity, 1)
 
 		s.state.FillPercent = p
 		s.state.Time = t

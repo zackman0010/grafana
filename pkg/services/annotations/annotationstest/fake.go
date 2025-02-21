@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/grafana/grafana/pkg/services/annotations"
+	"maps"
 )
 
 type fakeAnnotationsRepo struct {
@@ -94,8 +95,6 @@ func (repo *fakeAnnotationsRepo) Items() map[int64]annotations.Item {
 	repo.mtx.Lock()
 	defer repo.mtx.Unlock()
 	ret := make(map[int64]annotations.Item)
-	for k, v := range repo.annotations {
-		ret[k] = v
-	}
+	maps.Copy(ret, repo.annotations)
 	return ret
 }

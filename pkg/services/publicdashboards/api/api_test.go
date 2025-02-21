@@ -491,7 +491,7 @@ func TestAPIUpdatePublicDashboard(t *testing.T) {
 		PublicDashboardUid   string
 		Body                 string
 		ExpectedResponse     *PublicDashboard
-		ExpectedError        interface{}
+		ExpectedError        any
 		ExpectedHttpResponse int
 		ShouldCallService    bool
 	}{

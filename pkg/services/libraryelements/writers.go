@@ -9,6 +9,7 @@ import (
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/infra/metrics"
 	"github.com/grafana/grafana/pkg/services/libraryelements/model"
+	"slices"
 )
 
 type Pair struct {
@@ -123,11 +124,8 @@ func parseFolderFilter(query model.SearchLibraryElementsQuery) FolderFilter {
 		folderUIDs = strings.Split(query.FolderFilterUIDs, ",")
 		result.folderUIDs = folderUIDs
 
-		for _, folderUID := range folderUIDs {
-			if isUIDGeneralFolder(folderUID) {
-				result.includeGeneralFolder = true
-				break
-			}
+		if slices.ContainsFunc(folderUIDs, isUIDGeneralFolder) {
+			result.includeGeneralFolder = true
 		}
 	}
 

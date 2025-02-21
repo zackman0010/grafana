@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	pref "github.com/grafana/grafana/pkg/services/preference"
+	"slices"
 )
 
 // preferenceKey represents the primarily used index to access
@@ -61,9 +62,7 @@ func (s *inmemStore) List(ctx context.Context, preference *pref.Preference) ([]*
 	}
 
 	// Org + Teams (teams are numerically ordered)
-	sort.Slice(preference.Teams, func(i, j int) bool {
-		return preference.Teams[i] < preference.Teams[j]
-	})
+	slices.Sort(preference.Teams)
 
 	for _, t := range preference.Teams {
 		p, ok := s.preference[preferenceKey{

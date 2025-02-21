@@ -26,6 +26,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/store/entity"
 	kdash "github.com/grafana/grafana/pkg/services/store/kind/dashboard"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 type dashboardLoader interface {
@@ -730,12 +731,7 @@ func (i *searchIndex) removeFolder(_ context.Context, index *orgIndex, folderUID
 }
 
 func stringInSlice(str string, slice []string) bool {
-	for _, s := range slice {
-		if s == str {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, str)
 }
 
 func (i *searchIndex) updateDashboard(ctx context.Context, orgID int64, index *orgIndex, dash dashboard) error {

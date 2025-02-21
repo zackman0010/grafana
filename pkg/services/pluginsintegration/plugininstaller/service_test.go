@@ -14,6 +14,7 @@ import (
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/require"
+	"slices"
 )
 
 // Test if the service is disabled
@@ -138,10 +139,8 @@ func TestService_Run(t *testing.T) {
 				pluginstore.New(preg, &fakes.FakeLoader{}),
 				&fakes.FakePluginInstaller{
 					AddFunc: func(ctx context.Context, pluginID string, version string, opts plugins.AddOpts) error {
-						for _, plugin := range tt.pluginsToFail {
-							if plugin == pluginID {
-								return errors.New("Failed to install plugin")
-							}
+						if slices.Contains(tt.pluginsToFail, pluginID) {
+							return errors.New("Failed to install plugin")
 						}
 						if !tt.shouldInstall {
 							t.Fatal("Should not install plugin")
@@ -181,13 +180,7 @@ func TestService_Run(t *testing.T) {
 				expectedInstalled := 0
 				expectedInstalledFromURL := 0
 				for _, plugin := range tt.pluginsToInstall {
-					expectedFailed := false
-					for _, pluginFail := range tt.pluginsToFail {
-						if plugin.ID == pluginFail {
-							expectedFailed = true
-							break
-						}
-					}
+					expectedFailed := slices.Contains(tt.pluginsToFail, plugin.ID)
 					if expectedFailed {
 						continue
 					}

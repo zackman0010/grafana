@@ -26,6 +26,8 @@ import (
 	"github.com/grafana/grafana/pkg/services/ssosettings/models"
 	"github.com/grafana/grafana/pkg/services/ssosettings/strategies"
 	"github.com/grafana/grafana/pkg/setting"
+	"maps"
+	maps0 "maps"
 )
 
 var _ ssosettings.Service = (*Service)(nil)
@@ -55,9 +57,7 @@ func ProvideService(cfg *setting.Cfg, sqlStore db.DB, ac ac.AccessControl,
 	}
 
 	configurableProviders := make(map[string]bool)
-	for provider, enabled := range cfg.SSOSettingsConfigurableProviders {
-		configurableProviders[provider] = enabled
-	}
+	maps.Copy(configurableProviders, cfg.SSOSettingsConfigurableProviders)
 
 	providersList := ssosettings.AllOAuthProviders
 
@@ -507,9 +507,7 @@ func getConfigMaps(settings map[string]any) []map[string]any {
 func mergeSettings(storedSettings, systemSettings map[string]any) map[string]any {
 	settings := make(map[string]any)
 
-	for k, v := range storedSettings {
-		settings[k] = v
-	}
+	maps.Copy(settings, storedSettings)
 
 	for k, v := range systemSettings {
 		if _, ok := settings[k]; !ok {
@@ -569,9 +567,7 @@ func mergeSecrets(settings map[string]any, storedSettings map[string]any) (map[s
 func overrideMaps(maps ...map[string]any) map[string]any {
 	result := make(map[string]any)
 	for _, m := range maps {
-		for k, v := range m {
-			result[k] = v
-		}
+		maps0.Copy(result, m)
 	}
 	return result
 }

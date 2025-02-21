@@ -279,7 +279,7 @@ func TestSSOSettingsAPI_GetForProvider(t *testing.T) {
 			expectedResult: &models.SSOSettings{
 				ID:        "1",
 				Provider:  "azuread",
-				Settings:  make(map[string]interface{}),
+				Settings:  make(map[string]any),
 				Created:   time.Now(),
 				Updated:   time.Now(),
 				IsDeleted: false,
@@ -403,7 +403,7 @@ func TestSSOSettingsAPI_List(t *testing.T) {
 				{
 					ID:       "1",
 					Provider: "azuread",
-					Settings: make(map[string]interface{}),
+					Settings: make(map[string]any),
 					Source:   models.DB,
 				},
 			},
@@ -426,19 +426,19 @@ func TestSSOSettingsAPI_List(t *testing.T) {
 				{
 					ID:       "1",
 					Provider: "azuread",
-					Settings: make(map[string]interface{}),
+					Settings: make(map[string]any),
 					Source:   models.DB,
 				},
 				{
 					ID:       "2",
 					Provider: "github",
-					Settings: make(map[string]interface{}),
+					Settings: make(map[string]any),
 					Source:   models.DB,
 				},
 				{
 					ID:       "3",
 					Provider: "okta",
-					Settings: make(map[string]interface{}),
+					Settings: make(map[string]any),
 					Source:   models.System,
 				},
 			},
@@ -476,7 +476,7 @@ func TestSSOSettingsAPI_List(t *testing.T) {
 				{
 					ID:        "1",
 					Provider:  "azuread",
-					Settings:  make(map[string]interface{}),
+					Settings:  make(map[string]any),
 					Created:   time.Now(),
 					Updated:   time.Now(),
 					IsDeleted: false,
@@ -485,7 +485,7 @@ func TestSSOSettingsAPI_List(t *testing.T) {
 				{
 					ID:        "2",
 					Provider:  "github",
-					Settings:  make(map[string]interface{}),
+					Settings:  make(map[string]any),
 					Created:   time.Now(),
 					Updated:   time.Now(),
 					IsDeleted: false,
@@ -494,7 +494,7 @@ func TestSSOSettingsAPI_List(t *testing.T) {
 				{
 					ID:        "3",
 					Provider:  "okta",
-					Settings:  make(map[string]interface{}),
+					Settings:  make(map[string]any),
 					Created:   time.Now(),
 					Updated:   time.Now(),
 					IsDeleted: false,

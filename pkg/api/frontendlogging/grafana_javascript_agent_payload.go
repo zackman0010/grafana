@@ -167,12 +167,12 @@ func (t Traces) MarshalJSON() ([]byte, error) {
 func (t Traces) SpanSlice() []ptrace.Span {
 	spans := make([]ptrace.Span, 0)
 	rss := t.ResourceSpans()
-	for i := 0; i < rss.Len(); i++ {
+	for i := range rss.Len() {
 		rs := rss.At(i)
 		ilss := rs.ScopeSpans()
-		for j := 0; j < ilss.Len(); j++ {
+		for j := range ilss.Len() {
 			s := ilss.At(j).Spans()
-			for si := 0; si < s.Len(); si++ {
+			for si := range s.Len() {
 				spans = append(spans, s.At(si))
 			}
 		}

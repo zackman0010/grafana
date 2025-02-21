@@ -13,6 +13,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/models"
 	"github.com/grafana/grafana/pkg/services/ngalert/state"
 	history_model "github.com/grafana/grafana/pkg/services/ngalert/state/historian/model"
+	"maps"
 )
 
 const StateHistoryWriteTimeout = time.Minute
@@ -111,8 +112,6 @@ func (p PanelKey) PanelID() int64 {
 }
 
 func mergeLabels(base, into data.Labels) data.Labels {
-	for k, v := range into {
-		base[k] = v
-	}
+	maps.Copy(base, into)
 	return base
 }

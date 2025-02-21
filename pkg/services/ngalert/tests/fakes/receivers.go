@@ -9,7 +9,7 @@ import (
 
 type ReceiverServiceMethodCall struct {
 	Method string
-	Args   []interface{}
+	Args   []any
 }
 
 type FakeReceiverService struct {
@@ -26,12 +26,12 @@ func NewFakeReceiverService() *FakeReceiverService {
 }
 
 func (f *FakeReceiverService) GetReceiver(ctx context.Context, q models.GetReceiverQuery, u identity.Requester) (*models.Receiver, error) {
-	f.MethodCalls = append(f.MethodCalls, ReceiverServiceMethodCall{Method: "GetReceiver", Args: []interface{}{ctx, q}})
+	f.MethodCalls = append(f.MethodCalls, ReceiverServiceMethodCall{Method: "GetReceiver", Args: []any{ctx, q}})
 	return f.GetReceiverFn(ctx, q, u)
 }
 
 func (f *FakeReceiverService) ListReceivers(ctx context.Context, q models.ListReceiversQuery, u identity.Requester) ([]*models.Receiver, error) {
-	f.MethodCalls = append(f.MethodCalls, ReceiverServiceMethodCall{Method: "ListReceivers", Args: []interface{}{ctx, q}})
+	f.MethodCalls = append(f.MethodCalls, ReceiverServiceMethodCall{Method: "ListReceivers", Args: []any{ctx, q}})
 	return f.ListReceiversFn(ctx, q, u)
 }
 

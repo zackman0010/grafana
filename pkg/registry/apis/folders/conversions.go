@@ -16,8 +16,8 @@ import (
 
 func LegacyCreateCommandToUnstructured(cmd *folder.CreateFolderCommand) (*unstructured.Unstructured, error) {
 	obj := &unstructured.Unstructured{
-		Object: map[string]interface{}{
-			"spec": map[string]interface{}{
+		Object: map[string]any{
+			"spec": map[string]any{
 				"title":       cmd.Title,
 				"description": cmd.Description,
 			},

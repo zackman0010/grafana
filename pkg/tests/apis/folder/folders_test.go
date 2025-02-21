@@ -276,7 +276,7 @@ func doFolderTests(t *testing.T, helper *apis.K8sTestHelper) *apis.K8sTestHelper
 		uids := []string{first.GetName()}
 
 		// Create (with name generation) two folders
-		for i := 0; i < 2; i++ {
+		for range 2 {
 			out, err := client.Resource.Create(context.Background(),
 				helper.LoadYAMLOrJSONFile("testdata/folder-generate.yaml"),
 				metav1.CreateOptions{},
@@ -725,7 +725,7 @@ func TestIntegrationFolderGetPermissions(t *testing.T) {
 			parents := getResp.Result.Parents
 			require.Equal(t, len(tc.expectedParentUIDs), len(parents))
 			require.Equal(t, len(tc.expectedParentTitles), len(parents))
-			for i := 0; i < len(tc.expectedParentUIDs); i++ {
+			for i := range tc.expectedParentUIDs {
 				require.Equal(t, tc.expectedParentUIDs[i], parents[i].UID)
 				require.Equal(t, tc.expectedParentTitles[i], parents[i].Title)
 			}
@@ -1074,7 +1074,7 @@ func TestFoldersGetAPIEndpointK8S(t *testing.T) {
 					require.NoError(t, resp.Body.Close())
 
 					// ignore IDs
-					for i := 0; i < len(list); i++ {
+					for i := range list {
 						list[i].ID = 0
 					}
 

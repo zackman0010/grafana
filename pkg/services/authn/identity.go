@@ -15,6 +15,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/login"
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/services/user"
+	"slices"
 )
 
 const GlobalOrgID = int64(0)
@@ -268,12 +269,7 @@ func (i *Identity) HasUniqueId() bool {
 }
 
 func (i *Identity) IsAuthenticatedBy(providers ...string) bool {
-	for _, p := range providers {
-		if i.AuthenticatedBy == p {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(providers, i.AuthenticatedBy)
 }
 
 func (i *Identity) IsNil() bool {

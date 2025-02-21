@@ -27,11 +27,11 @@ var FolderResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Title", Type: "string", Format: "string", Description: "The display name"},
 			{Name: "Parent", Type: "string", Format: "string", Description: "Parent folder UID"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			r, ok := obj.(*Folder)
 			if ok {
 				accessor, _ := utils.MetaAccessor(r)
-				return []interface{}{
+				return []any{
 					r.Name,
 					r.Spec.Title,
 					accessor.GetFolder(),

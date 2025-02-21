@@ -20,6 +20,7 @@ import (
 	"github.com/grafana/grafana/pkg/infra/httpclient"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/setting"
+	"maps"
 )
 
 var logger = log.New("tsdb.opentsdb")
@@ -168,9 +169,7 @@ func (s *Service) parseResponse(logger log.Logger, res *http.Response, myRefID s
 	frames := data.Frames{}
 	for _, val := range responseData {
 		labels := data.Labels{}
-		for label, value := range val.Tags {
-			labels[label] = value
-		}
+		maps.Copy(labels, val.Tags)
 
 		frame := data.NewFrameOfFieldTypes(val.Metric, len(val.DataPoints), data.FieldTypeTime, data.FieldTypeFloat64)
 		frame.Meta = &data.FrameMeta{Type: data.FrameTypeTimeSeriesMulti, TypeVersion: data.FrameTypeVersion{0, 1}}

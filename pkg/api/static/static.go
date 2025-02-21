@@ -27,6 +27,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/web"
+	"slices"
 )
 
 var Root string
@@ -123,10 +124,8 @@ func staticHandler(ctx *web.Context, log log.Logger, opt StaticOptions) bool {
 	}
 
 	file := ctx.Req.URL.Path
-	for _, p := range opt.Exclude {
-		if file == p {
-			return false
-		}
+	if slices.Contains(opt.Exclude, file) {
+		return false
 	}
 
 	// if we have a prefix, filter requests by stripping the prefix

@@ -27,10 +27,10 @@ var UserResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Email", Type: "string", Format: "string", Description: "The user email"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			u, ok := obj.(*User)
 			if ok {
-				return []interface{}{
+				return []any{
 					u.Name,
 					u.Spec.Login,
 					u.Spec.Email,
@@ -53,12 +53,12 @@ var TeamResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Email", Type: "string", Format: "string", Description: "team email"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*Team)
 			if !ok {
 				return nil, fmt.Errorf("expected team")
 			}
-			return []interface{}{
+			return []any{
 				m.Name,
 				m.Spec.Title,
 				m.Spec.Email,
@@ -79,10 +79,10 @@ var ServiceAccountResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Disabled", Type: "boolean"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			sa, ok := obj.(*ServiceAccount)
 			if ok {
-				return []interface{}{
+				return []any{
 					sa.Name,
 					sa.Spec.Title,
 					sa.Spec.Disabled,
@@ -105,12 +105,12 @@ var SSOSettingResourceInfo = utils.NewResourceInfo(
 			{Name: "Enabled", Type: "boolean"},
 			{Name: "Created At", Type: "string", Format: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*SSOSetting)
 			if !ok {
 				return nil, fmt.Errorf("expected sso setting")
 			}
-			return []interface{}{
+			return []any{
 				m.Name,
 				m.Spec.Source,
 				m.Spec.Settings.GetNestedBool("enabled"),
@@ -130,12 +130,12 @@ var TeamBindingResourceInfo = utils.NewResourceInfo(
 			{Name: "Team", Type: "string"},
 			{Name: "Created At", Type: "string", Format: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*TeamBinding)
 			if !ok {
 				return nil, fmt.Errorf("expected team binding")
 			}
-			return []interface{}{
+			return []any{
 				m.Name,
 				m.Spec.Team.Name,
 				m.CreationTimestamp.UTC().Format(time.RFC3339),

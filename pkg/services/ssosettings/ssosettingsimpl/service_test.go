@@ -1286,9 +1286,7 @@ func TestService_Upsert(t *testing.T) {
 
 		expected := settings
 		expected.Settings = make(map[string]any)
-		for key, value := range settings.Settings {
-			expected.Settings[key] = value
-		}
+		maps.Copy(expected.Settings, settings.Settings)
 		expected.Settings["client_secret"] = "encrypted-client-secret"
 
 		reloadable := ssosettingstests.NewMockReloadable(t)
@@ -1332,9 +1330,7 @@ func TestService_Upsert(t *testing.T) {
 
 		expected := settings
 		expected.Settings = make(map[string]any)
-		for key, value := range settings.Settings {
-			expected.Settings[key] = value
-		}
+		maps.Copy(expected.Settings, settings.Settings)
 		expected.Settings["client_secret"] = "current-client-secret"
 		expected.Settings["private_key"] = "current-private-key"
 

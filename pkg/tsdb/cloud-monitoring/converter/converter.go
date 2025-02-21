@@ -1085,11 +1085,11 @@ func readCategorizedStream(iter *sdkjsoniter.Iterator) backend.DataResponse {
 	return rsp
 }
 
-func readCategorizedStreamField(iter *sdkjsoniter.Iterator) (map[string]interface{}, map[string]interface{}, error) {
+func readCategorizedStreamField(iter *sdkjsoniter.Iterator) (map[string]any, map[string]any, error) {
 	parsedLabels := data.Labels{}
 	structuredMetadata := data.Labels{}
-	var parsedLabelsMap map[string]interface{}
-	var structuredMetadataMap map[string]interface{}
+	var parsedLabelsMap map[string]any
+	var structuredMetadataMap map[string]any
 streamField:
 	for streamField, err := iter.ReadObject(); ; streamField, err = iter.ReadObject() {
 		if err != nil {
@@ -1159,14 +1159,14 @@ func labelsToRawJson(labels data.Labels) (json.RawMessage, error) {
 	return json.RawMessage(bytes), nil
 }
 
-func labelsToMap(labels data.Labels) (map[string]interface{}, error) {
+func labelsToMap(labels data.Labels) (map[string]any, error) {
 	// data.Labels when converted to JSON keep the fields sorted
 	labelJson, err := labelsToRawJson(labels)
 	if err != nil {
 		return nil, err
 	}
 
-	var labelMap map[string]interface{}
+	var labelMap map[string]any
 	err = jsoniter.Unmarshal(labelJson, &labelMap)
 	if err != nil {
 		return nil, err

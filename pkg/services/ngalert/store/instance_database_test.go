@@ -492,7 +492,7 @@ func TestIntegrationFullSync(t *testing.T) {
 
 		largeCount := 300
 		largeSet := make([]models.AlertInstance, largeCount)
-		for i := 0; i < largeCount; i++ {
+		for i := range largeCount {
 			largeSet[i] = generateTestAlertInstance(orgID, fmt.Sprintf("large-%d", i))
 		}
 

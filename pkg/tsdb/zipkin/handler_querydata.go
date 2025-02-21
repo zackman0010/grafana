@@ -80,9 +80,9 @@ func loadQuery(backendQuery backend.DataQuery) (zipkinQuery, error) {
 }
 
 type TraceKeyValuePair struct {
-	Key   string      `json:"key"`
-	Value interface{} `json:"value"`
-	Type  string      `json:"type,omitempty"`
+	Key   string `json:"key"`
+	Value any    `json:"value"`
+	Type  string `json:"type,omitempty"`
 }
 
 type TraceLog struct {
@@ -106,7 +106,7 @@ func transformResponse(zipkinSpans []model.SpanModel, refId string) *data.Frame 
 
 	newFrame.Meta = &data.FrameMeta{
 		PreferredVisualization: "trace",
-		Custom: map[string]interface{}{
+		Custom: map[string]any{
 			"traceFormat": "zipkin",
 		},
 	}
@@ -196,7 +196,7 @@ func getServiceTags(span model.SpanModel) []TraceKeyValuePair {
 	return tags
 }
 
-func valueToTag(key string, value interface{}) TraceKeyValuePair {
+func valueToTag(key string, value any) TraceKeyValuePair {
 	return TraceKeyValuePair{
 		Key:   key,
 		Value: value,

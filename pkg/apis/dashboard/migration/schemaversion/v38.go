@@ -2,16 +2,16 @@ package schemaversion
 
 // V38 updates the configuration of the table panel to use the new cellOptions format
 // and updates the overrides to use the new cellOptions format
-func V38(dashboard map[string]interface{}) error {
+func V38(dashboard map[string]any) error {
 	dashboard["schemaVersion"] = int(38)
 
-	panels, ok := dashboard["panels"].([]interface{})
+	panels, ok := dashboard["panels"].([]any)
 	if !ok {
 		return nil
 	}
 
 	for _, panel := range panels {
-		p, ok := panel.(map[string]interface{})
+		p, ok := panel.(map[string]any)
 		if !ok {
 			continue
 		}
@@ -21,17 +21,17 @@ func V38(dashboard map[string]interface{}) error {
 			continue
 		}
 
-		fieldConfig, ok := p["fieldConfig"].(map[string]interface{})
+		fieldConfig, ok := p["fieldConfig"].(map[string]any)
 		if !ok {
 			continue
 		}
 
-		defaults, ok := fieldConfig["defaults"].(map[string]interface{})
+		defaults, ok := fieldConfig["defaults"].(map[string]any)
 		if !ok {
 			continue
 		}
 
-		custom, ok := defaults["custom"].(map[string]interface{})
+		custom, ok := defaults["custom"].(map[string]any)
 		if !ok {
 			continue
 		}
@@ -53,25 +53,25 @@ func V38(dashboard map[string]interface{}) error {
 }
 
 // migrateOverrides updates the overrides configuration to use the new cellOptions format
-func migrateOverrides(fieldConfig map[string]interface{}) {
-	overrides, ok := fieldConfig["overrides"].([]interface{})
+func migrateOverrides(fieldConfig map[string]any) {
+	overrides, ok := fieldConfig["overrides"].([]any)
 	if !ok {
 		return
 	}
 
 	for _, override := range overrides {
-		o, ok := override.(map[string]interface{})
+		o, ok := override.(map[string]any)
 		if !ok {
 			continue
 		}
 
-		properties, ok := o["properties"].([]interface{})
+		properties, ok := o["properties"].([]any)
 		if !ok {
 			continue
 		}
 
 		for _, property := range properties {
-			prop, ok := property.(map[string]interface{})
+			prop, ok := property.(map[string]any)
 			if !ok {
 				continue
 			}
@@ -90,7 +90,7 @@ func migrateOverrides(fieldConfig map[string]interface{}) {
 }
 
 // migrateTableDisplayModeToCellOptions converts the old displayMode string to the new cellOptions format
-func migrateTableDisplayModeToCellOptions(displayMode string) map[string]interface{} {
+func migrateTableDisplayModeToCellOptions(displayMode string) map[string]any {
 	switch displayMode {
 	case "basic", "gradient-gauge", "lcd-gauge":
 		gaugeMode := "basic"
@@ -99,7 +99,7 @@ func migrateTableDisplayModeToCellOptions(displayMode string) map[string]interfa
 		} else if displayMode == "lcd-gauge" {
 			gaugeMode = "lcd"
 		}
-		return map[string]interface{}{
+		return map[string]any{
 			"type": "gauge",
 			"mode": gaugeMode,
 		}
@@ -109,13 +109,13 @@ func migrateTableDisplayModeToCellOptions(displayMode string) map[string]interfa
 		if displayMode == "color-background" {
 			mode = "gradient"
 		}
-		return map[string]interface{}{
+		return map[string]any{
 			"type": "color-background",
 			"mode": mode,
 		}
 
 	default:
-		return map[string]interface{}{
+		return map[string]any{
 			"type": displayMode,
 		}
 	}

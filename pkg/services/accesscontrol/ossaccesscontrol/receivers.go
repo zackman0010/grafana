@@ -20,6 +20,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/team"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 var ReceiversViewActions = []string{accesscontrol.ActionAlertingReceiversRead}
@@ -52,9 +53,9 @@ func ProvideReceiverPermissionsService(
 			ServiceAccounts: true,
 		},
 		PermissionsToActions: map[string][]string{
-			string(alertingac.ReceiverPermissionView):  append([]string{}, ReceiversViewActions...),
-			string(alertingac.ReceiverPermissionEdit):  append([]string{}, ReceiversEditActions...),
-			string(alertingac.ReceiverPermissionAdmin): append([]string{}, ReceiversAdminActions...),
+			string(alertingac.ReceiverPermissionView):  slices.Clone(ReceiversViewActions),
+			string(alertingac.ReceiverPermissionEdit):  slices.Clone(ReceiversEditActions),
+			string(alertingac.ReceiverPermissionAdmin): slices.Clone(ReceiversAdminActions),
 		},
 		ReaderRoleName: "Alerting receiver permission reader",
 		WriterRoleName: "Alerting receiver permission writer",

@@ -10,21 +10,21 @@ func TestV38(t *testing.T) {
 	tests := []migrationTestCase{
 		{
 			name: "no table panels",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
 				"title":         "Test Dashboard",
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type":  "graph",
 						"title": "Panel 1",
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"title":         "Test Dashboard",
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type":  "graph",
 						"title": "Panel 1",
 					},
@@ -33,14 +33,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with basic gauge displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "basic",
 								},
 							},
@@ -48,15 +48,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "gauge",
 										"mode": "basic",
 									},
@@ -69,14 +69,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with gradient-gauge displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "gradient-gauge",
 								},
 							},
@@ -84,15 +84,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "gauge",
 										"mode": "gradient",
 									},
@@ -105,14 +105,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with lcd-gauge displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "lcd-gauge",
 								},
 							},
@@ -120,15 +120,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "gauge",
 										"mode": "lcd",
 									},
@@ -141,14 +141,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with color-background displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "color-background",
 								},
 							},
@@ -156,15 +156,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "color-background",
 										"mode": "gradient",
 									},
@@ -177,14 +177,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with color-background-solid displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "color-background-solid",
 								},
 							},
@@ -192,15 +192,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "color-background",
 										"mode": "basic",
 									},
@@ -213,14 +213,14 @@ func TestV38(t *testing.T) {
 		},
 		{
 			name: "table panel with default displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
 									"displayMode": "some-other-mode",
 								},
 							},
@@ -228,15 +228,15 @@ func TestV38(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type": "table",
-						"fieldConfig": map[string]interface{}{
-							"defaults": map[string]interface{}{
-								"custom": map[string]interface{}{
-									"cellOptions": map[string]interface{}{
+						"fieldConfig": map[string]any{
+							"defaults": map[string]any{
+								"custom": map[string]any{
+									"cellOptions": map[string]any{
 										"type": "some-other-mode",
 									},
 								},

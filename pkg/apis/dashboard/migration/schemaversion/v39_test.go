@@ -10,20 +10,20 @@ func TestV39(t *testing.T) {
 	tests := []migrationTestCase{
 		{
 			name: "no transformations",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 38,
 				"title":         "Test Dashboard",
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"title": "Panel 1",
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"title":         "Test Dashboard",
 				"schemaVersion": 39,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"title": "Panel 1",
 					},
 				},
@@ -31,15 +31,15 @@ func TestV39(t *testing.T) {
 		},
 		{
 			name: "timeSeriesTable transformation with refIdToStat",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 38,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"transformations": []interface{}{
-							map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"transformations": []any{
+							map[string]any{
 								"id": "timeSeriesTable",
-								"options": map[string]interface{}{
-									"refIdToStat": map[string]interface{}{
+								"options": map[string]any{
+									"refIdToStat": map[string]any{
 										"A": "mean",
 										"B": "max",
 									},
@@ -49,18 +49,18 @@ func TestV39(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 39,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"transformations": []interface{}{
-							map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"transformations": []any{
+							map[string]any{
 								"id": "timeSeriesTable",
-								"options": map[string]interface{}{
-									"A": map[string]interface{}{
+								"options": map[string]any{
+									"A": map[string]any{
 										"stat": "mean",
 									},
-									"B": map[string]interface{}{
+									"B": map[string]any{
 										"stat": "max",
 									},
 								},
@@ -72,14 +72,14 @@ func TestV39(t *testing.T) {
 		},
 		{
 			name: "non-timeSeriesTable transformation is not modified",
-			input: map[string]interface{}{
-				"panels": []interface{}{
-					map[string]interface{}{
-						"transformations": []interface{}{
-							map[string]interface{}{
+			input: map[string]any{
+				"panels": []any{
+					map[string]any{
+						"transformations": []any{
+							map[string]any{
 								"id": "otherTransform",
-								"options": map[string]interface{}{
-									"refIdToStat": map[string]interface{}{
+								"options": map[string]any{
+									"refIdToStat": map[string]any{
 										"A": "mean",
 									},
 								},
@@ -88,15 +88,15 @@ func TestV39(t *testing.T) {
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 39,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"transformations": []interface{}{
-							map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"transformations": []any{
+							map[string]any{
 								"id": "otherTransform",
-								"options": map[string]interface{}{
-									"refIdToStat": map[string]interface{}{
+								"options": map[string]any{
+									"refIdToStat": map[string]any{
 										"A": "mean",
 									},
 								},

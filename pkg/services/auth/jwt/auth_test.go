@@ -162,7 +162,7 @@ func TestVerifyUsingJWKSetURL(t *testing.T) {
 
 func TestCachingJWKHTTPResponse(t *testing.T) {
 	jwkCachingScenario(t, "caches the jwk response", func(t *testing.T, sc cachingScenarioContext) {
-		for i := 0; i < 5; i++ {
+		for i := range 5 {
 			token := sign(t, &jwKeys[0], jwt.Claims{Subject: subject}, nil)
 			_, err := sc.authJWTSvc.Verify(sc.ctx, token)
 			require.NoError(t, err, "verify call %d", i+1)
@@ -189,7 +189,7 @@ func TestCachingJWKHTTPResponse(t *testing.T) {
 	})
 
 	jwkCachingScenario(t, "does not cache the response when TTL is zero", func(t *testing.T, sc cachingScenarioContext) {
-		for i := 0; i < 2; i++ {
+		for i := range 2 {
 			_, err := sc.authJWTSvc.Verify(sc.ctx, sign(t, &jwKeys[i], jwt.Claims{Subject: subject}, nil))
 			require.NoError(t, err, "verify call %d", i+1)
 		}

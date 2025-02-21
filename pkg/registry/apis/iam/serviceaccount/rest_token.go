@@ -49,7 +49,7 @@ func (s *LegacyTokenRest) ProducesMIMETypes(verb string) []string {
 }
 
 // ProducesObject implements rest.StorageMetadata.
-func (s *LegacyTokenRest) ProducesObject(verb string) interface{} {
+func (s *LegacyTokenRest) ProducesObject(verb string) any {
 	return s.New()
 }
 

@@ -24,7 +24,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			verb: "CREATE",
 			input: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{
+					Object: map[string]any{
 						"id": float64(1),
 					},
 				},
@@ -37,7 +37,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			},
 			expected: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{},
+					Object: map[string]any{},
 				},
 				TypeMeta: metav1.TypeMeta{
 					Kind: "Dashboard",
@@ -53,7 +53,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			verb: "UPDATE",
 			input: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{
+					Object: map[string]any{
 						"id": float64(1),
 					},
 				},
@@ -66,7 +66,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			},
 			expected: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{},
+					Object: map[string]any{},
 				},
 				TypeMeta: metav1.TypeMeta{
 					Kind: "Dashboard",
@@ -82,7 +82,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			verb: "UPDATE",
 			input: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{
+					Object: map[string]any{
 						"id":      float64(1),
 						"testing": "this",
 					},
@@ -96,7 +96,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			},
 			expected: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{
+					Object: map[string]any{
 						"testing": "this",
 					},
 				},
@@ -114,7 +114,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			verb: "CREATE",
 			input: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{
+					Object: map[string]any{
 						"id": float64(0),
 					},
 				},
@@ -127,7 +127,7 @@ func TestDashboardAPIBuilder_Mutate(t *testing.T) {
 			},
 			expected: &v0alpha1.Dashboard{
 				Spec: common.Unstructured{
-					Object: map[string]interface{}{},
+					Object: map[string]any{},
 				},
 				TypeMeta: metav1.TypeMeta{
 					Kind: "Dashboard",

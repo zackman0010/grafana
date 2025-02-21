@@ -24,6 +24,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/sqlstore/searchstore"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 const (
@@ -938,10 +939,5 @@ func (l *LibraryElementService) deleteLibraryElementsInFolderUID(c context.Conte
 }
 
 func contains(slice []string, element string) bool {
-	for _, item := range slice {
-		if item == element {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, element)
 }

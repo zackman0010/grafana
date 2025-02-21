@@ -166,7 +166,7 @@ func TestLargeLogsResponse(t *testing.T) {
 			},
 		}
 		rows := [][]any{}
-		for i := 0; i < 40000; i++ {
+		for i := range 40000 {
 			rows = append(rows, []any{json.Number(strconv.Itoa(i))})
 		}
 		res.Tables[0].Rows = rows

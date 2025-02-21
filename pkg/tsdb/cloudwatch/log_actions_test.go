@@ -885,7 +885,7 @@ func TestGroupResponseFrame(t *testing.T) {
 
 func asArray(field *data.Field) []any {
 	var vals []any
-	for i := 0; i < field.Len(); i++ {
+	for i := range field.Len() {
 		vals = append(vals, field.At(i))
 	}
 	return vals

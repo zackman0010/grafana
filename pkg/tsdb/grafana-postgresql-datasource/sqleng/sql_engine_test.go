@@ -93,7 +93,7 @@ func TestSQLEngine(t *testing.T) {
 			}),
 		)
 
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -137,7 +137,7 @@ func TestSQLEngine(t *testing.T) {
 			}),
 		)
 
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -166,7 +166,7 @@ func TestSQLEngine(t *testing.T) {
 				nilInt,
 			}),
 		)
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -191,7 +191,7 @@ func TestSQLEngine(t *testing.T) {
 				nilInt,
 			}),
 		)
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -230,7 +230,7 @@ func TestSQLEngine(t *testing.T) {
 			}),
 		)
 
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -259,7 +259,7 @@ func TestSQLEngine(t *testing.T) {
 				nilInt,
 			}),
 		)
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			err := convertSQLTimeColumnToEpochMS(originFrame, i)
 			require.NoError(t, err)
 		}
@@ -331,7 +331,7 @@ func TestSQLEngine(t *testing.T) {
 				Pointer(uint8(1)),
 			}),
 		)
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			_, err := convertSQLValueColumnToFloat(originFrame, i)
 			require.NoError(t, err)
 			if i == 8 {
@@ -387,7 +387,7 @@ func TestSQLEngine(t *testing.T) {
 				uint8NilPointer,
 			}),
 		)
-		for i := 0; i < len(originFrame.Fields); i++ {
+		for i := range originFrame.Fields {
 			t.Run("", func(t *testing.T) {
 				_, err := convertSQLValueColumnToFloat(originFrame, i)
 				require.NoError(t, err)

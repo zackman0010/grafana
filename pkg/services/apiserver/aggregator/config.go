@@ -11,6 +11,7 @@ import (
 	serviceclientset "github.com/grafana/grafana/pkg/generated/clientset/versioned"
 	informersv0alpha1 "github.com/grafana/grafana/pkg/generated/informers/externalversions"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
+	"maps"
 )
 
 type RemoteService struct {
@@ -51,9 +52,7 @@ func NewConfig(aggregator *aggregatorapiserver.Config, customExtraConfig *Custom
 		aggregatorAPIs := aggregatoropenapi.GetOpenAPIDefinitions(ref)
 		builderAPIs := builder.GetOpenAPIDefinitions(builders)(ref)
 
-		for k, v := range builderAPIs {
-			aggregatorAPIs[k] = v
-		}
+		maps.Copy(aggregatorAPIs, builderAPIs)
 
 		return aggregatorAPIs
 	}

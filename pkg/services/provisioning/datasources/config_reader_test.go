@@ -12,6 +12,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/services/org/orgtest"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 var (
@@ -479,7 +480,7 @@ func (s *spyStore) DeleteDataSource(ctx context.Context, cmd *datasources.Delete
 	for i, v := range s.items {
 		if cmd.Name == v.Name && cmd.OrgID == v.OrgID {
 			cmd.DeletedDatasourcesCount = 1
-			s.items = append(s.items[:i], s.items[i+1:]...)
+			s.items = slices.Delete(s.items, i, i+1)
 			return nil
 		}
 	}

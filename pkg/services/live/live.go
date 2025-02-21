@@ -398,9 +398,9 @@ type GrafanaLive struct {
 	surveyCaller *survey.Caller
 
 	// Websocket handlers
-	websocketHandler             interface{}
-	pushWebsocketHandler         interface{}
-	pushPipelineWebsocketHandler interface{}
+	websocketHandler             any
+	pushWebsocketHandler         any
+	pushPipelineWebsocketHandler any
 
 	// Full channel handler
 	channels   map[string]model.ChannelHandler
@@ -1343,7 +1343,7 @@ func (g *GrafanaLive) HandleWriteConfigsDeleteHTTP(c *contextmodel.ReqContext) r
 
 // Write to the standard log15 logger
 func handleLog(msg centrifuge.LogEntry) {
-	arr := make([]interface{}, 0)
+	arr := make([]any, 0)
 	for k, v := range msg.Fields {
 		if v == nil {
 			v = "<nil>"
@@ -1408,7 +1408,7 @@ func getHistogramMetric(val int, bounds []int, metricPrefix string) string {
 	return metricPrefix + "le_inf"
 }
 
-func (g *GrafanaLive) collectLiveStats(_ context.Context) (map[string]interface{}, error) {
+func (g *GrafanaLive) collectLiveStats(_ context.Context) (map[string]any, error) {
 	liveUsersAvg := 0
 	liveClientsAvg := 0
 
@@ -1427,7 +1427,7 @@ func (g *GrafanaLive) collectLiveStats(_ context.Context) (map[string]interface{
 		liveHAEnabled = 1
 	}
 
-	metrics := map[string]interface{}{
+	metrics := map[string]any{
 		"stats.live_enabled.count":      liveEnabled,
 		"stats.live_ha_enabled.count":   liveHAEnabled,
 		"stats.live_samples.count":      g.usageStats.sampleCount,

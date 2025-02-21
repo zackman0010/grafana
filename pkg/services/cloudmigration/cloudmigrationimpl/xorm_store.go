@@ -84,7 +84,7 @@ func (ss *sqlStore) GetCloudMigrationSessionList(ctx context.Context, orgID int6
 		return nil, err
 	}
 
-	for i := 0; i < len(migrations); i++ {
+	for i := range migrations {
 		m := migrations[i]
 
 		if err := ss.decryptToken(ctx, m); err != nil {
@@ -327,7 +327,7 @@ func (ss *sqlStore) GetSnapshotList(ctx context.Context, query cloudmigration.Li
 
 // CreateSnapshotResources initializes the local state of a resources belonging to a snapshot
 func (ss *sqlStore) CreateSnapshotResources(ctx context.Context, snapshotUid string, resources []cloudmigration.CloudMigrationResource) error {
-	for i := 0; i < len(resources); i++ {
+	for i := range resources {
 		resources[i].UID = util.GenerateShortUID()
 		// ensure snapshot_uids are consistent so that we can use in conjunction with refID for lookup later
 		resources[i].SnapshotUID = snapshotUid

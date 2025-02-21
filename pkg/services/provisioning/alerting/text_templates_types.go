@@ -14,10 +14,7 @@ type TemplateV1 struct {
 }
 
 func (v1 *TemplateV1) mapToModel() Template {
-	orgID := v1.OrgID.Value()
-	if orgID < 1 {
-		orgID = 1
-	}
+	orgID := max(v1.OrgID.Value(), 1)
 	return Template{
 		Data:  v1.Template,
 		OrgID: orgID,
@@ -39,10 +36,7 @@ func (v1 *DeleteTemplateV1) mapToModel() (DeleteTemplate, error) {
 	if name == "" {
 		return DeleteTemplate{}, errors.New("delete template missing name")
 	}
-	orgID := v1.OrgID.Value()
-	if orgID < 1 {
-		orgID = 1
-	}
+	orgID := max(v1.OrgID.Value(), 1)
 	return DeleteTemplate{
 		Name:  name,
 		OrgID: orgID,

@@ -190,9 +190,7 @@ func TestUnmarshalThresholdCommand(t *testing.T) {
 				for fingerprint := range cmd.LoadedDimensions {
 					actual = append(actual, uint64(fingerprint))
 				}
-				sort.Slice(actual, func(i, j int) bool {
-					return actual[i] < actual[j]
-				})
+				slices.Sort(actual)
 
 				require.EqualValues(t, []uint64{2, 3, 4, 5, 18446744073709551615}, actual)
 			},

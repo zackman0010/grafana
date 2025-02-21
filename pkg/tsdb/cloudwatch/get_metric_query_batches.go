@@ -64,7 +64,7 @@ func getConnectedQueries(root *models.CloudWatchQuery, queryReferences map[strin
 	queriesToReturn := []*models.CloudWatchQuery{}
 
 	queriesToVisit := []*models.CloudWatchQuery{root}
-	for i := 0; i < len(queriesToVisit); i++ {
+	for i := range queriesToVisit {
 		currentQuery := queriesToVisit[i]
 		queriesToReturn = append(queriesToReturn, currentQuery)
 		for _, queryRef := range queryReferences[currentQuery.Id] {

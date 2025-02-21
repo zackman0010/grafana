@@ -115,7 +115,7 @@ func (ss *SqlStore) GetDataSourcesByType(ctx context.Context, query *datasources
 	}
 
 	typeQuery := "type=?"
-	args := []interface{}{query.Type}
+	args := []any{query.Type}
 	for _, alias := range query.AliasIDs {
 		typeQuery += " OR type=?"
 		args = append(args, alias)
@@ -125,7 +125,7 @@ func (ss *SqlStore) GetDataSourcesByType(ctx context.Context, query *datasources
 	dataSources := make([]*datasources.DataSource, 0)
 	return dataSources, ss.db.WithDbSession(ctx, func(sess *db.Session) error {
 		if query.OrgID > 0 {
-			args = append([]interface{}{query.OrgID}, args...)
+			args = append([]any{query.OrgID}, args...)
 			return sess.Where("org_id=? AND "+typeQuery, args...).Asc("id").Find(&dataSources)
 		}
 		return sess.Where(typeQuery, args...).Asc("id").Find(&dataSources)
@@ -408,7 +408,7 @@ func (ss *SqlStore) UpdateDataSource(ctx context.Context, cmd *datasources.Updat
 }
 
 func generateNewDatasourceUid(sess *db.Session, orgId int64) (string, error) {
-	for i := 0; i < 3; i++ {
+	for range 3 {
 		uid := generateNewUid()
 
 		exists, err := sess.Where("org_id=? AND uid=?", orgId, uid).Get(&datasources.DataSource{})

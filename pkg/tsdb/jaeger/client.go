@@ -17,11 +17,11 @@ type JaegerClient struct {
 }
 
 type ServicesResponse struct {
-	Data   []string    `json:"data"`
-	Errors interface{} `json:"errors"`
-	Limit  int         `json:"limit"`
-	Offset int         `json:"offset"`
-	Total  int         `json:"total"`
+	Data   []string `json:"data"`
+	Errors any      `json:"errors"`
+	Limit  int      `json:"limit"`
+	Offset int      `json:"offset"`
+	Total  int      `json:"total"`
 }
 
 func New(url string, hc *http.Client, logger log.Logger) (JaegerClient, error) {

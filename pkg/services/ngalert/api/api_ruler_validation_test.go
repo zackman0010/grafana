@@ -202,7 +202,7 @@ func TestValidateRuleGroup(t *testing.T) {
 	folder := randFolder()
 
 	rules := make([]apimodels.PostableExtendedRuleNode, 0, rand.Intn(4)+1)
-	for i := 0; i < cap(rules); i++ {
+	for range cap(rules) {
 		rules = append(rules, validRule())
 	}
 	cfg := config(t)

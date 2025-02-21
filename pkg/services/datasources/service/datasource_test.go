@@ -575,13 +575,13 @@ func TestService_UpdateDataSource(t *testing.T) {
 		dsService.features = featuremgmt.WithFeatures()
 
 		// Create a datasource with existing LBAC rules
-		existingRules := []interface{}{
-			map[string]interface{}{
+		existingRules := []any{
+			map[string]any{
 				"name":  "X-Grafana-Team",
 				"value": "team1",
 			},
 		}
-		jsonData := simplejson.NewFromAny(map[string]interface{}{
+		jsonData := simplejson.NewFromAny(map[string]any{
 			"teamHttpHeaders": existingRules,
 		})
 
@@ -603,8 +603,8 @@ func TestService_UpdateDataSource(t *testing.T) {
 		require.Equal(t, existingRules, createdRules)
 
 		// Update the datasource with new LBAC rules from API
-		newRules := []interface{}{
-			map[string]interface{}{
+		newRules := []any{
+			map[string]any{
 				"name":  "X-Grafana-Team",
 				"value": "team2",
 			},
@@ -614,7 +614,7 @@ func TestService_UpdateDataSource(t *testing.T) {
 			OrgID: ds.OrgID,
 			Name:  "updated-datasource",
 			Type:  "prometheus",
-			JsonData: simplejson.NewFromAny(map[string]interface{}{
+			JsonData: simplejson.NewFromAny(map[string]any{
 				"teamHttpHeaders": newRules,
 			}),
 			AllowLBACRuleUpdates: true,
@@ -631,13 +631,13 @@ func TestService_UpdateDataSource(t *testing.T) {
 		dsService := initDSService(t)
 		dsService.features = featuremgmt.WithFeatures()
 		// Create a datasource with existing LBAC rules
-		existingRules := []interface{}{
-			map[string]interface{}{
+		existingRules := []any{
+			map[string]any{
 				"name":  "X-Grafana-Team",
 				"value": "team1",
 			},
 		}
-		jsonData := simplejson.NewFromAny(map[string]interface{}{
+		jsonData := simplejson.NewFromAny(map[string]any{
 			"teamHttpHeaders": existingRules,
 		})
 
@@ -664,7 +664,7 @@ func TestService_UpdateDataSource(t *testing.T) {
 			OrgID: ds.OrgID,
 			Name:  "updated-datasource",
 			Type:  "prometheus",
-			JsonData: simplejson.NewFromAny(map[string]interface{}{
+			JsonData: simplejson.NewFromAny(map[string]any{
 				"someOtherSetting": "value",
 			}),
 			AllowLBACRuleUpdates: false,
@@ -683,13 +683,13 @@ func TestService_UpdateDataSource(t *testing.T) {
 		dsService.features = featuremgmt.WithFeatures()
 
 		// Create a datasource with existing LBAC rules
-		existingRules := []interface{}{
-			map[string]interface{}{
+		existingRules := []any{
+			map[string]any{
 				"name":  "X-Grafana-Team",
 				"value": "team1",
 			},
 		}
-		jsonData := simplejson.NewFromAny(map[string]interface{}{
+		jsonData := simplejson.NewFromAny(map[string]any{
 			"teamHttpHeaders": existingRules,
 		})
 
@@ -734,8 +734,8 @@ func TestService_UpdateDataSource(t *testing.T) {
 		require.NoError(t, err)
 
 		// Update the datasource with new LBAC rules but without AllowLBACRuleUpdates
-		newRules := []interface{}{
-			map[string]interface{}{
+		newRules := []any{
+			map[string]any{
 				"name":  "X-Grafana-Team",
 				"value": "team2",
 			},
@@ -745,7 +745,7 @@ func TestService_UpdateDataSource(t *testing.T) {
 			OrgID: ds.OrgID,
 			Name:  "updated-datasource",
 			Type:  "prometheus",
-			JsonData: simplejson.NewFromAny(map[string]interface{}{
+			JsonData: simplejson.NewFromAny(map[string]any{
 				"teamHttpHeaders": newRules,
 			}),
 			AllowLBACRuleUpdates: false,

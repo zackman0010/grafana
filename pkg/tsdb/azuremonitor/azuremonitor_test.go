@@ -72,7 +72,7 @@ func TestNewInstanceSettings(t *testing.T) {
 				ID:                      60,
 			},
 			expectedModel: nil,
-			Err: func(t require.TestingT, err error, _ ...interface{}) {
+			Err: func(t require.TestingT, err error, _ ...any) {
 				require.Error(t, err)
 				require.Contains(t, err.Error(), "current user authentication is not enabled for azure monitor")
 			},

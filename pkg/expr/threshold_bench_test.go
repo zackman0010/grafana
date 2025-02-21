@@ -15,7 +15,7 @@ import (
 
 func BenchmarkThreshold(b *testing.B) {
 	results := make(mathexp.Values, 0, 1000)
-	for i := 0; i < cap(results); i++ {
+	for i := range cap(results) {
 		n := newNumber(data.Labels{"test": fmt.Sprintf("series-%d", i)}, util.Pointer(float64(i)))
 		results = append(results, n)
 	}
@@ -63,7 +63,7 @@ func BenchmarkThreshold(b *testing.B) {
 		}
 
 		results := make(mathexp.Values, 0, 1000)
-		for i := 0; i < cap(results); i++ {
+		for i := range cap(results) {
 			n := newNumber(nil, util.Pointer(float64(i)))
 			results = append(results, n)
 		}

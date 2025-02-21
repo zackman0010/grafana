@@ -40,7 +40,7 @@ func (s *httpServiceProxy) writeErrorResponse(rw http.ResponseWriter, statusCode
 	re := regexp.MustCompile(`\{.*?\}`)
 	jsonPart := re.FindString(message)
 	if jsonPart != "" {
-		var jsonData map[string]interface{}
+		var jsonData map[string]any
 		if unmarshalErr := json.Unmarshal([]byte(jsonPart), &jsonData); unmarshalErr != nil {
 			errorBody["error"] = fmt.Sprintf("Invalid JSON format in error message. Raw error: %s", message)
 			s.logger.Error("failed to unmarshal JSON error message", "error", unmarshalErr)
@@ -84,7 +84,7 @@ func (s *httpServiceProxy) Do(rw http.ResponseWriter, req *http.Request, cli *ht
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
-		_, err = rw.Write([]byte(fmt.Sprintf("unexpected error %v", err)))
+		_, err = rw.Write(fmt.Appendf(nil, "unexpected error %v", err))
 		if err != nil {
 			return nil, fmt.Errorf("unable to write HTTP response: %v", err)
 		}

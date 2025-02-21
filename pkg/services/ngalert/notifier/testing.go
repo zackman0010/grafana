@@ -183,10 +183,7 @@ func (f *fakeConfigStore) GetAppliedConfigurations(_ context.Context, orgID int6
 	// Iterate backwards to get the latest applied configs.
 	var configs []*models.HistoricAlertConfiguration
 	start := len(configsByOrg) - 1
-	end := start - limit
-	if end < 0 {
-		end = 0
-	}
+	end := max(start-limit, 0)
 
 	for i := start; i >= end; i-- {
 		if configsByOrg[i].LastApplied > 0 {
@@ -360,7 +357,7 @@ func createNotificationLog(groupKey string, receiverName string, sentAt, expires
 
 type call struct {
 	Method string
-	Args   []interface{}
+	Args   []any
 }
 
 type fakeAlertRuleNotificationStore struct {
@@ -373,7 +370,7 @@ type fakeAlertRuleNotificationStore struct {
 func (f *fakeAlertRuleNotificationStore) RenameReceiverInNotificationSettings(ctx context.Context, orgID int64, oldReceiver, newReceiver string, validateProvenance func(models.Provenance) bool, dryRun bool) ([]models.AlertRuleKey, []models.AlertRuleKey, error) {
 	call := call{
 		Method: "RenameReceiverInNotificationSettings",
-		Args:   []interface{}{ctx, orgID, oldReceiver, newReceiver, validateProvenance, dryRun},
+		Args:   []any{ctx, orgID, oldReceiver, newReceiver, validateProvenance, dryRun},
 	}
 	f.Calls = append(f.Calls, call)
 
@@ -388,7 +385,7 @@ func (f *fakeAlertRuleNotificationStore) RenameReceiverInNotificationSettings(ct
 func (f *fakeAlertRuleNotificationStore) ListNotificationSettings(ctx context.Context, q models.ListNotificationSettingsQuery) (map[models.AlertRuleKey][]models.NotificationSettings, error) {
 	call := call{
 		Method: "ListNotificationSettings",
-		Args:   []interface{}{ctx, q},
+		Args:   []any{ctx, q},
 	}
 	f.Calls = append(f.Calls, call)
 

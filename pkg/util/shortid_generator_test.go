@@ -26,9 +26,9 @@ func TestThreadSafe(t *testing.T) {
 	t.Skip()
 	// Use 1000 go routines to create 100 UIDs each at roughly the same time.
 	var wg sync.WaitGroup
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		go func() {
-			for ii := 0; ii < 100; ii++ {
+			for range 100 {
 				_ = GenerateShortUID()
 			}
 			wg.Done()
@@ -39,7 +39,7 @@ func TestThreadSafe(t *testing.T) {
 }
 
 func TestRandomUIDs(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		v := GenerateShortUID()
 		if !IsValidShortUID(v) {
 			t.Fatalf("charset for creating new shortids contains chars not present in uid pattern")
@@ -56,7 +56,7 @@ func TestRandomUIDs(t *testing.T) {
 
 func TestCaseInsensitiveCollisionsUIDs(t *testing.T) {
 	history := make(map[string]bool, 0)
-	for i := 0; i < 100000; i++ {
+	for i := range 100000 {
 		v := GenerateShortUID()
 		if false {
 			v, _ = shortid.Generate() // collides in less then 500 iterations

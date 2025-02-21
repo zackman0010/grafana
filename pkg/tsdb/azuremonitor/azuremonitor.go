@@ -431,8 +431,8 @@ func (s *Service) CheckHealth(ctx context.Context, req *backend.CheckHealthReque
 	return &backend.CheckHealthResult{
 		Status:  status,
 		Message: "One or more health checks failed. See details below.",
-		JSONDetails: []byte(
-			fmt.Sprintf(`{"verboseMessage": %s }`, strconv.Quote(fmt.Sprintf("1. %s\n2. %s\n3. %s", metricsLog, logAnalyticsLog, graphLog))),
-		),
+		JSONDetails: 
+			fmt.Appendf(nil, `{"verboseMessage": %s }`, strconv.Quote(fmt.Sprintf("1. %s\n2. %s\n3. %s", metricsLog, logAnalyticsLog, graphLog))),
+		,
 	}, nil
 }

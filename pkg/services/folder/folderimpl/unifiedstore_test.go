@@ -127,13 +127,13 @@ func TestGetChildren(t *testing.T) {
 			TotalHits: 1,
 		}, nil).Once()
 		mockCli.On("Get", mock.Anything, "folder2", orgID, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"metadata": map[string]interface{}{"name": "folder2"},
+			Object: map[string]any{
+				"metadata": map[string]any{"name": "folder2"},
 			},
 		}, nil).Once()
 		mockCli.On("Get", mock.Anything, "folder3", orgID, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"metadata": map[string]interface{}{"name": "folder3"},
+			Object: map[string]any{
+				"metadata": map[string]any{"name": "folder3"},
 			},
 		}, nil).Once()
 
@@ -182,8 +182,8 @@ func TestGetChildren(t *testing.T) {
 			TotalHits: 1,
 		}, nil).Once()
 		mockCli.On("Get", mock.Anything, "folder2", orgID, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"metadata": map[string]interface{}{"name": "folder2"},
+			Object: map[string]any{
+				"metadata": map[string]any{"name": "folder2"},
 			},
 		}, nil).Once()
 
@@ -215,8 +215,8 @@ func TestGetChildren(t *testing.T) {
 			TotalHits: 1,
 		}, nil)
 		mockCli.On("Get", mock.Anything, accesscontrol.K6FolderUID, orgID, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"metadata": map[string]interface{}{"name": accesscontrol.K6FolderUID},
+			Object: map[string]any{
+				"metadata": map[string]any{"name": accesscontrol.K6FolderUID},
 			},
 		}, nil)
 

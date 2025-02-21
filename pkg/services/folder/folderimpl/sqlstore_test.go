@@ -785,7 +785,7 @@ func TestIntegrationGetChildren(t *testing.T) {
 	})
 
 	t.Run("pagination works if k6-app folder is hidden", func(t *testing.T) {
-		for i := 0; i < 4; i++ {
+		for i := range 4 {
 			_, err = folderStore.Create(context.Background(), folder.CreateFolderCommand{
 				Title: fmt.Sprintf("root-%d", i),
 				OrgID: orgID,
@@ -863,7 +863,7 @@ func TestIntegrationGetFolders(t *testing.T) {
 	// create folders
 	uids := make([]string, 0)
 	folders := make([]*folder.Folder, 0)
-	for i := 0; i < foldersNum; i++ {
+	for range foldersNum {
 		uid := util.GenerateShortUID()
 		f, err := folderStore.Create(context.Background(), folder.CreateFolderCommand{
 			Title:       folderTitle,
@@ -951,7 +951,7 @@ func TestIntegrationGetFolders(t *testing.T) {
 	t.Run("get folders by UIDs and ancestor UIDs should work as expected", func(t *testing.T) {
 		q := folder.NewGetFoldersQuery(folder.GetFoldersQuery{OrgID: orgID, UIDs: uids[1:], BatchSize: 3})
 		q.AncestorUIDs = make([]string, 0, int(q.BatchSize)+1)
-		for i := 0; i < int(q.BatchSize); i++ {
+		for range int(q.BatchSize) {
 			q.AncestorUIDs = append(q.AncestorUIDs, uuid.New().String())
 		}
 		q.AncestorUIDs = append(q.AncestorUIDs, folders[len(folders)-1].UID)
@@ -998,7 +998,7 @@ func CreateSubtree(t *testing.T, store *FolderStoreImpl, orgID int64, parentUID 
 	if parentUID != "" {
 		ancestorUIDs = append(ancestorUIDs, parentUID)
 	}
-	for i := 0; i < depth; i++ {
+	for i := range depth {
 		title := fmt.Sprintf("%sfolder-%d", prefix, i)
 		cmd := folder.CreateFolderCommand{
 			Title:     title,
@@ -1034,7 +1034,7 @@ func CreateLeaves(t *testing.T, store *FolderStoreImpl, parent *folder.Folder, n
 	t.Helper()
 
 	leaves := make([]string, 0)
-	for i := 0; i < num; i++ {
+	for range num {
 		uid := util.GenerateShortUID()
 		f, err := store.Create(context.Background(), folder.CreateFolderCommand{
 			Title:     fmt.Sprintf("folder-%s", uid),

@@ -302,11 +302,11 @@ func (moa *MultiOrgAlertmanager) SaveAndApplyAlertmanagerConfiguration(ctx conte
 		moa.logger.Error("Unable to save and apply alertmanager configuration", "error", err)
 		errReceiverDoesNotExist := ErrorReceiverDoesNotExist{}
 		if errors.As(err, &errReceiverDoesNotExist) {
-			return ErrAlertmanagerReceiverInUse.Build(errutil.TemplateData{Public: map[string]interface{}{"Receiver": errReceiverDoesNotExist.Reference}, Error: err})
+			return ErrAlertmanagerReceiverInUse.Build(errutil.TemplateData{Public: map[string]any{"Receiver": errReceiverDoesNotExist.Reference}, Error: err})
 		}
 		errTimeIntervalDoesNotExist := ErrorTimeIntervalDoesNotExist{}
 		if errors.As(err, &errTimeIntervalDoesNotExist) {
-			return ErrAlertmanagerTimeIntervalInUse.Build(errutil.TemplateData{Public: map[string]interface{}{"Interval": errTimeIntervalDoesNotExist.Reference}, Error: err})
+			return ErrAlertmanagerTimeIntervalInUse.Build(errutil.TemplateData{Public: map[string]any{"Interval": errTimeIntervalDoesNotExist.Reference}, Error: err})
 		}
 		return AlertmanagerConfigRejectedError{err}
 	}
@@ -339,7 +339,7 @@ func assignReceiverConfigsUIDs(c []*definitions.PostableApiReceiver) error {
 			for _, gr := range r.PostableGrafanaReceivers.GrafanaManagedReceivers {
 				if gr.UID == "" {
 					retries := 5
-					for i := 0; i < retries; i++ {
+					for range retries {
 						gen := util.GenerateShortUID()
 						_, ok := seenUIDs[gen]
 						if !ok {

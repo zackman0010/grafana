@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"maps"
 )
 
 // DateFormatEpochMS represents a date format of epoch milliseconds (epoch_millis)
@@ -15,25 +16,23 @@ type SearchRequest struct {
 	Index       string
 	Interval    time.Duration
 	Size        int
-	Sort        map[string]interface{}
+	Sort        map[string]any
 	Query       *Query
 	Aggs        AggArray
-	CustomProps map[string]interface{}
+	CustomProps map[string]any
 	TimeRange   backend.TimeRange
 }
 
 // MarshalJSON returns the JSON encoding of the request.
 func (r *SearchRequest) MarshalJSON() ([]byte, error) {
-	root := make(map[string]interface{})
+	root := make(map[string]any)
 
 	root["size"] = r.Size
 	if len(r.Sort) > 0 {
 		root["sort"] = r.Sort
 	}
 
-	for key, value := range r.CustomProps {
-		root[key] = value
-	}
+	maps.Copy(root, r.CustomProps)
 
 	root["query"] = r.Query
 
@@ -46,14 +45,14 @@ func (r *SearchRequest) MarshalJSON() ([]byte, error) {
 
 // SearchResponseHits represents search response hits
 type SearchResponseHits struct {
-	Hits []map[string]interface{}
+	Hits []map[string]any
 }
 
 // SearchResponse represents a search response
 type SearchResponse struct {
-	Error        map[string]interface{} `json:"error"`
-	Aggregations map[string]interface{} `json:"aggregations"`
-	Hits         *SearchResponseHits    `json:"hits"`
+	Error        map[string]any      `json:"error"`
+	Aggregations map[string]any      `json:"aggregations"`
+	Hits         *SearchResponseHits `json:"hits"`
 }
 
 // MultiSearchRequest represents a multi search request
@@ -79,7 +78,7 @@ type BoolQuery struct {
 
 // MarshalJSON returns the JSON encoding of the boolean query.
 func (q *BoolQuery) MarshalJSON() ([]byte, error) {
-	root := make(map[string]interface{})
+	root := make(map[string]any)
 
 	if len(q.Filters) > 0 {
 		if len(q.Filters) == 1 {
@@ -92,7 +91,7 @@ func (q *BoolQuery) MarshalJSON() ([]byte, error) {
 }
 
 // Filter represents a search filter
-type Filter interface{}
+type Filter any
 
 // QueryStringFilter represents a query string search filter
 type QueryStringFilter struct {
@@ -103,8 +102,8 @@ type QueryStringFilter struct {
 
 // MarshalJSON returns the JSON encoding of the query string filter.
 func (f *QueryStringFilter) MarshalJSON() ([]byte, error) {
-	root := map[string]interface{}{
-		"query_string": map[string]interface{}{
+	root := map[string]any{
+		"query_string": map[string]any{
 			"query":            f.Query,
 			"analyze_wildcard": f.AnalyzeWildcard,
 		},
@@ -124,7 +123,7 @@ type RangeFilter struct {
 
 // MarshalJSON returns the JSON encoding of the query string filter.
 func (f *RangeFilter) MarshalJSON() ([]byte, error) {
-	root := map[string]map[string]map[string]interface{}{
+	root := map[string]map[string]map[string]any{
 		"range": {
 			f.Key: {
 				"lte": f.Lte,
@@ -141,7 +140,7 @@ func (f *RangeFilter) MarshalJSON() ([]byte, error) {
 }
 
 // Aggregation represents an aggregation
-type Aggregation interface{}
+type Aggregation any
 
 // Agg represents a key and aggregation
 type Agg struct {
@@ -151,7 +150,7 @@ type Agg struct {
 
 // MarshalJSON returns the JSON encoding of the agg
 func (a *Agg) MarshalJSON() ([]byte, error) {
-	root := map[string]interface{}{
+	root := map[string]any{
 		a.Key: a.Aggregation,
 	}
 
@@ -180,7 +179,7 @@ type aggContainer struct {
 
 // MarshalJSON returns the JSON encoding of the aggregation container
 func (a *aggContainer) MarshalJSON() ([]byte, error) {
-	root := map[string]interface{}{
+	root := map[string]any{
 		a.Type: a.Aggregation,
 	}
 
@@ -233,16 +232,16 @@ func GetCalendarIntervals() []string {
 
 // FiltersAggregation represents a filters aggregation
 type FiltersAggregation struct {
-	Filters map[string]interface{} `json:"filters"`
+	Filters map[string]any `json:"filters"`
 }
 
 // TermsAggregation represents a terms aggregation
 type TermsAggregation struct {
-	Field       string                 `json:"field"`
-	Size        int                    `json:"size"`
-	Order       map[string]interface{} `json:"order"`
-	MinDocCount *int                   `json:"min_doc_count,omitempty"`
-	Missing     *string                `json:"missing,omitempty"`
+	Field       string         `json:"field"`
+	Size        int            `json:"size"`
+	Order       map[string]any `json:"order"`
+	MinDocCount *int           `json:"min_doc_count,omitempty"`
+	Missing     *string        `json:"missing,omitempty"`
 }
 
 // NestedAggregation represents a nested aggregation
@@ -266,13 +265,13 @@ type GeoHashGridAggregation struct {
 type MetricAggregation struct {
 	Type     string
 	Field    string
-	Settings map[string]interface{}
+	Settings map[string]any
 }
 
 // MarshalJSON returns the JSON encoding of the metric aggregation
 func (a *MetricAggregation) MarshalJSON() ([]byte, error) {
 	if a.Type == "top_metrics" {
-		root := map[string]interface{}{}
+		root := map[string]any{}
 		var rootMetrics []map[string]string
 
 		order, hasOrder := a.Settings["order"]
@@ -280,7 +279,7 @@ func (a *MetricAggregation) MarshalJSON() ([]byte, error) {
 
 		root["size"] = "1"
 
-		metrics, hasMetrics := a.Settings["metrics"].([]interface{})
+		metrics, hasMetrics := a.Settings["metrics"].([]any)
 		if hasMetrics {
 			for _, v := range metrics {
 				metricValue := map[string]string{"field": v.(string)}
@@ -290,7 +289,7 @@ func (a *MetricAggregation) MarshalJSON() ([]byte, error) {
 		}
 
 		if hasOrderBy && hasOrder {
-			root["sort"] = []map[string]interface{}{
+			root["sort"] = []map[string]any{
 				{
 					orderBy.(string): order,
 				},
@@ -299,7 +298,7 @@ func (a *MetricAggregation) MarshalJSON() ([]byte, error) {
 
 		return json.Marshal(root)
 	}
-	root := map[string]interface{}{}
+	root := map[string]any{}
 
 	if a.Field != "" {
 		root["field"] = a.Field
@@ -316,13 +315,13 @@ func (a *MetricAggregation) MarshalJSON() ([]byte, error) {
 
 // PipelineAggregation represents a metric aggregation
 type PipelineAggregation struct {
-	BucketPath interface{}
-	Settings   map[string]interface{}
+	BucketPath any
+	Settings   map[string]any
 }
 
 // MarshalJSON returns the JSON encoding of the pipeline aggregation
 func (a *PipelineAggregation) MarshalJSON() ([]byte, error) {
-	root := map[string]interface{}{
+	root := map[string]any{
 		"buckets_path": a.BucketPath,
 	}
 

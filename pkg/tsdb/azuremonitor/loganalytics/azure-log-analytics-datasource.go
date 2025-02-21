@@ -124,7 +124,7 @@ func (e *AzureLogAnalyticsDatasource) GetBasicLogsUsage(ctx context.Context, url
 	if err != nil {
 		return rw, err
 	}
-	_, err = rw.Write([]byte(fmt.Sprintf("%f", value)))
+	_, err = rw.Write(fmt.Appendf(nil, "%f", value))
 	if err != nil {
 		return rw, err
 	}
@@ -503,7 +503,7 @@ func appendErrorNotice(frame *data.Frame, err *AzureLogAnalyticsAPIError) *data.
 }
 
 func (e *AzureLogAnalyticsDatasource) createRequest(ctx context.Context, queryURL string, query *AzureLogAnalyticsQuery) (*http.Request, error) {
-	body := map[string]interface{}{
+	body := map[string]any{
 		"query": query.Query,
 	}
 

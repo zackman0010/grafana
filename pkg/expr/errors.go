@@ -65,7 +65,7 @@ var DependencyError = errutil.NewBase(
 
 func MakeDependencyError(refID, depRefID string) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"refId":    refID,
 			"depRefId": depRefID,
 		},
@@ -84,7 +84,7 @@ var UnexpectedNodeTypeError = errutil.NewBase(
 
 func makeUnexpectedNodeTypeError(refID, nodeType string) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"refId":    refID,
 			"nodeType": nodeType,
 		},

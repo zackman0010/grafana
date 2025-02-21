@@ -17,6 +17,7 @@ import (
 	ssoModels "github.com/grafana/grafana/pkg/services/ssosettings/models"
 	"github.com/grafana/grafana/pkg/services/ssosettings/validation"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 var _ social.SocialConnector = (*SocialOkta)(nil)
@@ -214,10 +215,8 @@ func (s *SocialOkta) isGroupMember(groups []string) bool {
 	}
 
 	for _, allowedGroup := range s.info.AllowedGroups {
-		for _, group := range groups {
-			if group == allowedGroup {
-				return true
-			}
+		if slices.Contains(groups, allowedGroup) {
+			return true
 		}
 	}
 

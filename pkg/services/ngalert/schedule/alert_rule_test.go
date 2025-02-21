@@ -29,6 +29,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/models"
 	"github.com/grafana/grafana/pkg/services/ngalert/state"
 	"github.com/grafana/grafana/pkg/util"
+	"maps"
 )
 
 func TestAlertRule(t *testing.T) {
@@ -224,10 +225,10 @@ func TestAlertRule(t *testing.T) {
 		rule := gen.GenerateRef()
 		rule.UID = r.key.UID
 		rule.OrgID = r.key.OrgID
-		for i := 0; i < 10; i++ {
+		for range 10 {
 			wg.Add(1)
 			go func() {
-				for i := 0; i < 20; i++ {
+				for i := range 20 {
 					max := 3
 					if i <= 10 {
 						max = 2
@@ -603,7 +604,7 @@ func TestRuleRoutine(t *testing.T) {
 		// define some state
 		states := make([]*state.State, 0, len(allStates))
 		for _, s := range allStates {
-			for i := 0; i < 2; i++ {
+			for range 2 {
 				states = append(states, &state.State{
 					AlertRuleUID: rule.UID,
 					CacheID:      data.Labels(rule.Labels).Fingerprint(),
@@ -922,9 +923,7 @@ func stateForRule(rule *models.AlertRule, ts time.Time, evalState eval.State) *s
 		LastSentAt:         &ts,
 		LastEvaluationTime: ts,
 	}
-	for k, v := range rule.Labels {
-		s.Labels[k] = v
-	}
+	maps.Copy(s.Labels, rule.Labels)
 	for k, v := range state.GetRuleExtraLabels(&logtest.Fake{}, rule, "", true) {
 		if _, ok := s.Labels[k]; !ok {
 			s.Labels[k] = v

@@ -206,7 +206,7 @@ func getEntityReferences(resp *backend.DataResponse) ([]entityReferences, error)
 	}
 
 	var out []entityReferences
-	for i := 0; i < dsUidField.Len(); i++ {
+	for i := range dsUidField.Len() {
 		kind, ok := kindField.At(i).(string)
 		if !ok || kind == "" {
 			return nil, errors.New("invalid value in kind field")

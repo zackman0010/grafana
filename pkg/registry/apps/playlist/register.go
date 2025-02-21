@@ -70,12 +70,12 @@ func (p *PlaylistAppProvider) legacyStorageGetter(requested schema.GroupVersionR
 				{Name: "Interval", Type: "string", Format: "string", Description: "How often the playlist will update"},
 				{Name: "Created At", Type: "date"},
 			},
-			Reader: func(obj any) ([]interface{}, error) {
+			Reader: func(obj any) ([]any, error) {
 				m, ok := obj.(*playlistv0alpha1.Playlist)
 				if !ok {
 					return nil, fmt.Errorf("expected playlist")
 				}
-				return []interface{}{
+				return []any{
 					m.Name,
 					m.Spec.Title,
 					m.Spec.Interval,

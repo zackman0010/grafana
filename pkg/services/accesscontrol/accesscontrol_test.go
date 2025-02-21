@@ -132,8 +132,8 @@ func TestReduce(t *testing.T) {
 func TestGroupScopesByActionContext(t *testing.T) {
 	// test data = 3 actions with 2+i scopes each, including a duplicate
 	permissions := []Permission{}
-	for i := 0; i < 3; i++ {
-		for j := 0; j < 2+i; j++ {
+	for i := range 3 {
+		for j := range 2 + i {
 			permissions = append(permissions, Permission{
 				Action: fmt.Sprintf("action:%d", i),
 				Scope:  fmt.Sprintf("scope:%d_%d", i, j),
@@ -142,10 +142,10 @@ func TestGroupScopesByActionContext(t *testing.T) {
 	}
 
 	expected := map[string][]string{}
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		action := fmt.Sprintf("action:%d", i)
 		scopes := []string{}
-		for j := 0; j < 2+i; j++ {
+		for j := range 2 + i {
 			scopes = append(scopes, fmt.Sprintf("scope:%d_%d", i, j))
 		}
 		expected[action] = scopes
@@ -157,15 +157,15 @@ func TestGroupScopesByActionContext(t *testing.T) {
 func BenchmarkGroupScopesByAction(b *testing.B) {
 	// create a big list of permissions with a bunch of duplicates
 	permissions := []Permission{}
-	for i := 0; i < 100; i++ {
-		for j := 0; j < 500+i; j++ {
+	for i := range 100 {
+		for j := range 500 + i {
 			permissions = append(permissions, Permission{
 				Action: fmt.Sprintf("action:%d", i),
 				Scope:  fmt.Sprintf("scope:%d_%d", i, j),
 			})
 		}
 		// add duplicate scopes
-		for j := 0; j < 10; j++ {
+		for range 10 {
 			permissions = append(permissions, Permission{
 				Action: fmt.Sprintf("action:%d", i),
 				Scope:  fmt.Sprintf("scope:%d_%d", i, 0),

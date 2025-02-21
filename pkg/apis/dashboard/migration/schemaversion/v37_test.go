@@ -10,43 +10,43 @@ func TestV37(t *testing.T) {
 	tests := []migrationTestCase{
 		{
 			name: "no legend config",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type":    "graph",
-						"options": map[string]interface{}{},
+						"options": map[string]any{},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
+				"panels": []any{
+					map[string]any{
 						"type":    "graph",
-						"options": map[string]interface{}{},
+						"options": map[string]any{},
 					},
 				},
 			},
 		},
 		{
 			name: "boolean legend true",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
 							"legend": true,
 						},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "list",
 								"showLegend":  true,
 							},
@@ -57,22 +57,22 @@ func TestV37(t *testing.T) {
 		},
 		{
 			name: "boolean legend false",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
 							"legend": false,
 						},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "list",
 								"showLegend":  false,
 							},
@@ -83,24 +83,24 @@ func TestV37(t *testing.T) {
 		},
 		{
 			name: "hidden displayMode",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "hidden",
 							},
 						},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "list",
 								"showLegend":  false,
 							},
@@ -111,24 +111,24 @@ func TestV37(t *testing.T) {
 		},
 		{
 			name: "showLegend false",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"showLegend": false,
 							},
 						},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "list",
 								"showLegend":  false,
 							},
@@ -139,24 +139,24 @@ func TestV37(t *testing.T) {
 		},
 		{
 			name: "visible legend",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"schemaVersion": 36,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "table",
 							},
 						},
 					},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"schemaVersion": 37,
-				"panels": []interface{}{
-					map[string]interface{}{
-						"options": map[string]interface{}{
-							"legend": map[string]interface{}{
+				"panels": []any{
+					map[string]any{
+						"options": map[string]any{
+							"legend": map[string]any{
 								"displayMode": "table",
 								"showLegend":  true,
 							},

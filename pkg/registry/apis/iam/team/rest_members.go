@@ -50,7 +50,7 @@ func (s *LegacyTeamMemberREST) ProducesMIMETypes(verb string) []string {
 }
 
 // ProducesObject implements rest.StorageMetadata.
-func (s *LegacyTeamMemberREST) ProducesObject(verb string) interface{} {
+func (s *LegacyTeamMemberREST) ProducesObject(verb string) any {
 	return s.New()
 }
 

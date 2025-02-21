@@ -25,12 +25,12 @@ var GenericConnectionResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "APIVersion", Type: "string", Format: "string", Description: "API Version"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*DataSourceConnection)
 			if !ok {
 				return nil, fmt.Errorf("expected connection")
 			}
-			return []interface{}{
+			return []any{
 				m.Name,
 				m.Title,
 				m.APIVersion,

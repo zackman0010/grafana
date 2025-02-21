@@ -25,6 +25,7 @@ import (
 	"github.com/grafana/grafana/pkg/expr/mathexp"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/web"
+	"maps"
 )
 
 type queryREST struct {
@@ -66,7 +67,7 @@ func (r *queryREST) ProducesMIMETypes(verb string) []string {
 	return []string{"application/json"} // and parquet!
 }
 
-func (r *queryREST) ProducesObject(verb string) interface{} {
+func (r *queryREST) ProducesObject(verb string) any {
 	return &query.QueryDataResponse{}
 }
 
@@ -324,9 +325,7 @@ func (b *QueryAPIBuilder) executeConcurrentQueries(ctx context.Context, requests
 	// Merge the results from each response
 	resp := backend.NewQueryDataResponse()
 	for result := range rchan {
-		for refId, dataResponse := range result.Responses {
-			resp.Responses[refId] = dataResponse
-		}
+		maps.Copy(resp.Responses, result.Responses)
 	}
 
 	return resp, nil

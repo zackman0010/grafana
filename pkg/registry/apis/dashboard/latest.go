@@ -56,7 +56,7 @@ func (l *latestREST) ProducesMIMETypes(verb string) []string {
 	return nil
 }
 
-func (l *latestREST) ProducesObject(verb string) interface{} {
+func (l *latestREST) ProducesObject(verb string) any {
 	return &metav1.PartialObjectMetadataList{}
 }
 

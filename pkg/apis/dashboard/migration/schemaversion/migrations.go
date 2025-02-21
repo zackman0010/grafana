@@ -2,7 +2,7 @@ package schemaversion
 
 import "strconv"
 
-type SchemaVersionMigrationFunc func(map[string]interface{}) error
+type SchemaVersionMigrationFunc func(map[string]any) error
 
 const LATEST_VERSION = 41
 
@@ -14,7 +14,7 @@ var Migrations = map[int]SchemaVersionMigrationFunc{
 	41: V41,
 }
 
-func GetSchemaVersion(dash map[string]interface{}) int {
+func GetSchemaVersion(dash map[string]any) int {
 	if v, ok := dash["schemaVersion"]; ok {
 		switch v := v.(type) {
 		case int:

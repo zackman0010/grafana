@@ -22,6 +22,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/pluginstore"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/web"
+	"slices"
 )
 
 type AuthOptions struct {
@@ -189,13 +190,7 @@ func normalizeIncludePath(p string) string {
 
 func RoleAuth(roles ...org.RoleType) web.Handler {
 	return func(c *contextmodel.ReqContext) {
-		ok := false
-		for _, role := range roles {
-			if role == c.OrgRole {
-				ok = true
-				break
-			}
-		}
+		ok := slices.Contains(roles, c.OrgRole)
 		if !ok {
 			accessForbidden(c)
 		}

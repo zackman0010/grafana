@@ -19,6 +19,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"maps"
 )
 
 const backendType = "prometheus"
@@ -94,9 +95,7 @@ func PointsFromFrames(name string, t time.Time, frames data.Frames, extraLabels 
 			labels = data.Labels{}
 		}
 		delete(labels, "__name__")
-		for k, v := range extraLabels {
-			labels[k] = v
-		}
+		maps.Copy(labels, extraLabels)
 
 		points = append(points, Point{
 			Name:   name,

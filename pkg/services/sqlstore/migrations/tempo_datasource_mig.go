@@ -42,12 +42,12 @@ func (m *AddTraceQLStreamingToJsonData) Exec(sess *xorm.Session, mg *Migrator) e
 		return err
 	}
 
-	enabledStreamingMap := map[string]interface{}{
+	enabledStreamingMap := map[string]any{
 		"search": true,
 	}
 
 	for _, ds := range datasources {
-		var parsedMap map[string]interface{}
+		var parsedMap map[string]any
 		if err := json.Unmarshal([]byte(ds.JsonData), &parsedMap); err != nil {
 			continue
 		}

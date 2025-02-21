@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"maps"
 )
 
 func adjustFrame(frame *data.Frame, query *lokiQuery, setMetricFrameName bool, logsDataplane bool) error {
@@ -99,7 +100,7 @@ func adjustLegacyLogsFrame(frame *data.Frame, query *lokiQuery) error {
 		}
 		labelTypesField.Name = "labelTypes"
 		labelTypesField.Config = &data.FieldConfig{
-			Custom: map[string]interface{}{
+			Custom: map[string]any{
 				"hidden": true,
 			},
 		}
@@ -168,7 +169,7 @@ func adjustDataplaneLogsFrame(frame *data.Frame, query *lokiQuery) error {
 		}
 		labelTypesField.Name = "labelTypes"
 		labelTypesField.Config = &data.FieldConfig{
-			Custom: map[string]interface{}{
+			Custom: map[string]any{
 				"hidden": true,
 			},
 		}
@@ -233,7 +234,7 @@ func makeIdField(stringTimeField *data.Field, lineField *data.Field, labelsField
 
 	checksums := make(map[string]int)
 
-	for i := 0; i < length; i++ {
+	for i := range length {
 		time := stringTimeField.At(i).(string)
 		line := lineField.At(i).(string)
 		labels := labelsField.At(i).(json.RawMessage)
@@ -291,27 +292,25 @@ func getFrameLabels(frame *data.Frame) map[string]string {
 	labels := make(map[string]string)
 
 	for _, field := range frame.Fields {
-		for k, v := range field.Labels {
-			labels[k] = v
-		}
+		maps.Copy(labels, field.Labels)
 	}
 
 	return labels
 }
 
-func parseStats(frameMetaCustom interface{}) []data.QueryStat {
-	customMap, ok := frameMetaCustom.(map[string]interface{})
+func parseStats(frameMetaCustom any) []data.QueryStat {
+	customMap, ok := frameMetaCustom.(map[string]any)
 	if !ok {
 		return nil
 	}
-	rawStats, ok := customMap["stats"].(map[string]interface{})
+	rawStats, ok := customMap["stats"].(map[string]any)
 	if !ok {
 		return nil
 	}
 
 	var stats []data.QueryStat
 
-	summary, ok := rawStats["summary"].(map[string]interface{})
+	summary, ok := rawStats["summary"].(map[string]any)
 	if ok {
 		stats = append(stats,
 			makeStat("Summary: bytes processed per second", summary["bytesProcessedPerSecond"], "Bps"),
@@ -321,7 +320,7 @@ func parseStats(frameMetaCustom interface{}) []data.QueryStat {
 			makeStat("Summary: exec time", summary["execTime"], "s"))
 	}
 
-	store, ok := rawStats["store"].(map[string]interface{})
+	store, ok := rawStats["store"].(map[string]any)
 	if ok {
 		stats = append(stats,
 			makeStat("Store: total chunks ref", store["totalChunksRef"], ""),
@@ -335,7 +334,7 @@ func parseStats(frameMetaCustom interface{}) []data.QueryStat {
 			makeStat("Store: total duplicates", store["totalDuplicates"], ""))
 	}
 
-	ingester, ok := rawStats["ingester"].(map[string]interface{})
+	ingester, ok := rawStats["ingester"].(map[string]any)
 	if ok {
 		stats = append(stats,
 			makeStat("Ingester: total reached", ingester["totalReached"], ""),
@@ -353,7 +352,7 @@ func parseStats(frameMetaCustom interface{}) []data.QueryStat {
 	return stats
 }
 
-func makeStat(name string, interfaceValue interface{}, unit string) data.QueryStat {
+func makeStat(name string, interfaceValue any, unit string) data.QueryStat {
 	var value float64
 	switch v := interfaceValue.(type) {
 	case float64:

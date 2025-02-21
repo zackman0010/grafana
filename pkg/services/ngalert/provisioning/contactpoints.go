@@ -22,6 +22,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/store"
 	"github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 type AlertRuleNotificationSettingsStore interface {
@@ -356,11 +357,11 @@ func (ecp *ContactPointService) DeleteContactPoint(ctx context.Context, orgID in
 		for j, grafanaReceiver := range receiver.GrafanaManagedReceivers {
 			if grafanaReceiver.UID == uid {
 				name = grafanaReceiver.Name
-				receiver.GrafanaManagedReceivers = append(receiver.GrafanaManagedReceivers[:j], receiver.GrafanaManagedReceivers[j+1:]...)
+				receiver.GrafanaManagedReceivers = slices.Delete(receiver.GrafanaManagedReceivers, j, j+1)
 				// if this was the last receiver we removed, we remove the whole receiver
 				if len(receiver.GrafanaManagedReceivers) == 0 {
 					fullRemoval = true
-					revision.Config.AlertmanagerConfig.Receivers = append(revision.Config.AlertmanagerConfig.Receivers[:i], revision.Config.AlertmanagerConfig.Receivers[i+1:]...)
+					revision.Config.AlertmanagerConfig.Receivers = slices.Delete(revision.Config.AlertmanagerConfig.Receivers, i, i+1)
 				}
 				break
 			}
@@ -469,13 +470,13 @@ groupLoop:
 					// If so, put our modified receiver into that group. Done!
 					if candidateExistingGroup.Name == target.Name {
 						// Drop it from the old group...
-						receiverGroup.GrafanaManagedReceivers = append(receiverGroup.GrafanaManagedReceivers[:i], receiverGroup.GrafanaManagedReceivers[i+1:]...)
+						receiverGroup.GrafanaManagedReceivers = slices.Delete(receiverGroup.GrafanaManagedReceivers, i, i+1)
 						// Add the modified receiver to the new group...
 						candidateExistingGroup.GrafanaManagedReceivers = append(candidateExistingGroup.GrafanaManagedReceivers, target)
 
 						// if the old receiver group turns out to be empty. Remove it.
 						if len(receiverGroup.GrafanaManagedReceivers) == 0 {
-							cfg.AlertmanagerConfig.Receivers = append(cfg.AlertmanagerConfig.Receivers[:groupIdx], cfg.AlertmanagerConfig.Receivers[groupIdx+1:]...)
+							cfg.AlertmanagerConfig.Receivers = slices.Delete(cfg.AlertmanagerConfig.Receivers, groupIdx, groupIdx+1)
 						}
 						break groupLoop
 					}
@@ -502,7 +503,7 @@ groupLoop:
 				}
 				cfg.AlertmanagerConfig.Receivers = append(cfg.AlertmanagerConfig.Receivers, newGroup)
 				// Drop it from the old spot.
-				receiverGroup.GrafanaManagedReceivers = append(receiverGroup.GrafanaManagedReceivers[:i], receiverGroup.GrafanaManagedReceivers[i+1:]...)
+				receiverGroup.GrafanaManagedReceivers = slices.Delete(receiverGroup.GrafanaManagedReceivers, i, i+1)
 				break groupLoop
 			}
 		}

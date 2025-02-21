@@ -229,7 +229,7 @@ func TestRouteGetNamespaceRulesConfig(t *testing.T) {
 					for _, actualRule := range group.Rules {
 						for i, expected := range allRules {
 							if actualRule.GrafanaManagedAlert.UID == expected.UID {
-								allRules = append(allRules[:i], allRules[i+1:]...)
+								allRules = slices.Delete(allRules, i, i+1)
 								continue grouploop
 							}
 						}
@@ -724,7 +724,7 @@ func TestVerifyProvisionedRulesNotAffected(t *testing.T) {
 		rules := gen.With(gen.WithGroupKey(group)).GenerateManyRef(1, 4)
 		allRules = append(allRules, rules...)
 		affectedGroups[group] = rules
-		for i := 0; i < rand.Intn(3)+1; i++ {
+		for range rand.Intn(3) + 1 {
 			g := models.GenerateGroupKey(orgID)
 			rules := gen.With(gen.WithGroupKey(g)).GenerateManyRef(1, 4)
 			allRules = append(allRules, rules...)

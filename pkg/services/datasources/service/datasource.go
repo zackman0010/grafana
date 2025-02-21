@@ -31,6 +31,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/services/secrets/kvstore"
 	"github.com/grafana/grafana/pkg/setting"
+	"maps"
 )
 
 const (
@@ -718,9 +719,7 @@ func (s *Service) httpClientOptions(ctx context.Context, ds *datasources.DataSou
 		opts.CustomOptions = ds.JsonData.MustMap()
 		// allow the plugin sdk to get the json data in JSONDataFromHTTPClientOptions
 		deepJsonDataCopy := make(map[string]any, len(opts.CustomOptions))
-		for k, v := range opts.CustomOptions {
-			deepJsonDataCopy[k] = v
-		}
+		maps.Copy(deepJsonDataCopy, opts.CustomOptions)
 		opts.CustomOptions["grafanaData"] = deepJsonDataCopy
 	}
 	if ds.BasicAuth {

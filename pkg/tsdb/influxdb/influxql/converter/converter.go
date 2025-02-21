@@ -192,7 +192,7 @@ func readSeries(iter *sdkjsoniter.Iterator, query *models.Query) *backend.DataRe
 				newField := data.NewFieldFromFieldType(data.FieldTypeNullableFloat64, 0)
 				newField.Name = v.Name
 				newField.Config = v.Config
-				for k := 0; k < v.Len(); k++ {
+				for range v.Len() {
 					newField.Append(nil)
 				}
 				rsp.Frames[i].Fields[j] = newField
@@ -339,7 +339,7 @@ func maybeFixValueFieldType(valueFields data.Fields, expectedType data.FieldType
 	}
 	stringField := data.NewFieldFromFieldType(expectedType, 0)
 	stringField.Name = "Value"
-	for i := 0; i < valueFields[colIdx].Len(); i++ {
+	for range valueFields[colIdx].Len() {
 		stringField.Append(nil)
 	}
 	valueFields[colIdx] = stringField
@@ -353,7 +353,7 @@ func tryToAppendValue[T *string | *float64 | *bool](valueFields data.Fields, val
 	}
 }
 
-func typeOf(value interface{}) data.FieldType {
+func typeOf(value any) data.FieldType {
 	switch v := value.(type) {
 	case *string:
 		return data.FieldTypeNullableString
@@ -469,7 +469,7 @@ func handleTableFormatValueFields(rsp *backend.DataResponse, valueFields data.Fi
 			rsp.Frames[0].Fields = append(rsp.Frames[0].Fields, valueFields[i])
 		} else {
 			ll := valueFields[i].Len()
-			for vi := 0; vi < ll; vi++ {
+			for vi := range ll {
 				if valueFields[i].Type() == data.FieldTypeNullableJSON {
 					// add nil explicitly.
 					// we don't know if it is a float pointer nil or string pointer nil or etc

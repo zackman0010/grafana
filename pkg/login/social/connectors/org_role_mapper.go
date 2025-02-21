@@ -10,6 +10,7 @@ import (
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/setting"
+	"maps"
 )
 
 const (
@@ -260,9 +261,7 @@ func getMappedOrgRoles(externalOrgs []string, orgMapping map[string]map[int64]or
 	}
 
 	if orgRoles, ok := orgMapping["*"]; ok {
-		for orgID, role := range orgRoles {
-			userOrgRoles[orgID] = role
-		}
+		maps.Copy(userOrgRoles, orgRoles)
 	}
 
 	for _, org := range externalOrgs {

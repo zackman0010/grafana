@@ -23,6 +23,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/sandbox"
 	"github.com/grafana/grafana/pkg/services/stats"
 	"github.com/grafana/grafana/pkg/setting"
+	"maps"
 )
 
 const (
@@ -99,7 +100,7 @@ func (s *Service) RegisterProviders(usageStatProviders []registry.ProvidesUsageS
 	s.log.Info("registering usage stat providers", "usageStatsProvidersLen", len(usageStatProviders))
 	for _, usageStatProvider := range usageStatProviders {
 		provider := usageStatProvider.GetUsageStats
-		collector := func(ctx context.Context) (map[string]interface{}, error) {
+		collector := func(ctx context.Context) (map[string]any, error) {
 			return provider(ctx), nil
 		}
 
@@ -216,9 +217,7 @@ func (s *Service) collectSystemStats(ctx context.Context) (map[string]any, error
 	m["stats.uptime"] = int64(time.Since(s.startTime).Seconds())
 
 	featureUsageStats := s.features.GetUsageStats(ctx)
-	for k, v := range featureUsageStats {
-		m[k] = v
-	}
+	maps.Copy(m, featureUsageStats)
 
 	return m, nil
 }

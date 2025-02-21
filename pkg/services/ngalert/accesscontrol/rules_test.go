@@ -46,7 +46,7 @@ func createAllCombinationsOfPermissions(permissions map[string][]string) []map[s
 	var permissionCombinations []map[string][]string
 	for bit := uint(0); bit < uint(math.Pow(2, float64(l))); bit++ {
 		var tuple []actionscope
-		for idx := 0; idx < l; idx++ {
+		for idx := range l {
 			if (bit>>idx)&1 == 1 {
 				tuple = append(tuple, flattenPermissions[idx])
 			}
@@ -285,7 +285,7 @@ func TestAuthorizeRuleChanges(t *testing.T) {
 				if toCopy > 1 {
 					toCopy = rand.Intn(toCopy-1) + 1
 				}
-				for i := 0; i < toCopy; i++ {
+				for range toCopy {
 					rule := sourceGroup[0]
 					cp := models.CopyRule(rule, gen.WithGroupKey(targetGroupKey), gen.WithQuery(models.GenerateAlertQuery()))
 
@@ -444,7 +444,7 @@ func TestCheckDatasourcePermissionsForRule(t *testing.T) {
 
 	var data []models.AlertQuery
 	var scopes []string
-	for i := 0; i < rand.Intn(3)+2; i++ {
+	for range rand.Intn(3) + 2 {
 		q := models.GenerateAlertQuery()
 		scopes = append(scopes, datasources.ScopeProvider.GetResourceScopeUID(q.DatasourceUID))
 		data = append(data, q)

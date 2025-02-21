@@ -227,10 +227,7 @@ func (st InstanceDBStore) FullSync(ctx context.Context, instances []models.Alert
 
 		total := len(instances)
 		for start := 0; start < total; start += batchSize {
-			end := start + batchSize
-			if end > total {
-				end = total
-			}
+			end := min(start+batchSize, total)
 
 			batch := instances[start:end]
 

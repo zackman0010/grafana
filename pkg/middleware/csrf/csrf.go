@@ -9,6 +9,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 type Service interface {
@@ -82,10 +83,8 @@ func (c *CSRF) check(r *http.Request) error {
 	}
 
 	// Skip CSRF checks for "safe" methods
-	for _, method := range safeMethods {
-		if r.Method == method {
-			return nil
-		}
+	if slices.Contains(safeMethods, r.Method) {
+		return nil
 	}
 	// Skip CSRF checks for "safe" endpoints
 	for safeEndpoint := range c.safeEndpoints {

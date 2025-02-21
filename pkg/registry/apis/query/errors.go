@@ -52,7 +52,7 @@ var dependencyError = errutil.BadRequest("sse.dependencyError").MustTemplate(
 
 func makeDependencyError(refID, depRefID string) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"refId":    refID,
 			"depRefId": depRefID,
 		},
@@ -70,7 +70,7 @@ var cyclicErr = errutil.BadRequest("sse.cyclic").MustTemplate(
 
 func makeCyclicError(refID string) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"refId": refID,
 		},
 		Error: fmt.Errorf("cyclic reference in %s", refID),

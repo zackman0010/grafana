@@ -22,6 +22,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/services/ngalert/metrics"
 	ngmodels "github.com/grafana/grafana/pkg/services/ngalert/models"
+	"maps"
 )
 
 func TestValidateSettings(t *testing.T) {
@@ -125,9 +126,7 @@ func TestPointsFromFrames(t *testing.T) {
 				for i, point := range points {
 					v := extractValue(t, frames, series[i], tc.frameType)
 					expectedLabels := map[string]string{"extra": "label"}
-					for k, v := range series[i] {
-						expectedLabels[k] = v
-					}
+					maps.Copy(expectedLabels, series[i])
 					require.Equal(t, expectedLabels, point.Labels)
 					require.Equal(t, "test", point.Name)
 					require.Equal(t, now, point.Metric.T)
@@ -296,7 +295,7 @@ func extractValueLong(t *testing.T, frames data.Frames, labels map[string]string
 	foundLabels := make(map[string]string)
 
 	l := frame.Fields[0].Len()
-	for i := 0; i < l; i++ {
+	for i := range l {
 		for _, field := range frame.Fields[1 : len(frame.Fields)-1] {
 			foundLabels[field.Name] = field.At(i).(string)
 		}

@@ -70,7 +70,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -138,7 +138,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.VariableElement),
 							Type:        "query",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"name":        "query0",
 								"type":        "query",
@@ -201,7 +201,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -237,7 +237,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -304,7 +304,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -340,7 +340,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -429,7 +429,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "bargauge",
 							Description: "BarGauge description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "BarGauge description",
 								"id":          float64(1),
@@ -465,7 +465,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "gauge",
 							Description: "Gauge description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"id":          float64(1),
 								"title":       "Gauge - Library Panel",
@@ -572,7 +572,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -672,7 +672,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -708,7 +708,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -775,7 +775,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -842,7 +842,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -910,7 +910,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -987,7 +987,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -1062,7 +1062,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A Library Panel",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A Library Panel",
 								"id":          float64(1),
@@ -1098,7 +1098,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),
@@ -1167,7 +1167,7 @@ func TestGetAllLibraryElements(t *testing.T) {
 							Kind:        int64(model.PanelElement),
 							Type:        "text",
 							Description: "A description",
-							Model: map[string]interface{}{
+							Model: map[string]any{
 								"datasource":  "${DS_GDEV-TESTDATA}",
 								"description": "A description",
 								"id":          float64(1),

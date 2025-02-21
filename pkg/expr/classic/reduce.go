@@ -42,7 +42,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 	switch cr {
 	case "avg":
 		validPointsCount := 0
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -55,7 +55,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 			value /= float64(validPointsCount)
 		}
 	case "sum":
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -65,7 +65,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 		}
 	case "min":
 		value = math.MaxFloat64
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -80,7 +80,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 		}
 	case "max":
 		value = -math.MaxFloat64
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -107,7 +107,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 		}
 	case "median":
 		var values []float64
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -133,7 +133,7 @@ func (cr reducer) Reduce(series mathexp.Series) mathexp.Number {
 	case "percent_diff_abs":
 		allNull, value = calculateDiff(ff, allNull, value, percentDiffAbs)
 	case "count_non_null":
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if nilOrNaN(f) {
 				continue
@@ -170,7 +170,7 @@ func calculateDiff(ff mathexp.Float64Field, allNull bool, value float64, fn func
 	}
 	if i >= 1 {
 		// get the oldest point
-		for i := 0; i < ff.Len(); i++ {
+		for i := range ff.Len() {
 			f := ff.GetValue(i)
 			if !nilOrNaN(f) {
 				value = fn(first, *f)

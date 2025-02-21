@@ -89,7 +89,7 @@ func (st DBstore) IncreaseVersionForAllRulesInNamespaces(ctx context.Context, or
 			"UPDATE alert_rule SET version = version + 1, updated = ? WHERE org_id = ? AND namespace_uid IN (%s)",
 			strings.Join(in, ","),
 		)
-		args := make([]interface{}, 0, 3+len(namespaceUIDsArgs))
+		args := make([]any, 0, 3+len(namespaceUIDsArgs))
 		args = append(args, sql, now, orgID)
 		args = append(args, namespaceUIDsArgs...)
 
@@ -846,7 +846,7 @@ func (st DBstore) Kind() string { return entity.StandardKindAlertRule }
 // This is set as a variable so that the tests can override it.
 // The ruleTitle is only used by the mocked functions.
 var GenerateNewAlertRuleUID = func(sess *db.Session, orgID int64, ruleTitle string) (string, error) {
-	for i := 0; i < 3; i++ {
+	for range 3 {
 		uid := util.GenerateShortUID()
 
 		exists, err := sess.Where("org_id=? AND uid=?", orgID, uid).Get(&alertRule{})

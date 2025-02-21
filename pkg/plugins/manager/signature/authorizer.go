@@ -3,6 +3,7 @@ package signature
 import (
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/config"
+	"slices"
 )
 
 func ProvideOSSAuthorizer(cfg *config.PluginManagementCfg) *UnsignedPluginAuthorizer {
@@ -28,11 +29,5 @@ func (u *UnsignedPluginAuthorizer) CanLoadPlugin(p *plugins.Plugin) bool {
 		return true
 	}
 
-	for _, pID := range u.cfg.PluginsAllowUnsigned {
-		if pID == p.ID {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(u.cfg.PluginsAllowUnsigned, p.ID)
 }

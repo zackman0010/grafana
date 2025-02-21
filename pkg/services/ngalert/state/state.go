@@ -819,9 +819,7 @@ func (a *State) transition(alertRule *models.AlertRule, result eval.Result, extr
 		}
 	}
 
-	for key, val := range extraAnnotations {
-		a.Annotations[key] = val
-	}
+	maps.Copy(a.Annotations, extraAnnotations)
 
 	nextState := StateTransition{
 		State:               a,

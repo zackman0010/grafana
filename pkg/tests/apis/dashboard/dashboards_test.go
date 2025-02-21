@@ -33,7 +33,7 @@ func runDashboardTest(t *testing.T, helper *apis.K8sTestHelper, gvr schema.Group
 		require.Empty(t, rsp.Items)
 
 		obj := &unstructured.Unstructured{
-			Object: map[string]interface{}{
+			Object: map[string]any{
 				"spec": map[string]any{
 					"title": "Test empty dashboard",
 				},

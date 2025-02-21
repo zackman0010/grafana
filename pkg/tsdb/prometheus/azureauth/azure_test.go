@@ -27,7 +27,7 @@ func (l fakeLogger) Level() log.Level {
 func (l fakeLogger) FromContext(ctx context.Context) log.Logger {
 	return fakeLogger{}
 }
-func (l fakeLogger) With(args ...interface{}) log.Logger {
+func (l fakeLogger) With(args ...any) log.Logger {
 	return fakeLogger{}
 }
 

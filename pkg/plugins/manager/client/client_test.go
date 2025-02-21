@@ -12,6 +12,7 @@ import (
 	"github.com/grafana/grafana/pkg/plugins/backendplugin"
 	"github.com/grafana/grafana/pkg/plugins/manager/fakes"
 	"github.com/stretchr/testify/require"
+	"maps"
 )
 
 func TestQueryData(t *testing.T) {
@@ -157,9 +158,7 @@ func TestCallResource(t *testing.T) {
 		}
 
 		resHeaders := make(map[string][]string, len(reqHeaders))
-		for k, v := range reqHeaders {
-			resHeaders[k] = v
-		}
+		maps.Copy(resHeaders, reqHeaders)
 
 		req := &backend.CallResourceRequest{
 			PluginContext: backend.PluginContext{
@@ -220,9 +219,7 @@ func TestCallResource(t *testing.T) {
 		}
 
 		resHeaders := make(map[string][]string, len(reqHeaders))
-		for k, v := range reqHeaders {
-			resHeaders[k] = v
-		}
+		maps.Copy(resHeaders, reqHeaders)
 
 		req := &backend.CallResourceRequest{
 			PluginContext: backend.PluginContext{

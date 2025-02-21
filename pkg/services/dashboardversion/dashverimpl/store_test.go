@@ -71,7 +71,7 @@ func testIntegrationGetDashboardVersion(t *testing.T, fn getStore) {
 
 	t.Run("Clean up old dashboard versions", func(t *testing.T) {
 		versionsToWrite := 10
-		for i := 0; i < versionsToWrite-1; i++ {
+		for i := range versionsToWrite - 1 {
 			insertTestDashboard(t, ss, "test dash 53"+strconv.Itoa(i), 1, strconv.Itoa(i), false, "diff-all")
 		}
 		versionIDsToDelete := []any{1, 2, 3, 4}

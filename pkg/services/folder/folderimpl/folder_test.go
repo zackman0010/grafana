@@ -1427,7 +1427,7 @@ func TestNestedFolderService(t *testing.T) {
 			dashboardFolderStore.On("GetFolderByUID", mock.Anything, mock.AnythingOfType("int64"), mock.AnythingOfType("string")).Return(&folder.Folder{}, nil)
 
 			parents := make([]*folder.Folder, 0, folder.MaxNestedFolderDepth)
-			for i := 0; i < folder.MaxNestedFolderDepth; i++ {
+			for i := range folder.MaxNestedFolderDepth {
 				parents = append(parents, &folder.Folder{UID: fmt.Sprintf("folder%d", i)})
 			}
 
@@ -2541,7 +2541,7 @@ func CreateSubtreeInStore(t *testing.T, store folder.Store, service *Service, de
 	t.Helper()
 
 	folders := make([]*folder.Folder, 0, depth)
-	for i := 0; i < depth; i++ {
+	for i := range depth {
 		title := fmt.Sprintf("%sfolder-%d", prefix, i)
 		cmd.Title = title
 		cmd.UID = util.GenerateShortUID()

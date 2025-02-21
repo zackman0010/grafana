@@ -226,7 +226,7 @@ func setupDB(b testing.TB) benchScenario {
 	var orgID int64 = 1
 
 	userIDs := make([]int64, 0, TEAM_MEMBER_NUM)
-	for i := 0; i < TEAM_MEMBER_NUM; i++ {
+	for i := range TEAM_MEMBER_NUM {
 		u, err := userSvc.Create(context.Background(), &user.CreateUserCommand{
 			OrgID: orgID,
 			Login: fmt.Sprintf("user%d", i),
@@ -306,7 +306,7 @@ func setupDB(b testing.TB) benchScenario {
 	dashs := make([]*dashboards.Dashboard, 0, foldersCap+dashsCap)
 	dashTags := make([]*dashboardTag, 0, dashsCap)
 	permissions := make([]accesscontrol.Permission, 0, foldersCap*2)
-	for i := 0; i < LEVEL0_FOLDER_NUM; i++ {
+	for i := range LEVEL0_FOLDER_NUM {
 		f0, d := addFolder(orgID, generateID(IDs), fmt.Sprintf("folder%d", i), nil)
 		folders = append(folders, f0)
 		dashs = append(dashs, d)
@@ -330,7 +330,7 @@ func setupDB(b testing.TB) benchScenario {
 		signedInUser.Permissions[orgID][dashboards.ActionFoldersRead] = append(signedInUser.Permissions[orgID][dashboards.ActionFoldersRead], dashboards.ScopeFoldersProvider.GetResourceScopeUID(f0.UID))
 		signedInUser.Permissions[orgID][dashboards.ActionDashboardsRead] = append(signedInUser.Permissions[orgID][dashboards.ActionDashboardsRead], dashboards.ScopeFoldersProvider.GetResourceScopeUID(f0.UID))
 
-		for j := 0; j < LEVEL0_DASHBOARD_NUM; j++ {
+		for j := range LEVEL0_DASHBOARD_NUM {
 			str := fmt.Sprintf("dashboard_%d_%d", i, j)
 			dashID := generateID(IDs)
 			dashs = append(dashs, &dashboards.Dashboard{
@@ -353,12 +353,12 @@ func setupDB(b testing.TB) benchScenario {
 			})
 		}
 
-		for j := 0; j < LEVEL1_FOLDER_NUM; j++ {
+		for j := range LEVEL1_FOLDER_NUM {
 			f1, d1 := addFolder(orgID, generateID(IDs), fmt.Sprintf("folder%d_%d", i, j), &f0.UID)
 			folders = append(folders, f1)
 			dashs = append(dashs, d1)
 
-			for k := 0; k < LEVEL1_DASHBOARD_NUM; k++ {
+			for k := range LEVEL1_DASHBOARD_NUM {
 				str := fmt.Sprintf("dashboard_%d_%d_%d", i, j, k)
 				dashID := generateID(IDs)
 				dashs = append(dashs, &dashboards.Dashboard{
@@ -381,12 +381,12 @@ func setupDB(b testing.TB) benchScenario {
 				})
 			}
 
-			for k := 0; k < LEVEL2_FOLDER_NUM; k++ {
+			for k := range LEVEL2_FOLDER_NUM {
 				f2, d2 := addFolder(orgID, generateID(IDs), fmt.Sprintf("folder%d_%d_%d", i, j, k), &f1.UID)
 				folders = append(folders, f2)
 				dashs = append(dashs, d2)
 
-				for l := 0; l < LEVEL2_DASHBOARD_NUM; l++ {
+				for l := range LEVEL2_DASHBOARD_NUM {
 					str := fmt.Sprintf("dashboard_%d_%d_%d_%d", i, j, k, l)
 					dashID := generateID(IDs)
 					dashs = append(dashs, &dashboards.Dashboard{

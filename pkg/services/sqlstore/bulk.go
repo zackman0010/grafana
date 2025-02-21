@@ -45,10 +45,7 @@ func InBatches(items any, opts BulkOpSettings, fn func(batch any) error) error {
 	}
 
 	for i := 0; i < slice.Len(); i += opts.BatchSize {
-		end := i + opts.BatchSize
-		if end > slice.Len() {
-			end = slice.Len()
-		}
+		end := min(i+opts.BatchSize, slice.Len())
 
 		chunk := slice.Slice(i, end).Interface()
 

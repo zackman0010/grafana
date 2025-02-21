@@ -22,6 +22,7 @@ import (
 	"github.com/grafana/grafana/pkg/components/simplejson"
 	es "github.com/grafana/grafana/pkg/tsdb/elasticsearch/client"
 	"github.com/grafana/grafana/pkg/tsdb/elasticsearch/instrumentation"
+	"maps"
 )
 
 const (
@@ -131,14 +132,14 @@ func parseResponse(ctx context.Context, responses []*es.SearchResponse, targets 
 
 func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields es.ConfiguredFields, queryRes *backend.DataResponse, logger log.Logger) error {
 	propNames := make(map[string]bool)
-	docs := make([]map[string]interface{}, len(res.Hits.Hits))
+	docs := make([]map[string]any, len(res.Hits.Hits))
 	searchWords := make(map[string]bool)
 
 	for hitIdx, hit := range res.Hits.Hits {
-		var flattened map[string]interface{}
+		var flattened map[string]any
 		var sourceString string
 		if hit["_source"] != nil {
-			flattened = flatten(hit["_source"].(map[string]interface{}), 10)
+			flattened = flatten(hit["_source"].(map[string]any), 10)
 			sourceMarshalled, err := json.Marshal(flattened)
 			if err != nil {
 				return err
@@ -146,7 +147,7 @@ func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields
 			sourceString = string(sourceMarshalled)
 		}
 
-		doc := map[string]interface{}{
+		doc := map[string]any{
 			"_id":       hit["_id"],
 			"_type":     hit["_type"],
 			"_index":    hit["_index"],
@@ -165,11 +166,9 @@ func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields
 		}
 
 		if hit["fields"] != nil {
-			source, ok := hit["fields"].(map[string]interface{})
+			source, ok := hit["fields"].(map[string]any)
 			if ok {
-				for k, v := range source {
-					doc[k] = v
-				}
+				maps.Copy(doc, source)
 			}
 		}
 
@@ -184,9 +183,9 @@ func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields
 		}
 
 		// Process highlight to searchWords
-		if highlights, ok := doc["highlight"].(map[string]interface{}); ok {
+		if highlights, ok := doc["highlight"].(map[string]any); ok {
 			for _, highlight := range highlights {
-				if highlightList, ok := highlight.([]interface{}); ok {
+				if highlightList, ok := highlight.([]any); ok {
 					for _, highlightValue := range highlightList {
 						str := fmt.Sprintf("%v", highlightValue)
 						matches := searchWordsRegex.FindAllStringSubmatch(str, -1)
@@ -218,15 +217,15 @@ func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields
 
 func processRawDataResponse(res *es.SearchResponse, target *Query, configuredFields es.ConfiguredFields, queryRes *backend.DataResponse, logger log.Logger) error {
 	propNames := make(map[string]bool)
-	docs := make([]map[string]interface{}, len(res.Hits.Hits))
+	docs := make([]map[string]any, len(res.Hits.Hits))
 
 	for hitIdx, hit := range res.Hits.Hits {
-		var flattened map[string]interface{}
+		var flattened map[string]any
 		if hit["_source"] != nil {
-			flattened = flatten(hit["_source"].(map[string]interface{}), 10)
+			flattened = flatten(hit["_source"].(map[string]any), 10)
 		}
 
-		doc := map[string]interface{}{
+		doc := map[string]any{
 			"_id":       hit["_id"],
 			"_type":     hit["_type"],
 			"_index":    hit["_index"],
@@ -234,16 +233,12 @@ func processRawDataResponse(res *es.SearchResponse, target *Query, configuredFie
 			"highlight": hit["highlight"],
 		}
 
-		for k, v := range flattened {
-			doc[k] = v
-		}
+		maps.Copy(doc, flattened)
 
 		if hit["fields"] != nil {
-			source, ok := hit["fields"].(map[string]interface{})
+			source, ok := hit["fields"].(map[string]any)
 			if ok {
-				for k, v := range source {
-					doc[k] = v
-				}
+				maps.Copy(doc, source)
 			}
 		}
 
@@ -268,9 +263,9 @@ func processRawDataResponse(res *es.SearchResponse, target *Query, configuredFie
 }
 
 func processRawDocumentResponse(res *es.SearchResponse, target *Query, queryRes *backend.DataResponse, logger log.Logger) error {
-	docs := make([]map[string]interface{}, len(res.Hits.Hits))
+	docs := make([]map[string]any, len(res.Hits.Hits))
 	for hitIdx, hit := range res.Hits.Hits {
-		doc := map[string]interface{}{
+		doc := map[string]any{
 			"_id":       hit["_id"],
 			"_type":     hit["_type"],
 			"_index":    hit["_index"],
@@ -279,20 +274,16 @@ func processRawDocumentResponse(res *es.SearchResponse, target *Query, queryRes 
 		}
 
 		if hit["_source"] != nil {
-			source, ok := hit["_source"].(map[string]interface{})
+			source, ok := hit["_source"].(map[string]any)
 			if ok {
-				for k, v := range source {
-					doc[k] = v
-				}
+				maps.Copy(doc, source)
 			}
 		}
 
 		if hit["fields"] != nil {
-			source, ok := hit["fields"].(map[string]interface{})
+			source, ok := hit["fields"].(map[string]any)
 			if ok {
-				for k, v := range source {
-					doc[k] = v
-				}
+				maps.Copy(doc, source)
 			}
 		}
 
@@ -324,7 +315,7 @@ func processRawDocumentResponse(res *es.SearchResponse, target *Query, queryRes 
 	return nil
 }
 
-func processDocsToDataFrameFields(docs []map[string]interface{}, propNames []string, configuredFields es.ConfiguredFields) []*data.Field {
+func processDocsToDataFrameFields(docs []map[string]any, propNames []string, configuredFields es.ConfiguredFields) []*data.Field {
 	size := len(docs)
 	isFilterable := true
 	allFields := make([]*data.Field, len(propNames))
@@ -340,7 +331,7 @@ func processDocsToDataFrameFields(docs []map[string]interface{}, propNames []str
 				timeString, timeStringOk = doc[configuredFields.TimeField].(string)
 				// If not, it might be an array with one time string
 				if !timeStringOk {
-					timeList, ok := doc[configuredFields.TimeField].([]interface{})
+					timeList, ok := doc[configuredFields.TimeField].([]any)
 					if !ok || len(timeList) != 1 {
 						continue
 					}
@@ -396,7 +387,7 @@ func processDocsToDataFrameFields(docs []map[string]interface{}, propNames []str
 	return allFields
 }
 
-func processBuckets(aggs map[string]interface{}, target *Query,
+func processBuckets(aggs map[string]any, target *Query,
 	queryResult *backend.DataResponse, props map[string]string, depth int) error {
 	var err error
 	maxDepth := len(target.BucketAggs) - 1
@@ -435,9 +426,7 @@ func processBuckets(aggs map[string]interface{}, target *Query,
 				bucket := simplejson.NewFromAny(b)
 				newProps := make(map[string]string)
 
-				for k, v := range props {
-					newProps[k] = v
-				}
+				maps.Copy(newProps, props)
 
 				if key, err := bucket.Get("key").String(); err == nil {
 					newProps[aggDef.Field] = key
@@ -465,9 +454,7 @@ func processBuckets(aggs map[string]interface{}, target *Query,
 				bucket := simplejson.NewFromAny(buckets[bucketKey])
 				newProps := make(map[string]string)
 
-				for k, v := range props {
-					newProps[k] = v
-				}
+				maps.Copy(newProps, props)
 
 				newProps["filter"] = bucketKey
 
@@ -506,9 +493,7 @@ func processCountMetric(buckets []*simplejson.Json, props map[string]string) (da
 		values = append(values, value)
 	}
 
-	for k, v := range props {
-		tags[k] = v
-	}
+	maps.Copy(tags, props)
 	tags["metric"] = countType
 	return data.Frames{newTimeSeriesFrame(timeVector, tags, values)}, nil
 }
@@ -534,9 +519,7 @@ func processPercentilesMetric(metric *MetricAgg, buckets []*simplejson.Json, pro
 		timeVector := make([]time.Time, 0, len(buckets))
 		values := make([]*float64, 0, len(buckets))
 
-		for k, v := range props {
-			tags[k] = v
-		}
+		maps.Copy(tags, props)
 		tags["metric"] = "p" + percentileName
 		tags["field"] = metric.Field
 		for _, bucket := range buckets {
@@ -564,9 +547,7 @@ func processTopMetricsMetric(metric *MetricAgg, buckets []*simplejson.Json, prop
 		tags := make(map[string]string, len(props))
 		timeVector := make([]time.Time, 0, len(buckets))
 		values := make([]*float64, 0, len(buckets))
-		for k, v := range props {
-			tags[k] = v
-		}
+		maps.Copy(tags, props)
 
 		tags["field"] = metricField.(string)
 		tags["metric"] = "top_metrics"
@@ -580,11 +561,11 @@ func processTopMetricsMetric(metric *MetricAgg, buckets []*simplejson.Json, prop
 			timeVector = append(timeVector, timeValue)
 
 			for _, stat := range stats.MustArray() {
-				stat := stat.(map[string]interface{})
+				stat := stat.(map[string]any)
 
 				metrics, hasMetrics := stat["metrics"]
 				if hasMetrics {
-					metrics := metrics.(map[string]interface{})
+					metrics := metrics.(map[string]any)
 					metricValue, hasMetricValue := metrics[metricField.(string)]
 
 					if hasMetricValue && metricValue != nil {
@@ -621,9 +602,7 @@ func processExtendedStatsMetric(metric *MetricAgg, buckets []*simplejson.Json, p
 		timeVector := make([]time.Time, 0, len(buckets))
 		values := make([]*float64, 0, len(buckets))
 
-		for k, v := range props {
-			tags[k] = v
-		}
+		maps.Copy(tags, props)
 		tags["metric"] = statName
 		tags["field"] = metric.Field
 
@@ -656,9 +635,7 @@ func processDefaultMetric(metric *MetricAgg, buckets []*simplejson.Json, props m
 	timeVector := make([]time.Time, 0, len(buckets))
 	values := make([]*float64, 0, len(buckets))
 
-	for k, v := range props {
-		tags[k] = v
-	}
+	maps.Copy(tags, props)
 
 	tags["metric"] = metric.Type
 	tags["field"] = metric.Field
@@ -751,7 +728,7 @@ func processAggregationDocs(esAgg *simplejson.Json, aggDef *BucketAgg, target *Q
 
 	for _, v := range esAgg.Get("buckets").MustArray() {
 		bucket := simplejson.NewFromAny(v)
-		var values []interface{}
+		var values []any
 
 		found := false
 		for _, field := range fields {
@@ -818,7 +795,7 @@ func processAggregationDocs(esAgg *simplejson.Json, aggDef *BucketAgg, target *Q
 	return nil
 }
 
-func extractDataField(name string, v interface{}) *data.Field {
+func extractDataField(name string, v any) *data.Field {
 	var field *data.Field
 	switch v.(type) {
 	case *string:
@@ -857,12 +834,12 @@ func trimDatapoints(queryResult backend.DataResponse, target *Query) {
 		for _, field := range frame.Fields {
 			if field.Len() > trimEdges*2 {
 				// first we delete the first "trim" items
-				for i := 0; i < trimEdges; i++ {
+				for range trimEdges {
 					field.Delete(0)
 				}
 
 				// then we delete the last "trim" items
-				for i := 0; i < trimEdges; i++ {
+				for range trimEdges {
 					field.Delete(field.Len() - 1)
 				}
 			}
@@ -1108,20 +1085,20 @@ func getErrorFromElasticResponse(response *es.SearchResponse) string {
 }
 
 // flatten flattens multi-level objects to single level objects. It uses dot notation to join keys.
-func flatten(target map[string]interface{}, maxDepth int) map[string]interface{} {
+func flatten(target map[string]any, maxDepth int) map[string]any {
 	// On frontend maxDepth wasn't used but as we are processing on backend
 	// let's put a limit to avoid infinite loop. 10 was chosen arbitrary.
-	output := make(map[string]interface{})
+	output := make(map[string]any)
 	step(0, maxDepth, target, "", output)
 	return output
 }
 
-func step(currentDepth, maxDepth int, target map[string]interface{}, prev string, output map[string]interface{}) {
+func step(currentDepth, maxDepth int, target map[string]any, prev string, output map[string]any) {
 	nextDepth := currentDepth + 1
 	for key, value := range target {
 		newKey := strings.Trim(prev+"."+key, ".")
 
-		v, ok := value.(map[string]interface{})
+		v, ok := value.(map[string]any)
 		if ok && len(v) > 0 && currentDepth < maxDepth {
 			step(nextDepth, maxDepth, v, newKey, output)
 		} else {
@@ -1161,7 +1138,7 @@ func sortPropNames(propNames map[string]bool, configuredFields es.ConfiguredFiel
 }
 
 // findTheFirstNonNilDocValueForPropName finds the first non-nil value for propName in docs. If none of the values are non-nil, it returns the value of propName in the first doc.
-func findTheFirstNonNilDocValueForPropName(docs []map[string]interface{}, propName string) interface{} {
+func findTheFirstNonNilDocValueForPropName(docs []map[string]any, propName string) any {
 	for _, doc := range docs {
 		if doc[propName] != nil {
 			return doc[propName]
@@ -1170,7 +1147,7 @@ func findTheFirstNonNilDocValueForPropName(docs []map[string]interface{}, propNa
 	return docs[0][propName]
 }
 
-func createFieldOfType[T int | float64 | bool | string](docs []map[string]interface{}, propName string, size int, isFilterable bool) *data.Field {
+func createFieldOfType[T int | float64 | bool | string](docs []map[string]any, propName string, size int, isFilterable bool) *data.Field {
 	fieldVector := make([]*T, size)
 	for i, doc := range docs {
 		value, ok := doc[propName].(T)
@@ -1206,10 +1183,10 @@ func setLogsCustomMeta(frame *data.Frame, searchWords map[string]bool, limit int
 	}
 
 	if frame.Meta.Custom == nil {
-		frame.Meta.Custom = map[string]interface{}{}
+		frame.Meta.Custom = map[string]any{}
 	}
 
-	frame.Meta.Custom = map[string]interface{}{
+	frame.Meta.Custom = map[string]any{
 		"searchWords": searchWordsList,
 		"limit":       limit,
 	}
@@ -1231,7 +1208,7 @@ func createFields(frames data.Frames, propKeys []string) []*data.Field {
 	return fields
 }
 
-func getSortedKeys(data map[string]interface{}) []string {
+func getSortedKeys(data map[string]any) []string {
 	keys := make([]string, 0, len(data))
 
 	for k := range data {
@@ -1251,7 +1228,7 @@ func createPropKeys(props map[string]string) []string {
 	return propKeys
 }
 
-func addMetricValueToFields(fields *[]*data.Field, values []interface{}, metricName string, value *float64) {
+func addMetricValueToFields(fields *[]*data.Field, values []any, metricName string, value *float64) {
 	index := -1
 	for i, f := range *fields {
 		if f.Name == metricName {
@@ -1270,7 +1247,7 @@ func addMetricValueToFields(fields *[]*data.Field, values []interface{}, metricN
 	field.Append(value)
 }
 
-func addPercentilesToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []interface{}) {
+func addPercentilesToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []any) {
 	percentiles := bucket.GetPath(metric.ID, "values")
 	for _, percentileName := range getSortedKeys(percentiles.MustMap()) {
 		percentileValue := percentiles.Get(percentileName).MustFloat64()
@@ -1278,7 +1255,7 @@ func addPercentilesToFields(fields *[]*data.Field, bucket *simplejson.Json, metr
 	}
 }
 
-func addExtendedStatsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []interface{}) {
+func addExtendedStatsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []any) {
 	metaKeys := make([]string, 0)
 	meta := metric.Meta.MustMap()
 	for k := range meta {
@@ -1305,7 +1282,7 @@ func addExtendedStatsToFields(fields *[]*data.Field, bucket *simplejson.Json, me
 	}
 }
 
-func addTopMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []interface{}) {
+func addTopMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []any) {
 	baseName := getMetricName(metric.Type)
 	metrics := metric.Settings.Get("metrics").MustStringArray()
 	for _, metricField := range metrics {
@@ -1315,9 +1292,9 @@ func addTopMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metri
 			metricName += " " + metricField
 		}
 		top := bucket.GetPath(metric.ID, "top").MustArray()
-		metrics, hasMetrics := top[0].(map[string]interface{})["metrics"]
+		metrics, hasMetrics := top[0].(map[string]any)["metrics"]
 		if hasMetrics {
-			metrics := metrics.(map[string]interface{})
+			metrics := metrics.(map[string]any)
 			metricValue, hasMetricValue := metrics[metricField]
 			if hasMetricValue && metricValue != nil {
 				v := metricValue.(float64)
@@ -1327,7 +1304,7 @@ func addTopMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metri
 	}
 }
 
-func addOtherMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []interface{}, target *Query) {
+func addOtherMetricsToFields(fields *[]*data.Field, bucket *simplejson.Json, metric *MetricAgg, values []any, target *Query) {
 	metricName := getMetricName(metric.Type)
 	otherMetrics := make([]*MetricAgg, 0)
 

@@ -213,7 +213,7 @@ func NewInstanceSettings(cfg *setting.Cfg, logger log.Logger) datasource.Instanc
 // so we have a special minimal interface that is fulfilled by
 // both places.
 type DebugOnlyLogger interface {
-	Debug(msg string, args ...interface{})
+	Debug(msg string, args ...any)
 }
 
 // ParseURL tries to parse an MSSQL URL string into a URL object.

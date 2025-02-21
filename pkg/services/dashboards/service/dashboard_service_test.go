@@ -1674,8 +1674,8 @@ func TestUnstructuredToLegacyDashboard(t *testing.T) {
 		title := "Test Dashboard"
 		now := metav1.Now()
 		item := &unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"spec": map[string]interface{}{
+			Object: map[string]any{
+				"spec": map[string]any{
 					"title":   title,
 					"version": int64(1),
 				},
@@ -1707,7 +1707,7 @@ func TestUnstructuredToLegacyDashboard(t *testing.T) {
 
 	t.Run("returns error if spec is missing", func(t *testing.T) {
 		item := &unstructured.Unstructured{
-			Object: map[string]interface{}{},
+			Object: map[string]any{},
 		}
 		_, err := (&DashboardServiceImpl{}).UnstructuredToLegacyDashboard(context.Background(), item, int64(123))
 		assert.Error(t, err)

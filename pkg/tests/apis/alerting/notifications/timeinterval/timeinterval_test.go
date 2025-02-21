@@ -518,7 +518,7 @@ func TestIntegrationTimeIntervalPatch(t *testing.T) {
 	t.Run("should patch with json patch", func(t *testing.T) {
 		expected := fakes.IntervalGenerator{}.Generate()
 
-		patch := []map[string]interface{}{
+		patch := []map[string]any{
 			{
 				"op":    "add",
 				"path":  "/spec/time_intervals/-",

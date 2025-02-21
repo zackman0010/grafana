@@ -281,7 +281,7 @@ func extractFieldValues[T any](t *testing.T, field *data.Field) []T {
 	t.Helper()
 
 	values := make([]T, 0, field.Len())
-	for i := 0; i < cap(values); i++ {
+	for i := range cap(values) {
 		values = append(values, field.CopyAt(i).(T))
 	}
 	return values
@@ -335,7 +335,7 @@ func cmpFrame(a, b data.Frame) bool {
 	if len(a.Fields) != len(b.Fields) {
 		return false
 	}
-	for i := 0; i < len(a.Fields); i++ {
+	for i := range a.Fields {
 		if a.Fields[i].Name != b.Fields[i].Name {
 			return false
 		}

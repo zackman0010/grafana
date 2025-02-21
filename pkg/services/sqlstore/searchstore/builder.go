@@ -8,6 +8,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/search/model"
 	"github.com/grafana/grafana/pkg/services/sqlstore/migrator"
+	"slices"
 )
 
 // Builder defaults to returning a SQL query to get a list of all dashboards
@@ -166,13 +167,7 @@ func (b *Builder) applyFilters() (ordering string) {
 		for _, o := range orders {
 			o := strings.TrimSuffix(o, " DESC")
 			o = strings.TrimSuffix(o, " ASC")
-			exists := false
-			for _, g := range groups {
-				if g == o {
-					exists = true
-					break
-				}
-			}
+			exists := slices.Contains(groups, o)
 			if !exists {
 				cols = append(cols, o)
 			}

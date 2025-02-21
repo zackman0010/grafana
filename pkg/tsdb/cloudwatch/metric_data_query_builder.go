@@ -12,6 +12,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/tsdb/cloudwatch/features"
 	"github.com/grafana/grafana/pkg/tsdb/cloudwatch/models"
+	"slices"
 )
 
 const keySeparator = "|&|"
@@ -78,13 +79,7 @@ func buildSearchExpression(query *models.CloudWatchQuery, stat string) string {
 
 	for key, values := range query.Dimensions {
 		dimensionNames = append(dimensionNames, key)
-		hasWildcard := false
-		for _, value := range values {
-			if value == "*" {
-				hasWildcard = true
-				break
-			}
-		}
+		hasWildcard := slices.Contains(values, "*")
 		if hasWildcard {
 			dimensionNamesWithoutKnownValues = append(dimensionNamesWithoutKnownValues, key)
 		} else {

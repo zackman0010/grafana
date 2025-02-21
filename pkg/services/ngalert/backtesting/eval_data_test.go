@@ -29,7 +29,7 @@ func GenerateWideSeriesFrame(size int, resolution time.Duration) *data.Frame {
 	tmili := time.Now().UnixMilli()
 	tmili = tmili - tmili%resolution.Milliseconds()
 	current := time.UnixMilli(tmili).Add(-resolution * time.Duration(size))
-	for i := 0; i < size; i++ {
+	for i := range size {
 		vals := make([]any, 0, len(frame.Fields))
 		vals = append(vals, current)
 		for i := 1; i < cap(vals); i++ {
@@ -134,7 +134,7 @@ func TestDataEvaluator_Eval(t *testing.T) {
 
 		t.Run("results should be in ascending order", func(t *testing.T) {
 			var prev = results{}
-			for i := 0; i < len(r); i++ {
+			for i := range r {
 				current := r[i]
 				if i > 0 {
 					require.Less(t, prev.time, current.time)
@@ -146,7 +146,7 @@ func TestDataEvaluator_Eval(t *testing.T) {
 		})
 
 		t.Run("results should be in the same order as fields in frame", func(t *testing.T) {
-			for i := 0; i < len(r); i++ {
+			for i := range r {
 				current := r[i]
 				for idx, result := range current.results {
 					field := frame.Fields[idx+1]

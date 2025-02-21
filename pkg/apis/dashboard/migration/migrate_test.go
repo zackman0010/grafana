@@ -50,7 +50,7 @@ func TestMigrate(t *testing.T) {
 	}
 }
 
-func testMigration(t *testing.T, dash map[string]interface{}, name string, inputVersion, targetVersion int) {
+func testMigration(t *testing.T, dash map[string]any, name string, inputVersion, targetVersion int) {
 	t.Helper()
 	require.NoError(t, migration.Migrate(dash, targetVersion), "%d migration failed", targetVersion)
 
@@ -82,7 +82,7 @@ func parseInputName(t *testing.T, name string) (int, string) {
 	return iv, parts[1]
 }
 
-func load(t *testing.T, path string) (dash map[string]interface{}, inputVersion int, name string) {
+func load(t *testing.T, path string) (dash map[string]any, inputVersion int, name string) {
 	// We can ignore gosec G304 here since it's a test
 	// nolint:gosec
 	inputBytes, err := os.ReadFile(path)

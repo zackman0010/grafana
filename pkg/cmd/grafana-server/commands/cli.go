@@ -23,6 +23,7 @@ import (
 	"github.com/grafana/grafana/pkg/server"
 	"github.com/grafana/grafana/pkg/services/apiserver/standalone"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 func ServerCommand(version, commit, enterpriseCommit, buildBranch, buildstamp string) *cli.Command {
@@ -126,10 +127,8 @@ func RunServer(opts standalone.BuildInfo, cli *cli.Context) error {
 
 func validPackaging(packaging string) string {
 	validTypes := []string{"dev", "deb", "rpm", "docker", "brew", "hosted", "unknown"}
-	for _, vt := range validTypes {
-		if packaging == vt {
-			return packaging
-		}
+	if slices.Contains(validTypes, packaging) {
+		return packaging
 	}
 	return "unknown"
 }

@@ -244,7 +244,7 @@ func (ss *FolderUnifiedStoreImpl) GetHeight(ctx context.Context, foldrUID string
 	for len(queue) > 0 && height <= folder.MaxNestedFolderDepth {
 		length := len(queue)
 		height++
-		for i := 0; i < length; i++ {
+		for range length {
 			ele := queue[0]
 			queue = queue[1:]
 			if parentUID != nil && *parentUID == ele {

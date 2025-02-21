@@ -29,6 +29,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/pluginstore"
 	"github.com/grafana/grafana/pkg/tsdb/grafana-testdata-datasource/kinds"
+	"maps"
 )
 
 var _ builder.APIGroupBuilder = (*DataSourceAPIBuilder)(nil)
@@ -246,9 +247,7 @@ func (b *DataSourceAPIBuilder) getPluginContext(ctx context.Context, uid string)
 func (b *DataSourceAPIBuilder) GetOpenAPIDefinitions() openapi.GetOpenAPIDefinitions {
 	return func(ref openapi.ReferenceCallback) map[string]openapi.OpenAPIDefinition {
 		defs := query.GetOpenAPIDefinitions(ref) // required when running standalone
-		for k, v := range datasource.GetOpenAPIDefinitions(ref) {
-			defs[k] = v
-		}
+		maps.Copy(defs, datasource.GetOpenAPIDefinitions(ref))
 		return defs
 	}
 }

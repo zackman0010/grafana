@@ -109,7 +109,7 @@ func makeDataQuery() *backend.DataQuery {
 
 func fieldValues[T any](field *data.Field) []T {
 	values := make([]T, field.Len())
-	for i := 0; i < field.Len(); i++ {
+	for i := range field.Len() {
 		values[i] = field.At(i).(T)
 	}
 	return values

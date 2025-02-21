@@ -206,7 +206,7 @@ func withDatasourceQuery(uid string) func(r *apimodels.PostableExtendedRuleNode)
 
 func generateAlertRuleGroup(rulesCount int, gen func() apimodels.PostableExtendedRuleNode) apimodels.PostableRuleGroupConfig {
 	rules := make([]apimodels.PostableExtendedRuleNode, 0, rulesCount)
-	for i := 0; i < rulesCount; i++ {
+	for range rulesCount {
 		rules = append(rules, gen())
 	}
 	return apimodels.PostableRuleGroupConfig{
@@ -770,7 +770,7 @@ func (a apiClient) CreateTestDatasource(t *testing.T) (result api.CreateOrUpdate
 	if resp.StatusCode != 200 {
 		require.Failf(t, "failed to create data source", "API request to create a datasource failed. Status code: %d, response: %s", resp.StatusCode, string(b))
 	}
-	require.NoError(t, json.Unmarshal([]byte(fmt.Sprintf(`{ "body": %s }`, string(b))), &result))
+	require.NoError(t, json.Unmarshal(fmt.Appendf(nil, `{ "body": %s }`, string(b)), &result))
 	return result
 }
 

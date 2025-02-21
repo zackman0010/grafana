@@ -70,7 +70,7 @@ func TestGetFolders(t *testing.T) {
 	numberOfFolders := 5
 	indexWithoutPermission := 3
 
-	for i := 0; i < numberOfFolders; i++ {
+	for i := range numberOfFolders {
 		respCode := 0
 		folderUID := ""
 		retries := 0

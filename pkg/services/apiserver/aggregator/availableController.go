@@ -202,7 +202,7 @@ func (c *AvailableConditionController) sync(key string) error {
 	if apiService.Spec.Service != nil && c.serviceResolver != nil {
 		attempts := 5
 		results := make(chan error, attempts)
-		for i := 0; i < attempts; i++ {
+		for i := range attempts {
 			go func() {
 				// stagger these requests to reduce pressure on aggregated services
 				waitDuration := time.Second * time.Duration(int32(i))
@@ -265,7 +265,7 @@ func (c *AvailableConditionController) sync(key string) error {
 		}
 
 		var lastError error
-		for i := 0; i < attempts; i++ {
+		for range attempts {
 			lastError = <-results
 			// if we had at least one success, we are successful overall and we can return now
 			if lastError == nil {
@@ -352,7 +352,7 @@ func (c *AvailableConditionController) Run(workers int, stopCh <-chan struct{}) 
 		return
 	}
 
-	for i := 0; i < workers; i++ {
+	for range workers {
 		go wait.Until(c.runWorker, time.Second, stopCh)
 	}
 
@@ -384,7 +384,7 @@ func (c *AvailableConditionController) processNextWorkItem() bool {
 	return true
 }
 
-func (c *AvailableConditionController) addAPIService(obj interface{}) {
+func (c *AvailableConditionController) addAPIService(obj any) {
 	castObj := obj.(*apiregistrationv1.APIService)
 	klog.V(4).Infof("Adding %s", castObj.Name)
 	if castObj.Spec.Service != nil {
@@ -393,7 +393,7 @@ func (c *AvailableConditionController) addAPIService(obj interface{}) {
 	c.queue.Add(castObj.Name)
 }
 
-func (c *AvailableConditionController) updateAPIService(oldObj, newObj interface{}) {
+func (c *AvailableConditionController) updateAPIService(oldObj, newObj any) {
 	castObj := newObj.(*apiregistrationv1.APIService)
 	oldCastObj := oldObj.(*apiregistrationv1.APIService)
 	klog.V(4).Infof("Updating %s", oldCastObj.Name)
@@ -403,7 +403,7 @@ func (c *AvailableConditionController) updateAPIService(oldObj, newObj interface
 	c.queue.Add(oldCastObj.Name)
 }
 
-func (c *AvailableConditionController) deleteAPIService(obj interface{}) {
+func (c *AvailableConditionController) deleteAPIService(obj any) {
 	castObj, ok := obj.(*apiregistrationv1.APIService)
 	if !ok {
 		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
@@ -458,19 +458,19 @@ func (c *AvailableConditionController) rebuildAPIServiceCache() {
 
 // TODO, think of a way to avoid checking on every service manipulation
 
-func (c *AvailableConditionController) addService(obj interface{}) {
+func (c *AvailableConditionController) addService(obj any) {
 	for _, apiService := range c.getAPIServicesFor(obj.(*v0alpha1.ExternalName)) {
 		c.queue.Add(apiService)
 	}
 }
 
-func (c *AvailableConditionController) updateService(obj, _ interface{}) {
+func (c *AvailableConditionController) updateService(obj, _ any) {
 	for _, apiService := range c.getAPIServicesFor(obj.(*v0alpha1.ExternalName)) {
 		c.queue.Add(apiService)
 	}
 }
 
-func (c *AvailableConditionController) deleteService(obj interface{}) {
+func (c *AvailableConditionController) deleteService(obj any) {
 	castObj, ok := obj.(*v0alpha1.ExternalName)
 	if !ok {
 		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)

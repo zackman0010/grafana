@@ -247,7 +247,7 @@ func tagSet[T any](fn func(T) int64, list []T) map[int64]struct{} {
 
 func (r *xormRepositoryImpl) Get(ctx context.Context, query annotations.ItemQuery, accessResources *accesscontrol.AccessResources) ([]*annotations.ItemDTO, error) {
 	var sql bytes.Buffer
-	params := make([]interface{}, 0)
+	params := make([]any, 0)
 	items := make([]*annotations.ItemDTO, 0)
 	err := r.db.WithDbSession(ctx, func(sess *db.Session) error {
 		sql.WriteString(`
@@ -454,7 +454,7 @@ func (r *xormRepositoryImpl) GetTags(ctx context.Context, query annotations.Tags
 		}
 
 		var sql bytes.Buffer
-		params := make([]interface{}, 0)
+		params := make([]any, 0)
 		tagKey := `tag.` + r.db.GetDialect().Quote("key")
 		tagValue := `tag.` + r.db.GetDialect().Quote("value")
 

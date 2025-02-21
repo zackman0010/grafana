@@ -2,27 +2,27 @@ package schemaversion
 
 // V39 updates the configuration of the Timeseries to table transformation
 // to support multiple options per query
-func V39(dashboard map[string]interface{}) error {
+func V39(dashboard map[string]any) error {
 	dashboard["schemaVersion"] = int(39)
 
-	panels, ok := dashboard["panels"].([]interface{})
+	panels, ok := dashboard["panels"].([]any)
 	if !ok {
 		return nil
 	}
 
 	for _, panel := range panels {
-		p, ok := panel.(map[string]interface{})
+		p, ok := panel.(map[string]any)
 		if !ok {
 			continue
 		}
 
-		transformations, ok := p["transformations"].([]interface{})
+		transformations, ok := p["transformations"].([]any)
 		if !ok {
 			continue
 		}
 
 		for _, transformation := range transformations {
-			t, ok := transformation.(map[string]interface{})
+			t, ok := transformation.(map[string]any)
 			if !ok {
 				continue
 			}
@@ -33,12 +33,12 @@ func V39(dashboard map[string]interface{}) error {
 				continue
 			}
 
-			options, ok := t["options"].(map[string]interface{})
+			options, ok := t["options"].(map[string]any)
 			if !ok {
 				continue
 			}
 
-			refIdStats, ok := options["refIdToStat"].(map[string]interface{})
+			refIdStats, ok := options["refIdToStat"].(map[string]any)
 			if !ok {
 				continue
 			}
@@ -46,9 +46,9 @@ func V39(dashboard map[string]interface{}) error {
 			// For each {refIdtoStat} record which maps refId to a statistic
 			// we add that to the stat property of the new
 			// RefIdTransformerOptions interface which includes multiple settings
-			transformationOptions := make(map[string]interface{})
+			transformationOptions := make(map[string]any)
 			for refId, stat := range refIdStats {
-				transformationOptions[refId] = map[string]interface{}{"stat": stat}
+				transformationOptions[refId] = map[string]any{"stat": stat}
 			}
 
 			// Update the options

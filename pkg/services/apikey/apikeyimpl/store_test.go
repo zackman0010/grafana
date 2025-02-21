@@ -47,7 +47,7 @@ func resetTimeNow() {
 func seedApiKeys(t *testing.T, store store, num int) {
 	t.Helper()
 
-	for i := 0; i < num; i++ {
+	for i := range num {
 		_, err := store.AddAPIKey(context.Background(), &apikey.AddCommand{
 			Name:  fmt.Sprintf("key:%d", i),
 			Key:   fmt.Sprintf("key:%d", i),

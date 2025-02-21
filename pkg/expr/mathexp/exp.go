@@ -142,7 +142,7 @@ func (e *State) walkUnary(node *parse.UnaryNode) (Results, error) {
 
 func (e *State) unarySeries(s Series, op string) (Series, error) {
 	newSeries := NewSeries(e.RefID, s.GetLabels(), s.Len())
-	for i := 0; i < s.Len(); i++ {
+	for i := range s.Len() {
 		t, f := s.GetPoint(i)
 		if f == nil {
 			newSeries.SetPoint(i, t, nil)
@@ -505,7 +505,7 @@ func (e *State) biScalarNumber(labels data.Labels, op string, number Number, sca
 func (e *State) biSeriesNumber(labels data.Labels, op string, s Series, scalarVal *float64, seriesFirst bool) (Series, error) {
 	newSeries := NewSeries(e.RefID, labels, s.Len())
 	var err error
-	for i := 0; i < s.Len(); i++ {
+	for i := range s.Len() {
 		nF := math.NaN()
 		t, f := s.GetPoint(i)
 		if f == nil || scalarVal == nil {
@@ -530,13 +530,13 @@ func (e *State) biSeriesNumber(labels data.Labels, op string, s Series, scalarVa
 // are equal. If there are datapoints in A or B that do not share a time, they will be dropped.
 func (e *State) biSeriesSeries(labels data.Labels, op string, aSeries, bSeries Series) (Series, error) {
 	bPoints := make(map[string]*float64)
-	for i := 0; i < bSeries.Len(); i++ {
+	for i := range bSeries.Len() {
 		t, f := bSeries.GetPoint(i)
 		bPoints[t.UTC().String()] = f
 	}
 
 	newSeries := NewSeries(e.RefID, labels, 0)
-	for aIdx := 0; aIdx < aSeries.Len(); aIdx++ {
+	for aIdx := range aSeries.Len() {
 		aTime, aF := aSeries.GetPoint(aIdx)
 		bF, ok := bPoints[aTime.UTC().String()]
 		if !ok {

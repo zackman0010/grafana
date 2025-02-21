@@ -94,7 +94,7 @@ func setupBenchMark(b *testing.B, usr user.SignedInUser, features featuremgmt.Fe
 	rootFolders := make([]*folder.Folder, 0, numFolders)
 	dashes := make([]dashboards.Dashboard, 0, numDashboards)
 	parentUID := ""
-	for i := 0; i < numFolders; i++ {
+	for i := range numFolders {
 		uid := fmt.Sprintf("f%d", i)
 		f, err := folderSvc.Create(context.Background(), &folder.CreateFolderCommand{
 			UID:          uid,
@@ -274,10 +274,7 @@ func BenchmarkDashboardPermissionFilter_300_10000_10_8(b *testing.B) {
 
 func batch(count, batchSize int, eachFn func(start, end int) error) error {
 	for i := 0; i < count; {
-		end := i + batchSize
-		if end > count {
-			end = count
-		}
+		end := min(i+batchSize, count)
 
 		if err := eachFn(i, end); err != nil {
 			return err

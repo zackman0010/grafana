@@ -29,7 +29,7 @@ func (m *MockAMConfigStore_Expecter) SaveSucceedsIntercept(intercepted *models.S
 
 type methodCall struct {
 	Method string
-	Args   []interface{}
+	Args   []any
 }
 
 type AlertmanagerConfigStoreFake struct {
@@ -41,7 +41,7 @@ type AlertmanagerConfigStoreFake struct {
 func (a *AlertmanagerConfigStoreFake) Get(ctx context.Context, orgID int64) (*ConfigRevision, error) {
 	a.Calls = append(a.Calls, methodCall{
 		Method: "Get",
-		Args:   []interface{}{ctx, orgID},
+		Args:   []any{ctx, orgID},
 	})
 	if a.GetFn != nil {
 		return a.GetFn(ctx, orgID)
@@ -52,7 +52,7 @@ func (a *AlertmanagerConfigStoreFake) Get(ctx context.Context, orgID int64) (*Co
 func (a *AlertmanagerConfigStoreFake) Save(ctx context.Context, revision *ConfigRevision, orgID int64) error {
 	a.Calls = append(a.Calls, methodCall{
 		Method: "Save",
-		Args:   []interface{}{ctx, revision, orgID},
+		Args:   []any{ctx, revision, orgID},
 	})
 	if a.SaveFn != nil {
 		return a.SaveFn(ctx, revision)

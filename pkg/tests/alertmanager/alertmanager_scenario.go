@@ -356,7 +356,7 @@ func getNetworkName() string {
 func getInstances(n int) []string {
 	is := make([]string, n)
 
-	for i := 0; i < n; i++ {
+	for i := range n {
 		is[i] = "grafana-" + strconv.Itoa(i+1)
 	}
 

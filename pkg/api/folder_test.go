@@ -507,7 +507,7 @@ func TestFolderGetAPIEndpoint(t *testing.T) {
 			require.Equal(t, len(folder.Parents), len(tc.expectedParentUIDs))
 			require.Equal(t, len(folder.Parents), len(tc.expectedParentTitles))
 
-			for i := 0; i < len(tc.expectedParentUIDs); i++ {
+			for i := range tc.expectedParentUIDs {
 				assert.Equal(t, tc.expectedParentUIDs[i], folder.Parents[i].UID)
 				assert.Equal(t, tc.expectedParentOrgIDs[i], folder.Parents[i].OrgID)
 				assert.Equal(t, tc.expectedParentTitles[i], folder.Parents[i].Title)

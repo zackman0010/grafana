@@ -182,7 +182,7 @@ func copyData(field *data.Field, col arrow.Array) error {
 	switch col.DataType().ID() {
 	case arrow.TIMESTAMP:
 		v := array.NewTimestampData(colData)
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			if field.Nullable() {
 				if v.IsNull(i) {
 					var t *time.Time
@@ -197,7 +197,7 @@ func copyData(field *data.Field, col arrow.Array) error {
 		}
 	case arrow.DENSE_UNION:
 		v := array.NewDenseUnionData(colData)
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			sc, err := scalar.GetScalar(v, i)
 			if err != nil {
 				return err
@@ -227,7 +227,7 @@ func copyData(field *data.Field, col arrow.Array) error {
 		}
 	case arrow.LIST:
 		v := array.NewListData(colData)
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			sc, err := scalar.GetScalar(v, i)
 			if err != nil {
 				return err
@@ -278,7 +278,7 @@ type arrowArray[T any] interface {
 }
 
 func copyBasic[T any, Array arrowArray[T]](dst *data.Field, src Array) {
-	for i := 0; i < src.Len(); i++ {
+	for i := range src.Len() {
 		if dst.Nullable() {
 			if src.IsNull(i) {
 				var s *T

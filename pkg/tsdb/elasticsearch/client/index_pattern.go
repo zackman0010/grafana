@@ -329,7 +329,7 @@ func formatDate(t time.Time, pattern string) string {
 	var i int
 
 	minLen := min(len(formattedDatePatterns), len(bases))
-	for i = 0; i < minLen; i++ {
+	for i = range minLen {
 		if isBaseFirst {
 			fullPattern = append(fullPattern, bases[i], formattedDatePatterns[i])
 		} else {

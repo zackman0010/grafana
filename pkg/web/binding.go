@@ -62,7 +62,7 @@ func validate(obj any) error {
 	switch v.Kind() {
 	// For arrays and slices - iterate over each element and validate it recursively
 	case reflect.Slice, reflect.Array:
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			e := v.Index(i).Interface()
 			if err := validate(e); err != nil {
 				return err
@@ -70,7 +70,7 @@ func validate(obj any) error {
 		}
 	// For structs - iterate over each field, check for the "Required" constraint (Macaron legacy), then validate it recursively
 	case reflect.Struct:
-		for i := 0; i < v.NumField(); i++ {
+		for i := range v.NumField() {
 			field := t.Field(i)
 			value := v.Field(i)
 			rule := field.Tag.Get("binding")

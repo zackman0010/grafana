@@ -741,7 +741,7 @@ func makeReceiverInUseErr(usedByRoutes bool, rules []models.AlertRuleKey) error 
 
 func makeErrReceiverVersionConflict(current *models.Receiver, desiredVersion string) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"Version":        desiredVersion,
 			"CurrentVersion": current.Version,
 			"Name":           current.Name,

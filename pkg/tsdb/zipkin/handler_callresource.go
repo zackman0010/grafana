@@ -63,7 +63,7 @@ func getTraceHandler(ds *datasourceInfo) http.HandlerFunc {
 	}
 }
 
-func writeResponse(res interface{}, err error, rw http.ResponseWriter, logger log.Logger) {
+func writeResponse(res any, err error, rw http.ResponseWriter, logger log.Logger) {
 	if err != nil {
 		// This is used for resource calls, we don't need to add actual error message, but we should log it
 		logger.Warn("An error occurred while doing a resource call", "error", err)

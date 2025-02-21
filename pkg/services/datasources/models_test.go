@@ -119,7 +119,7 @@ func TestIsSecureSocksDSProxyEnabled(t *testing.T) {
 		{
 			desc: "Json with enableSecureSocksProxy",
 			ds: &DataSource{
-				JsonData: simplejson.NewFromAny(map[string]interface{}{
+				JsonData: simplejson.NewFromAny(map[string]any{
 					"enableSecureSocksProxy": true,
 				}),
 			},
@@ -128,7 +128,7 @@ func TestIsSecureSocksDSProxyEnabled(t *testing.T) {
 		{
 			desc: "Json with string enableSecureSocksProxy",
 			ds: &DataSource{
-				JsonData: simplejson.NewFromAny(map[string]interface{}{
+				JsonData: simplejson.NewFromAny(map[string]any{
 					"enableSecureSocksProxy": "true",
 				}),
 			},
@@ -137,7 +137,7 @@ func TestIsSecureSocksDSProxyEnabled(t *testing.T) {
 		{
 			desc: "Json with enableSecureSocksProxy false",
 			ds: &DataSource{
-				JsonData: simplejson.NewFromAny(map[string]interface{}{
+				JsonData: simplejson.NewFromAny(map[string]any{
 					"enableSecureSocksProxy": false,
 				}),
 			},

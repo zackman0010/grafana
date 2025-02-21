@@ -8,6 +8,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/infra/httpclient"
 	"github.com/grafana/grafana/pkg/services/datasources"
+	"slices"
 )
 
 type FakeDataSourceService struct {
@@ -90,7 +91,7 @@ func (s *FakeDataSourceService) DeleteDataSource(ctx context.Context, cmd *datas
 		uidMatch := cmd.UID != "" && cmd.UID == datasource.UID
 		nameMatch := cmd.Name != "" && cmd.Name == datasource.Name
 		if idMatch || nameMatch || uidMatch {
-			s.DataSources = append(s.DataSources[:i], s.DataSources[i+1:]...)
+			s.DataSources = slices.Delete(s.DataSources, i, i+1)
 			return nil
 		}
 	}

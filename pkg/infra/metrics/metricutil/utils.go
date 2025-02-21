@@ -9,6 +9,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
+	"maps"
 )
 
 // SanitizeLabelName removes all invalid chars from the label name.
@@ -82,9 +83,7 @@ func buildLabelSets(labels []string, labelValues map[string][]string) []promethe
 
 func copyLabelSet(ls prometheus.Labels) prometheus.Labels {
 	newLs := make(prometheus.Labels, len(ls))
-	for l, v := range ls {
-		newLs[l] = v
-	}
+	maps.Copy(newLs, ls)
 	return newLs
 }
 

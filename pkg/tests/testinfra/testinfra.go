@@ -159,7 +159,7 @@ func CreateGrafDir(t *testing.T, opts GrafanaOpts) (string, string) {
 	// Search upwards in directory tree for project root
 	var rootDir string
 	found := false
-	for i := 0; i < 20; i++ {
+	for range 20 {
 		rootDir = filepath.Join(rootDir, "..")
 
 		dir, err := filepath.Abs(rootDir)

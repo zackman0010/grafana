@@ -396,10 +396,7 @@ func (s QueryHistoryService) enforceQueryHistoryRowLimit(ctx context.Context, li
 					)`
 			}
 
-			sqlLimit := countRowsToDelete
-			if sqlLimit > 10000 {
-				sqlLimit = 10000
-			}
+			sqlLimit := min(countRowsToDelete, 10000)
 
 			res, err := session.Exec(sql, strconv.FormatInt(sqlLimit, 10))
 			if err != nil {

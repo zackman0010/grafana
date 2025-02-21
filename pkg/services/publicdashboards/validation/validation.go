@@ -5,6 +5,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
 	. "github.com/grafana/grafana/pkg/services/publicdashboards/models"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 func ValidatePublicDashboard(dto *SavePublicDashboardDTO) error {
@@ -54,10 +55,5 @@ func IsValidShortUID(uid string) bool {
 }
 
 func IsValidShareType(shareType ShareType) bool {
-	for _, t := range ValidShareTypes {
-		if t == shareType {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(ValidShareTypes, shareType)
 }

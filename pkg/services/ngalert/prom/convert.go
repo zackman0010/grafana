@@ -9,6 +9,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/services/datasources"
 	"github.com/grafana/grafana/pkg/services/ngalert/models"
+	"maps"
 )
 
 type Config struct {
@@ -146,9 +147,7 @@ func (p *Converter) convertRule(orgID int64, namespaceUID, group string, rule Pr
 	}
 
 	labels := make(map[string]string, len(rule.Labels)+1)
-	for k, v := range rule.Labels {
-		labels[k] = v
-	}
+	maps.Copy(labels, rule.Labels)
 
 	originalRuleDefinition, err := yaml.Marshal(rule)
 	if err != nil {
@@ -188,8 +187,8 @@ func (p *Converter) convertRule(orgID int64, namespaceUID, group string, rule Pr
 }
 
 func createAlertQueryNode(datasourceUID, datasourceType, expr string, fromTimeRange, evaluationOffset time.Duration) (models.AlertQuery, error) {
-	modelData := map[string]interface{}{
-		"datasource": map[string]interface{}{
+	modelData := map[string]any{
+		"datasource": map[string]any{
 			"type": datasourceType,
 			"uid":  datasourceUID,
 		},

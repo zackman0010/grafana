@@ -323,8 +323,8 @@ func TestGetQueryDataResponse(t *testing.T) {
 	}
 
 	t.Run("Returns query data even when the query is hidden", func(t *testing.T) {
-		hiddenQuery := map[string]interface{}{
-			"datasource": map[string]interface{}{
+		hiddenQuery := map[string]any{
+			"datasource": map[string]any{
 				"name": "Expression",
 				"type": "__expr__",
 				"uid":  "__expr__",
@@ -332,16 +332,16 @@ func TestGetQueryDataResponse(t *testing.T) {
 			"hide":  true,
 			"refId": "A",
 		}
-		customPanels := []interface{}{
-			map[string]interface{}{
+		customPanels := []any{
+			map[string]any{
 				"id": 1,
-				"datasource": map[string]interface{}{
+				"datasource": map[string]any{
 					"uid": "ds1",
 				},
-				"targets": []interface{}{hiddenQuery},
+				"targets": []any{hiddenQuery},
 			}}
 
-		dashboard := insertTestDashboard(t, dashboardStore, "testDashWithHiddenQuery", 1, 0, "", true, []map[string]interface{}{}, customPanels)
+		dashboard := insertTestDashboard(t, dashboardStore, "testDashWithHiddenQuery", 1, 0, "", true, []map[string]any{}, customPanels)
 		fakeDashboardService.On("GetDashboard", mock.Anything, mock.Anything, mock.Anything).Return(dashboard, nil)
 
 		isEnabled := true
@@ -721,7 +721,7 @@ func TestGetMetricRequest(t *testing.T) {
 	service, sqlStore, cfg := newPublicDashboardServiceImpl(t, nil, nil, nil, nil, nil)
 	dashboardStore, err := dashboardsDB.ProvideDashboardStore(sqlStore, cfg, featuremgmt.WithFeatures(), tagimpl.ProvideService(sqlStore))
 	require.NoError(t, err)
-	dashboard := insertTestDashboard(t, dashboardStore, "testDashie", 1, 0, "", true, []map[string]interface{}{}, nil)
+	dashboard := insertTestDashboard(t, dashboardStore, "testDashie", 1, 0, "", true, []map[string]any{}, nil)
 
 	publicDashboard := &PublicDashboard{
 		Uid:          "1",
@@ -762,8 +762,8 @@ func TestBuildMetricRequest(t *testing.T) {
 
 	dashboardStore, err := dashboardsDB.ProvideDashboardStore(sqlStore, cfg, featuremgmt.WithFeatures(), tagimpl.ProvideService(sqlStore))
 	require.NoError(t, err)
-	publicDashboard := insertTestDashboard(t, dashboardStore, "testDashie", 1, 0, "", true, []map[string]interface{}{}, nil)
-	nonPublicDashboard := insertTestDashboard(t, dashboardStore, "testNonPublicDashie", 1, 0, "", true, []map[string]interface{}{}, nil)
+	publicDashboard := insertTestDashboard(t, dashboardStore, "testDashie", 1, 0, "", true, []map[string]any{}, nil)
+	nonPublicDashboard := insertTestDashboard(t, dashboardStore, "testNonPublicDashie", 1, 0, "", true, []map[string]any{}, nil)
 	from, to := internal.GetTimeRangeFromDashboard(t, publicDashboard.Data)
 
 	fakeDashboardService.On("GetDashboard", mock.Anything, mock.Anything, mock.Anything).Return(publicDashboard, nil)
@@ -818,8 +818,8 @@ func TestBuildMetricRequest(t *testing.T) {
 
 		require.Equal(
 			t,
-			simplejson.NewFromAny(map[string]interface{}{
-				"datasource": map[string]interface{}{
+			simplejson.NewFromAny(map[string]any{
+				"datasource": map[string]any{
 					"type": "mysql",
 					"uid":  "ds1",
 				},
@@ -833,8 +833,8 @@ func TestBuildMetricRequest(t *testing.T) {
 
 		require.Equal(
 			t,
-			simplejson.NewFromAny(map[string]interface{}{
-				"datasource": map[string]interface{}{
+			simplejson.NewFromAny(map[string]any{
+				"datasource": map[string]any{
 					"type": "prometheus",
 					"uid":  "ds2",
 				},
@@ -859,32 +859,32 @@ func TestBuildMetricRequest(t *testing.T) {
 	})
 
 	t.Run("metric request built with hidden query", func(t *testing.T) {
-		hiddenQuery := map[string]interface{}{
-			"datasource": map[string]interface{}{
+		hiddenQuery := map[string]any{
+			"datasource": map[string]any{
 				"type": "mysql",
 				"uid":  "ds1",
 			},
 			"hide":  true,
 			"refId": "A",
 		}
-		nonHiddenQuery := map[string]interface{}{
-			"datasource": map[string]interface{}{
+		nonHiddenQuery := map[string]any{
+			"datasource": map[string]any{
 				"type": "prometheus",
 				"uid":  "ds2",
 			},
 			"refId": "B",
 		}
 
-		customPanels := []interface{}{
-			map[string]interface{}{
+		customPanels := []any{
+			map[string]any{
 				"id": 1,
-				"datasource": map[string]interface{}{
+				"datasource": map[string]any{
 					"uid": "ds1",
 				},
-				"targets": []interface{}{hiddenQuery, nonHiddenQuery},
+				"targets": []any{hiddenQuery, nonHiddenQuery},
 			}}
 
-		publicDashboard := insertTestDashboard(t, dashboardStore, "testDashWithHiddenQuery", 1, 0, "", true, []map[string]interface{}{}, customPanels)
+		publicDashboard := insertTestDashboard(t, dashboardStore, "testDashWithHiddenQuery", 1, 0, "", true, []map[string]any{}, customPanels)
 
 		reqDTO, err := service.buildMetricRequest(
 			publicDashboard,
@@ -1163,8 +1163,8 @@ func TestSanitizeMetadataFromQueryData(t *testing.T) {
 }
 
 func TestBuildTimeSettings(t *testing.T) {
-	var defaultDashboardData = simplejson.NewFromAny(map[string]interface{}{
-		"time": map[string]interface{}{
+	var defaultDashboardData = simplejson.NewFromAny(map[string]any{
+		"time": map[string]any{
 			"from": "2022-09-01T00:00:00.000Z", "to": "2022-09-01T12:00:00.000Z",
 		},
 		"timezone": "America/Argentina/Mendoza",
@@ -1384,8 +1384,8 @@ func getStartAndEndOfTheDayBefore(fakeNow time.Time, timezoneName string) (time.
 }
 
 func buildJsonDataWithTimeRange(from, to, timezone string) *simplejson.Json {
-	return simplejson.NewFromAny(map[string]interface{}{
-		"time": map[string]interface{}{
+	return simplejson.NewFromAny(map[string]any{
+		"time": map[string]any{
 			"from": from, "to": to,
 		},
 		"timezone": timezone,

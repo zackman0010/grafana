@@ -544,7 +544,7 @@ func TestIntegrationPatch(t *testing.T) {
 	t.Run("should patch with json patch", func(t *testing.T) {
 		expected := `{{ define "test-json-patch" }} test {{ end }}`
 
-		patch := []map[string]interface{}{
+		patch := []map[string]any{
 			{
 				"op":    "replace",
 				"path":  "/spec/content",

@@ -148,11 +148,7 @@ func (g *AlertRuleGenerator) getCount(bounds ...int) int {
 	if len(bounds) == 2 {
 		if bounds[0] > bounds[1] {
 			panic("min should not be greater than max")
-		} else if bounds[0] < bounds[1] {
-			count = rand.Intn(bounds[1]-bounds[0]) + bounds[0]
-		} else {
-			count = bounds[0]
-		}
+		} else count = max(bounds[0], bounds[1])
 	}
 	if len(bounds) > 2 {
 		panic("invalid number of parameter must be up to 2")
@@ -163,7 +159,7 @@ func (g *AlertRuleGenerator) getCount(bounds ...int) int {
 func (g *AlertRuleGenerator) GenerateMany(bounds ...int) []AlertRule {
 	count := g.getCount(bounds...)
 	result := make([]AlertRule, 0, count)
-	for i := 0; i < count; i++ {
+	for range count {
 		result = append(result, g.Generate())
 	}
 	return result
@@ -173,7 +169,7 @@ func (g *AlertRuleGenerator) GenerateManyRef(bounds ...int) []*AlertRule {
 	count := g.getCount(bounds...)
 
 	result := make([]*AlertRule, 0)
-	for i := 0; i < count; i++ {
+	for range count {
 		r := g.Generate()
 		result = append(result, &r)
 	}
@@ -584,7 +580,7 @@ func (g *AlertRuleGenerator) GenerateLabels(min, max int, prefix string) data.La
 		count = rand.Intn(max-min) + min
 	}
 	labels := make(data.Labels, count)
-	for i := 0; i < count; i++ {
+	for range count {
 		labels[prefix+"key-"+util.GenerateShortUID()] = prefix + "value-" + util.GenerateShortUID()
 	}
 	return labels
@@ -1266,7 +1262,7 @@ func (n IntegrationMutators) WithInvalidConfig(integrationType string) Mutator[I
 	return func(c *Integration) {
 		integrationConfig, _ := IntegrationConfigFromType(integrationType)
 		c.Config = integrationConfig
-		c.Settings = map[string]interface{}{}
+		c.Settings = map[string]any{}
 		c.SecureSettings = map[string]string{}
 		if integrationType == "webex" {
 			// Webex passes validation without any settings but should fail with an unparsable URL.

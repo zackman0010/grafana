@@ -67,10 +67,7 @@ func (kr *KeyRetriever) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	nextSendInterval := time.Until(lastUpdated.Add(publicKeySyncInterval))
-	if nextSendInterval < time.Minute {
-		nextSendInterval = time.Minute
-	}
+	nextSendInterval := max(time.Until(lastUpdated.Add(publicKeySyncInterval)), time.Minute)
 
 	downloadKeysTicker := time.NewTicker(nextSendInterval)
 	defer downloadKeysTicker.Stop()

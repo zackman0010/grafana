@@ -26,10 +26,10 @@ var DashboardSnapshotResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Title", Type: "string", Format: "string", Description: "The snapshot name"},
 			{Name: "Created At", Type: "date"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			m, ok := obj.(*DashboardSnapshot)
 			if ok {
-				return []interface{}{
+				return []any{
 					m.Name,
 					m.Spec.Title,
 					m.CreationTimestamp.UTC().Format(time.RFC3339),

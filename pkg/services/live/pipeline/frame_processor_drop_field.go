@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"slices"
 )
 
 // DropFieldsFrameProcessor can drop specified fields from a data.Frame.
@@ -12,7 +13,7 @@ type DropFieldsFrameProcessor struct {
 }
 
 func removeIndex(s []*data.Field, index int) []*data.Field {
-	return append(s[:index], s[index+1:]...)
+	return slices.Delete(s, index, index+1)
 }
 
 func NewDropFieldsFrameProcessor(config DropFieldsFrameProcessorConfig) *DropFieldsFrameProcessor {

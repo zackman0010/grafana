@@ -57,7 +57,7 @@ func (s *Service) Get(ctx context.Context, q *playlist.GetPlaylistByUidQuery) (*
 		return nil, err
 	}
 	items := make([]playlist.PlaylistItemDTO, len(rawItems))
-	for i := 0; i < len(rawItems); i++ {
+	for i := range rawItems {
 		items[i].Type = rawItems[i].Type
 		items[i].Value = rawItems[i].Value
 

@@ -9,6 +9,7 @@ import (
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/pluginsettings"
 	"github.com/grafana/grafana/pkg/services/secrets"
+	"maps"
 )
 
 func ProvideService(db db.DB, secretsService secrets.Service) *Service {
@@ -202,9 +203,7 @@ func (s *Service) updatePluginSetting(ctx context.Context, cmd *pluginsettings.U
 			return err
 		}
 
-		for key, encryptedData := range cmd.EncryptedSecureJsonData {
-			pluginSetting.SecureJsonData[key] = encryptedData
-		}
+		maps.Copy(pluginSetting.SecureJsonData, cmd.EncryptedSecureJsonData)
 
 		// add state change event on commit success
 		if pluginSetting.Enabled != cmd.Enabled {

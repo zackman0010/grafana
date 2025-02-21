@@ -23,7 +23,7 @@ func RandomState() State {
 
 func GenerateResults(count int, generator func() Result) Results {
 	var result = make(Results, 0, count)
-	for i := 0; i < count; i++ {
+	for range count {
 		result = append(result, generator())
 	}
 	return result

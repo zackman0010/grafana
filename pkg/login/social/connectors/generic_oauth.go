@@ -19,6 +19,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ssosettings/validation"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 const (
@@ -171,10 +172,8 @@ func (s *SocialGenericOAuth) isGroupMember(groups []string) bool {
 	}
 
 	for _, allowedGroup := range s.info.AllowedGroups {
-		for _, group := range groups {
-			if group == allowedGroup {
-				return true
-			}
+		if slices.Contains(groups, allowedGroup) {
+			return true
 		}
 	}
 
@@ -192,10 +191,8 @@ func (s *SocialGenericOAuth) isTeamMember(ctx context.Context, client *http.Clie
 	}
 
 	for _, teamId := range s.teamIds {
-		for _, membershipId := range teamMemberships {
-			if teamId == membershipId {
-				return true
-			}
+		if slices.Contains(teamMemberships, teamId) {
+			return true
 		}
 	}
 
@@ -213,10 +210,8 @@ func (s *SocialGenericOAuth) isOrganizationMember(ctx context.Context, client *h
 	}
 
 	for _, allowedOrganization := range s.allowedOrganizations {
-		for _, organization := range organizations {
-			if organization == allowedOrganization {
-				return true
-			}
+		if slices.Contains(organizations, allowedOrganization) {
+			return true
 		}
 	}
 

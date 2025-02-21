@@ -14,6 +14,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
+	"slices"
 )
 
 func ProvideOrgSync(userService user.Service, orgService org.Service, accessControl accesscontrol.Service, cfg *setting.Cfg, tracer tracing.Tracer) *OrgSync {
@@ -127,7 +128,7 @@ func (s *OrgSync) SyncOrgRolesHook(ctx context.Context, id *authn.Identity, _ *a
 	}
 
 	// Note: sort all org ids to not make it flaky, for now we default to the lowest id
-	sort.Slice(orgIDs, func(i, j int) bool { return orgIDs[i] < orgIDs[j] })
+	slices.Sort(orgIDs)
 	// update user's default org if needed
 	if _, ok := id.OrgRoles[id.OrgID]; !ok {
 		if len(orgIDs) > 0 {

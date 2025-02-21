@@ -364,9 +364,9 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 		setup()
 		cmd := dashboards.SaveDashboardCommand{
 			OrgID: 1,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"title": "folderId",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 			UserID: 100,
 		}
@@ -382,9 +382,9 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 		setup()
 		cmd := dashboards.SaveDashboardCommand{
 			OrgID: 1,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"title": "folderId",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 			FolderUID: savedFolder.UID,
 			UserID:    100,
@@ -399,10 +399,10 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 		setup()
 		cmd := dashboards.SaveDashboardCommand{
 			OrgID: 1,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"id":    savedDash.ID,
 				"title": "folderId",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 			Overwrite: true,
 			FolderUID: "2",
@@ -414,10 +414,10 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 
 		cmd = dashboards.SaveDashboardCommand{
 			OrgID: 1,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"id":    savedDash.ID,
 				"title": "folderId",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 			FolderUID: "",
 			Overwrite: true,
@@ -453,10 +453,10 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 		cmd := dashboards.SaveDashboardCommand{
 			OrgID:     1,
 			Overwrite: true,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"id":    float64(123412321),
 				"title": "Expect error",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 		}
 
@@ -468,10 +468,10 @@ func TestIntegrationDashboardDataAccess(t *testing.T) {
 		cmd := dashboards.SaveDashboardCommand{
 			OrgID:     1,
 			Overwrite: true,
-			Dashboard: simplejson.NewFromAny(map[string]interface{}{
+			Dashboard: simplejson.NewFromAny(map[string]any{
 				"id":    0,
 				"title": "New dash",
-				"tags":  []interface{}{},
+				"tags":  []any{},
 			}),
 		}
 		_, err := dashboardStore.SaveDashboard(context.Background(), cmd)
@@ -915,7 +915,7 @@ func TestIntegrationDashboard_Filter(t *testing.T) {
 				1: {dashboards.ActionDashboardsRead: []string{dashboards.ScopeDashboardsAll}},
 			},
 		},
-		Filters: []interface{}{
+		Filters: []any{
 			searchstore.TitleFilter{
 				Dialect: sqlStore.GetDialect(),
 				Title:   "Beta",
@@ -1311,14 +1311,14 @@ func insertTestRule(t *testing.T, sqlStore db.DB, foderOrgID int64, folderUID st
 }
 
 func insertTestDashboard(t *testing.T, dashboardStore dashboards.Store, title string, orgId int64,
-	folderId int64, folderUID string, isFolder bool, tags ...interface{}) *dashboards.Dashboard {
+	folderId int64, folderUID string, isFolder bool, tags ...any) *dashboards.Dashboard {
 	t.Helper()
 	cmd := dashboards.SaveDashboardCommand{
 		OrgID:     orgId,
 		FolderID:  folderId, // nolint:staticcheck
 		FolderUID: folderUID,
 		IsFolder:  isFolder,
-		Dashboard: simplejson.NewFromAny(map[string]interface{}{
+		Dashboard: simplejson.NewFromAny(map[string]any{
 			"id":    nil,
 			"title": title,
 			"tags":  tags,
@@ -1339,7 +1339,7 @@ func insertTestDashboardForPlugin(t *testing.T, dashboardStore dashboards.Store,
 		OrgID:     orgId,
 		IsFolder:  isFolder,
 		FolderUID: folderUID,
-		Dashboard: simplejson.NewFromAny(map[string]interface{}{
+		Dashboard: simplejson.NewFromAny(map[string]any{
 			"id":    nil,
 			"title": title,
 		}),

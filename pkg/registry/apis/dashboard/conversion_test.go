@@ -36,7 +36,7 @@ func TestConvertDashboardVersionsToInternal(t *testing.T) {
 	annotations := map[string]string{"created-by": "me"}
 	labels := map[string]string{"starred-by": "you"}
 	rv := "1"
-	body := map[string]interface{}{"title": title, "description": "A new dashboard"}
+	body := map[string]any{"title": title, "description": "A new dashboard"}
 	expectedDashbaord := dashboardinternal.Dashboard{
 		ObjectMeta: v1.ObjectMeta{
 			Name:              name,

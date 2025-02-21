@@ -26,10 +26,10 @@ var FeatureResourceInfo = utils.NewResourceInfo(GROUP, VERSION,
 			{Name: "Stage", Type: "string", Format: "string", Description: "Where is the flag in the dev cycle"},
 			{Name: "Owner", Type: "string", Format: "string", Description: "Which team owns the feature"},
 		},
-		Reader: func(obj any) ([]interface{}, error) {
+		Reader: func(obj any) ([]any, error) {
 			r, ok := obj.(*Feature)
 			if ok {
-				return []interface{}{
+				return []any{
 					r.Name,
 					r.Spec.Stage,
 					r.Spec.Owner,

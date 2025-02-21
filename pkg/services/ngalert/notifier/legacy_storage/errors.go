@@ -16,7 +16,7 @@ var (
 
 func makeErrBadAlertmanagerConfiguration(err error) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"Error": err.Error(),
 		},
 		Error: err,
@@ -26,7 +26,7 @@ func makeErrBadAlertmanagerConfiguration(err error) error {
 
 func MakeErrReceiverInvalid(err error) error {
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"Reason": err.Error(),
 		},
 		Error: err,

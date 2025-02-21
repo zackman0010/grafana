@@ -51,7 +51,7 @@ func TestIntegrationLoki(t *testing.T) {
 	}))
 	t.Cleanup(outgoingServer.Close)
 
-	jsonData := simplejson.NewFromAny(map[string]interface{}{
+	jsonData := simplejson.NewFromAny(map[string]any{
 		"httpMethod":      "post",
 		"httpHeaderName1": "X-CUSTOM-HEADER",
 	})
@@ -76,8 +76,8 @@ func TestIntegrationLoki(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("When calling /api/ds/query should set expected headers on outgoing HTTP request", func(t *testing.T) {
-		query := simplejson.NewFromAny(map[string]interface{}{
-			"datasource": map[string]interface{}{
+		query := simplejson.NewFromAny(map[string]any{
+			"datasource": map[string]any{
 				"uid": uid,
 			},
 			"expr": "{job=\"grafana\"}",
@@ -129,8 +129,8 @@ func TestIntegrationLoki(t *testing.T) {
 	})
 
 	t.Run("should forward `X-Dashboard-Title` header but no `X-Panel-Title`", func(t *testing.T) {
-		query := simplejson.NewFromAny(map[string]interface{}{
-			"datasource": map[string]interface{}{
+		query := simplejson.NewFromAny(map[string]any{
+			"datasource": map[string]any{
 				"uid": uid,
 			},
 			"expr": "{job=\"grafana\"}",
@@ -170,8 +170,8 @@ func TestIntegrationLoki(t *testing.T) {
 	})
 
 	t.Run("should forward `X-Dashboard-Title` and `X-Panel-Title` header", func(t *testing.T) {
-		query := simplejson.NewFromAny(map[string]interface{}{
-			"datasource": map[string]interface{}{
+		query := simplejson.NewFromAny(map[string]any{
+			"datasource": map[string]any{
 				"uid": uid,
 			},
 			"expr": "{job=\"grafana\"}",

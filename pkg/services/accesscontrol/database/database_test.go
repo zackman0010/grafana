@@ -186,7 +186,7 @@ func TestAccessControlStore_GetTeamsPermissions(t *testing.T) {
 			store, permissionStore, _, teamSvc, _, _ := setupTestEnv(t)
 
 			teams := make([]team.Team, 0)
-			for i := 0; i < len(tt.teamsPermissions); i++ {
+			for i := range tt.teamsPermissions {
 				team, err := teamSvc.CreateTeam(context.Background(), fmt.Sprintf("team-%v", i), "", tt.orgID)
 				require.NoError(t, err)
 				teams = append(teams, team)

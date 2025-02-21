@@ -2029,10 +2029,10 @@ func LegacySaveCommandToUnstructured(cmd *dashboards.SaveDashboardCommand, names
 	}
 
 	finalObj := unstructured.Unstructured{
-		Object: map[string]interface{}{},
+		Object: map[string]any{},
 	}
 
-	obj := map[string]interface{}{}
+	obj := map[string]any{}
 	body, err := cmd.Dashboard.ToDB()
 	if err != nil {
 		return finalObj, err

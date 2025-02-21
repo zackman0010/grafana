@@ -136,7 +136,7 @@ func getStateValueAsTimeseries(query usaQuery, wide bool) backend.DataResponse {
 
 		values := make([]float64, len(timeVals))
 		for idx, state := range query.States {
-			for i := 0; i < len(timeVals); i++ {
+			for i := range timeVals {
 				values[i] = stateVals[i][idx]
 			}
 

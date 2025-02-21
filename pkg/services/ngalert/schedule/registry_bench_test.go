@@ -15,7 +15,7 @@ func BenchmarkRuleWithFolderFingerprint(b *testing.B) {
 	gen := models.RuleGen
 	rules := gen.With(func(rule *models.AlertRule) {
 		rule.Data = make([]models.AlertQuery, 0, 5)
-		for i := 0; i < rand.Intn(5)+1; i++ {
+		for range rand.Intn(5) + 1 {
 			rule.Data = append(rule.Data, gen.GenerateQuery())
 		}
 	}).GenerateManyRef(b.N)

@@ -208,7 +208,7 @@ func TestInitInstanceStore(t *testing.T) {
 	tests := []struct {
 		name                      string
 		ft                        featuremgmt.FeatureToggles
-		expectedInstanceStoreType interface{}
+		expectedInstanceStoreType any
 	}{
 		{
 			name: "Compressed flag enabled, no periodic flag",

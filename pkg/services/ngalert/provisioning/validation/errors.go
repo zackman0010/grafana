@@ -20,7 +20,7 @@ func MakeErrProvenanceChangeNotAllowed(from, to models.Provenance) error {
 		from = "none"
 	}
 	data := errutil.TemplateData{
-		Public: map[string]interface{}{
+		Public: map[string]any{
 			"TargetProvenance": to,
 			"SourceProvenance": from,
 		},

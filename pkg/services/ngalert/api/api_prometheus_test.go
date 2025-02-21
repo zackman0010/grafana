@@ -32,6 +32,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/util"
 	"github.com/grafana/grafana/pkg/web"
+	"maps"
 )
 
 func Test_FormatValues(t *testing.T) {
@@ -266,9 +267,7 @@ func withErrorState() forEachState {
 
 func withLabels(labels data.Labels) forEachState {
 	return func(s *state.State) *state.State {
-		for k, v := range labels {
-			s.Labels[k] = v
-		}
+		maps.Copy(s.Labels, labels)
 		return s
 	}
 }
@@ -721,7 +720,7 @@ func TestRouteGetRuleStatuses(t *testing.T) {
 
 			require.Len(t, result.Data.RuleGroups, 9)
 			require.NotZero(t, len(result.Data.Totals))
-			for i := 0; i < 9; i++ {
+			for i := range 9 {
 				folder, err := api.store.GetNamespaceByUID(context.Background(), fmt.Sprintf("namespace_%d", i/9), orgID, user)
 				require.NoError(t, err)
 				require.Equal(t, folder.Fullpath, result.Data.RuleGroups[i].File)
@@ -748,7 +747,7 @@ func TestRouteGetRuleStatuses(t *testing.T) {
 			require.NotEmpty(t, result.Data.NextToken)
 			token := result.Data.NextToken
 
-			for i := 0; i < 3; i++ {
+			for range 3 {
 				r, err := http.NewRequest("GET", fmt.Sprintf("/api/v1/rules?group_limit=2&group_next_token=%s", token), nil)
 				require.NoError(t, err)
 
@@ -782,7 +781,7 @@ func TestRouteGetRuleStatuses(t *testing.T) {
 			returnedGroups = append(returnedGroups, result.Data.RuleGroups...)
 			require.Empty(t, result.Data.NextToken)
 
-			for i := 0; i < 9; i++ {
+			for i := range 9 {
 				folder, err := api.store.GetNamespaceByUID(context.Background(), fmt.Sprintf("namespace_%d", i/9), orgID, user)
 				require.NoError(t, err)
 				require.Equal(t, folder.Fullpath, returnedGroups[i].File)
@@ -854,7 +853,7 @@ func TestRouteGetRuleStatuses(t *testing.T) {
 				for _, rule := range group.Rules {
 					for i, expected := range rules {
 						if rule.Name == expected.Title && group.Name == expected.RuleGroup {
-							rules = append(rules[:i], rules[i+1:]...)
+							rules = slices.Delete(rules, i, i+1)
 							continue grouploop
 						}
 					}

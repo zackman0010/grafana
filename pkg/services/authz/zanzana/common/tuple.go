@@ -9,6 +9,7 @@ import (
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	dashboardalpha1 "github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
 	authzextv1 "github.com/grafana/grafana/pkg/services/authz/proto/v1"
+	"slices"
 )
 
 const (
@@ -135,12 +136,7 @@ func IsFolderResourceRelation(relation string) bool {
 }
 
 func isValidRelation(relation string, valid []string) bool {
-	for _, r := range valid {
-		if r == relation {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(valid, relation)
 }
 
 func FolderResourceRelation(relation string) string {

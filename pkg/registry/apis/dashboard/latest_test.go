@@ -75,12 +75,12 @@ func TestLatest(t *testing.T) {
 			Value:           val,
 		}, nil).Once()
 
-		mockResponder.On("Object", http.StatusOK, mock.MatchedBy(func(obj interface{}) bool {
+		mockResponder.On("Object", http.StatusOK, mock.MatchedBy(func(obj any) bool {
 			unstructuredObj, ok := obj.(*unstructured.Unstructured)
-			expectedMap := map[string]interface{}{
+			expectedMap := map[string]any{
 				"apiVersion": expectedObject.APIVersion,
 				"kind":       expectedObject.Kind,
-				"metadata": map[string]interface{}{
+				"metadata": map[string]any{
 					"name":              expectedObject.Name,
 					"namespace":         expectedObject.Namespace,
 					"resourceVersion":   expectedObject.ResourceVersion,

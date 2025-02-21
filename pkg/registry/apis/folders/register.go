@@ -331,10 +331,8 @@ func (b *FolderAPIBuilder) validateOnDelete(ctx context.Context, f *v0alpha1.Fol
 }
 
 func (b *FolderAPIBuilder) validateOnCreate(ctx context.Context, id string, obj runtime.Object) error {
-	for _, invalidName := range folderValidationRules.invalidNames {
-		if id == invalidName {
-			return dashboards.ErrFolderInvalidUID
-		}
+	if slices.Contains(folderValidationRules.invalidNames, id) {
+		return dashboards.ErrFolderInvalidUID
 	}
 
 	f, ok := obj.(*v0alpha1.Folder)
@@ -363,7 +361,7 @@ func getParent(o runtime.Object) string {
 
 func (b *FolderAPIBuilder) checkFolderMaxDepth(ctx context.Context, obj runtime.Object) ([]string, error) {
 	var parents = []string{}
-	for i := 0; i < folderValidationRules.maxDepth; i++ {
+	for i := range folderValidationRules.maxDepth {
 		parent := getParent(obj)
 		if parent == "" {
 			break

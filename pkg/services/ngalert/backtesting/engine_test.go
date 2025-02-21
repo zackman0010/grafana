@@ -250,7 +250,7 @@ func TestEvaluatorTest(t *testing.T) {
 			for _, field := range frame.Fields {
 				require.Equalf(t, expectedLength, field.Len(), "Field %s should have the size %d", field.Name, expectedLength)
 			}
-			for i := 0; i < expectedLength; i++ {
+			for i := range expectedLength {
 				expectedTime := from.Add(time.Duration(int64(i)*rule.IntervalSeconds) * time.Second)
 				require.Equal(t, expectedTime, timestampField.At(i).(time.Time))
 				for _, s := range states {
@@ -290,7 +290,7 @@ func TestEvaluatorTest(t *testing.T) {
 		frame, err := engine.Test(context.Background(), nil, rule, from, to)
 		require.NoError(t, err)
 		expectedLen := frame.Rows()
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			jitter := time.Duration(rand.Int63n(ruleInterval.Milliseconds())) * time.Millisecond
 			frame, err = engine.Test(context.Background(), nil, rule, from, to.Add(jitter))
 			require.NoError(t, err)

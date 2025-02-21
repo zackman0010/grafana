@@ -309,5 +309,5 @@ func genApiKey(legacy bool) (string, string) {
 }
 
 func encodeBasicAuth(username, password string) string {
-	return "Basic " + base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
+	return "Basic " + base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "%s:%s", username, password))
 }

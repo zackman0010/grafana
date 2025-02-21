@@ -97,7 +97,7 @@ func TestTestdataScenarios(t *testing.T) {
 			require.Equal(t, "Max", frame.Fields[3].Name)
 			require.Equal(t, "Info", frame.Fields[4].Name)
 
-			for i := 0; i < frame.Rows(); i++ {
+			for i := range frame.Rows() {
 				value, ok := frame.ConcreteAt(1, i)
 				require.True(t, ok)
 				min, ok := frame.ConcreteAt(2, i)
@@ -153,7 +153,7 @@ func TestTestdataScenarios(t *testing.T) {
 			minNil := false
 			maxNil := false
 
-			for i := 0; i < frame.Rows(); i++ {
+			for i := range frame.Rows() {
 				_, ok := frame.ConcreteAt(1, i)
 				if !ok {
 					valNil = true

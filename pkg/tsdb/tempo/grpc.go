@@ -169,5 +169,5 @@ func (c *basicAuth) RequireTransportSecurity() bool {
 }
 
 func basicHeaderForAuth(username, password string) string {
-	return fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password))))
+	return fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString(fmt.Appendf(nil, "%s:%s", username, password)))
 }

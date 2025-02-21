@@ -27,6 +27,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ssosettings/validation"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 const forceUseGraphAPIKey = "force_use_graph_api" // #nosec G101 not a hardcoded credential
@@ -366,10 +367,8 @@ func validateFederatedCredentialAudience(info *social.OAuthInfo, requester ident
 	if info.ClientAuthentication != social.ManagedIdentity {
 		return nil
 	}
-	for _, supportedFederatedCredentialAudience := range supportedFederatedCredentialAudiences {
-		if info.FederatedCredentialAudience == supportedFederatedCredentialAudience {
-			return nil
-		}
+	if slices.Contains(supportedFederatedCredentialAudiences, info.FederatedCredentialAudience) {
+		return nil
 	}
 	return ssosettings.ErrInvalidOAuthConfig("FIC audience is not a supported audience.")
 }
@@ -565,10 +564,5 @@ func (s *SocialAzureAD) isAllowedTenant(tenantID string) bool {
 		return true
 	}
 
-	for _, t := range s.allowedOrganizations {
-		if t == tenantID {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(s.allowedOrganizations, tenantID)
 }

@@ -276,7 +276,7 @@ func TestPatchPartialAlertRule(t *testing.T) {
 		for _, testCase := range testCases {
 			t.Run(testCase.name, func(t *testing.T) {
 				var existing *AlertRuleWithOptionals
-				for i := 0; i < 10; i++ {
+				for range 10 {
 					rule := gen.Generate()
 					existing = &AlertRuleWithOptionals{AlertRule: rule}
 					cloned := *existing
@@ -877,7 +877,7 @@ func TestDiff(t *testing.T) {
 
 func TestSortByGroupIndex(t *testing.T) {
 	ensureNotSorted := func(t *testing.T, rules []*AlertRule, less func(i, j int) bool) {
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			rand.Shuffle(len(rules), func(i, j int) {
 				rules[i], rules[j] = rules[j], rules[i]
 			})
@@ -956,7 +956,7 @@ func TestAlertRuleGetKeyWithGroup(t *testing.T) {
 
 func TestAlertRuleCopy(t *testing.T) {
 	t.Run("should return a copy of the rule", func(t *testing.T) {
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			rule := RuleGen.GenerateRef()
 			copied := rule.Copy()
 			require.Empty(t, rule.Diff(copied))
@@ -982,18 +982,18 @@ func TestGeneratorFillsAllFields(t *testing.T) {
 
 	tpe := reflect.TypeOf(AlertRule{})
 	fields := make(map[string]struct{}, tpe.NumField())
-	for i := 0; i < tpe.NumField(); i++ {
+	for i := range tpe.NumField() {
 		if _, ok := ignoredFields[tpe.Field(i).Name]; ok {
 			continue
 		}
 		fields[tpe.Field(i).Name] = struct{}{}
 	}
 
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		rule := RuleGen.Generate()
 		v := reflect.ValueOf(rule)
 
-		for j := 0; j < tpe.NumField(); j++ {
+		for j := range tpe.NumField() {
 			field := tpe.Field(j)
 			value := v.Field(j)
 			if !value.IsValid() || value.Kind() == reflect.Ptr && value.IsNil() || value.IsZero() {

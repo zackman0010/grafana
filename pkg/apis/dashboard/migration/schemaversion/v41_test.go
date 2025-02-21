@@ -10,24 +10,24 @@ func TestV41(t *testing.T) {
 	tests := []migrationTestCase{
 		{
 			name: "time_options is removed",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"title": "Test Dashboard",
-				"timepicker": map[string]interface{}{
+				"timepicker": map[string]any{
 					"time_options": []string{"1m", "5m", "15m", "1h", "6h", "12h", "24h"},
 				},
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"title":         "Test Dashboard",
 				"schemaVersion": 41,
-				"timepicker":    map[string]interface{}{},
+				"timepicker":    map[string]any{},
 			},
 		},
 		{
 			name: "timepicker is not set",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"title": "Test Dashboard",
 			},
-			expected: map[string]interface{}{
+			expected: map[string]any{
 				"title":         "Test Dashboard",
 				"schemaVersion": 41,
 			},

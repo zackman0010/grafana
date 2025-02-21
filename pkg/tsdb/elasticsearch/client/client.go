@@ -370,7 +370,7 @@ func streamHitsArray(dec *json.Decoder, sr *SearchResponse) error {
 	}
 
 	for dec.More() {
-		var hit map[string]interface{}
+		var hit map[string]any
 		err = dec.Decode(&hit)
 		if err != nil {
 			return err

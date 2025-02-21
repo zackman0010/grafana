@@ -10,38 +10,38 @@ import (
 func TestGetSchemaVersion(t *testing.T) {
 	tests := []struct {
 		name     string
-		dash     map[string]interface{}
+		dash     map[string]any
 		expected int
 	}{
 		{
 			name: "schemaVersion as int",
-			dash: map[string]interface{}{
+			dash: map[string]any{
 				"schemaVersion": 16,
 			},
 			expected: 16,
 		},
 		{
 			name: "schemaVersion as float64",
-			dash: map[string]interface{}{
+			dash: map[string]any{
 				"schemaVersion": 40.2345,
 			},
 			expected: 40,
 		},
 		{
 			name:     "schemaVersion is not set",
-			dash:     map[string]interface{}{},
+			dash:     map[string]any{},
 			expected: 0,
 		},
 		{
 			name: "schemaVersion as string int",
-			dash: map[string]interface{}{
+			dash: map[string]any{
 				"schemaVersion": "5",
 			},
 			expected: 5,
 		},
 		{
 			name: "schemaVersion as invalid string",
-			dash: map[string]interface{}{
+			dash: map[string]any{
 				"schemaVersion": "foo",
 			},
 			expected: 0,
@@ -58,8 +58,8 @@ func TestGetSchemaVersion(t *testing.T) {
 
 type migrationTestCase struct {
 	name     string
-	input    map[string]interface{}
-	expected map[string]interface{}
+	input    map[string]any
+	expected map[string]any
 }
 
 func runMigrationTests(t *testing.T, testCases []migrationTestCase, migrationFunc schemaversion.SchemaVersionMigrationFunc) {

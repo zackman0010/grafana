@@ -220,10 +220,10 @@ func extractNumberSet(frame *data.Frame) ([]mathexp.Number, error) {
 	}
 	numbers := make([]mathexp.Number, frame.Rows())
 
-	for rowIdx := 0; rowIdx < frame.Rows(); rowIdx++ {
+	for rowIdx := range frame.Rows() {
 		val, _ := frame.FloatAt(numericField, rowIdx)
 		var labels data.Labels
-		for i := 0; i < len(stringFieldIdxs); i++ {
+		for i := range stringFieldIdxs {
 			if i == 0 {
 				labels = make(data.Labels)
 			}
@@ -277,7 +277,7 @@ func WideToMany(frame *data.Frame, fixSeries func(series mathexp.Series, valueFi
 		if frame.Fields[valIdx].Labels != nil {
 			f.Fields[1].Labels = frame.Fields[valIdx].Labels.Copy()
 		}
-		for i := 0; i < l; i++ {
+		for i := range l {
 			f.SetRow(i, frame.Fields[tsSchema.TimeIndex].CopyAt(i), frame.Fields[valIdx].CopyAt(i))
 		}
 		s, err := mathexp.SeriesFromFrame(f)

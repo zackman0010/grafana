@@ -43,7 +43,7 @@ func TestCheckIfSeriesNeedToBeFixed(t *testing.T) {
 	createFrame := func(m ...func(field *data.Field)) []*data.Frame {
 		f := data.NewFrame("",
 			data.NewField("Time", nil, []time.Time{}))
-		for i := 0; i < 100; i++ {
+		for i := range 100 {
 			fld := data.NewField(fmt.Sprintf("fld-%d", i), nil, []*float64{})
 			fld.Config = &data.FieldConfig{}
 			for _, change := range m {

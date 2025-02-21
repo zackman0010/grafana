@@ -147,7 +147,7 @@ func TestIntegrationUpdatingProvisionionedDashboards(t *testing.T) {
 
 	provDashboardsDir := filepath.Join(dir, "conf", "provisioning", "dashboards")
 	provDashboardsCfg := filepath.Join(provDashboardsDir, "dev.yaml")
-	blob := []byte(fmt.Sprintf(`
+	blob := fmt.Appendf(nil, `
 apiVersion: 1
 
 providers:
@@ -155,7 +155,7 @@ providers:
   type: file
   allowUiUpdates: false
   options:
-   path: %s`, provDashboardsDir))
+   path: %s`, provDashboardsDir)
 	err := os.WriteFile(provDashboardsCfg, blob, 0644)
 	require.NoError(t, err)
 	input, err := os.ReadFile(filepath.Join("./home.json"))

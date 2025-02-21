@@ -51,7 +51,7 @@ type columnInfo struct {
 
 // frameBuilder is an interface to help testing.
 type frameBuilder struct {
-	currentGroupKey     []interface{}
+	currentGroupKey     []any
 	groupKeyColumnNames []string
 	active              *data.Frame
 	frames              []*data.Frame
@@ -93,7 +93,7 @@ func getDataColumns(cols []*query.FluxColumn) []*query.FluxColumn {
 
 var timeToOptionalTime = data.FieldConverter{
 	OutputFieldType: data.FieldTypeNullableTime,
-	Converter: func(v interface{}) (interface{}, error) {
+	Converter: func(v any) (any, error) {
 		var ptr *time.Time
 		if v == nil {
 			return ptr, nil
@@ -281,8 +281,8 @@ func getColumnInfo(col *query.FluxColumn) (info *columnInfo, isTimestamp bool, e
 	}, isTimestamp, nil
 }
 
-func getTableID(record *query.FluxRecord, groupColumns []string) []interface{} {
-	result := make([]interface{}, len(groupColumns))
+func getTableID(record *query.FluxRecord, groupColumns []string) []any {
+	result := make([]any, len(groupColumns))
 
 	// Flux does not allow duplicate column-names,
 	// so we can be sure there is no confusion in the record.
@@ -299,7 +299,7 @@ func getTableID(record *query.FluxRecord, groupColumns []string) []interface{} {
 	return result
 }
 
-func isTableIDEqual(id1 []interface{}, id2 []interface{}) bool {
+func isTableIDEqual(id1 []any, id2 []any) bool {
 	if (id1 == nil) || (id2 == nil) {
 		return false
 	}

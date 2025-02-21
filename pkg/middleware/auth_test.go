@@ -209,7 +209,7 @@ func TestRoleAppPluginAuth(t *testing.T) {
 					ac := &actest.FakeAccessControl{}
 
 					sc.m.Get("/a/:id/*", RoleAppPluginAuth(ac, ps, features, logger), func(c *contextmodel.ReqContext) {
-						c.JSON(http.StatusOK, map[string]interface{}{})
+						c.JSON(http.StatusOK, map[string]any{})
 					})
 					sc.fakeReq("GET", path).exec()
 					assert.Equal(t, tc.expStatus, sc.resp.Code)
@@ -231,7 +231,7 @@ func TestRoleAppPluginAuth(t *testing.T) {
 		logger := &logtest.Fake{}
 		ac := &actest.FakeAccessControl{}
 		sc.m.Get("/a/:id/*", RoleAppPluginAuth(ac, &pluginstore.FakePluginStore{}, features, logger), func(c *contextmodel.ReqContext) {
-			c.JSON(http.StatusOK, map[string]interface{}{})
+			c.JSON(http.StatusOK, map[string]any{})
 		})
 		sc.fakeReq("GET", "/a/test-app/test").exec()
 		assert.Equal(t, 200, sc.resp.Code)
@@ -260,7 +260,7 @@ func TestRoleAppPluginAuth(t *testing.T) {
 				},
 			},
 		}), features, logger), func(c *contextmodel.ReqContext) {
-			c.JSON(http.StatusOK, map[string]interface{}{})
+			c.JSON(http.StatusOK, map[string]any{})
 		})
 		sc.fakeReq("GET", "/a/test-app/notExistingPath").exec()
 		assert.Equal(t, 200, sc.resp.Code)
@@ -328,7 +328,7 @@ func TestRoleAppPluginAuth(t *testing.T) {
 				})
 
 				sc.m.Get("/a/:id/*", RoleAppPluginAuth(ac, ps, features, logger), func(c *contextmodel.ReqContext) {
-					c.JSON(http.StatusOK, map[string]interface{}{})
+					c.JSON(http.StatusOK, map[string]any{})
 				})
 				sc.fakeReq("GET", path).exec()
 				assert.Equal(t, tc.expStatus, sc.resp.Code)

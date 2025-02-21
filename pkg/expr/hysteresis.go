@@ -120,7 +120,7 @@ func FingerprintsFromFrame(frame *data.Frame) (Fingerprints, error) {
 		return nil, fmt.Errorf("invalid format of loaded dimensions frame: the field type must be uint64 but got %s", fld.Type().String())
 	}
 	result := make(Fingerprints, fld.Len())
-	for i := 0; i < fld.Len(); i++ {
+	for i := range fld.Len() {
 		val, ok := fld.ConcreteAt(i)
 		if !ok {
 			continue

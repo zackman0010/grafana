@@ -68,7 +68,7 @@ func (out *ChangeLogFrameOutput) OutputFrame(_ context.Context, vars Vars, frame
 	f2.Name = "new"
 
 	if currentFrameFieldIndex >= 0 {
-		for i := 0; i < frame.Fields[currentFrameFieldIndex].Len(); i++ {
+		for i := range frame.Fields[currentFrameFieldIndex].Len() {
 			currentValue := frame.Fields[currentFrameFieldIndex].At(i)
 			if !reflect.DeepEqual(
 				previousValue,

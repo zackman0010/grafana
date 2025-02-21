@@ -23,6 +23,7 @@ import (
 	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/testdata"
 	azTime "github.com/grafana/grafana/pkg/tsdb/azuremonitor/time"
 	"github.com/grafana/grafana/pkg/tsdb/azuremonitor/types"
+	"maps"
 )
 
 func Pointer[T any](v T) *T { return &v }
@@ -275,16 +276,14 @@ func TestAzureMonitorBuildQueries(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			for k, v := range commonAzureModelProps {
-				tt.azureMonitorVariedProperties[k] = v
-			}
+			maps.Copy(tt.azureMonitorVariedProperties, commonAzureModelProps)
 			azureMonitorJSON, _ := json.Marshal(tt.azureMonitorVariedProperties)
 			tsdbQuery := []backend.DataQuery{
 				{
-					JSON: []byte(fmt.Sprintf(`{
+					JSON: fmt.Appendf(nil, `{
 							"subscription": "12345678-aaaa-bbbb-cccc-123456789abc",
 							"azureMonitor": %s
-						}`, string(azureMonitorJSON))),
+						}`, string(azureMonitorJSON)),
 					RefID:    "A",
 					Interval: tt.queryInterval,
 					TimeRange: backend.TimeRange{

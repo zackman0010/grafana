@@ -90,7 +90,7 @@ func setImages(p *plugins.Plugin, assetPath *assetpath.Service, info assetpath.P
 			return fmt.Errorf("logo: %w", err)
 		}
 	}
-	for i := 0; i < len(p.Info.Screenshots); i++ {
+	for i := range p.Info.Screenshots {
 		screenshot := &p.Info.Screenshots[i]
 		screenshot.Path, err = assetPath.RelativeURL(info, screenshot.Path)
 		if err != nil {

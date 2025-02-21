@@ -171,7 +171,7 @@ func convertTimeSeriesMultiToTimeSeriesLong(frames data.Frames) (data.Frames, er
 	for _, frame := range frames {
 		for _, field := range frame.Fields {
 			if field.Type() == data.FieldTypeTime {
-				for i := 0; i < field.Len(); i++ {
+				for i := range field.Len() {
 					t := field.At(i).(time.Time)
 					timeSet[t] = struct{}{}
 				}
@@ -226,7 +226,7 @@ func convertTimeSeriesMultiToTimeSeriesLong(frames data.Frames) (data.Frames, er
 
 		for _, field := range frame.Fields {
 			if field.Type().Numeric() {
-				for i := 0; i < field.Len(); i++ {
+				for i := range field.Len() {
 					t := timeField.At(i).(time.Time)
 					val, err := field.FloatAt(i)
 					if err != nil {

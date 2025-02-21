@@ -116,10 +116,7 @@ func (api *Api) ListPublicDashboards(c *contextmodel.ReqContext) response.Respon
 		perPage = 1000
 	}
 
-	page := c.QueryInt("page")
-	if page < 1 {
-		page = 1
-	}
+	page := max(c.QueryInt("page"), 1)
 
 	resp, err := api.PublicDashboardService.FindAllWithPagination(c.Req.Context(), &PublicDashboardListQuery{
 		OrgID: c.SignedInUser.GetOrgID(),

@@ -10,6 +10,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/util"
+	"slices"
 )
 
 // FileStorage can load channel rules from a file on disk.
@@ -228,7 +229,7 @@ func (f *FileStorage) UpdateChannelRule(ctx context.Context, orgID int64, cmd Ch
 }
 
 func removeChannelRuleByIndex(s []ChannelRule, index int) []ChannelRule {
-	return append(s[:index], s[index+1:]...)
+	return slices.Delete(s, index, index+1)
 }
 
 func (f *FileStorage) ruleFilePath() string {
@@ -297,7 +298,7 @@ func (f *FileStorage) DeleteChannelRule(_ context.Context, orgID int64, cmd Chan
 }
 
 func removeWriteConfigByIndex(s []WriteConfig, index int) []WriteConfig {
-	return append(s[:index], s[index+1:]...)
+	return slices.Delete(s, index, index+1)
 }
 
 func (f *FileStorage) writeConfigsFilePath() string {

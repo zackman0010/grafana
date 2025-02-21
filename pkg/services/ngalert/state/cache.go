@@ -16,6 +16,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/ngalert/metrics"
 	ngModels "github.com/grafana/grafana/pkg/services/ngalert/models"
 	"github.com/grafana/grafana/pkg/services/ngalert/state/template"
+	"maps"
 )
 
 type ruleStates struct {
@@ -110,9 +111,7 @@ func expandAnnotationsAndLabels(ctx context.Context, log log.Logger, alertRule *
 
 	lbs := make(data.Labels, len(extraLabels)+len(labels)+len(resultLabels))
 	dupes := make(data.Labels)
-	for key, val := range extraLabels {
-		lbs[key] = val
-	}
+	maps.Copy(lbs, extraLabels)
 	for key, val := range labels {
 		ruleVal, ok := lbs[key]
 		// if duplicate labels exist, reserved label will take precedence
@@ -308,9 +307,7 @@ func (c *cache) GetAlertInstances() []ngModels.AlertInstance {
 // if duplicate labels exist, keep the value from the first set
 func mergeLabels(a, b data.Labels) data.Labels {
 	newLbs := make(data.Labels, len(a)+len(b))
-	for k, v := range a {
-		newLbs[k] = v
-	}
+	maps.Copy(newLbs, a)
 	for k, v := range b {
 		if _, ok := newLbs[k]; !ok {
 			newLbs[k] = v

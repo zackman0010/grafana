@@ -143,7 +143,7 @@ func (s *Service) sendSearchResponse(ctx context.Context, response *ExtendedResp
 	return sender.SendFrame(frame, data.IncludeAll)
 }
 
-func (s *Service) sendResponse(ctx context.Context, result interface{}, metrics *tempopb.SearchMetrics, state dataquery.SearchStreamingState, sender StreamSender) error {
+func (s *Service) sendResponse(ctx context.Context, result any, metrics *tempopb.SearchMetrics, state dataquery.SearchStreamingState, sender StreamSender) error {
 	_, span := tracing.DefaultTracer().Start(ctx, "datasource.tempo.sendResponse")
 	defer span.End()
 	frame := createResponseDataFrame()

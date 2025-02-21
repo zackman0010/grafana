@@ -356,7 +356,7 @@ func (b wrapper) List(ctx context.Context, folderPath string, paging *Paging, op
 			resp.LastPath = b.removeRoot(resp.LastPath)
 		}
 
-		for i := 0; i < len(resp.Files); i++ {
+		for i := range resp.Files {
 			resp.Files[i].FullPath = b.removeRoot(resp.Files[i].FullPath)
 		}
 		return resp, err

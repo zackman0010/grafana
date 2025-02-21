@@ -79,7 +79,7 @@ func TestIntegrationSendingToExternalAlertmanager(t *testing.T) {
 
 	var expected []*models2.PostableAlert
 	alerts := definitions.PostableAlerts{}
-	for i := 0; i < rand.Intn(5)+1; i++ {
+	for range rand.Intn(5) + 1 {
 		alert := generatePostableAlert(t, mockedClock)
 		expected = append(expected, &alert)
 		alerts.PostableAlerts = append(alerts.PostableAlerts, alert)
@@ -177,13 +177,13 @@ func TestIntegrationSendingToExternalAlertmanager_WithMultipleOrgs(t *testing.T)
 
 	var expected []*models2.PostableAlert
 	alerts1 := definitions.PostableAlerts{}
-	for i := 0; i < rand.Intn(5)+1; i++ {
+	for range rand.Intn(5) + 1 {
 		alert := generatePostableAlert(t, mockedClock)
 		expected = append(expected, &alert)
 		alerts1.PostableAlerts = append(alerts1.PostableAlerts, alert)
 	}
 	alerts2 := definitions.PostableAlerts{}
-	for i := 0; i < rand.Intn(5)+1; i++ {
+	for range rand.Intn(5) + 1 {
 		alert := generatePostableAlert(t, mockedClock)
 		expected = append(expected, &alert)
 		alerts2.PostableAlerts = append(alerts2.PostableAlerts, alert)
@@ -310,7 +310,7 @@ func TestChangingAlertmanagersChoice(t *testing.T) {
 
 	var expected []*models2.PostableAlert
 	alerts := definitions.PostableAlerts{}
-	for i := 0; i < rand.Intn(5)+1; i++ {
+	for range rand.Intn(5) + 1 {
 		alert := generatePostableAlert(t, mockedClock)
 		expected = append(expected, &alert)
 		alerts.PostableAlerts = append(alerts.PostableAlerts, alert)
@@ -387,7 +387,7 @@ func TestAlertmanagersChoiceWithDisableExternalFeatureToggle(t *testing.T) {
 
 	var expected []*models2.PostableAlert
 	alerts := definitions.PostableAlerts{}
-	for i := 0; i < rand.Intn(5)+1; i++ {
+	for range rand.Intn(5) + 1 {
 		alert := generatePostableAlert(t, mockedClock)
 		expected = append(expected, &alert)
 		alerts.PostableAlerts = append(alerts.PostableAlerts, alert)

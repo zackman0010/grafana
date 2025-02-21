@@ -214,7 +214,7 @@ func handleDistributionSeries(
 			continue
 		}
 		maxKey := 0
-		for i := 0; i < len(point.bucketCounts(descriptorIndex)); i++ {
+		for i := range point.bucketCounts(descriptorIndex) {
 			value, err := strconv.ParseFloat(point.bucketValue(descriptorIndex, i), 64)
 			if err != nil {
 				return nil, err
@@ -234,7 +234,7 @@ func handleDistributionSeries(
 		}
 
 		// fill empty bucket
-		for i := 0; i < maxKey; i++ {
+		for i := range maxKey {
 			if _, ok := buckets[i]; !ok {
 				buckets[i] = bucketFrame(
 					point.bucketOptions(descriptorIndex), i,
@@ -256,7 +256,7 @@ func handleNonDistributionSeries(
 	frame *data.Frame,
 	query cloudMonitoringQueryExecutor,
 ) {
-	for i := 0; i < series.length(); i++ {
+	for i := range series.length() {
 		point := series.getPoint(i)
 		value := point.doubleValue(descriptorIndex)
 
@@ -301,7 +301,7 @@ func appendFrames(
 	if err != nil {
 		return nil, err
 	}
-	for i := 0; i < len(buckets); i++ {
+	for i := range len(buckets) {
 		frames = append(frames, buckets[i])
 	}
 	if len(buckets) == 0 {

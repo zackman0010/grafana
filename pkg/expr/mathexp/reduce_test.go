@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/stretchr/testify/require"
+	"slices"
 )
 
 var seriesWithNil = Vars{
@@ -539,7 +540,7 @@ func TestSeriesReduceReplaceNN(t *testing.T) {
 }
 
 func sortedFloat64(f []float64) []float64 {
-	f = append([]float64(nil), f...)
+	f = slices.Clone(f)
 	sort.Float64s(f)
 	return f
 }

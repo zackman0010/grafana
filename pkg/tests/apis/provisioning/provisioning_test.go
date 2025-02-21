@@ -119,7 +119,7 @@ func TestIntegrationProvisioning(t *testing.T) {
 	})
 }
 
-func mustNestedString(obj map[string]interface{}, fields ...string) string {
+func mustNestedString(obj map[string]any, fields ...string) string {
 	v, _, _ := unstructured.NestedString(obj, fields...)
 	return v
 }

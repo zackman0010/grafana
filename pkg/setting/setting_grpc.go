@@ -26,7 +26,7 @@ type GRPCServerSettings struct {
 	keyFile  string
 }
 
-func gRPCServerSettingsError(msg string, args ...interface{}) error {
+func gRPCServerSettingsError(msg string, args ...any) error {
 	return fmt.Errorf("grpc_server: "+msg, args...)
 }
 

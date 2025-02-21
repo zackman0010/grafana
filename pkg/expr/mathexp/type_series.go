@@ -52,7 +52,7 @@ FIELDS:
 			// Handle default case
 			// try to convert to *float64
 			var convertedField *data.Field
-			for j := 0; j < field.Len(); j++ {
+			for j := range field.Len() {
 				ff, err := field.NullableFloatAt(j)
 				if err != nil {
 					break
@@ -84,7 +84,7 @@ FIELDS:
 
 	if timeNullable { // make time not nullable if it is in the input
 		timeSlice := make([]time.Time, 0, frame.Fields[timeIdx].Len())
-		for rowIdx := 0; rowIdx < frame.Fields[timeIdx].Len(); rowIdx++ {
+		for rowIdx := range frame.Fields[timeIdx].Len() {
 			val, ok := frame.At(timeIdx, rowIdx).(*time.Time)
 			if !ok {
 				return s, fmt.Errorf("unexpected time type, expected *time.Time but got %T", val)
@@ -101,7 +101,7 @@ FIELDS:
 
 	if !valueNullable { // make value nullable if it is not in the input
 		floatSlice := make([]*float64, 0, frame.Fields[valueIdx].Len())
-		for rowIdx := 0; rowIdx < frame.Fields[valueIdx].Len(); rowIdx++ {
+		for rowIdx := range frame.Fields[valueIdx].Len() {
 			val, ok := frame.At(valueIdx, rowIdx).(float64)
 			if !ok {
 				return s, fmt.Errorf("unexpected time type, expected float64 but got %T", val)
@@ -160,7 +160,7 @@ func NewSeriesFromRef(refID string, s timeseries.MetricRef) (Series, error) {
 		convertedField.Name = valField.Name
 		convertedField.Labels = valField.Labels
 		convertedField.Config = valField.Config
-		for j := 0; j < valField.Len(); j++ {
+		for j := range valField.Len() {
 			ff, err := valField.NullableFloatAt(j)
 			if err != nil {
 				break

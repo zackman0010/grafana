@@ -105,10 +105,7 @@ func MigrateScopeSplit(db db.DB, log log.Logger) error {
 
 func batch(count, batchSize int, eachFn func(start, end int) error) error {
 	for i := 0; i < count; {
-		end := i + batchSize
-		if end > count {
-			end = count
-		}
+		end := min(i+batchSize, count)
 
 		if err := eachFn(i, end); err != nil {
 			return err

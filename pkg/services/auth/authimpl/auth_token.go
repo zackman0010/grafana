@@ -521,7 +521,7 @@ func (s *UserAuthTokenService) ActiveTokenCount(ctx context.Context, userID *int
 	var count int64
 	err := s.sqlStore.WithDbSession(ctx, func(dbSession *db.Session) error {
 		query := `SELECT COUNT(*) FROM user_auth_token WHERE created_at > ? AND rotated_at > ? AND revoked_at = 0`
-		args := []interface{}{s.createdAfterParam(), s.rotatedAfterParam()}
+		args := []any{s.createdAfterParam(), s.rotatedAfterParam()}
 		if userID != nil {
 			query += " AND user_id = ?"
 			args = append(args, *userID)
