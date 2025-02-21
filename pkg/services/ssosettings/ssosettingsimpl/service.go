@@ -193,6 +193,8 @@ func (s *Service) Upsert(ctx context.Context, settings *models.SSOSettings, requ
 		return ssosettings.ErrNotConfigurable
 	}
 
+	s.logger.Info("Upserting SSO settings", "provider", settings.Provider, "settings", settings.Settings)
+
 	reloadable, ok := s.reloadables[settings.Provider]
 	if !ok {
 		return ssosettings.ErrInvalidProvider.Errorf("provider %s not found in reloadables", settings.Provider)
