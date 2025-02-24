@@ -30,6 +30,7 @@ import templatingReducers from 'app/features/variables/state/keyedVariablesReduc
 import { alertingApi } from '../../features/alerting/unified/api/alertingApi';
 import { iamApi } from '../../features/iam/api/api';
 import { userPreferencesAPI } from '../../features/preferences/api';
+import { secretsManagementAdminReducer } from '../../features/secrets-management/state/reducers';
 import { cleanUpAction } from '../actions/cleanUp';
 
 const rootReducers = {
@@ -54,6 +55,7 @@ const rootReducers = {
   ...templatingReducers,
   ...supportBundlesReducer,
   ...authConfigReducers,
+  secretsManagementAdmin: secretsManagementAdminReducer,
   plugins: pluginsReducer,
   [alertingApi.reducerPath]: alertingApi.reducer,
   [publicDashboardApi.reducerPath]: publicDashboardApi.reducer,
