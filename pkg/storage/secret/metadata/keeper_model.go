@@ -8,20 +8,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
+	keepertypes "github.com/grafana/grafana/pkg/registry/apis/secret/secretkeeper/types"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/xkube"
 	"github.com/grafana/grafana/pkg/storage/secret/migrator"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-)
-
-type KeeperType string
-
-const (
-	SqlKeeperType       KeeperType = "sql"
-	AWSKeeperType       KeeperType = "aws"
-	AzureKeeperType     KeeperType = "azure"
-	GCPKeeperType       KeeperType = "gcp"
-	HashiCorpKeeperType KeeperType = "hashicorp"
 )
 
 type keeperDB struct {
@@ -37,9 +28,9 @@ type keeperDB struct {
 	UpdatedBy   string `xorm:"updated_by"`
 
 	// Spec
-	Title   string     `xorm:"title"`
-	Type    KeeperType `xorm:"type"`
-	Payload string     `xorm:"payload"`
+	Title   string                 `xorm:"title"`
+	Type    keepertypes.KeeperType `xorm:"type"`
+	Payload string                 `xorm:"payload"`
 }
 
 func (*keeperDB) TableName() string {
@@ -207,40 +198,40 @@ func toKeeperRow(kp *secretv0alpha1.Keeper) (*keeperDB, error) {
 }
 
 // toTypeAndPayload obtain keeper type and payload from a Kubernetes Keeper resource.
-func toTypeAndPayload(kp *secretv0alpha1.Keeper) (KeeperType, string, error) {
-	var keeperType KeeperType
+func toTypeAndPayload(kp *secretv0alpha1.Keeper) (keepertypes.KeeperType, string, error) {
+	var keeperType keepertypes.KeeperType
 	var keeperPayload string
 
 	if kp.Spec.SQL != nil {
-		keeperType = SqlKeeperType
+		keeperType = keepertypes.SQLKeeperType
 		jsonData, err := json.Marshal(kp.Spec.SQL)
 		if err != nil {
 			return "", "", fmt.Errorf("error encoding to json: %w", err)
 		}
 		keeperPayload = string(jsonData)
 	} else if kp.Spec.AWS != nil {
-		keeperType = AWSKeeperType
+		keeperType = keepertypes.AWSKeeperType
 		jsonData, err := json.Marshal(kp.Spec.AWS.AWSCredentials)
 		if err != nil {
 			return "", "", fmt.Errorf("error encoding to json: %w", err)
 		}
 		keeperPayload = string(jsonData)
 	} else if kp.Spec.Azure != nil {
-		keeperType = AzureKeeperType
+		keeperType = keepertypes.AzureKeeperType
 		jsonData, err := json.Marshal(kp.Spec.Azure)
 		if err != nil {
 			return "", "", fmt.Errorf("error encoding to json: %w", err)
 		}
 		keeperPayload = string(jsonData)
 	} else if kp.Spec.GCP != nil {
-		keeperType = GCPKeeperType
+		keeperType = keepertypes.GCPKeeperType
 		jsonData, err := json.Marshal(kp.Spec.GCP)
 		if err != nil {
 			return "", "", fmt.Errorf("error encoding to json: %w", err)
 		}
 		keeperPayload = string(jsonData)
 	} else if kp.Spec.HashiCorp != nil {
-		keeperType = HashiCorpKeeperType
+		keeperType = keepertypes.HashiCorpKeeperType
 		jsonData, err := json.Marshal(kp.Spec.HashiCorp)
 		if err != nil {
 			return "", "", fmt.Errorf("error encoding to json: %w", err)
@@ -252,33 +243,33 @@ func toTypeAndPayload(kp *secretv0alpha1.Keeper) (KeeperType, string, error) {
 }
 
 // toProvider maps a KeeperType and payload into a provider config struct.
-func toProvider(keeperType KeeperType, payload string) secretv0alpha1.KeeperConfig {
+func toProvider(keeperType keepertypes.KeeperType, payload string) secretv0alpha1.KeeperConfig {
 	switch keeperType {
-	case SqlKeeperType:
+	case keepertypes.SQLKeeperType:
 		sql := &secretv0alpha1.SQLKeeperConfig{}
 		if err := json.Unmarshal([]byte(payload), sql); err != nil {
 			return nil
 		}
 		return sql
-	case AWSKeeperType:
+	case keepertypes.AWSKeeperType:
 		aws := &secretv0alpha1.AWSKeeperConfig{}
 		if err := json.Unmarshal([]byte(payload), aws); err != nil {
 			return nil
 		}
 		return aws
-	case AzureKeeperType:
+	case keepertypes.AzureKeeperType:
 		azure := &secretv0alpha1.AzureKeeperConfig{}
 		if err := json.Unmarshal([]byte(payload), azure); err != nil {
 			return nil
 		}
 		return azure
-	case GCPKeeperType:
+	case keepertypes.GCPKeeperType:
 		gcp := &secretv0alpha1.GCPKeeperConfig{}
 		if err := json.Unmarshal([]byte(payload), gcp); err != nil {
 			return nil
 		}
 		return gcp
-	case HashiCorpKeeperType:
+	case keepertypes.HashiCorpKeeperType:
 		hashicorp := &secretv0alpha1.HashiCorpKeeperConfig{}
 		if err := json.Unmarshal([]byte(payload), hashicorp); err != nil {
 			return nil

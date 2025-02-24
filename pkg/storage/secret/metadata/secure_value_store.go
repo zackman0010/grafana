@@ -213,6 +213,7 @@ func (s *secureValueMetadataStorage) List(ctx context.Context, namespace xkube.N
 		return nil, fmt.Errorf("missing auth info in context")
 	}
 
+	fmt.Println("DEBUG | user", user)
 	hasPermissionFor, err := s.accessClient.Compile(ctx, user, claims.ListRequest{
 		Group:     secretv0alpha1.GROUP,
 		Resource:  secretv0alpha1.SecureValuesResourceInfo.GetName(),
@@ -248,6 +249,7 @@ func (s *secureValueMetadataStorage) List(ctx context.Context, namespace xkube.N
 	for _, row := range secureValueRows {
 		// Check whether the user has permission to access this specific SecureValue in the namespace.
 		if !hasPermissionFor(row.Namespace, row.Name, "") {
+			fmt.Println("DEBUG | doesn't have permissions")
 			continue
 		}
 
