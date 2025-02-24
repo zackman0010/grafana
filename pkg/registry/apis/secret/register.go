@@ -21,7 +21,6 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/reststorage"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
-	authsvc "github.com/grafana/grafana/pkg/services/apiserver/auth/authorizer"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
@@ -160,7 +159,8 @@ func (b *SecretAPIBuilder) GetAuthorizer() authorizer.Authorizer {
 		return nil
 	}
 
-	return authsvc.NewResourceAuthorizer(b.accessClient)
+	return nil
+	// return authsvc.NewResourceAuthorizer(b.accessClient)
 }
 
 // Register additional routes with the server.

@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	claims "github.com/grafana/authlib/types"
-	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
@@ -172,20 +171,20 @@ func (s *keeperMetadataStorage) Delete(ctx context.Context, namespace xkube.Name
 }
 
 func (s *keeperMetadataStorage) List(ctx context.Context, namespace xkube.Namespace, options *internalversion.ListOptions) (*secretv0alpha1.KeeperList, error) {
-	user, ok := claims.AuthInfoFrom(ctx)
-	if !ok {
-		return nil, fmt.Errorf("missing auth info in context")
-	}
+	// user, ok := claims.AuthInfoFrom(ctx)
+	// if !ok {
+	// 	return nil, fmt.Errorf("missing auth info in context")
+	// }
 
-	hasPermissionFor, err := s.accessClient.Compile(ctx, user, claims.ListRequest{
-		Group:     secretv0alpha1.GROUP,
-		Resource:  secretv0alpha1.KeeperResourceInfo.GetName(),
-		Namespace: namespace.String(),
-		Verb:      utils.VerbGet, // Why not VerbList?
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to compile checker: %w", err)
-	}
+	// hasPermissionFor, err := s.accessClient.Compile(ctx, user, claims.ListRequest{
+	// 	Group:     secretv0alpha1.GROUP,
+	// 	Resource:  secretv0alpha1.KeeperResourceInfo.GetName(),
+	// 	Namespace: namespace.String(),
+	// 	Verb:      utils.VerbGet, // Why not VerbList?
+	// })
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to compile checker: %w", err)
+	// }
 
 	labelSelector := options.LabelSelector
 	if labelSelector == nil {
@@ -194,7 +193,7 @@ func (s *keeperMetadataStorage) List(ctx context.Context, namespace xkube.Namesp
 
 	keeperRows := make([]*keeperDB, 0)
 
-	err = s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
+	err := s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
 		cond := &keeperDB{Namespace: namespace.String()}
 
 		if err := sess.Find(&keeperRows, cond); err != nil {
@@ -211,9 +210,9 @@ func (s *keeperMetadataStorage) List(ctx context.Context, namespace xkube.Namesp
 
 	for _, row := range keeperRows {
 		// Check whether the user has permission to access this specific Keeper in the namespace.
-		if !hasPermissionFor(row.Namespace, row.Name, "") {
-			continue
-		}
+		// if !hasPermissionFor(row.Namespace, row.Name, "") {
+		// 	continue
+		// }
 
 		keeper, err := row.toKubernetes()
 		if err != nil {
