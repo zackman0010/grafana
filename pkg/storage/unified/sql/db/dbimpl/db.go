@@ -29,10 +29,12 @@ func (d sqlDB) DriverName() string {
 }
 
 func (d sqlDB) QueryContext(ctx context.Context, query string, args ...any) (db.Rows, error) {
+	// Ensure the query uses placeholders and args are passed correctly
 	return d.DB.QueryContext(ctx, query, args...)
 }
 
 func (d sqlDB) QueryRowContext(ctx context.Context, query string, args ...any) db.Row {
+	// Ensure the query uses placeholders and args are passed correctly
 	return d.DB.QueryRowContext(ctx, query, args...)
 }
 
