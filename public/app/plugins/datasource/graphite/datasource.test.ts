@@ -745,8 +745,13 @@ describe('graphiteDatasource', () => {
         },
         updateText: () => {},
         render: () => {
+<<<<<<< HEAD
           return '';
         },
+=======
+          return "";
+        }
+>>>>>>> d5c8153b4b8 (removed calls to getTemplateSrv because it makes things impossible to test. added a check for empty raw queries)
       }));
     });
 
