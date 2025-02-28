@@ -19,6 +19,7 @@ import { enrichHelpItem } from '../MegaMenu/utils';
 import { QuickAdd } from '../QuickAdd/QuickAdd';
 import { TOP_BAR_LEVEL_HEIGHT } from '../types';
 
+import { DashButton } from './DashButton';
 import { ProfileButton } from './ProfileButton';
 import { SignInLink } from './SignInLink';
 import { TopNavBarMenu } from './TopNavBarMenu';
@@ -86,6 +87,7 @@ export const SingleTopBar = memo(function SingleTopBar({
           onClick={onToggleKioskMode}
           tooltip="Enable kiosk mode"
         />
+        <DashButton />
         {!contextSrv.user.isSignedIn && <SignInLink />}
         {profileNode && <ProfileButton profileNode={profileNode} />}
       </Stack>

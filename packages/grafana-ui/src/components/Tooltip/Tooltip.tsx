@@ -32,10 +32,12 @@ export interface TooltipProps {
    * Set to true if you want the tooltip to stay long enough so the user can move mouse over content to select text or click a link
    */
   interactive?: boolean;
+  /** Max tooltip width */
+  maxWidth?: number;
 }
 
 export const Tooltip = forwardRef<HTMLElement, TooltipProps>(
-  ({ children, theme, interactive, show, placement, content }, forwardedRef) => {
+  ({ children, theme, interactive, show, placement, content, maxWidth }, forwardedRef) => {
     const arrowRef = useRef(null);
     const [controlledVisible, setControlledVisible] = useState(show);
     const isOpen = show ?? controlledVisible;
@@ -79,7 +81,7 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(
 
     const contentIsFunction = typeof content === 'function';
 
-    const styles = useStyles2(getStyles);
+    const styles = useStyles2(getStyles, maxWidth);
     const style = styles[theme ?? 'info'];
 
     const handleRef = useCallback(
@@ -131,20 +133,22 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(
 
 Tooltip.displayName = 'Tooltip';
 
-export const getStyles = (theme: GrafanaTheme2) => {
+export const getStyles = (theme: GrafanaTheme2, maxWidth = 400) => {
   const info = buildTooltipTheme(
     theme,
     theme.components.tooltip.background,
     theme.components.tooltip.background,
     theme.components.tooltip.text,
-    { topBottom: 0.5, rightLeft: 1 }
+    { topBottom: 0.5, rightLeft: 1 },
+    maxWidth
   );
   const error = buildTooltipTheme(
     theme,
     theme.colors.error.main,
     theme.colors.error.main,
     theme.colors.error.contrastText,
-    { topBottom: 0.5, rightLeft: 1 }
+    { topBottom: 0.5, rightLeft: 1 },
+    maxWidth
   );
 
   return {
