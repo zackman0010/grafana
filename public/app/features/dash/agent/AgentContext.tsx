@@ -43,6 +43,53 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [langchainMessages, setLangchainMessages] = useState<Array<HumanMessage | AIMessageChunk>>([]);
 
+  // Recursive function to handle tool calls
+  const handleToolCalls = useCallback(
+    async (
+      aiMessage: AIMessageChunk,
+      currentMessages: Array<HumanMessage | AIMessageChunk>,
+      callCount = 0,
+      maxCalls = 20
+    ) => {
+      // Base case: no tool calls or reached max calls
+      if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0 || callCount >= maxCalls) {
+        return;
+      }
+
+      // Process each tool call
+      for (const toolCall of aiMessage.tool_calls) {
+        const selectedTool = toolsByName[toolCall.name];
+        if (selectedTool) {
+          // Execute the tool
+          const toolMessage = await selectedTool.invoke(toolCall);
+
+          // Update LangChain messages with tool response
+          setLangchainMessages((prev) => [...prev, toolMessage]);
+
+          // Get next response after tool execution
+          const nextMessages = [...currentMessages, aiMessage, toolMessage];
+          const nextAiMessage: AIMessageChunk = await agent.invoke(nextMessages);
+
+          // Add AI message to UI
+          const nextAiChatMessage: ChatMessage = {
+            id: (Date.now() + callCount).toString(),
+            content: nextAiMessage.content,
+            sender: 'ai',
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, nextAiChatMessage]);
+
+          // Update LangChain messages with AI response
+          setLangchainMessages((prev) => [...prev, nextAiMessage]);
+
+          // Recursively handle any further tool calls
+          await handleToolCalls(nextAiMessage, nextMessages, callCount + 1, maxCalls);
+        }
+      }
+    },
+    []
+  );
+
   const askMessage = useCallback(
     async (message: string) => {
       if (!message.trim()) {
@@ -84,38 +131,8 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
         // Update LangChain messages with AI response
         setLangchainMessages((prev) => [...prev, aiMessage]);
 
-        // Handle tool calls if any
-        if (aiMessage.tool_calls && aiMessage.tool_calls.length > 0) {
-          for (const toolCall of aiMessage.tool_calls) {
-            const selectedTool = toolsByName[toolCall.name];
-            if (selectedTool) {
-              // Execute the tool
-              const toolMessage = await selectedTool.invoke(toolCall);
-
-              // Update LangChain messages with tool response
-              setLangchainMessages((prev) => [...prev, toolMessage]);
-
-              // Get final response after tool execution
-              const finalAiMessage: AIMessageChunk = await agent.invoke([
-                ...updatedLangchainMessages,
-                aiMessage,
-                toolMessage,
-              ]);
-
-              // Add final AI message to UI
-              const finalAiChatMessage: ChatMessage = {
-                id: (Date.now() + 2).toString(),
-                content: finalAiMessage.content,
-                sender: 'ai',
-                timestamp: new Date(),
-              };
-              setMessages((prev) => [...prev, finalAiChatMessage]);
-
-              // Update LangChain messages with final AI response
-              setLangchainMessages((prev) => [...prev, finalAiMessage]);
-            }
-          }
-        }
+        // Handle tool calls recursively
+        await handleToolCalls(aiMessage, updatedLangchainMessages);
       } catch (error) {
         console.error('Error in agent communication:', error);
 
@@ -131,7 +148,7 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
         setIsLoading(false);
       }
     },
-    [langchainMessages]
+    [langchainMessages, handleToolCalls]
   );
 
   return <AgentContext.Provider value={{ messages, isLoading, askMessage }}>{children}</AgentContext.Provider>;
