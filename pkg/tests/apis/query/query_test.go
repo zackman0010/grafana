@@ -16,34 +16,32 @@ import (
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/tests/apis"
 	"github.com/grafana/grafana/pkg/tests/testinfra"
-	"github.com/grafana/grafana/pkg/tests/testsuite"
 )
 
-func TestMain(m *testing.M) {
-	testsuite.Run(m)
-}
-
 func TestIntegrationSimpleQuery(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
-	helper := apis.NewK8sTestHelper(t, testinfra.GrafanaOpts{
-		AppModeProduction: false, // dev mode required for datasource connections
-		EnableFeatureToggles: []string{
-			featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs, // Required to start the example service
-		},
-	})
-
-	// Create a single datasource
-	ds := helper.CreateDS(&datasources.AddDataSourceCommand{
-		Name:  "test",
-		Type:  datasources.DS_TESTDATA,
-		UID:   "test",
-		OrgID: int64(1),
-	})
-	require.Equal(t, "test", ds.UID)
 
 	t.Run("Call query with expression", func(t *testing.T) {
+		helper := apis.NewK8sTestHelper(t, testinfra.GrafanaOpts{
+			AppModeProduction: false, // dev mode required for datasource connections
+			EnableFeatureToggles: []string{
+				featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs, // Required to start the example service
+			},
+		})
+
+		// Create a single datasource
+		ds := helper.CreateDS(&datasources.AddDataSourceCommand{
+			Name:  "test",
+			Type:  datasources.DS_TESTDATA,
+			UID:   "test",
+			OrgID: int64(1),
+		})
+		require.Equal(t, "test", ds.UID)
+
 		client := helper.Org1.Admin.RESTClient(t, &schema.GroupVersion{
 			Group:   "query.grafana.app",
 			Version: "v0alpha1",
@@ -108,6 +106,22 @@ func TestIntegrationSimpleQuery(t *testing.T) {
 	})
 
 	t.Run("Gets an error with invalid queries", func(t *testing.T) {
+		helper := apis.NewK8sTestHelper(t, testinfra.GrafanaOpts{
+			AppModeProduction: false, // dev mode required for datasource connections
+			EnableFeatureToggles: []string{
+				featuremgmt.FlagGrafanaAPIServerWithExperimentalAPIs, // Required to start the example service
+			},
+		})
+
+		// Create a single datasource
+		ds := helper.CreateDS(&datasources.AddDataSourceCommand{
+			Name:  "test",
+			Type:  datasources.DS_TESTDATA,
+			UID:   "test",
+			OrgID: int64(1),
+		})
+		require.Equal(t, "test", ds.UID)
+
 		client := helper.Org1.Admin.RESTClient(t, &schema.GroupVersion{
 			Group:   "query.grafana.app",
 			Version: "v0alpha1",

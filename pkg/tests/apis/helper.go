@@ -86,6 +86,8 @@ func NewK8sTestHelper(t *testing.T, opts testinfra.GrafanaOpts) *K8sTestHelper {
 		Namespacer: request.GetNamespaceMapper(nil),
 	}
 
+	c.CreateDefaultOrg()
+
 	c.Org1 = c.createTestUsers(Org1)
 	c.OrgB = c.createTestUsers("OrgB")
 
@@ -458,6 +460,26 @@ func (c *K8sTestHelper) createTestUsers(orgName string) OrgUsers {
 	c.AddOrUpdateTeamMember(users.Editor, users.Staff.ID, team.PermissionTypeMember)
 
 	return users
+}
+
+func (c *K8sTestHelper) CreateDefaultOrg() {
+	defer func() {
+		c.env.Cfg.AutoAssignOrg = false
+		c.env.Cfg.AutoAssignOrgId = 1 // the default
+	}()
+
+	store := c.env.SQLStore
+	quotaService := quotaimpl.ProvideService(store, c.env.Cfg)
+
+	c.env.Cfg.AutoAssignOrg = true
+	c.env.Cfg.AutoAssignOrgId = 1
+
+	orgService, err := orgimpl.ProvideService(store, c.env.Cfg, quotaService)
+	require.NoError(c.t, err)
+
+	orgID, err := orgService.GetOrCreate(context.Background(), "")
+	require.NoError(c.t, err)
+	require.EqualValues(c.t, c.env.Cfg.AutoAssignOrgId, orgID)
 }
 
 func (c *K8sTestHelper) CreateUser(name string, orgName string, basicRole org.RoleType, permissions []resourcepermissions.SetResourcePermissionCommand) User {
