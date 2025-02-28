@@ -229,7 +229,13 @@ build: build-go build-js ## Build backend and frontend.
 
 .PHONY: run
 run: $(BRA) ## Build and run web server on filesystem changes. See /.bra.toml for configuration.
-	$(BRA) run
+	@if [ ! -f .env ]; then \
+	echo ".env file not found!"; \
+	exit 1; \
+	fi; \
+	$(eval ENV_VARS := $(shell grep -v '^#' .env | xargs -0))
+	@echo "Running with environment variables from .env"
+	@$(ENV_VARS) make run
 
 .PHONY: run-go
 run-go: ## Build and run web server immediately.
@@ -238,7 +244,13 @@ run-go: ## Build and run web server immediately.
 
 .PHONY: run-frontend
 run-frontend: deps-js ## Fetch js dependencies and watch frontend for rebuild
-	yarn start
+	@if [ ! -f .env ]; then \
+	echo ".env file not found!"; \
+	exit 1; \
+	fi; \
+	$(eval ENV_VARS := $(shell grep -v '^#' .env | xargs -0))
+	@echo "Running with environment variables from .env"
+	@$(ENV_VARS) yarn start
 
 ##@ Testing
 
