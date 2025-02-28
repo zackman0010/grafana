@@ -1,12 +1,15 @@
-import { UrlQueryMap, urlUtil } from '@grafana/data';
+import { ExploreUrlState, UrlQueryMap, urlUtil } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
 
-// @ts-expect-error
-window.getContext = () => {
+export function getCurrentContext() {
   const urlContext = getCurrentURLContext();
   console.log(urlContext);
   const timeRangeContext = getCurrentTimeRangeContext(urlContext);
   console.log(timeRangeContext);
+  const dataSourceContext = getDataSourceContext(urlContext);
+  console.log(dataSourceContext);
+  const queryContext = getQueryContext(urlContext);
+  console.log(queryContext);
 };
 
 interface URLContext {
@@ -59,5 +62,55 @@ function getCurrentTimeRangeContext(urlContext?: URLContext) {
     }
     return `${urlContext.params.from} to ${urlContext.params.to}`;
   }
-  return document.querySelector('[data-testid~="TimePicker"]')?.getAttribute('aria-label')?.replace('Time range selected: ', '') ?? '';
+  return (
+    document
+      .querySelector('[data-testid~="TimePicker"]')
+      ?.getAttribute('aria-label')
+      ?.replace('Time range selected: ', '') ?? ''
+  );
+}
+
+function getDataSourceContext(urlContext?: URLContext) {
+  if (urlContext?.url.includes('grafana-lokiexplore-app')) {
+    return 'Loki';
+  }
+  if (urlContext?.url.includes('/explore') && urlContext.params.panes) {
+    let panes: ExploreUrlState | undefined = undefined;
+    try {
+      panes = JSON.parse(urlContext.params.panes.toString());
+    } catch (e) {
+      console.error(e);
+    }
+    if (panes) {
+      const keys = Object.keys(panes);
+      // @ts-expect-error
+      if (keys[0] in panes && panes[keys[0]].queries) {
+        // @ts-expect-error
+        return panes[keys[0]].queries[0]?.datasource?.type ?? '';
+      }
+    }
+  }
+
+  return '';
+}
+
+function getQueryContext(urlContext?: URLContext) {
+  if (urlContext?.url.includes('/explore') && urlContext.params.panes) {
+    let panes: ExploreUrlState | undefined = undefined;
+    try {
+      panes = JSON.parse(urlContext.params.panes.toString());
+    } catch (e) {
+      console.error(e);
+    }
+    if (panes) {
+      const keys = Object.keys(panes);
+      // @ts-expect-error
+      if (keys[0] in panes && panes[keys[0]].queries) {
+        // @ts-expect-error
+        return panes[keys[0]].queries[0]?.expr ?? '';
+      }
+    }
+  }
+
+  return '';
 }
