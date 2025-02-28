@@ -235,7 +235,7 @@ run: $(BRA) ## Build and run web server on filesystem changes. See /.bra.toml fo
 	fi; \
 	$(eval ENV_VARS := $(shell grep -v '^#' .env | xargs -0))
 	@echo "Running with environment variables from .env"
-	@$(ENV_VARS) make run
+	@$(ENV_VARS) $(BRA) run
 
 .PHONY: run-go
 run-go: ## Build and run web server immediately.
