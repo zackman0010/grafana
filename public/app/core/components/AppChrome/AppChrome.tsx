@@ -151,7 +151,6 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
       bottom: 0,
       right: 0,
       width: '500px',
-      height: '47%',
       background: theme.colors.background.primary,
       borderLeft: `1px solid ${theme.colors.border.weak}`,
       zIndex: 99999,
