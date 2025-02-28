@@ -1,7 +1,7 @@
 import { ExploreUrlState, UrlQueryMap, urlUtil } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
 
-export function getCurrentContext() {
+export async function getCurrentContext() {
   const urlContext = getCurrentURLContext();
   console.log(urlContext);
   const timeRangeContext = getCurrentTimeRangeContext(urlContext);
@@ -10,22 +10,29 @@ export function getCurrentContext() {
   console.log(dataSourceContext);
   const queryContext = getQueryContext(urlContext);
   console.log(queryContext);
+
+  return {
+    app_context: urlContext,
+    time_range: timeRangeContext,
+    current_datasource: dataSourceContext,
+    current_query: queryContext,
+  };
 };
 
 interface URLContext {
-  url: string;
-  appName: string;
-  title: string;
-  params: UrlQueryMap;
+  current_url: string;
+  app_name: string;
+  page_title: string;
+  url_params: UrlQueryMap;
 }
 function getCurrentURLContext(): URLContext {
   const location = locationService.getLocation();
-  const params = filterContextRelevantParams(urlUtil.getUrlSearchParams());
+  const url_params = filterContextRelevantParams(urlUtil.getUrlSearchParams());
   return {
-    url: location.pathname,
-    appName: locationToAppName(location.pathname),
-    title: document.title,
-    params,
+    current_url: location.pathname,
+    app_name: locationToAppName(location.pathname),
+    page_title: document.title,
+    url_params,
   };
 }
 
@@ -56,11 +63,11 @@ function filterContextRelevantParams(params: UrlQueryMap) {
 }
 
 function getCurrentTimeRangeContext(urlContext?: URLContext) {
-  if (urlContext && urlContext.params.from && urlContext.params.to) {
-    if (urlContext.params.from.toString().includes('now-')) {
-      return urlContext.params.from;
+  if (urlContext && urlContext.url_params.from && urlContext.url_params.to) {
+    if (urlContext.url_params.from.toString().includes('now-')) {
+      return urlContext.url_params.from;
     }
-    return `${urlContext.params.from} to ${urlContext.params.to}`;
+    return `${urlContext.url_params.from} to ${urlContext.url_params.to}`;
   }
   return (
     document
@@ -71,13 +78,13 @@ function getCurrentTimeRangeContext(urlContext?: URLContext) {
 }
 
 function getDataSourceContext(urlContext?: URLContext) {
-  if (urlContext?.url.includes('grafana-lokiexplore-app')) {
+  if (urlContext?.current_url.includes('grafana-lokiexplore-app')) {
     return 'Loki';
   }
-  if (urlContext?.url.includes('/explore') && urlContext.params.panes) {
+  if (urlContext?.current_url.includes('/explore') && urlContext.url_params.panes) {
     let panes: ExploreUrlState | undefined = undefined;
     try {
-      panes = JSON.parse(urlContext.params.panes.toString());
+      panes = JSON.parse(urlContext.url_params.panes.toString());
     } catch (e) {
       console.error(e);
     }
@@ -95,10 +102,10 @@ function getDataSourceContext(urlContext?: URLContext) {
 }
 
 function getQueryContext(urlContext?: URLContext) {
-  if (urlContext?.url.includes('/explore') && urlContext.params.panes) {
+  if (urlContext?.current_url.includes('/explore') && urlContext.url_params.panes) {
     let panes: ExploreUrlState | undefined = undefined;
     try {
-      panes = JSON.parse(urlContext.params.panes.toString());
+      panes = JSON.parse(urlContext.url_params.panes.toString());
     } catch (e) {
       console.error(e);
     }
