@@ -46,6 +46,8 @@ export interface ToggletipProps {
   show?: boolean;
   /** Callback function to be called when the toggletip is opened */
   onOpen?: () => void;
+  /** Max tooltip width */
+  maxWidth?: number;
 }
 
 export const Toggletip = memo(
@@ -61,10 +63,11 @@ export const Toggletip = memo(
     fitContent = false,
     onOpen,
     show,
+    maxWidth,
   }: ToggletipProps) => {
     const arrowRef = useRef(null);
     const grafanaTheme = useTheme2();
-    const styles = useStyles2(getStyles);
+    const styles = useStyles2(getStyles, maxWidth);
     const style = styles[theme];
     const [controlledVisible, setControlledVisible] = useState(show);
     const isOpen = show ?? controlledVisible;
@@ -164,20 +167,22 @@ export const Toggletip = memo(
 
 Toggletip.displayName = 'Toggletip';
 
-export const getStyles = (theme: GrafanaTheme2) => {
+export const getStyles = (theme: GrafanaTheme2, maxWidth = 400) => {
   const info = buildTooltipTheme(
     theme,
     theme.colors.background.primary,
     theme.colors.border.weak,
     theme.components.tooltip.text,
-    { topBottom: 2, rightLeft: 2 }
+    { topBottom: 2, rightLeft: 2 },
+    maxWidth
   );
   const error = buildTooltipTheme(
     theme,
     theme.colors.error.main,
     theme.colors.error.main,
     theme.colors.error.contrastText,
-    { topBottom: 2, rightLeft: 2 }
+    { topBottom: 2, rightLeft: 2 },
+    maxWidth
   );
 
   return {

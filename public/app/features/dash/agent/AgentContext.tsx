@@ -10,7 +10,7 @@ import { tools, toolsByName } from './tools';
 export interface ChatMessage {
   id: string;
   content: MessageContent;
-  sender: 'user' | 'ai';
+  sender: 'user' | 'ai' | 'system';
   timestamp: Date;
 }
 
@@ -144,7 +144,7 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
         const errorMessage: ChatMessage = {
           id: (Date.now() + 3).toString(),
           content: 'Sorry, there was an error processing your request. Please try again.',
-          sender: 'ai',
+          sender: 'system',
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
