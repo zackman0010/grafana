@@ -37,7 +37,7 @@ const getPrometheusLabelValues = async (
       params
     );
 
-    return response.data?.result || [];
+    return response.data || [];
   } catch (error) {
     console.error(`Error fetching Prometheus label values for ${labelName}:`, error);
     throw new Error(`Failed to fetch label values for datasource ${datasourceUid}: ${error}`);
@@ -57,7 +57,7 @@ const getPrometheusLabelNames = async (datasourceUid: string, start?: number, en
 
     const response = await getBackendSrv().get(`/api/datasources/uid/${datasourceUid}/resources/api/v1/labels`, params);
 
-    return response.data?.result || [];
+    return response.data || [];
   } catch (error) {
     console.error('Error fetching Prometheus label names:', error);
     throw new Error(`Failed to fetch label names for datasource ${datasourceUid}: ${error}`);
@@ -131,7 +131,7 @@ const executePrometheusRangeQuery = async (
 
 const listDatasourcesSchema = z.object({
   uid: z.string().optional().describe('Optional datasource uid for exact matching'),
-  name: z.string().optional().describe('Optional datasource name (can be a regex pattern)'),
+  name: z.string().optional().describe('Optional datasource name (can be a javascript regex pattern)'),
 });
 
 const listDatasourcesTool = tool(
@@ -149,27 +149,38 @@ const listDatasourcesTool = tool(
 
     if (name) {
       try {
-        const nameRegex = new RegExp(name);
+        const nameRegex = new RegExp(name, 'i');
         filteredDatasources = filteredDatasources.filter((ds) => nameRegex.test(ds.name));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredDatasources = filteredDatasources.filter((ds) => ds.name.includes(name));
+        filteredDatasources = filteredDatasources.filter((ds) => ds.name.toLowerCase().includes(name.toLowerCase()));
       }
     }
 
-    return JSON.stringify(filteredDatasources);
+    // Only return the specified fields
+    const simplifiedDatasources = filteredDatasources.map((ds) => ({
+      uid: ds.uid,
+      name: ds.name,
+      type: ds.type,
+      typeName: ds.typeName,
+    }));
+
+    return JSON.stringify(simplifiedDatasources);
   },
   {
     name: 'list_datasources',
-    description: 'List all datasources. Can filter by uid (exact match) or name (regex pattern).',
+    description: 'List all datasources. Can filter by uid (exact match) or name (javascript regex pattern supported).',
     schema: listDatasourcesSchema,
   }
 );
 
 // Define schema for Prometheus label values tool
 const prometheusLabelValuesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  label_name: z.string().describe('The label name to query values for. Use "__name__" for metric names.'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  label_name: z
+    .string()
+    .min(1)
+    .describe('(REQUIRED) The label name to query values for. Use "__name__" for metric names.'),
   start: z
     .number()
     .optional()
@@ -178,7 +189,7 @@ const prometheusLabelValuesSchema = z.object({
     .number()
     .optional()
     .describe('Optional end timestamp for the query range. Defaults to current time if not provided.'),
-  regex: z.string().optional().describe('Optional regex pattern to filter label values'),
+  regex: z.string().optional().describe('Optional javascript regex pattern to filter label values'),
 });
 
 export const pageContextTool = tool(
@@ -200,34 +211,39 @@ const prometheusLabelValuesTool = tool(
     const { datasource_uid, label_name, start, end, regex } = parsedInput;
 
     // Fetch the label values from the datasource
-    const labelValues = await getPrometheusLabelValues(datasource_uid, label_name, start, end);
+    const labelValues = await getPrometheusLabelValues(datasource_uid, label_name || '__name__', start, end);
+
+    console.log(`Retrieved ${labelValues.length} label values for ${label_name}`);
 
     // Filter by regex if provided
     let filteredValues = labelValues;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredValues = labelValues.filter((value) => regexPattern.test(value));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredValues = labelValues.filter((value) => value.includes(regex));
+        filteredValues = labelValues.filter((value) => value.toLowerCase().includes(regex.toLowerCase()));
       }
     }
 
-    // Convert to CSV format
-    return filteredValues.join(',');
+    // Return as JSON array
+    return JSON.stringify(filteredValues);
   },
   {
     name: 'list_prometheus_label_values',
-    description:
-      'List values for a specified Prometheus label. Use label_name="__name__" to get metric names. Default time range is last hour if not specified.',
+    description: `List values for a specified Prometheus label. Use label_name="__name__" to get metric names.
+       Supports regex pattern (case-insensitive) to filter values.
+       Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
+       It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Default time range is last hour if not specified.`,
     schema: prometheusLabelValuesSchema,
   }
 );
 
 // Define schema for Prometheus label names tool
 const prometheusLabelNamesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
   start: z
     .number()
     .optional()
@@ -236,7 +252,7 @@ const prometheusLabelNamesSchema = z.object({
     .number()
     .optional()
     .describe('Optional end timestamp for the query range. Defaults to current time if not provided.'),
-  regex: z.string().optional().describe('Optional regex pattern to filter label names'),
+  regex: z.string().optional().describe('Optional javascript regex pattern to filter label names'),
 });
 
 // Create Prometheus label names tool
@@ -249,11 +265,13 @@ const prometheusLabelNamesTool = tool(
     // Fetch the label names from the datasource
     const labelNames = await getPrometheusLabelNames(datasource_uid, start, end);
 
+    console.log(`Retrieved ${labelNames.length} label names`);
+
     // Filter by regex if provided
     let filteredNames = labelNames;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredNames = labelNames.filter((name) => regexPattern.test(name));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
@@ -261,21 +279,21 @@ const prometheusLabelNamesTool = tool(
       }
     }
 
-    // Convert to CSV format
-    return filteredNames.join(',');
+    // Return as JSON array
+    return JSON.stringify(filteredNames);
   },
   {
     name: 'list_prometheus_label_names',
     description:
-      'List all available Prometheus label names for a given datasource. Default time range is last hour if not specified.',
+      'List all available Prometheus label names for a given datasource. Supports regex pattern (case-insensitive) to filter label names. Default time range is last hour if not specified.',
     schema: prometheusLabelNamesSchema,
   }
 );
 
 // Define schema for Prometheus instant query tool
 const prometheusInstantQuerySchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  query: z.string().describe('The PromQL query expression to evaluate'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   time: z
     .number()
     .optional()
@@ -308,8 +326,8 @@ const prometheusInstantQueryTool = tool(
 
 // Define schema for Prometheus range query tool
 const prometheusRangeQuerySchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  query: z.string().describe('The PromQL query expression to evaluate'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   start: z.number().describe('Start timestamp for the query range (Unix seconds)'),
   end: z.number().describe('End timestamp for the query range (Unix seconds)'),
   step: z.string().describe('Query resolution step width as a duration string (e.g., "15s", "1m", "1h")'),

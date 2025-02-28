@@ -100,6 +100,20 @@ export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
         return;
       }
 
+      //todo(cyriltovena): We should add a system message to ask LLM to check if we need to find a metrics name.
+      // If yes, we should fork the conversation to a new thread to first find the metrics name and potentially labels selectors.
+      // This will allow us to reduce the main conversation size, and drop any tool results that are not relevant anymore.
+      // This is basically what we call starting a new langchain !
+
+      // In this discovery metrics conversation, we should teach LLM to use selector to find metrics
+      //  aka count by (__name__)({pod=pod-123}) which returns less broad results than label/__name__/values api calls.
+      // May be a good workflow
+      // 1. find label names that are revelant.
+      // 2. find relevant values for these labels.
+      // 3. verify if the metrics is a popular one, if yes, see if it exits and get labels names. match[]=<series_selector>
+      // 4. try to find metrics names that are relevant for these values via instant query count by (__name__)({namespace="loki-dev-005"}) using regex.
+      // 5. try to find metrics name using label/__name__/values
+
       // Add user message to UI
       const userMessage: ChatMessage = {
         id: Date.now().toString(),
