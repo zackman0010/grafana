@@ -10,6 +10,8 @@ import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
 import { Trans } from 'app/core/internationalization';
 import store from 'app/core/store';
 import { CommandPalette } from 'app/features/commandPalette/CommandPalette';
+import { AgentProvider } from 'app/features/dash/agent/context';
+import { ChatInterface } from 'app/features/dash/ui';
 import { ScopesDashboards, useScopesDashboardsState } from 'app/features/scopes';
 
 import { AppChromeMenu } from './AppChromeMenu';
@@ -123,6 +125,12 @@ export function AppChrome({ children }: Props) {
             })}
             id="pageContent"
           >
+            {/* Chat container on the right */}
+            <div className={styles.chatContainer}>
+              <AgentProvider>
+                <ChatInterface />
+              </AgentProvider>
+            </div>
             {children}
           </main>
         </div>
@@ -138,6 +146,16 @@ export function AppChrome({ children }: Props) {
 
 const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
   return {
+    chatContainer: css({
+      position: 'fixed',
+      bottom: 0,
+      right: 0,
+      width: '400px',
+      height: '30%',
+      background: theme.colors.background.primary,
+      borderLeft: `1px solid ${theme.colors.border.weak}`,
+      zIndex: 99999,
+    }),
     content: css({
       display: 'flex',
       flexDirection: 'column',
