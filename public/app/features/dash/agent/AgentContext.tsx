@@ -1,6 +1,7 @@
 import { ChatAnthropic } from '@langchain/anthropic';
-import { AIMessageChunk, HumanMessage, MessageContent } from '@langchain/core/messages';
+import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { SystemPromptTemplate } from './system-prompt';
 
 import { ANTHROPIC_API_KEY } from './api-key';
 import { tools, toolsByName } from './tools';
@@ -39,9 +40,12 @@ interface AgentProviderProps {
 }
 
 export const AgentProvider: React.FC<AgentProviderProps> = ({ children }) => {
+  const systemMessage: SystemMessage = new SystemMessage(SystemPromptTemplate);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [langchainMessages, setLangchainMessages] = useState<Array<HumanMessage | AIMessageChunk>>([]);
+  const [langchainMessages, setLangchainMessages] = useState<Array<HumanMessage | AIMessageChunk | SystemMessage>>([
+    systemMessage,
+  ]);
 
   // Recursive function to handle tool calls
   const handleToolCalls = useCallback(
