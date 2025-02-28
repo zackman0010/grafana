@@ -144,6 +144,7 @@ module.exports = (env = {}) => {
       new DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify('development'),
+          ANTHROPIC_API_KEY: JSON.stringify(process.env.ANTHROPIC_API_KEY || ''),
         },
       }),
       new WebpackAssetsManifest({

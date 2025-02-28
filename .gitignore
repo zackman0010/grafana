@@ -233,3 +233,12 @@ public/app/plugins/**/dist/
 public/mockServiceWorker.js
 
 /e2e/test-plugins/*/dist
+
+.env
+.yarn/.cache/
+
+conf/provisioning/datasources/loki-dev.yml
+conf/provisioning/datasources/fire-dev-001.yml
+conf/provisioning/datasources/tempo-dev-01.yml
+conf/provisioning/datasources/cortex-dev-01.yml
+conf/provisioning/dashboards/
