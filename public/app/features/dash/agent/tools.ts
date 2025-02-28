@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { getBackendSrv } from 'app/core/services/backend_srv';
 import { getDataSources } from 'app/features/datasources/api';
+import { getCurrentContext } from './context';
 
 // Helper to get current time in seconds (Unix timestamp)
 const getCurrentTimeInSeconds = (): number => Math.floor(Date.now() / 1000);
@@ -179,6 +180,17 @@ const prometheusLabelValuesSchema = z.object({
   regex: z.string().optional().describe('Optional regex pattern to filter label values'),
 });
 
+export const pageContextTool = tool(
+  async () => {
+    const context = await getCurrentContext();
+    return JSON.stringify(context);
+  },
+  {
+    name: 'get_context',
+    description: 'Data about the module where the user is at and the current state of the application',
+  }
+);
+
 // Create Prometheus label values tool (previously metrics tool)
 const prometheusLabelValuesTool = tool(
   async (input): Promise<string> => {
@@ -326,7 +338,9 @@ const prometheusRangeQueryTool = tool(
   }
 );
 
+// Combine all tools from both branches
 export const tools = [
+  pageContextTool,
   listDatasourcesTool,
   prometheusLabelValuesTool,
   prometheusLabelNamesTool,
@@ -339,12 +353,5 @@ export const toolsByName = tools.reduce(
     acc[tool.name] = tool;
     return acc;
   },
-  {} as Record<
-    string,
-    | typeof listDatasourcesTool
-    | typeof prometheusLabelValuesTool
-    | typeof prometheusLabelNamesTool
-    | typeof prometheusInstantQueryTool
-    | typeof prometheusRangeQueryTool
-  >
+  {} as Record<string, (typeof tools)[number]>
 );
