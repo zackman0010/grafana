@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import React, { useRef, useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { Button, Icon, TextArea, useStyles2 } from '@grafana/ui';
+import { Button, Icon, TextArea, useStyles2, JSONFormatter } from '@grafana/ui';
 
 import { useAgent } from '../agent/AgentContext';
 
@@ -19,6 +19,7 @@ export const ChatInterface = ({
   const [messages, isLoading, askMessage] = useAgent();
   const [inputValue, setInputValue] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [expandedJsonMessages, setExpandedJsonMessages] = React.useState<Record<string, boolean>>({});
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -44,6 +45,47 @@ export const ChatInterface = ({
     }
   };
 
+  const toggleJsonExpand = (messageId: string) => {
+    setExpandedJsonMessages((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
+  };
+
+  const renderMessageContent = (message: any) => {
+    // Check if content is an object (but not a React element)
+    if (
+      message.content !== null &&
+      typeof message.content === 'object' &&
+      !React.isValidElement(message.content)
+    ) {
+      const isExpanded = expandedJsonMessages[message.id] || false;
+      return (
+        <div className={styles.jsonContainer}>
+          <div className={styles.jsonHeader}>
+            <span className={styles.jsonLabel}>JSON Object</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              fill="text"
+              icon={isExpanded ? 'angle-down' : 'angle-right'}
+              onClick={() => toggleJsonExpand(message.id)}
+              className={styles.jsonToggle}
+            >
+              {isExpanded ? 'Collapse' : 'Expand'}
+            </Button>
+          </div>
+          <div className={styles.jsonFormatterWrapper}>
+            <JSONFormatter json={message.content} open={isExpanded ? 999 : 0} />
+          </div>
+        </div>
+      );
+    }
+    
+    // Otherwise render as string
+    return <div className={styles.messageText}>{message.content.toString()}</div>;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -66,7 +108,7 @@ export const ChatInterface = ({
                   <Icon name={message.sender === 'user' ? 'user' : 'grafana'} size="sm" />
                   <span>{message.sender === 'user' ? 'You' : 'AI Assistant'}</span>
                 </div>
-                <div className={styles.messageText}>{message.content.toString()}</div>
+                {renderMessageContent(message)}
                 <div className={styles.messageTime}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
@@ -225,6 +267,36 @@ const getStyles = (theme: GrafanaTheme2) => {
       '& p': {
         margin: 0,
       },
+    }),
+    jsonContainer: css({
+      fontSize: theme.typography.size.md,
+      maxWidth: '100%',
+      overflow: 'hidden',
+      border: `1px solid ${theme.colors.border.weak}`,
+      borderRadius: theme.shape.radius.default,
+      background: theme.colors.background.secondary,
+    }),
+    jsonHeader: css({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: theme.spacing(0.5, 1),
+      borderBottom: `1px solid ${theme.colors.border.weak}`,
+      background: theme.colors.background.secondary,
+    }),
+    jsonLabel: css({
+      fontSize: theme.typography.size.sm,
+      fontWeight: theme.typography.fontWeightMedium,
+      color: theme.colors.text.secondary,
+    }),
+    jsonToggle: css({
+      marginLeft: 'auto',
+    }),
+    jsonFormatterWrapper: css({
+      padding: theme.spacing(1),
+      maxHeight: '400px',
+      overflow: 'auto',
+      background: theme.colors.background.primary,
     }),
   };
 };
