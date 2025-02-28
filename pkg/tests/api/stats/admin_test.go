@@ -18,15 +18,14 @@ import (
 	"github.com/grafana/grafana/pkg/services/user/userimpl"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/tests/testinfra"
-	"github.com/grafana/grafana/pkg/tests/testsuite"
 )
 
-func TestMain(m *testing.M) {
-	testsuite.Run(m)
-}
-
 func TestIntegrationAdminStats(t *testing.T) {
+	t.Parallel()
+
 	t.Run("with unified alerting enabled", func(t *testing.T) {
+		t.Parallel()
+
 		url := grafanaSetup(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
 			EnableUnifiedAlerting: true,
@@ -43,6 +42,8 @@ func TestIntegrationAdminStats(t *testing.T) {
 	})
 
 	t.Run("with legacy alerting enabled", func(t *testing.T) {
+		t.Parallel()
+
 		url := grafanaSetup(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: false,
 			EnableUnifiedAlerting: false,
@@ -64,7 +65,6 @@ func grafanaSetup(t *testing.T, opts testinfra.GrafanaOpts) string {
 	t.Helper()
 
 	testinfra.SQLiteIntegrationTest(t)
-	t.Parallel()
 
 	// Setup Grafana and its Database
 	dir, path := testinfra.CreateGrafDir(t, opts)
@@ -96,6 +96,10 @@ func createUser(t *testing.T, db db.DB, cfg *setting.Cfg, cmd user.CreateUserCom
 		quotaService, supportbundlestest.NewFakeBundleService(),
 	)
 	require.NoError(t, err)
+
+	orgID, err := orgService.GetOrCreate(context.TODO(), "")
+	require.NoError(t, err)
+	require.EqualValues(t, cfg.AutoAssignOrgId, orgID)
 
 	u, err := usrSvc.Create(context.Background(), &cmd)
 	require.NoError(t, err)

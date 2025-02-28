@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -33,6 +34,9 @@ import (
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/sql"
 )
+
+// If we don't lock, wire will panic.
+var mx sync.Mutex
 
 // StartGrafana starts a Grafana server.
 // The server address is returned.
@@ -80,7 +84,9 @@ func StartGrafanaEnv(t *testing.T, grafDir, cfgPath string) (addr string, testEn
 		runstore = true
 	}
 
+	mx.Lock()
 	env, err := server.InitializeForTest(t, cfg, serverOpts, apiServerOpts)
+	mx.Unlock()
 	require.NoError(t, err)
 
 	require.NotNil(t, env.Cfg)
