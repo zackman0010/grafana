@@ -1,11 +1,9 @@
 import { ChatAnthropic } from '@langchain/anthropic';
 import { AIMessageChunk, HumanMessage, MessageContent } from '@langchain/core/messages';
-import { tool } from '@langchain/core/tools';
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
-import { getDataSources } from 'app/features/datasources/api';
-
-import { ANTHROPIC_API_KEY } from '../api-key';
+import { ANTHROPIC_API_KEY } from './api-key';
+import { tools, toolsByName } from './tools';
 
 // Define the message type
 export interface ChatMessage {
@@ -17,31 +15,10 @@ export interface ChatMessage {
 
 // Initialize the LLM
 const llm = new ChatAnthropic({
-  model: 'claude-3-5-sonnet-20240620',
+  model: 'claude-3-7-sonnet-20250219',
   temperature: 0,
   apiKey: ANTHROPIC_API_KEY,
 });
-
-// Define tools
-const listDatasourcesTool = tool(
-  async () => {
-    const datasources = await getDataSources();
-    return JSON.stringify(datasources);
-  },
-  {
-    name: 'list_datasources',
-    description: 'List all datasources',
-  }
-);
-
-const tools = [listDatasourcesTool];
-const toolsByName = tools.reduce(
-  (acc, tool) => {
-    acc[tool.name] = tool;
-    return acc;
-  },
-  {} as Record<string, typeof listDatasourcesTool>
-);
 
 // Create the agent
 const agent = llm.bindTools(tools);

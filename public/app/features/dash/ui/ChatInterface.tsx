@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Button, Icon, TextArea, useStyles2 } from '@grafana/ui';
 
-import { useAgent } from '../agent/context';
+import { useAgent } from '../agent/AgentContext';
 
 export interface ChatInterfaceProps {
   placeholder?: string;
