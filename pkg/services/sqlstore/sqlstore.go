@@ -408,29 +408,12 @@ func (ss *SQLStore) RecursiveQueriesAreSupported() (bool, error) {
 	return *ss.recursiveQueriesAreSupported, nil
 }
 
-var testSQLStoreSetup = false
-var testSQLStore *SQLStore
-var testSQLStoreMutex sync.Mutex
-var testSQLStoreCleanup []func()
-
 // InitTestDBOpt contains options for InitTestDB.
 type InitTestDBOpt struct {
 	// EnsureDefaultOrgAndUser flags whether to ensure that default org and user exist.
 	EnsureDefaultOrgAndUser bool
 	FeatureFlags            []string
 	Cfg                     *setting.Cfg
-}
-
-// InitTestDBWithMigration initializes the test DB given custom migrations.
-func InitTestDBWithMigration(t sqlutil.ITestDB, migration registry.DatabaseMigrator, opts ...InitTestDBOpt) *SQLStore {
-	t.Helper()
-	features := getFeaturesForTesting(opts...)
-	cfg := getCfgForTesting(opts...)
-	store, err := initTestDB(t, cfg, features, migration, opts...)
-	if err != nil {
-		t.Fatalf("failed to initialize sql store: %s", err)
-	}
-	return store
 }
 
 // InitTestDB initializes the test DB.
@@ -444,37 +427,6 @@ func InitTestDB(t sqlutil.ITestDB, opts ...InitTestDBOpt) (*SQLStore, *setting.C
 		t.Fatalf("failed to initialize sql store: %s", err)
 	}
 	return store, store.cfg
-}
-
-func SetupTestDB() {
-	testSQLStoreMutex.Lock()
-	defer testSQLStoreMutex.Unlock()
-	if testSQLStoreSetup {
-		fmt.Printf("ERROR: Test DB already set up, SetupTestDB called twice\n")
-		os.Exit(1)
-	}
-	testSQLStoreSetup = true
-}
-
-func CleanupTestDB() {
-	testSQLStoreMutex.Lock()
-	defer testSQLStoreMutex.Unlock()
-	if !testSQLStoreSetup {
-		fmt.Printf("ERROR: Test DB not set up, SetupTestDB not called\n")
-		os.Exit(1)
-	}
-	if testSQLStore != nil {
-		if err := testSQLStore.GetEngine().Close(); err != nil {
-			fmt.Printf("Failed to close testSQLStore engine: %s\n", err)
-		}
-
-		for _, cleanup := range testSQLStoreCleanup {
-			cleanup()
-		}
-
-		testSQLStoreCleanup = []func(){}
-		testSQLStore = nil
-	}
 }
 
 func getCfgForTesting(opts ...InitTestDBOpt) *setting.Cfg {
@@ -506,119 +458,72 @@ func initTestDB(t sqlutil.ITestDB, testCfg *setting.Cfg,
 	features featuremgmt.FeatureToggles,
 	migration registry.DatabaseMigrator,
 	opts ...InitTestDBOpt) (*SQLStore, error) {
-	testSQLStoreMutex.Lock()
-	defer testSQLStoreMutex.Unlock()
-	if !testSQLStoreSetup {
-		t.Fatalf(`
-
-ERROR: Test DB not set up, are you missing TestMain?
-
-https://github.com/grafana/grafana/blob/main/contribute/backend/style-guide.md
-
-Example:
-
-package mypkg
-
-import (
-	"testing"
-
-	"github.com/grafana/grafana/pkg/tests/testsuite"
-)
-
-func TestMain(m *testing.M) {
-	testsuite.Run(m)
-}
-
-`)
-		os.Exit(1)
-	}
-
 	if len(opts) == 0 {
 		opts = []InitTestDBOpt{{EnsureDefaultOrgAndUser: false, FeatureFlags: []string{}}}
 	}
 
-	if testSQLStore == nil {
-		dbType := sqlutil.GetTestDBType()
+	dbType := sqlutil.GetTestDBType()
 
-		// set test db config
-		cfg := setting.NewCfg()
-		// nolint:staticcheck
-		cfg.IsFeatureToggleEnabled = features.IsEnabledGlobally
+	// set test db config
+	cfg := setting.NewCfg()
+	// nolint:staticcheck
+	cfg.IsFeatureToggleEnabled = features.IsEnabledGlobally
 
-		sec, err := cfg.Raw.NewSection("database")
-		if err != nil {
-			return nil, err
-		}
+	sec, err := cfg.Raw.NewSection("database")
+	if err != nil {
+		return nil, err
+	}
 
-		if _, err := sec.NewKey("type", dbType); err != nil {
-			return nil, err
-		}
+	if _, err := sec.NewKey("type", dbType); err != nil {
+		return nil, err
+	}
 
-		testDB, err := sqlutil.GetTestDB(dbType)
-		if err != nil {
-			return nil, err
-		}
+	testDB, err := sqlutil.GetTestDB(dbType)
+	if err != nil {
+		return nil, err
+	}
 
-		if _, err := sec.NewKey("connection_string", testDB.ConnStr); err != nil {
-			return nil, err
-		}
-		if _, err := sec.NewKey("path", testDB.Path); err != nil {
-			return nil, err
-		}
+	if _, err := sec.NewKey("connection_string", testDB.ConnStr); err != nil {
+		return nil, err
+	}
+	if _, err := sec.NewKey("path", testDB.Path); err != nil {
+		return nil, err
+	}
 
-		testSQLStoreCleanup = append(testSQLStoreCleanup, testDB.Cleanup)
+	t.Cleanup(testDB.Cleanup)
 
-		// useful if you already have a database that you want to use for tests.
-		// cannot just set it on testSQLStore as it overrides the config in Init
-		if _, present := os.LookupEnv("SKIP_MIGRATIONS"); present {
-			if _, err := sec.NewKey("skip_migrations", "true"); err != nil {
-				return nil, err
-			}
-		}
-
-		if testCfg.Raw.HasSection("database") {
-			testSec, err := testCfg.Raw.GetSection("database")
-			if err == nil {
-				// copy from testCfg to the Cfg keys that do not exist
-				for _, k := range testSec.Keys() {
-					if sec.HasKey(k.Name()) {
-						continue
-					}
-					if _, err := sec.NewKey(k.Name(), k.Value()); err != nil {
-						return nil, err
-					}
+	if testCfg.Raw.HasSection("database") {
+		testSec, err := testCfg.Raw.GetSection("database")
+		if err == nil {
+			// copy from testCfg to the Cfg keys that do not exist
+			for _, k := range testSec.Keys() {
+				if sec.HasKey(k.Name()) {
+					continue
+				}
+				if _, err := sec.NewKey(k.Name(), k.Value()); err != nil {
+					return nil, err
 				}
 			}
 		}
-
-		// need to get engine to clean db before we init
-		engine, err := xorm.NewEngine(dbType, sec.Key("connection_string").String())
-		if err != nil {
-			return nil, err
-		}
-
-		engine.DatabaseTZ = time.UTC
-		engine.TZLocation = time.UTC
-
-		tracer := tracing.InitializeTracerForTest()
-		bus := bus.ProvideBus(tracer)
-		testSQLStore, err = newSQLStore(cfg, engine, features, migration, bus, tracer, opts...)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := testSQLStore.Migrate(false); err != nil {
-			return nil, err
-		}
 	}
 
-	// nolint:staticcheck
-	testSQLStore.cfg.IsFeatureToggleEnabled = features.IsEnabledGlobally
-
-	if err := testSQLStore.dialect.TruncateDBTables(testSQLStore.GetEngine()); err != nil {
+	// need to get engine to clean db before we init
+	engine, err := xorm.NewEngine(dbType, sec.Key("connection_string").String())
+	if err != nil {
 		return nil, err
 	}
-	if err := testSQLStore.Reset(); err != nil {
+
+	engine.DatabaseTZ = time.UTC
+	engine.TZLocation = time.UTC
+
+	tracer := tracing.InitializeTracerForTest()
+	bus := bus.ProvideBus(tracer)
+	testSQLStore, err := newSQLStore(cfg, engine, features, migration, bus, tracer, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := testSQLStore.Migrate(false); err != nil {
 		return nil, err
 	}
 

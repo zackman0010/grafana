@@ -41,7 +41,7 @@ func StartGrafana(t *testing.T, grafDir, cfgPath string) (string, db.DB) {
 	return addr, env.SQLStore
 }
 
-func StartGrafanaEnv(t *testing.T, grafDir, cfgPath string) (string, *server.TestEnv) {
+func StartGrafanaEnv(t *testing.T, grafDir, cfgPath string) (addr string, testEnv *server.TestEnv) {
 	t.Helper()
 	ctx := context.Background()
 
@@ -132,7 +132,7 @@ func StartGrafanaEnv(t *testing.T, grafDir, cfgPath string) (string, *server.Tes
 	})
 
 	// Wait for Grafana to be ready
-	addr := listener.Addr().String()
+	addr = listener.Addr().String()
 	resp, err := http.Get(fmt.Sprintf("http://%s/api/health", addr))
 	require.NoError(t, err)
 	require.NotNil(t, resp)
@@ -151,7 +151,7 @@ func StartGrafanaEnv(t *testing.T, grafDir, cfgPath string) (string, *server.Tes
 // The log by default is muted in the regression test, to activate it, pass option EnableLog = true
 //
 //nolint:gocyclo
-func CreateGrafDir(t *testing.T, opts GrafanaOpts) (string, string) {
+func CreateGrafDir(t *testing.T, opts GrafanaOpts) (grafanaDir string, cfgPath string) {
 	t.Helper()
 
 	tmpDir := t.TempDir()
@@ -493,7 +493,7 @@ func CreateGrafDir(t *testing.T, opts GrafanaOpts) (string, string) {
 	_, err = dbSection.NewKey("max_idle_conn", "2")
 	require.NoError(t, err)
 
-	cfgPath := filepath.Join(cfgDir, "test.ini")
+	cfgPath = filepath.Join(cfgDir, "test.ini")
 	err = cfg.SaveTo(cfgPath)
 	require.NoError(t, err)
 

@@ -28,6 +28,8 @@ import (
 
 func TestIntegrationAlertmanagerConfiguration(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
+
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,
 		EnableUnifiedAlerting: true,
@@ -275,6 +277,7 @@ func TestIntegrationAlertmanagerConfiguration(t *testing.T) {
 
 func TestIntegrationAlertmanagerConfigurationIsTransactional(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting:                 true,
@@ -393,6 +396,7 @@ func TestIntegrationAlertmanagerConfigurationIsTransactional(t *testing.T) {
 
 func TestIntegrationAlertmanagerConfigurationPersistSecrets(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,

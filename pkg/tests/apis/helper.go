@@ -65,6 +65,7 @@ type K8sTestHelper struct {
 
 func NewK8sTestHelper(t *testing.T, opts testinfra.GrafanaOpts) *K8sTestHelper {
 	t.Helper()
+	t.Parallel()
 
 	// Use GRPC server when not configured
 	if opts.APIServerStorageType == "" && opts.GRPCServerAddress == "" {

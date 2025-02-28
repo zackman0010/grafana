@@ -32,6 +32,7 @@ var respModel apimodels.UpdateRuleGroupResponse
 
 func TestIntegrationPrometheusRules(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,
@@ -355,6 +356,7 @@ func TestIntegrationPrometheusRules(t *testing.T) {
 
 func TestIntegrationPrometheusRulesFilterByDashboard(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		EnableFeatureToggles: []string{"ngalert"},
@@ -677,6 +679,7 @@ func TestIntegrationPrometheusRulesFilterByDashboard(t *testing.T) {
 
 func TestIntegrationPrometheusRulesPermissions(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,

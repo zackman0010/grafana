@@ -64,6 +64,7 @@ func grafanaSetup(t *testing.T, opts testinfra.GrafanaOpts) string {
 	t.Helper()
 
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	// Setup Grafana and its Database
 	dir, path := testinfra.CreateGrafDir(t, opts)

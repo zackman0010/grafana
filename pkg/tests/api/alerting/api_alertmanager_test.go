@@ -26,6 +26,7 @@ import (
 
 func TestIntegrationAMConfigAccess(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,
@@ -403,6 +404,8 @@ func TestIntegrationAMConfigAccess(t *testing.T) {
 
 func TestIntegrationAlertmanagerCreateSilence(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
+
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,
 		EnableUnifiedAlerting: true,
@@ -557,6 +560,7 @@ func TestIntegrationAlertmanagerCreateSilence(t *testing.T) {
 
 func TestIntegrationAlertmanagerStatus(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	// Setup Grafana and its Database
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{

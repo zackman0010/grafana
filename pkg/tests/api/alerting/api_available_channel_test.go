@@ -17,6 +17,7 @@ import (
 
 func TestIntegrationAvailableChannels(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 		DisableLegacyAlerting: true,

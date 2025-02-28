@@ -41,8 +41,10 @@ import (
 
 func TestIntegrationTestReceivers(t *testing.T) {
 	testinfra.SQLiteIntegrationTest(t)
+	t.Parallel()
 
 	t.Run("assert no receivers returns 400 Bad Request", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -76,6 +78,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert working receiver returns OK", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -159,6 +162,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert working receiver with new secure settings returns OK", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -239,6 +243,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert working receiver with existing secure settings returns OK", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -340,6 +345,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert invalid receiver returns 400 Bad Request", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -419,6 +425,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert timed out receiver returns 408 Request Timeout", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,
@@ -506,6 +513,7 @@ func TestIntegrationTestReceivers(t *testing.T) {
 	})
 
 	t.Run("assert multiple different errors returns 207 Multi Status", func(t *testing.T) {
+		t.Parallel()
 		// Setup Grafana and its Database
 		dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
 			DisableLegacyAlerting: true,

@@ -46,6 +46,7 @@ func TestIntegrationDashboardQuota(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
+	t.Parallel()
 
 	// enable quota and set low dashboard quota
 	// Setup Grafana and its Database
@@ -139,6 +140,7 @@ func TestIntegrationUpdatingProvisionionedDashboards(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
+	t.Parallel()
 
 	// Setup Grafana and its Database
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{
@@ -314,6 +316,7 @@ func TestIntegrationCreate(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
+	t.Parallel()
 
 	// Setup Grafana and its Database
 	dir, path := testinfra.CreateGrafDir(t, testinfra.GrafanaOpts{

@@ -3,13 +3,9 @@ package testsuite
 import (
 	"os"
 	"testing"
-
-	"github.com/grafana/grafana/pkg/infra/db"
 )
 
+// Deprecated: the testsuite package does not do anything anymore.
 func Run(m *testing.M) {
-	db.SetupTestDB()
-	code := m.Run()
-	db.CleanupTestDB()
-	os.Exit(code)
+	os.Exit(m.Run())
 }
