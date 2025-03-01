@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Button, Icon, TextArea, useStyles2, JSONFormatter } from '@grafana/ui';
 
-import { useAgent } from '../agent/AgentContext';
+import { useDashAgent } from '../agent';
 
 export interface ChatInterfaceProps {
   placeholder?: string;
@@ -16,7 +16,7 @@ export const ChatInterface = ({
   title = 'AI Assistant',
 }: ChatInterfaceProps) => {
   const styles = useStyles2(getStyles);
-  const [messages, isLoading, askMessage] = useAgent();
+  const [messages, isLoading, askMessage] = useDashAgent();
   const [inputValue, setInputValue] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [expandedJsonMessages, setExpandedJsonMessages] = React.useState<Record<string, boolean>>({});
@@ -54,11 +54,7 @@ export const ChatInterface = ({
 
   const renderMessageContent = (message: any) => {
     // Check if content is an object (but not a React element)
-    if (
-      message.content !== null &&
-      typeof message.content === 'object' &&
-      !React.isValidElement(message.content)
-    ) {
+    if (message.content !== null && typeof message.content === 'object' && !React.isValidElement(message.content)) {
       const isExpanded = expandedJsonMessages[message.id] || false;
       return (
         <div className={styles.jsonContainer}>
@@ -81,7 +77,7 @@ export const ChatInterface = ({
         </div>
       );
     }
-    
+
     // Otherwise render as string
     return <div className={styles.messageText}>{message.content.toString()}</div>;
   };

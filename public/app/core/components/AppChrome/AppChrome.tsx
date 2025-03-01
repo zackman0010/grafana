@@ -10,7 +10,6 @@ import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
 import { Trans } from 'app/core/internationalization';
 import store from 'app/core/store';
 import { CommandPalette } from 'app/features/commandPalette/CommandPalette';
-import { ChatInterface } from 'app/features/dash/ui';
 import { ScopesDashboards, useScopesDashboardsState } from 'app/features/scopes';
 
 import { AppChromeMenu } from './AppChromeMenu';
@@ -124,10 +123,6 @@ export function AppChrome({ children }: Props) {
             })}
             id="pageContent"
           >
-            {/* Chat container on the right */}
-            <div className={styles.chatContainer}>
-              <ChatInterface />
-            </div>
             {children}
           </main>
         </div>

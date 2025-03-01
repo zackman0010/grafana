@@ -1,11 +1,12 @@
 import { css } from '@emotion/css';
+import { Resizable } from 're-resizable';
 import { useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { ChatMessage, useAgent } from '../agent/AgentContext';
+import { ChatMessage, useDashAgent } from '../agent';
 
 import { DashInput } from './DashInput';
 import { DashMessage } from './DashMessage';
@@ -62,34 +63,23 @@ export class DashChat extends SceneObjectBase<DashChatState> {
 function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
   const styles = useStyles2(getStyles);
   const { messages, input } = model.useState();
-  const [agentMessages, agentLoading, agentAskMessage] = useAgent();
+  const [agentMessages, agentLoading, agentAskMessage] = useDashAgent();
 
-  useEffect(() => {
-    model.setAskMessage(agentAskMessage);
-  }, [agentAskMessage, model]);
-
-  useEffect(() => {
-    model.updateMessages(agentMessages);
-  }, [agentMessages, model]);
-
-  useEffect(() => {
-    model.setLoading(agentLoading);
-  }, [agentLoading, model]);
+  useEffect(() => model.setAskMessage(agentAskMessage), [agentAskMessage, model]);
+  useEffect(() => model.updateMessages(agentMessages), [agentMessages, model]);
+  useEffect(() => model.setLoading(agentLoading), [agentLoading, model]);
 
   return (
-    <div className={styles.container}>
+    <Resizable className={styles.container} defaultSize={{ height: '500px', width: '600px' }}>
       <messages.Component model={messages} />
       <input.Component model={input} />
-    </div>
+    </Resizable>
   );
 }
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
-    width: theme.spacing(72),
-    height: theme.spacing(60),
-    margin: '0 auto',
-    backgroundColor: '#212124',
+    backgroundColor: theme.colors.background.primary,
     borderRadius: theme.shape.radius.default,
     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
     display: 'flex',

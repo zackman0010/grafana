@@ -1,5 +1,5 @@
 // Create a prompt template with instructions to format the response as JSON
-export const SystemPromptTemplate = `You are a helpful assistant for Grafana. You can help users understand their data and visualizations.
+export const SYSTEM_PROMPT_TEMPLATE = `You are a helpful assistant for Grafana. You can help users understand their data and visualizations.
 
     First use tools to gather information if needed, then format your final response as a JSON object with the following structure:
     {{
