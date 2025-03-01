@@ -54,7 +54,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     flex: 1,
     overflowY: 'auto',
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     backgroundColor: theme.colors.background.primary,
   }),
   empty: css({

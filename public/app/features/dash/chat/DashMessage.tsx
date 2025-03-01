@@ -1,5 +1,6 @@
 import { css, keyframes } from '@emotion/css';
-import { MessageContent } from '@langchain/core/messages';
+import { MessageContent, MessageContentComplex } from '@langchain/core/messages';
+import { useCallback } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
@@ -19,10 +20,42 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
   const { content, sender, timestamp } = model.useState();
   const styles = useStyles2(getStyles, sender);
 
+  const renderString = useCallback(
+    (content: string, key?: string | number) => (
+      <div className={styles.content} key={key?.toString()}>
+        {content}
+      </div>
+    ),
+    [styles.content]
+  );
+
+  const renderImage = useCallback(
+    (imageUrl: string, key?: string | number) => <img src={imageUrl} key={key?.toString()} />,
+    []
+  );
+
+  const renderTool = useCallback((content: MessageContentComplex, key?: string | number) => null, []);
+
   return (
     <div className={styles.row}>
       <div className={styles.message}>
-        <div className={styles.content}>{content.toString()}</div>
+        {typeof content === 'string'
+          ? renderString(content)
+          : content.map((currentContent, idx) => {
+              switch (currentContent.type) {
+                case 'text':
+                  return renderString(currentContent.text, idx);
+
+                case 'image_url':
+                  return renderImage(currentContent.image_url, idx);
+
+                case 'tool_use':
+                  return renderTool(currentContent, idx);
+
+                default:
+                  return renderString(`I don't know what to do with this: ${JSON.stringify(currentContent)}`);
+              }
+            })}
         <div className={styles.time}>{timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
       </div>
     </div>
@@ -65,6 +98,7 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => 
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
       color: theme.colors.text.maxContrast,
       background: colors.color,
+      whiteSpace: 'pre-wrap',
 
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {
         transition: 'all 0.2s ease',
@@ -76,6 +110,7 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => 
     }),
     content: css({
       ...theme.typography.body,
+      whiteSpace: 'pre-wrap',
     }),
     time: css({
       marginTop: theme.spacing(1),
