@@ -80,8 +80,8 @@ const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     display: 'flex',
     flexDirection: 'column',
-    background: '#212124',
-    borderTop: '1px solid #2c3235',
+    background: theme.colors.background.elevated,
+    borderTop: `1px solid ${theme.colors.border.medium}`,
   }),
   row: css({
     display: 'flex',

@@ -1,5 +1,4 @@
 import { css } from '@emotion/css';
-import { Resizable } from 're-resizable';
 import { useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
@@ -9,7 +8,7 @@ import { useStyles2 } from '@grafana/ui';
 import { ChatMessage, useDashAgent } from '../agent';
 
 import { DashInput } from './DashInput';
-import { DashMessage } from './DashMessage';
+import { DashMessage } from './DashMessage/DashMessage';
 import { DashMessages } from './DashMessages';
 
 export interface DashChatState extends SceneObjectState {
@@ -70,15 +69,17 @@ function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
   useEffect(() => model.setLoading(agentLoading), [agentLoading, model]);
 
   return (
-    <Resizable className={styles.container} defaultSize={{ height: '500px', width: '600px' }}>
+    <div className={styles.container}>
       <messages.Component model={messages} />
       <input.Component model={input} />
-    </Resizable>
+    </div>
   );
 }
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    height: '100%',
+    width: '100%',
     backgroundColor: theme.colors.background.primary,
     borderRadius: theme.shape.radius.default,
     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',

@@ -5,7 +5,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { DashMessage } from './DashMessage';
+import { DashMessage } from './DashMessage/DashMessage';
 
 interface DashMessagesState extends SceneObjectState {
   messages: DashMessage[];
@@ -35,7 +35,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   useLayoutEffect(() => {
     setTimeout(() => {
       scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    });
+    }, 100);
   }, [messages]);
 
   return (
@@ -52,6 +52,8 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    display: 'flex',
+    flexDirection: 'column',
     flex: 1,
     overflowY: 'auto',
     padding: theme.spacing(2),
@@ -62,7 +64,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
+    width: '100%',
     textAlign: 'center',
-    padding: theme.spacing(2),
   }),
 });

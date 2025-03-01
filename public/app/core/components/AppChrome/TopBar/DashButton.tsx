@@ -1,37 +1,40 @@
 import { css } from '@emotion/css';
 import {
+  FloatingArrow,
   FloatingFocusManager,
+  arrow,
   autoUpdate,
   flip,
-  offset as floatingUIOffset,
+  offset,
   shift,
   useClick,
   useDismiss,
   useFloating,
   useInteractions,
 } from '@floating-ui/react';
+import { Resizable } from 're-resizable';
 import { useMemo, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { Portal, ToolbarButton, useStyles2 } from '@grafana/ui';
+import { Portal, ToolbarButton, useStyles2, useTheme2 } from '@grafana/ui';
 import { DashChat } from 'app/features/dash/chat/DashChat';
 
 export const DashButton = () => {
   const dashChat = useMemo(() => new DashChat(), []);
   const [isOpened, setIsOpened] = useState(false);
   const transitionRef = useRef(null);
+  const theme = useTheme2();
 
+  const arrowRef = useRef(null);
   const { context, refs, floatingStyles } = useFloating({
     open: isOpened,
-    placement: 'bottom',
+    placement: 'bottom-end',
     onOpenChange: setIsOpened,
     whileElementsMounted: autoUpdate,
     middleware: [
-      floatingUIOffset({
-        mainAxis: 8,
-        crossAxis: 0,
-      }),
+      arrow({ element: arrowRef }),
+      offset({ mainAxis: 8, crossAxis: 0 }),
       flip({
         fallbackAxisSideDirection: 'end',
         crossAxis: false,
@@ -54,6 +57,7 @@ export const DashButton = () => {
         <Portal>
           <FloatingFocusManager context={context}>
             <div ref={refs.setFloating} style={floatingStyles}>
+              <FloatingArrow ref={arrowRef} context={context} fill={theme.colors.border.strong} />
               <CSSTransition
                 nodeRef={transitionRef}
                 appear={true}
@@ -62,9 +66,9 @@ export const DashButton = () => {
                 classNames={animationStyles}
               >
                 <div ref={transitionRef}>
-                  <div {...getFloatingProps()}>
+                  <Resizable {...getFloatingProps()} defaultSize={{ height: '500px', width: '600px' }}>
                     <dashChat.Component model={dashChat} />
-                  </div>
+                  </Resizable>
                 </div>
               </CSSTransition>
             </div>
