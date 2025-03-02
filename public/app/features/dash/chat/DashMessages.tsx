@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { findLastIndex } from 'lodash';
 import { useMemo, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
@@ -8,7 +9,7 @@ import { useStyles2 } from '@grafana/ui';
 import { ChatMessage } from '../agent';
 
 import { DashMessage } from './DashMessage/DashMessage';
-import { getIndicators } from './utils';
+import { getIndicators, getInput } from './utils';
 
 interface DashMessagesState extends SceneObjectState {
   messages: DashMessage[];
@@ -27,6 +28,16 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
         }),
       ],
     });
+
+    this._keyDownEventListener = this._keyDownEventListener.bind(this);
+
+    this.addActivationHandler(() => this._activationHandler());
+  }
+
+  private _activationHandler() {
+    return () => {
+      this.exitSelectMode(false);
+    };
   }
 
   public updateMessages(messages: ChatMessage[]) {
@@ -34,8 +45,9 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
       messages:
         messages.length > 0
           ? messages.map(
-              ({ id, content, sender, timestamp }) =>
-                this._getMessageByKey(id) ?? new DashMessage({ key: id, sender, timestamp, content })
+              ({ id: key, content, sender, timestamp }) =>
+                this.state.messages.find((message) => message.state.key === key) ??
+                new DashMessage({ key, sender, timestamp, content })
             )
           : [
               new DashMessage({
@@ -47,23 +59,118 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     });
   }
 
-  private _getMessageByKey(key: string): DashMessage | undefined {
-    return this.state.messages.find((message) => message.state.key === key);
+  public enterSelectMode() {
+    getInput(this).blur();
+    this.exitSelectMode(false);
+
+    const [message] = this._findUserMessage(this.state.messages);
+    this._enterMessageSelectMode(message);
+  }
+
+  public selectPreviousMessage() {
+    const [, selectedIndex] = this._findSelectedMessage(this.state.messages);
+
+    this.exitSelectMode(false);
+
+    if (selectedIndex <= 0) {
+      getInput(this).focus();
+      this.forceRender();
+      return;
+    }
+
+    const [message] = this._findUserMessage(this.state.messages.slice(0, selectedIndex - 1));
+    this._enterMessageSelectMode(message);
+  }
+
+  public selectNextMessage() {
+    const [, selectedIndex] = this._findSelectedMessage(this.state.messages);
+
+    this.exitSelectMode(false);
+
+    if (selectedIndex === -1 || selectedIndex + 1 === this.state.messages.length) {
+      getInput(this).focus();
+      this.forceRender();
+      return;
+    }
+
+    const [message] = this._findUserMessage(this.state.messages.slice(selectedIndex + 1, this.state.messages.length));
+    this._enterMessageSelectMode(message);
+  }
+
+  public exitSelectMode(withSet: boolean) {
+    if (withSet) {
+      const [message] = this._findSelectedMessage(this.state.messages);
+      getInput(this).updateMessage(String(message?.state.content ?? ''), false);
+    }
+
+    this.state.messages.forEach((message) => message.setSelected(false));
+    document.body.removeEventListener('keydown', this._keyDownEventListener);
+  }
+
+  private _findSelectedMessage(messages: DashMessage[]): [DashMessage | undefined, number] {
+    const index = findLastIndex(messages, (message) => message.state.selected);
+    return [messages[index], index];
+  }
+
+  private _findUserMessage(messages: DashMessage[]): [DashMessage | undefined, number] {
+    const index = findLastIndex(messages, (message) => message.state.sender === 'user');
+    return [messages[index], index];
+  }
+
+  private _enterMessageSelectMode(message?: DashMessage) {
+    if (!message) {
+      getInput(this).focus();
+      this.forceRender();
+      return;
+    }
+
+    message.setSelected(true);
+    document.body.addEventListener('keydown', this._keyDownEventListener);
+  }
+
+  private _keyDownEventListener(evt: KeyboardEvent) {
+    switch (evt.key) {
+      case 'ArrowUp':
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.selectPreviousMessage();
+        break;
+
+      case 'ArrowDown':
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.selectNextMessage();
+        break;
+
+      case 'Escape':
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.exitSelectMode(false);
+        getInput(this).focus();
+        this.forceRender();
+        break;
+
+      case 'Enter':
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.exitSelectMode(true);
+        getInput(this).focus();
+        this.forceRender();
+        break;
+    }
   }
 }
 
 function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const styles = useStyles2(getStyles);
   const { messages } = model.useState();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLInputElement>(null);
   const indicators = useMemo(() => getIndicators(model), [model]);
 
   // Workaround to force scroll to bottom when typing indicator appears
   indicators.useState();
 
-  setTimeout(() => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, 100);
+  setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
   return (
     <div className={styles.container}>
@@ -71,7 +178,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
         <message.Component model={message} key={message.state.key!} />
       ))}
       <indicators.Component model={indicators} />
-      <div ref={scrollRef}></div>
+      <div ref={scrollRef} />
     </div>
   );
 }

@@ -10,14 +10,15 @@ interface Props {
   children: ReactNode;
   colors: ReturnType<typeof getTagColor>;
   containerClassName: string;
+  selected: boolean;
   sender: DashMessageState['sender'];
   time: string;
 
   hideTime?: boolean;
 }
 
-export const Bubble = ({ children, colors, containerClassName, sender, time, hideTime }: Props) => {
-  const styles = useStyles2(getStyles, colors, containerClassName, sender);
+export const Bubble = ({ children, colors, containerClassName, selected, sender, time, hideTime }: Props) => {
+  const styles = useStyles2(getStyles, colors, containerClassName, selected, sender);
 
   return (
     <div className={styles.container}>
@@ -31,12 +32,13 @@ const getStyles = (
   theme: GrafanaTheme2,
   colors: ReturnType<typeof getTagColor>,
   containerClassName: string,
+  selected: boolean,
   sender: DashMessageState['sender']
 ) => ({
   container: css({
     maxWidth: '75%',
     padding: theme.spacing(1),
-    border: `1px solid ${colors.borderColor}`,
+    border: selected ? `3px dashed ${colors.borderColor}` : `1px solid ${colors.borderColor}`,
     borderRadius: theme.spacing(1),
     borderBottomRightRadius: sender === 'user' ? 0 : theme.spacing(1),
     borderBottomLeftRadius: sender === 'ai' ? 0 : theme.spacing(1),

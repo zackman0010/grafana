@@ -4,7 +4,6 @@ import {
   FloatingFocusManager,
   arrow,
   autoUpdate,
-  flip,
   offset,
   shift,
   useClick,
@@ -32,16 +31,7 @@ export const DashButton = () => {
     placement: 'bottom-end',
     onOpenChange: setIsOpened,
     whileElementsMounted: autoUpdate,
-    middleware: [
-      arrow({ element: arrowRef }),
-      offset({ mainAxis: 8, crossAxis: 0 }),
-      flip({
-        fallbackAxisSideDirection: 'end',
-        crossAxis: false,
-        boundary: document.body,
-      }),
-      shift(),
-    ],
+    middleware: [arrow({ element: arrowRef }), offset({ mainAxis: 8, crossAxis: 0 }), shift()],
   });
 
   const click = useClick(context);

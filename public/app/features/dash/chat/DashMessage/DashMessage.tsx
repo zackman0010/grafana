@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/css';
 import { MessageContent, MessageContentComplex } from '@langchain/core/messages';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
@@ -18,22 +18,40 @@ export interface DashMessageState extends SceneObjectState {
   content: MessageContent | { __isIndicator: true };
   sender: 'user' | 'ai' | 'system';
   timestamp: Date;
+  selected: boolean;
 }
 
 export class DashMessage extends SceneObjectBase<DashMessageState> {
   public static Component = DashMessageRenderer;
+
+  public constructor(state: Omit<DashMessageState, 'selected'>) {
+    super({ ...state, selected: false });
+  }
+
+  public setSelected(selected: boolean) {
+    if (selected !== this.state.selected) {
+      this.setState({ selected });
+    }
+  }
 }
 
 function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
-  const { content, sender, timestamp } = model.useState();
+  const { content, sender, timestamp, selected } = model.useState();
   const colors = useMemo(() => getTagColor(sender === 'user' ? 7 : sender === 'ai' ? 11 : 8), [sender]);
   const styles = useStyles2(getStyles, sender);
   const settings = useMemo(() => getSettings(model), [model]).useState();
   const time = useMemo(() => timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), [timestamp]);
   const commonBubbleProps = useMemo(
-    () => ({ colors, containerClassName: styles.container, sender, time }),
-    [colors, styles.container, sender, time]
+    () => ({ colors, containerClassName: styles.container, selected, sender, time }),
+    [colors, styles.container, selected, sender, time]
   );
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selected) {
+      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selected]);
 
   const renderText = (content: string, key?: string | number) => (
     <Bubble {...commonBubbleProps} key={key}>
@@ -49,7 +67,7 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
     ) : null;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={containerRef}>
       <div className={styles.messages}>
         {typeof content === 'string' ? (
           renderText(content)

@@ -1,12 +1,12 @@
 import { css } from '@emotion/css';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, TextArea, useStyles2 } from '@grafana/ui';
 
 import { DashIndicators } from './DashIndicators';
-import { getIndicators } from './utils';
+import { getIndicators, getMessages } from './utils';
 
 interface DashInputState extends SceneObjectState {
   message: string;
@@ -19,6 +19,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _askMessage: (message: string) => Promise<void> = () => Promise.resolve();
 
   public indicators?: DashIndicators;
+  private _inputRef: HTMLTextAreaElement | null = null;
 
   public constructor() {
     super({ message: '' });
@@ -39,16 +40,28 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     };
   }
 
+  public setInputRef(ref: HTMLTextAreaElement | null) {
+    this._inputRef = ref;
+  }
+
+  public focus() {
+    this._inputRef?.focus();
+  }
+
+  public blur() {
+    this._inputRef?.blur();
+  }
+
   public updateAskMessage(askMessage: (message: string) => Promise<void>) {
     this._askMessage = askMessage;
   }
 
-  public getMessage(): string {
-    return this.state.message;
-  }
-
-  public updateMessage(message: string) {
-    this.indicators?.setTyping(true);
+  public updateMessage(message: string, isUserInput: boolean) {
+    if (isUserInput) {
+      this.indicators?.setTyping(true);
+    } else {
+      this._inputRef?.focus();
+    }
 
     if (this._clearTypingFlagTimeout) {
       clearTimeout(this._clearTypingFlagTimeout);
@@ -68,14 +81,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       this._clearTypingFlagTimeout = null;
     }
 
-    const message = this.getMessage().trim();
+    const message = this.state.message.trim();
 
     if (!message) {
       return;
     }
 
     this.indicators?.setTyping(false);
-    this.setState({ message: '' });
+    this.updateMessage('', false);
 
     this._askMessage(message);
   }
@@ -86,9 +99,6 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const { message } = model.useState();
   const { loading } = model.indicators!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => inputRef.current?.focus(), [message]);
 
   return (
     <div className={styles.container} ref={containerRef}>
@@ -97,16 +107,26 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
       <div className={styles.row}>
         <TextArea
           autoFocus
-          ref={inputRef}
+          ref={(ref) => model.setInputRef(ref)}
           value={message}
           readOnly={loading}
           placeholder="Type your message here"
-          onChange={(evt) => model.updateMessage(evt.currentTarget.value)}
+          onChange={(evt) => model.updateMessage(evt.currentTarget.value, true)}
           onKeyDown={(evt) => {
-            if (evt.key === 'Enter' && !evt.shiftKey) {
-              evt.preventDefault();
-              evt.stopPropagation();
-              model.sendMessage();
+            switch (evt.key) {
+              case 'Enter':
+                if (!evt.shiftKey) {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+                  model.sendMessage();
+                }
+                break;
+
+              case 'ArrowUp':
+                evt.preventDefault();
+                evt.stopPropagation();
+                getMessages(model).enterSelectMode();
+                break;
             }
           }}
         />
