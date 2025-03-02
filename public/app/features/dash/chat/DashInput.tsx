@@ -2,10 +2,11 @@ import { css } from '@emotion/css';
 import { useEffect, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { SceneComponentProps, sceneGraph, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, TextArea, useStyles2 } from '@grafana/ui';
 
-import { DashChat } from './DashChat';
+import { DashIndicators } from './DashIndicators';
+import { getIndicators } from './utils';
 
 interface DashInputState extends SceneObjectState {
   message: string;
@@ -14,8 +15,32 @@ interface DashInputState extends SceneObjectState {
 export class DashInput extends SceneObjectBase<DashInputState> {
   public static Component = DashInputRenderer;
 
+  private _clearTypingFlagTimeout: NodeJS.Timeout | null = null;
+  private _askMessage: (message: string) => Promise<void> = () => Promise.resolve();
+
+  public indicators?: DashIndicators;
+
   public constructor() {
     super({ message: '' });
+
+    this.addActivationHandler(() => this._activationHandler());
+  }
+
+  private _activationHandler() {
+    this.indicators = getIndicators(this);
+
+    return () => {
+      if (this._clearTypingFlagTimeout) {
+        clearTimeout(this._clearTypingFlagTimeout);
+      }
+
+      this._clearTypingFlagTimeout = null;
+      this.indicators?.setTyping(false);
+    };
+  }
+
+  public updateAskMessage(askMessage: (message: string) => Promise<void>) {
+    this._askMessage = askMessage;
   }
 
   public getMessage(): string {
@@ -23,25 +48,47 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   public updateMessage(message: string) {
+    this.indicators?.setTyping(true);
+
+    if (this._clearTypingFlagTimeout) {
+      clearTimeout(this._clearTypingFlagTimeout);
+    }
+
+    this._clearTypingFlagTimeout = setTimeout(() => {
+      this.indicators?.setTyping(false);
+      this._clearTypingFlagTimeout = null;
+    }, 1000);
+
     this.setState({ message });
   }
 
-  public getChat(): DashChat {
-    return sceneGraph.getAncestor(this, DashChat);
+  public sendMessage() {
+    if (this._clearTypingFlagTimeout) {
+      clearTimeout(this._clearTypingFlagTimeout);
+      this._clearTypingFlagTimeout = null;
+    }
+
+    const message = this.getMessage().trim();
+
+    if (!message) {
+      return;
+    }
+
+    this.indicators?.setTyping(false);
+    this.setState({ message: '' });
+
+    this._askMessage(message);
   }
 }
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
   const { message } = model.useState();
-  const chat = model.getChat();
-  const { loading } = chat.useState();
+  const { loading } = model.indicators!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [message]);
+  useEffect(() => inputRef.current?.focus(), [message]);
 
   return (
     <div className={styles.container} ref={containerRef}>
@@ -59,7 +106,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
             if (evt.key === 'Enter' && !evt.shiftKey) {
               evt.preventDefault();
               evt.stopPropagation();
-              chat.sendMessage();
+              model.sendMessage();
             }
           }}
         />
@@ -69,7 +116,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           name="play"
           aria-label="Send message"
           disabled={loading}
-          onClick={() => chat.sendMessage()}
+          onClick={() => model.sendMessage()}
         />
       </div>
     </div>

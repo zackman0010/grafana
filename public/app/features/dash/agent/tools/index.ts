@@ -1,4 +1,5 @@
 import { contextTool } from './context';
+import { dashboardPanelsTool } from './dashboardPanels';
 import { listDatasourcesTool } from './listDatasources';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
@@ -12,6 +13,7 @@ export const tools = [
   prometheusLabelNamesTool,
   prometheusInstantQueryTool,
   prometheusRangeQueryTool,
+  dashboardPanelsTool,
 ];
 
 export const toolsByName = tools.reduce(

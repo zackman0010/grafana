@@ -3,18 +3,21 @@ import { useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { useStyles2 } from '@grafana/ui';
+import { IconButton, useStyles2 } from '@grafana/ui';
 
-import { ChatMessage, useDashAgent } from '../agent';
+import { useDashAgent } from '../agent';
 
+import { DashIndicators } from './DashIndicators';
 import { DashInput } from './DashInput';
-import { DashMessage } from './DashMessage/DashMessage';
 import { DashMessages } from './DashMessages';
+import { DashSettings } from './DashSettings';
 
 export interface DashChatState extends SceneObjectState {
-  messages: DashMessages;
+  indicators: DashIndicators;
   input: DashInput;
-  loading: boolean;
+  messages: DashMessages;
+  settings: DashSettings;
+  page: 'chat' | 'settings';
 }
 
 export class DashChat extends SceneObjectBase<DashChatState> {
@@ -24,54 +27,55 @@ export class DashChat extends SceneObjectBase<DashChatState> {
     return true;
   }
 
-  private _askMessage: (message: string) => Promise<void> = () => Promise.resolve();
-
   public constructor() {
-    super({ messages: new DashMessages(), input: new DashInput(), loading: false });
+    super({
+      indicators: new DashIndicators(),
+      input: new DashInput(),
+      messages: new DashMessages(),
+      settings: new DashSettings(),
+      page: 'chat',
+    });
   }
 
-  public async sendMessage() {
-    const message = this.state.input.getMessage().trim();
-
-    if (!message) {
-      return;
-    }
-
-    this.state.input.updateMessage('');
-    await this._askMessage(message);
+  public updateDashAgent([messages, loading, askMessage]: ReturnType<typeof useDashAgent>) {
+    this.state.input.updateAskMessage(askMessage);
+    this.state.indicators.setLoading(loading);
+    this.state.messages.updateMessages(messages);
   }
 
-  public setAskMessage(askMessage: (message: string) => Promise<void>) {
-    this._askMessage = askMessage;
-  }
-
-  public updateMessages(messages: ChatMessage[]) {
-    this.state.messages.updateMessages(
-      messages.map(
-        ({ id, content, sender, timestamp }) =>
-          this.state.messages.getMessageByKey(id) ?? new DashMessage({ key: id, sender, timestamp, content })
-      )
-    );
-  }
-
-  public setLoading(loading: boolean) {
-    this.setState({ loading });
+  public changePage(page: DashChatState['page']) {
+    this.setState({ page });
   }
 }
 
 function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
   const styles = useStyles2(getStyles);
-  const { messages, input } = model.useState();
-  const [agentMessages, agentLoading, agentAskMessage] = useDashAgent();
+  const { input, messages, settings, page } = model.useState();
+  const dashAgent = useDashAgent();
 
-  useEffect(() => model.setAskMessage(agentAskMessage), [agentAskMessage, model]);
-  useEffect(() => model.updateMessages(agentMessages), [agentMessages, model]);
-  useEffect(() => model.setLoading(agentLoading), [agentLoading, model]);
+  useEffect(() => model.updateDashAgent(dashAgent), [dashAgent, model]);
+
+  const isChatPage = page === 'chat';
 
   return (
     <div className={styles.container}>
-      <messages.Component model={messages} />
-      <input.Component model={input} />
+      <div className={styles.top}>
+        {isChatPage ? (
+          <>
+            <messages.Component model={messages} />
+            <input.Component model={input} />
+          </>
+        ) : (
+          <settings.Component model={settings} />
+        )}
+      </div>
+      <div className={styles.buttons}>
+        {isChatPage ? (
+          <IconButton name="cog" size="xs" aria-label="Settings" onClick={() => model.changePage('settings')} />
+        ) : (
+          <IconButton name="hipchat" size="xs" aria-label="Chat" onClick={() => model.changePage('chat')} />
+        )}
+      </div>
     </div>
   );
 }
@@ -87,6 +91,21 @@ const getStyles = (theme: GrafanaTheme2) => ({
     flexDirection: 'column',
     overflow: 'hidden',
     border: `1px solid ${theme.colors.border.weak}`,
+  }),
+  top: css({
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
     position: 'relative',
+    flex: 1,
+  }),
+  buttons: css({
+    backgroundColor: theme.colors.background.canvas,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: theme.spacing(1),
+    borderTop: `1px solid ${theme.colors.border.strong}`,
   }),
 });

@@ -3,6 +3,7 @@ import { tool } from '@langchain/core/tools';
 import { AppContext, getAppContext } from './app';
 import { DataSourceContext, getDataSourceContext } from './dataSource';
 import { getPageContext, PageContext } from './page';
+import { getPanelsContext, PanelsContext } from './panels';
 import { getQueryContext, QueryContext } from './query';
 import { getTimeRangeContext, TimeRangeContext } from './timeRange';
 
@@ -12,6 +13,7 @@ export interface Contexts {
   time_range: TimeRangeContext;
   datasource: DataSourceContext;
   query: QueryContext;
+  panels: PanelsContext;
 }
 
 export async function getCurrentContext(): Promise<Contexts> {
@@ -24,6 +26,7 @@ export async function getCurrentContext(): Promise<Contexts> {
     time_range: getTimeRangeContext(page, app),
     datasource: getDataSourceContext(page, app),
     query: getQueryContext(page, app),
+    panels: getPanelsContext(page, app),
   };
 }
 
