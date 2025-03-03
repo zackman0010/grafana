@@ -25,8 +25,7 @@ export const MessageContainer = ({ children, selected, sender }: Props) => {
 
   return (
     <div className={styles.container} ref={ref}>
-      {children}
-      <Icon sender={sender} />
+      {sender === 'user' ? <div className={styles.messagePanel}>{children}</div> : children}
     </div>
   );
 };
@@ -45,11 +44,10 @@ const fadeIn = keyframes({
 const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
   container: css({
     display: 'flex',
-    flexDirection: sender === 'ai' ? 'row-reverse' : 'row',
-    alignItems: 'flex-end',
-    gap: theme.spacing(1),
-    marginTop: theme.spacing(1.5),
-    justifyContent: sender === 'ai' ? 'flex-end' : 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    width: '100%',
+    justifyContent: sender === 'user' ? 'flex-end' : 'flex-start',
 
     '&:first-child': {
       marginTop: 0,
@@ -61,5 +59,9 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => 
       animationTimingFunction: 'ease-in-out',
       transition: 'all 0.2s ease',
     },
+  }),
+  messagePanel: css({
+    flex: 1,
+    maxWidth: '100%',
   }),
 });

@@ -76,12 +76,15 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
 
 const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
   messages: css({
+    label: 'dash-message-messages',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    alignItems: sender === 'user' ? 'flex-end' : sender === 'ai' ? 'flex-start' : 'center',
     width: '100%',
     minWidth: 0,
     gap: theme.spacing(1),
+    '& p': {
+      margin: 0,
+    },
   }),
 });
