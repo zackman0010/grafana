@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Divider, IconButton, useStyles2 } from '@grafana/ui';
+import { IconButton, useStyles2 } from '@grafana/ui';
 
 import { getPersistedSetting, persistSetting } from './utils';
 
@@ -58,23 +58,23 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
     <div className={styles.container}>
       <IconButton
         name={codeOverflow === 'scroll' ? 'ellipsis-h' : 'wrap-text'}
-        size="sm"
+        size="lg"
         tooltip={codeOverflowText}
         aria-label={codeOverflowText}
         onClick={() => model.toggleCodeOverflow()}
       />
-      <Divider direction="vertical" />
+
       <IconButton
         name={showTools ? 'eye' : 'eye-slash'}
-        size="sm"
+        size="lg"
         tooltip={showToolsText}
         aria-label={showToolsText}
         onClick={() => model.toggleShowTools()}
       />
-      <Divider direction="vertical" />
+
       <IconButton
         name={mode === 'floating' ? 'library-panel' : 'columns'}
-        size="sm"
+        size="lg"
         tooltip={modeText}
         aria-label={modeText}
         onClick={() => model.toggleMode()}

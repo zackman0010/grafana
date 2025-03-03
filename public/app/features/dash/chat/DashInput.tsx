@@ -122,18 +122,18 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   return (
     <div className={styles.container} ref={containerRef}>
       {loading && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
-
       <div className={styles.row}>
-        <ReactTextareaAutocomplete
+        <ReactTextareaAutocomplete<string>
           containerClassName={styles.textArea}
-          autoFocus
+          autoFocus={true}
           loadingComponent={() => <span>Connecting to the mothership</span>}
           trigger={{
             '@': {
               dataProvider,
-              // @ts-expect-error
               component: Item,
-              output: (item, trigger = '') => { return trigger + item; }
+              output: (item, trigger = '') => {
+                return trigger + item;
+              },
             },
           }}
           minChar={0}
@@ -141,9 +141,9 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           innerRef={(ref) => model.setInputRef(ref)}
           value={message}
           readOnly={loading}
-          placeholder="Type your message here"
-          onChange={(evt) => model.updateMessage(evt.target.value, true)}
-          onKeyDown={(evt) => {
+          placeholder="Ask me anything about your data."
+          onChange={(evt: any) => model.updateMessage(evt.target.value, true)}
+          onKeyDown={(evt: any) => {
             switch (evt.key) {
               case 'Enter':
                 if (!evt.shiftKey) {

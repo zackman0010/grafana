@@ -50,7 +50,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   point: css({
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(getColors('ai').color),
+    backgroundColor: theme.colors.getContrastText(getColors('ai', theme).color),
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 

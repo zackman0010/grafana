@@ -25,9 +25,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
   public constructor(state: Partial<Omit<DashMessagesState, 'loading'>>) {
     super({
       langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
-      messages: state.messages ?? [
-        new DashMessage({ sender: 'system', content: 'Start a conversation by sending a message!' }),
-      ],
+      messages: state.messages ?? [],
       loading: false,
     });
 
@@ -200,6 +198,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    label: 'dash-messages-container',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,

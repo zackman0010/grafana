@@ -1,5 +1,5 @@
 import { sceneGraph, SceneObject } from '@grafana/scenes';
-import { getTagColor } from '@grafana/ui';
+import { GrafanaTheme2 } from '@grafana/data';
 
 import { Dash } from './Dash';
 import { DashChat } from './DashChat';
@@ -37,8 +37,23 @@ export function getMessage(sceneObject: SceneObject): DashMessage {
   return sceneGraph.getAncestor(sceneObject, DashMessage);
 }
 
-export function getColors(sender: DashMessageState['sender']) {
-  return getTagColor(sender === 'user' ? 7 : sender === 'ai' ? 11 : 8);
+export function getColors(sender: DashMessageState['sender'], theme: GrafanaTheme2) {
+  if (sender === 'user') {
+    return {
+      color: theme.colors.background.secondary,
+      borderColor: theme.colors.border.medium,
+    };
+  }
+  if (sender === 'ai') {
+    return {
+      color: theme.colors.background.primary,
+      borderColor: theme.colors.border.medium,
+    };
+  }
+  return {
+    color: theme.colors.background.secondary,
+    borderColor: theme.colors.border.medium,
+  };
 }
 
 export function persistSetting(setting: string, value: string) {
