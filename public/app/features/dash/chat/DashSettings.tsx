@@ -1,75 +1,95 @@
 import { css } from '@emotion/css';
-import { useMemo } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Combobox, ComboboxOption, Divider, Field, Switch, useStyles2 } from '@grafana/ui';
+import { Divider, IconButton, useStyles2 } from '@grafana/ui';
 
 export interface DashSettingsState extends SceneObjectState {
-  codeOverflow: 'scroll' | 'wrap' | 'ellipsis';
+  codeOverflow: 'scroll' | 'wrap';
+  mode: 'floating' | 'sidebar';
   showTools: boolean;
 }
 
 export class DashSettings extends SceneObjectBase<DashSettingsState> {
   public static Component = DashSettingsRenderer;
 
+  public get renderBeforeActivation(): boolean {
+    return true;
+  }
+
   public constructor() {
     super({
-      codeOverflow: 'wrap',
-      showTools: true,
+      codeOverflow: (localStorage.getItem('grafana.settings.dash.code-overflow') ?? 'wrap') as 'scroll' | 'wrap',
+      mode: (localStorage.getItem('grafana.settings.dash.mode') ?? 'sidebar') as 'floating' | 'sidebar',
+      showTools: localStorage.getItem('grafana.settings.dash.show-tools') === 'false' ? false : true,
     });
   }
 
-  public changeCodeOverflow(codeOverflow: DashSettingsState['codeOverflow']) {
+  public toggleCodeOverflow() {
+    const codeOverflow = this.state.codeOverflow === 'scroll' ? 'wrap' : 'scroll';
     this.setState({ codeOverflow });
+    localStorage.setItem('grafana.settings.dash.code-overflow', codeOverflow);
+  }
+
+  public toggleMode() {
+    const mode = this.state.mode === 'floating' ? 'sidebar' : 'floating';
+    this.setState({ mode });
+    localStorage.setItem('grafana.settings.dash.mode', mode);
   }
 
   public toggleShowTools() {
-    this.setState({ showTools: !this.state.showTools });
+    const showTools = !this.state.showTools;
+    this.setState({ showTools });
+    localStorage.setItem('grafana.settings.dash.show-tools', String(showTools));
   }
 }
 
 function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const styles = useStyles2(getStyles);
-  const { codeOverflow, showTools } = model.useState();
+  const { codeOverflow, mode, showTools } = model.useState();
 
-  const codeOverflowOptions: Array<ComboboxOption<DashSettingsState['codeOverflow']>> = useMemo(
-    () => [
-      { label: 'Scroll', value: 'scroll' },
-      { label: 'Wrap', value: 'wrap' },
-      { label: 'Ellipsis', value: 'ellipsis' },
-    ],
-    []
-  );
-
-  const codeOverflowValue = codeOverflowOptions.find(({ value }) => value === codeOverflow);
+  const codeOverflowText = codeOverflow === 'scroll' ? 'Enable soft wrap' : 'Disable soft wrap';
+  const showToolsText = showTools ? 'Hide tools' : 'Show tools';
+  const modeText = mode === 'floating' ? 'View as chat window' : 'View as sidebar';
 
   return (
     <div className={styles.container}>
-      <Field label="Code overflow" description="Control how code blocks overflow">
-        <Combobox
-          isClearable={false}
-          value={codeOverflowValue}
-          options={codeOverflowOptions}
-          onChange={(value) => model.changeCodeOverflow(value?.value ?? 'scroll')}
-        />
-      </Field>
-      <Divider />
-      <Field label="Show tools" description="Toggle the visibility of tools">
-        <Switch value={showTools} onChange={() => model.toggleShowTools()} />
-      </Field>
+      <IconButton
+        name={codeOverflow === 'scroll' ? 'ellipsis-h' : 'wrap-text'}
+        size="sm"
+        tooltip={codeOverflowText}
+        aria-label={codeOverflowText}
+        onClick={() => model.toggleCodeOverflow()}
+      />
+      <Divider direction="vertical" />
+      <IconButton
+        name={showTools ? 'eye' : 'eye-slash'}
+        size="sm"
+        tooltip={showToolsText}
+        aria-label={showToolsText}
+        onClick={() => model.toggleShowTools()}
+      />
+      <Divider direction="vertical" />
+      <IconButton
+        name={mode === 'floating' ? 'library-panel' : 'columns'}
+        size="sm"
+        tooltip={modeText}
+        aria-label={modeText}
+        onClick={() => model.toggleMode()}
+      />
     </div>
   );
 }
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
-    height: '100%',
-    width: '100%',
-    backgroundColor: theme.colors.background.primary,
+    backgroundColor: theme.colors.background.canvas,
     display: 'flex',
-    flexDirection: 'column',
-    overflow: 'scroll',
-    padding: theme.spacing(2),
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: theme.spacing(1),
+    borderTop: `1px solid ${theme.colors.border.strong}`,
+    gap: theme.spacing(0.5),
   }),
 });

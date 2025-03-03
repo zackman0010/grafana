@@ -41,8 +41,8 @@ const getStyles = (theme: GrafanaTheme2, { codeOverflow }: DashSettingsState) =>
     '& code': {
       wordBreak: 'break-all',
       display: codeOverflow === 'wrap' ? 'initial' : 'block',
-      overflow: codeOverflow === 'ellipsis' ? 'hidden' : 'scroll',
-      textOverflow: codeOverflow === 'ellipsis' ? 'ellipsis' : 'unset',
+      overflow: 'auto',
+      textOverflow: 'unset',
       whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
     },
   }),

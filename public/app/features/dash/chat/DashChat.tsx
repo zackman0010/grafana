@@ -3,21 +3,21 @@ import { useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, useStyles2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
 
 import { useDashAgent } from '../agent';
 
 import { DashIndicators } from './DashIndicators';
 import { DashInput } from './DashInput';
 import { DashMessages } from './DashMessages';
-import { DashSettings } from './DashSettings';
+import { DashSettings, DashSettingsState } from './DashSettings';
 
 export interface DashChatState extends SceneObjectState {
   indicators: DashIndicators;
   input: DashInput;
   messages: DashMessages;
   settings: DashSettings;
-  page: 'chat' | 'settings';
+  opened: boolean;
 }
 
 export class DashChat extends SceneObjectBase<DashChatState> {
@@ -33,8 +33,12 @@ export class DashChat extends SceneObjectBase<DashChatState> {
       input: new DashInput(),
       messages: new DashMessages(),
       settings: new DashSettings(),
-      page: 'chat',
+      opened: false,
     });
+
+    this.activate();
+    this.state.indicators.activate();
+    this.state.settings.activate();
   }
 
   public updateDashAgent([messages, loading, askMessage]: ReturnType<typeof useDashAgent>) {
@@ -43,54 +47,47 @@ export class DashChat extends SceneObjectBase<DashChatState> {
     this.state.messages.updateMessages(messages);
   }
 
-  public changePage(page: DashChatState['page']) {
-    this.setState({ page });
+  public setOpened(opened: boolean) {
+    if (opened !== this.state.opened) {
+      this.setState({ opened });
+    }
   }
 }
 
 function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
-  const styles = useStyles2(getStyles);
-  const { input, messages, settings, page } = model.useState();
+  const { input, messages, settings } = model.useState();
+  const { mode } = settings.useState();
+  const styles = useStyles2(getStyles, mode);
+
   const dashAgent = useDashAgent();
-
   useEffect(() => model.updateDashAgent(dashAgent), [dashAgent, model]);
-
-  const isChatPage = page === 'chat';
 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        {isChatPage ? (
-          <>
-            <messages.Component model={messages} />
-            <input.Component model={input} />
-          </>
-        ) : (
-          <settings.Component model={settings} />
-        )}
+        <messages.Component model={messages} />
+        <input.Component model={input} />
       </div>
-      <div className={styles.buttons}>
-        {isChatPage ? (
-          <IconButton name="cog" size="xs" aria-label="Settings" onClick={() => model.changePage('settings')} />
-        ) : (
-          <IconButton name="hipchat" size="xs" aria-label="Chat" onClick={() => model.changePage('chat')} />
-        )}
-      </div>
+      <settings.Component model={settings} />
     </div>
   );
 }
 
-const getStyles = (theme: GrafanaTheme2) => ({
+const getStyles = (theme: GrafanaTheme2, mode: DashSettingsState['mode']) => ({
   container: css({
     height: '100%',
     width: '100%',
     backgroundColor: theme.colors.background.primary,
-    borderRadius: theme.shape.radius.default,
-    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
+    borderRadius: mode === 'floating' ? theme.shape.radius.default : '0',
+    boxShadow: mode === 'floating' ? '0 8px 30px rgba(0, 0, 0, 0.3)' : 'none',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
     border: `1px solid ${theme.colors.border.weak}`,
+    ...(mode === 'sidebar' && {
+      borderTop: 'none',
+      borderBottom: 'none',
+    }),
   }),
   top: css({
     display: 'flex',
@@ -99,13 +96,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     position: 'relative',
     flex: 1,
   }),
-  buttons: css({
-    backgroundColor: theme.colors.background.canvas,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    padding: theme.spacing(1),
-    borderTop: `1px solid ${theme.colors.border.strong}`,
-  }),
 });
+
+export const dashChat = new DashChat();

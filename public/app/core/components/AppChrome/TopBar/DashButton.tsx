@@ -12,24 +12,24 @@ import {
   useInteractions,
 } from '@floating-ui/react';
 import { Resizable } from 're-resizable';
-import { useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { Portal, ToolbarButton, useStyles2, useTheme2 } from '@grafana/ui';
-import { DashChat } from 'app/features/dash/chat/DashChat';
+import { dashChat } from 'app/features/dash/chat/DashChat';
 
 export const DashButton = () => {
-  const dashChat = useMemo(() => new DashChat(), []);
-  const [isOpened, setIsOpened] = useState(false);
   const transitionRef = useRef(null);
   const theme = useTheme2();
+  const { opened, settings } = dashChat.useState();
+  const { mode } = settings.useState();
 
   const arrowRef = useRef(null);
   const { context, refs, floatingStyles } = useFloating({
-    open: isOpened,
+    open: opened,
     placement: 'bottom-end',
-    onOpenChange: setIsOpened,
+    onOpenChange: (opened) => dashChat.setOpened(opened),
     whileElementsMounted: autoUpdate,
     middleware: [arrow({ element: arrowRef }), offset({ mainAxis: 8, crossAxis: 0 }), shift()],
   });
@@ -43,7 +43,7 @@ export const DashButton = () => {
     <>
       <ToolbarButton iconOnly icon="ai" aria-label="Dash" ref={refs.setReference} {...getReferenceProps()} />
 
-      {isOpened && (
+      {opened && mode === 'floating' && (
         <Portal>
           <FloatingFocusManager context={context}>
             <div ref={refs.setFloating} style={floatingStyles}>

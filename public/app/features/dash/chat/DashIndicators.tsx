@@ -17,13 +17,15 @@ export class DashIndicators extends SceneObjectBase<DashIndicatorsState> {
       loading: false,
       loadingIndicator: new DashMessage({
         sender: 'ai',
-        content: { __isIndicator: true },
+        content: '',
+        indicator: true,
         timestamp: new Date(),
       }),
       typing: false,
       typingIndicator: new DashMessage({
         sender: 'user',
-        content: { __isIndicator: true },
+        content: '',
+        indicator: true,
         timestamp: new Date(),
       }),
     });
