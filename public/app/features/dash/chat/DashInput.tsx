@@ -131,6 +131,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           trigger={{
             '@': {
               dataProvider,
+              // @ts-expect-error
               component: Item,
               output: (item, trigger = '') => { return trigger + item; }
             },
