@@ -63,6 +63,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     return message;
   }
 
+  public addToolNotification(content: string): DashMessage {
+    const message = new DashMessage({ content, sender: 'tool_notification' });
+    this.setState({ messages: [...this.state.messages, message] });
+    return message;
+  }
+
   public enterSelectMode() {
     getInput(this).blur();
     this.exitSelectMode(false);

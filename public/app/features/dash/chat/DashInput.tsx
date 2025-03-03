@@ -63,6 +63,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       return;
     }
 
+    console.log('User message:', message);
     this.messages?.setLoading(true);
     this.updateMessage('', false);
     const userMessage = this.messages?.addUserMessage(message);
@@ -84,10 +85,12 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     try {
       this.messages?.addLangchainMessage(new HumanMessage({ content: message, id: userMessage?.state.key! }));
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+      console.log('AI response:', aiMessage.content);
       this.messages?.addAiMessage(aiMessage.content);
       this.messages?.addLangchainMessage(aiMessage);
       await this._handleToolCalls(aiMessage);
     } catch (error) {
+      console.error('Error processing message:', error);
       this.messages?.addSystemMessage('Sorry, there was an error processing your request. Please try again.');
     } finally {
       this.messages?.setLoading(false);
@@ -100,11 +103,20 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
 
     for (const toolCall of aiMessage.tool_calls) {
+      console.log('Tool call:', {
+        name: toolCall.name,
+        type: 'tool_notification',
+      });
       const selectedTool = toolsByName[toolCall.name];
       if (selectedTool) {
         const toolMessage = await selectedTool.invoke(toolCall);
+        console.log('Tool response:', {
+          content: toolMessage.content,
+          type: 'tool_response',
+        });
         this.messages?.addLangchainMessage(toolMessage);
         const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+        console.log('Next AI response after tool:', nextAiMessage.content);
         this.messages?.addAiMessage(nextAiMessage.content);
         this.messages?.addLangchainMessage(nextAiMessage);
         await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
