@@ -1,5 +1,5 @@
-import { sceneGraph, SceneObject } from '@grafana/scenes';
 import { GrafanaTheme2 } from '@grafana/data';
+import { sceneGraph, SceneObject } from '@grafana/scenes';
 
 import { Dash } from './Dash';
 import { DashChat } from './DashChat';

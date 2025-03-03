@@ -1,8 +1,9 @@
 import { css, cx } from '@emotion/css';
-import { Icon, IconButton } from '@grafana/ui';
-import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { ReactNode } from 'react';
+
 import { GrafanaTheme2 } from '@grafana/data';
-import { useStyles2 } from '@grafana/ui';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { Icon, IconButton, useStyles2 } from '@grafana/ui';
 
 import { getMessage, getSettings } from '../utils';
 
@@ -124,7 +125,9 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   spinner: css({
     label: 'dash-tool-spinner',
-    animation: 'spin 1s linear infinite',
+    [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+      animation: 'spin 1s linear infinite',
+    },
     '@keyframes spin': {
       '0%': {
         transform: 'rotate(0deg)',
