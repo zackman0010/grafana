@@ -1,20 +1,15 @@
-import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Icon as IconUI } from '@grafana/ui';
 
-import { getMessage } from '../utils';
+import { DashMessageState } from './DashMessage';
 
-export interface IconState extends SceneObjectState {}
-
-export class Icon extends SceneObjectBase<IconState> {
-  public static Component = IconRenderer;
+interface Props {
+  sender: DashMessageState['sender'];
 }
 
-function IconRenderer({ model }: SceneComponentProps<Icon>) {
-  const { sender } = getMessage(model).useState();
-
+export const Icon = ({ sender }: Props) => {
   if (sender === 'system') {
     return null;
   }
 
   return <IconUI name={sender === 'ai' ? 'ai' : 'user'} />;
-}
+};

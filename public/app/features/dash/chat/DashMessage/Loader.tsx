@@ -1,35 +1,28 @@
 import { css, keyframes } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { getColors, getMessage, getSettings } from '../utils';
+import { getColors } from '../utils';
 
 import { Bubble } from './Bubble';
-import { DashMessageState } from './DashMessage';
+import { MessageContainer } from './MessageContainer';
 
-interface LoaderState extends SceneObjectState {}
-
-export class Loader extends SceneObjectBase<LoaderState> {
-  public static Component = LoaderRenderer;
-}
-
-function LoaderRenderer({ model }: SceneComponentProps<Loader>) {
-  const { selected, sender, time } = getMessage(model).useState();
-  const { codeOverflow } = getSettings(model).useState();
-  const styles = useStyles2(getStyles, sender);
+export const Loader = () => {
+  const styles = useStyles2(getStyles);
 
   return (
-    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender} time={time} hideTime>
-      <div className={styles.container}>
-        <span className={styles.point}></span>
-        <span className={styles.point}></span>
-        <span className={styles.point}></span>
-      </div>
-    </Bubble>
+    <MessageContainer selected={false} sender="ai">
+      <Bubble codeOverflow="wrap" selected={false} sender="ai" time="" hideTime>
+        <div className={styles.container}>
+          <span className={styles.point}></span>
+          <span className={styles.point}></span>
+          <span className={styles.point}></span>
+        </div>
+      </Bubble>
+    </MessageContainer>
   );
-}
+};
 
 const getBounce = (offset: string) =>
   keyframes({
@@ -47,7 +40,7 @@ const getBounce = (offset: string) =>
     },
   });
 
-const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
+const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     display: 'flex',
     flexDirection: 'row',
@@ -57,7 +50,7 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => 
   point: css({
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(getColors(sender).color),
+    backgroundColor: theme.colors.getContrastText(getColors('ai').color),
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 

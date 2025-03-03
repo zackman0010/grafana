@@ -9,9 +9,8 @@ import { IconButton, LoadingBar, TextArea, useStyles2 } from '@grafana/ui';
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 
-import { DashIndicators } from './DashIndicators';
 import { DashMessages } from './DashMessages';
-import { getIndicators, getMessages } from './utils';
+import { getMessages } from './utils';
 
 interface DashInputState extends SceneObjectState {
   message: string;
@@ -20,30 +19,17 @@ interface DashInputState extends SceneObjectState {
 export class DashInput extends SceneObjectBase<DashInputState> {
   public static Component = DashInputRenderer;
 
-  private _clearTypingFlagTimeout: NodeJS.Timeout | null = null;
-
-  public indicators?: DashIndicators;
   public messages?: DashMessages;
   private _inputRef: HTMLTextAreaElement | null = null;
 
-  public constructor() {
-    super({ message: '' });
+  public constructor(state: Partial<Pick<DashInputState, 'message'>>) {
+    super({ ...state, message: state.message ?? '' });
 
     this.addActivationHandler(() => this._activationHandler());
   }
 
   private _activationHandler() {
     this.messages = getMessages(this);
-    this.indicators = getIndicators(this);
-
-    return () => {
-      if (this._clearTypingFlagTimeout) {
-        clearTimeout(this._clearTypingFlagTimeout);
-      }
-
-      this._clearTypingFlagTimeout = null;
-      this.indicators?.setTyping(false);
-    };
   }
 
   public setInputRef(ref: HTMLTextAreaElement | null) {
@@ -59,40 +45,23 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   public updateMessage(message: string, isUserInput: boolean) {
-    if (isUserInput) {
-      this.indicators?.setTyping(true);
-    } else {
+    if (!isUserInput) {
       this._inputRef?.focus();
     }
-
-    if (this._clearTypingFlagTimeout) {
-      clearTimeout(this._clearTypingFlagTimeout);
-    }
-
-    this._clearTypingFlagTimeout = setTimeout(() => {
-      this.indicators?.setTyping(false);
-      this._clearTypingFlagTimeout = null;
-    }, 1000);
 
     this.setState({ message });
   }
 
   public async sendMessage() {
-    if (this._clearTypingFlagTimeout) {
-      clearTimeout(this._clearTypingFlagTimeout);
-      this._clearTypingFlagTimeout = null;
-    }
-
     const message = this.state.message.trim();
 
     if (!message) {
       return;
     }
 
-    this.indicators?.setLoading(true);
-    this.indicators?.setTyping(false);
+    this.messages?.setLoading(true);
     this.updateMessage('', false);
-    this.messages?.addUserMessage(message);
+    const userMessage = this.messages?.addUserMessage(message);
 
     //todo(cyriltovena): We should add a system message to ask LLM to check if we need to find a metrics name.
     // If yes, we should fork the conversation to a new thread to first find the metrics name and potentially labels selectors.
@@ -109,7 +78,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     // 5. try to find metrics name using label/__name__/values
 
     try {
-      this.messages?.addLangchainMessage(new HumanMessage(message));
+      this.messages?.addLangchainMessage(new HumanMessage({ content: message, id: userMessage?.state.key! }));
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
       this.messages?.addAiMessage(aiMessage.content);
       this.messages?.addLangchainMessage(aiMessage);
@@ -117,7 +86,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     } catch (error) {
       this.messages?.addSystemMessage('Sorry, there was an error processing your request. Please try again.');
     } finally {
-      this.indicators?.setLoading(false);
+      this.messages?.setLoading(false);
     }
   }
 
@@ -143,7 +112,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
   const { message } = model.useState();
-  const { loading } = model.indicators!.useState();
+  const { loading } = model.messages!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (

@@ -85,13 +85,10 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
-    backgroundColor: theme.colors.background.canvas,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    padding: theme.spacing(1),
-    borderTop: `1px solid ${theme.colors.border.strong}`,
     gap: theme.spacing(0.5),
   }),
 });
