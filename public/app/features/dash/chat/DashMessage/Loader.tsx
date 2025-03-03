@@ -13,7 +13,7 @@ export const Loader = () => {
 
   return (
     <MessageContainer selected={false} sender="ai">
-      <Bubble codeOverflow="wrap" selected={false} sender="ai" time="" hideTime>
+      <Bubble codeOverflow="wrap" selected={false} sender="ai">
         <div className={styles.container}>
           <span className={styles.point}></span>
           <span className={styles.point}></span>
