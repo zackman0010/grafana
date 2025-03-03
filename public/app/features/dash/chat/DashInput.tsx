@@ -9,7 +9,7 @@ import { IconButton, LoadingBar, useStyles2, TextArea } from '@grafana/ui';
 
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
-import { dataProvider } from '../agent/tools/context/autocomplete';
+import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
 import { DashMessages } from './DashMessages';
 import { getMessages } from './utils';
@@ -129,11 +129,13 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           autoFocus
           loadingComponent={() => <span>Connecting to the mothership</span>}
           trigger={{
+            ...getProviderTriggers(Item),
             '@': {
               dataProvider,
               // @ts-expect-error
               component: Item,
-              output: (item, trigger = '') => { return trigger + item; }
+              output: (item, trigger = '') => ({ text: trigger + item.toString(), caretPosition: 'end' }),
+              afterWhitespace: false,
             },
           }}
           minChar={0}
