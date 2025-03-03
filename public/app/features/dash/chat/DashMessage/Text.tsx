@@ -1,17 +1,27 @@
 import { css } from '@emotion/css';
 
 import { GrafanaTheme2, renderMarkdown } from '@grafana/data';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
 import { DashSettingsState } from '../DashSettings';
+import { getMessage, getSettings } from '../utils';
 
-interface Props {
+import { Bubble } from './Bubble';
+
+interface TextState extends SceneObjectState {
   content: string;
-  settings: DashSettingsState;
 }
 
-export const Text = ({ content, settings }: Props) => {
-  const styles = useStyles2(getStyles, settings);
+export class Text extends SceneObjectBase<TextState> {
+  public static Component = TextRenderer;
+}
+
+function TextRenderer({ model }: SceneComponentProps<Text>) {
+  const { content } = model.useState();
+  const { codeOverflow } = getSettings(model).useState();
+  const { selected, sender, time } = getMessage(model).useState();
+  const styles = useStyles2(getStyles, codeOverflow);
 
   let jsonContent: any = undefined;
   let message = content;
@@ -23,27 +33,13 @@ export const Text = ({ content, settings }: Props) => {
     // Ignore
   }
 
-  return <div className={styles.container} dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }} />;
-};
+  return (
+    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender} time={time}>
+      <div className={styles.container} dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }} />
+    </Bubble>
+  );
+}
 
-const getStyles = (theme: GrafanaTheme2, { codeOverflow }: DashSettingsState) => ({
-  container: css({
-    ...theme.typography.body,
-
-    '& :is(ol, ul)': {
-      paddingLeft: theme.spacing(2),
-    },
-
-    '& strong': {
-      fontWeight: 'bold',
-    },
-
-    '& code': {
-      wordBreak: 'break-all',
-      display: codeOverflow === 'wrap' ? 'initial' : 'block',
-      overflow: 'auto',
-      textOverflow: 'unset',
-      whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
-    },
-  }),
+const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOverflow']) => ({
+  container: css({ ...theme.typography.body }),
 });

@@ -1,23 +1,35 @@
 import { css, keyframes } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { getTagColor, useStyles2 } from '@grafana/ui';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { useStyles2 } from '@grafana/ui';
 
-interface Props {
-  colors: ReturnType<typeof getTagColor>;
+import { getColors, getMessage, getSettings } from '../utils';
+
+import { Bubble } from './Bubble';
+import { DashMessageState } from './DashMessage';
+
+interface LoaderState extends SceneObjectState {}
+
+export class Loader extends SceneObjectBase<LoaderState> {
+  public static Component = LoaderRenderer;
 }
 
-export const Loader = ({ colors }: Props) => {
-  const styles = useStyles2(getStyles, colors);
+function LoaderRenderer({ model }: SceneComponentProps<Loader>) {
+  const { selected, sender, time } = getMessage(model).useState();
+  const { codeOverflow } = getSettings(model).useState();
+  const styles = useStyles2(getStyles, sender);
 
   return (
-    <div className={styles.container}>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
-    </div>
+    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender} time={time} hideTime>
+      <div className={styles.container}>
+        <span className={styles.point}></span>
+        <span className={styles.point}></span>
+        <span className={styles.point}></span>
+      </div>
+    </Bubble>
   );
-};
+}
 
 const getBounce = (offset: string) =>
   keyframes({
@@ -35,7 +47,7 @@ const getBounce = (offset: string) =>
     },
   });
 
-const getStyles = (theme: GrafanaTheme2, colors: ReturnType<typeof getTagColor>) => ({
+const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
   container: css({
     display: 'flex',
     flexDirection: 'row',
@@ -45,7 +57,7 @@ const getStyles = (theme: GrafanaTheme2, colors: ReturnType<typeof getTagColor>)
   point: css({
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(colors.color),
+    backgroundColor: theme.colors.getContrastText(getColors(sender).color),
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 

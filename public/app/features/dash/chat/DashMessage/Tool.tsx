@@ -1,20 +1,55 @@
-import { MessageContentComplex } from '@langchain/core/messages';
-import { useState } from 'react';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 
-import { Collapse, JSONFormatter } from '@grafana/ui';
+import { getMessage, getSettings } from '../utils';
 
-interface Props {
-  content: MessageContentComplex;
+import { Bubble } from './Bubble';
+
+export interface ToolState extends SceneObjectState {
+  content: {
+    type: string;
+    id: string;
+    name: string;
+    input: Record<string, unknown>;
+  };
+  opened: boolean;
 }
 
-export const Tool = ({ content }: Props) => {
-  const [opened, setOpened] = useState(false);
+export class Tool extends SceneObjectBase<ToolState> {
+  public static Component = ToolRenderer;
 
-  const name = 'name' in content ? String(content.name) : 'Unknown tool';
+  public constructor(state: Omit<ToolState, 'opened'>) {
+    super({
+      opened: false,
+      ...state,
+    });
+  }
+
+  public toggleOpened() {
+    this.setState({ opened: !this.state.opened });
+  }
+}
+
+function ToolRenderer({ model }: SceneComponentProps<Tool>) {
+  const { content } = model.useState();
+  const { codeOverflow, showTools } = getSettings(model).useState();
+  const { selected, sender, time } = getMessage(model).useState();
+
+  if (!showTools) {
+    return null;
+  }
 
   return (
-    <Collapse label={name} collapsible isOpen={opened} onToggle={setOpened}>
-      <JSONFormatter json={content} />
-    </Collapse>
+    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender} time={time}>
+      <p>
+        Using tool <b>{content.name} with the following input:</b>
+      </p>
+      <ul>
+        {Object.entries(content.input).map(([key, value]) => (
+          <li key={key}>
+            <b>{key}:</b> {String(value)}
+          </li>
+        ))}
+      </ul>
+    </Bubble>
   );
-};
+}

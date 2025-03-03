@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
 import { findLastIndex } from 'lodash';
 import { useMemo, useRef } from 'react';
 
@@ -6,12 +7,13 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { ChatMessage } from '../agent';
+import { generateSystemPrompt } from '../agent/systemPrompt';
 
 import { DashMessage } from './DashMessage/DashMessage';
 import { getIndicators, getInput } from './utils';
 
 interface DashMessagesState extends SceneObjectState {
+  langchainMessages: Array<HumanMessage | AIMessageChunk | SystemMessage>;
   messages: DashMessage[];
 }
 
@@ -20,6 +22,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   public constructor() {
     super({
+      langchainMessages: [new SystemMessage(generateSystemPrompt())],
       messages: [
         new DashMessage({
           sender: 'system',
@@ -40,22 +43,49 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     };
   }
 
-  public updateMessages(messages: ChatMessage[]) {
+  public addLangchainMessage(message: HumanMessage | AIMessageChunk | SystemMessage) {
+    this.setState({ langchainMessages: [...this.state.langchainMessages, message] });
+  }
+
+  public addUserMessage(message: string) {
+    const timestamp = new Date();
     this.setState({
-      messages:
-        messages.length > 0
-          ? messages.map(
-              ({ id: key, content, sender, timestamp }) =>
-                this.state.messages.find((message) => message.state.key === key) ??
-                new DashMessage({ key, sender, timestamp, content })
-            )
-          : [
-              new DashMessage({
-                sender: 'system',
-                content: 'Start a conversation by sending a message!',
-                timestamp: new Date(),
-              }),
-            ],
+      messages: [
+        ...this.state.messages,
+        new DashMessage({
+          content: message,
+          sender: 'user',
+          timestamp,
+        }),
+      ],
+    });
+  }
+
+  public addAiMessage(message: MessageContent) {
+    const timestamp = new Date();
+    this.setState({
+      messages: [
+        ...this.state.messages,
+        new DashMessage({
+          content: message,
+          sender: 'ai',
+          timestamp,
+        }),
+      ],
+    });
+  }
+
+  public addSystemMessage(message: string) {
+    const timestamp = new Date();
+    this.setState({
+      messages: [
+        ...this.state.messages,
+        new DashMessage({
+          content: message,
+          sender: 'system',
+          timestamp,
+        }),
+      ],
     });
   }
 

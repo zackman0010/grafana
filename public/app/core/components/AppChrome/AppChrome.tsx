@@ -11,7 +11,7 @@ import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
 import { Trans } from 'app/core/internationalization';
 import store from 'app/core/store';
 import { CommandPalette } from 'app/features/commandPalette/CommandPalette';
-import { dashChat } from 'app/features/dash/chat/DashChat';
+import { dash } from 'app/features/dash/chat/Dash';
 import { ScopesDashboards, useScopesDashboardsState } from 'app/features/scopes';
 
 import { AppChromeMenu } from './AppChromeMenu';
@@ -39,7 +39,7 @@ export function AppChrome({ children }: Props) {
   const isScopesDashboardsOpen = Boolean(
     scopesDashboardsState?.isEnabled && scopesDashboardsState?.isPanelOpened && !scopesDashboardsState?.isReadOnly
   );
-  const { opened, settings } = dashChat.useState();
+  const { opened, settings } = dash.useState();
   const { mode } = settings.useState();
   useMediaQueryChange({
     breakpoint: dockedMenuBreakpoint,
@@ -138,7 +138,7 @@ export function AppChrome({ children }: Props) {
               enable={{ left: true }}
               onResize={(_evt, _direction, ref) => setDashWidth(ref.getBoundingClientRect().width)}
             >
-              <dashChat.Component model={dashChat} />
+              <dash.Component model={dash} />
             </Resizable>
           )}
         </div>

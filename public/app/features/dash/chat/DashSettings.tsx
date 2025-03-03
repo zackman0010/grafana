@@ -4,6 +4,8 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Divider, IconButton, useStyles2 } from '@grafana/ui';
 
+import { getPersistedSetting, persistSetting } from './utils';
+
 export interface DashSettingsState extends SceneObjectState {
   codeOverflow: 'scroll' | 'wrap';
   mode: 'floating' | 'sidebar';
@@ -19,28 +21,28 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
 
   public constructor() {
     super({
-      codeOverflow: (localStorage.getItem('grafana.settings.dash.code-overflow') ?? 'wrap') as 'scroll' | 'wrap',
-      mode: (localStorage.getItem('grafana.settings.dash.mode') ?? 'sidebar') as 'floating' | 'sidebar',
-      showTools: localStorage.getItem('grafana.settings.dash.show-tools') === 'false' ? false : true,
+      codeOverflow: (getPersistedSetting('code-overflow') ?? 'wrap') as 'scroll' | 'wrap',
+      mode: (getPersistedSetting('mode') ?? 'sidebar') as 'floating' | 'sidebar',
+      showTools: getPersistedSetting('show-tools') === 'false' ? false : true,
     });
   }
 
   public toggleCodeOverflow() {
     const codeOverflow = this.state.codeOverflow === 'scroll' ? 'wrap' : 'scroll';
     this.setState({ codeOverflow });
-    localStorage.setItem('grafana.settings.dash.code-overflow', codeOverflow);
+    persistSetting('code-overflow', codeOverflow);
   }
 
   public toggleMode() {
     const mode = this.state.mode === 'floating' ? 'sidebar' : 'floating';
     this.setState({ mode });
-    localStorage.setItem('grafana.settings.dash.mode', mode);
+    persistSetting('mode', mode);
   }
 
   public toggleShowTools() {
     const showTools = !this.state.showTools;
     this.setState({ showTools });
-    localStorage.setItem('grafana.settings.dash.show-tools', String(showTools));
+    persistSetting('show-tools', String(showTools));
   }
 }
 

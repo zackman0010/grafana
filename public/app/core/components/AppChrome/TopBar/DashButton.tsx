@@ -17,19 +17,19 @@ import { CSSTransition } from 'react-transition-group';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { Portal, ToolbarButton, useStyles2, useTheme2 } from '@grafana/ui';
-import { dashChat } from 'app/features/dash/chat/DashChat';
+import { dash } from 'app/features/dash/chat/Dash';
 
 export const DashButton = () => {
   const transitionRef = useRef(null);
   const theme = useTheme2();
-  const { opened, settings } = dashChat.useState();
+  const { opened, settings } = dash.useState();
   const { mode } = settings.useState();
 
   const arrowRef = useRef(null);
   const { context, refs, floatingStyles } = useFloating({
     open: opened,
     placement: 'bottom-end',
-    onOpenChange: (opened) => dashChat.setOpened(opened),
+    onOpenChange: (opened) => dash.setOpened(opened),
     whileElementsMounted: autoUpdate,
     middleware: [arrow({ element: arrowRef }), offset({ mainAxis: 8, crossAxis: 0 }), shift()],
   });
@@ -57,7 +57,7 @@ export const DashButton = () => {
               >
                 <div ref={transitionRef}>
                   <Resizable {...getFloatingProps()} defaultSize={{ height: '500px', width: '600px' }}>
-                    <dashChat.Component model={dashChat} />
+                    <dash.Component model={dash} />
                   </Resizable>
                 </div>
               </CSSTransition>

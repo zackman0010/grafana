@@ -1,10 +1,17 @@
 import { sceneGraph, SceneObject } from '@grafana/scenes';
+import { getTagColor } from '@grafana/ui';
 
+import { Dash } from './Dash';
 import { DashChat } from './DashChat';
 import { DashIndicators } from './DashIndicators';
 import { DashInput } from './DashInput';
+import { DashMessage, DashMessageState } from './DashMessage/DashMessage';
 import { DashMessages } from './DashMessages';
 import { DashSettings } from './DashSettings';
+
+export function getDash(sceneObject: SceneObject): Dash {
+  return sceneGraph.getAncestor(sceneObject, Dash);
+}
 
 export function getChat(sceneObject: SceneObject): DashChat {
   return sceneGraph.getAncestor(sceneObject, DashChat);
@@ -15,7 +22,11 @@ export function getIndicators(sceneObject: SceneObject): DashIndicators {
 }
 
 export function getSettings(sceneObject: SceneObject): DashSettings {
-  return getChat(sceneObject).state.settings;
+  return getDash(sceneObject).state.settings;
+}
+
+export function getMessage(sceneObject: SceneObject): DashMessage {
+  return sceneGraph.getAncestor(sceneObject, DashMessage);
 }
 
 export function getMessages(sceneObject: SceneObject): DashMessages {
@@ -24,4 +35,16 @@ export function getMessages(sceneObject: SceneObject): DashMessages {
 
 export function getInput(sceneObject: SceneObject): DashInput {
   return getChat(sceneObject).state.input;
+}
+
+export function getColors(sender: DashMessageState['sender']) {
+  return getTagColor(sender === 'user' ? 7 : sender === 'ai' ? 11 : 8);
+}
+
+export function persistSetting(setting: string, value: string) {
+  localStorage.setItem(`grafana.settings.dash.${setting}`, value);
+}
+
+export function getPersistedSetting(setting: string): string | null {
+  return localStorage.getItem(`grafana.settings.dash.${setting}`);
 }
