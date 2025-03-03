@@ -1,6 +1,6 @@
 import { empty } from 'ix/asynciterable';
 import { catchError, take, tap, withAbort } from 'ix/asynciterable/operators';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 
 import { Card, EmptyState, Stack, Text } from '@grafana/ui';
 import { Trans } from 'app/core/internationalization';
@@ -20,6 +20,7 @@ import {
   RuleWithOrigin,
   useFilteredRulesIteratorProvider,
 } from './hooks/useFilteredRulesIterator';
+import { logError } from '../Analytics';
 
 interface FilterViewProps {
   filterState: RulesFilter;
@@ -79,8 +80,11 @@ function FilterViewResults({ filterState }: FilterViewProps) {
     for await (const rule of rulesIterator.current.pipe(
       // grab <FRONTENT_PAGE_SIZE> from the rules iterable
       take(FRONTENT_PAGE_SIZE),
-      // if an error occurs trying to fetch a page, return an empty iterable so the front-end isn't caught in an infinite loop
-      catchError(() => empty())
+      // if an error occurs trying to fetch a page, return an empty iterable so the front-end doesn't crash
+      catchError((error) => {
+        logError(error);
+        return empty();
+      })
     )) {
       startTransition(() => {
         // Rule key could be computed on the fly, but we do it here to avoid recalculating it with each render
