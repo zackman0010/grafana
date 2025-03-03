@@ -1,16 +1,20 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, LoadingBar, TextArea, useStyles2 } from '@grafana/ui';
+import { IconButton, LoadingBar, useStyles2, TextArea } from '@grafana/ui';
 
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
+import { dataProvider } from '../agent/tools/context/autocomplete';
 
 import { DashMessages } from './DashMessages';
 import { getMessages } from './utils';
+
+import '@webscopeio/react-textarea-autocomplete/style.css';
 
 interface DashInputState extends SceneObjectState {
   message: string;
@@ -120,13 +124,24 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
       {loading && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
 
       <div className={styles.row}>
-        <TextArea
+        <ReactTextareaAutocomplete
+          containerClassName={styles.textArea}
           autoFocus
-          ref={(ref) => model.setInputRef(ref)}
+          loadingComponent={() => <span>Connecting to the mothership</span>}
+          trigger={{
+            '@': {
+              dataProvider,
+              component: Item,
+              output: (item, trigger = '') => { return trigger + item; }
+            },
+          }}
+          minChar={0}
+          textAreaComponent={TextArea}
+          innerRef={(ref) => model.setInputRef(ref)}
           value={message}
           readOnly={loading}
           placeholder="Type your message here"
-          onChange={(evt) => model.updateMessage(evt.currentTarget.value, true)}
+          onChange={(evt) => model.updateMessage(evt.target.value, true)}
           onKeyDown={(evt) => {
             switch (evt.key) {
               case 'Enter':
@@ -144,6 +159,8 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
                 break;
             }
           }}
+          itemClassName={styles.autoCompleteListItem}
+          listClassName={styles.autoCompleteList}
         />
 
         <IconButton
@@ -157,6 +174,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     </div>
   );
 }
+const Item = ({ entity }: { entity: string }) => <div>{entity}</div>;
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
@@ -170,5 +188,28 @@ const getStyles = (theme: GrafanaTheme2) => ({
     flexDirection: 'row',
     gap: theme.spacing(2),
     padding: theme.spacing(2),
+  }),
+  textArea: css({
+    flexGrow: 1,
+    fontSize: theme.typography.fontSize,
+  }),
+  autoCompleteList: css({
+    border: `1px solid ${theme.colors.border.medium}`,
+    background: theme.colors.background.secondary,
+    '& .rta__entity': {
+      background: theme.colors.background.secondary,
+      color: theme.colors.text.primary,
+    },
+    '& .rta__entity--selected': {
+      background: theme.colors.background.canvas,
+    },
+  }),
+  autoCompleteListItem: css({
+    border: `1px solid ${theme.colors.border.medium}`,
+    background: theme.colors.background.secondary,
+    '&:not(:last-child)': {
+      border: `1px solid ${theme.colors.border.medium}`,
+      background: theme.colors.background.secondary,
+    },
   }),
 });
