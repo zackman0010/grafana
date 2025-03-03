@@ -20,7 +20,7 @@ export class Text extends SceneObjectBase<TextState> {
 function TextRenderer({ model }: SceneComponentProps<Text>) {
   const { content } = model.useState();
   const { codeOverflow } = getSettings(model).useState();
-  const { selected, sender, time } = getMessage(model).useState();
+  const { selected, sender } = getMessage(model).useState();
   const styles = useStyles2(getStyles, codeOverflow);
 
   let jsonContent: any = undefined;
@@ -34,7 +34,7 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   }
 
   return (
-    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender} time={time}>
+    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
       <div className={styles.container} dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }} />
     </Bubble>
   );

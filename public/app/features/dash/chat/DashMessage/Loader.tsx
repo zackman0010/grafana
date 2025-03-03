@@ -13,7 +13,7 @@ export const Loader = () => {
 
   return (
     <MessageContainer selected={false} sender="ai">
-      <Bubble codeOverflow="wrap" selected={false} sender="ai" time="" hideTime>
+      <Bubble codeOverflow="wrap" selected={false} sender="ai">
         <div className={styles.container}>
           <span className={styles.point}></span>
           <span className={styles.point}></span>
@@ -50,7 +50,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   point: css({
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(getColors('ai').color),
+    backgroundColor: theme.colors.getContrastText(getColors('ai', theme).color),
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 

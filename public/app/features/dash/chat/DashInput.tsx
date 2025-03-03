@@ -11,6 +11,7 @@ import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
+import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
 import { getMessages } from './utils';
 
@@ -63,6 +64,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       return;
     }
 
+    console.log('User message:', message);
     this.messages?.setLoading(true);
     this.updateMessage('', false);
     const userMessage = this.messages?.addUserMessage(message);
@@ -84,10 +86,12 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     try {
       this.messages?.addLangchainMessage(new HumanMessage({ content: message, id: userMessage?.state.key! }));
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+      console.log('AI response:', aiMessage.content);
       this.messages?.addAiMessage(aiMessage.content);
       this.messages?.addLangchainMessage(aiMessage);
       await this._handleToolCalls(aiMessage);
     } catch (error) {
+      console.error('Error processing message:', error);
       this.messages?.addSystemMessage('Sorry, there was an error processing your request. Please try again.');
     } finally {
       this.messages?.setLoading(false);
@@ -100,14 +104,49 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
 
     for (const toolCall of aiMessage.tool_calls) {
+      console.log('Tool call:', {
+        name: toolCall.name,
+        type: 'tool_notification',
+      });
       const selectedTool = toolsByName[toolCall.name];
       if (selectedTool) {
-        const toolMessage = await selectedTool.invoke(toolCall);
-        this.messages?.addLangchainMessage(toolMessage);
-        const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
-        this.messages?.addAiMessage(nextAiMessage.content);
-        this.messages?.addLangchainMessage(nextAiMessage);
-        await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+        // Find the tool in the messages and set it to working
+        const toolMessage = this.messages?.state.messages.find((message) => {
+          return message.state.children.some((child) => {
+            if (child instanceof Tool) {
+              return (child.state as any).content.id === toolCall.id;
+            }
+            return false;
+          });
+        });
+        if (toolMessage) {
+          const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
+          if (tool) {
+            tool.setWorking(true);
+          }
+        }
+
+        try {
+          const toolResponse = await selectedTool.invoke(toolCall);
+          console.log('Tool response:', {
+            content: toolResponse.content,
+            type: 'tool_response',
+          });
+          this.messages?.addLangchainMessage(toolResponse);
+          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+          console.log('Next AI response after tool:', nextAiMessage.content);
+          this.messages?.addAiMessage(nextAiMessage.content);
+          this.messages?.addLangchainMessage(nextAiMessage);
+          await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+        } finally {
+          // Set the tool back to not working
+          if (toolMessage) {
+            const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
+            if (tool) {
+              tool.setWorking(false);
+            }
+          }
+        }
       }
     }
   }
@@ -119,20 +158,28 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const { loading } = model.messages!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Check if any tool is currently working
+  const isToolWorking = model.messages?.state.messages.some((message) => {
+    return message.state.children.some((child) => {
+      if (child instanceof Tool) {
+        return (child.state as any).working;
+      }
+      return false;
+    });
+  });
+
   return (
     <div className={styles.container} ref={containerRef}>
-      {loading && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
-
+      {loading && !isToolWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
-        <ReactTextareaAutocomplete
+        <ReactTextareaAutocomplete<string>
           containerClassName={styles.textArea}
-          autoFocus
+          autoFocus={true}
           loadingComponent={() => <span>Connecting to the mothership</span>}
           trigger={{
             ...getProviderTriggers(Item),
             '@': {
               dataProvider,
-              // @ts-expect-error
               component: Item,
               output: (item, trigger = '') => ({ text: trigger + item.toString(), caretPosition: 'end' }),
               afterWhitespace: false,
@@ -143,9 +190,9 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           innerRef={(ref) => model.setInputRef(ref)}
           value={message}
           readOnly={loading}
-          placeholder="Type your message here"
-          onChange={(evt) => model.updateMessage(evt.target.value, true)}
-          onKeyDown={(evt) => {
+          placeholder="Ask me anything about your data."
+          onChange={(evt: any) => model.updateMessage(evt.target.value, true)}
+          onKeyDown={(evt: any) => {
             switch (evt.key) {
               case 'Enter':
                 if (!evt.shiftKey) {

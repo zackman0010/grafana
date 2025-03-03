@@ -11,6 +11,7 @@ import { generateSystemPrompt } from '../agent/systemPrompt';
 
 import { DashMessage } from './DashMessage/DashMessage';
 import { Loader } from './DashMessage/Loader';
+import { Tool } from './DashMessage/Tool';
 import { getChat, getChatContainer, getInput } from './utils';
 
 interface DashMessagesState extends SceneObjectState {
@@ -25,9 +26,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
   public constructor(state: Partial<Omit<DashMessagesState, 'loading'>>) {
     super({
       langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
-      messages: state.messages ?? [
-        new DashMessage({ sender: 'system', content: 'Start a conversation by sending a message!' }),
-      ],
+      messages: state.messages ?? [],
       loading: false,
     });
 
@@ -61,6 +60,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   public addSystemMessage(content: string): DashMessage {
     const message = new DashMessage({ content, sender: 'ai' });
+    this.setState({ messages: [...this.state.messages, message] });
+    return message;
+  }
+
+  public addToolNotification(content: string): DashMessage {
+    const message = new DashMessage({ content, sender: 'tool_notification' });
     this.setState({ messages: [...this.state.messages, message] });
     return message;
   }
@@ -185,6 +190,16 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const { loading, messages } = model.useState();
   const scrollRef = useRef<HTMLInputElement>(null);
 
+  // Check if any tool is currently working
+  const isToolWorking = messages.some((message) => {
+    return message.state.children.some((child) => {
+      if (child instanceof Tool) {
+        return (child.state as any).working;
+      }
+      return false;
+    });
+  });
+
   setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
   return (
@@ -192,7 +207,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
       {messages.map((message) => (
         <message.Component model={message} key={message.state.key!} />
       ))}
-      {loading && <Loader />}
+      {loading && !isToolWorking && <Loader />}
       <div ref={scrollRef} />
     </div>
   );
@@ -200,6 +215,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    label: 'dash-messages-container',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,

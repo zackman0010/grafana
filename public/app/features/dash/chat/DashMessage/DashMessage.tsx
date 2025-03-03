@@ -13,7 +13,7 @@ import { Tool, ToolState } from './Tool';
 export interface DashMessageState extends SceneObjectState {
   children: SceneObject[];
   content: MessageContent;
-  sender: 'user' | 'ai' | 'system';
+  sender: 'user' | 'ai' | 'system' | 'tool_notification';
   time: string;
   selected: boolean;
 }
@@ -76,12 +76,21 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
 
 const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
   messages: css({
+    label: 'dash-message-messages',
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    alignItems: sender === 'user' ? 'flex-end' : sender === 'ai' ? 'flex-start' : 'center',
     width: '100%',
     minWidth: 0,
     gap: theme.spacing(1),
+    '& p': {
+      margin: 0,
+    },
+    ...(sender === 'tool_notification' && {
+      backgroundColor: theme.colors.background.secondary,
+      borderRadius: theme.shape.borderRadius(1),
+      padding: theme.spacing(1),
+      border: `1px solid ${theme.colors.border.medium}`,
+    }),
   }),
 });
