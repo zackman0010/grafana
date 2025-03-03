@@ -5,7 +5,6 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
 import { DashMessageState } from './DashMessage';
-import { Icon } from './Icon';
 
 interface Props {
   children: ReactNode;

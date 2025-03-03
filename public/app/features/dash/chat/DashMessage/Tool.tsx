@@ -1,5 +1,4 @@
 import { css, cx } from '@emotion/css';
-import { ReactNode } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
