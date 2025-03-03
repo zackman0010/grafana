@@ -1,5 +1,7 @@
 import { dashboardPanelsTool } from './dashboardPanels';
 import { listDatasourcesTool } from './listDatasources';
+import { lokiLabelNamesTool } from './lokiLabelNames';
+import { lokiLabelValuesTool } from './lokiLabelValues';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
@@ -12,6 +14,8 @@ export const tools = [
   prometheusInstantQueryTool,
   prometheusRangeQueryTool,
   dashboardPanelsTool,
+  lokiLabelNamesTool,
+  lokiLabelValuesTool,
 ];
 
 export const toolsByName = tools.reduce(
