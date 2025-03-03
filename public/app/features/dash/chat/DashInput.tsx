@@ -11,7 +11,6 @@ import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider } from '../agent/tools/context/autocomplete';
 
-import { DashMessage } from './DashMessage/DashMessage';
 import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
 import { getMessages } from './utils';
