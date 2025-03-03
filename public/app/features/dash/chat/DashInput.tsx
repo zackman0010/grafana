@@ -13,6 +13,8 @@ import { dataProvider } from '../agent/tools/context/autocomplete';
 
 import { DashMessages } from './DashMessages';
 import { getMessages } from './utils';
+import { DashMessage } from './DashMessage/DashMessage';
+import { Tool } from './DashMessage/Tool';
 
 import '@webscopeio/react-textarea-autocomplete/style.css';
 
@@ -109,17 +111,43 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       });
       const selectedTool = toolsByName[toolCall.name];
       if (selectedTool) {
-        const toolMessage = await selectedTool.invoke(toolCall);
-        console.log('Tool response:', {
-          content: toolMessage.content,
-          type: 'tool_response',
+        // Find the tool in the messages and set it to working
+        const toolMessage = this.messages?.state.messages.find((message) => {
+          return message.state.children.some((child) => {
+            if (child instanceof Tool) {
+              return (child.state as any).content.id === toolCall.id;
+            }
+            return false;
+          });
         });
-        this.messages?.addLangchainMessage(toolMessage);
-        const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
-        console.log('Next AI response after tool:', nextAiMessage.content);
-        this.messages?.addAiMessage(nextAiMessage.content);
-        this.messages?.addLangchainMessage(nextAiMessage);
-        await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+        if (toolMessage) {
+          const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
+          if (tool) {
+            tool.setWorking(true);
+          }
+        }
+
+        try {
+          const toolResponse = await selectedTool.invoke(toolCall);
+          console.log('Tool response:', {
+            content: toolResponse.content,
+            type: 'tool_response',
+          });
+          this.messages?.addLangchainMessage(toolResponse);
+          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+          console.log('Next AI response after tool:', nextAiMessage.content);
+          this.messages?.addAiMessage(nextAiMessage.content);
+          this.messages?.addLangchainMessage(nextAiMessage);
+          await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+        } finally {
+          // Set the tool back to not working
+          if (toolMessage) {
+            const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
+            if (tool) {
+              tool.setWorking(false);
+            }
+          }
+        }
       }
     }
   }
@@ -131,9 +159,19 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const { loading } = model.messages!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Check if any tool is currently working
+  const isToolWorking = model.messages?.state.messages.some((message) => {
+    return message.state.children.some((child) => {
+      if (child instanceof Tool) {
+        return (child.state as any).working;
+      }
+      return false;
+    });
+  });
+
   return (
     <div className={styles.container} ref={containerRef}>
-      {loading && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
+      {loading && !isToolWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
         <ReactTextareaAutocomplete<string>
           containerClassName={styles.textArea}

@@ -1,6 +1,8 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { Icon, IconButton } from '@grafana/ui';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { GrafanaTheme2 } from '@grafana/data';
+import { useStyles2 } from '@grafana/ui';
 
 import { getMessage, getSettings } from '../utils';
 
@@ -14,14 +16,16 @@ export interface ToolState extends SceneObjectState {
     input: Record<string, unknown>;
   };
   opened: boolean;
+  working: boolean;
 }
 
 export class Tool extends SceneObjectBase<ToolState> {
   public static Component = ToolRenderer;
 
-  public constructor(state: Omit<ToolState, 'opened'>) {
+  public constructor(state: Omit<ToolState, 'opened' | 'working'>) {
     super({
       opened: false,
+      working: false,
       ...state,
     });
   }
@@ -29,10 +33,15 @@ export class Tool extends SceneObjectBase<ToolState> {
   public toggleOpened() {
     this.setState({ opened: !this.state.opened });
   }
+
+  public setWorking(working: boolean) {
+    this.setState({ working });
+  }
 }
 
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
-  const { content, opened } = model.useState();
+  const styles = useStyles2(getStyles);
+  const { content, opened, working } = model.useState();
   const { codeOverflow, showTools } = getSettings(model).useState();
   const { selected, sender } = getMessage(model).useState();
 
@@ -45,15 +54,18 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   return (
     <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
       <div className={styles.container}>
-        <div className={styles.header}>
-          <Icon name="wrench" className={styles.icon} />
+        <div className={cx(styles.header, { expanded: opened })}>
+          <Icon name={working ? 'sync' : 'wrench'} className={working ? styles.spinner : ''} />
           <span className={styles.name}>{content.name}</span>
           {hasInput && (
             <IconButton
               name={opened ? 'angle-up' : 'angle-down'}
-              onClick={() => model.toggleOpened()}
-              className={styles.toggleButton}
+              size="sm"
               aria-label={opened ? 'Collapse details' : 'Expand details'}
+              onClick={(e) => {
+                e.stopPropagation();
+                model.toggleOpened();
+              }}
             />
           )}
         </div>
@@ -72,29 +84,69 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   );
 }
 
-const styles = {
+const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    label: 'dash-tool-container',
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
-    opacity: 0.85,
+    gap: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius(1),
   }),
   header: css({
+    label: 'dash-tool-header',
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: '8px',
-    color: 'var(--grafana-color-text-secondary)',
-    fontSize: '0.9em',
+    gap: theme.spacing(1),
+    cursor: 'pointer',
+  }),
+  title: css({
+    label: 'dash-tool-title',
+    fontSize: theme.typography.fontSize,
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.colors.text.primary,
+    fontFamily: theme.typography.fontFamilyMonospace,
+  }),
+  description: css({
+    label: 'dash-tool-description',
+    fontSize: theme.typography.fontSize,
+    color: theme.colors.text.secondary,
+    marginLeft: theme.spacing(4),
+  }),
+  details: css({
+    label: 'dash-tool-details',
+    fontSize: theme.typography.fontSize,
+    color: theme.colors.text.secondary,
+    marginLeft: theme.spacing(4),
+    padding: theme.spacing(1),
+    backgroundColor: theme.colors.background.primary,
+    borderRadius: theme.shape.borderRadius(1),
+  }),
+  spinner: css({
+    label: 'dash-tool-spinner',
+    animation: 'spin 1s linear infinite',
+    '@keyframes spin': {
+      '0%': {
+        transform: 'rotate(0deg)',
+      },
+      '100%': {
+        transform: 'rotate(360deg)',
+      },
+    },
   }),
   icon: css({
     fontSize: '14px',
     color: 'var(--grafana-color-text-secondary)',
     opacity: 0.8,
+    '&.fa-sync': {
+      animation: 'spin 1s linear infinite',
+    },
   }),
   name: css({
     flex: 1,
     fontWeight: 400,
     opacity: 0.9,
+    fontFamily: 'var(--grafana-font-family-monospace)',
   }),
   toggleButton: css({
     padding: '4px',
@@ -103,12 +155,6 @@ const styles = {
     '&:hover': {
       opacity: 1,
     },
-  }),
-  details: css({
-    marginTop: '4px',
-    paddingTop: '8px',
-    borderTop: '1px solid var(--grafana-color-border-weak)',
-    opacity: 0.8,
   }),
   detailRow: css({
     display: 'flex',
@@ -125,4 +171,4 @@ const styles = {
     color: 'var(--grafana-color-text-secondary)',
     opacity: 0.9,
   }),
-};
+});

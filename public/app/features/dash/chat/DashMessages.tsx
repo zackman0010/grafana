@@ -11,6 +11,7 @@ import { generateSystemPrompt } from '../agent/systemPrompt';
 
 import { DashMessage } from './DashMessage/DashMessage';
 import { Loader } from './DashMessage/Loader';
+import { Tool } from './DashMessage/Tool';
 import { getChat, getChatContainer, getInput } from './utils';
 
 interface DashMessagesState extends SceneObjectState {
@@ -189,6 +190,16 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const { loading, messages } = model.useState();
   const scrollRef = useRef<HTMLInputElement>(null);
 
+  // Check if any tool is currently working
+  const isToolWorking = messages.some((message) => {
+    return message.state.children.some((child) => {
+      if (child instanceof Tool) {
+        return (child.state as any).working;
+      }
+      return false;
+    });
+  });
+
   setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
   return (
@@ -196,7 +207,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
       {messages.map((message) => (
         <message.Component model={message} key={message.state.key!} />
       ))}
-      {loading && <Loader />}
+      {loading && !isToolWorking && <Loader />}
       <div ref={scrollRef} />
     </div>
   );

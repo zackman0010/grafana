@@ -38,7 +38,6 @@ const getStyles = (
     container: css({
       label: 'chat-message-bubble',
       width: '100%',
-      padding: theme.spacing(1),
       border: sender === 'user' ? `0.5px solid ${borderColor}80` : 'none',
       borderRadius: theme.spacing(0.25),
       color: theme.colors.text.primary,
