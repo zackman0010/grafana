@@ -3,12 +3,12 @@ import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { DashAgentContext, ChatMessage } from './DashAgentContext';
 import { agent } from './agent';
-import { SYSTEM_PROMPT_TEMPLATE } from './systemPrompt';
+import { generateSystemPrompt } from './systemPrompt';
 import { toolsByName } from './tools';
 import { getAiMessage, getSystemMessage, getUserMessage } from './utils';
 
 export const DashAgentProvider = ({ children }: { children: ReactNode }) => {
-  const systemMessage = useMemo(() => new SystemMessage(SYSTEM_PROMPT_TEMPLATE), []);
+  const systemMessage = useMemo(() => new SystemMessage(generateSystemPrompt()), []);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [langchainMessages, setLangchainMessages] = useState<Array<HumanMessage | AIMessageChunk | SystemMessage>>([

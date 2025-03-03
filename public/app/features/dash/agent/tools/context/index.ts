@@ -16,7 +16,7 @@ export interface Contexts {
   panels: PanelsContext;
 }
 
-export async function getCurrentContext(): Promise<Contexts> {
+export function getCurrentContext(): Contexts {
   const page = getPageContext();
   const app = getAppContext(page);
 
@@ -30,7 +30,8 @@ export async function getCurrentContext(): Promise<Contexts> {
   };
 }
 
-export const contextTool = tool(async () => JSON.stringify(await getCurrentContext()), {
-  name: 'get_context',
-  description: 'Data about the module where the user is at and the current state of the application',
+export const contextTool = tool(() => JSON.stringify(getCurrentContext()), {
+  name: 'update_current_context',
+  description:
+    'Use this tool when you need an update about the module where the user is at and the current state of the application',
 });
