@@ -54,7 +54,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   return (
     <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
       <div className={styles.container}>
-        <div className={cx(styles.header, { expanded: opened })}>
+        <div className={cx(styles.header(hasInput), { expanded: opened })}>
           <Icon name={working ? 'sync' : 'wrench'} className={working ? styles.spinner : ''} />
           <span className={styles.name}>{content.name}</span>
           {hasInput && (
@@ -92,14 +92,15 @@ const getStyles = (theme: GrafanaTheme2) => ({
     gap: theme.spacing(1),
     borderRadius: theme.shape.borderRadius(1),
   }),
-  header: css({
-    label: 'dash-tool-header',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    cursor: 'pointer',
-  }),
+  header: (hasInput: boolean) =>
+    css({
+      label: 'dash-tool-header',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      cursor: hasInput ? 'pointer' : 'default',
+    }),
   title: css({
     label: 'dash-tool-title',
     fontSize: theme.typography.fontSize,

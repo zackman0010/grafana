@@ -44,6 +44,7 @@ const getStyles = (
       background: color,
       position: 'relative',
       textAlign: 'left',
+      padding: theme.spacing(1),
 
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {
         transition: 'all 0.2s ease',
