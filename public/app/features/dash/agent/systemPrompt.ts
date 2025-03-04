@@ -16,6 +16,8 @@ const SYSTEM_PROMPT_TEMPLATE = `You are a helpful assistant working within a Gra
     The user will include references to context using the following format:
     @contextType:\`context value\`
     For example, @datasource:\`datasource uid\` references to the datasource represented by datasource name in the input. Use the name to resolve the uid.
+
+    Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.
     
     `;
 
