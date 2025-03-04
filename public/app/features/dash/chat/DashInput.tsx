@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
@@ -10,7 +10,6 @@ import { IconButton, LoadingBar, useStyles2, TextArea } from '@grafana/ui';
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
-import { getPersistedSetting, persistSetting } from './utils';
 
 import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
@@ -103,12 +102,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
         // Update message and send it
         this.updateMessage(transcript, true);
-        this.sendMessage().then(() => {
-          // Only restart listening if we're still in listening mode
-          if (this.state.isListening) {
-            this._recognition?.start();
-          }
-        });
+        this.sendMessage();
       };
 
       this._recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -161,6 +155,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     console.log('User message:', message);
     this.messages?.setLoading(true);
 
+    // Pause listening while processing
+    if (this.state.isListening && this._recognition) {
+      this._recognition.stop();
+    }
+
     // Store the message before we clear it
     const messageToSend = message;
     const userMessage = this.messages?.addUserMessage(messageToSend);
@@ -179,6 +178,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       this.messages?.setLoading(false);
       // Clear the message only after we've successfully processed it
       this.updateMessage('', false);
+      // Resume listening if we were listening before
+      if (this.state.isListening && this._recognition) {
+        this._recognition.start();
+      }
     }
   }
 
