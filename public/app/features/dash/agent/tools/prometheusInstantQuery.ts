@@ -28,8 +28,8 @@ const executePrometheusInstantQuery = async (
 };
 
 const prometheusInstantQuerySchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  query: z.string().describe('The PromQL query expression to evaluate'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   time: z
     .number()
     .optional()

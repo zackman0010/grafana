@@ -26,8 +26,8 @@ const executePrometheusRangeQuery = async (
 };
 
 const prometheusRangeQuerySchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  query: z.string().describe('The PromQL query expression to evaluate'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   start: z.number().describe('Start timestamp for the query range (Unix seconds)'),
   end: z.number().describe('End timestamp for the query range (Unix seconds)'),
   step: z.string().describe('Query resolution step width as a duration string (e.g., "15s", "1m", "1h")'),

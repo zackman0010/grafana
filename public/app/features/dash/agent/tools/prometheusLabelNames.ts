@@ -14,7 +14,7 @@ const getPrometheusLabelNames = async (datasourceUid: string, start?: number, en
           start: timeRange.start,
           end: timeRange.end,
         })
-      ).data?.result ?? []
+      ).data ?? []
     );
   } catch (error) {
     console.error('Error fetching Prometheus label names:', error);
@@ -23,7 +23,7 @@ const getPrometheusLabelNames = async (datasourceUid: string, start?: number, en
 };
 
 const prometheusLabelNamesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
   start: z
     .number()
     .optional()
@@ -32,7 +32,7 @@ const prometheusLabelNamesSchema = z.object({
     .number()
     .optional()
     .describe('Optional end timestamp for the query range. Defaults to current time if not provided.'),
-  regex: z.string().optional().describe('Optional regex pattern to filter label names'),
+  regex: z.string().optional().describe('Optional javascript regex pattern to filter label names'),
 });
 
 export const prometheusLabelNamesTool = tool(
@@ -44,20 +44,24 @@ export const prometheusLabelNamesTool = tool(
     let filteredNames = labelNames;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredNames = labelNames.filter((name) => regexPattern.test(name));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredNames = labelNames.filter((name) => name.includes(regex));
+        filteredNames = labelNames.filter((name) => name.toLowerCase().includes(regex.toLowerCase()));
       }
     }
 
-    return filteredNames.join(',');
+    // Return as JSON array
+    return JSON.stringify(filteredNames);
   },
   {
     name: 'list_prometheus_label_names',
-    description:
-      'List all available Prometheus label names for a given datasource. Default time range is last hour if not specified.',
+    description: `List values for a specified Prometheus label. Use label_name="__name__" to get metric names.
+       Supports regex pattern (case-insensitive) to filter values.
+       Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
+       It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Default time range is last hour if not specified.`,
     schema: prometheusLabelNamesSchema,
   }
 );

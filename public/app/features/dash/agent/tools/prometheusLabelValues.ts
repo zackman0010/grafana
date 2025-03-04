@@ -19,7 +19,7 @@ const getPrometheusLabelValues = async (
           start: timeRange.start,
           end: timeRange.end,
         })
-      ).data?.result ?? []
+      ).data ?? []
     );
   } catch (error) {
     console.error(`Error fetching Prometheus label values for ${labelName}:`, error);
@@ -28,8 +28,11 @@ const getPrometheusLabelValues = async (
 };
 
 const prometheusLabelValuesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource'),
-  label_name: z.string().describe('The label name to query values for. Use "__name__" for metric names.'),
+  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  label_name: z
+    .string()
+    .min(1)
+    .describe('(REQUIRED) The label name to query values for. Use "__name__" for metric names.'),
   start: z
     .number()
     .optional()
@@ -38,32 +41,35 @@ const prometheusLabelValuesSchema = z.object({
     .number()
     .optional()
     .describe('Optional end timestamp for the query range. Defaults to current time if not provided.'),
-  regex: z.string().optional().describe('Optional regex pattern to filter label values'),
+  regex: z.string().optional().describe('Optional javascript regex pattern to filter label values'),
 });
 
 export const prometheusLabelValuesTool = tool(
   async (input): Promise<string> => {
     const parsedInput = prometheusLabelValuesSchema.parse(input);
     const { datasource_uid, label_name, start, end, regex } = parsedInput;
-    const labelValues = await getPrometheusLabelValues(datasource_uid, label_name, start, end);
+    const labelValues = await getPrometheusLabelValues(datasource_uid, label_name || '__name__', start, end);
 
     let filteredValues = labelValues;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredValues = labelValues.filter((value) => regexPattern.test(value));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredValues = labelValues.filter((value) => value.includes(regex));
+        filteredValues = labelValues.filter((value) => value.toLowerCase().includes(regex.toLowerCase()));
       }
     }
 
-    return filteredValues.join(',');
+    return JSON.stringify(filteredValues);
   },
   {
     name: 'list_prometheus_label_values',
-    description:
-      'List values for a specified Prometheus label. Use label_name="__name__" to get metric names. Default time range is last hour if not specified.',
+    description: `List values for a specified Prometheus label. Use label_name="__name__" to get metric names.
+       Supports regex pattern (case-insensitive) to filter values.
+       Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
+       It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Default time range is last hour if not specified.`,
     schema: prometheusLabelValuesSchema,
   }
 );
