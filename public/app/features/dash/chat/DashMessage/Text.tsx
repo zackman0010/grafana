@@ -47,8 +47,10 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
         message = content.slice(0, jsonStartIndex) + content.slice(jsonEndIndex + 7);
       }
     } catch (e) {
-      // If JSON parsing fails, just remove the tags
-      message = content.slice(0, jsonStartIndex) + content.slice(jsonEndIndex + 7);
+      // If JSON parsing fails, preserve any content after the tags
+      const beforeJson = content.slice(0, jsonStartIndex);
+      const afterJson = content.slice(jsonEndIndex + 7);
+      message = beforeJson + afterJson;
     }
   } else {
     // If no <json> tags, try parsing as regular JSON
