@@ -95,7 +95,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
               currentChatContainer === index
                 ? () => (
                     <Icon
-                      name="trash-alt"
+                      name="times"
                       aria-label="Remove"
                       onClick={(evt) => {
                         evt.preventDefault();
