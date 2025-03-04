@@ -41,7 +41,8 @@ export const listDatasourcesTool = tool(
   },
   {
     name: 'list_datasources',
-    description: 'List all datasources. Can filter by uid (exact match) or name (regex pattern).',
+    description:
+      'When there is no current data source, use this tool to get all the available data sources. Can filter by uid (exact match) or name (regex pattern).',
     schema: listDatasourcesSchema,
   }
 );

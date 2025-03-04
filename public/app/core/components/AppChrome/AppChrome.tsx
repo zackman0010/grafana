@@ -1,15 +1,17 @@
 import { css, cx } from '@emotion/css';
 import classNames from 'classnames';
-import { PropsWithChildren, useEffect } from 'react';
+import { Resizable } from 're-resizable';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { locationSearchToObject, locationService } from '@grafana/runtime';
-import { useStyles2, LinkButton, useTheme2 } from '@grafana/ui';
+import { LinkButton, useStyles2, useTheme2 } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
 import { Trans } from 'app/core/internationalization';
 import store from 'app/core/store';
 import { CommandPalette } from 'app/features/commandPalette/CommandPalette';
+import { dash } from 'app/features/dash/chat/Dash';
 import { ScopesDashboards, useScopesDashboardsState } from 'app/features/scopes';
 
 import { AppChromeMenu } from './AppChromeMenu';
@@ -27,7 +29,8 @@ export function AppChrome({ children }: Props) {
   const { chrome } = useGrafana();
   const state = chrome.useState();
   const theme = useTheme2();
-  const styles = useStyles2(getStyles, Boolean(state.actions));
+  const [dashWidth, setDashWidth] = useState(500);
+  const styles = useStyles2(getStyles, Boolean(state.actions), dashWidth);
 
   const dockedMenuBreakpoint = theme.breakpoints.values.xl;
   const dockedMenuLocalStorageState = store.getBool(DOCKED_LOCAL_STORAGE_KEY, true);
@@ -36,6 +39,8 @@ export function AppChrome({ children }: Props) {
   const isScopesDashboardsOpen = Boolean(
     scopesDashboardsState?.isEnabled && scopesDashboardsState?.isPanelOpened && !scopesDashboardsState?.isReadOnly
   );
+  const { opened, settings } = dash.useState();
+  const { mode } = settings.useState();
   useMediaQueryChange({
     breakpoint: dockedMenuBreakpoint,
     onChange: (e) => {
@@ -120,11 +125,22 @@ export function AppChrome({ children }: Props) {
             className={cx(styles.pageContainer, {
               [styles.pageContainerMenuDocked]: menuDockedAndOpen || isScopesDashboardsOpen,
               [styles.pageContainerMenuDockedScopes]: menuDockedAndOpen && isScopesDashboardsOpen,
+              [styles.pageContainerMenuDockedDash]: opened && mode === 'sidebar',
             })}
             id="pageContent"
           >
             {children}
           </main>
+          {!state.chromeless && opened && mode === 'sidebar' && (
+            <Resizable
+              className={cx(styles.dashContainer)}
+              defaultSize={{ width: dashWidth }}
+              enable={{ left: true }}
+              onResize={(_evt, _direction, ref) => setDashWidth(ref.getBoundingClientRect().width)}
+            >
+              <dash.Component model={dash} />
+            </Resizable>
+          )}
         </div>
       </div>
       {!state.chromeless && !state.megaMenuDocked && <AppChromeMenu />}
@@ -136,17 +152,8 @@ export function AppChrome({ children }: Props) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
+const getStyles = (theme: GrafanaTheme2, hasActions: boolean, dashWidth: number) => {
   return {
-    chatContainer: css({
-      position: 'fixed',
-      bottom: 0,
-      right: 0,
-      width: '500px',
-      background: theme.colors.background.primary,
-      borderLeft: `1px solid ${theme.colors.border.weak}`,
-      zIndex: 99999,
-    }),
     content: css({
       display: 'flex',
       flexDirection: 'column',
@@ -176,6 +183,13 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
       height: `calc(100% - ${TOP_BAR_LEVEL_HEIGHT}px)`,
       zIndex: 1,
     }),
+    dashContainer: css({
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      position: 'fixed!important' as 'fixed',
+      height: `calc(100% - ${hasActions ? TOP_BAR_LEVEL_HEIGHT * 2 : TOP_BAR_LEVEL_HEIGHT}px)!important`,
+      zIndex: 1000,
+      right: 0,
+    }),
     scopesDashboardsContainerDocked: css({
       left: MENU_WIDTH,
     }),
@@ -202,6 +216,9 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
     }),
     pageContainerMenuDockedScopes: css({
       paddingLeft: `calc(${MENU_WIDTH} * 2)`,
+    }),
+    pageContainerMenuDockedDash: css({
+      paddingRight: dashWidth,
     }),
     pageContainer: css({
       label: 'page-container',

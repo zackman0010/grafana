@@ -2,62 +2,69 @@ import { css } from '@emotion/css';
 import { ReactNode } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { getTagColor, useStyles2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
+
+import { DashSettingsState } from '../DashSettings';
+import { getColors } from '../utils';
 
 import { DashMessageState } from './DashMessage';
 
 interface Props {
   children: ReactNode;
-  colors: ReturnType<typeof getTagColor>;
-  containerClassName: string;
+  codeOverflow: DashSettingsState['codeOverflow'];
   selected: boolean;
   sender: DashMessageState['sender'];
-  time: string;
-
-  hideTime?: boolean;
 }
 
-export const Bubble = ({ children, colors, containerClassName, selected, sender, time, hideTime }: Props) => {
-  const styles = useStyles2(getStyles, colors, containerClassName, selected, sender);
+export const Bubble = ({ children, codeOverflow, selected, sender }: Props) => {
+  const styles = useStyles2(getStyles, codeOverflow, selected, sender);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="chat-message-bubble">
       {children}
-      {!hideTime && <div className={styles.time}>{time}</div>}
     </div>
   );
 };
 
 const getStyles = (
   theme: GrafanaTheme2,
-  colors: ReturnType<typeof getTagColor>,
-  containerClassName: string,
+  codeOverflow: DashSettingsState['codeOverflow'],
   selected: boolean,
   sender: DashMessageState['sender']
-) => ({
-  container: css({
-    maxWidth: '75%',
-    padding: theme.spacing(1),
-    border: selected ? `3px dashed ${colors.borderColor}` : `1px solid ${colors.borderColor}`,
-    borderRadius: theme.spacing(1),
-    borderBottomRightRadius: sender === 'user' ? 0 : theme.spacing(1),
-    borderBottomLeftRadius: sender === 'ai' ? 0 : theme.spacing(1),
-    color: theme.colors.getContrastText(colors.color),
-    background: colors.color,
-    boxShadow: theme.shadows.z1,
-    position: 'relative',
+) => {
+  const { color, borderColor } = getColors(sender, theme);
 
-    [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-      transition: 'all 0.2s ease',
-    },
+  return {
+    container: css({
+      label: 'chat-message-bubble',
+      width: '100%',
+      border: sender === 'user' ? `0.5px solid ${borderColor}80` : 'none',
+      borderRadius: theme.spacing(0.25),
+      color: theme.colors.text.primary,
+      background: color,
+      position: 'relative',
+      textAlign: 'left',
+      padding: theme.spacing(1),
 
-    [`.${containerClassName}:has(:hover) &`]: {
-      boxShadow: theme.shadows.z2,
-    },
-  }),
-  time: css({
-    marginTop: theme.spacing(1),
-    textAlign: 'right',
-    ...theme.typography.bodySmall,
-  }),
-});
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        transition: 'all 0.2s ease',
+      },
+
+      '& :is(ol, ul)': {
+        paddingLeft: theme.spacing(2),
+      },
+
+      '& strong': {
+        fontWeight: 'bold',
+      },
+
+      '& code': {
+        wordBreak: 'break-all',
+        display: codeOverflow === 'wrap' ? 'initial' : 'block',
+        overflow: 'auto',
+        textOverflow: 'unset',
+        whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
+      },
+    }),
+  };
+};

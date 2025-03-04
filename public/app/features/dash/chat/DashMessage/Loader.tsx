@@ -1,21 +1,26 @@
 import { css, keyframes } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { getTagColor, useStyles2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
 
-interface Props {
-  colors: ReturnType<typeof getTagColor>;
-}
+import { getColors } from '../utils';
 
-export const Loader = ({ colors }: Props) => {
-  const styles = useStyles2(getStyles, colors);
+import { Bubble } from './Bubble';
+import { MessageContainer } from './MessageContainer';
+
+export const Loader = () => {
+  const styles = useStyles2(getStyles);
 
   return (
-    <div className={styles.container}>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
-    </div>
+    <MessageContainer selected={false} sender="ai">
+      <Bubble codeOverflow="wrap" selected={false} sender="ai">
+        <div className={styles.container}>
+          <span className={styles.point}></span>
+          <span className={styles.point}></span>
+          <span className={styles.point}></span>
+        </div>
+      </Bubble>
+    </MessageContainer>
   );
 };
 
@@ -35,7 +40,7 @@ const getBounce = (offset: string) =>
     },
   });
 
-const getStyles = (theme: GrafanaTheme2, colors: ReturnType<typeof getTagColor>) => ({
+const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     display: 'flex',
     flexDirection: 'row',
@@ -45,7 +50,7 @@ const getStyles = (theme: GrafanaTheme2, colors: ReturnType<typeof getTagColor>)
   point: css({
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(colors.color),
+    backgroundColor: theme.colors.getContrastText(getColors('ai', theme).color),
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 
