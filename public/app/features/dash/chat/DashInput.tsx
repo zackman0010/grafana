@@ -406,7 +406,15 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           }
           // Check if request was cancelled after tool finished
           if (this._abortController?.signal.aborted) {
+            if (tool) {
+              tool.setWorking(false);
+            }
             return;
+          }
+
+          // Clear working state immediately after tool completes
+          if (tool) {
+            tool.setWorking(false);
           }
 
           console.log('\n📥 Tool Response:', {
@@ -418,34 +426,37 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           // Log messages being sent to LLM after tool response
           this._logMessagesToLLM(this.messages?.state.langchainMessages!);
 
-          const nextAiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
-            signal: this._abortController?.signal,
-          });
-          // Check if request was cancelled after AI response
-          if (this._abortController?.signal.aborted) {
-            return;
-          }
+          try {
+            const nextAiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
+              signal: this._abortController?.signal,
+            });
+            // Check if request was cancelled after AI response
+            if (this._abortController?.signal.aborted) {
+              return;
+            }
 
-          this._logAIMessage(nextAiMessage.content, 'tool');
-          this.messages?.addAiMessage(nextAiMessage.content);
-          this.messages?.addLangchainMessage(nextAiMessage);
-          // Set the tool back to not working after successful completion
-          if (tool) {
-            tool.setWorking(false);
+            this._logAIMessage(nextAiMessage.content, 'tool');
+            this.messages?.addAiMessage(nextAiMessage.content);
+            this.messages?.addLangchainMessage(nextAiMessage);
+            await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+          } catch (error) {
+            throw error;
           }
-          await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
-        } catch (error: any) {
-          if (error.name === 'AbortError') {
+        } catch (error: unknown) {
+          if (error instanceof Error && error.name === 'AbortError') {
             console.log('Request was cancelled during tool execution');
+            if (tool) {
+              tool.setWorking(false);
+            }
             return;
           }
           // Set error state on the tool and continue with other tools
           if (tool) {
-            tool.setError(error.message || 'An error occurred while executing the tool');
+            tool.setError(error instanceof Error ? error.message : 'An error occurred while executing the tool');
             tool.setWorking(false);
             // Add error message to the chat
             this.messages?.addSystemMessage(
-              `${error.message || 'An error occurred while executing the tool'}`,
+              error instanceof Error ? error.message : 'An error occurred while executing the tool',
               false,
               true
             );
