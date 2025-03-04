@@ -70,6 +70,7 @@ ${
 - Refer to yourself as an Agent - never as an assistant.
 
 ## Response Format
+Markdown is supported.
 Your response must be formatted as a valid JSON object with this structure:
 <json>
 {{
