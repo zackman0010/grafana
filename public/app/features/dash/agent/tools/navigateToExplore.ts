@@ -10,11 +10,12 @@ import { lokiOrPrometheusTypeRefiner } from './refiners';
 const navigateToExploreSchema = z.object({
   datasource_uid: z.string().describe('Datasource UID that will execute the query').refine(lokiOrPrometheusTypeRefiner.func, lokiOrPrometheusTypeRefiner.message),
   query: z.string().describe('Query to be executed'),
+  navigate: z.boolean().describe('Whether to navigate to the Explore page. Only ever set this to true if the user has confirmed to navigate to Explore.'),
 });
 
 export const navigateToExploreTool = tool(
   async (input) => {
-    const { datasource_uid, query } = navigateToExploreSchema.parse(input);
+    const { datasource_uid, query, navigate } = navigateToExploreSchema.parse(input);
     const type = getDatasourceSrv().getAll().find((ds) => ds.uid === datasource_uid)?.type;
 
     const panes = {
@@ -37,9 +38,12 @@ export const navigateToExploreTool = tool(
       },
     };
 
-    locationService.push(`/explore?schemaVersion=1&panes=${JSON.stringify(panes)}`);
+    const url = `/explore?schemaVersion=1&panes=${JSON.stringify(panes)}`;
+    if (navigate) {
+      locationService.push(url);
+    }
 
-    return 'success';
+    return url;
   },
   {
     name: 'navigate_to_explore',
