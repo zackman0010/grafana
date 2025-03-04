@@ -98,5 +98,8 @@ const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOv
       marginLeft: 'auto',
       marginRight: 'auto',
     },
+    p: {
+      marginBottom: theme.spacing(1),
+    },
   }),
 });
