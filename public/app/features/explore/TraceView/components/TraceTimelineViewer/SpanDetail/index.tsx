@@ -52,16 +52,16 @@ const getStyles = (theme: GrafanaTheme2) => {
   return {
     header: css({
       display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'space-between',
-      gap: '0 1rem',
-      marginBottom: '0.25rem',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap: theme.spacing(2),
+      marginBottom: theme.spacing(1.5),
     }),
     listWrapper: css({
       overflow: 'hidden',
     }),
     list: css({
-      textAlign: 'right',
+      // textAlign: 'right',
     }),
     operationName: css({
       margin: 0,
@@ -235,12 +235,12 @@ export default function SpanDetail(props: SpanDetailProps) {
     },
     ...(span.childSpanCount > 0
       ? [
-          {
-            key: 'child_count',
-            label: 'Child Count:',
-            value: span.childSpanCount,
-          },
-        ]
+        {
+          key: 'child_count',
+          label: 'Child Count:',
+          value: span.childSpanCount,
+        },
+      ]
       : []),
   ];
 
@@ -347,14 +347,18 @@ export default function SpanDetail(props: SpanDetailProps) {
   }
 
   const focusSpanLink = createFocusSpanLink(traceID, spanID);
+  const operationResult = span.tags.find((tag) => ['http.status_code', 'http.response.status_code'].includes(tag.key));
+  console.log(operationResult)
   return (
     <div data-testid="span-detail-component">
       <div className={styles.header}>
         <h2 className={styles.operationName} title={operationName}>
-          {operationName}
+          {operationName}{operationResult ? ` (${operationResult.value})` : undefined}
         </h2>
         <div className={styles.listWrapper}>
-          <LabeledList className={styles.list} divider={true} items={overviewItems} />
+          <LabeledList
+            //  className={styles.list}
+            divider={true} items={overviewItems} />
         </div>
       </div>
       <div className={styles.linkList}>

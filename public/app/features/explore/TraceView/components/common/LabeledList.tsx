@@ -30,11 +30,9 @@ const getStyles = (divider: boolean) => (theme: GrafanaTheme2) => {
       padding: 0,
       ...(divider
         ? {
-            marginRight: '-8px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-end',
-          }
+          display: 'flex',
+          flexWrap: 'wrap',
+        }
         : {}),
     }),
     LabeledListItem: css({
@@ -42,9 +40,9 @@ const getStyles = (divider: boolean) => (theme: GrafanaTheme2) => {
       display: 'inline-block',
       ...(divider
         ? {
-            borderRight: `1px solid ${autoColor(theme, '#ddd')}`,
-            padding: '0 8px',
-          }
+          borderRight: `1px solid ${autoColor(theme, '#ddd')}`,
+          padding: '0 8px',
+        }
         : {}),
     }),
     LabeledListLabel: css({

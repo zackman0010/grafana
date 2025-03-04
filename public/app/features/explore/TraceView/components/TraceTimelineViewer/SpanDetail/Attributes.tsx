@@ -25,13 +25,13 @@ export const Attributes = ({
   // Order matters
   const standardAttributeResources = {
     service: { icon: 'application-observability', title: 'Service' },
+    'gf.feo11y': { icon: 'frontend-observability', title: 'Grafana RUM' },
+    k8s: { icon: 'kubernetes', title: 'Kubernetes' },
     'telemetry.sdk': { icon: 'graph-bar', title: 'Telemetry SDK' },
     'telemetry.distro': { icon: 'graph-bar', title: 'Telemetry Distro' },
-    k8s: { icon: 'kubernetes', title: 'Kubernetes' },
     cloud: { icon: 'cloud', title: 'Cloud' },
     host: { icon: 'cube', title: 'Host' },
     deployment: { icon: 'rocket', title: 'Deployment' },
-    'gf.feo11y': { icon: 'monitor', title: 'Faro' },
     db: { icon: 'database', title: 'Database' },
     'process.runtime': { icon: 'process', title: 'Runtime' },
     process: { icon: 'process', title: 'Process' },
