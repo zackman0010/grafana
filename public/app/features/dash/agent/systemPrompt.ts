@@ -128,14 +128,18 @@ Your response must be formatted as a valid JSON object with this structure:
   }}
 }}
 </json>
+
 `;
 
 export function generateSystemPrompt() {
   const context = getCurrentContext();
-  let contextPrompt = `The current page title is "${context.page.title}"  which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
-  contextPrompt += `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}`;
+  let contextPrompt = `
+  ## Current context and Grafana state
+
+  The current page title is "${context.page.title}"  which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
+  contextPrompt += `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}. `;
   if (context.time_range) {
-    contextPrompt += `The selected time range is ${context.time_range}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
+    contextPrompt += `The selected time range is ${context.time_range.text}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
   }
   if (context.datasource.type !== 'Unknown') {
     contextPrompt += `The current data source type is ${context.datasource.type}. The data source should be displayed by name to the user but internally referenced by the uid. You can resolve the uid using the list_datasources tool. `;
@@ -143,9 +147,11 @@ export function generateSystemPrompt() {
   if (context.query.expression) {
     contextPrompt += `The current query on display is \`${context.query.expression}\`. `;
   }
-  if (context.panels) {
+  if (context.panels.panels.length > 0) {
     contextPrompt += `The current panels in the dashboard are: ${JSON.stringify(context.panels)}. `;
   }
+
+  console.log(SYSTEM_PROMPT_TEMPLATE + contextPrompt)
 
   return SYSTEM_PROMPT_TEMPLATE + contextPrompt;
 }
