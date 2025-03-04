@@ -4,11 +4,12 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Dropdown, Icon, IconButton, Menu, MenuItem, Tab, TabsBar, useStyles2 } from '@grafana/ui';
 
+import { makeSingleRequest } from '../agent/singleRequest';
+import { getCurrentContext } from '../agent/tools/context';
+
 import { DashChatContainer } from './DashChatContainer';
 import { DashSettings, DashSettingsState } from './DashSettings';
 import { getPersistedSetting, persistSetting } from './utils';
-import { makeSingleRequest } from '../agent/singleRequest';
-import { getCurrentContext } from '../agent/tools/context';
 
 export interface DashState extends SceneObjectState {
   chatContainers: DashChatContainer[];
