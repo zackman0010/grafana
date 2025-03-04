@@ -55,7 +55,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
     <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
       <div className={styles.container}>
         <div className={cx(styles.header(hasInput), { expanded: opened })}>
-          <Icon name={working ? 'sync' : 'wrench'} className={working ? styles.spinner : ''} />
+          <Icon name={working ? 'sync' : 'check'} className={working ? styles.spinner : ''} />
           <span className={styles.name}>{content.name}</span>
           {hasInput && (
             <IconButton
