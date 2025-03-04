@@ -40,30 +40,35 @@ export class DashChat extends SceneObjectBase<DashChatState> {
   }
 
   public cloneChat(chat: DashChatInstance) {
-    const { messages, langchainMessages } = chat.state.messages.state;
+    const { messages: currentMessages, langchainMessages } = chat.state.messages.state;
 
     const [selectedMessage, selectedMessageIndex] = chat.state.messages.findSelectedMessage();
     const langchainMessageIndex = langchainMessages.findIndex((message) => message.id === selectedMessage?.state.key);
 
-    const newLangchainMessages = langchainMessages.slice(0, langchainMessageIndex);
-    const newMessages = messages.slice(0, selectedMessageIndex).map((message) => message.clone());
+    const input = new DashInput({
+      message: selectedMessage?.state.editedMessage ?? String(selectedMessage?.state.content!),
+    });
 
+    const messages = new DashMessages({
+      messages: currentMessages.slice(0, selectedMessageIndex).map((message) => message.clone()),
+      langchainMessages: langchainMessages.slice(0, langchainMessageIndex),
+    });
+
+    const newChat = new DashChatInstance({ input, messages });
     this.setState({
-      versions: [
-        ...this.state.versions,
-        new DashChatInstance({
-          input: new DashInput({ message: String(selectedMessage?.state.content!) }),
-          messages: new DashMessages({ messages: newMessages, langchainMessages: newLangchainMessages }),
-        }),
-      ],
+      versions: [...this.state.versions, newChat],
       versionIndex: this.state.versions.length,
     });
+    newChat.activate();
+    messages.activate();
+    input.activate();
+    input.sendMessage();
     getDash(this).persist();
   }
 
   public clearHistory() {
     this.setState({
-      versions: this.state.versions.filter((_version, index) => index !== this.state.versionIndex),
+      versions: this.state.versions.filter((_version, index) => index === this.state.versionIndex),
       versionIndex: 0,
     });
     getDash(this).persist();

@@ -125,7 +125,7 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
           autoFocus
           value={editedMessage}
           className={styles.editInput}
-          onClick={(evt) => evt.stopPropagation()}
+          onPointerDown={(evt) => evt.stopPropagation()}
           onChange={(evt) => model.updateEditedMessage(evt.target.value ?? '')}
         />
       ) : (

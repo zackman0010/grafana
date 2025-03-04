@@ -37,8 +37,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       message: state.message ?? '',
       speech: new Speech({ listening: state.listening ?? false }),
     });
-
-    this.state.logger.activate();
   }
 
   public recreateAgent() {
