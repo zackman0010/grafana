@@ -119,6 +119,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
     if (this.state.isListening) {
       this._recognition.stop();
+      this.setState({ isListening: false });
     } else {
       this.setState({ isListening: true });
       this._recognition.start();
