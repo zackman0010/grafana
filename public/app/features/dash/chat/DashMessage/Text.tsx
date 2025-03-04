@@ -27,33 +27,45 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   let jsonContent: any = undefined;
   let message = content;
 
-  // Find json tags anywhere in the content
-  const jsonStartIndex = content.indexOf('<json>');
-  const jsonEndIndex = content.indexOf('</json>');
+  // Process all JSON tags in the content
+  while (true) {
+    // Find json tags anywhere in the content
+    const jsonStartIndex = message.indexOf('<json>');
+    const jsonEndIndex = message.indexOf('</json>');
 
-  if (jsonStartIndex !== -1 && jsonEndIndex !== -1 && jsonEndIndex > jsonStartIndex) {
+    if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
+      break;
+    }
+
     // Extract content between tags and normalize it
-    const jsonStr = content
+    const jsonStr = message
       .slice(jsonStartIndex + 6, jsonEndIndex) // Remove <json> and </json>
       .trim();
 
     try {
       jsonContent = JSON.parse(jsonStr);
-      if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
-        // Just use the message from the JSON content
-        message = jsonContent.message;
+      if (jsonContent && typeof jsonContent === 'object') {
+        if ('message' in jsonContent) {
+          // Replace the JSON section with the message
+          message = message.slice(0, jsonStartIndex) + jsonContent.message + message.slice(jsonEndIndex + 7);
+        } else {
+          // If we have valid JSON but no message, just remove the tags
+          message = message.slice(0, jsonStartIndex) + message.slice(jsonEndIndex + 7);
+        }
       } else {
-        // If we have valid JSON but no message, just remove the tags
-        message = content.slice(0, jsonStartIndex) + content.slice(jsonEndIndex + 7);
+        // If we have valid JSON but it's not an object, just remove the tags
+        message = message.slice(0, jsonStartIndex) + message.slice(jsonEndIndex + 7);
       }
     } catch (e) {
       // If JSON parsing fails, preserve any content after the tags
-      const beforeJson = content.slice(0, jsonStartIndex);
-      const afterJson = content.slice(jsonEndIndex + 7);
+      const beforeJson = message.slice(0, jsonStartIndex);
+      const afterJson = message.slice(jsonEndIndex + 7);
       message = beforeJson + afterJson;
     }
-  } else {
-    // If no <json> tags, try parsing as regular JSON
+  }
+
+  // If no <json> tags were found, try parsing as regular JSON
+  if (message === content) {
     try {
       jsonContent = JSON.parse(content);
       if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
