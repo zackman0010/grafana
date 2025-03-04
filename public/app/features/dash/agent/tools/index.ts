@@ -1,3 +1,5 @@
+import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
+
 import { dashboardPanelsTool } from './dashboardPanels';
 import { getCurrentTimeTool } from './getCurrentTime';
 import { listDatasourcesTool } from './listDatasources';
@@ -22,6 +24,11 @@ export const tools = [
   navigateToExploreTool,
   navigateToDrilldownLogs,
   getCurrentTimeTool,
+  new TavilySearchResults({
+    apiKey: process.env.TAVILY_API_KEY,
+    maxResults: 1,
+    includeDomains: ['grafana.com'],
+  }),
 ];
 
 export const toolsByName = tools.reduce(
