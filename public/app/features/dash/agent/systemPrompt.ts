@@ -1,4 +1,5 @@
 import { getCurrentContext } from './tools/context';
+import { getPersistedSetting } from '../chat/utils';
 
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `
@@ -59,7 +60,11 @@ Think about the steps you need to take to answer the question and the best way t
 Explain your reasoning before you start executing any tools.
 
 ## Tone
-- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.
+${
+  getPersistedSetting('verbosity') === 'educational'
+    ? '- Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available".'
+    : '- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
+}
 - Be friendly and helpful.
 
 ## Response Format

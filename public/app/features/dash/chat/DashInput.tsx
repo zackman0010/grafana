@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { AIMessageChunk, HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import { useRef } from 'react';
 
@@ -72,6 +72,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _inputRef: HTMLTextAreaElement | null = null;
   private _recognition: SpeechRecognition | null = null;
   private _abortController: AbortController | null = null;
+  private _currentAgent = agent;
+
   public constructor(state: Partial<Pick<DashInputState, 'message' | 'isListening'>>) {
     super({
       ...state,
@@ -85,6 +87,34 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _activationHandler() {
     this.messages = getMessages(this);
     this._initializeSpeechRecognition();
+    this._setupVerbosityListener();
+  }
+
+  private _setupVerbosityListener() {
+    // Listen for verbosity changes
+    const settings = getDash(this).state.settings;
+    settings.subscribeToState((newState: { verbosity: string }) => {
+      if (newState.verbosity !== settings.state.verbosity) {
+        // Recreate the agent with new verbosity setting
+        this._currentAgent = agent;
+
+        // Send a system message to update the model's response style
+        const verbosityInstructions = {
+          concise:
+            'Please adjust your response style to be more concise. Use short, clear sentences and avoid unnecessary explanations or repetition.',
+          educational:
+            'Please adjust your response style to be more educational. Explain concepts as if speaking to someone new to Grafana, break down technical terms, and use analogies where helpful. Include helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available".',
+        };
+
+        const instruction = verbosityInstructions[newState.verbosity as keyof typeof verbosityInstructions];
+        if (instruction) {
+          // Add to both the UI messages and LangChain messages
+          this.messages?.addSystemMessage(instruction);
+          this.messages?.addLangchainMessage(new SystemMessage({ content: instruction }));
+          this._logAIMessage(instruction, 'final');
+        }
+      }
+    });
   }
 
   private _initializeSpeechRecognition() {
@@ -162,6 +192,29 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
+  private _logAIMessage(message: MessageContent, type: 'initial' | 'tool' | 'final' = 'initial') {
+    const timestamp = new Date().toLocaleTimeString();
+    const prefix = type === 'initial' ? '🤖' : type === 'tool' ? '🛠️' : '✨';
+    const messageText = typeof message === 'string' ? message : JSON.stringify(message);
+    console.log(`\n${prefix} AI (${timestamp}): ${messageText}`);
+  }
+
+  private _logMessagesToLLM(messages: Array<HumanMessage | AIMessageChunk | SystemMessage>) {
+    const timestamp = new Date().toLocaleTimeString();
+    const counts = {
+      system: messages.filter((m) => m instanceof SystemMessage).length,
+      user: messages.filter((m) => m instanceof HumanMessage).length,
+      ai: messages.filter((m) => m instanceof AIMessageChunk).length,
+    };
+    console.log(
+      `\n📤 Sending to LLM (${timestamp}): ${counts.system} system, ${counts.user} user, ${counts.ai} AI messages`
+    );
+    messages.forEach((msg, i) => {
+      const prefix = msg instanceof HumanMessage ? '👤' : msg instanceof SystemMessage ? '⚙️' : '🤖';
+      const content = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content);
+      console.log(`${prefix} [${i + 1}]: ${content}`);
+    });
+    
   private async _generateTitleSummary(userMessage: string): Promise<string> {
     try {
       // Create a system message with instructions for generating a title
@@ -231,7 +284,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
     this._abortController = new AbortController();
 
-    console.log('User message:', message);
+    console.log('\n👤 User Message:', message);
     this.messages?.setLoading(true);
 
     // Pause listening while processing
@@ -255,6 +308,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     try {
       this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
 
+      // Log messages being sent to LLM
+      this._logMessagesToLLM(this.messages?.state.langchainMessages!);
+
+      const aiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
+
       // Only generate a title if this is the first message and the chat has a default name
       if (isFirstMessage && hasDefaultName) {
         const titleSummary = await this._generateTitleSummary(messageToSend);
@@ -264,7 +322,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
         signal: this._abortController.signal,
       });
-      console.log('AI response:', aiMessage.content);
+      this._logAIMessage(aiMessage.content);
       this.messages?.addAiMessage(aiMessage.content);
       this.messages?.addLangchainMessage(aiMessage);
       await this._handleToolCalls(aiMessage);
@@ -274,8 +332,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
         return;
       }
       // Only log and show error message for unexpected errors
-      console.error('Error processing message:', error);
-      this.messages?.addSystemMessage(`Oops: ${error.message || 'Unknown error occurred'}`);
+      console.error('\n❌ Error:', error.message || 'Unknown error occurred');
+      this.messages?.addSystemMessage(error.message || 'Unknown error occurred', false, true);
     } finally {
       this.messages?.setLoading(false);
       this._abortController = null;
@@ -299,7 +357,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
         return;
       }
 
-      console.log('Tool call:', {
+      console.log('\n🛠️ Tool Call:', {
         name: toolCall.name,
         type: 'tool_notification',
       });
@@ -328,12 +386,16 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return;
           }
 
-          console.log('Tool response:', {
+          console.log('\n📥 Tool Response:', {
             content: toolResponse.content,
             type: 'tool_response',
           });
           this.messages?.addLangchainMessage(toolResponse);
-          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
+
+          // Log messages being sent to LLM after tool response
+          this._logMessagesToLLM(this.messages?.state.langchainMessages!);
+
+          const nextAiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
             signal: this._abortController?.signal,
           });
           // Check if request was cancelled after AI response
@@ -341,7 +403,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return;
           }
 
-          console.log('Next AI response after tool:', nextAiMessage.content);
+          this._logAIMessage(nextAiMessage.content, 'tool');
           this.messages?.addAiMessage(nextAiMessage.content);
           this.messages?.addLangchainMessage(nextAiMessage);
           await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
