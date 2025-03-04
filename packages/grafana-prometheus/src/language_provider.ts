@@ -206,8 +206,8 @@ export default class PromQlLanguageProvider extends LanguageProvider {
   /**
    * @param key
    */
-  fetchLabelValues = async (key: string): Promise<string[]> => {
-    const params = this.datasource.getAdjustedInterval(this.timeRange);
+  fetchLabelValues = async (key: string, timeRange?: TimeRange): Promise<string[]> => {
+    const params = this.datasource.getAdjustedInterval(timeRange ?? this.timeRange);
     const interpolatedName = this.datasource.interpolateString(key);
     const interpolatedAndEscapedName = escapeForUtf8Support(removeQuotesIfExist(interpolatedName));
     const url = `/api/v1/label/${interpolatedAndEscapedName}/values`;

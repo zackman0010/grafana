@@ -2,28 +2,31 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
 import { locationService } from '@grafana/runtime';
+import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+
+import { lokiOrPrometheusTypeRefiner } from './refiners';
+
 
 const navigateToExploreSchema = z.object({
-  uid: z.string().describe('Datasource UID that will execute the query'),
-  type: z.enum(['loki', 'prometheus']).describe('Type of the data source.'),
+  datasource_uid: z.string().describe('Datasource UID that will execute the query').refine(lokiOrPrometheusTypeRefiner.func, lokiOrPrometheusTypeRefiner.message),
   query: z.string().describe('Query to be executed'),
 });
 
 export const navigateToExploreTool = tool(
   async (input) => {
-    // Parse the input using the schema
-    const { uid, query, type } = navigateToExploreSchema.parse(input);
+    const { datasource_uid, query } = navigateToExploreSchema.parse(input);
+    const type = getDatasourceSrv().getAll().find((ds) => ds.uid === datasource_uid)?.type;
 
     const panes = {
       dash: {
-        datasource: uid,
+        datasource: datasource_uid,
         queries: [
           {
             refId: 'A',
             expr: query,
             datasource: {
               type: type,
-              uid: uid,
+              uid: datasource_uid,
             },
           },
         ],
