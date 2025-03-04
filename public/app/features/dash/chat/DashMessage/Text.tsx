@@ -34,26 +34,26 @@ function processMessageContent(content: string): string {
     .trim();
 
   try {
-    // Log the first few characters to check for any hidden characters
+    // Parse the JSON content
     const jsonContent = JSON.parse(jsonStr);
+
+    // If we have a valid object with a message property, return the message
     if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
-      // Only use the message from the JSON content
       return jsonContent.message;
     }
+
+    // If we have a valid object but no message, return the stringified content
+    return JSON.stringify(jsonContent);
   } catch (e) {
-    // If JSON parsing fails, let's manually clean up the string
-    const cleanedStr = jsonStr
-      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
-      .replace(/\n/g, '\\n') // Normalize line feeds
-      .replace(/\r/g, '') // Remove carriage returns
-      .trim();
+    // If JSON parsing fails, try to extract just the message content using regex
+    const messageMatch = jsonStr.match(/"message"\s*:\s*"([^"]+)"/);
+    if (messageMatch) {
+      return messageMatch[1].replace(/\\n/g, '\n');
+    }
 
-    console.warn('Failed to parse JSON content:', e);
-    // If JSON parsing fails, return the original content
-    return cleanedStr;
+    // If all else fails, return the original content without the json tags
+    return content.replace(/<\/?json>/g, '').trim();
   }
-
-  return content;
 }
 
 function TextRenderer({ model }: SceneComponentProps<Text>) {
