@@ -23,9 +23,7 @@ import { autoColor } from '../../Theme';
 import { TraceLink, TNil, SpanLinkDef } from '../../types';
 
 import * as markers from './AccordianKeyValues.markers';
-import KeyValuesTable from './KeyValuesTable';
-
-import { alignIcon } from '.';
+import KeyValuesTable, { AccordionHeaderLink } from './KeyValuesTable';
 
 export const getStyles = (theme: GrafanaTheme2) => {
   return {
@@ -35,6 +33,7 @@ export const getStyles = (theme: GrafanaTheme2) => {
     header: css({
       display: 'flex',
       alignItems: 'center',
+      gap: '0.25em',
       label: 'header',
       cursor: 'pointer',
       overflow: 'hidden',
@@ -47,6 +46,9 @@ export const getStyles = (theme: GrafanaTheme2) => {
     }),
     headerTitle: css({
       display: 'flex',
+    }),
+    headerLink: css({
+      display: 'inline-flex',
     }),
     headerEmpty: css({
       label: 'headerEmpty',
@@ -102,6 +104,7 @@ export type AccordianKeyValuesProps = {
   linksGetter?: ((pairs: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
   onToggle?: null | (() => void);
   withSummary?: boolean;
+  headerLink?: SpanLinkDef;
   links: SpanLinkDef[];
 };
 
@@ -142,11 +145,12 @@ export default function AccordianKeyValues({
   linksGetter,
   onToggle = null,
   withSummary = true,
+  headerLink,
   links,
 }: AccordianKeyValuesProps) {
   const isEmpty = (!Array.isArray(data) || !data.length) && !logName;
   const styles = useStyles2(getStyles);
-  const iconCls = cx(alignIcon, { [styles.emptyIcon]: isEmpty });
+  const iconCls = cx({ [styles.emptyIcon]: isEmpty });
   let arrow: React.ReactNode | null = null;
   let headerProps: {} | null = null;
   const tableFields = logName ? [{ key: 'event name', value: logName }, ...data] : data;
@@ -180,8 +184,11 @@ export default function AccordianKeyValues({
           {label}
           {showDataSummaryFields && ':'}
         </strong>
+        {headerLink && (
+          <AccordionHeaderLink href={headerLink.href} title={headerLink.title} className={styles.headerLink} />
+        )}
         {showDataSummaryFields && (
-          <span className={css({ marginLeft: '0.7em' })}>
+          <span>
             <KeyValuesSummary data={data} />
           </span>
         )}

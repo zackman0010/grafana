@@ -25,6 +25,7 @@ import CopyIcon from '../../common/CopyIcon';
 import { TraceLink, TNil, SpanLinkDef } from '../../types';
 
 import jsonMarkup from './jsonMarkup';
+import { getAttributeLinks } from './span-utils';
 
 const copyIconClassName = 'copyIcon';
 
@@ -92,7 +93,7 @@ function parseIfComplexJson(value: unknown) {
     try {
       return JSON.parse(value);
       // eslint-disable-next-line no-empty
-    } catch (_) { }
+    } catch (_) {}
   }
   return value;
 }
@@ -107,6 +108,27 @@ export const LinkValue = ({ href, title = '', children }: PropsWithChildren<Link
   return (
     <a href={href} title={title} target="_blank" rel="noopener noreferrer">
       {children} <Icon name="external-link-alt" />
+    </a>
+  );
+};
+
+interface AccordionHeaderLinkProps {
+  href: string;
+  title?: string;
+  className?: string;
+}
+
+export const AccordionHeaderLink = ({ href, title, className }: AccordionHeaderLinkProps) => {
+  return (
+    <a
+      href={href}
+      title={title}
+      onClick={(e) => e.stopPropagation()}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+    >
+      <Icon name="external-link-alt" />
     </a>
   );
 };
@@ -131,7 +153,7 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
             };
             const jsonTable = <div className={styles.jsonTable} dangerouslySetInnerHTML={markup} />;
             // Find all links targeting this attribute
-            const scopedLinks = links.filter((link) => (link.linkAttributes ?? []).includes(row.key));
+            const scopedLinks = getAttributeLinks(row.key, links);
             // Find the most specific link the possibly multiple links targeting this attribute
             const keyLink = scopedLinks.sort((a, b) => b.linkAttributes!.length - a.linkAttributes!.length).at(0);
             const valueMarkup = keyLink ? <Link href={keyLink.href}>{jsonTable}</Link> : jsonTable;

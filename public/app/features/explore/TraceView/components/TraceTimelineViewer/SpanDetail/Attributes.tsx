@@ -7,6 +7,7 @@ import { SpanLinkDef, TNil } from '../../types';
 import { TraceLink, TraceSpan } from '../../types/trace';
 
 import AccordianKeyValues from './AccordianKeyValues';
+import { getAttributeLinks } from './span-utils';
 
 export type AttributesProps = {
   span: TraceSpan;
@@ -19,6 +20,12 @@ export type AttributesProps = {
   isTagsOpen: boolean;
   detailAttributeItemToggle: (spanID: string, attribute: any) => void;
 };
+
+interface GroupedAttributes {
+  attributes: TraceKeyValuePair[];
+  // Map of links where the link.href is the key
+  linksMap: Record<string, SpanLinkDef>;
+}
 
 export const Attributes = ({
   span,
@@ -46,22 +53,37 @@ export const Attributes = ({
     // 'os': { icon: 'os-linux', title: 'OS' },
   } as const;
   const groupBy = (attributes: TraceKeyValuePair[]) =>
-    attributes.reduce<Record<string, TraceKeyValuePair[]>>(
+    attributes.reduce<Record<string, GroupedAttributes>>(
       (acc, attribute) => {
         const [key] = Object.entries(standardAttributeResources).find(([key]) => attribute.key.startsWith(key)) || [];
 
         if (key) {
-          acc[key] = [...(acc[key] || []), attribute];
+          const scopedLinks = getAttributeLinks(attribute.key, links).reduce<Record<string, SpanLinkDef>>(
+            (linkMap, link) => {
+              linkMap[link.href] = link;
+              return linkMap;
+            },
+            {}
+          );
+          if (acc[key]) {
+            acc[key].attributes.push(attribute);
+            acc[key].linksMap = { ...acc[key].linksMap, ...scopedLinks };
+          } else {
+            acc[key] = {
+              attributes: [attribute],
+              linksMap: scopedLinks,
+            };
+          }
         } else {
-          acc['other'] = [...(acc['other'] || []), attribute];
+          acc['other'].attributes.push(attribute);
         }
 
         return acc;
       },
-      { other: [] }
+      { other: { attributes: [], linksMap: {} } }
     );
   const groupedByResourceAttributes = Object.entries(groupBy(span.process.tags)).filter(
-    ([, value]) => value.length > 0
+    ([, group]) => group.attributes.length > 0
   );
   const sortedGroupedByResourceAttributes = sortBy(groupedByResourceAttributes, ([attribute]) => {
     if (attribute === 'other') {
@@ -84,17 +106,21 @@ export const Attributes = ({
       {span.process.tags && (
         <>
           <Text weight="bold">Resource attributes</Text>
-          {sortedGroupedByResourceAttributes.map(([key, attribute]) => {
+          {sortedGroupedByResourceAttributes.map(([key, { attributes, linksMap }]) => {
             const { icon, title = 'Other' } =
               standardAttributeResources[key as keyof typeof standardAttributeResources] || {};
+            const headerLink = sortBy(Object.values(linksMap), (link) => link.href.length ?? 0)
+              .reverse()
+              .at(0);
             return (
               <AccordianKeyValues
                 key={key}
-                data={attribute}
+                data={attributes}
                 label={getLabelTitle(title, icon)}
                 linksGetter={linksGetter}
                 isOpen={resourceAttributesState.openedItems.has(key)}
                 onToggle={() => detailAttributeItemToggle(span.spanID, key)}
+                headerLink={headerLink}
                 links={links}
               />
             );
