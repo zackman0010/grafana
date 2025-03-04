@@ -157,6 +157,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       if (this.state.isListening && this._recognition) {
         this._recognition.start();
       }
+      // Add the cancellation message
+      this.messages?.addSystemMessage('Canceled by user', true);
     }
   }
 
@@ -195,9 +197,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       this.messages?.addLangchainMessage(aiMessage);
       await this._handleToolCalls(aiMessage);
     } catch (error: any) {
-      if (error.name === 'AbortError') {
+      if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
         // Don't log as error since this is an expected cancellation
-        this.messages?.addSystemMessage('Canceled by user', true);
         return;
       }
       // Only log and show error message for unexpected errors
