@@ -78,7 +78,8 @@ ${
 
 ## Response Format
 Markdown is supported.
-Your response must be formatted as a valid JSON object with this structure:
+Your response must be formatted as a valid JSON object with the structure below. All text fields are properly escaped.
+
 <json>
 {{
   // In the message you reference data using <panel:i> <query:i> <alert:i> where i is the index of the data in the data object
