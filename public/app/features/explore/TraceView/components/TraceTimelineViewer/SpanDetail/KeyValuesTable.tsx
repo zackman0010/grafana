@@ -92,7 +92,7 @@ function parseIfComplexJson(value: unknown) {
     try {
       return JSON.parse(value);
       // eslint-disable-next-line no-empty
-    } catch (_) {}
+    } catch (_) { }
   }
   return value;
 }

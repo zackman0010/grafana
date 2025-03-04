@@ -78,6 +78,7 @@ export type SpanDetailRowProps = {
   onDetailToggled: (spanID: string) => void;
   linksGetter: (span: TraceSpan, links: TraceKeyValuePair[], index: number) => TraceLink[];
   logItemToggle: (spanID: string, log: TraceLog) => void;
+  attributeItemToggle: (spanID: string, attribute: any) => void;
   logsToggle: (spanID: string) => void;
   processToggle: (spanID: string) => void;
   referenceItemToggle: (spanID: string, reference: TraceSpanReference) => void;
@@ -146,6 +147,7 @@ export class UnthemedSpanDetailRow extends PureComponent<SpanDetailRowProps> {
       traceFlameGraphs,
       setTraceFlameGraphs,
       setRedrawListView,
+      attributeItemToggle,
     } = this.props;
     const styles = getStyles(theme);
     return (
@@ -170,6 +172,7 @@ export class UnthemedSpanDetailRow extends PureComponent<SpanDetailRowProps> {
         <TimelineRow.Cell width={1 - columnDivision}>
           <div className={styles.infoWrapper} style={{ borderTopColor: color }}>
             <SpanDetail
+              attributeItemToggle={attributeItemToggle}
               detailState={detailState}
               linksGetter={this._linksGetter}
               logItemToggle={logItemToggle}

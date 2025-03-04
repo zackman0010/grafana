@@ -92,6 +92,7 @@ export function TraceView(props: Props) {
     detailTagsToggle,
     detailWarningsToggle,
     detailStackTracesToggle,
+    detailAttributeItemToggle,
   } = useDetailState(props.dataFrames[0]);
 
   const { removeHoverIndentGuideId, addHoverIndentGuideId, hoverIndentGuideIds } = useHoverIndentGuide();
@@ -212,6 +213,7 @@ export function TraceView(props: Props) {
             expandAll={expandAll}
             expandOne={expandOne}
             childrenToggle={childrenToggle}
+            detailAttributeItemToggle={detailAttributeItemToggle}
             detailLogItemToggle={detailLogItemToggle}
             detailLogsToggle={detailLogsToggle}
             detailWarningsToggle={detailWarningsToggle}
@@ -307,20 +309,20 @@ function useFocusSpanLink(options: {
         ? () => setFocusedSpanId(focusedSpanId === spanId ? undefined : spanId)
         : options.splitOpenFn
           ? () =>
-              options.splitOpenFn({
-                datasourceUid: options.datasource?.uid!,
-                queries: [
-                  {
-                    ...query!,
-                    query: traceId,
-                  },
-                ],
-                panelsState: {
-                  trace: {
-                    spanId,
-                  },
+            options.splitOpenFn({
+              datasourceUid: options.datasource?.uid!,
+              queries: [
+                {
+                  ...query!,
+                  query: traceId,
                 },
-              })
+              ],
+              panelsState: {
+                trace: {
+                  spanId,
+                },
+              },
+            })
           : undefined,
       replaceVariables: getTemplateSrv().replace.bind(getTemplateSrv()),
     });

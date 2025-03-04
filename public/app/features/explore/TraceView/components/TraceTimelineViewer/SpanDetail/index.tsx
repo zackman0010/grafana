@@ -186,6 +186,7 @@ export type SpanDetailProps = {
   detailState: DetailState;
   linksGetter: ((links: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
   logItemToggle: (spanID: string, log: TraceLog) => void;
+  attributeItemToggle: (spanID: string, attribute: any) => void;
   logsToggle: (spanID: string) => void;
   processToggle: (spanID: string) => void;
   span: TraceSpan;
@@ -213,6 +214,7 @@ export default function SpanDetail(props: SpanDetailProps) {
     detailState,
     linksGetter,
     logItemToggle,
+    attributeItemToggle,
     logsToggle,
     processToggle,
     span,
@@ -236,6 +238,7 @@ export default function SpanDetail(props: SpanDetailProps) {
     isTagsOpen,
     isProcessOpen,
     logs: logsState,
+    resourceAttributes: resourceAttributesState,
     isWarningsOpen,
     references: referencesState,
     isStackTracesOpen,
@@ -273,12 +276,12 @@ export default function SpanDetail(props: SpanDetailProps) {
     },
     ...(span.childSpanCount > 0
       ? [
-          {
-            key: 'child_count',
-            label: 'Child Count:',
-            value: span.childSpanCount,
-          },
-        ]
+        {
+          key: 'child_count',
+          label: 'Child Count:',
+          value: span.childSpanCount,
+        },
+      ]
       : []),
   ];
 
@@ -400,7 +403,9 @@ export default function SpanDetail(props: SpanDetailProps) {
           <Attributes
             span={span}
             linksGetter={linksGetter}
+            detailAttributeItemToggle={attributeItemToggle}
             tagsToggle={tagsToggle}
+            resourceAttributesState={resourceAttributesState}
             processToggle={processToggle}
             isTagsOpen={isTagsOpen}
             isProcessOpen={isProcessOpen}

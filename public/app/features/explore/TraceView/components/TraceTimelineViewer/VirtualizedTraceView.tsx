@@ -80,6 +80,7 @@ type TVirtualizedTraceViewOwnProps = {
   spanBarOptions: SpanBarOptions | undefined;
   linksGetter: (span: TraceSpan, items: TraceKeyValuePair[], itemIndex: number) => TraceLink[];
   childrenToggle: (spanID: string) => void;
+  detailAttributeItemToggle: (spanID: string, attribute: any) => void;
   detailLogItemToggle: (spanID: string, log: TraceLog) => void;
   detailLogsToggle: (spanID: string) => void;
   detailWarningsToggle: (spanID: string) => void;
@@ -197,14 +198,14 @@ function generateRowStatesFromTrace(
 ): RowState[] {
   return trace
     ? generateRowStates(
-        trace.spans,
-        childrenHiddenIDs,
-        detailStates,
-        findMatchesIDs,
-        showSpanFilterMatchesOnly,
-        showCriticalPathSpansOnly,
-        criticalPath
-      )
+      trace.spans,
+      childrenHiddenIDs,
+      detailStates,
+      findMatchesIDs,
+      showSpanFilterMatchesOnly,
+      showCriticalPathSpansOnly,
+      criticalPath
+    )
     : [];
 }
 
@@ -557,6 +558,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
       traceFlameGraphs,
       setTraceFlameGraphs,
       setRedrawListView,
+      detailAttributeItemToggle
     } = this.props;
     const detailState = detailStates.get(spanID);
     if (!trace || !detailState) {
@@ -575,6 +577,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
           linksGetter={linksGetter}
           logItemToggle={detailLogItemToggle}
           logsToggle={detailLogsToggle}
+          attributeItemToggle={detailAttributeItemToggle}
           processToggle={detailProcessToggle}
           referenceItemToggle={detailReferenceItemToggle}
           referencesToggle={detailReferencesToggle}

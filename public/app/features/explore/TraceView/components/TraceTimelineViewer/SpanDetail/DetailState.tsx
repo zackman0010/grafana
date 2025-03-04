@@ -23,6 +23,7 @@ export default class DetailState {
   isTagsOpen: boolean;
   isProcessOpen: boolean;
   logs: { isOpen: boolean; openedItems: Set<TraceLog> };
+  resourceAttributes: { isOpen: boolean; openedItems: Set<any> };
   references: { isOpen: boolean; openedItems: Set<TraceSpanReference> };
   isWarningsOpen: boolean;
   isStackTracesOpen: boolean;
@@ -37,6 +38,7 @@ export default class DetailState {
       isStackTracesOpen,
       logs,
       references,
+      resourceAttributes,
     }: DetailState | Record<string, undefined> = oldState || {};
     this.isTagsOpen = Boolean(isTagsOpen);
     this.isProcessOpen = Boolean(isProcessOpen);
@@ -50,6 +52,10 @@ export default class DetailState {
     this.references = {
       isOpen: Boolean(references && references.isOpen),
       openedItems: references && references.openedItems ? new Set(references.openedItems) : new Set(),
+    };
+    this.resourceAttributes = {
+      isOpen: Boolean(resourceAttributes && resourceAttributes.isOpen),
+      openedItems: resourceAttributes && resourceAttributes.openedItems ? new Set(resourceAttributes.openedItems) : new Set(),
     };
   }
 
@@ -105,6 +111,16 @@ export default class DetailState {
       next.logs.openedItems.delete(logItem);
     } else {
       next.logs.openedItems.add(logItem);
+    }
+    return next;
+  }
+
+  toggleResourceAttributes(resourceAttribute: any) {
+    const next = new DetailState(this);
+    if (next.resourceAttributes.openedItems.has(resourceAttribute)) {
+      next.resourceAttributes.openedItems.delete(resourceAttribute);
+    } else {
+      next.resourceAttributes.openedItems.add(resourceAttribute);
     }
     return next;
   }

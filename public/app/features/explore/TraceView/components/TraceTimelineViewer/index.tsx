@@ -85,6 +85,7 @@ export type TProps = {
   expandOne: (spans: TraceSpan[]) => void;
 
   childrenToggle: (spanID: string) => void;
+  detailAttributeItemToggle: (spanID: string, attribute: any) => void;
   detailLogItemToggle: (spanID: string, log: TraceLog) => void;
   detailLogsToggle: (spanID: string) => void;
   detailWarningsToggle: (spanID: string) => void;

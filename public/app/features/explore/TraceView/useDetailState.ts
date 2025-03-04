@@ -57,6 +57,21 @@ export function useDetailState(frame: DataFrame) {
     [detailStates]
   );
 
+  const detailAttributeItemToggle = useCallback(
+    function detailAttributeItemToggle(spanID: string, attribute: any) {
+      console.log('detailAttributeItemToggle', spanID, attribute);
+      const old = detailStates.get(spanID);
+      if (!old) {
+        return;
+      }
+      const detailState = old.toggleResourceAttributes(attribute);
+      const newDetailStates = new Map(detailStates);
+      newDetailStates.set(spanID, detailState);
+      return setDetailStates(newDetailStates);
+    },
+    [detailStates]
+  );
+
   return {
     detailStates,
     toggleDetail,
@@ -86,6 +101,7 @@ export function useDetailState(frame: DataFrame) {
       (spanID: string) => makeDetailSubsectionToggle('tags', detailStates, setDetailStates)(spanID),
       [detailStates]
     ),
+    detailAttributeItemToggle
   };
 }
 

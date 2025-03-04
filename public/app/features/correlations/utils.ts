@@ -231,6 +231,142 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
               },
             },
           },
+          {
+            uid: 'fe-o11y',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Frontend observability',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                // url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}/deployment/${__span.tags["k8s.deployment.name"]}/${__span.tags["k8s.pod.name"]}',
+                url: 'https://appo11y.grafana.net/a/grafana-kowalski-app/apps/${__span.tags["gf.feo11y.app.id"]}',
+              },
+            },
+          },
+          {
+            uid: 'appo11y-namespace-and-name',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Application observability > Service overview',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['service.namespace', 'service.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: '/a/grafana-app-observability-app/services/service/${__span.tags["service.namespace"]}---${__span.tags["service.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'appo11y-name',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Application observability > Service overview',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['service.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: '/a/grafana-app-observability-app/services/service/${__span.tags["service.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-cluster',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Cluster view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.cluster.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/cluster/${__span.tags["k8s.cluster.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-namespace',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Namespace view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.namespace.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-node',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Node view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.node.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/nodes/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.node.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-deployment',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Deployment view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.deployment.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}/deployment/${__span.tags["k8s.deployment.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-pod',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Pod view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.pod.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}/deployment/${__span.tags["k8s.deployment.name"]}/${__span.tags["k8s.pod.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'fe-o11y',
+            sourceUID: 'grafanacloud-appo11y-traces',
+            orgId: 1,
+            label: 'Frontend observability',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11y.grafana.net/a/grafana-kowalski-app/apps/${__span.tags["gf.feo11y.app.id"]}',
+              },
+            },
+          },
         ],
         page: 1,
         limit: 100,

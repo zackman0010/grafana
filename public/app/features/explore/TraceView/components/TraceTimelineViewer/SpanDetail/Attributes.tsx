@@ -13,9 +13,11 @@ export type AttributesProps = {
   linksGetter: ((links: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
   tagsToggle: (spanID: string) => void;
   processToggle: (spanID: string) => void;
-  isTagsOpen: boolean;
   isProcessOpen: boolean;
   links: SpanLinkDef[];
+  resourceAttributesState: { isOpen: boolean; openedItems: Set<any> };
+  isTagsOpen: boolean;
+  detailAttributeItemToggle: (spanID: string, attribute: any) => void;
 };
 
 export const Attributes = ({
@@ -24,8 +26,9 @@ export const Attributes = ({
   tagsToggle,
   processToggle,
   isTagsOpen,
-  isProcessOpen,
   links,
+  resourceAttributesState,
+  detailAttributeItemToggle,
 }: AttributesProps) => {
   // Order matters
   const standardAttributeResources = {
@@ -67,22 +70,19 @@ export const Attributes = ({
     return Object.keys(standardAttributeResources).findIndex((key) => attribute === key);
   });
 
-  console.log(span);
-
   return (
     <>
       <AccordianKeyValues
         data={span.tags}
         label="Span Attributes"
         linksGetter={linksGetter}
+        links={links}
         isOpen={isTagsOpen}
         onToggle={() => tagsToggle(span.spanID)}
-        links={links}
       />
 
       {span.process.tags && (
         <>
-          {' '}
           <Text weight="bold">Resource attributes</Text>
           {sortedGroupedByResourceAttributes.map(([key, attribute]) => {
             const { icon, title = 'Other' } =
@@ -93,8 +93,8 @@ export const Attributes = ({
                 data={attribute}
                 label={getLabelTitle(title, icon)}
                 linksGetter={linksGetter}
-                isOpen={isProcessOpen}
-                onToggle={() => processToggle(span.spanID)}
+                isOpen={resourceAttributesState.openedItems.has(key)}
+                onToggle={() => detailAttributeItemToggle(span.spanID, key)}
                 links={links}
               />
             );
