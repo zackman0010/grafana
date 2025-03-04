@@ -28,6 +28,10 @@ export class DashChatContainer extends SceneObjectBase<DashChatContainerState> {
     this.setState({ currentVersion: this.state.versions.indexOf(chat) });
   }
 
+  public setName(name: string) {
+    this.setState({ name });
+  }
+
   public cloneChat(chat: DashChat) {
     const { messages, langchainMessages } = chat.state.messages.state;
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
+import { AIMessageChunk, HumanMessage, SystemMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import { useRef } from 'react';
 
@@ -7,13 +7,13 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, useStyles2, TextArea, Tooltip } from '@grafana/ui';
 
-import { agent } from '../agent/agent';
+import { agent, workflowAgent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
 import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
-import { getMessages } from './utils';
+import { getDash, getMessages } from './utils';
 
 import '@webscopeio/react-textarea-autocomplete/style.css';
 
@@ -162,6 +162,62 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
+  private async _generateTitleSummary(userMessage: string): Promise<string> {
+    try {
+      // Create a system message with instructions for generating a title
+      const systemMessage = new SystemMessage({
+        content:
+          "Generate a concise title (maximum 20 characters) that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation.",
+      });
+
+      // Create a human message with the user's input
+      const humanMessage = new HumanMessage({
+        content: userMessage,
+      });
+
+      // Make a separate LLM call with just these two messages
+      const titleGenerator = workflowAgent.llm.bind({});
+      const titleResponse = await titleGenerator.invoke([systemMessage, humanMessage]);
+
+      // Extract and clean the title
+      let title = titleResponse.content.toString().trim();
+
+      // Ensure the title isn't too long
+      if (title.length > 20) {
+        title = title.substring(0, 17) + '...';
+      }
+
+      console.log('Generated title:', title);
+      return title;
+    } catch (error) {
+      console.error('Error generating title:', error);
+      // Return a fallback title if generation fails
+      return 'Chat ' + new Date().toLocaleTimeString();
+    }
+  }
+
+  private _updateChatTitle(title: string) {
+    try {
+      // Get the Dash instance
+      const dash = getDash(this);
+      if (!dash) {
+        console.error('Could not find Dash instance');
+        return;
+      }
+
+      // Get the current chat container
+      const currentChatIndex = dash.state.currentChatContainer;
+      const chatContainer = dash.state.chatContainers[currentChatIndex];
+
+      if (chatContainer) {
+        // Update the chat container's name using the setName method
+        chatContainer.setName(title);
+      }
+    } catch (error) {
+      console.error('Error updating chat title:', error);
+    }
+  }
+
   public async sendMessage() {
     const message = this.state.message.trim();
 
@@ -187,8 +243,24 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const messageToSend = message;
     const userMessage = this.messages?.addUserMessage(messageToSend);
 
+    // Check if this is the first message in a new conversation
+    const isFirstMessage = this.messages?.state.messages.length === 1;
+
+    // Get the chat container to check if it has the default name
+    const dash = getDash(this);
+    const currentChatIndex = dash?.state.currentChatContainer || 0;
+    const chatContainer = dash?.state.chatContainers[currentChatIndex];
+    const hasDefaultName = chatContainer?.state.name.startsWith('Chat ');
+
     try {
       this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
+
+      // Only generate a title if this is the first message and the chat has a default name
+      if (isFirstMessage && hasDefaultName) {
+        const titleSummary = await this._generateTitleSummary(messageToSend);
+        this._updateChatTitle(titleSummary);
+      }
+
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
         signal: this._abortController.signal,
       });
