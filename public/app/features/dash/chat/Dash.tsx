@@ -7,6 +7,8 @@ import { Dropdown, Icon, IconButton, Menu, MenuItem, Tab, TabsBar, useStyles2 } 
 import { DashChatContainer } from './DashChatContainer';
 import { DashSettings, DashSettingsState } from './DashSettings';
 import { getPersistedSetting, persistSetting } from './utils';
+import { makeSingleRequest } from '../agent/singleRequest';
+import { getCurrentContext } from '../agent/tools/context';
 
 export interface DashState extends SceneObjectState {
   chatContainers: DashChatContainer[];
@@ -34,6 +36,52 @@ export class Dash extends SceneObjectBase<DashState> {
 
     this.activate();
     this.state.settings.activate();
+
+    // Generate welcome message for the initial chat
+    this.generateWelcomeMessage().then((welcomeMessage) => {
+      if (this.state.chatContainers[0]?.state.versions[0]?.state.messages) {
+        this.state.chatContainers[0].state.versions[0].state.messages.addSystemMessage(welcomeMessage);
+      }
+    });
+  }
+
+  private async generateWelcomeMessage(): Promise<string> {
+    try {
+      const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
+      if (!messages) {
+        return "Hello! I'm your Grafana AI assistant. How can I help you today?";
+      }
+
+      messages.setGeneratingWelcome(true);
+      const context = getCurrentContext();
+      let contextPrompt = `You are a helpful AI assistant for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
+      if (context.time_range) {
+        contextPrompt += `The selected time range is ${context.time_range.text}. `;
+      }
+      if (context.datasource.type !== 'Unknown') {
+        contextPrompt += `The current data source type is ${context.datasource.type}. `;
+      }
+      if (context.query.expression) {
+        contextPrompt += `The current query is \`${context.query.expression}\`. `;
+      }
+      contextPrompt +=
+        'Generate a friendly, concise welcome message that introduces yourself and explains that you can help with data analysis, visualization, and dashboard creation. Keep it under 2-3 sentences.';
+
+      const welcomeMessage = await makeSingleRequest({
+        systemPrompt: contextPrompt,
+        userMessage: 'Generate a welcome message',
+      });
+      console.log('Generated welcome message:', welcomeMessage);
+      return welcomeMessage;
+    } catch (error) {
+      console.error('Error generating welcome message:', error);
+      return "Hello! I'm your Grafana AI assistant. How can I help you today?";
+    } finally {
+      const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
+      if (messages) {
+        messages.setGeneratingWelcome(false);
+      }
+    }
   }
 
   public setOpened(opened: boolean) {
@@ -52,9 +100,17 @@ export class Dash extends SceneObjectBase<DashState> {
     }
   }
 
-  public addChat() {
+  public async addChat() {
+    const welcomeMessage = await this.generateWelcomeMessage();
+    const newChat = new DashChatContainer({ name: `Chat ${this._chatName++}` });
+
+    // Add the welcome message to the new chat
+    if (newChat.state.versions[0]?.state.messages) {
+      newChat.state.versions[0].state.messages.addSystemMessage(welcomeMessage);
+    }
+
     this.setState({
-      chatContainers: [...this.state.chatContainers, new DashChatContainer({ name: `Chat ${this._chatName++}` })],
+      chatContainers: [...this.state.chatContainers, newChat],
       currentChatContainer: this.state.chatContainers.length,
     });
   }
