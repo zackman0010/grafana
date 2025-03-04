@@ -37,14 +37,14 @@ export const navigateToExploreTool = tool(
       },
     };
 
-    locationService.push(`explore?schemaVersion=1&panes=${JSON.stringify(panes)}`);
+    locationService.push(`/explore?schemaVersion=1&panes=${JSON.stringify(panes)}`);
 
     return 'success';
   },
   {
     name: 'navigate_to_explore',
     description:
-      'Use this tool when the user wants to execute a query in Grafana Explore. NEVER use it without user confirmation',
+      'Use this tool when the user wants to execute a query in Grafana Explore. NEVER use it without asking the user for confirmation.',
     schema: navigateToExploreSchema,
   }
 );

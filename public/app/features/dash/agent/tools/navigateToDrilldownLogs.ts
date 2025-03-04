@@ -34,7 +34,7 @@ export const navigateToDrilldownLogs = tool(
   {
     name: 'navigate_to_drilldown_logs',
     description:
-      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without user confirmation.',
+      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without asking the user for confirmation.',
     schema: navigateToDrilldownLogsSchema,
   }
 );
