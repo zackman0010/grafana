@@ -4904,51 +4904,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/langgraph-checkpoint@npm:~0.0.15":
-  version: 0.0.15
-  resolution: "@langchain/langgraph-checkpoint@npm:0.0.15"
-  dependencies:
-    uuid: "npm:^10.0.0"
-  peerDependencies:
-    "@langchain/core": ">=0.2.31 <0.4.0"
-  checksum: 10/34ce2a8ceebcfc6a744245923068ff1aea520051f513f45b5828cc9b51b7a23276b2de024daba901a5d36e389b85ee68820a53ffd541f539c6cb9d9df2f457bf
-  languageName: node
-  linkType: hard
-
-"@langchain/langgraph-sdk@npm:~0.0.32":
-  version: 0.0.45
-  resolution: "@langchain/langgraph-sdk@npm:0.0.45"
-  dependencies:
-    "@types/json-schema": "npm:^7.0.15"
-    p-queue: "npm:^6.6.2"
-    p-retry: "npm:4"
-    uuid: "npm:^9.0.0"
-  peerDependencies:
-    "@langchain/core": ">=0.2.31 <0.4.0"
-    react: ^18 || ^19
-  peerDependenciesMeta:
-    "@langchain/core":
-      optional: true
-    react:
-      optional: true
-  checksum: 10/fbe60820828f43b0610b641e61d9ba0985c217d2b47a9972d09ea105d3af76ab7e88628c6377a247960622dc69ed13a0cdca89dc13d4fb907f62be49980b3921
-  languageName: node
-  linkType: hard
-
-"@langchain/langgraph@npm:^0.2.51":
-  version: 0.2.51
-  resolution: "@langchain/langgraph@npm:0.2.51"
-  dependencies:
-    "@langchain/langgraph-checkpoint": "npm:~0.0.15"
-    "@langchain/langgraph-sdk": "npm:~0.0.32"
-    uuid: "npm:^10.0.0"
-    zod: "npm:^3.23.8"
-  peerDependencies:
-    "@langchain/core": ">=0.2.36 <0.3.0 || >=0.3.40 < 0.4.0"
-  checksum: 10/f1858fe0abe4a1d45efe658cd94a765ef2b26cfc6ea23c8bc91d6296587bc291bf260d54c5e108f2b514ca861f8825d22c26bd50dcc56f912afb501d300f6871
-  languageName: node
-  linkType: hard
-
 "@leeoniya/ufuzzy@npm:1.0.14":
   version: 1.0.14
   resolution: "@leeoniya/ufuzzy@npm:1.0.14"
@@ -18354,7 +18309,6 @@ __metadata:
     "@kusto/monaco-kusto": "npm:^10.0.0"
     "@langchain/anthropic": "npm:^0.3.14"
     "@langchain/core": "npm:^0.3.41"
-    "@langchain/langgraph": "npm:^0.2.51"
     "@leeoniya/ufuzzy": "npm:1.0.18"
     "@lezer/common": "npm:1.2.3"
     "@lezer/highlight": "npm:1.2.1"
@@ -18650,7 +18604,6 @@ __metadata:
     uplot: "npm:1.6.31"
     uuid: "npm:11.0.5"
     visjs-network: "npm:4.25.0"
-    web-streams-polyfill: "npm:^4.1.0"
     webpack: "npm:5.97.1"
     webpack-assets-manifest: "npm:^5.1.0"
     webpack-cli: "npm:6.0.1"
@@ -31920,13 +31873,6 @@ __metadata:
   version: 3.3.3
   resolution: "web-streams-polyfill@npm:3.3.3"
   checksum: 10/8e7e13501b3834094a50abe7c0b6456155a55d7571312b89570012ef47ec2a46d766934768c50aabad10a9c30dd764a407623e8bfcc74fcb58495c29130edea9
-  languageName: node
-  linkType: hard
-
-"web-streams-polyfill@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "web-streams-polyfill@npm:4.1.0"
-  checksum: 10/c6e802e6b83a8dc72acee8ec14b3a4af46d5ea4a15d0260303d7e4cab3c600716ff998b70457bc3ac0998073c0e73344c89400bfcc5f49a9bc0b10bb263c2f5f
   languageName: node
   linkType: hard
 
