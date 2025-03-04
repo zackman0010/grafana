@@ -17,6 +17,7 @@ export interface DashMessageState extends SceneObjectState {
   time: string;
   selected: boolean;
   muted?: boolean;
+  isError?: boolean;
 }
 
 export class DashMessage extends SceneObjectBase<DashMessageState> {
@@ -24,7 +25,7 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
   public constructor(
     state: Omit<DashMessageState, 'children' | 'icon' | 'selected' | 'time'> &
-      Partial<Pick<DashMessageState, 'selected' | 'muted'>>
+      Partial<Pick<DashMessageState, 'selected' | 'muted' | 'isError'>>
   ) {
     const children =
       typeof state.content === 'string'
@@ -49,6 +50,7 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
       children,
       selected: false,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isError: false,
       ...state,
     });
   }
@@ -61,8 +63,8 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 }
 
 function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
-  const { children, sender, selected } = model.useState();
-  const styles = useStyles2(getStyles, sender);
+  const { children, sender, selected, isError } = model.useState();
+  const styles = useStyles2(getStyles, sender, isError);
 
   return (
     <MessageContainer selected={selected} sender={sender}>
@@ -75,7 +77,7 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => ({
+const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender'], isError?: boolean) => ({
   messages: css({
     label: 'dash-message-messages',
     display: 'flex',
@@ -89,9 +91,18 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender']) => 
     },
     ...(sender === 'tool_notification' && {
       backgroundColor: theme.colors.background.secondary,
-      borderRadius: theme.shape.borderRadius(1),
+      borderRadius: theme.shape.radius.circle,
       padding: theme.spacing(1),
       border: `1px solid ${theme.colors.border.medium}`,
+    }),
+    ...(isError && {
+      color: theme.colors.error.text,
+      borderLeft: `3px solid ${theme.colors.error.border}`,
+      '& > div > p': {
+        color: theme.colors.text.disabled,
+        margin: 0,
+        padding: 0,
+      },
     }),
   }),
 });

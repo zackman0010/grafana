@@ -1,4 +1,5 @@
 import { getCurrentContext } from './tools/context';
+import { getPersistedSetting } from '../chat/utils';
 
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `You are a helpful assistant working within a Grafana instance. You can help users understand their data, generate visualizations, and perform actions.
@@ -17,7 +18,11 @@ const SYSTEM_PROMPT_TEMPLATE = `You are a helpful assistant working within a Gra
     @contextType:\`context value\`
     For example, @datasource:\`datasource uid\` references to the datasource represented by datasource name in the input. Use the name to resolve the uid.
 
-    Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.
+    ${
+      getPersistedSetting('verbosity') === 'educational'
+        ? 'Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available".'
+        : 'Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
+    }
     
     `;
 
