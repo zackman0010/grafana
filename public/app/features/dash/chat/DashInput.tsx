@@ -214,7 +214,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       const content = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content);
       console.log(`${prefix} [${i + 1}]: ${content}`);
     });
-    
+  }
+
   private async _generateTitleSummary(userMessage: string): Promise<string> {
     try {
       // Create a system message with instructions for generating a title
@@ -285,7 +286,9 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this._abortController = new AbortController();
 
     console.log('\n👤 User Message:', message);
-    this.messages?.setLoading(true);
+    if (this.messages) {
+      this.messages.setLoading(true);
+    }
 
     // Pause listening while processing
     if (this.state.isListening && this._recognition) {
@@ -297,21 +300,23 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const userMessage = this.messages?.addUserMessage(messageToSend);
 
     // Check if this is the first message in a new conversation
-    const isFirstMessage = this.messages?.state.messages.length === 1;
+    const isFirstMessage: boolean = this.messages?.state.messages.length === 1;
 
     // Get the chat container to check if it has the default name
     const dash = getDash(this);
     const currentChatIndex = dash?.state.currentChatContainer || 0;
     const chatContainer = dash?.state.chatContainers[currentChatIndex];
-    const hasDefaultName = chatContainer?.state.name.startsWith('Chat ');
+    const hasDefaultName = chatContainer?.state.name.startsWith('Chat ') ?? false;
 
     try {
-      this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
+      if (this.messages && userMessage?.state.key) {
+        this.messages.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage.state.key }));
+      }
 
       // Log messages being sent to LLM
-      this._logMessagesToLLM(this.messages?.state.langchainMessages!);
-
-      const aiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
+      if (this.messages?.state.langchainMessages) {
+        this._logMessagesToLLM(this.messages.state.langchainMessages);
+      }
 
       // Only generate a title if this is the first message and the chat has a default name
       if (isFirstMessage && hasDefaultName) {
@@ -319,13 +324,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
         this._updateChatTitle(titleSummary);
       }
 
-      const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
-        signal: this._abortController.signal,
-      });
-      this._logAIMessage(aiMessage.content);
-      this.messages?.addAiMessage(aiMessage.content);
-      this.messages?.addLangchainMessage(aiMessage);
-      await this._handleToolCalls(aiMessage);
+      if (this.messages?.state.langchainMessages) {
+        const aiMessage = await this._currentAgent.invoke(this.messages.state.langchainMessages, {
+          signal: this._abortController.signal,
+        });
+        this._logAIMessage(aiMessage.content);
+        if (this.messages) {
+          this.messages.addAiMessage(aiMessage.content);
+          this.messages.addLangchainMessage(aiMessage);
+          await this._handleToolCalls(aiMessage);
+        }
+      }
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
         // Don't log as error since this is an expected cancellation
@@ -333,9 +342,13 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       }
       // Only log and show error message for unexpected errors
       console.error('\n❌ Error:', error.message || 'Unknown error occurred');
-      this.messages?.addSystemMessage(error.message || 'Unknown error occurred', false, true);
+      if (this.messages) {
+        this.messages.addSystemMessage(error.message || 'Unknown error occurred', false, true);
+      }
     } finally {
-      this.messages?.setLoading(false);
+      if (this.messages) {
+        this.messages.setLoading(false);
+      }
       this._abortController = null;
       // Clear the message only after we've successfully processed it
       this.updateMessage('', false);
