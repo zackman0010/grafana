@@ -5,7 +5,7 @@ import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, LoadingBar, useStyles2, TextArea } from '@grafana/ui';
+import { IconButton, LoadingBar, useStyles2, TextArea, Tooltip } from '@grafana/ui';
 
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
@@ -269,14 +269,16 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     <div className={styles.container} ref={containerRef}>
       {loading && !isToolWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
-        <IconButton
-          size="xl"
-          name="record-audio"
-          aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
-          disabled={loading}
-          onClick={() => model.toggleSpeechRecognition()}
-          className={isListening ? styles.listening : undefined}
-        />
+        <Tooltip content={isListening ? 'Stop listening' : 'Use dictation'}>
+          <IconButton
+            size="xl"
+            name="record-audio"
+            aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+            disabled={loading}
+            onClick={() => model.toggleSpeechRecognition()}
+            className={isListening ? styles.listening : undefined}
+          />
+        </Tooltip>
 
         <ReactTextareaAutocomplete<string>
           containerClassName={styles.textArea}
