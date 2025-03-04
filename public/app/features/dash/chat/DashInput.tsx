@@ -402,6 +402,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
               tool_call_id: toolCall.id ?? '1',
               content: `An error occurred while executing the tool: ${e.message}`,
             });
+            tool?.setError(e.message);
           }
           // Check if request was cancelled after tool finished
           if (this._abortController?.signal.aborted) {
