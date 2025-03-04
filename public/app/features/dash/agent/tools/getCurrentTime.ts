@@ -6,12 +6,12 @@ export const getCurrentTimeTool = tool(
 
     return JSON.stringify({
       time: date.toISOString(),
-      unixTime: Math.floor(date.getTime() / 1000),
+      unixTimeMillisecond: date.getTime(),
     });
   },
   {
     name: 'get_current_time',
     description:
-      'Get the current time in ISO format and as a unix timestamp. Use the unix timestamp when the expected format is a number.',
+      'Get the current time in ISO format and as a unix millisecond timestamp. Use the unix millisecond timestamp when the expected format is a number.',
   }
 );
