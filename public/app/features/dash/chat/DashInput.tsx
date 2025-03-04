@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
@@ -10,6 +10,7 @@ import { IconButton, LoadingBar, useStyles2, TextArea } from '@grafana/ui';
 import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
+import { getPersistedSetting, persistSetting } from './utils';
 
 import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
@@ -19,6 +20,50 @@ import '@webscopeio/react-textarea-autocomplete/style.css';
 
 interface DashInputState extends SceneObjectState {
   message: string;
+  isListening: boolean;
+}
+
+// Add type definitions for Speech Recognition API
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onend: () => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
+  }
 }
 
 export class DashInput extends SceneObjectBase<DashInputState> {
@@ -26,15 +71,64 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   public messages?: DashMessages;
   private _inputRef: HTMLTextAreaElement | null = null;
+  private _recognition: SpeechRecognition | null = null;
 
-  public constructor(state: Partial<Pick<DashInputState, 'message'>>) {
-    super({ ...state, message: state.message ?? '' });
+  public constructor(state: Partial<Pick<DashInputState, 'message' | 'isListening'>>) {
+    super({
+      ...state,
+      message: state.message ?? '',
+      isListening: state.isListening ?? false,
+    });
 
     this.addActivationHandler(() => this._activationHandler());
   }
 
   private _activationHandler() {
     this.messages = getMessages(this);
+    this._initializeSpeechRecognition();
+  }
+
+  private _initializeSpeechRecognition() {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this._recognition = new SpeechRecognition();
+      this._recognition.continuous = true;
+      this._recognition.interimResults = false;
+      this._recognition.lang = 'en-US';
+
+      this._recognition.onresult = (event: SpeechRecognitionEvent) => {
+        // Get the last result from the results array
+        const lastResult = event.results[event.results.length - 1];
+        const transcript = lastResult[0].transcript;
+
+        // Update message and send it
+        this.updateMessage(transcript, true);
+        this.sendMessage().then(() => {
+          // Only restart listening if we're still in listening mode
+          if (this.state.isListening) {
+            this._recognition?.start();
+          }
+        });
+      };
+
+      this._recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        console.error('Speech recognition error:', event.error);
+        this.setState({ isListening: false });
+      };
+    }
+  }
+
+  public toggleSpeechRecognition() {
+    if (!this._recognition) {
+      return;
+    }
+
+    if (this.state.isListening) {
+      this._recognition.stop();
+    } else {
+      this.setState({ isListening: true });
+      this._recognition.start();
+    }
   }
 
   public setInputRef(ref: HTMLTextAreaElement | null) {
@@ -66,25 +160,13 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
     console.log('User message:', message);
     this.messages?.setLoading(true);
-    this.updateMessage('', false);
-    const userMessage = this.messages?.addUserMessage(message);
 
-    //todo(cyriltovena): We should add a system message to ask LLM to check if we need to find a metrics name.
-    // If yes, we should fork the conversation to a new thread to first find the metrics name and potentially labels selectors.
-    // This will allow us to reduce the main conversation size, and drop any tool results that are not relevant anymore.
-    // This is basically what we call starting a new langchain !
-
-    // In this discovery metrics conversation, we should teach LLM to use selector to find metrics
-    //  aka count by (__name__)({pod=pod-123}) which returns less broad results than label/__name__/values api calls.
-    // May be a good workflow
-    // 1. find label names that are revelant.
-    // 2. find relevant values for these labels.
-    // 3. verify if the metrics is a popular one, if yes, see if it exits and get labels names. match[]=<series_selector>
-    // 4. try to find metrics names that are relevant for these values via instant query count by (__name__)({namespace="loki-dev-005"}) using regex.
-    // 5. try to find metrics name using label/__name__/values
+    // Store the message before we clear it
+    const messageToSend = message;
+    const userMessage = this.messages?.addUserMessage(messageToSend);
 
     try {
-      this.messages?.addLangchainMessage(new HumanMessage({ content: message, id: userMessage?.state.key! }));
+      this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
       const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
       console.log('AI response:', aiMessage.content);
       this.messages?.addAiMessage(aiMessage.content);
@@ -95,6 +177,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       this.messages?.addSystemMessage('Sorry, there was an error processing your request. Please try again.');
     } finally {
       this.messages?.setLoading(false);
+      // Clear the message only after we've successfully processed it
+      this.updateMessage('', false);
     }
   }
 
@@ -150,11 +234,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       }
     }
   }
+
+  public componentWillUnmount() {
+    if (this._recognition) {
+      this._recognition.stop();
+    }
+  }
 }
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message } = model.useState();
+  const { message, isListening } = model.useState();
   const { loading } = model.messages!.useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +262,15 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     <div className={styles.container} ref={containerRef}>
       {loading && !isToolWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
+        <IconButton
+          size="xl"
+          name="record-audio"
+          aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+          disabled={loading}
+          onClick={() => model.toggleSpeechRecognition()}
+          className={isListening ? styles.listening : undefined}
+        />
+
         <ReactTextareaAutocomplete<string>
           containerClassName={styles.textArea}
           autoFocus={true}
@@ -260,6 +359,66 @@ const getStyles = (theme: GrafanaTheme2) => ({
     '&:not(:last-child)': {
       border: `1px solid ${theme.colors.border.medium}`,
       background: theme.colors.background.secondary,
+    },
+  }),
+  recordButton: css({
+    width: '40px',
+    height: '40px',
+    padding: 0,
+    borderRadius: '50%',
+    backgroundColor: theme.colors.error.main,
+    '& svg': {
+      display: 'none',
+    },
+  }),
+  listening: css({
+    position: 'relative',
+    color: theme.colors.warning.main,
+    '& svg': {
+      opacity: 0.4,
+    },
+    '&:hover svg': {
+      opacity: 0.4,
+    },
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      borderRadius: '50%',
+      opacity: 0.2,
+    },
+    '&::before': {
+      width: '28px',
+      height: '28px',
+      marginTop: '-14px',
+      marginLeft: '-14px',
+      backgroundColor: theme.colors.warning.main,
+    },
+    '&::after': {
+      width: '42px',
+      height: '42px',
+      marginTop: '-21px',
+      marginLeft: '-21px',
+      background: `radial-gradient(circle, ${theme.colors.warning.main} 0%, transparent 70%)`,
+      animation: 'pulse 2s ease-in-out infinite',
+    },
+    '&:hover::before, &:hover::after': {
+      opacity: 0.2,
+    },
+    '@keyframes pulse': {
+      '0%': {
+        opacity: 0.2,
+        transform: 'scale(1)',
+      },
+      '50%': {
+        opacity: 0.4,
+        transform: 'scale(1.1)',
+      },
+      '100%': {
+        opacity: 0.2,
+        transform: 'scale(1)',
+      },
     },
   }),
 });
