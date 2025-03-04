@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
