@@ -3,6 +3,7 @@ import { getCurrentTimeTool } from './getCurrentTime';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
+import { navigateToDashboardTool } from './navigateToDashboard';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
 import { navigateToExploreTool } from './navigateToExplore';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
@@ -22,6 +23,7 @@ export const tools = [
   navigateToExploreTool,
   navigateToDrilldownLogs,
   getCurrentTimeTool,
+  navigateToDashboardTool,
 ];
 
 export const toolsByName = tools.reduce(
