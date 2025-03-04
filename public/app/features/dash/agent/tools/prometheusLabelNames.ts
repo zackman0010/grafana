@@ -9,18 +9,26 @@ import { getDefaultTimeRange } from '../utils';
 
 import { prometheusTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
 
-
 const prometheusLabelNamesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource').refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
+  datasource_uid: z
+    .string()
+    .describe('The datasource UID, only support Prometheus compatible datasource')
+    .refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
-  regex: z.string().optional().describe('Optional regex pattern to filter label names').refine(regexRefiner.func, regexRefiner.message),
+    .describe('Optional end timestamp for the query range. Defaults to current time if not provided.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  regex: z
+    .string()
+    .optional()
+    .describe('Optional regex pattern to filter label names')
+    .refine(regexRefiner.func, regexRefiner.message),
 });
 
 export const prometheusLabelNamesTool = tool(
@@ -39,20 +47,24 @@ export const prometheusLabelNamesTool = tool(
     let filteredNames = labelNames;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredNames = labelNames.filter((name) => regexPattern.test(name));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredNames = labelNames.filter((name) => name.includes(regex));
+        filteredNames = labelNames.filter((name) => name.toLowerCase().includes(regex.toLowerCase()));
       }
     }
 
-    return filteredNames.join(',');
+    // Return as JSON array
+    return JSON.stringify(filteredNames);
   },
   {
     name: 'list_prometheus_label_names',
-    description:
-      'List all available Prometheus label names for a given datasource. Default time range is last hour if not specified.',
+    description: `List values for a specified Prometheus label. Use label_name="__name__" to get metric names.
+       Supports regex pattern (case-insensitive) to filter values.
+       Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
+       It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Default time range is last hour if not specified.`,
     schema: prometheusLabelNamesSchema,
   }
 );
