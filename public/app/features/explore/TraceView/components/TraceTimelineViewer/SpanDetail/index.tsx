@@ -17,6 +17,7 @@ import { SpanStatusCode } from '@opentelemetry/api';
 import cx from 'classnames';
 import * as React from 'react';
 
+import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
 import {
   DataFrame,
   dateTimeFormat,
@@ -30,7 +31,6 @@ import { TraceToProfilesOptions } from '@grafana/o11y-ds-frontend';
 import { config, locationService, reportInteraction } from '@grafana/runtime';
 import { TimeZone } from '@grafana/schema';
 import { DataLinkButton, Divider, Icon, TextArea, useStyles2 } from '@grafana/ui';
-import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
 
 import { pyroscopeProfileIdTagKey } from '../../../createSpanLink';
 import { autoColor } from '../../Theme';
@@ -41,10 +41,10 @@ import { SpanLinkDef, SpanLinkType } from '../../types/links';
 import { TraceLink, TraceSpan, TraceSpanReference } from '../../types/trace';
 import { formatDuration } from '../utils';
 
-import AccordianKeyValues from './AccordianKeyValues';
 import AccordianLogs from './AccordianLogs';
 import AccordianReferences from './AccordianReferences';
 import AccordianText from './AccordianText';
+import { Attributes } from './Attributes';
 import DetailState from './DetailState';
 import SpanFlameGraph from './SpanFlameGraph';
 
@@ -365,23 +365,14 @@ export default function SpanDetail(props: SpanDetailProps) {
       <Divider spacing={1} />
       <div>
         <div>
-          <AccordianKeyValues
-            data={tags}
-            label="Span Attributes"
+          <Attributes
+            span={span}
             linksGetter={linksGetter}
-            isOpen={isTagsOpen}
-            onToggle={() => tagsToggle(spanID)}
+            tagsToggle={tagsToggle}
+            processToggle={processToggle}
+            isTagsOpen={isTagsOpen}
+            isProcessOpen={isProcessOpen}
           />
-          {process.tags && (
-            <AccordianKeyValues
-              className={styles.AccordianKeyValuesItem}
-              data={process.tags}
-              label="Resource Attributes"
-              linksGetter={linksGetter}
-              isOpen={isProcessOpen}
-              onToggle={() => processToggle(spanID)}
-            />
-          )}
         </div>
         {logs && logs.length > 0 && (
           <AccordianLogs

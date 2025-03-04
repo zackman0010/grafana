@@ -33,6 +33,8 @@ export const getStyles = (theme: GrafanaTheme2) => {
       textOverflow: 'ellipsis',
     }),
     header: css({
+      display: 'flex',
+      alignItems: 'center',
       label: 'header',
       cursor: 'pointer',
       overflow: 'hidden',
@@ -42,6 +44,9 @@ export const getStyles = (theme: GrafanaTheme2) => {
       '&:hover': {
         background: autoColor(theme, '#e8e8e8'),
       },
+    }),
+    headerTitle: css({
+      display: 'flex',
     }),
     headerEmpty: css({
       label: 'headerEmpty',
@@ -96,6 +101,7 @@ export type AccordianKeyValuesProps = {
   label: string | React.ReactNode;
   linksGetter?: ((pairs: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
   onToggle?: null | (() => void);
+  withSummary?: boolean;
 };
 
 interface KeyValuesSummaryProps {
@@ -134,6 +140,7 @@ export default function AccordianKeyValues({
   label,
   linksGetter,
   onToggle = null,
+  withSummary = true,
 }: AccordianKeyValuesProps) {
   const isEmpty = (!Array.isArray(data) || !data.length) && !logName;
   const styles = useStyles2(getStyles);
@@ -154,7 +161,7 @@ export default function AccordianKeyValues({
     };
   }
 
-  const showDataSummaryFields = data.length > 0 && !isOpen;
+  const showDataSummaryFields = data.length > 0 && !isOpen && withSummary;
 
   return (
     <div className={cx(className, styles.container)}>
@@ -167,7 +174,7 @@ export default function AccordianKeyValues({
         data-testid="AccordianKeyValues--header"
       >
         {arrow}
-        <strong data-test={markers.LABEL}>
+        <strong className={styles.headerTitle} data-test={markers.LABEL}>
           {label}
           {showDataSummaryFields && ':'}
         </strong>
