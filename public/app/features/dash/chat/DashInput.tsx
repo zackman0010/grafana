@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
@@ -262,6 +262,9 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     });
   });
 
+  // Set placeholder text based on listening state
+  const placeholderText = isListening ? 'Speak aloud your questions' : 'Ask me anything about your data.';
+
   return (
     <div className={styles.container} ref={containerRef}>
       {loading && !isToolWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
@@ -292,8 +295,8 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           textAreaComponent={TextArea}
           innerRef={(ref) => model.setInputRef(ref)}
           value={message}
-          readOnly={loading}
-          placeholder="Ask me anything about your data."
+          readOnly={loading || isListening}
+          placeholder={placeholderText}
           onChange={(evt: any) => model.updateMessage(evt.target.value, true)}
           onKeyDown={(evt: any) => {
             switch (evt.key) {
@@ -327,6 +330,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     </div>
   );
 }
+
 const Item = ({ entity }: { entity: string }) => <div>{entity}</div>;
 
 const getStyles = (theme: GrafanaTheme2) => ({
@@ -363,16 +367,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     '&:not(:last-child)': {
       border: `1px solid ${theme.colors.border.medium}`,
       background: theme.colors.background.secondary,
-    },
-  }),
-  recordButton: css({
-    width: '40px',
-    height: '40px',
-    padding: 0,
-    borderRadius: '50%',
-    backgroundColor: theme.colors.error.main,
-    '& svg': {
-      display: 'none',
     },
   }),
   listening: css({
