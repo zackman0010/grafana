@@ -1,4 +1,5 @@
 import { dashboardPanelsTool } from './dashboardPanels';
+import { getCurrentTimeTool } from './getCurrentTime';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
@@ -20,6 +21,7 @@ export const tools = [
   lokiLabelValuesTool,
   navigateToExploreTool,
   navigateToDrilldownLogs,
+  getCurrentTimeTool,
 ];
 
 export const toolsByName = tools.reduce(
