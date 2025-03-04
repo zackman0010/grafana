@@ -27,27 +27,36 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   let jsonContent: any = undefined;
   let message = content;
 
-  // First check if content is wrapped in <json> tags
-  const jsonMatch = content.match(/<json>([\s\S]*?)<\/json>/);
-  if (jsonMatch) {
+  // Find json tags anywhere in the content
+  const jsonStartIndex = content.indexOf('<json>');
+  const jsonEndIndex = content.indexOf('</json>');
+
+  if (jsonStartIndex !== -1 && jsonEndIndex !== -1 && jsonEndIndex > jsonStartIndex) {
+    // Extract content between tags and normalize it
+    const jsonStr = content
+      .slice(jsonStartIndex + 6, jsonEndIndex) // Remove <json> and </json>
+      .trim();
+
     try {
-      jsonContent = JSON.parse(jsonMatch[1]);
-      message = jsonContent.message;
-    } catch (e) {
-      // If JSON parsing fails, try parsing as regular JSON
-      try {
-        jsonContent = JSON.parse(content);
+      jsonContent = JSON.parse(jsonStr);
+      if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
+        // Just use the message from the JSON content
         message = jsonContent.message;
-      } catch (e) {
-        // If all parsing fails, use the original content
-        message = content;
+      } else {
+        // If we have valid JSON but no message, just remove the tags
+        message = content.slice(0, jsonStartIndex) + content.slice(jsonEndIndex + 7);
       }
+    } catch (e) {
+      // If JSON parsing fails, just remove the tags
+      message = content.slice(0, jsonStartIndex) + content.slice(jsonEndIndex + 7);
     }
   } else {
     // If no <json> tags, try parsing as regular JSON
     try {
       jsonContent = JSON.parse(content);
-      message = jsonContent.message;
+      if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
+        message = jsonContent.message;
+      }
     } catch (e) {
       // If parsing fails, use the original content
       message = content;
