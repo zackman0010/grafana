@@ -5,7 +5,7 @@ import { dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
 
-import { datasourceTypeRefiner, lokiTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
+import { lokiTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
 
 const getLokiLabelNames = async (datasourceUid: string, from?: number, to?: number): Promise<string[]> => {
   try {
@@ -22,19 +22,30 @@ const getLokiLabelNames = async (datasourceUid: string, from?: number, to?: numb
 };
 
 const lokiLabelNamesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Loki datasource').refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
+  datasource_uid: z
+    .string()
+    .describe('The datasource UID of the Loki datasource')
+    .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 5 minutes ago if not provided. Should be a valid unix timestamp in milliseconds.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+    .describe(
+      'Optional start timestamp for the query range. Defaults to 5 minutes ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   regex: z
     .string()
     .optional()
-    .describe('Optional javascript regex pattern to filter label names. Use this when you want to filter the label names by a specific pattern.')
+    .describe(
+      'Optional javascript regex pattern to filter label names. Use this when you want to filter the label names by a specific pattern.'
+    )
     .refine(regexRefiner.func, regexRefiner.message),
 });
 

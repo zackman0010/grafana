@@ -5,7 +5,7 @@ import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
 const listDatasourcesSchema = z.object({
   uid: z.string().optional().describe('Optional datasource UID for exact matching'),
-  name: z.string().optional().describe('Optional datasource name (can be a regex pattern)'),
+  name: z.string().optional().describe('Optional datasource name (can be a javascript regex pattern)'),
 });
 
 export const listDatasourcesTool = tool(
@@ -13,7 +13,7 @@ export const listDatasourcesTool = tool(
     // Parse the input using the schema
     const parsedInput = listDatasourcesSchema.parse(input);
     const { uid, name } = parsedInput;
-    
+
     // Get all datasources using getDatasourceSrv
     let filteredDatasources = getDatasourceSrv().getList();
 
@@ -23,15 +23,15 @@ export const listDatasourcesTool = tool(
 
     if (name) {
       try {
-        const nameRegex = new RegExp(name);
+        const nameRegex = new RegExp(name, 'i');
         filteredDatasources = filteredDatasources.filter((ds) => nameRegex.test(ds.name));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredDatasources = filteredDatasources.filter((ds) => ds.name.includes(name));
+        filteredDatasources = filteredDatasources.filter((ds) => ds.name.toLowerCase().includes(name.toLowerCase()));
       }
     }
 
-    // Reduce the datasources to only include relevant properties
+    // Only return the specified fields
     const simplifiedDatasources = filteredDatasources.map((ds) => ({
       uid: ds.uid,
       name: ds.name,

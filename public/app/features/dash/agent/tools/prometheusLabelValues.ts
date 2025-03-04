@@ -8,17 +8,26 @@ import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 import { prometheusTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
 
 const prometheusLabelValuesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Prometheus/Cortex/Mimir datasource').refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
+  datasource_uid: z
+    .string()
+    .describe('The datasource UID, only support Prometheus compatible datasource')
+    .refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
   label_name: z.string().describe('The label name to query values for. Use "__name__" for metric names.'),
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
-  regex: z.string().optional().describe('Optional regex pattern to filter label values').refine(regexRefiner.func, regexRefiner.message),
+    .describe('Optional end timestamp for the query range. Defaults to current time if not provided.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  regex: z
+    .string()
+    .optional()
+    .describe('Optional regex pattern to filter label values')
+    .refine(regexRefiner.func, regexRefiner.message),
 });
 
 export const prometheusLabelValuesTool = tool(
@@ -36,20 +45,23 @@ export const prometheusLabelValuesTool = tool(
     let filteredValues = labelValues;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        const regexPattern = new RegExp(regex, 'i');
         filteredValues = labelValues.filter((value) => regexPattern.test(value));
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredValues = labelValues.filter((value) => value.includes(regex));
+        filteredValues = labelValues.filter((value) => value.toLowerCase().includes(regex.toLowerCase()));
       }
     }
 
-    return filteredValues.join(',');
+    return JSON.stringify(filteredValues);
   },
   {
     name: 'list_prometheus_label_values',
-    description:
-      'List values for a specified Prometheus label. Use label_name="__name__" to get metric names. Default time range is last hour if not specified.',
+    description: `List values for a specified Prometheus label. Use label_name="__name__" to get metric names.
+       Supports regex pattern (case-insensitive) to filter values.
+       Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
+       It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Default time range is last hour if not specified.`,
     schema: prometheusLabelValuesSchema,
   }
 );

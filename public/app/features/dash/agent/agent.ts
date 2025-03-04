@@ -1,6 +1,6 @@
 import { ChatAnthropic } from '@langchain/anthropic';
-
 import { tools } from './tools';
+import { StructuredTool } from '@langchain/core/tools';
 
 export const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 
@@ -11,8 +11,12 @@ export function createAgent() {
     apiKey: ANTHROPIC_API_KEY,
   });
 
-  return llm.bindTools(tools);
-}
+export const agent = llm.bindTools(tools);
 
-// Create initial agent instance
-export const agent = createAgent();
+export const workflowAgent = {
+  llm: llm,
+  tools: tools,
+  withTools(tools: StructuredTool[]) {
+    return llm.bindTools(tools);
+  },
+};
