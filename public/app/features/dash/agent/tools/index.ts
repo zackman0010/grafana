@@ -33,3 +33,4 @@ export const toolsByName = tools.reduce(
   },
   {} as Record<string, (typeof tools)[number]>
 );
+
