@@ -3,8 +3,10 @@ import { z } from 'zod';
 
 import { locationService } from '@grafana/runtime';
 
-const listDatasourcesSchema = z.object({
-  uid: z.string().describe('Datasource UID that will execute the query'),
+import { lokiTypeRefiner } from './refiners';
+
+const navigateToDrilldownLogsSchema = z.object({
+  datasource_uid: z.string().describe('Datasource UID that will execute the query').refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
   label_filters: z
     .array(z.string())
     .describe(
@@ -18,13 +20,13 @@ const listDatasourcesSchema = z.object({
 
 export const navigateToDrilldownLogs = tool(
   async (input) => {
-    const { uid, label_filters, levels = [] } = listDatasourcesSchema.parse(input);
+    const { datasource_uid, label_filters, levels = [] } = navigateToDrilldownLogsSchema.parse(input);
 
     const varFilters = label_filters.map((filter) => `var-filters=${encodeURIComponent(filter)}`);
     const varLevels = levels.map((level) => `var-levels=${encodeURIComponent(`detected_level|=|${level}`)}`);
 
     locationService.push(
-      `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=now-15m&to=now&var-ds=${uid}&${varFilters.join('&')}&${varLevels.join('&')}`
+      `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=now-15m&to=now&var-ds=${datasource_uid}&${varFilters.join('&')}&${varLevels.join('&')}`
     );
 
     return 'success';
@@ -33,6 +35,6 @@ export const navigateToDrilldownLogs = tool(
     name: 'navigate_to_drilldown_logs',
     description:
       'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without user confirmation.',
-    schema: listDatasourcesSchema,
+    schema: navigateToDrilldownLogsSchema,
   }
 );

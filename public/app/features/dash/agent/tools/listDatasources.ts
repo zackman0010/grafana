@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { getDataSources } from 'app/features/datasources/api';
+import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
 const listDatasourcesSchema = z.object({
   uid: z.string().optional().describe('Optional datasource UID for exact matching'),
@@ -13,7 +13,9 @@ export const listDatasourcesTool = tool(
     // Parse the input using the schema
     const parsedInput = listDatasourcesSchema.parse(input);
     const { uid, name } = parsedInput;
-    let filteredDatasources = await getDataSources();
+
+    // Get all datasources using getDatasourceSrv
+    let filteredDatasources = getDatasourceSrv().getList();
 
     if (uid) {
       filteredDatasources = filteredDatasources.filter((ds) => ds.uid === uid);
@@ -34,7 +36,6 @@ export const listDatasourcesTool = tool(
       uid: ds.uid,
       name: ds.name,
       type: ds.type,
-      typeName: ds.typeName,
     }));
 
     return JSON.stringify(simplifiedDatasources);

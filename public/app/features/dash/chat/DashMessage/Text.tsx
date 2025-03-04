@@ -11,6 +11,7 @@ import { Bubble } from './Bubble';
 
 interface TextState extends SceneObjectState {
   content: string;
+  muted?: boolean;
 }
 
 export class Text extends SceneObjectBase<TextState> {
@@ -18,10 +19,10 @@ export class Text extends SceneObjectBase<TextState> {
 }
 
 function TextRenderer({ model }: SceneComponentProps<Text>) {
-  const { content } = model.useState();
+  const { content, muted } = model.useState();
   const { codeOverflow } = getSettings(model).useState();
   const { selected, sender } = getMessage(model).useState();
-  const styles = useStyles2(getStyles, codeOverflow);
+  const styles = useStyles2(getStyles, codeOverflow, muted);
 
   let jsonContent: any = undefined;
   let message = content;
@@ -40,6 +41,11 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOverflow']) => ({
-  container: css({ ...theme.typography.body }),
+const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOverflow'], muted?: boolean) => ({
+  container: css({
+    ...theme.typography.body,
+    ...(muted && {
+      color: theme.colors.text.secondary,
+    }),
+  }),
 });

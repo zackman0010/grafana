@@ -1,37 +1,26 @@
-import { getBackendSrv } from '@grafana/runtime';
+import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
+import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+import { lastValueFrom } from 'rxjs';
+import { PrometheusDatasource } from '@grafana/prometheus';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
+import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-const executePrometheusRangeQuery = async (
-  datasourceUid: string,
-  query: string,
-  start: number,
-  end: number,
-  step: string,
-  timeout?: string
-): Promise<any> => {
-  try {
-    const params: Record<string, any> = { query, start, end, step };
-    if (timeout) {
-      params.timeout = timeout;
-    }
-
-    return (await getBackendSrv().get(`/api/datasources/uid/${datasourceUid}/resources/api/v1/query_range`, params))
-      .data;
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'data' in error) {
-      return (error as { data: unknown }).data ?? error;
-    }
-    return error;
-  }
-};
-
 const prometheusRangeQuerySchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID datasource, only support type Prometheus'),
+  datasource_uid: z
+    .string()
+    .describe('The datasource UID datasource, only support type Prometheus')
+    .refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
   query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
-  start: z.number().describe('Start timestamp for the query range (Unix seconds)'),
-  end: z.number().describe('End timestamp for the query range (Unix seconds)'),
+  start: z
+    .number()
+    .describe('Start timestamp for the query range (Unix seconds)')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  end: z
+    .number()
+    .describe('End timestamp for the query range (Unix seconds)')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   step: z.string().describe('Query resolution step width as a duration string (e.g., "15s", "1m", "1h")'),
   timeout: z
     .string()
@@ -42,8 +31,28 @@ const prometheusRangeQuerySchema = z.object({
 export const prometheusRangeQueryTool = tool(
   async (input): Promise<string> => {
     const parsedInput = prometheusRangeQuerySchema.parse(input);
-    const { datasource_uid, query, start, end, step, timeout } = parsedInput;
-    const result = await executePrometheusRangeQuery(datasource_uid, query, start, end, step, timeout);
+    const { datasource_uid, query, start, end } = parsedInput;
+    const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
+    if (!datasource) {
+      throw new Error(`Datasource with uid ${datasource_uid} not found`);
+    }
+    const promDatasource = datasource as PrometheusDatasource;
+    const timeRange = makeTimeRange(dateTime(start), dateTime(end));
+    const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
+    const q = { ...defaultQuery, expr: query, range: true, instant: false };
+    const result = await lastValueFrom(
+      promDatasource.query({
+        requestId: '1',
+        interval: '1m',
+        intervalMs: 60000,
+        range: timeRange,
+        targets: [q],
+        scopedVars: {},
+        timezone: 'browser',
+        app: CoreApp.Explore,
+        startTime: timeRange.from.valueOf(),
+      })
+    );
     return JSON.stringify(result);
   },
   {
