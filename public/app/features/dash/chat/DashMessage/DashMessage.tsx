@@ -16,6 +16,7 @@ export interface DashMessageState extends SceneObjectState {
   sender: 'user' | 'ai' | 'system' | 'tool_notification';
   time: string;
   selected: boolean;
+  muted?: boolean;
 }
 
 export class DashMessage extends SceneObjectBase<DashMessageState> {
@@ -23,15 +24,15 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
   public constructor(
     state: Omit<DashMessageState, 'children' | 'icon' | 'selected' | 'time'> &
-      Partial<Pick<DashMessageState, 'selected'>>
+      Partial<Pick<DashMessageState, 'selected' | 'muted'>>
   ) {
     const children =
       typeof state.content === 'string'
-        ? [new Text({ content: state.content })]
+        ? [new Text({ content: state.content, muted: state.muted })]
         : state.content.reduce<SceneObject[]>((acc, currentContent) => {
             switch (currentContent.type) {
               case 'text':
-                return [...acc, new Text({ content: currentContent.text })];
+                return [...acc, new Text({ content: currentContent.text, muted: state.muted })];
 
               case 'tool_use':
                 return [...acc, new Tool({ content: currentContent as ToolState['content'] })];
