@@ -10,7 +10,7 @@ import { z } from 'zod';
 const prometheusRangeQuerySchema = z.object({
   datasource_uid: z
     .string()
-    .describe('The datasource UID datasource, only support type Prometheus')
+    .describe('The datasource UID datasource, only support Prometheus compatible datasource')
     .refine(prometheusTypeRefiner.func, prometheusTypeRefiner.message),
   query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   start: z
