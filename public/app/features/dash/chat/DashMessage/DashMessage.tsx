@@ -98,7 +98,7 @@ const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender'], isE
     ...(isError && {
       color: theme.colors.error.text,
       borderLeft: `3px solid ${theme.colors.error.border}`,
-      '& > div > p': {
+      '& p': {
         color: theme.colors.text.disabled,
         margin: 0,
         padding: 0,
