@@ -58,8 +58,8 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     return message;
   }
 
-  public addSystemMessage(content: string): DashMessage {
-    const message = new DashMessage({ content, sender: 'ai' });
+  public addSystemMessage(content: string, muted?: boolean): DashMessage {
+    const message = new DashMessage({ content, sender: 'ai', muted });
     this.setState({ messages: [...this.state.messages, message] });
     return message;
   }

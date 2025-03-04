@@ -71,7 +71,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   public messages?: DashMessages;
   private _inputRef: HTMLTextAreaElement | null = null;
   private _recognition: SpeechRecognition | null = null;
-
+  private _abortController: AbortController | null = null;
   public constructor(state: Partial<Pick<DashInputState, 'message' | 'isListening'>>) {
     super({
       ...state,
@@ -146,12 +146,34 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this.setState({ message });
   }
 
+  public cancelRequest() {
+    if (this._abortController) {
+      this._abortController.abort();
+      this._abortController = null;
+      this.messages?.setLoading(false);
+      // Clear the message
+      this.updateMessage('', false);
+      // Resume listening if we were listening before
+      if (this.state.isListening && this._recognition) {
+        this._recognition.start();
+      }
+      // Add the cancellation message
+      this.messages?.addSystemMessage('Canceled by user', true);
+    }
+  }
+
   public async sendMessage() {
     const message = this.state.message.trim();
 
     if (!message) {
       return;
     }
+
+    // Cancel any existing request
+    if (this._abortController) {
+      this._abortController.abort();
+    }
+    this._abortController = new AbortController();
 
     console.log('User message:', message);
     this.messages?.setLoading(true);
@@ -167,16 +189,24 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
     try {
       this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
-      const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+      const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
+        signal: this._abortController.signal,
+      });
       console.log('AI response:', aiMessage.content);
       this.messages?.addAiMessage(aiMessage.content);
       this.messages?.addLangchainMessage(aiMessage);
       await this._handleToolCalls(aiMessage);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
+        // Don't log as error since this is an expected cancellation
+        return;
+      }
+      // Only log and show error message for unexpected errors
       console.error('Error processing message:', error);
-      this.messages?.addSystemMessage('Sorry, there was an error processing your request. Please try again.');
+      this.messages?.addSystemMessage(`Oops: ${error.message || 'Unknown error occurred'}`);
     } finally {
       this.messages?.setLoading(false);
+      this._abortController = null;
       // Clear the message only after we've successfully processed it
       this.updateMessage('', false);
       // Resume listening if we were listening before
@@ -192,6 +222,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
 
     for (const toolCall of aiMessage.tool_calls) {
+      // Check if request was cancelled before starting tool
+      if (this._abortController?.signal.aborted) {
+        return;
+      }
+
       console.log('Tool call:', {
         name: toolCall.name,
         type: 'tool_notification',
@@ -216,16 +251,34 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
         try {
           const toolResponse = await selectedTool.invoke(toolCall);
+          // Check if request was cancelled after tool finished
+          if (this._abortController?.signal.aborted) {
+            return;
+          }
+
           console.log('Tool response:', {
             content: toolResponse.content,
             type: 'tool_response',
           });
           this.messages?.addLangchainMessage(toolResponse);
-          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!);
+          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
+            signal: this._abortController?.signal,
+          });
+          // Check if request was cancelled after AI response
+          if (this._abortController?.signal.aborted) {
+            return;
+          }
+
           console.log('Next AI response after tool:', nextAiMessage.content);
           this.messages?.addAiMessage(nextAiMessage.content);
           this.messages?.addLangchainMessage(nextAiMessage);
           await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
+        } catch (error: any) {
+          if (error.name === 'AbortError') {
+            console.log('Request was cancelled during tool execution');
+            return;
+          }
+          throw error;
         } finally {
           // Set the tool back to not working
           if (toolMessage) {
@@ -315,6 +368,16 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
                 evt.stopPropagation();
                 getMessages(model).enterSelectMode();
                 break;
+
+              case 'Escape':
+                if (loading) {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+                  model.cancelRequest();
+                  // Prevent the event from bubbling up to parent components
+                  evt.nativeEvent.stopImmediatePropagation();
+                }
+                break;
             }
           }}
           itemClassName={styles.autoCompleteListItem}
@@ -323,10 +386,9 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
 
         <IconButton
           size="xl"
-          name="play"
-          aria-label="Send message"
-          disabled={loading}
-          onClick={() => model.sendMessage()}
+          name={loading ? 'times' : 'play'}
+          aria-label={loading ? 'Cancel request' : 'Send message'}
+          onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
         />
       </div>
     </div>
