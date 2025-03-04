@@ -169,6 +169,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
+    textTransform: 'capitalize',
   }),
   caret: css({
     fontSize: '14px',

@@ -156,7 +156,5 @@ export function generateSystemPrompt() {
     contextPrompt += `The current panels in the dashboard are: ${JSON.stringify(context.panels)}. `;
   }
 
-  console.log(SYSTEM_PROMPT_TEMPLATE + contextPrompt)
-
   return SYSTEM_PROMPT_TEMPLATE + contextPrompt;
 }
