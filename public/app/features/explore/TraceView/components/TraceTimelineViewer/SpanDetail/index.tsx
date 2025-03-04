@@ -16,8 +16,8 @@ import { css } from '@emotion/css';
 import { SpanStatusCode } from '@opentelemetry/api';
 import cx from 'classnames';
 import * as React from 'react';
+import { useMemo } from 'react';
 
-import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
 import {
   DataFrame,
   dateTimeFormat,
@@ -31,6 +31,7 @@ import { TraceToProfilesOptions } from '@grafana/o11y-ds-frontend';
 import { config, locationService, reportInteraction } from '@grafana/runtime';
 import { TimeZone } from '@grafana/schema';
 import { DataLinkButton, Divider, Icon, TextArea, useStyles2 } from '@grafana/ui';
+import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
 
 import { pyroscopeProfileIdTagKey } from '../../../createSpanLink';
 import { autoColor } from '../../Theme';
@@ -144,6 +145,43 @@ export type TraceFlameGraphs = {
   [spanID: string]: DataFrame;
 };
 
+const createLinkButton = (
+  link: SpanLinkDef,
+  datasourceType: string,
+  type: SpanLinkType,
+  title: string,
+  icon: IconName
+) => {
+  return (
+    <DataLinkButton
+      link={{
+        ...link,
+        title: title,
+        target: '_blank',
+        origin: link.field,
+        onClick: (event: React.MouseEvent) => {
+          // DataLinkButton assumes if you provide an onClick event you would want to prevent default behavior like navigation
+          // In this case, if an onClick is not defined, restore navigation to the provided href while keeping the tracking
+          // this interaction will not be tracked with link right clicks
+          reportInteraction('grafana_traces_trace_view_span_link_clicked', {
+            datasourceType: datasourceType,
+            grafana_version: config.buildInfo.version,
+            type,
+            location: 'spanDetails',
+          });
+
+          if (link.onClick) {
+            link.onClick?.(event);
+          } else {
+            locationService.push(link.href);
+          }
+        },
+      }}
+      buttonProps={{ icon }}
+    />
+  );
+};
+
 export type SpanDetailProps = {
   detailState: DetailState;
   linksGetter: ((links: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
@@ -235,12 +273,12 @@ export default function SpanDetail(props: SpanDetailProps) {
     },
     ...(span.childSpanCount > 0
       ? [
-        {
-          key: 'child_count',
-          label: 'Child Count:',
-          value: span.childSpanCount,
-        },
-      ]
+          {
+            key: 'child_count',
+            label: 'Child Count:',
+            value: span.childSpanCount,
+          },
+        ]
       : []),
   ];
 
@@ -289,76 +327,66 @@ export default function SpanDetail(props: SpanDetailProps) {
     });
   }
 
-  const createLinkButton = (link: SpanLinkDef, type: SpanLinkType, title: string, icon: IconName) => {
-    return (
-      <DataLinkButton
-        link={{
-          ...link,
-          title: title,
-          target: '_blank',
-          origin: link.field,
-          onClick: (event: React.MouseEvent) => {
-            // DataLinkButton assumes if you provide an onClick event you would want to prevent default behavior like navigation
-            // In this case, if an onClick is not defined, restore navigation to the provided href while keeping the tracking
-            // this interaction will not be tracked with link right clicks
-            reportInteraction('grafana_traces_trace_view_span_link_clicked', {
-              datasourceType: datasourceType,
-              grafana_version: config.buildInfo.version,
-              type,
-              location: 'spanDetails',
-            });
+  const { links, logLinkButton, profileLinkButton, sessionLinkButton } = useMemo(() => {
+    const links = createSpanLink?.(span) ?? [];
 
-            if (link.onClick) {
-              link.onClick?.(event);
-            } else {
-              locationService.push(link.href);
-            }
-          },
-        }}
-        buttonProps={{ icon }}
-      />
-    );
-  };
+    let logLinkButton: JSX.Element | null = null;
+    let profileLinkButton: JSX.Element | null = null;
+    let sessionLinkButton: JSX.Element | null = null;
 
-  let logLinkButton: JSX.Element | null = null;
-  let profileLinkButton: JSX.Element | null = null;
-  let sessionLinkButton: JSX.Element | null = null;
-  if (createSpanLink) {
-    const links = createSpanLink(span);
-    const logsLink = links?.filter((link) => link.type === SpanLinkType.Logs);
-    if (links && logsLink && logsLink.length > 0) {
-      logLinkButton = createLinkButton(logsLink[0], SpanLinkType.Logs, 'Logs for this span', 'gf-logs');
+    const logsLink = links.filter((link) => link.type === SpanLinkType.Logs);
+    if (logsLink && logsLink.length > 0) {
+      logLinkButton = createLinkButton(logsLink[0], datasourceType, SpanLinkType.Logs, 'Logs for this span', 'gf-logs');
     }
-    const profilesLink = links?.filter(
+
+    const profilesLink = links.filter(
       (link) => link.type === SpanLinkType.Profiles && link.title === RelatedProfilesTitle
     );
-    if (links && profilesLink && profilesLink.length > 0) {
-      profileLinkButton = createLinkButton(profilesLink[0], SpanLinkType.Profiles, 'Profiles for this span', 'link');
+    if (profilesLink && profilesLink.length > 0) {
+      profileLinkButton = createLinkButton(
+        profilesLink[0],
+        datasourceType,
+        SpanLinkType.Profiles,
+        'Profiles for this span',
+        'link'
+      );
     }
-    const sessionLink = links?.filter((link) => link.type === SpanLinkType.Session);
-    if (links && sessionLink && sessionLink.length > 0) {
+
+    const sessionLink = links.filter((link) => link.type === SpanLinkType.Session);
+    if (sessionLink && sessionLink.length > 0) {
       sessionLinkButton = createLinkButton(
         sessionLink[0],
+        datasourceType,
         SpanLinkType.Session,
         'Session for this span',
         'frontend-observability'
       );
     }
-  }
+
+    return {
+      links,
+      logLinkButton,
+      profileLinkButton,
+      sessionLinkButton,
+    };
+  }, [span, createSpanLink, datasourceType]);
 
   const focusSpanLink = createFocusSpanLink(traceID, spanID);
   const operationResult = span.tags.find((tag) => ['http.status_code', 'http.response.status_code'].includes(tag.key));
-  console.log(operationResult)
+  console.log(operationResult);
   return (
     <div data-testid="span-detail-component">
       <div className={styles.header}>
         <h2 className={styles.operationName} title={operationName}>
-          {operationName}{operationResult ? ` (${operationResult.value})` : undefined}
+          {operationName}
+          {operationResult ? ` (${operationResult.value})` : undefined}
         </h2>
         <div className={styles.listWrapper}>
           <LabeledList
             //  className={styles.list}
-            divider={true} items={overviewItems} />
+            divider={true}
+            items={overviewItems}
+          />
         </div>
       </div>
       <div className={styles.linkList}>
@@ -376,6 +404,7 @@ export default function SpanDetail(props: SpanDetailProps) {
             processToggle={processToggle}
             isTagsOpen={isTagsOpen}
             isProcessOpen={isProcessOpen}
+            links={links}
           />
         </div>
         {logs && logs.length > 0 && (

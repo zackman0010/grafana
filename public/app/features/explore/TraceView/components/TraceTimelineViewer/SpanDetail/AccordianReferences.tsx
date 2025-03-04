@@ -176,6 +176,7 @@ export function References(props: ReferenceItemProps) {
                 label={'attributes'}
                 linksGetter={null}
                 onToggle={interactive && onItemToggle ? () => onItemToggle(reference) : null}
+                links={[]}
               />
             </div>
           )}

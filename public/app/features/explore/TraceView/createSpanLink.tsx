@@ -112,6 +112,7 @@ export function createSpanLinkFactory({
             field: link.origin,
             type: shouldCreatePyroscopeLink ? SpanLinkType.Profiles : SpanLinkType.Unknown,
             target: link.target,
+            linkAttributes: link.linkAttributes,
           };
         });
 
@@ -250,6 +251,7 @@ function legacyCreateSpanLinkFactory(
             content: <Icon name="gf-logs" title="Explore the logs for this in split view" />,
             field,
             type: SpanLinkType.Logs,
+            linkAttributes: [],
           });
         }
       }
@@ -311,6 +313,7 @@ function legacyCreateSpanLinkFactory(
           content: <Icon name="chart-line" title="Explore metrics for this span" />,
           field,
           type: SpanLinkType.Metrics,
+          linkAttributes: [],
         });
       }
     }
@@ -333,6 +336,7 @@ function legacyCreateSpanLinkFactory(
           onClick: link.onClick,
           field: link.origin,
           type: SpanLinkType.Traces,
+          linkAttributes: [],
         });
       }
     }
@@ -349,6 +353,7 @@ function legacyCreateSpanLinkFactory(
           onClick: link.onClick,
           field: link.origin,
           type: SpanLinkType.Traces,
+          linkAttributes: [],
         });
       }
     }
@@ -362,6 +367,7 @@ function legacyCreateSpanLinkFactory(
         content: <Icon name="frontend-observability" title="Session for this span" />,
         field,
         type: SpanLinkType.Session,
+        linkAttributes: [],
       });
     }
 

@@ -27,6 +27,7 @@ type CorrelationBase = {
   description?: string;
   provisioned: boolean;
   orgId?: number;
+  linkAttributes?: string[];
 };
 
 /**

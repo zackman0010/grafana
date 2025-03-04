@@ -219,7 +219,7 @@ const getStyles = stylesFactory((theme: GrafanaTheme2, showSpanFilterMatchesOnly
       paddingLeft: '4px',
       paddingRight: '0.25em',
       position: 'relative',
-      '-ms-overflow-style': 'none',
+      msOverflowStyle: 'none',
       scrollbarWidth: 'none',
       '&::-webkit-scrollbar': {
         display: 'none',

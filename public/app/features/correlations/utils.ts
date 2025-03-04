@@ -1,4 +1,4 @@
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 
 import { DataFrame, DataLinkConfigOrigin } from '@grafana/data';
 import {
@@ -6,6 +6,7 @@ import {
   CorrelationData,
   CorrelationsData,
   createMonitoringLogger,
+  FetchResponse,
   getBackendSrv,
   getDataSourceSrv,
 } from '@grafana/runtime';
@@ -77,7 +78,10 @@ const decorateDataFrameWithInternalDataLinks = (dataFrame: DataFrame, correlatio
             url: externalTarget.url,
             title: correlation.label || 'External URL',
             origin: DataLinkConfigOrigin.Correlations,
-            meta: { transformations: correlation.config?.transformations },
+            meta: {
+              transformations: correlation.config?.transformations,
+              linkAttributes: correlation.linkAttributes,
+            },
           });
         }
       }
@@ -108,14 +112,131 @@ const fixLokiDataplaneFields = (correlations: CorrelationData[], dataFrame: Data
 
 export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise<CorrelationsData> => {
   return lastValueFrom(
-    getBackendSrv().fetch<CorrelationsResponse>({
-      url: `/api/datasources/correlations`,
-      method: 'GET',
-      showErrorAlert: false,
-      params: {
-        sourceUID: sourceUIDs,
+    // getBackendSrv().fetch<CorrelationsResponse>({
+    //   url: `/api/datasources/correlations`,
+    //   method: 'GET',
+    //   showErrorAlert: false,
+    //   params: {
+    //     sourceUID: sourceUIDs,
+    //   },
+    // })
+    // For the hackathon I'm hard coding the correlations like this to avoid spending time
+    // on CRUD work just to be able to set the linkAttributes property which is a new property
+    of({
+      data: {
+        status: '200',
+        correlations: [
+          {
+            uid: 'appo11y-namespace-and-name',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Application observability > Service overview',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['service.namespace', 'service.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: '/a/grafana-app-observability-app/services/service/${__span.tags["service.namespace"]}---${__span.tags["service.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'appo11y-name',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Application observability > Service overview',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['service.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: '/a/grafana-app-observability-app/services/service/${__span.tags["service.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-cluster',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Cluster view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.cluster.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/cluster/${__span.tags["k8s.cluster.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-namespace',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Namespace view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.namespace.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-node',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Node view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.node.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/nodes/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.node.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-deployment',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Deployment view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.deployment.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}/deployment/${__span.tags["k8s.deployment.name"]}',
+              },
+            },
+          },
+          {
+            uid: 'k8s-pod',
+            sourceUID: 'grafanacloud-traces',
+            orgId: 1,
+            label: 'Kubernetes monitoring > Pod view',
+            type: 'external',
+            provisioned: false,
+            linkAttributes: ['k8s.pod.name'],
+            config: {
+              field: 'traceID',
+              target: {
+                url: 'https://appo11ydev01.grafana-dev.net/a/grafana-k8s-app/navigation/namespace/${__span.tags["k8s.cluster.name"]}/${__span.tags["k8s.namespace.name"]}/deployment/${__span.tags["k8s.deployment.name"]}/${__span.tags["k8s.pod.name"]}',
+              },
+            },
+          },
+        ],
+        page: 1,
+        limit: 100,
+        totalCount: 100,
       },
-    })
+    } as unknown as FetchResponse<CorrelationsResponse>)
   )
     .then(getData)
     .then(toEnrichedCorrelationsData);

@@ -135,6 +135,7 @@ export default function AccordianLogs({
                 label={label}
                 linksGetter={linksGetter}
                 onToggle={interactive && onItemToggle ? () => onItemToggle(log) : null}
+                links={[]}
               />
             );
           })}

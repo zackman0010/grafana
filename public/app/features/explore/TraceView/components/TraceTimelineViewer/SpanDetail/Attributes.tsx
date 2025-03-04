@@ -1,9 +1,12 @@
+import { sortBy } from 'lodash';
+
 import { IconName, TraceKeyValuePair } from '@grafana/data';
 import { Icon, Stack, Text } from '@grafana/ui';
-import AccordianKeyValues from './AccordianKeyValues';
+
+import { SpanLinkDef, TNil } from '../../types';
 import { TraceLink, TraceSpan } from '../../types/trace';
-import { TNil } from '../../types';
-import { sortBy } from 'lodash';
+
+import AccordianKeyValues from './AccordianKeyValues';
 
 export type AttributesProps = {
   span: TraceSpan;
@@ -12,6 +15,7 @@ export type AttributesProps = {
   processToggle: (spanID: string) => void;
   isTagsOpen: boolean;
   isProcessOpen: boolean;
+  links: SpanLinkDef[];
 };
 
 export const Attributes = ({
@@ -21,6 +25,7 @@ export const Attributes = ({
   processToggle,
   isTagsOpen,
   isProcessOpen,
+  links,
 }: AttributesProps) => {
   // Order matters
   const standardAttributeResources = {
@@ -89,6 +94,7 @@ export const Attributes = ({
                 linksGetter={linksGetter}
                 isOpen={isProcessOpen}
                 onToggle={() => processToggle(span.spanID)}
+                links={links}
               />
             );
           })}

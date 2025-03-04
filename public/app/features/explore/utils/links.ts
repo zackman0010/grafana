@@ -52,6 +52,7 @@ const DATA_LINK_FILTERS: DataLinkFilter[] = [dataLinkHasRequiredPermissionsFilte
  */
 export interface ExploreFieldLinkModel extends LinkModel<Field> {
   variables: VariableInterpolation[];
+  linkAttributes?: string[];
 }
 
 const DATA_LINK_USAGE_KEY = 'grafana_data_link_clicked';
@@ -212,7 +213,7 @@ export const getFieldLinksForExplore = (options: {
             linkModel.title = getTitleFromHref(linkModel.href);
           }
           linkModel.target = linkModel.target ?? '_blank';
-          return { ...linkModel, variables: variables };
+          return { ...linkModel, variables: variables, linkAttributes: link.meta?.linkAttributes };
         } else {
           const splitFnWithTracking = (options?: SplitOpenOptions<DataQuery>) => {
             reportInteraction(DATA_LINK_USAGE_KEY, {
