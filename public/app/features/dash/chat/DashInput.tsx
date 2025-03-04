@@ -7,7 +7,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, useStyles2, TextArea, Tooltip } from '@grafana/ui';
 
-import { agent, createAgent } from '../agent/agent';
+import { agent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
@@ -96,7 +96,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     settings.subscribeToState((newState: { verbosity: string }) => {
       if (newState.verbosity !== settings.state.verbosity) {
         // Recreate the agent with new verbosity setting
-        this._currentAgent = createAgent();
+        this._currentAgent = agent;
 
         // Send a system message to update the model's response style
         const verbosityInstructions = {
