@@ -19,7 +19,7 @@ const prometheusInstantQuerySchema = z.object({
   time: z
     .number()
     .optional()
-    .describe('Optional evaluation timestamp (Unix seconds). Defaults to current time if not provided.')
+    .describe('Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.') 
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
 });
 

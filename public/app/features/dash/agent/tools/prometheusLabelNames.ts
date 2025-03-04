@@ -17,12 +17,12 @@ const prometheusLabelNamesSchema = z.object({
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided.')
+    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided. Should be a valid unix timestamp in milliseconds.')
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided.')
+    .describe('Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.')
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   regex: z
     .string()

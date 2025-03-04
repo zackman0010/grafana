@@ -1,11 +1,13 @@
-import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
-import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+import { tool } from '@langchain/core/tools';
 import { lastValueFrom } from 'rxjs';
+import { z } from 'zod';
+
+import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
+import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
-import { tool } from '@langchain/core/tools';
-import { z } from 'zod';
 
 const prometheusRangeQuerySchema = z.object({
   datasource_uid: z
@@ -15,17 +17,13 @@ const prometheusRangeQuerySchema = z.object({
   query: z.string().describe('(REQUIRED) The PromQL query expression to evaluate'),
   start: z
     .number()
-    .describe('Start timestamp for the query range (Unix seconds)')
+    .describe('Start timestamp for the query range (Unix millisecond timestamp)')
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
-    .describe('End timestamp for the query range (Unix seconds)')
+    .describe('End timestamp for the query range (Unix millisecond timestamp')
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   step: z.string().describe('Query resolution step width as a duration string (e.g., "15s", "1m", "1h")'),
-  timeout: z
-    .string()
-    .optional()
-    .describe('Optional evaluation timeout (e.g., "30s"). Uses datasource default if not specified.'),
 });
 
 export const prometheusRangeQueryTool = tool(
