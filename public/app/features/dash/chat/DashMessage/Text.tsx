@@ -18,64 +18,51 @@ export class Text extends SceneObjectBase<TextState> {
   public static Component = TextRenderer;
 }
 
+function processMessageContent(content: string): string {
+  // Find json tags anywhere in the content
+  const jsonStartIndex = content.indexOf('<json>');
+  const jsonEndIndex = content.indexOf('</json>');
+
+  // If no json tags found, return the content as is
+  if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
+    return content;
+  }
+
+  // Extract content between tags and normalize it
+  const jsonStr = content
+    .slice(jsonStartIndex + 6, jsonEndIndex) // Remove <json> and </json>
+    .trim();
+
+  try {
+    // Log the first few characters to check for any hidden characters
+    const jsonContent = JSON.parse(jsonStr);
+    if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
+      // Only use the message from the JSON content
+      return jsonContent.message;
+    }
+  } catch (e) {
+    // If JSON parsing fails, let's manually clean up the string
+    const cleanedStr = jsonStr
+      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+      .replace(/\n/g, '\\n') // Normalize line feeds
+      .replace(/\r/g, '') // Remove carriage returns
+      .trim();
+
+    console.warn('Failed to parse JSON content:', e);
+    // If JSON parsing fails, return the original content
+    return cleanedStr;
+  }
+
+  return content;
+}
+
 function TextRenderer({ model }: SceneComponentProps<Text>) {
   const { content, muted } = model.useState();
   const { codeOverflow } = getSettings(model).useState();
   const { selected, sender } = getMessage(model).useState();
   const styles = useStyles2(getStyles, codeOverflow, muted);
 
-  let jsonContent: any = undefined;
-  let message = content;
-
-  // Process all JSON tags in the content
-  while (true) {
-    // Find json tags anywhere in the content
-    const jsonStartIndex = message.indexOf('<json>');
-    const jsonEndIndex = message.indexOf('</json>');
-
-    if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
-      break;
-    }
-
-    // Extract content between tags and normalize it
-    const jsonStr = message
-      .slice(jsonStartIndex + 6, jsonEndIndex) // Remove <json> and </json>
-      .trim();
-
-    try {
-      jsonContent = JSON.parse(jsonStr);
-      if (jsonContent && typeof jsonContent === 'object') {
-        if ('message' in jsonContent) {
-          // Replace the JSON section with the message
-          message = message.slice(0, jsonStartIndex) + jsonContent.message + message.slice(jsonEndIndex + 7);
-        } else {
-          // If we have valid JSON but no message, just remove the tags
-          message = message.slice(0, jsonStartIndex) + message.slice(jsonEndIndex + 7);
-        }
-      } else {
-        // If we have valid JSON but it's not an object, just remove the tags
-        message = message.slice(0, jsonStartIndex) + message.slice(jsonEndIndex + 7);
-      }
-    } catch (e) {
-      // If JSON parsing fails, preserve any content after the tags
-      const beforeJson = message.slice(0, jsonStartIndex);
-      const afterJson = message.slice(jsonEndIndex + 7);
-      message = beforeJson + afterJson;
-    }
-  }
-
-  // If no <json> tags were found, try parsing as regular JSON
-  if (message === content) {
-    try {
-      jsonContent = JSON.parse(content);
-      if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
-        message = jsonContent.message;
-      }
-    } catch (e) {
-      // If parsing fails, use the original content
-      message = content;
-    }
-  }
+  const message = processMessageContent(content);
 
   return (
     <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
@@ -96,6 +83,11 @@ const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOv
     'ul, ol': {
       margin: theme.spacing(1, 0),
       paddingLeft: theme.spacing(3),
+    },
+    'h1, h2, h3, h4, h5, h6': {
+      marginTop: theme.spacing(2),
+      fontSize: '0.9em',
+      fontWeight: theme.typography.fontWeightMedium,
     },
     '&.welcome-message': {
       fontSize: theme.typography.h6.fontSize,
