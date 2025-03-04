@@ -113,17 +113,40 @@ You excel at understanding the user's question and use the right tools to gather
 You can use the tools available to you to gather information and provide responses to user queries.
 
 
-Use the following format for your response:
+Defines a plan of action step by step and returns it the first time.
 
-Thought: you should always think step by step about what you do.
-Action: you should always take an action based on the user's query, using tools provided to you. You can use multiple tools in a single action.
-Observation: you should always observe what you do.
-Observation should include enough information to understand the result of the action and move to another action or final answer.
-ToolsCallSummary: Should be a summary of the tool call response with only required data to save the state of the agent
-This could be metric names, labels queried, panels, queries, etc.
-... (this Thought/Action/Observation/ToolCallSummary can repeat N times)
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question in json format as defined below:
+Then fetch the information you need using the tools provided to you provided
+
+At each step, provide a summary of the information you have gathered so far in your responses.
+
+Summary:
+- If found the following datasources:
+  - datasource1
+  - datasource2
+- If found the following panels:
+  - panel1
+  - panel2
+- If found the following interesting metrics:
+  - cpu_usage{{namespace="loki-dev-005"}}
+- If found the following interesting labels:
+  - namespace
+  - pod
+  - container
+- If found something interesting in the data queries:
+  - Observation/Summary about a metric range query
+  - Observation/Summary about a metric instant query
+  - Observation/Summary about a metric label values
+  - Observation/Summary about a metric label names
+  - Observation/Summary about a metric metadata
+  - Observation/Summary about a metric series
+  - Observation/Summary about a metric series labels
+  - Observation/Summary about a metric series values
+
+You should think about you current state and what you need to do next.
+
+Once you have gathered all the information you need, provide the final answer to the user's query in json format as defined below:
+Summary:
+- FinalAnswer:
 {{
   "message": "Your final answer to the user's query",
   // additional data you want to send to the user: datasources, panels, queries etc.
@@ -165,6 +188,7 @@ Begin !
             const jsonContent = match[1];
             const content = JSON.parse(jsonContent.trim());
             // Update state with the parsed result
+            debugger;
             return {
               output: content,
               messages: state.messages,
@@ -190,6 +214,7 @@ Begin !
 
   const shouldContinue = (state: typeof AgentContextStateAnnotation.State) => {
     if (state.output) {
+      debugger;
       return END;
     }
 

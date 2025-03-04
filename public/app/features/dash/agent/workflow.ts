@@ -238,6 +238,7 @@ window.setTimeout(async () => {
       {
         messages: initialState.messages,
         output: undefined,
+        lastResponse: undefined,
       },
       {
         ...config,
