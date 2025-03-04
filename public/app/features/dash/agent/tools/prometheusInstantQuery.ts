@@ -9,7 +9,6 @@ import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
-
 const prometheusInstantQuerySchema = z.object({
   datasource_uid: z
     .string()
@@ -19,37 +18,37 @@ const prometheusInstantQuerySchema = z.object({
   time: z
     .number()
     .optional()
-    .describe('Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.') 
+    .describe('Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.')
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
 });
 
-export const prometheusInstantQueryTool = tool(
-  async (input): Promise<string> => {
-    const parsedInput = prometheusInstantQuerySchema.parse(input);
-    const { datasource_uid, query, time } = parsedInput;
-    const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
-    if (!datasource) {
-      throw new Error(`Datasource with uid ${datasource_uid} not found`);
-    }
-    const promDatasource = datasource as PrometheusDatasource;
-    const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
-    const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
-    const q = { ...defaultQuery, expr: query, range: false, instant: true };
-    const result = await lastValueFrom(
-      promDatasource.query({
-        requestId: '1',
-        interval: '1m',
-        intervalMs: 60000,
-        range: timeRange,
-        targets: [q],
-        scopedVars: {},
-        timezone: 'browser',
-        app: CoreApp.Explore,
-        startTime: timeRange.from.valueOf(),
-      })
-    );
-    return JSON.stringify(result);
-  },
+// Wrap the implementation with error handling
+export const prometheusInstantQueryTool = tool(async (input: any): Promise<string> => {
+  const parsedInput = prometheusInstantQuerySchema.parse(input);
+  const { datasource_uid, query, time } = parsedInput;
+  const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
+  if (!datasource) {
+    throw new Error(`Datasource with uid ${datasource_uid} not found`);
+  }
+  const promDatasource = datasource as PrometheusDatasource;
+  const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
+  const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
+  const q = { ...defaultQuery, expr: query, range: false, instant: true };
+  const result = await lastValueFrom(
+    promDatasource.query({
+      requestId: '1',
+      interval: '1m',
+      intervalMs: 60000,
+      range: timeRange,
+      targets: [q],
+      scopedVars: {},
+      timezone: 'browser',
+      app: CoreApp.Explore,
+      startTime: timeRange.from.valueOf(),
+    })
+  );
+  return JSON.stringify(result);
+},
   {
     name: 'prometheus_instant_query',
     description: `

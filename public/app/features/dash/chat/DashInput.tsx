@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
+import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage, ToolMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import { useRef } from 'react';
 
@@ -391,8 +391,19 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           tool.setWorking(true);
         }
 
+        let toolResponse;
         try {
-          const toolResponse = await selectedTool.invoke(toolCall);
+          try {
+            toolResponse = await selectedTool.invoke(toolCall);
+          } catch (error) {
+            const e = error as Error;
+            console.error(`Tool ${toolCall.name} failed:`, error);
+            toolResponse = new ToolMessage({
+              tool_call_id: toolCall.id ?? '1',
+              content: `An error occurred while executing the tool: ${e.message}`,
+            });
+            tool?.setError(e.message);
+          }
           // Check if request was cancelled after tool finished
           if (this._abortController?.signal.aborted) {
             return;
