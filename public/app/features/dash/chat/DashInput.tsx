@@ -7,7 +7,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, useStyles2, TextArea, Tooltip } from '@grafana/ui';
 
-import { agent, workflowAgent } from '../agent/agent';
+import { getAgent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
@@ -72,7 +72,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _inputRef: HTMLTextAreaElement | null = null;
   private _recognition: SpeechRecognition | null = null;
   private _abortController: AbortController | null = null;
-  private _currentAgent = agent;
+  private _agentConfig = getAgent();
+  private _currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
 
   public constructor(state: Partial<Pick<DashInputState, 'message' | 'isListening'>>) {
     super({
@@ -96,7 +97,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     settings.subscribeToState((newState: { verbosity: string }) => {
       if (newState.verbosity !== settings.state.verbosity) {
         // Recreate the agent with new verbosity setting
-        this._currentAgent = agent;
+        this._currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
 
         // Send a system message to update the model's response style
         const verbosityInstructions = {
@@ -230,7 +231,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       });
 
       // Make a separate LLM call with just these two messages
-      const titleGenerator = workflowAgent.llm.bind({});
+      const titleGenerator = this._agentConfig.llm.bind({});
       const titleResponse = await titleGenerator.invoke([systemMessage, humanMessage]);
 
       // Extract and clean the title
