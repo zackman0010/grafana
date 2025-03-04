@@ -2,6 +2,7 @@ import { dashboardPanelsTool } from './dashboardPanels';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
+import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
 import { navigateToExploreTool } from './navigateToExplore';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
@@ -18,6 +19,7 @@ export const tools = [
   lokiLabelNamesTool,
   lokiLabelValuesTool,
   navigateToExploreTool,
+  navigateToDrilldownLogs,
 ];
 
 export const toolsByName = tools.reduce(
