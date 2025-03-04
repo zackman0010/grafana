@@ -1,6 +1,8 @@
 import { TriggerType } from '@webscopeio/react-textarea-autocomplete';
 
+import { backendSrv } from 'app/core/services/backend_srv';
 import { getDataSources } from 'app/features/datasources/api';
+import { DashboardSearchItem } from 'app/features/search/types';
 
 const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
 
@@ -32,19 +34,39 @@ function getDataProviderForTrigger(trigger: string) {
   switch (trigger) {
     case 'datasource':
       return datasourceDataProvider;
+    case 'dashboard':
+      return dashboardDataProvider;
     default:
       return notImplementedDataProvider;
   }
 }
 
 async function datasourceDataProvider(token: string) {
-  // Removes the dashboard prefix from the trigger
+  // Removes the datasource prefix from the trigger
   const actualToken = token.substring(10);
   const dataSources = await getDataSources();
 
   return dataSources
     .filter((ds) => ds.name.startsWith(actualToken) || ds.type.startsWith(actualToken))
     .map((ds) => ds.name);
+}
+
+let dashboards: DashboardSearchItem[];
+async function dashboardDataProvider(token: string) {
+  // Removes the dashboard prefix from the trigger
+  const actualToken = token.substring(9);
+
+  if (!dashboards) {
+    await getDashboards();
+  }
+  return dashboards.filter(dashboard => dashboard.title.startsWith(actualToken) || dashboard.title.toLowerCase().startsWith(actualToken)).slice(0, 10).map(dashboard => dashboard.title);
+}
+
+export async function getDashboards(): Promise<DashboardSearchItem[]> {
+  if (!dashboards) {
+    dashboards = await backendSrv.search({})
+  }
+  return dashboards;
 }
 
 function notImplementedDataProvider() {

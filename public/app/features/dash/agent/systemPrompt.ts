@@ -1,3 +1,5 @@
+import { getPersistedSetting } from '../chat/utils';
+
 import { getCurrentContext } from './tools/context';
 
 // Create a prompt template with instructions to format the response as JSON
@@ -46,6 +48,7 @@ You are an expert observability assistant integrated within a Grafana instance. 
   - Limiting query time ranges to what's necessary (avoid querying days of data when hours will suffice)
   - Consolidating multiple similar queries into one when possible
 - Batch related information gathering before responding rather than making sequential tool calls
+- When using times always use unix timestamps in milliseconds
 
 ## Context References
 The user will include references to context using the format:
@@ -59,7 +62,11 @@ Think about the steps you need to take to answer the question and the best way t
 Explain your reasoning before you start executing any tools.
 
 ## Tone
-- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.
+${
+  getPersistedSetting('verbosity') === 'educational'
+    ? '- Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available". Always suggest helpful next steps.'
+    : '- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
+}
 - Be friendly and helpful.
 
 ## Response Format
@@ -128,14 +135,18 @@ Your response must be formatted as a valid JSON object with this structure:
   }}
 }}
 </json>
+
 `;
 
 export function generateSystemPrompt() {
   const context = getCurrentContext();
-  let contextPrompt = `The current page title is "${context.page.title}"  which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
-  contextPrompt += `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}`;
+  let contextPrompt = `
+  ## Current context and Grafana state
+
+  The current page title is "${context.page.title}"  which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
+  contextPrompt += `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}. `;
   if (context.time_range) {
-    contextPrompt += `The selected time range is ${context.time_range}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
+    contextPrompt += `The selected time range is ${context.time_range.text}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
   }
   if (context.datasource.type !== 'Unknown') {
     contextPrompt += `The current data source type is ${context.datasource.type}. The data source should be displayed by name to the user but internally referenced by the uid. You can resolve the uid using the list_datasources tool. `;
@@ -143,7 +154,7 @@ export function generateSystemPrompt() {
   if (context.query.expression) {
     contextPrompt += `The current query on display is \`${context.query.expression}\`. `;
   }
-  if (context.panels) {
+  if (context.panels.panels.length > 0) {
     contextPrompt += `The current panels in the dashboard are: ${JSON.stringify(context.panels)}. `;
   }
 

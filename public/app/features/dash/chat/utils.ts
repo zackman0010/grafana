@@ -50,6 +50,12 @@ export function getColors(sender: DashMessageState['sender'], theme: GrafanaThem
       borderColor: theme.colors.border.medium,
     };
   }
+  if (sender === 'system') {
+    return {
+      color: 'transparent',
+      borderColor: 'transparent',
+    };
+  }
   return {
     color: theme.colors.background.secondary,
     borderColor: theme.colors.border.medium,

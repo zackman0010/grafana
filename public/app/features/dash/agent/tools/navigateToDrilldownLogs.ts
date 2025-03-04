@@ -13,7 +13,7 @@ const navigateToDrilldownLogsSchema = z.object({
       'Array of Loki indexed labels to include in the filters with the following format: label_name|=|label_value'
     ),
   levels: z
-    .array(z.enum(['critical', 'error', 'debug', 'info', 'warning']))
+    .array(z.enum(['critical', 'error', 'debug', 'info', 'warning', 'fatal']))
     .optional()
     .describe('Array of error levels to include in the filters.'),
 });
@@ -34,7 +34,7 @@ export const navigateToDrilldownLogs = tool(
   {
     name: 'navigate_to_drilldown_logs',
     description:
-      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without user confirmation.',
+      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without asking the user for confirmation.',
     schema: navigateToDrilldownLogsSchema,
   }
 );

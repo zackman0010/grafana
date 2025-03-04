@@ -1,11 +1,14 @@
-import { CoreApp, dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
-import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+import { tool } from '@langchain/core/tools';
 import { lastValueFrom } from 'rxjs';
+import { z } from 'zod';
+
+import { CoreApp, dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
+import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
+
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
-import { tool } from '@langchain/core/tools';
-import { z } from 'zod';
+
 
 const prometheusInstantQuerySchema = z.object({
   datasource_uid: z
@@ -16,7 +19,7 @@ const prometheusInstantQuerySchema = z.object({
   time: z
     .number()
     .optional()
-    .describe('Optional evaluation timestamp (Unix seconds). Defaults to current time if not provided.')
+    .describe('Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.') 
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
 });
 

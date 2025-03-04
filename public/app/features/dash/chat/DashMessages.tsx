@@ -18,16 +18,18 @@ interface DashMessagesState extends SceneObjectState {
   langchainMessages: Array<HumanMessage | AIMessageChunk | SystemMessage>;
   messages: DashMessage[];
   loading: boolean;
+  generatingWelcome: boolean;
 }
 
 export class DashMessages extends SceneObjectBase<DashMessagesState> {
   public static Component = DashMessagesRenderer;
 
-  public constructor(state: Partial<Omit<DashMessagesState, 'loading'>>) {
+  public constructor(state: Partial<Omit<DashMessagesState, 'loading' | 'generatingWelcome'>>) {
     super({
       langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
       messages: state.messages ?? [],
       loading: false,
+      generatingWelcome: false,
     });
 
     this._pointerDownEventListener = this._pointerDownEventListener.bind(this);
@@ -58,8 +60,8 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     return message;
   }
 
-  public addSystemMessage(content: string, muted?: boolean): DashMessage {
-    const message = new DashMessage({ content, sender: 'ai', muted });
+  public addSystemMessage(content: string, muted?: boolean, isError?: boolean): DashMessage {
+    const message = new DashMessage({ content, sender: 'system', muted, isError });
     this.setState({ messages: [...this.state.messages, message] });
     return message;
   }
@@ -129,6 +131,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     }
   }
 
+  public setGeneratingWelcome(generating: boolean) {
+    if (generating !== this.state.generatingWelcome) {
+      this.setState({ generatingWelcome: generating });
+    }
+  }
+
   private _findUserMessage(messages: DashMessage[] = this.state.messages): [DashMessage | undefined, number] {
     const index = findLastIndex(messages, (message) => message.state.sender === 'user');
     return [messages[index], index];
@@ -187,7 +195,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
 function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const styles = useStyles2(getStyles);
-  const { loading, messages } = model.useState();
+  const { loading, generatingWelcome, messages } = model.useState();
   const scrollRef = useRef<HTMLInputElement>(null);
 
   // Check if any tool is currently working
@@ -207,7 +215,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
       {messages.map((message) => (
         <message.Component model={message} key={message.state.key!} />
       ))}
-      {loading && !isToolWorking && <Loader />}
+      {(loading || generatingWelcome) && !isToolWorking && <Loader />}
       <div ref={scrollRef} />
     </div>
   );

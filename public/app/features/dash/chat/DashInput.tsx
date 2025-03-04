@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { AIMessageChunk, HumanMessage } from '@langchain/core/messages';
+import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import { useRef } from 'react';
 
@@ -7,13 +7,13 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, useStyles2, TextArea, Tooltip } from '@grafana/ui';
 
-import { agent } from '../agent/agent';
+import { agent, workflowAgent } from '../agent/agent';
 import { toolsByName } from '../agent/tools';
 import { dataProvider, getProviderTriggers } from '../agent/tools/context/autocomplete';
 
 import { Tool } from './DashMessage/Tool';
 import { DashMessages } from './DashMessages';
-import { getMessages } from './utils';
+import { getDash, getMessages } from './utils';
 
 import '@webscopeio/react-textarea-autocomplete/style.css';
 
@@ -72,6 +72,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _inputRef: HTMLTextAreaElement | null = null;
   private _recognition: SpeechRecognition | null = null;
   private _abortController: AbortController | null = null;
+  private _currentAgent = agent;
+
   public constructor(state: Partial<Pick<DashInputState, 'message' | 'isListening'>>) {
     super({
       ...state,
@@ -85,6 +87,34 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _activationHandler() {
     this.messages = getMessages(this);
     this._initializeSpeechRecognition();
+    this._setupVerbosityListener();
+  }
+
+  private _setupVerbosityListener() {
+    // Listen for verbosity changes
+    const settings = getDash(this).state.settings;
+    settings.subscribeToState((newState: { verbosity: string }) => {
+      if (newState.verbosity !== settings.state.verbosity) {
+        // Recreate the agent with new verbosity setting
+        this._currentAgent = agent;
+
+        // Send a system message to update the model's response style
+        const verbosityInstructions = {
+          concise:
+            'Please adjust your response style to be more concise. Use short, clear sentences and avoid unnecessary explanations or repetition.',
+          educational:
+            'Please adjust your response style to be more educational. Explain concepts as if speaking to someone new to Grafana, break down technical terms, and use analogies where helpful. Include helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available".',
+        };
+
+        const instruction = verbosityInstructions[newState.verbosity as keyof typeof verbosityInstructions];
+        if (instruction) {
+          // Add to both the UI messages and LangChain messages
+          this.messages?.addSystemMessage(instruction);
+          this.messages?.addLangchainMessage(new SystemMessage({ content: instruction }));
+          this._logAIMessage(instruction, 'final');
+        }
+      }
+    });
   }
 
   private _initializeSpeechRecognition() {
@@ -162,6 +192,86 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
+  private _logAIMessage(message: MessageContent, type: 'initial' | 'tool' | 'final' = 'initial') {
+    const timestamp = new Date().toLocaleTimeString();
+    const prefix = type === 'initial' ? '🤖' : type === 'tool' ? '🛠️' : '✨';
+    const messageText = typeof message === 'string' ? message : JSON.stringify(message);
+    console.log(`\n${prefix} AI (${timestamp}): ${messageText}`);
+  }
+
+  private _logMessagesToLLM(messages: Array<HumanMessage | AIMessageChunk | SystemMessage>) {
+    const timestamp = new Date().toLocaleTimeString();
+    const counts = {
+      system: messages.filter((m) => m instanceof SystemMessage).length,
+      user: messages.filter((m) => m instanceof HumanMessage).length,
+      ai: messages.filter((m) => m instanceof AIMessageChunk).length,
+    };
+    console.log(
+      `\n📤 Sending to LLM (${timestamp}): ${counts.system} system, ${counts.user} user, ${counts.ai} AI messages`
+    );
+    messages.forEach((msg, i) => {
+      const prefix = msg instanceof HumanMessage ? '👤' : msg instanceof SystemMessage ? '⚙️' : '🤖';
+      const content = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content);
+      console.log(`${prefix} [${i + 1}]: ${content}`);
+    });
+  }
+
+  private async _generateTitleSummary(userMessage: string): Promise<string> {
+    try {
+      // Create a system message with instructions for generating a title
+      const systemMessage = new SystemMessage({
+        content:
+          "Generate a concise title (maximum 20 characters) that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation.",
+      });
+
+      // Create a human message with the user's input
+      const humanMessage = new HumanMessage({
+        content: userMessage,
+      });
+
+      // Make a separate LLM call with just these two messages
+      const titleGenerator = workflowAgent.llm.bind({});
+      const titleResponse = await titleGenerator.invoke([systemMessage, humanMessage]);
+
+      // Extract and clean the title
+      let title = titleResponse.content.toString().trim();
+
+      // Ensure the title isn't too long
+      if (title.length > 20) {
+        title = title.substring(0, 17) + '...';
+      }
+
+      console.log('Generated title:', title);
+      return title;
+    } catch (error) {
+      console.error('Error generating title:', error);
+      // Return a fallback title if generation fails
+      return 'Chat ' + new Date().toLocaleTimeString();
+    }
+  }
+
+  private _updateChatTitle(title: string) {
+    try {
+      // Get the Dash instance
+      const dash = getDash(this);
+      if (!dash) {
+        console.error('Could not find Dash instance');
+        return;
+      }
+
+      // Get the current chat container
+      const currentChatIndex = dash.state.currentChatContainer;
+      const chatContainer = dash.state.chatContainers[currentChatIndex];
+
+      if (chatContainer) {
+        // Update the chat container's name using the setName method
+        chatContainer.setName(title);
+      }
+    } catch (error) {
+      console.error('Error updating chat title:', error);
+    }
+  }
+
   public async sendMessage() {
     const message = this.state.message.trim();
 
@@ -175,8 +285,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
     this._abortController = new AbortController();
 
-    console.log('User message:', message);
-    this.messages?.setLoading(true);
+    console.log('\n👤 User Message:', message);
+    if (this.messages) {
+      this.messages.setLoading(true);
+    }
 
     // Pause listening while processing
     if (this.state.isListening && this._recognition) {
@@ -187,25 +299,56 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const messageToSend = message;
     const userMessage = this.messages?.addUserMessage(messageToSend);
 
+    // Check if this is the first message in a new conversation
+    const isFirstMessage: boolean = this.messages?.state.messages.length === 1;
+
+    // Get the chat container to check if it has the default name
+    const dash = getDash(this);
+    const currentChatIndex = dash?.state.currentChatContainer || 0;
+    const chatContainer = dash?.state.chatContainers[currentChatIndex];
+    const hasDefaultName = chatContainer?.state.name.startsWith('Chat ') ?? false;
+
     try {
-      this.messages?.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage?.state.key! }));
-      const aiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
-        signal: this._abortController.signal,
-      });
-      console.log('AI response:', aiMessage.content);
-      this.messages?.addAiMessage(aiMessage.content);
-      this.messages?.addLangchainMessage(aiMessage);
-      await this._handleToolCalls(aiMessage);
+      if (this.messages && userMessage?.state.key) {
+        this.messages.addLangchainMessage(new HumanMessage({ content: messageToSend, id: userMessage.state.key }));
+      }
+
+      // Log messages being sent to LLM
+      if (this.messages?.state.langchainMessages) {
+        this._logMessagesToLLM(this.messages.state.langchainMessages);
+      }
+
+      // Only generate a title if this is the first message and the chat has a default name
+      if (isFirstMessage && hasDefaultName) {
+        const titleSummary = await this._generateTitleSummary(messageToSend);
+        this._updateChatTitle(titleSummary);
+      }
+
+      if (this.messages?.state.langchainMessages) {
+        const aiMessage = await this._currentAgent.invoke(this.messages.state.langchainMessages, {
+          signal: this._abortController.signal,
+        });
+        this._logAIMessage(aiMessage.content);
+        if (this.messages) {
+          this.messages.addAiMessage(aiMessage.content);
+          this.messages.addLangchainMessage(aiMessage);
+          await this._handleToolCalls(aiMessage);
+        }
+      }
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
         // Don't log as error since this is an expected cancellation
         return;
       }
       // Only log and show error message for unexpected errors
-      console.error('Error processing message:', error);
-      this.messages?.addSystemMessage(`Oops: ${error.message || 'Unknown error occurred'}`);
+      console.error('\n❌ Error:', error.message || 'Unknown error occurred');
+      if (this.messages) {
+        this.messages.addSystemMessage(error.message || 'Unknown error occurred', false, true);
+      }
     } finally {
-      this.messages?.setLoading(false);
+      if (this.messages) {
+        this.messages.setLoading(false);
+      }
       this._abortController = null;
       // Clear the message only after we've successfully processed it
       this.updateMessage('', false);
@@ -227,7 +370,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
         return;
       }
 
-      console.log('Tool call:', {
+      console.log('\n🛠️ Tool Call:', {
         name: toolCall.name,
         type: 'tool_notification',
       });
@@ -242,11 +385,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return false;
           });
         });
-        if (toolMessage) {
-          const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
-          if (tool) {
-            tool.setWorking(true);
-          }
+        const tool = toolMessage?.state.children.find((child) => child instanceof Tool) as Tool;
+
+        if (tool) {
+          tool.setWorking(true);
         }
 
         try {
@@ -256,12 +398,16 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return;
           }
 
-          console.log('Tool response:', {
+          console.log('\n📥 Tool Response:', {
             content: toolResponse.content,
             type: 'tool_response',
           });
           this.messages?.addLangchainMessage(toolResponse);
-          const nextAiMessage = await agent.invoke(this.messages?.state.langchainMessages!, {
+
+          // Log messages being sent to LLM after tool response
+          this._logMessagesToLLM(this.messages?.state.langchainMessages!);
+
+          const nextAiMessage = await this._currentAgent.invoke(this.messages?.state.langchainMessages!, {
             signal: this._abortController?.signal,
           });
           // Check if request was cancelled after AI response
@@ -269,24 +415,34 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return;
           }
 
-          console.log('Next AI response after tool:', nextAiMessage.content);
+          this._logAIMessage(nextAiMessage.content, 'tool');
           this.messages?.addAiMessage(nextAiMessage.content);
           this.messages?.addLangchainMessage(nextAiMessage);
+          // Set the tool back to not working after successful completion
+          if (tool) {
+            tool.setWorking(false);
+          }
           await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
         } catch (error: any) {
           if (error.name === 'AbortError') {
             console.log('Request was cancelled during tool execution');
             return;
           }
-          throw error;
-        } finally {
-          // Set the tool back to not working
-          if (toolMessage) {
-            const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
-            if (tool) {
-              tool.setWorking(false);
-            }
+          // Set error state on the tool and continue with other tools
+          if (tool) {
+            tool.setError(error.message || 'An error occurred while executing the tool');
+            tool.setWorking(false);
+            // Add error message to the chat
+            this.messages?.addSystemMessage(
+              `${error.message || 'An error occurred while executing the tool'}`,
+              false,
+              true
+            );
           }
+          // Log the error but don't throw it to allow other tools to continue
+          console.error(`Tool ${toolCall.name} failed:`, error);
+          // Continue with the next tool
+          continue;
         }
       }
     }
