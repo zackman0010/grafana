@@ -1,5 +1,4 @@
-import { css } from '@emotion/css';
-import { cx } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 import { GrafanaTheme2, renderMarkdown } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';

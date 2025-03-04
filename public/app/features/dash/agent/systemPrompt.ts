@@ -1,5 +1,6 @@
-import { getCurrentContext } from './tools/context';
 import { getPersistedSetting } from '../chat/utils';
+
+import { getCurrentContext } from './tools/context';
 
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `
