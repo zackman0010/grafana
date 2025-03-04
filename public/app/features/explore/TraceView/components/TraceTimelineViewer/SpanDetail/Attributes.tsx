@@ -77,6 +77,7 @@ export const Attributes = ({
         linksGetter={linksGetter}
         isOpen={isTagsOpen}
         onToggle={() => tagsToggle(span.spanID)}
+        links={links}
       />
 
       {span.process.tags && (
