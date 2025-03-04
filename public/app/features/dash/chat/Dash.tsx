@@ -38,16 +38,16 @@ export class Dash extends SceneObjectBase<DashState> {
     this.state.settings.activate();
 
     // Generate welcome message for the initial chat
-    this.generateWelcomeMessage().then((welcomeMessage) => {
-      if (this.state.chatContainers[0]?.state.versions[0]?.state.messages) {
-        this.state.chatContainers[0].state.versions[0].state.messages.addSystemMessage(welcomeMessage);
+    const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
+    this.generateWelcomeMessage(messages).then((welcomeMessage) => {
+      if (messages) {
+        messages.addSystemMessage(welcomeMessage);
       }
     });
   }
 
-  private async generateWelcomeMessage(): Promise<string> {
+  private async generateWelcomeMessage(messages?: any): Promise<string> {
     try {
-      const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
       if (!messages) {
         return "Hello! I'm your Grafana AI assistant. How can I help you today?";
       }
@@ -77,7 +77,6 @@ export class Dash extends SceneObjectBase<DashState> {
       console.error('Error generating welcome message:', error);
       return "Hello! I'm your Grafana AI assistant. How can I help you today?";
     } finally {
-      const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
       if (messages) {
         messages.setGeneratingWelcome(false);
       }
@@ -101,18 +100,21 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public async addChat() {
-    const welcomeMessage = await this.generateWelcomeMessage();
     const newChat = new DashChatContainer({ name: `Chat ${this._chatName++}` });
+    const newChatIndex = this.state.chatContainers.length;
+    const messages = newChat.state.versions[0]?.state.messages;
 
-    // Add the welcome message to the new chat
-    if (newChat.state.versions[0]?.state.messages) {
-      newChat.state.versions[0].state.messages.addSystemMessage(welcomeMessage);
-    }
-
+    // Add the new chat and switch to it immediately
     this.setState({
       chatContainers: [...this.state.chatContainers, newChat],
-      currentChatContainer: this.state.chatContainers.length,
+      currentChatContainer: newChatIndex,
     });
+
+    // Generate welcome message in the background
+    const welcomeMessage = await this.generateWelcomeMessage(messages);
+    if (messages) {
+      messages.addSystemMessage(welcomeMessage);
+    }
   }
 
   public removeChat(index: number) {
