@@ -3,41 +3,96 @@ import { css } from '@emotion/css';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { TabContent, useStyles2 } from '@grafana/ui';
 
+import { DashChatInstance } from './DashChatInstance';
 import { DashInput } from './DashInput';
 import { DashMessages } from './DashMessages';
+import { SerializedDashChat } from './types';
+import { getDash } from './utils';
 
-export interface DashChatState extends SceneObjectState {
-  input: DashInput;
-  messages: DashMessages;
-  timestamp: Date;
+interface DashChatState extends SceneObjectState {
+  name: string;
+  versions: DashChatInstance[];
+  versionIndex: number;
 }
 
 export class DashChat extends SceneObjectBase<DashChatState> {
   public static Component = DashChatRenderer;
 
-  public constructor(state: Partial<Omit<DashChatState, 'timestamp'>>) {
+  public constructor(state: Pick<DashChatState, 'name'> & Partial<Pick<DashChatState, 'versionIndex' | 'versions'>>) {
+    const versions = state.versions?.length ? state.versions : [new DashChatInstance({})];
+
     super({
-      input: state.input ?? new DashInput({}),
-      messages: state.messages ?? new DashMessages({}),
-      timestamp: new Date(),
+      ...state,
+      versions,
+      versionIndex:
+        state.versionIndex !== undefined && versions[state.versionIndex] ? state.versionIndex : versions.length - 1,
     });
+  }
+
+  public setVersionIndex(chat: DashChatInstance) {
+    this.setState({ versionIndex: this.state.versions.indexOf(chat) });
+    getDash(this).persist();
+  }
+
+  public setName(name: string) {
+    this.setState({ name });
+    getDash(this).persist();
+  }
+
+  public cloneChat(chat: DashChatInstance) {
+    const { messages, langchainMessages } = chat.state.messages.state;
+
+    const [selectedMessage, selectedMessageIndex] = chat.state.messages.findSelectedMessage();
+    const langchainMessageIndex = langchainMessages.findIndex((message) => message.id === selectedMessage?.state.key);
+
+    const newLangchainMessages = langchainMessages.slice(0, langchainMessageIndex);
+    const newMessages = messages.slice(0, selectedMessageIndex).map((message) => message.clone());
+
+    this.setState({
+      versions: [
+        ...this.state.versions,
+        new DashChatInstance({
+          input: new DashInput({ message: String(selectedMessage?.state.content!) }),
+          messages: new DashMessages({ messages: newMessages, langchainMessages: newLangchainMessages }),
+        }),
+      ],
+      versionIndex: this.state.versions.length,
+    });
+    getDash(this).persist();
+  }
+
+  public clearHistory() {
+    this.setState({
+      versions: this.state.versions.filter((_version, index) => index !== this.state.versionIndex),
+      versionIndex: 0,
+    });
+    getDash(this).persist();
+  }
+
+  public toJSON(): SerializedDashChat {
+    return {
+      name: this.state.name,
+      versions: this.state.versions.map((chat) => chat.toJSON()),
+      versionIndex: this.state.versionIndex,
+    };
   }
 }
 
 function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
   const styles = useStyles2(getStyles);
-  const { messages, input } = model.useState();
+  const { versions, versionIndex } = model.useState();
+  const chat = versions[versionIndex];
 
   return (
-    <TabContent className={styles.top}>
-      <messages.Component model={messages} />
-      <input.Component model={input} />
+    <TabContent className={styles.container}>
+      <chat.Component model={chat} />
     </TabContent>
   );
 }
 
 const getStyles = () => ({
-  top: css({
+  container: css({
+    label: 'dash-chat-container',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',

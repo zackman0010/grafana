@@ -4,7 +4,7 @@ import { GrafanaTheme2, renderMarkdown } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { DashSettingsState } from '../DashSettings';
+import { CodeOverflow } from '../types';
 import { getMessage, getSettings } from '../utils';
 
 import { Bubble } from './Bubble';
@@ -74,7 +74,7 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, codeOverflow: DashSettingsState['codeOverflow'], muted?: boolean) => ({
+const getStyles = (theme: GrafanaTheme2, codeOverflow: CodeOverflow, muted?: boolean) => ({
   container: css({
     ...theme.typography.body,
     ...(muted && {

@@ -9,7 +9,6 @@ import { makeSingleRequest } from '../agent/singleRequest';
 import { getCurrentContext } from '../agent/tools/context';
 
 import { DashChat } from './DashChat';
-import { DashChatContainer } from './DashChatContainer';
 import { DashChatInstance } from './DashChatInstance';
 import { DashMessage } from './DashMessage';
 import { DashMessages } from './DashMessages';
@@ -17,8 +16,8 @@ import { DashSettings } from './DashSettings';
 import { Mode, SerializedDash } from './types';
 import { getPersistedSetting, persistSetting } from './utils';
 
-export interface DashState extends SceneObjectState {
-  chats: DashChatContainer[];
+interface DashState extends SceneObjectState {
+  chats: DashChat[];
   chatIndex: number;
   opened: boolean;
   settings: DashSettings;
@@ -47,7 +46,7 @@ export class Dash extends SceneObjectBase<DashState> {
           (chat) =>
             new DashChat({
               name: chat.name,
-              currentVersion: chat.currentVersion,
+              versionIndex: chat.versionIndex,
               versions: chat.versions.map(
                 (instance) =>
                   new DashChatInstance({
@@ -78,7 +77,7 @@ export class Dash extends SceneObjectBase<DashState> {
 
     super({
       chats,
-      chatIndex,
+      chatIndex: chatIndex !== undefined && chats[chatIndex] ? chatIndex : chats.length - 1,
       opened: getPersistedSetting('opened') === 'true',
       settings: new DashSettings(),
     });
@@ -152,7 +151,7 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public async addChat() {
-    const newChat = new DashChatContainer({ name: `Chat ${this._chatNumber++}` });
+    const newChat = new DashChat({ name: `Chat ${this._chatNumber++}` });
     const newChatIndex = this.state.chats.length;
     const messages = newChat.state.versions[0]?.state.messages;
 
@@ -168,7 +167,7 @@ export class Dash extends SceneObjectBase<DashState> {
 
   public removeChat(index: number) {
     if (this.state.chats.length === 1) {
-      this.setState({ chats: [new DashChatContainer({ name: `Chat ${this._chatNumber++}` })], chatIndex: 0 });
+      this.setState({ chats: [new DashChat({ name: `Chat ${this._chatNumber++}` })], chatIndex: 0 });
       this.persist();
       return;
     }
@@ -252,7 +251,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
                   <Menu.Item
                     key={version.state.key}
                     label={version.state.timestamp.toLocaleString()}
-                    onClick={() => chat.setCurrentVersion(version)}
+                    onClick={() => chat.setVersionIndex(version)}
                   />
                 ))}
                 <Menu.Divider />

@@ -47,11 +47,11 @@ export interface SerializedDashChatInstance {
 export interface SerializedDashChat {
   name: string;
   versions: SerializedDashChatInstance[];
-  currentVersion: number;
+  versionIndex: number;
 }
 
 export interface SerializedDash {
   chats: SerializedDashChat[];
-  currentChatIndex: number;
+  chatIndex: number;
   chatNumber: number;
 }

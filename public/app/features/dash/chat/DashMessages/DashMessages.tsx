@@ -7,12 +7,12 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { generateSystemPrompt } from '../agent/systemPrompt';
+import { generateSystemPrompt } from '../../agent/systemPrompt';
+import { DashMessage } from '../DashMessage';
+import { SerializedDashMessages } from '../types';
+import { getChat, getChatInstance, getDash, getInput } from '../utils';
 
-import { DashMessage } from './DashMessage/DashMessage';
-import { Tool } from './DashMessage/Tool';
 import { Loader } from './Loader';
-import { getChat, getChatContainer, getInput } from './utils';
 
 interface DashMessagesState extends SceneObjectState {
   anyToolsWorking: boolean;
@@ -133,10 +133,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
   }
 
   public setGeneratingWelcome(generatingWelcome: boolean) {
-    if (generating !== this.state.generatingWelcome) {
+    if (generatingWelcome !== this.state.generatingWelcome) {
       this.setState({ generatingWelcome });
     }
   }
+
+  public setToolError(toolId: string | undefined, error: string) {}
 
   public setToolWorking(toolId: string | undefined, working: boolean) {
     this.state.messages.forEach((message) => message.setToolWorking(toolId, working));

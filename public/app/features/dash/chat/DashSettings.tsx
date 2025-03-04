@@ -8,7 +8,7 @@ import { IconButton, useStyles2 } from '@grafana/ui';
 import { CodeOverflow, Mode, Verbosity } from './types';
 import { getPersistedSetting, persistSetting } from './utils';
 
-export interface DashSettingsState extends SceneObjectState {
+interface DashSettingsState extends SceneObjectState {
   codeOverflow: CodeOverflow;
   mode: Mode;
   showTools: boolean;

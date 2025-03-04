@@ -5,38 +5,44 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObject, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
+import { Sender, SerializedDashMessage, ToolContent } from '../types';
+
 import { Image } from './Image';
 import { MessageContainer } from './MessageContainer';
 import { Text } from './Text';
-import { Tool, ToolState } from './Tool';
+import { Tool } from './Tool';
 
-export interface DashMessageState extends SceneObjectState {
+interface DashMessageState extends SceneObjectState {
   children: SceneObject[];
   content: MessageContent;
-  sender: 'user' | 'ai' | 'system' | 'tool_notification';
-  time: string;
+  editedMessage: string | undefined;
+  editing: boolean;
+  isError: boolean;
+  muted: boolean;
+  sender: Sender;
   selected: boolean;
-  muted?: boolean;
-  isError?: boolean;
 }
 
 export class DashMessage extends SceneObjectBase<DashMessageState> {
   public static Component = DashMessageRenderer;
 
   public constructor(
-    state: Omit<DashMessageState, 'children' | 'icon' | 'selected' | 'time'> &
+    state: Omit<
+      DashMessageState,
+      'children' | 'editedMessage' | 'editing' | 'icon' | 'selected' | 'muted' | 'isError'
+    > &
       Partial<Pick<DashMessageState, 'selected' | 'muted' | 'isError'>>
   ) {
     const children =
       typeof state.content === 'string'
-        ? [new Text({ content: state.content, muted: state.muted })]
+        ? [new Text({ content: state.content })]
         : state.content.reduce<SceneObject[]>((acc, currentContent) => {
             switch (currentContent.type) {
               case 'text':
-                return [...acc, new Text({ content: currentContent.text, muted: state.muted })];
+                return [...acc, new Text({ content: currentContent.text })];
 
               case 'tool_use':
-                return [...acc, new Tool({ content: currentContent as ToolState['content'] })];
+                return [...acc, new Tool({ content: currentContent as ToolContent })];
 
               case 'image_url':
                 return [...acc, new Image({ url: currentContent.image_url })];
@@ -47,18 +53,53 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
           }, []);
 
     super({
-      children,
-      selected: false,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isError: false,
       ...state,
+      children,
+      editedMessage: undefined,
+      editing: false,
+      selected: false,
+      isError: state.isError ?? false,
+      muted: state.muted ?? false,
     });
   }
 
   public setSelected(selected: boolean) {
     if (selected !== this.state.selected) {
-      this.setState({ selected });
+      this.setState({ selected, editing: false, editedMessage: undefined });
     }
+  }
+
+  public setEditing(editing: boolean) {
+    if (editing !== this.state.editing) {
+      this.setState({ editing, editedMessage: editing ? String(this.state.content) : undefined });
+    }
+  }
+
+  public updateEditedMessage(editedMessage: string) {
+    this.setState({ editedMessage });
+  }
+
+  public setToolWorking(id: string | undefined, working: boolean) {
+    if (!id) {
+      return;
+    }
+
+    this.state.children.forEach((child) => {
+      if (child instanceof Tool && child.state.content.id === id) {
+        child.setWorking(working);
+      }
+    });
+  }
+
+  public hasWorkingTools(): boolean {
+    return this.state.children.some((child) => child instanceof Tool && child.state.working);
+  }
+
+  public toJSON(): SerializedDashMessage {
+    return {
+      content: this.state.content,
+      sender: this.state.sender,
+    };
   }
 }
 
@@ -77,7 +118,7 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, sender: DashMessageState['sender'], isError?: boolean) => ({
+const getStyles = (theme: GrafanaTheme2, sender: Sender, isError?: boolean) => ({
   messages: css({
     label: 'dash-message-messages',
     display: 'flex',

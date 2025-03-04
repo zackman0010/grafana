@@ -4,14 +4,14 @@ import { ReactNode } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
-import { DashSettingsState } from '../DashSettings';
+import { CodeOverflow, Sender } from '../types';
 import { getColors } from '../utils';
 
 import { DashMessageState } from './DashMessage';
 
 interface Props {
   children: ReactNode;
-  codeOverflow: DashSettingsState['codeOverflow'];
+  codeOverflow: CodeOverflow;
   selected: boolean;
   sender: DashMessageState['sender'];
 }
@@ -26,12 +26,7 @@ export const Bubble = ({ children, codeOverflow, selected, sender }: Props) => {
   );
 };
 
-const getStyles = (
-  theme: GrafanaTheme2,
-  codeOverflow: DashSettingsState['codeOverflow'],
-  selected: boolean,
-  sender: DashMessageState['sender']
-) => {
+const getStyles = (theme: GrafanaTheme2, codeOverflow: CodeOverflow, selected: boolean, sender: Sender) => {
   const { color, borderColor } = getColors(sender, theme);
 
   return {

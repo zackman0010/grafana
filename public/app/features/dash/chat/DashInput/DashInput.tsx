@@ -203,13 +203,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
         try {
           try {
             toolResponse = await selectedTool.invoke(toolCall);
-          } catch (err: Error) {
+          } catch (err: unknown) {
             console.error(`Tool ${toolCall.name} failed:`, err);
+            const message = err instanceof Error ? err.message : String(err);
             toolResponse = new ToolMessage({
               tool_call_id: toolCall.id ?? '1',
-              content: `An error occurred while executing the tool: ${err.message}`,
+              content: `An error occurred while executing the tool: ${message}`,
             });
-            getMessages(this).setToolError(toolCall.id, err.message);
+            getMessages(this).setToolError(toolCall.id, message);
           }
 
           getMessages(this).setToolWorking(toolCall.id, false);
