@@ -5,13 +5,14 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, useStyles2 } from '@grafana/ui';
 
+import { CodeOverflow, Mode, Verbosity } from './types';
 import { getPersistedSetting, persistSetting } from './utils';
 
 export interface DashSettingsState extends SceneObjectState {
-  codeOverflow: 'scroll' | 'wrap';
-  mode: 'floating' | 'sidebar';
+  codeOverflow: CodeOverflow;
+  mode: Mode;
   showTools: boolean;
-  verbosity: 'concise' | 'educational';
+  verbosity: Verbosity;
 }
 
 export class DashSettings extends SceneObjectBase<DashSettingsState> {
@@ -23,10 +24,10 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
 
   public constructor() {
     super({
-      codeOverflow: (getPersistedSetting('code-overflow') ?? 'wrap') as 'scroll' | 'wrap',
-      mode: (getPersistedSetting('mode') ?? 'sidebar') as 'floating' | 'sidebar',
-      showTools: getPersistedSetting('show-tools') === 'false' ? false : true,
-      verbosity: (getPersistedSetting('verbosity') ?? 'concise') as 'concise' | 'educational',
+      codeOverflow: (getPersistedSetting('code-overflow') ?? 'wrap') as CodeOverflow,
+      mode: (getPersistedSetting('mode') ?? 'sidebar') as Mode,
+      showTools: getPersistedSetting('show-tools') !== 'false',
+      verbosity: (getPersistedSetting('verbosity') ?? 'concise') as Verbosity,
     });
   }
 
@@ -48,7 +49,7 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
     persistSetting('show-tools', String(showTools));
   }
 
-  public setVerbosity(verbosity: 'concise' | 'educational') {
+  public setVerbosity(verbosity: Verbosity) {
     this.setState({ verbosity });
     persistSetting('verbosity', verbosity);
   }
@@ -140,6 +141,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    label: 'dash-settings-container',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
