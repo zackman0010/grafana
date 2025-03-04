@@ -1,7 +1,7 @@
+import { getBackendSrv } from '@grafana/runtime';
+import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-
-import { getBackendSrv } from '@grafana/runtime';
 
 const executePrometheusInstantQuery = async (
   datasourceUid: string,
@@ -21,9 +21,11 @@ const executePrometheusInstantQuery = async (
     }
 
     return (await getBackendSrv().get(`/api/datasources/uid/${datasourceUid}/resources/api/v1/query`, params)).data;
-  } catch (error) {
-    console.error('Error executing Prometheus instant query:', error);
-    throw new Error(`Failed to execute instant query for datasource ${datasourceUid}: ${error}`);
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'data' in error) {
+      return (error as { data: unknown }).data ?? error;
+    }
+    return error;
   }
 };
 
@@ -49,7 +51,13 @@ export const prometheusInstantQueryTool = tool(
   },
   {
     name: 'prometheus_instant_query',
-    description: 'Execute a Prometheus instant query to evaluate a PromQL expression at a single point in time.',
+    description: `
+    Execute a Prometheus instant query to evaluate a PromQL expression at a single point in time.
+    Prefer to use this tool over range queries as it is less data but can still cover a long time range.
+    Always group by such as (sum by (labelname)) to reduce the number of results,
+    but first verify the cardinality of the label you are grouping by count() or ${prometheusLabelValuesTool.name}.
+    If is above 10 use alternative label to group by or use topk or bottomk to reduce the number of results.
+    `,
     schema: prometheusInstantQuerySchema,
   }
 );

@@ -1,7 +1,7 @@
+import { getBackendSrv } from '@grafana/runtime';
+import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-
-import { getBackendSrv } from '@grafana/runtime';
 
 const executePrometheusRangeQuery = async (
   datasourceUid: string,
@@ -19,9 +19,11 @@ const executePrometheusRangeQuery = async (
 
     return (await getBackendSrv().get(`/api/datasources/uid/${datasourceUid}/resources/api/v1/query_range`, params))
       .data;
-  } catch (error) {
-    console.error('Error executing Prometheus range query:', error);
-    throw new Error(`Failed to execute range query for datasource ${datasourceUid}: ${error}`);
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'data' in error) {
+      return (error as { data: unknown }).data ?? error;
+    }
+    return error;
   }
 };
 
@@ -46,7 +48,10 @@ export const prometheusRangeQueryTool = tool(
   },
   {
     name: 'prometheus_range_query',
-    description: 'Execute a Prometheus range query to evaluate a PromQL expression over a range of time.',
+    description: `
+    Execute a Prometheus range query to evaluate a PromQL expression over a range of time.
+    Avoid using this tool if you can use ${prometheusInstantQueryTool.name} instead.
+    `,
     schema: prometheusRangeQuerySchema,
   }
 );
