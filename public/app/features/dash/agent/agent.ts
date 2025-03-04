@@ -11,12 +11,10 @@ const llm = new ChatAnthropic({
   apiKey: ANTHROPIC_API_KEY,
 });
 
-export const agent = llm.bindTools(tools);
-
-export const workflowAgent = {
-  llm: llm,
-  tools: tools,
-  withTools(tools: StructuredTool[]) {
-    return llm.bindTools(tools);
-  },
-};
+export function getAgent() {
+  return {
+    llm: llm,
+    tools: tools,
+    withTools: (tools: StructuredTool[]) => llm.bindTools(tools),
+  };
+}

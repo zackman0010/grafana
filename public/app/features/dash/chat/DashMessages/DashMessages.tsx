@@ -7,29 +7,31 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { generateSystemPrompt } from '../agent/systemPrompt';
+import { generateSystemPrompt } from '../../agent/systemPrompt';
+import { DashMessage } from '../DashMessage';
+import { SerializedDashMessages } from '../types';
+import { getChat, getChatInstance, getDash, getInput } from '../utils';
 
-import { DashMessage } from './DashMessage/DashMessage';
-import { Loader } from './DashMessage/Loader';
-import { Tool } from './DashMessage/Tool';
-import { getChat, getChatContainer, getInput } from './utils';
+import { Loader } from './Loader';
 
 interface DashMessagesState extends SceneObjectState {
-  langchainMessages: Array<HumanMessage | AIMessageChunk | SystemMessage>;
-  messages: DashMessage[];
-  loading: boolean;
+  anyToolsWorking: boolean;
   generatingWelcome: boolean;
+  langchainMessages: Array<HumanMessage | AIMessageChunk | SystemMessage>;
+  loading: boolean;
+  messages: DashMessage[];
 }
 
 export class DashMessages extends SceneObjectBase<DashMessagesState> {
   public static Component = DashMessagesRenderer;
 
-  public constructor(state: Partial<Omit<DashMessagesState, 'loading' | 'generatingWelcome'>>) {
+  public constructor(state: Partial<Omit<DashMessagesState, 'loading' | 'generatingWelcome' | 'anyToolsWorking'>>) {
     super({
-      langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
-      messages: state.messages ?? [],
-      loading: false,
+      anyToolsWorking: false,
       generatingWelcome: false,
+      langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
+      loading: false,
+      messages: state.messages ?? [],
     });
 
     this._pointerDownEventListener = this._pointerDownEventListener.bind(this);
@@ -46,36 +48,40 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   public addLangchainMessage(message: HumanMessage | AIMessageChunk | SystemMessage) {
     this.setState({ langchainMessages: [...this.state.langchainMessages, message] });
+    getDash(this).persist();
   }
 
   public addUserMessage(content: string): DashMessage {
     const message = new DashMessage({ content, sender: 'user' });
     this.setState({ messages: [...this.state.messages, message] });
+    getDash(this).persist();
     return message;
   }
 
   public addAiMessage(content: MessageContent): DashMessage {
     const message = new DashMessage({ content, sender: 'ai' });
     this.setState({ messages: [...this.state.messages, message] });
+    getDash(this).persist();
     return message;
   }
 
   public addSystemMessage(content: string, muted?: boolean, isError?: boolean): DashMessage {
     const message = new DashMessage({ content, sender: 'system', muted, isError });
     this.setState({ messages: [...this.state.messages, message] });
+    getDash(this).persist();
     return message;
   }
 
   public addToolNotification(content: string): DashMessage {
     const message = new DashMessage({ content, sender: 'tool_notification' });
     this.setState({ messages: [...this.state.messages, message] });
+    getDash(this).persist();
     return message;
   }
 
   public enterSelectMode() {
     getInput(this).blur();
     this.exitSelectMode(false);
-
     const [message] = this._findUserMessage();
     this._enterMessageSelectMode(message);
   }
@@ -112,17 +118,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   public exitSelectMode(withSet: boolean) {
     if (withSet) {
-      getChatContainer(this).cloneChat(getChat(this));
+      getChat(this).cloneChat(getChatInstance(this));
     }
 
     this.state.messages.forEach((message) => message.setSelected(false));
     document.body.removeEventListener('keydown', this._keyDownEventListener);
     document.body.removeEventListener('pointerdown', this._pointerDownEventListener);
-  }
-
-  public findSelectedMessage(messages: DashMessage[] = this.state.messages): [DashMessage | undefined, number] {
-    const index = findLastIndex(messages, (message) => message.state.selected);
-    return [messages[index], index];
   }
 
   public setLoading(loading: boolean) {
@@ -131,10 +132,35 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     }
   }
 
-  public setGeneratingWelcome(generating: boolean) {
-    if (generating !== this.state.generatingWelcome) {
-      this.setState({ generatingWelcome: generating });
+  public setGeneratingWelcome(generatingWelcome: boolean) {
+    if (generatingWelcome !== this.state.generatingWelcome) {
+      this.setState({ generatingWelcome });
     }
+  }
+
+  public setToolError(toolId: string | undefined, error: string) {}
+
+  public setToolWorking(toolId: string | undefined, working: boolean) {
+    this.state.messages.forEach((message) => message.setToolWorking(toolId, working));
+
+    const anyToolsWorking = this.state.messages.some((message) => message.hasWorkingTools());
+
+    if (anyToolsWorking !== this.state.anyToolsWorking) {
+      this.setState({ anyToolsWorking });
+      getDash(this).persist();
+    }
+  }
+
+  public toJSON(): SerializedDashMessages {
+    return {
+      messages: this.state.messages.map((message) => message.toJSON()),
+      langchainMessages: this.state.langchainMessages.map((langchainMessage) => langchainMessage.toDict()),
+    };
+  }
+
+  public findSelectedMessage(messages: DashMessage[] = this.state.messages): [DashMessage | undefined, number] {
+    const index = findLastIndex(messages, (message) => message.state.selected);
+    return [messages[index], index];
   }
 
   private _findUserMessage(messages: DashMessage[] = this.state.messages): [DashMessage | undefined, number] {
@@ -162,51 +188,72 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   private _keyDownEventListener(evt: KeyboardEvent) {
     switch (evt.key) {
-      case 'ArrowUp':
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.selectPreviousMessage();
-        break;
+      case 'ArrowUp': {
+        const [message] = this.findSelectedMessage();
 
-      case 'ArrowDown':
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.selectNextMessage();
+        if (message && !message.state.editing) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          this.selectPreviousMessage();
+        }
         break;
+      }
 
-      case 'Escape':
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.exitSelectMode(false);
-        getInput(this).focus();
-        this.forceRender();
-        break;
+      case 'ArrowDown': {
+        const [message] = this.findSelectedMessage();
 
-      case 'Enter':
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.exitSelectMode(true);
-        getInput(this).focus();
-        this.forceRender();
+        if (message && !message.state.editing) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          this.selectNextMessage();
+        }
         break;
+      }
+
+      case 'Escape': {
+        const [message] = this.findSelectedMessage();
+
+        if (message) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          if (message.state.editing) {
+            message.setEditing(false);
+          } else {
+            this.exitSelectMode(false);
+            getInput(this).focus();
+            this.forceRender();
+          }
+        }
+        break;
+      }
+
+      case 'Enter': {
+        const [message] = this.findSelectedMessage();
+
+        if (message) {
+          if (message.state.editing) {
+            if (!evt.shiftKey) {
+              evt.preventDefault();
+              evt.stopPropagation();
+              this.exitSelectMode(true);
+              this.forceRender();
+            }
+          } else {
+            evt.preventDefault();
+            evt.stopPropagation();
+            message.setEditing(true);
+          }
+        }
+      }
     }
   }
 }
 
 function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const styles = useStyles2(getStyles);
-  const { loading, generatingWelcome, messages } = model.useState();
+  const { anyToolsWorking, loading, generatingWelcome, messages } = model.useState();
   const scrollRef = useRef<HTMLInputElement>(null);
-
-  // Check if any tool is currently working
-  const isToolWorking = messages.some((message) => {
-    return message.state.children.some((child) => {
-      if (child instanceof Tool) {
-        return (child.state as any).working;
-      }
-      return false;
-    });
-  });
 
   setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
@@ -215,7 +262,9 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
       {messages.map((message) => (
         <message.Component model={message} key={message.state.key!} />
       ))}
-      {(loading || generatingWelcome) && !isToolWorking && <Loader />}
+
+      {(loading || generatingWelcome) && !anyToolsWorking && <Loader />}
+
       <div ref={scrollRef} />
     </div>
   );
@@ -230,5 +279,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     overflowY: 'auto',
     padding: theme.spacing(2),
     backgroundColor: theme.colors.background.primary,
+    gap: theme.spacing(1),
   }),
 });

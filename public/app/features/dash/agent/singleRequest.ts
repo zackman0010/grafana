@@ -1,6 +1,6 @@
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
-import { workflowAgent } from './agent';
+import { getAgent } from './agent';
 
 export interface SingleRequestOptions {
   systemPrompt?: string;
@@ -17,7 +17,7 @@ export async function makeSingleRequest({ systemPrompt, userMessage }: SingleReq
   messages.push(new HumanMessage(userMessage));
 
   try {
-    const response = await workflowAgent.llm.invoke(messages);
+    const response = await getAgent().llm.invoke(messages);
     return response.content.toString();
   } catch (error) {
     return `Tool execution failed: ${error instanceof Error ? error.message : String(error)}`;

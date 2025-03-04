@@ -1,27 +1,33 @@
-import { css, cx } from '@emotion/css';
+import { css, keyframes } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Icon, IconButton, useStyles2 } from '@grafana/ui';
+import { Icon, useStyles2 } from '@grafana/ui';
 
-import { getMessage, getSettings } from '../utils';
+import { getSettings } from '../utils';
 
-import { Bubble } from './Bubble';
-
-export interface ToolState extends SceneObjectState {
+interface ToolState extends SceneObjectState {
   content: {
     type: string;
     id: string;
     name: string;
     input: Record<string, unknown>;
   };
+  error: string | undefined;
   opened: boolean;
   working: boolean;
-  error?: string;
 }
 
 export class Tool extends SceneObjectBase<ToolState> {
-  public static Component = ToolRenderer;
+  public static Component = ({ model }: SceneComponentProps<Tool>) => {
+    const { showTools } = getSettings(model).useState();
+
+    if (!showTools) {
+      return null;
+    }
+
+    return <ToolRenderer model={model} />;
+  };
 
   public constructor(state: Omit<ToolState, 'opened' | 'working' | 'error'>) {
     super({
@@ -40,89 +46,109 @@ export class Tool extends SceneObjectBase<ToolState> {
     this.setState({ working });
   }
 
-  public setError(error?: string) {
+  public setError(error: string | undefined) {
     this.setState({ error });
   }
 }
 
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
-  const styles = useStyles2(getStyles);
   const { content, opened, working, error } = model.useState();
-  const { codeOverflow, showTools } = getSettings(model).useState();
-  const { selected, sender } = getMessage(model).useState();
-
-  if (!showTools) {
-    return null;
-  }
-
   const hasInput = Object.keys(content.input).length > 0;
+  const styles = useStyles2(getStyles, !!error, working, hasInput);
 
   return (
-    <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
-      <div className={styles.container}>
-        <div className={cx(styles.header(hasInput), { expanded: opened })}>
-          <Icon
-            name={working ? 'sync' : error ? 'times' : 'check'}
-            className={cx(working && styles.spinner, error && styles.error)}
-          />
-          <span className={styles.name}>{content.name}</span>
-          {hasInput && (
-            <IconButton
-              name={opened ? 'angle-up' : 'angle-down'}
-              size="sm"
-              aria-label={opened ? 'Collapse details' : 'Expand details'}
-              onClick={(e) => {
-                e.stopPropagation();
+    <div className={styles.container}>
+      <div
+        className={styles.header}
+        role={hasInput ? 'button' : undefined}
+        onClick={
+          hasInput
+            ? (evt) => {
+                evt.stopPropagation();
                 model.toggleOpened();
-              }}
-            />
-          )}
-        </div>
-        {opened && hasInput && (
-          <div className={styles.details}>
-            {Object.entries(content.input).map(([key, value]) => (
-              <div key={key} className={styles.detailRow}>
-                <span className={styles.detailKey}>{key}:</span>
-                <span className={styles.detailValue}>{String(value)}</span>
-              </div>
-            ))}
-            {error && <div className={styles.errorMessage}>{error}</div>}
-          </div>
-        )}
+              }
+            : undefined
+        }
+      >
+        <Icon name={working ? 'sync' : error ? 'times' : 'check'} className={styles.icon} />
+
+        <span className={styles.name}>{content.name}</span>
+
+        {hasInput && <Icon name={opened ? 'angle-up' : 'angle-down'} size="sm" />}
       </div>
-    </Bubble>
+
+      {opened && hasInput && (
+        <div className={styles.details}>
+          {Object.entries(content.input).map(([key, value]) => (
+            <div key={key} className={styles.detailsRow}>
+              <span className={styles.detailsKey}>{key}:</span>
+              <span className={styles.detailsValue}>{String(value)}</span>
+            </div>
+          ))}
+
+          {error && <div className={styles.detailsError}>{error}</div>}
+        </div>
+      )}
+    </div>
   );
 }
 
-const getStyles = (theme: GrafanaTheme2) => ({
+const spin = keyframes({
+  '0%': {
+    transform: 'rotate(0deg)',
+  },
+  '100%': {
+    transform: 'rotate(360deg)',
+  },
+});
+
+const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, hasInput: boolean) => ({
   container: css({
-    label: 'dash-tool-container',
+    label: 'dash-message-tool-container',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius(1),
+    borderRadius: theme.shape.radius.default,
   }),
-  header: (hasInput: boolean) =>
-    css({
-      label: 'dash-tool-header',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: theme.spacing(1),
-      cursor: hasInput ? 'pointer' : 'default',
-    }),
+  header: css({
+    label: 'dash-message-tool-header',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    cursor: hasInput ? 'pointer' : 'default',
+  }),
   title: css({
-    label: 'dash-tool-title',
+    label: 'dash-message-tool-title',
     fontSize: theme.typography.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
     color: theme.colors.text.primary,
     fontFamily: theme.typography.fontFamilyMonospace,
   }),
   description: css({
-    label: 'dash-tool-description',
+    label: 'dash-message-tool-description',
     fontSize: theme.typography.fontSize,
     color: theme.colors.text.secondary,
     marginLeft: theme.spacing(4),
+  }),
+  icon: css({
+    label: 'dash-message-tool-icon',
+
+    ...(withError ? { color: theme.colors.warning.main } : {}),
+    ...(working
+      ? {
+          [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+            animation: `${spin} 1s linear infinite`,
+          },
+        }
+      : {}),
+  }),
+  name: css({
+    label: 'dash-message-tool-name',
+    flex: 1,
+    fontWeight: 400,
+    opacity: 0.9,
+    fontFamily: theme.typography.fontFamilyMonospace,
   }),
   details: css({
     label: 'dash-tool-details',
@@ -137,63 +163,28 @@ const getStyles = (theme: GrafanaTheme2) => ({
     gap: `${theme.spacing(1)} ${theme.spacing(2)}`,
     alignItems: 'baseline',
   }),
-  spinner: css({
-    label: 'dash-tool-spinner',
-    [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-      animation: 'spin 1s linear infinite',
-    },
-    '@keyframes spin': {
-      '0%': {
-        transform: 'rotate(0deg)',
-      },
-      '100%': {
-        transform: 'rotate(360deg)',
-      },
-    },
-  }),
-  error: css({
-    color: theme.colors.warning.main,
-  }),
-  errorMessage: css({
-    marginTop: theme.spacing(1),
-    color: theme.colors.error.main,
-    fontSize: '0.85em',
-  }),
-  icon: css({
-    fontSize: '14px',
-    color: 'var(--grafana-color-text-secondary)',
-    opacity: 0.8,
-    '&.fa-sync': {
-      animation: 'spin 1s linear infinite',
-    },
-  }),
-  name: css({
-    flex: 1,
-    fontWeight: 400,
-    opacity: 0.9,
-    fontFamily: 'var(--grafana-font-family-monospace)',
-  }),
-  toggleButton: css({
-    padding: '4px',
-    margin: '-4px',
-    opacity: 0.7,
-    '&:hover': {
-      opacity: 1,
-    },
-  }),
-  detailRow: css({
+  detailsRow: css({
+    label: 'dash-message-tool-details-row',
     display: 'contents',
     fontSize: '0.85em',
     fontFamily: theme.typography.fontFamilyMonospace,
   }),
-  detailKey: css({
+  detailsKey: css({
+    label: 'dash-message-tool-details-key',
     color: theme.colors.text.secondary,
     fontWeight: 500,
     opacity: 0.8,
     whiteSpace: 'nowrap',
   }),
-  detailValue: css({
+  detailsValue: css({
+    label: 'dash-message-tool-details-value',
     color: theme.colors.text.primary,
     opacity: 0.9,
+  }),
+  detailsError: css({
+    label: 'dash-message-tool-details-error',
+    marginTop: theme.spacing(1),
+    color: theme.colors.error.main,
+    fontSize: '0.85em',
   }),
 });

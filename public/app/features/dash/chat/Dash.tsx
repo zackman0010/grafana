@@ -1,45 +1,94 @@
 import { css } from '@emotion/css';
+import { mapStoredMessagesToChatMessages } from '@langchain/core/messages';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Dropdown, Icon, IconButton, Menu, MenuItem, Tab, TabsBar, useStyles2 } from '@grafana/ui';
+import { Dropdown, Icon, IconButton, Menu, Tab, TabsBar, useStyles2 } from '@grafana/ui';
 
 import { makeSingleRequest } from '../agent/singleRequest';
 import { getCurrentContext } from '../agent/tools/context';
 
-import { DashChatContainer } from './DashChatContainer';
-import { DashSettings, DashSettingsState } from './DashSettings';
+import { DashChat } from './DashChat';
+import { DashChatInstance } from './DashChatInstance';
+import { DashMessage } from './DashMessage';
+import { DashMessages } from './DashMessages';
+import { DashSettings } from './DashSettings';
+import { Mode, SerializedDash } from './types';
 import { getPersistedSetting, persistSetting } from './utils';
 
-export interface DashState extends SceneObjectState {
-  chatContainers: DashChatContainer[];
-  currentChatContainer: number;
-  settings: DashSettings;
+interface DashState extends SceneObjectState {
+  chats: DashChat[];
+  chatIndex: number;
   opened: boolean;
+  settings: DashSettings;
 }
 
 export class Dash extends SceneObjectBase<DashState> {
   public static Component = DashRenderer;
 
-  private _chatName = 2;
+  private _chatNumber = 2;
 
   public get renderBeforeActivation(): boolean {
     return true;
   }
 
   public constructor() {
+    let chats: DashChat[] = [];
+    let chatIndex: number | undefined;
+    let chatNumber: number | undefined;
+
+    try {
+      const settings = getPersistedSetting('state') ?? '';
+
+      if (settings) {
+        const parsedSettings = JSON.parse(settings) as SerializedDash;
+        chats = parsedSettings.chats.map(
+          (chat) =>
+            new DashChat({
+              name: chat.name,
+              versionIndex: chat.versionIndex,
+              versions: chat.versions.map(
+                (instance) =>
+                  new DashChatInstance({
+                    timestamp: new Date(instance.timestamp),
+                    messages: new DashMessages({
+                      messages: instance.messages.messages.map(
+                        (message) =>
+                          new DashMessage({
+                            content: message.content,
+                            sender: message.sender,
+                          })
+                      ),
+                      langchainMessages: mapStoredMessagesToChatMessages(instance.messages.langchainMessages),
+                    }),
+                  })
+              ),
+            })
+        );
+
+        chatIndex = parsedSettings.chatIndex;
+        chatNumber = parsedSettings.chatNumber;
+      }
+    } catch (err) {}
+
+    if (chats.length === 0) {
+      chats = [new DashChat({ name: 'Chat 1' })];
+    }
+
     super({
-      currentChatContainer: 0,
+      chats,
+      chatIndex: chatIndex !== undefined && chats[chatIndex] ? chatIndex : chats.length - 1,
+      opened: getPersistedSetting('opened') === 'true',
       settings: new DashSettings(),
-      chatContainers: [new DashChatContainer({ name: 'Chat 1' })],
-      opened: getPersistedSetting('opened') === 'true' ? true : false,
     });
+
+    this._chatNumber = chatNumber ?? 2;
 
     this.activate();
     this.state.settings.activate();
 
     // Generate welcome message for the initial chat
-    const messages = this.state.chatContainers[0]?.state.versions[0]?.state.messages;
+    const messages = this.state.chats[0]?.state.versions[0]?.state.messages;
     this.generateWelcomeMessage(messages).then((welcomeMessage) => {
       if (messages) {
         messages.addSystemMessage(welcomeMessage);
@@ -92,66 +141,75 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public setCurrentChat(index: number) {
-    if (index !== this.state.currentChatContainer) {
-      this.state.chatContainers[this.state.currentChatContainer].state.versions.forEach((chat) =>
+    if (index !== this.state.chatIndex) {
+      this.state.chats[this.state.chatIndex].state.versions.forEach((chat) =>
         chat.state.messages.exitSelectMode(false)
       );
-      this.setState({ currentChatContainer: index });
+      this.setState({ chatIndex: index });
+      this.persist();
     }
   }
 
   public async addChat() {
-    const newChat = new DashChatContainer({ name: `Chat ${this._chatName++}` });
-    const newChatIndex = this.state.chatContainers.length;
+    const newChat = new DashChat({ name: `Chat ${this._chatNumber++}` });
+    const newChatIndex = this.state.chats.length;
     const messages = newChat.state.versions[0]?.state.messages;
 
     // Add the new chat and switch to it immediately
-    this.setState({
-      chatContainers: [...this.state.chatContainers, newChat],
-      currentChatContainer: newChatIndex,
-    });
+    this.setState({ chats: [...this.state.chats, newChat], chatIndex: newChatIndex });
+    this.persist();
 
     // Generate welcome message in the background
     const welcomeMessage = await this.generateWelcomeMessage(messages);
-    if (messages) {
-      messages.addSystemMessage(welcomeMessage);
-    }
+    messages.addSystemMessage(welcomeMessage);
+    this.persist();
   }
 
   public removeChat(index: number) {
-    if (this.state.chatContainers.length === 1) {
-      this.setState({
-        chatContainers: [new DashChatContainer({ name: `Chat ${this._chatName++}` })],
-        currentChatContainer: 0,
-      });
+    if (this.state.chats.length === 1) {
+      this.setState({ chats: [new DashChat({ name: `Chat ${this._chatNumber++}` })], chatIndex: 0 });
+      this.persist();
       return;
     }
 
-    const chats = [...this.state.chatContainers];
+    const chats = [...this.state.chats];
     chats.splice(index, 1);
-    this.setState({ chatContainers: chats, currentChatContainer: index === 0 ? 0 : index - 1 });
+    this.setState({ chats: chats, chatIndex: index === 0 ? 0 : index - 1 });
+    this.persist();
+  }
+
+  public persist() {
+    persistSetting('state', JSON.stringify(this.toJSON()));
+  }
+
+  public toJSON(): SerializedDash {
+    return {
+      chats: this.state.chats.map((chat) => chat.toJSON()),
+      chatIndex: this.state.chatIndex,
+      chatNumber: this._chatNumber,
+    };
   }
 }
 
 function DashRenderer({ model }: SceneComponentProps<Dash>) {
-  const { currentChatContainer, settings, chatContainers } = model.useState();
+  const { chatIndex, settings, chats } = model.useState();
   const { mode } = settings.useState();
-  const chatContainer = chatContainers[currentChatContainer]!;
-  const { versions } = chatContainer.useState();
+  const chat = chats[chatIndex]!;
+  const { versions } = chat.useState();
   const styles = useStyles2(getStyles, mode, versions.length > 1);
 
   return (
     <div className={styles.container}>
       <TabsBar className={styles.tabs}>
-        {chatContainers.map((chat, index) => (
+        {chats.map((chat, index) => (
           <Tab
             key={chat.state.key}
             title={chat.state.name}
             label={chat.state.name}
-            active={currentChatContainer === index}
+            active={chatIndex === index}
             className={styles.tab}
             suffix={
-              currentChatContainer === index
+              chatIndex === index
                 ? () => (
                     <Icon
                       name="times"
@@ -171,6 +229,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
             }}
           />
         ))}
+
         <Tab
           icon="plus"
           label=""
@@ -180,33 +239,39 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
           }}
         />
       </TabsBar>
-      <chatContainer.Component model={chatContainer} />
+
+      <chat.Component model={chat} />
+
       <div className={styles.bottomBar}>
         {versions.length > 1 && (
           <Dropdown
             overlay={
               <Menu>
-                {versions.map((version, index) => (
-                  <MenuItem
+                {versions.map((version) => (
+                  <Menu.Item
                     key={version.state.key}
                     label={version.state.timestamp.toLocaleString()}
-                    onClick={() => chatContainer.setCurrentVersion(version)}
+                    onClick={() => chat.setVersionIndex(version)}
                   />
                 ))}
+                <Menu.Divider />
+                <Menu.Item label="Clear history" onClick={() => chat.clearHistory()} />
               </Menu>
             }
           >
             <IconButton name="history" aria-label="Previous versions" />
           </Dropdown>
         )}
+
         <settings.Component model={settings} />
       </div>
     </div>
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, mode: DashSettingsState['mode'], withVersions: boolean) => ({
+const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => ({
   container: css({
+    label: 'dash-container',
     height: '100%',
     width: '100%',
     backgroundColor: theme.colors.background.primary,
@@ -222,6 +287,7 @@ const getStyles = (theme: GrafanaTheme2, mode: DashSettingsState['mode'], withVe
     }),
   }),
   tabs: css({
+    label: 'dash-tabs',
     overflow: 'hidden',
 
     '&:hover': {
@@ -229,6 +295,8 @@ const getStyles = (theme: GrafanaTheme2, mode: DashSettingsState['mode'], withVe
     },
   }),
   tab: css({
+    label: 'dash-tab',
+
     '& > button': {
       display: 'flex',
       flexDirection: 'row',
@@ -237,6 +305,7 @@ const getStyles = (theme: GrafanaTheme2, mode: DashSettingsState['mode'], withVe
     },
   }),
   bottomBar: css({
+    label: 'dash-bottom-bar',
     backgroundColor: theme.colors.background.canvas,
     display: 'flex',
     flexDirection: 'row',
