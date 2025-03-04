@@ -16,20 +16,22 @@ const navigateToDrilldownLogsSchema = z.object({
     .array(z.enum(['critical', 'error', 'debug', 'info', 'warning', 'fatal']))
     .optional()
     .describe('Array of error levels to include in the filters.'),
+  navigate: z.boolean().describe('Whether to navigate to the Drilldown Logs page. Only ever set this to true if the user has confirmed to navigate to Drilldown Logs.'),
 });
 
 export const navigateToDrilldownLogs = tool(
   async (input) => {
-    const { datasource_uid, label_filters, levels = [] } = navigateToDrilldownLogsSchema.parse(input);
+    const { datasource_uid, label_filters, levels = [], navigate } = navigateToDrilldownLogsSchema.parse(input);
 
     const varFilters = label_filters.map((filter) => `var-filters=${encodeURIComponent(filter)}`);
     const varLevels = levels.map((level) => `var-levels=${encodeURIComponent(`detected_level|=|${level}`)}`);
 
-    locationService.push(
-      `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=now-15m&to=now&var-ds=${datasource_uid}&${varFilters.join('&')}&${varLevels.join('&')}`
-    );
+    const url = `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=now-15m&to=now&var-ds=${datasource_uid}&${varFilters.join('&')}&${varLevels.join('&')}`;
+    if (navigate) {
+      locationService.push(url);
+    }
 
-    return 'success';
+    return url;
   },
   {
     name: 'navigate_to_drilldown_logs',

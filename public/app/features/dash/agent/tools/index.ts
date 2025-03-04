@@ -6,6 +6,7 @@ import { lokiLabelValuesTool } from './lokiLabelValues';
 import { navigateToDashboardTool } from './navigateToDashboard';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
 import { navigateToExploreTool } from './navigateToExplore';
+import { navigateToOtherTool } from './navigateToOther';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
@@ -24,6 +25,7 @@ export const tools = [
   navigateToDrilldownLogs,
   getCurrentTimeTool,
   navigateToDashboardTool,
+  navigateToOtherTool,
 ];
 
 export const toolsByName = tools.reduce(
