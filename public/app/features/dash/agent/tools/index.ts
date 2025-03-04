@@ -1,3 +1,5 @@
+import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
+
 import { dashboardPanelsTool } from './dashboardPanels';
 import { getCurrentTimeTool } from './getCurrentTime';
 import { listDatasourcesTool } from './listDatasources';
@@ -12,6 +14,28 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
 
+const grafanaComSearch = new TavilySearchResults({
+  apiKey: process.env.TAVILY_API_KEY,
+  maxResults: 1,
+  includeDomains: ['grafana.com'],
+  includeRawContent: true,
+  includeAnswer: true,
+});
+grafanaComSearch.name = 'grafana_com_search';
+grafanaComSearch.description =
+  'Search for general information, such as blog posts on grafana.com. Only use this tool if `grafana_com_docs_search` tool was not helpful.';
+
+const grafanaDocsSearch = new TavilySearchResults({
+  apiKey: process.env.TAVILY_API_KEY,
+  maxResults: 1,
+  includeDomains: ['grafana.com/docs/'],
+  includeRawContent: true,
+  includeAnswer: true,
+});
+grafanaDocsSearch.name = 'grafana_com_docs_search';
+grafanaDocsSearch.description =
+  'Search for documentation of Grafana, Grafana Cloud, and all the various Grafana applications. Use this tool over `grafana_com_search`.';
+
 export const tools = [
   listDatasourcesTool,
   prometheusLabelValuesTool,
@@ -24,6 +48,8 @@ export const tools = [
   navigateToExploreTool,
   navigateToDrilldownLogs,
   getCurrentTimeTool,
+  grafanaComSearch,
+  grafanaDocsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
 ];

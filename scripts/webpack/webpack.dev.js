@@ -145,6 +145,7 @@ module.exports = (env = {}) => {
         'process.env': {
           NODE_ENV: JSON.stringify('development'),
           ANTHROPIC_API_KEY: JSON.stringify(process.env.ANTHROPIC_API_KEY || ''),
+          TAVILY_API_KEY: JSON.stringify(process.env.TAVILY_API_KEY || ''),
         },
       }),
       new WebpackAssetsManifest({

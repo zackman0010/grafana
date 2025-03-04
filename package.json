@@ -285,6 +285,7 @@
     "@hello-pangea/dnd": "17.0.0",
     "@kusto/monaco-kusto": "^10.0.0",
     "@langchain/anthropic": "^0.3.14",
+    "@langchain/community": "^0.3.34",
     "@langchain/core": "^0.3.41",
     "@leeoniya/ufuzzy": "1.0.18",
     "@lezer/common": "1.2.3",
