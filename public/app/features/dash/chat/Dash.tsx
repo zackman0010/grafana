@@ -50,12 +50,12 @@ export class Dash extends SceneObjectBase<DashState> {
   private async generateWelcomeMessage(messages?: any): Promise<string> {
     try {
       if (!messages) {
-        return "Hello! I'm your Grafana AI assistant. How can I help you today?";
+        return "Hello! I'm your Grafana AI agent. How can I help you today?";
       }
 
       messages.setGeneratingWelcome(true);
       const context = getCurrentContext();
-      let contextPrompt = `You are a helpful AI assistant for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
+      let contextPrompt = `You are a helpful AI agent for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
       if (context.time_range) {
         contextPrompt += `The selected time range is ${context.time_range.text}. `;
       }
@@ -66,7 +66,7 @@ export class Dash extends SceneObjectBase<DashState> {
         contextPrompt += `The current query is \`${context.query.expression}\`. `;
       }
       contextPrompt +=
-        'Generate a friendly, concise welcome message that introduces yourself and explains that you can help with data analysis, visualization, and dashboard creation. Keep it under 2-3 sentences.';
+        'Generate a concise overview message using as few words as possible, that introduces yourself as an "agent" (never assistant) and includes what the current page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
 
       const welcomeMessage = await makeSingleRequest({
         systemPrompt: contextPrompt,
@@ -76,7 +76,7 @@ export class Dash extends SceneObjectBase<DashState> {
       return welcomeMessage;
     } catch (error) {
       console.error('Error generating welcome message:', error);
-      return "Hello! I'm your Grafana AI assistant. How can I help you today?";
+      return "Hello! I'm your Grafana AI agent. How can I help you today?";
     } finally {
       if (messages) {
         messages.setGeneratingWelcome(false);

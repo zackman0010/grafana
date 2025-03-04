@@ -27,11 +27,31 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
   let jsonContent: any = undefined;
   let message = content;
 
-  try {
-    jsonContent = JSON.parse(content);
-    message = jsonContent.message;
-  } catch (e) {
-    // Ignore
+  // First check if content is wrapped in <json> tags
+  const jsonMatch = content.match(/<json>([\s\S]*?)<\/json>/);
+  if (jsonMatch) {
+    try {
+      jsonContent = JSON.parse(jsonMatch[1]);
+      message = jsonContent.message;
+    } catch (e) {
+      // If JSON parsing fails, try parsing as regular JSON
+      try {
+        jsonContent = JSON.parse(content);
+        message = jsonContent.message;
+      } catch (e) {
+        // If all parsing fails, use the original content
+        message = content;
+      }
+    }
+  } else {
+    // If no <json> tags, try parsing as regular JSON
+    try {
+      jsonContent = JSON.parse(content);
+      message = jsonContent.message;
+    } catch (e) {
+      // If parsing fails, use the original content
+      message = content;
+    }
   }
 
   return (
