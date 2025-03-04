@@ -385,11 +385,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             return false;
           });
         });
-        if (toolMessage) {
-          const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
-          if (tool) {
-            tool.setWorking(true);
-          }
+        const tool = toolMessage?.state.children.find((child) => child instanceof Tool) as Tool;
+
+        if (tool) {
+          tool.setWorking(true);
         }
 
         try {
@@ -419,21 +418,31 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           this._logAIMessage(nextAiMessage.content, 'tool');
           this.messages?.addAiMessage(nextAiMessage.content);
           this.messages?.addLangchainMessage(nextAiMessage);
+          // Set the tool back to not working after successful completion
+          if (tool) {
+            tool.setWorking(false);
+          }
           await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
         } catch (error: any) {
           if (error.name === 'AbortError') {
             console.log('Request was cancelled during tool execution');
             return;
           }
-          throw error;
-        } finally {
-          // Set the tool back to not working
-          if (toolMessage) {
-            const tool = toolMessage.state.children.find((child) => child instanceof Tool) as Tool;
-            if (tool) {
-              tool.setWorking(false);
-            }
+          // Set error state on the tool and continue with other tools
+          if (tool) {
+            tool.setError(error.message || 'An error occurred while executing the tool');
+            tool.setWorking(false);
+            // Add error message to the chat
+            this.messages?.addSystemMessage(
+              `${error.message || 'An error occurred while executing the tool'}`,
+              false,
+              true
+            );
           }
+          // Log the error but don't throw it to allow other tools to continue
+          console.error(`Tool ${toolCall.name} failed:`, error);
+          // Continue with the next tool
+          continue;
         }
       }
     }

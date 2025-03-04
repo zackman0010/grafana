@@ -17,15 +17,17 @@ export interface ToolState extends SceneObjectState {
   };
   opened: boolean;
   working: boolean;
+  error?: string;
 }
 
 export class Tool extends SceneObjectBase<ToolState> {
   public static Component = ToolRenderer;
 
-  public constructor(state: Omit<ToolState, 'opened' | 'working'>) {
+  public constructor(state: Omit<ToolState, 'opened' | 'working' | 'error'>) {
     super({
       opened: false,
       working: false,
+      error: undefined,
       ...state,
     });
   }
@@ -37,11 +39,15 @@ export class Tool extends SceneObjectBase<ToolState> {
   public setWorking(working: boolean) {
     this.setState({ working });
   }
+
+  public setError(error?: string) {
+    this.setState({ error });
+  }
 }
 
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   const styles = useStyles2(getStyles);
-  const { content, opened, working } = model.useState();
+  const { content, opened, working, error } = model.useState();
   const { codeOverflow, showTools } = getSettings(model).useState();
   const { selected, sender } = getMessage(model).useState();
 
@@ -55,7 +61,10 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
     <Bubble codeOverflow={codeOverflow} selected={selected} sender={sender}>
       <div className={styles.container}>
         <div className={cx(styles.header(hasInput), { expanded: opened })}>
-          <Icon name={working ? 'sync' : 'check'} className={working ? styles.spinner : ''} />
+          <Icon
+            name={working ? 'sync' : error ? 'times' : 'check'}
+            className={cx(working && styles.spinner, error && styles.error)}
+          />
           <span className={styles.name}>{content.name}</span>
           {hasInput && (
             <IconButton
@@ -77,6 +86,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
                 <span className={styles.detailValue}>{String(value)}</span>
               </div>
             ))}
+            {error && <div className={styles.errorMessage}>{error}</div>}
           </div>
         )}
       </div>
@@ -136,6 +146,14 @@ const getStyles = (theme: GrafanaTheme2) => ({
         transform: 'rotate(360deg)',
       },
     },
+  }),
+  error: css({
+    color: theme.colors.warning.main,
+  }),
+  errorMessage: css({
+    marginTop: theme.spacing(1),
+    color: theme.colors.error.main,
+    fontSize: '0.85em',
   }),
   icon: css({
     fontSize: '14px',
