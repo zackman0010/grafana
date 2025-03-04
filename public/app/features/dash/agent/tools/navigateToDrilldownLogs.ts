@@ -13,7 +13,7 @@ const navigateToDrilldownLogsSchema = z.object({
       'Array of Loki indexed labels to include in the filters with the following format: label_name|=|label_value'
     ),
   levels: z
-    .array(z.enum(['critical', 'error', 'debug', 'info', 'warning']))
+    .array(z.enum(['critical', 'error', 'debug', 'info', 'warning', 'fatal']))
     .optional()
     .describe('Array of error levels to include in the filters.'),
 });
