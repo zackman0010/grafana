@@ -3,6 +3,7 @@ import { AIMessageChunk, HumanMessage, SystemMessage, ToolMessage } from '@langc
 import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
+import { getAppEvents, ToolAddedEvent } from '@grafana/runtime';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 
@@ -38,10 +39,20 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       message: state.message ?? '',
       speech: new Speech({ listening: state.listening ?? false }),
     });
+
+    const handle = window.setInterval(() => {
+      const events = getAppEvents();
+      if (events) {
+        events.getStream(ToolAddedEvent).subscribe(() => {;
+          this.recreateAgent();
+        });
+        window.clearInterval(handle);
+      }
+    }, 500);
   }
 
   public recreateAgent() {
-    this._currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
+    this._currentAgent = this._agentConfig.withTools(getAgent().tools);
   }
 
   public setInputRef(ref: HTMLTextAreaElement | null) {
@@ -139,8 +150,9 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
 
     try {
-
-      getMessages(this).addLangchainMessage(new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key }));
+      getMessages(this).addLangchainMessage(
+        new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key })
+      );
       this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
 
       if (isFirstMessage && hasDefaultName) {
