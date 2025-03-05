@@ -13,14 +13,27 @@ interface Props {
   listening: boolean;
   loading: boolean;
   message: string;
-  onCancelRequest: () => void;
+  onCancelRequest: () => Promise<void>;
   onEnterSelectMode: () => void;
   onSendMessage: () => void;
   onUpdateMessage: (value: string) => void;
+  onInterruptAndSend: () => Promise<void>;
 }
 
 export const Input = forwardRef<HTMLTextAreaElement, Props>(
-  ({ listening, loading, message, onCancelRequest, onEnterSelectMode, onSendMessage, onUpdateMessage }, ref) => {
+  (
+    {
+      listening,
+      loading,
+      message,
+      onCancelRequest,
+      onEnterSelectMode,
+      onSendMessage,
+      onUpdateMessage,
+      onInterruptAndSend,
+    },
+    ref
+  ) => {
     const styles = useStyles2(getStyles);
 
     return (
@@ -28,7 +41,7 @@ export const Input = forwardRef<HTMLTextAreaElement, Props>(
         autoFocus
         minChar={0}
         value={message}
-        readOnly={listening || loading}
+        readOnly={listening}
         placeholder={listening ? 'Speak aloud your questions' : 'Ask me anything about your data.'}
         textAreaComponent={TextArea}
         containerClassName={styles.input}
@@ -60,7 +73,11 @@ export const Input = forwardRef<HTMLTextAreaElement, Props>(
               if (!evt.shiftKey) {
                 evt.preventDefault();
                 evt.stopPropagation();
-                onSendMessage();
+                if (loading) {
+                  onInterruptAndSend();
+                } else {
+                  onSendMessage();
+                }
               }
               break;
 
