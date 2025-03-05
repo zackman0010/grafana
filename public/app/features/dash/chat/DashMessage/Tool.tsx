@@ -1,11 +1,11 @@
 import { css, keyframes } from '@emotion/css';
-import { useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Icon, useStyles2, Modal } from '@grafana/ui';
+import { Icon, useStyles2 } from '@grafana/ui';
 
 import { getSettings } from '../utils';
+import { JSONPreview } from './JSONPreview';
 
 interface ToolState extends SceneObjectState {
   content: {
@@ -52,24 +52,6 @@ export class Tool extends SceneObjectBase<ToolState> {
   }
 }
 
-function JsonValue({ value, label }: { value: unknown; label: string }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const styles = useStyles2(getJsonValueStyles);
-  const stringified = JSON.stringify(value, null, 2);
-
-  return (
-    <>
-      <div className={styles.container} onClick={() => setIsModalOpen(true)}>
-        <pre className={styles.preview}>{stringified}</pre>
-      </div>
-
-      <Modal isOpen={isModalOpen} title={label} onDismiss={() => setIsModalOpen(false)} closeOnBackdropClick>
-        <pre className={styles.fullValue}>{stringified}</pre>
-      </Modal>
-    </>
-  );
-}
-
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   const { content, opened, working, error } = model.useState();
   const hasInput = Object.keys(content.input).length > 0;
@@ -77,7 +59,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
 
   const renderValue = (key: string, value: unknown) => {
     if (typeof value === 'object' && value !== null) {
-      return <JsonValue value={value} label={key} />;
+      return <JSONPreview value={value} label={key} />;
     }
     return String(value);
   };
@@ -159,7 +141,6 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
   }),
   icon: css({
     label: 'dash-message-tool-icon',
-
     ...(withError ? { color: theme.colors.warning.main } : {}),
     ...(working
       ? {
@@ -212,50 +193,5 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     marginTop: theme.spacing(1),
     color: theme.colors.error.main,
     fontSize: '0.85em',
-  }),
-});
-
-const getJsonValueStyles = (theme: GrafanaTheme2) => ({
-  container: css({
-    label: 'json-value-container',
-    cursor: 'pointer',
-    maxHeight: '100px',
-    overflow: 'hidden',
-    position: 'relative',
-    '&:hover': {
-      '&::after': {
-        content: '"Click to expand"',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: theme.colors.background.primary,
-        fontSize: '0.8em',
-        color: theme.colors.text.secondary,
-        textAlign: 'center',
-        padding: theme.spacing(0.5),
-      },
-    },
-  }),
-  preview: css({
-    label: 'json-value-preview',
-    margin: 0,
-    fontSize: '0.85em',
-    fontFamily: theme.typography.fontFamilyMonospace,
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-  }),
-  fullValue: css({
-    label: 'json-value-full',
-    margin: 0,
-    fontSize: '0.9em',
-    fontFamily: theme.typography.fontFamilyMonospace,
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-    maxHeight: '70vh',
-    overflow: 'auto',
-    padding: theme.spacing(2),
-    backgroundColor: theme.colors.background.secondary,
-    borderRadius: theme.shape.radius.default,
   }),
 });
