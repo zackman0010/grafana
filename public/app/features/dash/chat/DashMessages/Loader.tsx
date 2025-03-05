@@ -3,24 +3,15 @@ import { css, keyframes } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 
-import { getColors } from '../utils';
-
-import { Bubble } from './Bubble';
-import { MessageContainer } from './MessageContainer';
-
 export const Loader = () => {
   const styles = useStyles2(getStyles);
 
   return (
-    <MessageContainer selected={false} sender="ai">
-      <Bubble codeOverflow="wrap" selected={false} sender="ai">
-        <div className={styles.container}>
-          <span className={styles.point}></span>
-          <span className={styles.point}></span>
-          <span className={styles.point}></span>
-        </div>
-      </Bubble>
-    </MessageContainer>
+    <div className={styles.container}>
+      <span className={styles.point}></span>
+      <span className={styles.point}></span>
+      <span className={styles.point}></span>
+    </div>
   );
 };
 
@@ -42,15 +33,18 @@ const getBounce = (offset: string) =>
 
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
+    label: 'dash-messages-loader',
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(0.25),
     padding: theme.spacing(0.5, 0.5, 0, 0.5),
+    margin: theme.spacing(2, 0),
   }),
   point: css({
+    label: 'dash-messages-loader-point',
     height: theme.spacing(0.5),
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.getContrastText(getColors('ai', theme).color),
+    backgroundColor: theme.colors.text.maxContrast,
     borderRadius: theme.shape.radius.circle,
     display: 'inline-block',
 

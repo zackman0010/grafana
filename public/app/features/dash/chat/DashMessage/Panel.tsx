@@ -1,6 +1,5 @@
 import { css } from '@emotion/css';
 
-import { GrafanaTheme2, PanelModel } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import {
   SceneComponentProps,
@@ -13,18 +12,10 @@ import {
 } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
+import { PanelConfiguration } from '../types';
+
 interface PanelState extends SceneObjectState {
-  panel: {
-    title?: string;
-    description?: string;
-    type?: PanelModel['type'];
-    pluginVersion?: PanelModel['pluginVersion'];
-    options: PanelModel['options'];
-    fieldConfig: PanelModel['fieldConfig'];
-    datasource: PanelModel['datasource'];
-    transformations?: PanelModel['transformations'];
-    targets?: PanelModel['targets'];
-  };
+  panel: PanelConfiguration;
   vizPanel: VizPanel;
 }
 
@@ -75,9 +66,9 @@ function PanelRenderer({ model }: SceneComponentProps<Panel>) {
   );
 }
 
-const getStyles = (_theme: GrafanaTheme2) => ({
+const getStyles = () => ({
   container: css({
-    width: '75%',
+    label: 'dash-message-panel-container',
     height: '300px',
   }),
 });

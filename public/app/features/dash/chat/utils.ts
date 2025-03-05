@@ -3,41 +3,78 @@ import { sceneGraph, SceneObject } from '@grafana/scenes';
 
 import { Dash } from './Dash';
 import { DashChat } from './DashChat';
-import { DashChatContainer } from './DashChatContainer';
+import { DashChatInstance } from './DashChatInstance';
 import { DashInput } from './DashInput';
-import { DashMessage, DashMessageState } from './DashMessage/DashMessage';
+import { DashMessage } from './DashMessage';
 import { DashMessages } from './DashMessages';
 import { DashSettings } from './DashSettings';
+import { Sender } from './types';
+
+const dashMap = new WeakMap<SceneObject, Dash>();
+const settingsMap = new WeakMap<SceneObject, DashSettings>();
+const chatMap = new WeakMap<SceneObject, DashChat>();
+const chatInstanceMap = new WeakMap<SceneObject, DashChatInstance>();
+const messagesMap = new WeakMap<SceneObject, DashMessages>();
+const inputMap = new WeakMap<SceneObject, DashInput>();
+const messageMap = new WeakMap<SceneObject, DashMessage>();
 
 export function getDash(sceneObject: SceneObject): Dash {
-  return sceneGraph.getAncestor(sceneObject, Dash);
+  if (!dashMap.has(sceneObject) || !dashMap.get(sceneObject)) {
+    dashMap.set(sceneObject, sceneGraph.getAncestor(sceneObject, Dash));
+  }
+
+  return dashMap.get(sceneObject)!;
 }
 
 export function getSettings(sceneObject: SceneObject): DashSettings {
-  return getDash(sceneObject).state.settings;
-}
+  if (!settingsMap.has(sceneObject) || !settingsMap.get(sceneObject)) {
+    settingsMap.set(sceneObject, getDash(sceneObject).state.settings);
+  }
 
-export function getChatContainer(sceneObject: SceneObject): DashChatContainer {
-  return sceneGraph.getAncestor(sceneObject, DashChatContainer);
+  return settingsMap.get(sceneObject)!;
 }
 
 export function getChat(sceneObject: SceneObject): DashChat {
-  return sceneGraph.getAncestor(sceneObject, DashChat);
+  if (!chatMap.has(sceneObject) || !chatMap.get(sceneObject)) {
+    chatMap.set(sceneObject, sceneGraph.getAncestor(sceneObject, DashChat));
+  }
+
+  return chatMap.get(sceneObject)!;
+}
+
+export function getChatInstance(sceneObject: SceneObject): DashChatInstance {
+  if (!chatInstanceMap.has(sceneObject) || !chatInstanceMap.get(sceneObject)) {
+    chatInstanceMap.set(sceneObject, sceneGraph.getAncestor(sceneObject, DashChatInstance));
+  }
+
+  return chatInstanceMap.get(sceneObject)!;
 }
 
 export function getMessages(sceneObject: SceneObject): DashMessages {
-  return getChat(sceneObject).state.messages;
+  if (!messagesMap.has(sceneObject) || !messagesMap.get(sceneObject)) {
+    messagesMap.set(sceneObject, getChatInstance(sceneObject).state.messages);
+  }
+
+  return messagesMap.get(sceneObject)!;
 }
 
 export function getInput(sceneObject: SceneObject): DashInput {
-  return getChat(sceneObject).state.input;
+  if (!inputMap.has(sceneObject) || !inputMap.get(sceneObject)) {
+    inputMap.set(sceneObject, getChatInstance(sceneObject).state.input);
+  }
+
+  return inputMap.get(sceneObject)!;
 }
 
 export function getMessage(sceneObject: SceneObject): DashMessage {
-  return sceneGraph.getAncestor(sceneObject, DashMessage);
+  if (!messageMap.has(sceneObject) || !messageMap.get(sceneObject)) {
+    messageMap.set(sceneObject, sceneGraph.getAncestor(sceneObject, DashMessage));
+  }
+
+  return messageMap.get(sceneObject)!;
 }
 
-export function getColors(sender: DashMessageState['sender'], theme: GrafanaTheme2) {
+export function getColors(sender: Sender, theme: GrafanaTheme2) {
   if (sender === 'user') {
     return {
       color: theme.colors.background.secondary,
