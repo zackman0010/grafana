@@ -66,7 +66,7 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
 
   return (
     <div
-      className={cx(styles.container, 'markdown-html', sender === 'system' && styles.welcomeMessage)}
+      className={cx(styles.container, 'markdown-html', sender === 'system' && styles.systemMessage)}
       dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }}
     />
   );
@@ -105,10 +105,11 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
       marginBottom: theme.spacing(1),
     },
 
-    'pre, code': {
+    code: {
+      label: 'dash-message-text-code',
       backgroundColor: theme.colors.background.secondary,
       borderRadius: theme.shape.borderRadius(1),
-      padding: theme.spacing(1),
+      padding: theme.spacing(0.5, 1),
       fontFamily: theme.typography.fontFamilyMonospace,
       fontSize: '0.9em',
       lineHeight: 1.5,
@@ -116,17 +117,30 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     },
 
     'pre code': {
-      padding: 0,
-      backgroundColor: 'transparent',
+      label: 'dash-message-text-pre-code',
+      backgroundColor: theme.colors.background.secondary,
+      borderRadius: theme.shape.borderRadius(1),
+      padding: theme.spacing(0.5, 1),
+      fontFamily: theme.typography.fontFamilyMonospace,
+      fontSize: '0.9em',
+      lineHeight: 1.5,
+      overflow: 'auto',
     },
   }),
-  welcomeMessage: css({
-    label: 'dash-message-text-container-welcome-message',
+  systemMessage: css({
+    label: 'dash-message-text-system-message',
     fontSize: theme.typography.h6.fontSize,
     fontWeight: theme.typography.h6.fontWeight,
     color: theme.colors.text.secondary,
     maxWidth: '600px',
     marginLeft: 'auto',
     marginRight: 'auto',
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+    '& code': {
+      background: 'transparent',
+      border: 'none',
+      margin: 0,
+    },
   }),
 });

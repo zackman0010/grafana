@@ -32,9 +32,62 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _agentConfig = getAgent();
   private _currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
 
+
   // Helper function to extract token information from various response formats
   private _extractTokenInfo(response: any): number | null {
     return response.response_metadata?.usage?.input_tokens ?? null;
+  }
+
+  private _removeToolAndMessage(toolId: string) {
+    // Remove the tool from messages
+    const messages = getMessages(this);
+    messages.state.messages.forEach((message) => {
+      const updatedChildren = message.state.children.filter((child) => {
+        if (child instanceof Tool && child.state.content.id === toolId) {
+          return false;
+        }
+        return true;
+      });
+      message.setState({ children: updatedChildren });
+    });
+
+    // Create a new message history without the interrupted tool's messages
+    const langchainMessages = messages.state.langchainMessages;
+    const newMessages = [];
+    let skipNextAiMessage = false;
+
+    for (let i = 0; i < langchainMessages.length; i++) {
+      const msg = langchainMessages[i];
+
+      // Skip tool use message and its result
+      if (msg instanceof AIMessageChunk && msg.tool_calls?.some((tc) => tc.id === toolId)) {
+        skipNextAiMessage = true;
+        continue;
+      }
+
+      // Skip the next AI message if we found a tool use message
+      if (skipNextAiMessage && msg instanceof AIMessageChunk) {
+        skipNextAiMessage = false;
+        continue;
+      }
+
+      // Skip tool result message
+      if (msg instanceof ToolMessage && msg.tool_call_id === toolId) {
+        continue;
+      }
+
+      newMessages.push(msg);
+    }
+
+    // Update the message history using proper state management
+    messages.setState({ langchainMessages: newMessages });
+
+    // Add a cancellation result through LangChain's proper channel
+    const cancelResult = new ToolMessage({
+      tool_call_id: toolId,
+      content: JSON.stringify({ status: 'cancelled', message: 'Operation cancelled by user' }),
+    });
+    messages.addLangchainMessage(cancelResult);
   }
 
   public constructor(state: Partial<Pick<DashInputState, 'message'> & Pick<SpeechState, 'listening'>>) {
@@ -48,7 +101,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const handle = window.setInterval(() => {
       const events = getAppEvents();
       if (events) {
-        events.getStream(ToolAddedEvent).subscribe(() => {;
+        events.getStream(ToolAddedEvent).subscribe(() => {
           this.recreateAgent();
         });
         window.clearInterval(handle);
@@ -80,13 +133,136 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this.setState({ message });
   }
 
-  public cancelRequest() {
-    this._abortController?.abort();
-    this._abortController = null;
-    getMessages(this).setLoading(false);
-    this.updateMessage('', false);
-    this.state.speech.resume();
-    getMessages(this).addSystemMessage('Canceled by user', true);
+  public async cancelRequest() {
+    if (this._abortController) {
+      this._abortController.abort();
+      // Find any working tools and mark them as cancelled
+      const messages = getMessages(this);
+      messages.state.messages.forEach((message) => {
+        message.state.children.forEach((child) => {
+          if (child instanceof Tool && child.state.working) {
+            this._removeToolAndMessage(child.state.content.id);
+          }
+        });
+      });
+      // Remove the last AI message that was processing the tool
+      if (messages.state.messages.length > 0) {
+        const lastMessage = messages.state.messages[messages.state.messages.length - 1];
+        if (lastMessage.state.sender === 'ai') {
+          messages.state.messages.pop();
+        }
+      }
+      this._abortController = null;
+      messages.setLoading(false);
+      this.state.speech.resume();
+      this.updateMessage('', false);
+    }
+  }
+
+  public async interruptAndSendMessage() {
+    const message = this.state.message.trim();
+    if (!message) {
+      return;
+    }
+
+    if (this._abortController) {
+      await this.cancelRequest();
+    }
+
+    // Normal flow for new messages
+    this._abortController = new AbortController();
+    const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
+    console.log('\n👤 User Message:', messageWithTimeTag);
+    getMessages(this).setLoading(true);
+    this.state.speech.pause();
+
+    const userMessage = getMessages(this).addUserMessage(message);
+    const isFirstMessage =
+      getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
+    const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
+
+    try {
+      getMessages(this).addLangchainMessage(
+        new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key })
+      );
+      this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
+
+      if (isFirstMessage && hasDefaultName) {
+        const titleSummary = await this._generateTitleSummary(message);
+        this._updateChatTitle(titleSummary);
+      }
+
+      const aiMessage = await this._currentAgent.invoke(getMessages(this).state.langchainMessages, {
+        signal: this._abortController.signal,
+      });
+      this.state.logger.logAIMessage(aiMessage.content);
+      getMessages(this).addAiMessage(aiMessage.content);
+      getMessages(this).addLangchainMessage(aiMessage);
+      await this._handleToolCalls(aiMessage);
+    } catch (error: any) {
+      if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
+        return;
+      }
+
+      console.error('\n❌ Error:', error.message || 'Unknown error occurred');
+      getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
+    } finally {
+      getMessages(this).setLoading(false);
+      this._abortController = null;
+      this.updateMessage('', false);
+      this.state.speech.resume();
+    }
+  }
+
+  public async sendMessage() {
+    const message = this.state.message.trim();
+    if (!message) {
+      return;
+    }
+
+    // Normal flow for new messages
+    this._abortController = new AbortController();
+    const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
+    console.log('\n👤 User Message:', messageWithTimeTag);
+    getMessages(this).setLoading(true);
+    this.state.speech.pause();
+
+    const userMessage = getMessages(this).addUserMessage(message);
+    const isFirstMessage =
+      getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
+    const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
+
+    try {
+      getMessages(this).addLangchainMessage(
+        new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key })
+      );
+      this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
+
+      if (isFirstMessage && hasDefaultName) {
+        const titleSummary = await this._generateTitleSummary(message);
+        this._updateChatTitle(titleSummary);
+      }
+
+      const aiMessage = await this._currentAgent.invoke(getMessages(this).state.langchainMessages, {
+        signal: this._abortController.signal,
+      });
+      this.state.logger.logAIMessage(aiMessage.content);
+      getMessages(this).addAiMessage(aiMessage.content);
+      getMessages(this).addLangchainMessage(aiMessage);
+      await this._handleToolCalls(aiMessage);
+    } catch (error: any) {
+      if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
+        return;
+      }
+
+      console.error('\n❌ Error:', error.message || 'Unknown error occurred');
+      getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
+    } finally {
+      getMessages(this).setLoading(false);
+      this._abortController = null;
+      this.updateMessage('', false);
+      this.state.speech.resume();
+    }
   }
 
   private async _generateTitleSummary(userMessage: string): Promise<string> {
@@ -132,70 +308,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
-  public async sendMessage() {
-    const message = this.state.message.trim();
-
-    if (!message) {
-      return;
-    }
-
-    this._abortController?.abort();
-    this._abortController = new AbortController();
-
-    // Add the time tag to the message content for the LangchainMessage only
-    const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
-
-    console.log('\n👤 User Message:', messageWithTimeTag);
-    getMessages(this).setLoading(true);
-    this.state.speech.pause();
-
-    const userMessage = getMessages(this).addUserMessage(message);
-    const isFirstMessage =
-      getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
-    const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
-
-    try {
-      getMessages(this).addLangchainMessage(
-        new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key })
-      );
-      this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
-
-      if (isFirstMessage && hasDefaultName) {
-        const titleSummary = await this._generateTitleSummary(message);
-        this._updateChatTitle(titleSummary);
-      }
-
-      const aiMessage = await this._currentAgent.invoke(getMessages(this).state.langchainMessages, {
-        signal: this._abortController.signal,
-      });
-      this.state.logger.logAIMessage(aiMessage.content);
-      getMessages(this).addAiMessage(aiMessage.content);
-      getMessages(this).addLangchainMessage(aiMessage);
-
-      // Update token usage if available in the response
-      const inputTokens = this._extractTokenInfo(aiMessage);
-      if (inputTokens !== null) {
-        console.log('Input tokens:', inputTokens);
-        const settings = getSettings(this);
-        settings.updateInputTokens(inputTokens);
-      }
-
-      await this._handleToolCalls(aiMessage);
-    } catch (error: any) {
-      if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
-        return;
-      }
-
-      console.error('\n❌ Error:', error.message || 'Unknown error occurred');
-      getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
-    } finally {
-      getMessages(this).setLoading(false);
-      this._abortController = null;
-      this.updateMessage('', false);
-      this.state.speech.resume();
-    }
-  }
-
   private async _handleToolCalls(aiMessage: AIMessageChunk, callCount = 0, maxCalls = 20) {
     if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0 || callCount >= maxCalls) {
       return;
@@ -203,6 +315,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
     for (const toolCall of aiMessage.tool_calls) {
       if (this._abortController?.signal.aborted) {
+        this._removeToolAndMessage(toolCall.id ?? '');
         return;
       }
 
@@ -221,6 +334,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           try {
             toolResponse = await selectedTool.invoke(toolCall);
           } catch (err: unknown) {
+            if (this._abortController?.signal.aborted) {
+              this._removeToolAndMessage(toolCall.id ?? '');
+              return;
+            }
             console.error(`Tool ${toolCall.name} failed:`, err);
             const message = err instanceof Error ? err.message : String(err);
             toolResponse = new ToolMessage({
@@ -233,6 +350,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           getMessages(this).setToolWorking(toolCall.id, false);
 
           if (this._abortController?.signal.aborted) {
+            this._removeToolAndMessage(toolCall.id ?? '');
             return;
           }
 
@@ -271,6 +389,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             });
 
             if (this._abortController?.signal.aborted) {
+              this._removeToolAndMessage(toolCall.id ?? '');
               return;
             }
 
@@ -294,6 +413,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           if (error instanceof Error && error.name === 'AbortError') {
             console.log('Request was cancelled during tool execution');
             getMessages(this).setToolWorking(toolCall.id, false);
+            this._removeToolAndMessage(toolCall.id ?? '');
             return;
           }
 
@@ -303,6 +423,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           );
           getMessages(this).setToolWorking(toolCall.id, false);
           console.error(`Tool ${toolCall.name} failed:`, error);
+          this._removeToolAndMessage(toolCall.id ?? '');
         }
       }
     }
@@ -331,6 +452,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           onEnterSelectMode={() => getMessages(model).enterSelectMode()}
           onSendMessage={() => model.sendMessage()}
           onUpdateMessage={(message) => model.updateMessage(message, true)}
+          onInterruptAndSend={() => model.interruptAndSendMessage()}
         />
 
         <IconButton
