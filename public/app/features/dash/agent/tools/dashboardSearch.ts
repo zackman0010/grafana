@@ -24,6 +24,7 @@ export const dashboardSearchTool = tool(
       queryExpressions = [],
     } = dashboardSearchToolSchema.parse(input);
 
+    // Get all dashboards matching the query / tags / uids
     const dashboardsList = (await getBackendSrv().get('/api/search', {
       query: dashboardTitleQuery,
       tags: dashboardTags,
@@ -31,40 +32,47 @@ export const dashboardSearchTool = tool(
       type: 'dash-db',
     })) as DashboardSearchItem[];
 
-    const dashboards: Array<{ stringified: string; dto: DashboardDTO }> = [];
-
-    for (let dashboardsListIdx = 0; dashboardsListIdx < dashboardsList.length; dashboardsListIdx++) {
-      const uid = dashboardsList[dashboardsListIdx].uid;
-      const dto = await getBackendSrv().get(`/api/dashboards/uid/${uid}`);
-      dashboards.push({ stringified: JSON.stringify(dto), dto });
-    }
-
+    // If no metric names or query expressions are provided, return all dashboards
     if (metricNames.length === 0 && queryExpressions.length === 0) {
       return JSON.stringify(dashboardsList);
     }
 
-    const result = dashboards
-      .filter(({ stringified, dto }) => {
-        const containsMetricName = metricNames.some((metricName) => stringified.includes(metricName));
+    return JSON.stringify(
+      // Fetch the DTOs for the dashboards above
+      (
+        (await Promise.all(
+          dashboardsList.map(async (dashboardListItem) =>
+            getBackendSrv().get(`/api/dashboards/uid/${dashboardListItem.uid}`)
+          )
+        )) as DashboardDTO[]
+      )
+        // Map the DTOs to a list of objects with the DTO, a stringified version of it, and a list of query expressions
+        .map((dto) => ({
+          dto,
+          stringified: JSON.stringify(dto),
+          expressions: [
+            ...get(dto, 'dashboard.panels', []),
+            ...get(dto, 'dashboard.rows', []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
+          ].reduce<string[]>(
+            (acc, panel) => [...acc, ...(panel.targets.map((target: any) => get(target, 'expr', '')) ?? [])],
+            []
+          ),
+        }))
+        // Filter the DTOs to only include those that contain a metric name or query expression
+        .filter(({ stringified, expressions }) => {
+          const containsMetricName = metricNames.some((metricName) => stringified.includes(metricName));
 
-        if (containsMetricName) {
-          return true;
-        }
+          if (containsMetricName) {
+            return true;
+          }
 
-        const expressions = [
-          ...get(dto, 'dashboard.panels', []),
-          ...get(dto, 'dashboard.rows', []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
-        ].reduce<string[]>(
-          (acc, panel) => [...acc, ...(panel.targets.map((target: any) => get(target, 'expr', '')) ?? [])],
-          []
-        );
-
-        return queryExpressions.some((queryExpression) => expressions.includes(queryExpression));
-      })
-      .map(({ dto }) => dashboardsList.find((dashboardListItem) => dashboardListItem.uid === dto.dashboard.uid))
-      .filter(Boolean);
-
-    return JSON.stringify(result);
+          return queryExpressions.some((queryExpression) => expressions.includes(queryExpression));
+        })
+        // Map the DTOs to the original dashboard list items
+        .map(({ dto }) => dashboardsList.find((dashboardListItem) => dashboardListItem.uid === dto.dashboard.uid))
+        // Filter out any null values
+        .filter(Boolean)
+    );
   },
   {
     name: 'search_dashboard',
