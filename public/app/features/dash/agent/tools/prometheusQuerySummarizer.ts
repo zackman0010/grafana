@@ -439,7 +439,7 @@ export async function summarizePrometheusQueryResult(
 
     // Create LLM instance for summarization
     const summaryLLM = new ChatAnthropic({
-      model: 'claude-3-haiku-latest',
+      model: 'claude-3-haiku-20240307',
       temperature: 0,
       apiKey: ANTHROPIC_API_KEY,
     });
