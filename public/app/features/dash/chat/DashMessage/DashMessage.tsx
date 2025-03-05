@@ -110,8 +110,29 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
   }
 
   public toJSON(): SerializedDashMessage {
+    // If the content is an array (contains tools), we need to update the content with the current tool states
+    const content = Array.isArray(this.state.content)
+      ? this.state.content.map((item) => {
+          if (item.type === 'tool_use') {
+            // Find the corresponding tool in children
+            const tool = this.state.children.find(
+              (child) => child instanceof Tool && child.state.content.id === item.id
+            ) as Tool | undefined;
+
+            // If we found the tool, include its current output in the content
+            if (tool) {
+              return {
+                ...item,
+                output: tool.state.content.output,
+              };
+            }
+          }
+          return item;
+        })
+      : this.state.content;
+
     return {
-      content: this.state.content,
+      content,
       sender: this.state.sender,
     };
   }
