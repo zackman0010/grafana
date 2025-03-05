@@ -7,7 +7,6 @@ const dashboardSchema = z.object({
   title: z.string().describe('The title of the dashboard'),
   uid: z.string().optional().describe('The unique identifier for the dashboard'),
   folderUid: z.string().optional().describe('The folder UID to place the dashboard in'),
-  data: z.any().describe('The dashboard data object containing panels and other configuration'),
 });
 
 export const createDashboardTool = tool(
@@ -18,10 +17,10 @@ export const createDashboardTool = tool(
     // Create dashboard data
     const dashboardData = {
       dashboard: {
-        ...validatedInput.data,
         title: validatedInput.title,
         uid: validatedInput.uid,
         folderUid: validatedInput.folderUid,
+        panels: [],
       },
       overwrite: false,
     };
@@ -58,13 +57,13 @@ export const createDashboardTool = tool(
       success: true,
       uid: result.uid,
       url: result.url,
-      message: 'Dashboard created and navigated to successfully',
+      message: 'Dashboard created successfully. Use the add_dashboard_panels tool to add panels to this dashboard.',
     });
   },
   {
     name: 'create_dashboard',
     description:
-      'Creates a new dashboard with the specified title, optional UID, folder, and dashboard data. Automatically navigates to the new dashboard after creation. Minimise calls to this tool by consolodating all the new panels you want to add and building the data.',
+      'Creates a new empty dashboard with the specified title, optional UID, and folder. After creating the dashboard, you should use the add_dashboard_panels tool to add panels to it. This separation allows for better control over dashboard creation and panel addition.',
     schema: dashboardSchema,
   }
 );

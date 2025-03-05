@@ -3,8 +3,6 @@ import { z } from 'zod';
 
 import { SceneDataTransformer, SceneQueryRunner, VizPanel } from '@grafana/scenes';
 
-import { VizPanel } from '@grafana/scenes';
-
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 
 const panelConfigSchema = z.object({
@@ -13,7 +11,9 @@ const panelConfigSchema = z.object({
   pluginId: z.string().describe('The ID of the panel plugin to use'),
   options: z.record(z.unknown()).optional().describe('The panel options configuration'),
   fieldConfig: z.record(z.unknown()).optional().describe('The field configuration for the panel'),
-  targets: z.array(z.record(z.unknown())).describe('The target objects to use for a query to run. Each target is one query to run.'),
+  targets: z
+    .array(z.record(z.unknown()))
+    .describe('The target objects to use for a query to run. Each target is one query to run.'),
   transformations: z.array(z.unknown()).optional().describe('The transformations to use for the panel'),
   datasource_uid: z.string().optional().describe('The datasource uid to use for the panel'),
   gridPos: z
@@ -49,16 +49,17 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
       pluginId: config.pluginId,
       options: config.options,
       fieldConfig: config.fieldConfig as any,
-      $data: config.targets.length === 0
-        ? undefined
-        : new SceneDataTransformer({
-            $data: new SceneQueryRunner({
-              datasource: config.datasource_uid ?? config.targets[0].datasource ?? undefined,
-              queries: config.targets as any,
-              maxDataPointsFromWidth: true,
+      $data:
+        config.targets.length === 0
+          ? undefined
+          : new SceneDataTransformer({
+              $data: new SceneQueryRunner({
+                datasource: config.datasource_uid ?? config.targets[0].datasource ?? undefined,
+                queries: config.targets as any,
+                maxDataPointsFromWidth: true,
+              }),
+              transformations: (config.transformations as any) ?? [],
             }),
-            transformations: config.transformations as any ?? [],
-          }),
     });
 
     // Add the panel to the dashboard
@@ -99,8 +100,7 @@ export const addDashboardPanelsTool = tool(
   },
   {
     name: 'add_dashboard_panel',
-    description:
-      `Adds a new panel to the current dashboard A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
+    description: `Adds a new panel to the current dashboard A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
   
       The pluginId is the ID of the panel plugin to use. It is a string that uniquely identifies the panel plugin.
       The options are the configuration options for the panel. They are a record of key-value pairs.
@@ -227,7 +227,7 @@ export const addDashboardPanelsTool = tool(
       - x: the x position of the panel in grid units
       - y: the y position of the panel in grid units
 
-
+      Only call this tool when you have at least one panel to add.
       `,
     schema: addDashboardPanelsSchema,
   }
