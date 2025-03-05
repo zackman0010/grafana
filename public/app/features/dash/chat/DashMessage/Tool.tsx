@@ -196,6 +196,7 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     color: theme.colors.text.secondary,
     marginLeft: theme.spacing(2),
     padding: theme.spacing(1),
+    paddingTop: 0,
     backgroundColor: theme.colors.background.primary,
     borderRadius: theme.shape.borderRadius(1),
     display: 'grid',
