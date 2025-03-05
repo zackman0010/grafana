@@ -14,10 +14,10 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
+import { createDashboardTool } from './tool_create_dashboard';
 import { readDashboardPanelsTool } from './tool_read_dashboard_panels';
 import { simulateToolError } from './tool_simulate_tool_error';
 import { updateDashboardPanelsTool } from './tool_update_dashboard_panels';
-import { createDashboardTool } from './tool_create_dashboard';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -48,6 +48,7 @@ export const tools = [
   prometheusMetricSearchTool,
   prometheusInstantQueryTool,
   prometheusRangeQueryTool,
+  createDashboardTool,
   readDashboardPanelsTool,
   lokiLabelNamesTool,
   lokiLabelValuesTool,
@@ -61,7 +62,6 @@ export const tools = [
   updateDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,
   simulateToolError,
-  createDashboardTool,
 ];
 
 export const toolsByName = tools.reduce(

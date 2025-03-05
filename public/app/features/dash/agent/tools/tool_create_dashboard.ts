@@ -1,5 +1,6 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
+
 import { locationService } from '@grafana/runtime';
 
 const dashboardSchema = z.object({
