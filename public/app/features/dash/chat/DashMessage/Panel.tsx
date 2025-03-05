@@ -11,7 +11,8 @@ import {
   SceneTimeRange,
   VizPanel,
 } from '@grafana/scenes';
-import { useStyles2 } from '@grafana/ui';
+import { Button, Modal, useStyles2 } from '@grafana/ui';
+import { useState } from 'react';
 
 import { PanelConfiguration } from '../types';
 
@@ -60,10 +61,33 @@ export class Panel extends SceneObjectBase<PanelState> {
 function PanelRenderer({ model }: SceneComponentProps<Panel>) {
   const { vizPanel } = model.useState();
   const styles = useStyles2(getStyles);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className={styles.container}>
-      <vizPanel.Component model={vizPanel} />
+      <div className={styles.panelWrapper}>
+        <vizPanel.Component model={vizPanel} />
+        <Button
+          className={styles.expandButton}
+          icon="eye"
+          variant="secondary"
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
+        />
+      </div>
+      {isExpanded && (
+        <Modal
+          title={vizPanel.state.title || 'Panel'}
+          isOpen={isExpanded}
+          onDismiss={() => setIsExpanded(false)}
+          className={styles.modal}
+          contentClassName={styles.modalContent}
+        >
+          <div className={styles.expandedPanel}>
+            <vizPanel.Component model={vizPanel} />
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
@@ -72,5 +96,27 @@ const getStyles = () => ({
   container: css({
     label: 'dash-message-panel-container',
     height: '300px',
+  }),
+  panelWrapper: css({
+    position: 'relative',
+    height: '100%',
+  }),
+  expandButton: css({
+    position: 'absolute',
+    top: '8px',
+    right: '8px',
+    zIndex: 1,
+  }),
+  modal: css({
+    minWidth: '400px',
+    width: '80vw',
+  }),
+  modalContent: css({
+    padding: 0,
+  }),
+  expandedPanel: css({
+    height: '80vh',
+    width: '100%',
+    padding: '16px',
   }),
 });
