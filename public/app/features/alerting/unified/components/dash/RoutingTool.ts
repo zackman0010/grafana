@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { locationService, registerTool } from '@grafana/runtime';
+import { locationService } from '@grafana/runtime';
 
 import { createRelativeUrl } from '../../utils/url';
 
@@ -62,11 +62,11 @@ export const createAlertTool = tool(
     const { navigate, returnTo, defaults } = createAlertSchema.parse(input);
 
     const queryParams: Record<string, string> = {};
-    
+
     if (returnTo) {
       queryParams.returnTo = returnTo;
     }
-    
+
     if (defaults) {
       queryParams.defaults = JSON.stringify(defaults);
     }
