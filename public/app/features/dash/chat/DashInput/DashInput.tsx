@@ -108,21 +108,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   private _updateChatTitle(title: string) {
     try {
-      // Get the Dash instance
       const dash = getDash(this);
-      if (!dash) {
-        console.error('Could not find Dash instance');
-        return;
-      }
-
-      // Get the current chat container
-      const currentChatIndex = dash.state.chatIndex;
-      const chatContainer = dash.state.chats[currentChatIndex];
-
-      if (chatContainer) {
-        // Update the chat container's name using the setName method
-        chatContainer.setName(title);
-      }
+      dash.state.chats[dash.state.chatIndex].setName(title);
     } catch (error) {
       console.error('Error updating chat title:', error);
     }
@@ -143,7 +130,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this.state.speech.pause();
 
     const userMessage = getMessages(this).addUserMessage(message);
-    const isFirstMessage = getMessages(this).state.messages.length === 1;
+    const isFirstMessage =
+      getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
     const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
 
     try {

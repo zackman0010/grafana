@@ -5,15 +5,11 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { IconButton, useStyles2 } from '@grafana/ui';
 
-import { CodeOverflow, Mode, Verbosity } from './types';
-import { getPersistedSetting, persistSetting } from './utils';
+import { DashStorage } from './DashStorage';
+import { Settings, Verbosity } from './types';
+import { persistSetting } from './utils';
 
-interface DashSettingsState extends SceneObjectState {
-  codeOverflow: CodeOverflow;
-  mode: Mode;
-  showTools: boolean;
-  verbosity: Verbosity;
-}
+type DashSettingsState = Settings & SceneObjectState;
 
 export class DashSettings extends SceneObjectBase<DashSettingsState> {
   public static Component = DashSettingsRenderer;
@@ -22,36 +18,49 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
     return true;
   }
 
+  private _savingPromise: Promise<void> | undefined;
+
   public constructor() {
     super({
-      codeOverflow: (getPersistedSetting('code-overflow') ?? 'wrap') as CodeOverflow,
-      mode: (getPersistedSetting('mode') ?? 'sidebar') as Mode,
-      showTools: getPersistedSetting('show-tools') !== 'false',
-      verbosity: (getPersistedSetting('verbosity') ?? 'concise') as Verbosity,
+      codeOverflow: 'wrap',
+      mode: 'sidebar',
+      showTools: true,
+      verbosity: 'concise',
     });
   }
 
   public toggleCodeOverflow() {
     const codeOverflow = this.state.codeOverflow === 'scroll' ? 'wrap' : 'scroll';
     this.setState({ codeOverflow });
-    persistSetting('code-overflow', codeOverflow);
+    this._persist('codeOverflow', codeOverflow);
   }
 
   public toggleMode() {
     const mode = this.state.mode === 'floating' ? 'sidebar' : 'floating';
     this.setState({ mode });
-    persistSetting('mode', mode);
+    this._persist('mode', mode);
   }
 
   public toggleShowTools() {
     const showTools = !this.state.showTools;
     this.setState({ showTools });
-    persistSetting('show-tools', String(showTools));
+    this._persist('showTools', showTools);
   }
 
   public setVerbosity(verbosity: Verbosity) {
     this.setState({ verbosity });
+    this._persist('verbosity', verbosity);
     persistSetting('verbosity', verbosity);
+  }
+
+  private async _persist<T extends keyof Settings = keyof Settings>(key: T, value: Settings[T]) {
+    if (this._savingPromise) {
+      await this._savingPromise;
+    }
+
+    this._savingPromise = DashStorage.instance.setSettingsValue(key, value).finally(() => {
+      this._savingPromise = undefined;
+    });
   }
 }
 
