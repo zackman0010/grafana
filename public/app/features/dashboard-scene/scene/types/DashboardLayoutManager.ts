@@ -20,7 +20,7 @@ export interface DashboardLayoutManager<S = {}> extends SceneObject {
   /**
    * Adds a new panel to the layout
    */
-  addPanel(panel: VizPanel): void;
+  addPanel(panel: VizPanel, x?: number, y?: number, width?: number, height?: number): void;
 
   /**
    * Remove an element / panel

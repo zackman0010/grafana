@@ -18,13 +18,13 @@ const panelConfigSchema = z.object({
   datasource_uid: z.string().optional().describe('The datasource uid to use for the panel'),
   gridPos: z
     .object({
-      h: z.number().optional().describe('Height of the panel in grid units'),
-      w: z.number().optional().describe('Width of the panel in grid units'),
-      x: z.number().optional().describe('X position in grid units'),
+      h: z.number().optional().describe('Height of the panel in grid units. Default value is 8.'),
+      w: z.number().optional().describe('Width of the panel in grid units. Default value is 12.'),
+      x: z.number().optional().describe('X position in grid units. Value between 0 and 23.'),
       y: z.number().optional().describe('Y position in grid units'),
     })
     .optional()
-    .describe('Grid position configuration'),
+    .describe('Grid position configuration. A dashboard has 24 columns and unlimited rows. A default panel is 12 columns wide and 8 rows high.'),
 });
 
 const addDashboardPanelSchema = panelConfigSchema;
@@ -61,11 +61,12 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
     });
 
     // Add the panel to the dashboard
-    dashboard.addPanel(vizPanel);
+    dashboard.addPanel(vizPanel, config.gridPos?.x, config.gridPos?.y, config.gridPos?.w, config.gridPos?.h);
 
     return JSON.stringify({
       success: true,
       panelId: vizPanel.state.key,
+      gridPos: config.gridPos,
       details: `Successfully added panel with title: ${config.title || 'Untitled'}`,
     });
   } catch (error) {

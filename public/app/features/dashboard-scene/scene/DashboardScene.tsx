@@ -65,6 +65,8 @@ import {
   getDefaultVizPanel,
   getLayoutManagerFor,
   getPanelIdForVizPanel,
+  NEW_PANEL_HEIGHT,
+  NEW_PANEL_WIDTH,
 } from '../utils/utils';
 import { SchemaV2EditorDrawer } from '../v2schema/SchemaV2EditorDrawer';
 
@@ -482,12 +484,12 @@ export class DashboardScene extends SceneObjectBase<DashboardSceneState> impleme
     return this._initialState;
   }
 
-  public addPanel(vizPanel: VizPanel): void {
+  public addPanel(vizPanel: VizPanel, x = 0, y = 0, width: number = NEW_PANEL_WIDTH, height: number = NEW_PANEL_HEIGHT): void {
     if (!this.state.isEditing) {
       this.onEnterEditMode();
     }
 
-    this.state.body.addPanel(vizPanel);
+    this.state.body.addPanel(vizPanel, x, y, width, height);
   }
 
   public createLibraryPanel(panelToReplace: VizPanel, libPanel: LibraryPanel) {
