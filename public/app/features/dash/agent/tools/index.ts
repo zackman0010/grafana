@@ -15,7 +15,7 @@ import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
 import { readDashboardPanelsTool } from './tool_read_dashboard_panels';
-import { updateDashboardPanelTool } from './updateDashboardPanel';
+import { updateDashboardPanelsTool } from './tool_update_dashboard_panels';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -56,7 +56,7 @@ export const tools = [
   grafanaDocsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
-  updateDashboardPanelTool,
+  updateDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,
 ];
 
