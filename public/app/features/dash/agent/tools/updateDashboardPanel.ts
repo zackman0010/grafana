@@ -1,9 +1,10 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
+import { VizPanelState } from '@grafana/scenes';
+
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 import { findOriginalVizPanelByKey } from '../../../dashboard-scene/utils/utils';
-import { VizPanelState } from '@grafana/scenes';
 
 const updateDashboardPanelSchema = z.object({
   panelId: z.string().describe('The ID of the panel to update'),
