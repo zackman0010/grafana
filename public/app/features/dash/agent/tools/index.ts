@@ -1,5 +1,7 @@
 import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
+import { getAppEvents, ToolAddedEvent } from '@grafana/runtime';
+
 import { dashboardSearchTool } from './dashboardSearch';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
@@ -75,3 +77,18 @@ export const toolsByName = tools.reduce(
   },
   {} as Record<string, (typeof tools)[number]>
 );
+
+let handle: number | undefined;
+handle = window.setInterval(() => {
+  const events = getAppEvents();
+  if (events) {
+    events.getStream(ToolAddedEvent).subscribe((event) => {
+      const toolName = event.payload.tool.name;
+      if (!Object.keys(toolsByName).includes(toolName)) {
+        tools.push(event.payload.tool as (typeof tools)[number]);
+        toolsByName[event.payload.tool.name as keyof typeof toolsByName] = event.payload.tool as (typeof tools)[number];
+      }
+    });
+    window.clearInterval(handle);
+  }
+}, 500);
