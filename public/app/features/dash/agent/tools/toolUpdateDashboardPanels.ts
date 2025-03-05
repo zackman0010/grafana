@@ -84,7 +84,7 @@ async function updateSinglePanel(panelId: string, config: Record<string, unknown
       });
     }
 
-    return generateDiffMarkdown(oldState, panel.state);
+    return JSON.stringify({ diffMarkdown: generateDiffMarkdown(oldState, panel.state) });
   } catch (error) {
     // If the error is a circular reference error, return a simplified error message
     if (error instanceof Error && error.message.includes('Converting circular structure to JSON')) {
