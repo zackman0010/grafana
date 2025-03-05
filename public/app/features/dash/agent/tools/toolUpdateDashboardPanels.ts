@@ -130,7 +130,7 @@ export const updateDashboardPanelsTool = tool(
   {
     name: 'update_dashboard_panels',
     description:
-      'Updates multiple dashboard panels with new configurations. Get the configurations via read_dashboard_panels tool first. If there are no panels to read, or you are creating a new dashboard, use the grafana_com_docs_search tool to figure out the schema. Automatically navigate the user to view the dashboard before making any changes.',
+      'Updates multiple dashboard panels with new configurations. Get the configurations via read_dashboard_panels tool first. If there are no panels to read, or you are creating a new dashboard, use the grafana_com_docs_search tool to figure out the schema. Automatically navigate the user to view the dashboard before making any changes. Generate good titles and help text.',
     schema: updateDashboardPanelsSchema,
   }
 );

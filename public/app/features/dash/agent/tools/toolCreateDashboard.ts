@@ -64,7 +64,7 @@ export const createDashboardTool = tool(
   {
     name: 'create_dashboard',
     description:
-      'Creates a new dashboard with the specified title, optional UID, folder, and dashboard data. Automatically navigates to the new dashboard after creation.',
+      'Creates a new dashboard with the specified title, optional UID, folder, and dashboard data. Automatically navigates to the new dashboard after creation. Minimise calls to this tool by consolodating all the new panels you want to add and building the data.',
     schema: dashboardSchema,
   }
 );

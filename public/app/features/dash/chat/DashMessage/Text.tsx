@@ -87,6 +87,14 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
       paddingLeft: theme.spacing(3),
     },
 
+    li: {
+      marginBottom: theme.spacing(0.5),
+    },
+
+    'li p': {
+      marginBottom: 0,
+    },
+
     'h1, h2, h3, h4, h5, h6': {
       marginTop: theme.spacing(2),
       fontSize: '0.9em',
@@ -95,6 +103,21 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
 
     p: {
       marginBottom: theme.spacing(1),
+    },
+
+    'pre, code': {
+      backgroundColor: theme.colors.background.secondary,
+      borderRadius: theme.shape.borderRadius(1),
+      padding: theme.spacing(1),
+      fontFamily: theme.typography.fontFamilyMonospace,
+      fontSize: '0.9em',
+      lineHeight: 1.5,
+      overflow: 'auto',
+    },
+
+    'pre code': {
+      padding: 0,
+      backgroundColor: 'transparent',
     },
   }),
   welcomeMessage: css({

@@ -152,6 +152,7 @@ export const prometheusInstantQueryTool = tool(
     - Always group by appropriate labels (e.g., sum by (instance)) to reduce result size
     - For complex data, use the summarize parameter to get a concise overview
     - Prefer instant queries over range queries when possible as they're more efficient
+    - Title the panel in a meaningful way and provide helpful description in the help text
     
     Summarization examples:
     - "Summarize CPU usage patterns"
