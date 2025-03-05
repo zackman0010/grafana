@@ -2,6 +2,7 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
 import { VizPanel } from '@grafana/scenes';
+
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 
 const panelConfigSchema = z.object({
