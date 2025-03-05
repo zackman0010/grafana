@@ -33,7 +33,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     super({
       anyToolsWorking: false,
       generatingWelcome: false,
-      langchainMessages: state.langchainMessages ?? [new SystemMessage(generateSystemPrompt())],
+      langchainMessages: state.langchainMessages ?? generateSystemPrompt(),
       loading: false,
       messages: state.messages ?? [],
     });
@@ -68,7 +68,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     this.prevLocation = location;
     console.log('Location changed, generating a new welcome message.');
     this.setState({
-      langchainMessages: [new SystemMessage(generateSystemPrompt())],
+      langchainMessages: generateSystemPrompt(),
       generatingWelcome: false,
       messages: [],
     });

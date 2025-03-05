@@ -1,9 +1,11 @@
-import { getPersistedSetting } from '../chat/utils';
+import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
+import { getPersistedSetting } from '../chat/utils';
 import { getCurrentContext } from './tools/context';
 import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
 import { prometheusWorkflowSystemPrompt } from './tools/prometheusSystemPrompt';
 import { createDashboardTool } from './tools/toolCreateDashboard';
+
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `
 # Grafana Observability Agent
@@ -23,11 +25,10 @@ IMPORTANT TIMESTAMP USAGE:
 - Calculate time values before calling this tool
 
 ## Tone
-${
-  getPersistedSetting('verbosity') === 'educational'
+${getPersistedSetting('verbosity') === 'educational'
     ? '- Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available". Always suggest helpful next steps.'
     : '- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
-}
+  }
 - Be friendly and helpful.
 - Refer to yourself as an Agent - never as an assistant.
 
@@ -168,7 +169,7 @@ Always follow this structured approach when presenting analysis results:
 </json>
 `;
 
-export function generateSystemPrompt() {
+export function generateSystemPrompt(): BaseMessage[] {
   const context = getCurrentContext();
   let contextPrompt = `
   ## Current context and Grafana state
@@ -188,5 +189,63 @@ export function generateSystemPrompt() {
     contextPrompt += `The current panels in the dashboard are: ${JSON.stringify(context.panels)}. `;
   }
 
-  return SYSTEM_PROMPT_TEMPLATE + contextPrompt;
+  // Create few-shot examples directly instead of using a template
+  const fewshotMessages: BaseMessage[] = [
+    new HumanMessage("Can you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace?"),
+    new AIMessage({
+      content: [
+        {
+          type: "text",
+          text: "I'll help you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization."
+        },
+        {
+          type: "tool_use",
+          id: "toolu_01WZVskhEnnghSBhHPZ6mxVZ",
+          name: "search_prometheus_metrics",
+          input: {
+            datasource_uid: "cortex-dev-01",
+            metric_patterns: ["container_network_.*", "kube_pod_.*loki.*"],
+            start: 1741202198789,
+            end: 1741205798789
+          }
+        },
+      ]
+    }),
+    new HumanMessage({
+      content: [
+        {
+          type: "tool_result",
+          tool_use_id: "toolu_01WZVskhEnnghSBhHPZ6mxVZ",
+          content: JSON.stringify({
+            metric_patterns: ["container_network_.*", "kube_pod_.*ingester.*"],
+            total_matches_found: 14,
+            metrics_returned: 14,
+            max_metrics_per_pattern: 50,
+            max_series_per_metric: 1000,
+            limited_patterns: [],
+            metrics: [
+              {
+                metric_name: "container_network_receive_bytes_total",
+                label_stats: [
+                  {
+                    name: "interface",
+                    cardinality: 251,
+                    sampleValues: ["eth0", "eni25cb6e61f27", "eni348f13ee482", "eni48b8769ecff", "eni55593bf5d52"]
+                  },
+                  {
+                    name: "namespace",
+                    cardinality: 34,
+                    sampleValues: ["vpa", "goldpinger", "crossplane", "calico-system", "cert-manager"]
+                  }
+                ],
+                limited: true
+              },
+            ]
+          })
+        }
+      ]
+    }),
+  ];
+
+  return [new SystemMessage(SYSTEM_PROMPT_TEMPLATE + contextPrompt), ...fewshotMessages];
 }

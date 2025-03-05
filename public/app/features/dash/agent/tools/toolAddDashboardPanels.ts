@@ -18,18 +18,16 @@ const panelConfigSchema = z.object({
   datasource_uid: z.string().optional().describe('The datasource uid to use for the panel'),
   gridPos: z
     .object({
-      h: z.number().optional().describe('Height of the panel in grid units'),
-      w: z.number().optional().describe('Width of the panel in grid units'),
-      x: z.number().optional().describe('X position in grid units'),
+      h: z.number().optional().describe('Height of the panel in grid units. Default value is 8.'),
+      w: z.number().optional().describe('Width of the panel in grid units. Default value is 12.'),
+      x: z.number().optional().describe('X position in grid units. Value between 0 and 23.'),
       y: z.number().optional().describe('Y position in grid units'),
     })
     .optional()
-    .describe('Grid position configuration'),
+    .describe('Grid position configuration. A dashboard has 24 columns and unlimited rows. A default panel is 12 columns wide and 8 rows high.'),
 });
 
-const addDashboardPanelsSchema = z.object({
-  panels: z.array(panelConfigSchema).describe('Array of panel configurations to add. Minimum one panel is required.'),
-});
+const addDashboardPanelSchema = panelConfigSchema;
 
 async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promise<string> {
   if (!(window.__grafanaSceneContext instanceof DashboardScene)) {
@@ -63,11 +61,12 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
     });
 
     // Add the panel to the dashboard
-    dashboard.addPanel(vizPanel);
+    dashboard.addPanel(vizPanel, config.gridPos?.x, config.gridPos?.y, config.gridPos?.w, config.gridPos?.h);
 
     return JSON.stringify({
       success: true,
       panelId: vizPanel.state.key,
+      gridPos: config.gridPos,
       details: `Successfully added panel with title: ${config.title || 'Untitled'}`,
     });
   } catch (error) {
@@ -80,27 +79,15 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
 
 export const addDashboardPanelsTool = tool(
   async (input): Promise<string> => {
-    const parsedInput = addDashboardPanelsSchema.parse(input);
-    const { panels } = parsedInput;
+    const panelConfig = addDashboardPanelSchema.parse(input);
 
-    const results = await Promise.all(
-      panels.map(async (panelConfig) => {
-        const result = await addSinglePanel(panelConfig);
-        return {
-          ...JSON.parse(result),
-          config: panelConfig,
-        };
-      })
-    );
+    const result = await addSinglePanel(panelConfig);
 
-    return JSON.stringify({
-      success: true,
-      results,
-    });
+    return result;
   },
   {
-    name: 'add_dashboard_panels',
-    description: `Adds new panels to the current dashboard A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
+    name: 'add_dashboard_panel',
+    description: `Adds a new panel to the current dashboard. A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
   
       The pluginId is the ID of the panel plugin to use. It is a string that uniquely identifies the panel plugin.
       The options are the configuration options for the panel. They are a record of key-value pairs.
@@ -227,8 +214,8 @@ export const addDashboardPanelsTool = tool(
       - x: the x position of the panel in grid units
       - y: the y position of the panel in grid units
 
-      Only call this tool when you have at least one panel to add.
+      Only call this tool when you have a panel to add.
       `,
-    schema: addDashboardPanelsSchema,
+    schema: addDashboardPanelSchema,
   }
 );
