@@ -103,7 +103,6 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
         <div className={styles.details}>
           {hasInput && (
             <>
-              <div className={styles.sectionHeader}>Input</div>
               {Object.entries(content.input).map(([key, value]) => (
                 <div key={key} className={styles.detailsRow}>
                   <span className={styles.detailsKey}>{key}:</span>
