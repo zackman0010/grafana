@@ -182,9 +182,11 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
           otherChildren.map((child) => <child.Component model={child} key={child.state.key} />)
         )}
       </div>
-      {tools.map((tool) => (
-        <tool.Component model={tool} key={tool.state.key} />
-      ))}
+      <div className={styles.toolsContainer}>
+        {tools.map((tool) => (
+          <tool.Component model={tool} key={tool.state.key} />
+        ))}
+      </div>
     </>
   );
 }
@@ -212,8 +214,14 @@ const getStyles = (
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    gap: theme.spacing(1),
-    padding: theme.spacing(1),
+    padding: sender === 'user' ? theme.spacing(2) : theme.spacing(0.5),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+
+    ...(sender === 'user' && {
+      marginTop: theme.spacing(1),
+    }),
+
     outline: selected ? 'none' : 'none',
     background:
       sender === 'ai'
@@ -260,6 +268,13 @@ const getStyles = (
       textOverflow: 'unset',
       whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
     },
+  }),
+  toolsContainer: css({
+    label: 'dash-message-tools-container',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }),
   editInput: css({
     label: 'dash-message-edit-input',

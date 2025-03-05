@@ -343,7 +343,11 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
         <message.Component model={message} key={message.state.key!} />
       ))}
 
-      {(loading || generatingWelcome) && (!anyToolsWorking || model.areToolsHidden()) && <Loader />}
+      {(loading || generatingWelcome) && (!anyToolsWorking || model.areToolsHidden()) && (
+        <div style={{ margin: '0 16px' }}>
+          <Loader />
+        </div>
+      )}
 
       <div ref={scrollRef} />
     </div>
@@ -357,8 +361,8 @@ const getStyles = (theme: GrafanaTheme2) => ({
     flexDirection: 'column',
     flex: 1,
     overflowY: 'auto',
-    padding: theme.spacing(2),
     backgroundColor: theme.colors.background.primary,
-    gap: theme.spacing(0.5),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   }),
 });
