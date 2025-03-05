@@ -102,7 +102,6 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     fontSize: theme.typography.h6.fontSize,
     fontWeight: theme.typography.h6.fontWeight,
     color: theme.colors.text.secondary,
-    marginBottom: theme.spacing(3),
     maxWidth: '600px',
     marginLeft: 'auto',
     marginRight: 'auto',

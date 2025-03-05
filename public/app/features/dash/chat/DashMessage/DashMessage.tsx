@@ -40,7 +40,7 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
     const children: SceneObject[] = [];
 
     if (state.type === 'artifact') {
-      const c = (state.content as any);
+      const c = state.content as any;
       children.push(new Panel({ panel: c.panel, timeRange: c.timeRange }));
     } else if (typeof state.content === 'string') {
       children.push(new Text({ content: state.content }));
@@ -162,21 +162,30 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
     }
   }, [selected]);
 
+  // Separate tools from other children
+  const tools = children.filter((child) => child instanceof Tool);
+  const otherChildren = children.filter((child) => !(child instanceof Tool));
+
   return (
-    <div className={styles.container} ref={containerRef}>
-      {editing ? (
-        <textarea
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-          value={editedMessage}
-          className={styles.editInput}
-          onPointerDown={(evt) => evt.stopPropagation()}
-          onChange={(evt) => model.updateEditedMessage(evt.target.value ?? '')}
-        />
-      ) : (
-        children.map((child) => <child.Component model={child} key={child.state.key} />)
-      )}
-    </div>
+    <>
+      <div className={styles.container} ref={containerRef}>
+        {editing ? (
+          <textarea
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            value={editedMessage}
+            className={styles.editInput}
+            onPointerDown={(evt) => evt.stopPropagation()}
+            onChange={(evt) => model.updateEditedMessage(evt.target.value ?? '')}
+          />
+        ) : (
+          otherChildren.map((child) => <child.Component model={child} key={child.state.key} />)
+        )}
+      </div>
+      {tools.map((tool) => (
+        <tool.Component model={tool} key={tool.state.key} />
+      ))}
+    </>
   );
 }
 
