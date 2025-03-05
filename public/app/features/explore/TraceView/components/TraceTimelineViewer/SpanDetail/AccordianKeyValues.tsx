@@ -32,6 +32,7 @@ export const getStyles = (theme: GrafanaTheme2) => {
     }),
     header: css({
       display: 'flex',
+      flex: '1 1 auto',
       alignItems: 'center',
       gap: '0.25em',
       label: 'header',
@@ -40,6 +41,8 @@ export const getStyles = (theme: GrafanaTheme2) => {
       padding: '0.25em 0.1em',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      background: autoColor(theme, '#e8e8e8'),
+
       '&:hover': {
         background: autoColor(theme, '#e8e8e8'),
       },
@@ -148,7 +151,7 @@ export default function AccordianKeyValues({
   withSummary = true,
   headerLink,
   links,
-  widget: AssertionsWidget
+  widget: AssertionsWidget,
 }: AccordianKeyValuesProps) {
   const isEmpty = (!Array.isArray(data) || !data.length) && !logName;
   const styles = useStyles2(getStyles);

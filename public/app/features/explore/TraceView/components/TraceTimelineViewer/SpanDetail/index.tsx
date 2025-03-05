@@ -275,12 +275,12 @@ export default function SpanDetail(props: SpanDetailProps) {
     },
     ...(span.childSpanCount > 0
       ? [
-        {
-          key: 'child_count',
-          label: 'Child Count:',
-          value: span.childSpanCount,
-        },
-      ]
+          {
+            key: 'child_count',
+            label: 'Child Count:',
+            value: span.childSpanCount,
+          },
+        ]
       : []),
   ];
 
@@ -398,7 +398,7 @@ export default function SpanDetail(props: SpanDetailProps) {
       </div>
       <Divider spacing={1} />
       <div>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
           <Attributes
             span={span}
             linksGetter={linksGetter}
