@@ -201,12 +201,18 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     gridTemplateColumns: 'auto 1fr',
     gap: `${theme.spacing(1)} ${theme.spacing(2)}`,
     alignItems: 'baseline',
+    maxWidth: '100%',
+    wordBreak: 'break-word',
   }),
   detailsRow: css({
     label: 'dash-message-tool-details-row',
     display: 'contents',
     fontSize: '0.85em',
     fontFamily: theme.typography.fontFamilyMonospace,
+    '& > *': {
+      overflow: 'hidden',
+      maxWidth: '100%',
+    },
   }),
   detailsKey: css({
     label: 'dash-message-tool-details-key',

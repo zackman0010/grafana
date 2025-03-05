@@ -52,8 +52,8 @@ const getJsonValueStyles = (theme: GrafanaTheme2) => ({
   container: css({
     label: 'json-value-container',
     cursor: 'pointer',
-    width: '300px',
-    maxHeight: '212px', // Half of A4 ratio (300 * 1.414 / 2)
+    maxWidth: '300px',
+    maxHeight: '212px',
     overflow: 'hidden',
     position: 'relative',
     backgroundColor: theme.colors.background.secondary,
@@ -80,11 +80,12 @@ const getJsonValueStyles = (theme: GrafanaTheme2) => ({
     fontSize: '0.65em',
     lineHeight: 1.2,
     fontFamily: theme.typography.fontFamilyMonospace,
-    whiteSpace: 'pre',
-    overflow: 'auto',
+    whiteSpace: 'pre-wrap',
+    overflow: 'hidden',
     color: theme.colors.text.secondary,
     letterSpacing: '0.02em',
     height: '100%',
+    width: '100%',
     '&::-webkit-scrollbar': {
       width: '4px',
       height: '4px',
