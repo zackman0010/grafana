@@ -1,7 +1,6 @@
 import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
 import { dashboardSearchTool } from './dashboardSearch';
-import { getCurrentTimeTool } from './getCurrentTime';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
@@ -55,7 +54,6 @@ export const tools = [
   lokiLabelValuesTool,
   navigateToExploreTool,
   navigateToDrilldownLogs,
-  getCurrentTimeTool,
   grafanaComSearch,
   grafanaDocsSearch,
   navigateToDashboardTool,

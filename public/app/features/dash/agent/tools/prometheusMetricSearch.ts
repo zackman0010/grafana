@@ -5,7 +5,7 @@ import { getDefaultTimeRange, dateTime, TimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
-import { prometheusTypeRefiner } from './refiners';
+import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
 interface LabelStats {
   name: string;
@@ -261,11 +261,13 @@ const prometheusMetricSearchSchema = z.object({
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp in milliseconds.'),
+    .describe('Optional start timestamp in milliseconds since epoch.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp in milliseconds.'),
+    .describe('Optional end timestamp in milliseconds since epoch.')
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
 });
 
 export const prometheusMetricSearchTool = tool(

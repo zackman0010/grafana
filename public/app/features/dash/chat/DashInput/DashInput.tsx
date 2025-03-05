@@ -126,7 +126,10 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this._abortController?.abort();
     this._abortController = new AbortController();
 
-    console.log('\n👤 User Message:', message);
+    // Add the time tag to the message content for the LangchainMessage only
+    const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
+
+    console.log('\n👤 User Message:', messageWithTimeTag);
     getMessages(this).setLoading(true);
     this.state.speech.pause();
 
@@ -136,7 +139,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
 
     try {
-      getMessages(this).addLangchainMessage(new HumanMessage({ content: message, id: userMessage.state.key }));
+
+      getMessages(this).addLangchainMessage(new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key }));
       this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
 
       if (isFirstMessage && hasDefaultName) {

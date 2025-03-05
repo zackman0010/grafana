@@ -16,17 +16,20 @@ export class Text extends SceneObjectBase<TextState> {
 }
 
 function processMessageContent(content: string): string {
+  // Remove time tags
+  const contentWithoutTimeTag = content.replace(/<time>.*?<\/time>/s, '').trim();
+
   // Find json tags anywhere in the content
-  const jsonStartIndex = content.indexOf('<json>');
-  const jsonEndIndex = content.indexOf('</json>');
+  const jsonStartIndex = contentWithoutTimeTag.indexOf('<json>');
+  const jsonEndIndex = contentWithoutTimeTag.indexOf('</json>');
 
   // If no json tags found, return the content as is
   if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
-    return content;
+    return contentWithoutTimeTag;
   }
 
   // Extract content between tags and normalize it
-  const jsonStr = content
+  const jsonStr = contentWithoutTimeTag
     .slice(jsonStartIndex + 6, jsonEndIndex) // Remove <json> and </json>
     .trim();
 
@@ -49,7 +52,7 @@ function processMessageContent(content: string): string {
     }
 
     // If all else fails, return the original content without the json tags
-    return content.replace(/<\/?json>/g, '').trim();
+    return contentWithoutTimeTag.replace(/<\/?json>/g, '').trim();
   }
 }
 
