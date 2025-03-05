@@ -14,6 +14,7 @@ interface ToolState extends SceneObjectState {
     id: string;
     name: string;
     input: Record<string, unknown>;
+    output?: Record<string, unknown>;
   };
   error: string | undefined;
   opened: boolean;
@@ -51,12 +52,24 @@ export class Tool extends SceneObjectBase<ToolState> {
   public setError(error: string | undefined) {
     this.setState({ error });
   }
+
+  public setOutput(output: Record<string, unknown> | undefined) {
+    this.setState({
+      content: {
+        ...this.state.content,
+        output,
+      },
+    });
+  }
 }
 
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   const { content, opened, working, error } = model.useState();
   const hasInput = Object.keys(content.input).length > 0;
-  const styles = useStyles2(getStyles, !!error, working, hasInput);
+  const hasOutput = Boolean(content.output && Object.keys(content.output).length > 0);
+  const styles = useStyles2(getStyles, !!error, working, hasInput || hasOutput);
+
+  console.log('ToolRenderer state:', { content, hasOutput, output: content.output });
 
   const renderValue = (key: string, value: unknown) => {
     if (typeof value === 'object' && value !== null) {
@@ -69,9 +82,9 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
     <div className={styles.container}>
       <div
         className={styles.header}
-        role={hasInput ? 'button' : undefined}
+        role={hasInput || hasOutput ? 'button' : undefined}
         onClick={
-          hasInput
+          hasInput || hasOutput
             ? (evt) => {
                 evt.stopPropagation();
                 model.toggleOpened();
@@ -83,17 +96,34 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
 
         <span className={styles.name}>{content.name}</span>
 
-        {hasInput && <Icon name={opened ? 'angle-up' : 'angle-down'} size="sm" />}
+        {(hasInput || hasOutput) && <Icon name={opened ? 'angle-up' : 'angle-down'} size="sm" />}
       </div>
 
-      {opened && hasInput && (
+      {opened && (hasInput || hasOutput) && (
         <div className={styles.details}>
-          {Object.entries(content.input).map(([key, value]) => (
-            <div key={key} className={styles.detailsRow}>
-              <span className={styles.detailsKey}>{key}:</span>
-              <span className={styles.detailsValue}>{renderValue(key, value)}</span>
-            </div>
-          ))}
+          {hasInput && (
+            <>
+              <div className={styles.sectionHeader}>Input</div>
+              {Object.entries(content.input).map(([key, value]) => (
+                <div key={key} className={styles.detailsRow}>
+                  <span className={styles.detailsKey}>{key}:</span>
+                  <span className={styles.detailsValue}>{renderValue(key, value)}</span>
+                </div>
+              ))}
+            </>
+          )}
+
+          {hasOutput && (
+            <>
+              <div className={styles.sectionHeader}>Output</div>
+              {Object.entries(content.output!).map(([key, value]) => (
+                <div key={key} className={styles.detailsRow}>
+                  <span className={styles.detailsKey}>{key}:</span>
+                  <span className={styles.detailsValue}>{renderValue(key, value)}</span>
+                </div>
+              ))}
+            </>
+          )}
 
           {error && <div className={styles.detailsError}>{error}</div>}
         </div>
@@ -194,5 +224,14 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     marginTop: theme.spacing(1),
     color: theme.colors.error.main,
     fontSize: '0.85em',
+  }),
+  sectionHeader: css({
+    label: 'dash-message-tool-section-header',
+    gridColumn: '1 / -1',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(0.5),
+    fontWeight: 500,
+    color: theme.colors.text.secondary,
+    fontSize: '0.9em',
   }),
 });

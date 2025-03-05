@@ -9,6 +9,7 @@ import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 import { getAgent } from '../../agent/agent';
 import { toolsByName } from '../../agent/tools';
 import { getChat, getDash, getMessages } from '../utils';
+import { Tool } from '../DashMessage/Tool';
 
 import { Input } from './Input';
 import { Logger } from './Logger';
@@ -185,7 +186,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       if (selectedTool) {
         getMessages(this).setToolWorking(toolCall.id, true);
 
-        let toolResponse;
+        let toolResponse: ToolMessage;
         try {
           try {
             toolResponse = await selectedTool.invoke(toolCall);
@@ -209,6 +210,25 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             content: toolResponse.content,
             type: 'tool_response',
           });
+
+          // Set the tool's output
+          getMessages(this).state.messages.forEach((message) => {
+            message.state.children.forEach((child) => {
+              if (child instanceof Tool) {
+                const tool = child as Tool;
+                if (tool.state.content.id === toolCall.id) {
+                  try {
+                    const output = JSON.parse(toolResponse.content as string);
+                    tool.setOutput(output);
+                  } catch (e) {
+                    // If the response isn't JSON, set it as a string
+                    tool.setOutput({ result: toolResponse.content as string });
+                  }
+                }
+              }
+            });
+          });
+
           getMessages(this).addLangchainMessage(toolResponse);
           this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
 

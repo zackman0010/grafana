@@ -22,6 +22,7 @@ export interface ToolContent {
   id: string;
   name: string;
   input: Record<string, unknown>;
+  output?: Record<string, unknown>;
 }
 
 export interface PanelConfiguration {
