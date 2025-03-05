@@ -13,6 +13,7 @@ import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
+import { updateDashboardPanelTool } from './updateDashboardPanel';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -52,6 +53,7 @@ export const tools = [
   grafanaDocsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
+  updateDashboardPanelTool,
 ];
 
 export const toolsByName = tools.reduce(
@@ -61,4 +63,3 @@ export const toolsByName = tools.reduce(
   },
   {} as Record<string, (typeof tools)[number]>
 );
-
