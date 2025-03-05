@@ -85,7 +85,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
 
   const codeOverflowText = codeOverflow === 'scroll' ? 'Enable soft wrap' : 'Disable soft wrap';
   const showToolsText = showTools ? 'Hide tools' : 'Show tools';
-  const modeText = mode === 'floating' ? 'View as chat window' : 'View as sidebar';
+  const modeText = mode === 'floating' ? 'View as sidebar' : 'View as chat window';
 
   return (
     <div className={styles.container}>
