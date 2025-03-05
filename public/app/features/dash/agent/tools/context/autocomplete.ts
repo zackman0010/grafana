@@ -4,7 +4,19 @@ import { backendSrv } from 'app/core/services/backend_srv';
 import { getDataSources } from 'app/features/datasources/api';
 import { DashboardSearchItem } from 'app/features/search/types';
 
-const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
+const providers = [
+  'Dasboards',
+  'Metrics',
+  'Datasources',
+  'Labels',
+  'Investigations',
+  'Incidents',
+  'People',
+  'OnCall schedules',
+  'Alerts',
+  'SLOs',
+  'Scopes',
+];
 //const providers = ['dashboard', 'datasource'];
 
 export function dataProvider(token: string) {
@@ -33,9 +45,9 @@ export function getProviderTriggers(component: React.FunctionComponent<{ entity:
 
 function getDataProviderForTrigger(trigger: string) {
   switch (trigger) {
-    case 'datasource':
+    case 'Datasources':
       return datasourceDataProvider;
-    case 'dashboard':
+    case 'Dashboards':
       return dashboardDataProvider;
     default:
       return notImplementedDataProvider;
@@ -76,5 +88,5 @@ export async function getDashboards(): Promise<DashboardSearchItem[]> {
 }
 
 function notImplementedDataProvider() {
-  return ['not', 'yet', 'implemented'];
+  return ['coming', 'soon', "don't forget to vote"];
 }
