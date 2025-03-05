@@ -17,6 +17,7 @@ import { prometheusRangeQueryTool } from './prometheusRangeQuery';
 import { readDashboardPanelsTool } from './tool_read_dashboard_panels';
 import { simulateToolError } from './tool_simulate_tool_error';
 import { updateDashboardPanelsTool } from './tool_update_dashboard_panels';
+import { createDashboardTool } from './tool_create_dashboard';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -60,6 +61,7 @@ export const tools = [
   updateDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,
   simulateToolError,
+  createDashboardTool,
 ];
 
 export const toolsByName = tools.reduce(
