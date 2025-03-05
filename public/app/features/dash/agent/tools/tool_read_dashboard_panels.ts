@@ -9,7 +9,7 @@ const dashboardPanelsSchema = z.object({
   id: z.string().optional().describe('Panel ID'),
 });
 
-export const dashboardPanelsTool = tool(
+export const readDashboardPanelsTool = tool(
   async (input) => {
     if (!(window.__grafanaSceneContext instanceof DashboardScene)) {
       return '{}';
@@ -37,7 +37,7 @@ export const dashboardPanelsTool = tool(
     );
   },
   {
-    name: 'dashboard_panels',
+    name: 'read_dashboard_panels',
     description: 'List panels in the current dashboard. Optionally pass a panel ID to get a specific details.',
     schema: dashboardPanelsSchema,
   }

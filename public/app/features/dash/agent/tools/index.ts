@@ -1,6 +1,5 @@
 import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
-import { dashboardPanelsTool } from './dashboardPanels';
 import { getCurrentTimeTool } from './getCurrentTime';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
@@ -15,6 +14,7 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
+import { readDashboardPanelsTool } from './tool_read_dashboard_panels';
 import { updateDashboardPanelTool } from './updateDashboardPanel';
 
 const grafanaComSearch = new TavilySearchResults({
@@ -46,7 +46,7 @@ export const tools = [
   prometheusMetricSearchTool,
   prometheusInstantQueryTool,
   prometheusRangeQueryTool,
-  dashboardPanelsTool,
+  readDashboardPanelsTool,
   lokiLabelNamesTool,
   lokiLabelValuesTool,
   navigateToExploreTool,
