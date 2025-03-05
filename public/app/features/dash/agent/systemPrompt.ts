@@ -19,7 +19,7 @@ Extract and use this time for any time-based operations.
 IMPORTANT TIMESTAMP USAGE:
 - Timestamp values passed to tools should be in milliseconds since epoch.
 - NEVER use binary expressions or calculations in the parameters
-- Correct: start=1719566062148, end=1741166062148
+- Correct example: start=1719566062148, end=1741166062148
 - Calculate time values before calling this tool
 
 ## Tone
