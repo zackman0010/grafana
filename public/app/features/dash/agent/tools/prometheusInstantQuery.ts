@@ -6,7 +6,7 @@ import { CoreApp, dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
-import { buildPanelJson } from './buildPanelJson' ;
+import { buildPanelJson } from './buildPanelJson';
 import { summarizePrometheusQueryResult } from './prometheusQuerySummarizer';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
@@ -63,7 +63,7 @@ export const prometheusInstantQueryTool = tool(
     );
 
     let panelJson = null;
-    if (result?.data?.length > 0) {
+    if (result?.data?.length > 0 && result?.data[0]?.fields?.[0]?.values?.length > 0) {
       let type = 'stat';
       let transformations: any[] = [];
       if (result?.data[0]?.fields?.[0]?.values?.length > 1) {
@@ -104,7 +104,7 @@ export const prometheusInstantQueryTool = tool(
               },
               indexByName: {
                 Time: 0,
-                Value: 999,
+                Value: -1,
               },
               renameByName: {},
               includeByName: {},
