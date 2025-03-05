@@ -6,6 +6,7 @@ import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
+import { buildPanelJson } from './buildPanelJson';
 import { summarizePrometheusQueryResult } from './prometheusQuerySummarizer';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
@@ -27,11 +28,13 @@ const prometheusRangeQuerySchema = z.object({
   summarize: z
     .string()
     .optional()
-    .describe('Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage trends" or "Identify spikes in error rates"'),
+    .describe(
+      'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage trends" or "Identify spikes in error rates"'
+    ),
 });
 
 export const prometheusRangeQueryTool = tool(
-  async (input): Promise<string> => {
+  async (input) => {
     const parsedInput = prometheusRangeQuerySchema.parse(input);
     const { datasource_uid, query, start, end, summarize } = parsedInput;
     const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
@@ -41,7 +44,7 @@ export const prometheusRangeQueryTool = tool(
     const promDatasource = datasource as PrometheusDatasource;
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
     const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
-    const q = { ...defaultQuery, expr: query, range: true, instant: false };
+    const q = { ...defaultQuery, legendFormat:"__auto", expr: query, range: true, instant: false };
     const result = await lastValueFrom(
       promDatasource.query({
         requestId: '1',
@@ -55,23 +58,22 @@ export const prometheusRangeQueryTool = tool(
         startTime: timeRange.from.valueOf(),
       })
     );
-    
+
+    const panelJson = buildPanelJson(timeRange, 'timeseries', 'Prometheus Range Query', 'Prometheus Range Query', q);
+
     // If summarize parameter is provided, use the LLM-based summarizer
     if (summarize) {
-      return await summarizePrometheusQueryResult(
-        'range',
-        query,
-        result,
-        summarize,
-        {
+      return [
+        await summarizePrometheusQueryResult('range', query, result, summarize, {
           from: timeRange.from.toISOString(),
-          to: timeRange.to.toISOString()
-        }
-      );
+          to: timeRange.to.toISOString(),
+        }),
+        panelJson,
+      ];
     }
-    
+
     // Otherwise return the raw result
-    return JSON.stringify(result);
+    return [JSON.stringify(result), panelJson];
   },
   {
     name: 'prometheus_range_query',
@@ -96,5 +98,6 @@ export const prometheusRangeQueryTool = tool(
     - "Analyze memory utilization patterns"
     `,
     schema: prometheusRangeQuerySchema,
+    responseFormat: 'content_and_artifact',
   }
 );

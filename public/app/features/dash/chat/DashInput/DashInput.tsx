@@ -230,6 +230,9 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           });
 
           getMessages(this).addLangchainMessage(toolResponse);
+          if (toolResponse.artifact) {
+            getMessages(this).addArtifact(toolResponse.artifact);
+          }
           this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
 
           try {

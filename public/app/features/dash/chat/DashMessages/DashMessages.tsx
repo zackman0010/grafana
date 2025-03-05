@@ -130,6 +130,13 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     return message;
   }
 
+  public addArtifact(artifact: any): DashMessage {
+    const message = new DashMessage({ content: artifact, sender: 'ai', type: 'artifact' });
+    this.setState({ messages: [...this.state.messages, message] });
+    getDash(this).persist();
+    return message;
+  }
+
   public addAiMessage(content: MessageContent): DashMessage {
     const message = new DashMessage({ content, sender: 'ai' });
     this.setState({ messages: [...this.state.messages, message] });
