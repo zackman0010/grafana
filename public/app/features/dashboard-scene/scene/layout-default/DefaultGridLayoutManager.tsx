@@ -60,17 +60,17 @@ export class DefaultGridLayoutManager
 
   public readonly descriptor = DefaultGridLayoutManager.descriptor;
 
-  public addPanel(vizPanel: VizPanel) {
+  public addPanel(vizPanel: VizPanel, x = 0, y = 0, width: number = NEW_PANEL_WIDTH, height: number = NEW_PANEL_HEIGHT) {
     const panelId = dashboardSceneGraph.getNextPanelId(this);
 
     vizPanel.setState({ key: getVizPanelKeyForPanelId(panelId) });
     vizPanel.clearParent();
 
     const newGridItem = new DashboardGridItem({
-      height: NEW_PANEL_HEIGHT,
-      width: NEW_PANEL_WIDTH,
-      x: 0,
-      y: 0,
+      height: height,
+      width: width,
+      x: x,
+      y: y,
       body: vizPanel,
       key: getGridItemKeyForPanelId(panelId),
     });
