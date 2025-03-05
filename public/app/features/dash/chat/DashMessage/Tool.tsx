@@ -5,6 +5,7 @@ import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana
 import { Icon, useStyles2 } from '@grafana/ui';
 
 import { getSettings } from '../utils';
+import { JSONPreview } from './JSONPreview';
 
 interface ToolState extends SceneObjectState {
   content: {
@@ -56,6 +57,13 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   const hasInput = Object.keys(content.input).length > 0;
   const styles = useStyles2(getStyles, !!error, working, hasInput);
 
+  const renderValue = (key: string, value: unknown) => {
+    if (typeof value === 'object' && value !== null) {
+      return <JSONPreview value={value} label={key} />;
+    }
+    return String(value);
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -82,7 +90,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
           {Object.entries(content.input).map(([key, value]) => (
             <div key={key} className={styles.detailsRow}>
               <span className={styles.detailsKey}>{key}:</span>
-              <span className={styles.detailsValue}>{String(value)}</span>
+              <span className={styles.detailsValue}>{renderValue(key, value)}</span>
             </div>
           ))}
 
@@ -133,7 +141,6 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
   }),
   icon: css({
     label: 'dash-message-tool-icon',
-
     ...(withError ? { color: theme.colors.warning.main } : {}),
     ...(working
       ? {
