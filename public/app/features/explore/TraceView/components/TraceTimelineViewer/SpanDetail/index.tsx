@@ -252,7 +252,6 @@ export default function SpanDetail(props: SpanDetailProps) {
     traceID,
     spanID,
     logs,
-    tags,
     warnings,
     references,
     stackTraces,

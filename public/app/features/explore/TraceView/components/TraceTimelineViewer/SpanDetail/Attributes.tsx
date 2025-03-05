@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash';
+import { head, sortBy } from 'lodash';
 
 import { IconName, TraceKeyValuePair } from '@grafana/data';
 import { Icon, Stack, Text } from '@grafana/ui';
@@ -6,7 +6,10 @@ import { Icon, Stack, Text } from '@grafana/ui';
 import { SpanLinkDef, TNil } from '../../types';
 import { TraceLink, TraceSpan } from '../../types/trace';
 
+import { getTimeRange } from 'app/core/utils/explore';
+import { useMemo } from 'react';
 import AccordianKeyValues from './AccordianKeyValues';
+import { EntityAssertion } from './EntityAssertion';
 import { getAttributeLinks } from './span-utils';
 
 export type AttributesProps = {
@@ -37,9 +40,20 @@ export const Attributes = ({
   resourceAttributesState,
   detailAttributeItemToggle,
 }: AttributesProps) => {
+  const timeRange = useMemo(() => getTimeRange('utc', { to: 'now', from: 'now-1d' }, 0), [])
   // Order matters
   const standardAttributeResources = {
-    service: { icon: 'application-observability', title: 'Service' },
+    service: {
+      icon: 'application-observability', title: 'Service', component: ({ span }: { span: TraceKeyValuePair[] }) => {
+        const serviceName = span.find((attribute) => attribute.key === 'service.name')?.value
+        if (!serviceName) {
+          return null
+        }
+
+        const serviceNamespace = span.find((attribute) => attribute.key === 'service.namespace')?.value
+        return <EntityAssertion name={`otel-demo-${serviceName}`} namespace={serviceNamespace} range={timeRange} />
+      }
+    },
     'gf.feo11y': { icon: 'frontend-observability', title: 'Grafana RUM' },
     k8s: { icon: 'kubernetes', title: 'Kubernetes' },
     'telemetry.sdk': { icon: 'graph-bar', title: 'Telemetry SDK' },
@@ -107,22 +121,25 @@ export const Attributes = ({
         <>
           <Text weight="bold">Resource attributes</Text>
           {sortedGroupedByResourceAttributes.map(([key, { attributes, linksMap }]) => {
-            const { icon, title = 'Other' } =
+            const { icon, title = 'Other', component: AssertionsWidget } =
               standardAttributeResources[key as keyof typeof standardAttributeResources] || {};
             const headerLink = sortBy(Object.values(linksMap), (link) => link.href.length ?? 0)
               .reverse()
               .at(0);
             return (
-              <AccordianKeyValues
-                key={key}
-                data={attributes}
-                label={getLabelTitle(title, icon)}
-                linksGetter={linksGetter}
-                isOpen={resourceAttributesState.openedItems.has(key)}
-                onToggle={() => detailAttributeItemToggle(span.spanID, key)}
-                headerLink={headerLink}
-                links={links}
-              />
+              <>
+                <AccordianKeyValues
+                  key={key}
+                  widget={AssertionsWidget ? <AssertionsWidget span={attributes} /> : undefined}
+                  data={attributes}
+                  label={getLabelTitle(title, icon)}
+                  linksGetter={linksGetter}
+                  isOpen={resourceAttributesState.openedItems.has(key)}
+                  onToggle={() => detailAttributeItemToggle(span.spanID, key)}
+                  headerLink={headerLink}
+                  links={links}
+                  withSummary={!!AssertionsWidget ? false : true}
+                /></>
             );
           })}
         </>

@@ -106,6 +106,7 @@ export type AccordianKeyValuesProps = {
   withSummary?: boolean;
   headerLink?: SpanLinkDef;
   links: SpanLinkDef[];
+  widget?: React.ReactNode;
 };
 
 interface KeyValuesSummaryProps {
@@ -147,6 +148,7 @@ export default function AccordianKeyValues({
   withSummary = true,
   headerLink,
   links,
+  widget: AssertionsWidget
 }: AccordianKeyValuesProps) {
   const isEmpty = (!Array.isArray(data) || !data.length) && !logName;
   const styles = useStyles2(getStyles);
@@ -171,27 +173,30 @@ export default function AccordianKeyValues({
 
   return (
     <div className={cx(className, styles.container)}>
-      <div
-        className={cx(styles.header, {
-          [styles.headerEmpty]: isEmpty,
-          [styles.headerHighContrast]: highContrast && !isEmpty,
-        })}
-        {...headerProps}
-        data-testid="AccordianKeyValues--header"
-      >
-        {arrow}
-        <strong className={styles.headerTitle} data-test={markers.LABEL}>
-          {label}
-          {showDataSummaryFields && ':'}
-        </strong>
-        {headerLink && (
-          <AccordionHeaderLink href={headerLink.href} title={headerLink.title} className={styles.headerLink} />
-        )}
-        {showDataSummaryFields && (
-          <span>
-            <KeyValuesSummary data={data} />
-          </span>
-        )}
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', justifyContent: 'space-between' }}>
+        <div
+          className={cx(styles.header, {
+            [styles.headerEmpty]: isEmpty,
+            [styles.headerHighContrast]: highContrast && !isEmpty,
+          })}
+          {...headerProps}
+          data-testid="AccordianKeyValues--header"
+        >
+          {arrow}
+          <strong className={styles.headerTitle} data-test={markers.LABEL}>
+            {label}
+            {showDataSummaryFields && ':'}
+          </strong>
+          {headerLink && (
+            <AccordionHeaderLink href={headerLink.href} title={headerLink.title} className={styles.headerLink} />
+          )}
+          {showDataSummaryFields && (
+            <span>
+              <KeyValuesSummary data={data} />
+            </span>
+          )}
+        </div>
+        {AssertionsWidget}
       </div>
       {isOpen && <KeyValuesTable data={tableFields} linksGetter={linksGetter} links={links} />}
     </div>
