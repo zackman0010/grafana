@@ -19,6 +19,7 @@ import { readDashboardPanelsTool } from './toolReadDashboardPanels';
 import { simulateToolError } from './toolSimulateToolError';
 import { updateDashboardPanelsTool } from './toolUpdateDashboardPanels';
 import { addDashboardPanelsTool } from './toolAddDashboardPanels';
+import { navigateToDeclareIncidentTool } from './navigateToDeclareIncident';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -59,6 +60,7 @@ export const tools = [
   grafanaDocsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
+  navigateToDeclareIncidentTool,
   updateDashboardPanelsTool,
   addDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,
