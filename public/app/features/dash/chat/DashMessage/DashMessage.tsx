@@ -222,6 +222,7 @@ const getStyles = (
 
     ...(sender === 'user' && {
       marginTop: theme.spacing(1),
+      fontWeight: theme.typography.fontWeightBold,
       '& p': {
         color: theme.colors.text.primary,
       },
