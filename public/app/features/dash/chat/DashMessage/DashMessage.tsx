@@ -81,6 +81,18 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
     this.setState({ editedMessage });
   }
 
+  public setToolError(id: string | undefined, error: string) {
+    if (!id) {
+      return;
+    }
+
+    this.state.children.forEach((child) => {
+      if (child instanceof Tool && child.state.content.id === id) {
+        child.setError(error);
+      }
+    });
+  }
+
   public setToolWorking(id: string | undefined, working: boolean) {
     if (!id) {
       return;

@@ -7,7 +7,9 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
+import { makeSingleRequest } from '../../agent/singleRequest';
 import { generateSystemPrompt } from '../../agent/systemPrompt';
+import { getCurrentContext } from '../../agent/tools/context';
 import { DashMessage } from '../DashMessage';
 import { SerializedDashMessages } from '../types';
 import { getChat, getChatInstance, getDash, getInput } from '../utils';
@@ -41,9 +43,45 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
   }
 
   private _activationHandler() {
+    if (this.state.messages.length === 0) {
+      this.generateWelcomeMessage();
+    }
+
     return () => {
       this.exitSelectMode(false);
     };
+  }
+
+  public async generateWelcomeMessage() {
+    try {
+      this.setState({ generatingWelcome: true });
+      const context = getCurrentContext();
+      let contextPrompt = `You are a helpful AI agent for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
+      if (context.time_range) {
+        contextPrompt += `The selected time range is ${context.time_range.text}. `;
+      }
+      if (context.datasource.type !== 'Unknown') {
+        contextPrompt += `The current data source type is ${context.datasource.type}. `;
+      }
+      if (context.query.expression) {
+        contextPrompt += `The current query is \`${context.query.expression}\`. `;
+      }
+      contextPrompt +=
+        'Generate a concise overview message using as few words as possible, that introduces yourself as an "agent" (never assistant) and includes what the current page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
+
+      const welcomeMessage = await makeSingleRequest({
+        systemPrompt: contextPrompt,
+        userMessage: 'Generate a welcome message',
+      });
+      console.log('Generated welcome message:', welcomeMessage);
+      this.addSystemMessage(welcomeMessage);
+    } catch (error) {
+      console.error('Error generating welcome message:', error);
+      this.addSystemMessage("Hello! I'm your Grafana AI agent. How can I help you today?");
+    } finally {
+      this.setState({ generatingWelcome: false });
+      getDash(this).persist();
+    }
   }
 
   public addLangchainMessage(message: HumanMessage | AIMessageChunk | SystemMessage) {
@@ -132,13 +170,10 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     }
   }
 
-  public setGeneratingWelcome(generatingWelcome: boolean) {
-    if (generatingWelcome !== this.state.generatingWelcome) {
-      this.setState({ generatingWelcome });
-    }
+  public setToolError(toolId: string | undefined, error: string) {
+    this.state.messages.forEach((message) => message.setToolError(toolId, error));
+    getDash(this).persist();
   }
-
-  public setToolError(toolId: string | undefined, error: string) {}
 
   public setToolWorking(toolId: string | undefined, working: boolean) {
     this.state.messages.forEach((message) => message.setToolWorking(toolId, working));

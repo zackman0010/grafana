@@ -5,20 +5,18 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Dropdown, Icon, IconButton, Menu, Tab, TabsBar, useStyles2 } from '@grafana/ui';
 
-import { makeSingleRequest } from '../agent/singleRequest';
-import { getCurrentContext } from '../agent/tools/context';
-
 import { DashChat } from './DashChat';
 import { DashChatInstance } from './DashChatInstance';
 import { DashMessage } from './DashMessage';
 import { DashMessages } from './DashMessages';
 import { DashSettings } from './DashSettings';
-import { Mode, SerializedDash } from './types';
-import { getPersistedSetting, persistSetting } from './utils';
+import { DashStorage } from './DashStorage';
+import { Mode } from './types';
 
 interface DashState extends SceneObjectState {
   chats: DashChat[];
   chatIndex: number;
+  initializing: boolean;
   opened: boolean;
   settings: DashSettings;
 }
@@ -27,116 +25,87 @@ export class Dash extends SceneObjectBase<DashState> {
   public static Component = DashRenderer;
 
   private _chatNumber = 2;
+  private _savingPromise: Promise<void> | undefined;
 
   public get renderBeforeActivation(): boolean {
     return true;
   }
 
   public constructor() {
-    let chats: DashChat[] = [];
-    let chatIndex: number | undefined;
-    let chatNumber: number | undefined;
-
-    try {
-      const settings = getPersistedSetting('state') ?? '';
-
-      if (settings) {
-        const parsedSettings = JSON.parse(settings) as SerializedDash;
-        chats = parsedSettings.chats.map(
-          (chat) =>
-            new DashChat({
-              name: chat.name,
-              versionIndex: chat.versionIndex,
-              versions: chat.versions.map(
-                (instance) =>
-                  new DashChatInstance({
-                    timestamp: new Date(instance.timestamp),
-                    messages: new DashMessages({
-                      messages: instance.messages.messages.map(
-                        (message) =>
-                          new DashMessage({
-                            content: message.content,
-                            sender: message.sender,
-                          })
-                      ),
-                      langchainMessages: mapStoredMessagesToChatMessages(instance.messages.langchainMessages),
-                    }),
-                  })
-              ),
-            })
-        );
-
-        chatIndex = parsedSettings.chatIndex;
-        chatNumber = parsedSettings.chatNumber;
-      }
-    } catch (err) {}
-
-    if (chats.length === 0) {
-      chats = [new DashChat({ name: 'Chat 1' })];
-    }
-
     super({
-      chats,
-      chatIndex: chatIndex !== undefined && chats[chatIndex] ? chatIndex : chats.length - 1,
-      opened: getPersistedSetting('opened') === 'true',
+      chats: [new DashChat({ name: 'Chat 1' })],
+      chatIndex: 0,
+      initializing: true,
+      opened: false,
       settings: new DashSettings(),
     });
 
-    this._chatNumber = chatNumber ?? 2;
+    this.addActivationHandler(() => this._activationHandler());
 
     this.activate();
     this.state.settings.activate();
-
-    // Generate welcome message for the initial chat
-    const messages = this.state.chats[0]?.state.versions[0]?.state.messages;
-    this.generateWelcomeMessage(messages).then((welcomeMessage) => {
-      if (messages) {
-        messages.addSystemMessage(welcomeMessage);
-      }
-    });
   }
 
-  private async generateWelcomeMessage(messages?: any): Promise<string> {
-    try {
-      if (!messages) {
-        return "Hello! I'm your Grafana AI agent. How can I help you today?";
-      }
+  private _activationHandler() {
+    Promise.all([
+      DashStorage.instance.getSettings().then((settings) => this.state.settings.setState(settings)),
+      DashStorage.instance.getChat().then((dash) => {
+        let chats: DashChat[] = [];
+        let chatIndex: number | undefined;
+        let chatNumber: number | undefined;
+        let opened: boolean | undefined;
 
-      messages.setGeneratingWelcome(true);
-      const context = getCurrentContext();
-      let contextPrompt = `You are a helpful AI agent for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
-      if (context.time_range) {
-        contextPrompt += `The selected time range is ${context.time_range.text}. `;
-      }
-      if (context.datasource.type !== 'Unknown') {
-        contextPrompt += `The current data source type is ${context.datasource.type}. `;
-      }
-      if (context.query.expression) {
-        contextPrompt += `The current query is \`${context.query.expression}\`. `;
-      }
-      contextPrompt +=
-        'Generate a concise overview message using as few words as possible, that introduces yourself as an "agent" (never assistant) and includes what the current page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
+        try {
+          if (dash) {
+            chats = dash.chats.map(
+              (chat) =>
+                new DashChat({
+                  name: chat.name,
+                  versionIndex: chat.versionIndex,
+                  versions: chat.versions.map(
+                    (instance) =>
+                      new DashChatInstance({
+                        timestamp: new Date(instance.timestamp),
+                        messages: new DashMessages({
+                          messages: instance.messages.messages.map(
+                            (message) =>
+                              new DashMessage({
+                                content: message.content,
+                                sender: message.sender,
+                              })
+                          ),
+                          langchainMessages: mapStoredMessagesToChatMessages(instance.messages.langchainMessages),
+                        }),
+                      })
+                  ),
+                })
+            );
 
-      const welcomeMessage = await makeSingleRequest({
-        systemPrompt: contextPrompt,
-        userMessage: 'Generate a welcome message',
-      });
-      console.log('Generated welcome message:', welcomeMessage);
-      return welcomeMessage;
-    } catch (error) {
-      console.error('Error generating welcome message:', error);
-      return "Hello! I'm your Grafana AI agent. How can I help you today?";
-    } finally {
-      if (messages) {
-        messages.setGeneratingWelcome(false);
-      }
-    }
+            chatIndex = dash.chatIndex;
+            chatNumber = dash.chatNumber;
+            opened = dash.opened;
+          }
+        } catch (err) {}
+
+        if (chats.length === 0) {
+          chats = [new DashChat({ name: 'Chat 1' })];
+        }
+
+        this._chatNumber = chatNumber ?? 2;
+
+        this.setState({
+          chats,
+          chatIndex: chatIndex !== undefined && chats[chatIndex] ? chatIndex : chats.length - 1,
+          opened: opened ?? false,
+        });
+      }),
+    ]).finally(() => this.setState({ initializing: false }));
   }
 
   public setOpened(opened: boolean) {
     if (opened !== this.state.opened) {
       this.setState({ opened });
-      persistSetting('opened', String(opened));
+      this.persist();
     }
   }
 
@@ -153,15 +122,7 @@ export class Dash extends SceneObjectBase<DashState> {
   public async addChat() {
     const newChat = new DashChat({ name: `Chat ${this._chatNumber++}` });
     const newChatIndex = this.state.chats.length;
-    const messages = newChat.state.versions[0]?.state.messages;
-
-    // Add the new chat and switch to it immediately
     this.setState({ chats: [...this.state.chats, newChat], chatIndex: newChatIndex });
-    this.persist();
-
-    // Generate welcome message in the background
-    const welcomeMessage = await this.generateWelcomeMessage(messages);
-    messages.addSystemMessage(welcomeMessage);
     this.persist();
   }
 
@@ -178,25 +139,34 @@ export class Dash extends SceneObjectBase<DashState> {
     this.persist();
   }
 
-  public persist() {
-    persistSetting('state', JSON.stringify(this.toJSON()));
-  }
+  public async persist() {
+    if (this._savingPromise) {
+      await this._savingPromise;
+    }
 
-  public toJSON(): SerializedDash {
-    return {
-      chats: this.state.chats.map((chat) => chat.toJSON()),
-      chatIndex: this.state.chatIndex,
-      chatNumber: this._chatNumber,
-    };
+    DashStorage.instance
+      .setChat({
+        chats: this.state.chats.map((chat) => chat.toJSON()),
+        chatIndex: this.state.chatIndex,
+        chatNumber: this._chatNumber,
+        opened: this.state.opened,
+      })
+      .finally(() => {
+        this._savingPromise = undefined;
+      });
   }
 }
 
 function DashRenderer({ model }: SceneComponentProps<Dash>) {
-  const { chatIndex, settings, chats } = model.useState();
+  const { chatIndex, initializing, settings, chats } = model.useState();
   const { mode } = settings.useState();
   const chat = chats[chatIndex]!;
   const { versions } = chat.useState();
   const styles = useStyles2(getStyles, mode, versions.length > 1);
+
+  if (initializing) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
