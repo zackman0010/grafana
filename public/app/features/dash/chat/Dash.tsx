@@ -12,7 +12,6 @@ import { DashMessages } from './DashMessages';
 import { DashSettings } from './DashSettings';
 import { DashStorage } from './DashStorage';
 import { Mode } from './types';
-import { getPersistedSetting, persistSetting } from './utils';
 
 interface DashState extends SceneObjectState {
   chats: DashChat[];
@@ -37,7 +36,7 @@ export class Dash extends SceneObjectBase<DashState> {
       chats: [new DashChat({ name: 'Chat 1' })],
       chatIndex: 0,
       initializing: true,
-      opened: getPersistedSetting('opened') === 'true',
+      opened: false,
       settings: new DashSettings(),
     });
 
@@ -54,6 +53,7 @@ export class Dash extends SceneObjectBase<DashState> {
         let chats: DashChat[] = [];
         let chatIndex: number | undefined;
         let chatNumber: number | undefined;
+        let opened: boolean | undefined;
 
         try {
           if (dash) {
@@ -83,6 +83,7 @@ export class Dash extends SceneObjectBase<DashState> {
 
             chatIndex = dash.chatIndex;
             chatNumber = dash.chatNumber;
+            opened = dash.opened;
           }
         } catch (err) {}
 
@@ -95,6 +96,7 @@ export class Dash extends SceneObjectBase<DashState> {
         this.setState({
           chats,
           chatIndex: chatIndex !== undefined && chats[chatIndex] ? chatIndex : chats.length - 1,
+          opened: opened ?? false,
         });
       }),
     ]).finally(() => this.setState({ initializing: false }));
@@ -103,7 +105,7 @@ export class Dash extends SceneObjectBase<DashState> {
   public setOpened(opened: boolean) {
     if (opened !== this.state.opened) {
       this.setState({ opened });
-      persistSetting('opened', String(opened));
+      this.persist();
     }
   }
 
@@ -147,6 +149,7 @@ export class Dash extends SceneObjectBase<DashState> {
         chats: this.state.chats.map((chat) => chat.toJSON()),
         chatIndex: this.state.chatIndex,
         chatNumber: this._chatNumber,
+        opened: this.state.opened,
       })
       .finally(() => {
         this._savingPromise = undefined;

@@ -7,6 +7,7 @@ import { IconButton, useStyles2 } from '@grafana/ui';
 
 import { DashStorage } from './DashStorage';
 import { Settings, Verbosity } from './types';
+import { persistSetting } from './utils';
 
 type DashSettingsState = Settings & SceneObjectState;
 
@@ -49,6 +50,7 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
   public setVerbosity(verbosity: Verbosity) {
     this.setState({ verbosity });
     this._persist('verbosity', verbosity);
+    persistSetting('verbosity', verbosity);
   }
 
   private async _persist<T extends keyof Settings = keyof Settings>(key: T, value: Settings[T]) {

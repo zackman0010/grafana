@@ -61,4 +61,5 @@ export interface SerializedDash {
   chats: SerializedDashChat[];
   chatIndex: number;
   chatNumber: number;
+  opened: boolean;
 }
