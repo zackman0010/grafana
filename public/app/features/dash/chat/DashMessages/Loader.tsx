@@ -13,6 +13,11 @@ export const Loader = () => {
       <span className={styles.bar}></span>
       <span className={styles.bar}></span>
       <span className={styles.bar}></span>
+      <span className={styles.particle}></span>
+      <span className={styles.particle}></span>
+      <span className={styles.particle}></span>
+      <span className={styles.particle}></span>
+      <span className={styles.particle}></span>
     </div>
   );
 };
@@ -41,6 +46,21 @@ const getPulse = (theme: GrafanaTheme2, startHeight: number, maxHeight: number) 
     },
   });
 
+const getSparkle = (theme: GrafanaTheme2) =>
+  keyframes({
+    '0%': {
+      transform: 'translate(0, 0) scale(1)',
+      opacity: 0,
+    },
+    '20%': {
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'translate(var(--tx), var(--ty)) scale(0)',
+      opacity: 0,
+    },
+  });
+
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     label: 'dash-messages-loader',
@@ -51,6 +71,8 @@ const getStyles = (theme: GrafanaTheme2) => ({
     margin: theme.spacing(2, 0),
     height: theme.spacing(2),
     alignItems: 'flex-end',
+    position: 'relative',
+    width: 'fit-content',
   }),
   bar: css({
     label: 'dash-messages-loader-bar',
@@ -111,6 +133,74 @@ const getStyles = (theme: GrafanaTheme2) => ({
         animationDelay: '0.9s',
         animationName: getPulse(theme, 0.9, 1.9),
         animationDuration: '1.5s',
+      },
+    },
+  }),
+  particle: css({
+    label: 'dash-messages-loader-particle',
+    position: 'absolute',
+    width: theme.spacing(0.2),
+    height: theme.spacing(0.2),
+    backgroundColor: theme.colors.text.primary,
+    borderRadius: theme.shape.radius.circle,
+    opacity: 0,
+    '--tx': '0px',
+    '--ty': '0px',
+
+    [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+      animationName: getSparkle(theme),
+      animationDuration: '1s',
+      animationIterationCount: 'infinite',
+      animationTimingFunction: 'ease-out',
+    },
+
+    '&:nth-child(6)': {
+      top: '60%',
+      left: '5%',
+      '--tx': '8px',
+      '--ty': '-20px',
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.2s',
+      },
+    },
+
+    '&:nth-child(7)': {
+      top: '50%',
+      left: '25%',
+      '--tx': '-6px',
+      '--ty': '-25px',
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.4s',
+      },
+    },
+
+    '&:nth-child(8)': {
+      top: '55%',
+      left: '45%',
+      '--tx': '10px',
+      '--ty': '-18px',
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.6s',
+      },
+    },
+
+    '&:nth-child(9)': {
+      top: '45%',
+      left: '65%',
+      '--tx': '-8px',
+      '--ty': '-22px',
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.8s',
+      },
+    },
+
+    '&:nth-child(10)': {
+      top: '50%',
+      left: '85%',
+      '--tx': '6px',
+      '--ty': '-28px',
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '1s',
       },
     },
   }),
