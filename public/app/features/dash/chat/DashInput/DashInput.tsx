@@ -263,11 +263,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             error instanceof Error ? error.message : 'An error occurred while executing the tool'
           );
           getMessages(this).setToolWorking(toolCall.id, false);
-          getMessages(this).addSystemMessage(
-            error instanceof Error ? error.message : 'An error occurred while executing the tool',
-            false,
-            true
-          );
           console.error(`Tool ${toolCall.name} failed:`, error);
         }
       }
