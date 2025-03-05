@@ -99,8 +99,8 @@ export const addDashboardPanelsTool = tool(
     });
   },
   {
-    name: 'add_dashboard_panel',
-    description: `Adds a new panel to the current dashboard A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
+    name: 'add_dashboard_panels',
+    description: `Adds new panels to the current dashboard A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
   
       The pluginId is the ID of the panel plugin to use. It is a string that uniquely identifies the panel plugin.
       The options are the configuration options for the panel. They are a record of key-value pairs.
