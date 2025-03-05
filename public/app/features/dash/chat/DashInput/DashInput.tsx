@@ -8,8 +8,8 @@ import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 
 import { getAgent } from '../../agent/agent';
 import { toolsByName } from '../../agent/tools';
-import { getChat, getDash, getMessages } from '../utils';
 import { Tool } from '../DashMessage/Tool';
+import { getChat, getDash, getMessages } from '../utils';
 
 import { Input } from './Input';
 import { Logger } from './Logger';

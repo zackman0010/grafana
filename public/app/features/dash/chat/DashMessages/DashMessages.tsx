@@ -1,9 +1,11 @@
 import { css } from '@emotion/css';
 import { AIMessageChunk, HumanMessage, MessageContent, SystemMessage } from '@langchain/core/messages';
+import { Location } from 'history';
 import { findLastIndex } from 'lodash';
 import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
+import { locationService } from '@grafana/runtime';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
@@ -47,16 +49,43 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
       this.generateWelcomeMessage();
     }
 
+    const unsubscribeFromHistory = locationService.getHistory().listen(this._handleLocationChange);
+
     return () => {
       this.exitSelectMode(false);
+      unsubscribeFromHistory();
     };
   }
 
+  private prevLocation: Location = locationService.getLocation();
+  private _handleLocationChange = async (location: Location) => {
+    if (this.state.langchainMessages.length > 1 || this.state.messages.length > 1) {
+      return;
+    }
+    if (this.prevLocation.pathname === location.pathname) {
+      return;
+    }
+    this.prevLocation = location;
+    console.log('Location changed, generating a new welcome message.');
+    this.setState({
+      langchainMessages: [new SystemMessage(generateSystemPrompt())],
+      generatingWelcome: false,
+      messages: [],
+    });
+    setTimeout(() => {
+      this.generateWelcomeMessage();
+    }, 0);
+  };
+
   public async generateWelcomeMessage() {
+    if (this.state.generatingWelcome) {
+      console.log('Welcome message already generated, skipping.');
+      return;
+    }
     try {
       this.setState({ generatingWelcome: true });
       const context = getCurrentContext();
-      let contextPrompt = `You are a helpful AI agent for Grafana. The user is currently on the "${context.page.title}" page${context.app.description ? ` (${context.app.description})` : ''}. `;
+      let contextPrompt = `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}. Which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
       if (context.time_range) {
         contextPrompt += `The selected time range is ${context.time_range.text}. `;
       }
