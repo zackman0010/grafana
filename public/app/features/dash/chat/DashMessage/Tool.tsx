@@ -181,7 +181,7 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
             animation: `${spin} 1s linear infinite`,
           },
         }
-      : {}),
+      : { color: theme.colors.text.secondary }),
   }),
   name: css({
     label: 'dash-message-tool-name',
