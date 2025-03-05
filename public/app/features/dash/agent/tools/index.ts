@@ -6,6 +6,7 @@ import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
 import { navigateToDashboardTool } from './navigateToDashboard';
+import { navigateToDeclareIncidentTool } from './navigateToDeclareIncident';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
 import { navigateToExploreTool } from './navigateToExplore';
 import { navigateToOtherTool } from './navigateToOther';
@@ -14,11 +15,11 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
+import { addDashboardPanelsTool } from './toolAddDashboardPanels';
 import { createDashboardTool } from './toolCreateDashboard';
 import { readDashboardPanelsTool } from './toolReadDashboardPanels';
 import { simulateToolError } from './toolSimulateToolError';
 import { updateDashboardPanelsTool } from './toolUpdateDashboardPanels';
-import { addDashboardPanelsTool } from './toolAddDashboardPanels';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -59,6 +60,7 @@ export const tools = [
   grafanaDocsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
+  navigateToDeclareIncidentTool,
   updateDashboardPanelsTool,
   addDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,

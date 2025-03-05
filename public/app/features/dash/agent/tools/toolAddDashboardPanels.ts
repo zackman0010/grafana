@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { SceneDataTransformer, SceneQueryRunner, VizPanel } from '@grafana/scenes';
 
+import { VizPanel } from '@grafana/scenes';
+
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 
 const panelConfigSchema = z.object({

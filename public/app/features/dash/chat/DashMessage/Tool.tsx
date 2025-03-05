@@ -73,8 +73,6 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
   const hasOutput = Boolean(content.output && Object.keys(content.output).length > 0);
   const styles = useStyles2(getStyles, !!content.error, working, hasInput || hasOutput);
 
-  console.log('ToolRenderer state:', { content, hasOutput, output: content.output });
-
   const renderValue = (key: string, value: unknown) => {
     if (typeof value === 'object' && value !== null) {
       return <JSONPreview value={value} label={key} />;
