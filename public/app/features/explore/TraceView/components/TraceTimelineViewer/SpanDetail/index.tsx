@@ -397,20 +397,18 @@ export default function SpanDetail(props: SpanDetailProps) {
         {sessionLinkButton}
       </div>
       <Divider spacing={1} />
-      <div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
-          <Attributes
-            span={span}
-            linksGetter={linksGetter}
-            detailAttributeItemToggle={attributeItemToggle}
-            tagsToggle={tagsToggle}
-            resourceAttributesState={resourceAttributesState}
-            processToggle={processToggle}
-            isTagsOpen={isTagsOpen}
-            isProcessOpen={isProcessOpen}
-            links={links}
-          />
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+        <Attributes
+          span={span}
+          linksGetter={linksGetter}
+          detailAttributeItemToggle={attributeItemToggle}
+          tagsToggle={tagsToggle}
+          resourceAttributesState={resourceAttributesState}
+          processToggle={processToggle}
+          isTagsOpen={isTagsOpen}
+          isProcessOpen={isProcessOpen}
+          links={links}
+        />
         {logs && logs.length > 0 && (
           <AccordianLogs
             linksGetter={linksGetter}
