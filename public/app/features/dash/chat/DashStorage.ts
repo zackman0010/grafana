@@ -73,9 +73,10 @@ export class DashStorage {
         });
 
       request.onsuccess = () => {
-        const result = request.result.reduce((acc, entry) => {
-          acc[entry.id] = entry.value;
-        }, {});
+        const result =
+          request.result?.reduce((acc, entry) => {
+            acc[entry.id] = entry.value;
+          }, {}) ?? {};
 
         result.codeOverflow = result.codeOverflow ?? 'scroll';
         result.mode = result.mode ?? 'sidebar';
