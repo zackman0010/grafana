@@ -8,26 +8,36 @@ export const Loader = () => {
 
   return (
     <div className={styles.container}>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
-      <span className={styles.point}></span>
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
+      <span className={styles.bar}></span>
     </div>
   );
 };
 
-const getBounce = (offset: string) =>
+const getPulse = (theme: GrafanaTheme2, startHeight: number, maxHeight: number) =>
   keyframes({
     '0%': {
-      transform: 'translateY(0)',
+      height: theme.spacing(startHeight),
+      opacity: 0.7,
     },
-    '30%': {
-      transform: `translateY(-${offset})`,
+    '25%': {
+      height: theme.spacing(maxHeight),
+      opacity: 1,
     },
-    '60%': {
-      transform: 'translateY(0)',
+    '50%': {
+      height: theme.spacing(startHeight * 0.8),
+      opacity: 0.8,
+    },
+    '75%': {
+      height: theme.spacing(maxHeight * 0.9),
+      opacity: 0.9,
     },
     '100%': {
-      transform: 'translateY(0)',
+      height: theme.spacing(startHeight),
+      opacity: 0.7,
     },
   });
 
@@ -39,37 +49,68 @@ const getStyles = (theme: GrafanaTheme2) => ({
     gap: theme.spacing(0.25),
     padding: theme.spacing(0.5, 0.5, 0, 0.5),
     margin: theme.spacing(2, 0),
+    height: theme.spacing(2),
+    alignItems: 'flex-end',
   }),
-  point: css({
-    label: 'dash-messages-loader-point',
-    height: theme.spacing(0.5),
+  bar: css({
+    label: 'dash-messages-loader-bar',
     width: theme.spacing(0.5),
-    backgroundColor: theme.colors.text.maxContrast,
-    borderRadius: theme.shape.radius.circle,
+    backgroundColor: theme.colors.text.primary,
+    borderRadius: theme.shape.radius.default,
     display: 'inline-block',
+    transformOrigin: 'bottom',
+    height: theme.spacing(0.5),
+    opacity: 0.7,
 
     [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-      animationName: getBounce(theme.spacing(0.5)),
-      animationDuration: '1s',
+      animationName: getPulse(theme, 0.5, 1.5),
+      animationDuration: '1.2s',
       animationIterationCount: 'infinite',
       animationTimingFunction: 'ease-in-out',
     },
 
     '&:nth-child(1)': {
+      height: theme.spacing(0.8),
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-        animationDelay: '0s',
+        animationDelay: '0.1s',
+        animationName: getPulse(theme, 0.8, 1.8),
+        animationDuration: '1.4s',
       },
     },
 
     '&:nth-child(2)': {
+      height: theme.spacing(0.6),
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-        animationDelay: '0.2s',
+        animationDelay: '0.3s',
+        animationName: getPulse(theme, 0.6, 1.6),
+        animationDuration: '1.1s',
       },
     },
 
     '&:nth-child(3)': {
+      height: theme.spacing(0.7),
       [theme.transitions.handleMotion('no-preference', 'reduce')]: {
-        animationDelay: '0.4s',
+        animationDelay: '0.5s',
+        animationName: getPulse(theme, 0.7, 1.7),
+        animationDuration: '1.3s',
+      },
+    },
+
+    '&:nth-child(4)': {
+      height: theme.spacing(0.5),
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.7s',
+        animationName: getPulse(theme, 0.5, 1.5),
+        animationDuration: '1.2s',
+      },
+    },
+
+    '&:nth-child(5)': {
+      height: theme.spacing(0.9),
+      [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+        animationDelay: '0.9s',
+        animationName: getPulse(theme, 0.9, 1.9),
+        animationDuration: '1.5s',
       },
     },
   }),
