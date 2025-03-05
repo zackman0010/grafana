@@ -4,7 +4,8 @@ import { backendSrv } from 'app/core/services/backend_srv';
 import { getDataSources } from 'app/features/datasources/api';
 import { DashboardSearchItem } from 'app/features/search/types';
 
-const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
+//const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
+const providers = ['dashboard', 'datasource'];
 
 export function dataProvider(token: string) {
   return providers.filter((provider) => provider.startsWith(token));
@@ -59,12 +60,17 @@ async function dashboardDataProvider(token: string) {
   if (!dashboards) {
     await getDashboards();
   }
-  return dashboards.filter(dashboard => dashboard.title.startsWith(actualToken) || dashboard.title.toLowerCase().startsWith(actualToken)).slice(0, 10).map(dashboard => dashboard.title);
+  return dashboards
+    .filter(
+      (dashboard) => dashboard.title.startsWith(actualToken) || dashboard.title.toLowerCase().startsWith(actualToken)
+    )
+    .slice(0, 10)
+    .map((dashboard) => dashboard.title);
 }
 
 export async function getDashboards(): Promise<DashboardSearchItem[]> {
   if (!dashboards) {
-    dashboards = await backendSrv.search({})
+    dashboards = await backendSrv.search({});
   }
   return dashboards;
 }

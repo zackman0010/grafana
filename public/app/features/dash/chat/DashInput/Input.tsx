@@ -112,26 +112,27 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   autoCompleteList: css({
     label: 'dash-input-list',
-    border: `1px solid ${theme.colors.border.medium}`,
-    background: theme.colors.background.secondary,
+    background: theme.colors.background.primary,
+    border: 'none',
 
     '& .rta__entity': {
-      background: theme.colors.background.secondary,
+      background: theme.colors.background.primary,
       color: theme.colors.text.primary,
+      padding: theme.spacing(0.5, 1),
+      fontSize: theme.typography.bodySmall.fontSize,
     },
 
     '& .rta__entity--selected': {
-      background: theme.colors.background.canvas,
+      background: theme.colors.background.secondary,
     },
   }),
   autoCompleteListItem: css({
     label: 'dash-input-list-item',
-    border: `1px solid ${theme.colors.border.medium}`,
+    border: `1px solid ${theme.colors.border.weak}`,
     background: theme.colors.background.secondary,
 
     '&:not(:last-child)': {
-      border: `1px solid ${theme.colors.border.medium}`,
-      background: theme.colors.background.secondary,
+      borderBottom: 'none',
     },
   }),
 });
