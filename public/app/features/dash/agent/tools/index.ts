@@ -13,6 +13,7 @@ import { navigateToOtherTool } from './navigateToOther';
 import { prometheusInstantQueryTool } from './prometheusInstantQuery';
 import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
+import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
 import { updateDashboardPanelTool } from './updateDashboardPanel';
 
@@ -42,6 +43,7 @@ export const tools = [
   listDatasourcesTool,
   prometheusLabelValuesTool,
   prometheusLabelNamesTool,
+  prometheusMetricSearchTool,
   prometheusInstantQueryTool,
   prometheusRangeQueryTool,
   dashboardPanelsTool,

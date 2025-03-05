@@ -7,6 +7,7 @@ import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
 import { getDefaultTimeRange } from '../utils';
 
+import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
 
 const prometheusLabelNamesSchema = z.object({
@@ -27,7 +28,7 @@ const prometheusLabelNamesSchema = z.object({
   regex: z
     .string()
     .optional()
-    .describe('Optional regex pattern to filter label names')
+    .describe(`Optional regex pattern to filter label names. Avoid broad regexes, analyze labels cardinality using ${prometheusMetricSearchTool.name} first to see if the labels contains a lot of values.`)
     .refine(regexRefiner.func, regexRefiner.message),
 });
 
@@ -64,6 +65,7 @@ export const prometheusLabelNamesTool = tool(
        Supports regex pattern (case-insensitive) to filter values.
        Since there can be a lot of values, it is recommended to use a regex pattern to filter the values.
        It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
+       Prefer to use ${prometheusMetricSearchTool.name} for label names and metric discovery first to see if the labels contains a lot of values.
        Default time range is last hour if not specified.`,
     schema: prometheusLabelNamesSchema,
   }

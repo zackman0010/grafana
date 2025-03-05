@@ -5,6 +5,7 @@ import { dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
+import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
 
 const prometheusLabelValuesSchema = z.object({
@@ -26,7 +27,7 @@ const prometheusLabelValuesSchema = z.object({
   regex: z
     .string()
     .optional()
-    .describe('Optional regex pattern to filter label values')
+    .describe(`Optional regex pattern to filter label values. Avoid broad regexes, analyze labels cardinality using ${prometheusMetricSearchTool.name} first to see if the labels contains a lot of values.`)
     .refine(regexRefiner.func, regexRefiner.message),
 });
 
