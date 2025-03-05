@@ -15,10 +15,10 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
-import { createDashboardTool } from './tool_create_dashboard';
-import { readDashboardPanelsTool } from './tool_read_dashboard_panels';
-import { simulateToolError } from './tool_simulate_tool_error';
-import { updateDashboardPanelsTool } from './tool_update_dashboard_panels';
+import { createDashboardTool } from './toolCreateDashboard';
+import { readDashboardPanelsTool } from './toolReadDashboardPanels';
+import { simulateToolError } from './toolSimulateToolError';
+import { updateDashboardPanelsTool } from './toolUpdateDashboardPanels';
 
 const grafanaComSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
