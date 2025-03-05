@@ -5,6 +5,7 @@ import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana
 import { Icon, useStyles2 } from '@grafana/ui';
 
 import { getSettings } from '../utils';
+
 import { JSONPreview } from './JSONPreview';
 
 interface ToolState extends SceneObjectState {
