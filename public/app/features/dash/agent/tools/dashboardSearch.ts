@@ -45,29 +45,21 @@ export const dashboardSearchTool = tool(
 
     const result = dashboards
       .filter(({ stringified, dto }) => {
-        for (let metricNamesIdx = 0; metricNamesIdx < metricNames.length; metricNamesIdx++) {
-          if (stringified.includes(metricNames[metricNamesIdx])) {
-            return true;
-          }
+        const containsMetricName = metricNames.some((metricName) => stringified.includes(metricName));
+
+        if (containsMetricName) {
+          return true;
         }
 
-        for (let queryExpressionsIdx = 0; queryExpressionsIdx < queryExpressions.length; queryExpressionsIdx++) {
-          const expressions = [
-            ...get(dto, 'dashboard.panels', []),
-            ...get(dto, 'dashboard.rows', []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
-          ].reduce<string[]>(
-            (acc, panel) => [...acc, ...(panel.targets.map((target: any) => get(target, 'expr', '')) ?? [])],
-            []
-          );
+        const expressions = [
+          ...get(dto, 'dashboard.panels', []),
+          ...get(dto, 'dashboard.rows', []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
+        ].reduce<string[]>(
+          (acc, panel) => [...acc, ...(panel.targets.map((target: any) => get(target, 'expr', '')) ?? [])],
+          []
+        );
 
-          for (let expressionsIdx = 0; expressionsIdx < expressions.length; expressionsIdx++) {
-            if (expressions[expressionsIdx] === queryExpressions[queryExpressionsIdx]) {
-              return true;
-            }
-          }
-        }
-
-        return false;
+        return queryExpressions.some((queryExpression) => expressions.includes(queryExpression));
       })
       .map(({ dto }) => dashboardsList.find((dashboardListItem) => dashboardListItem.uid === dto.dashboard.uid))
       .filter(Boolean);
