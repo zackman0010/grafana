@@ -14,7 +14,7 @@ import { generateSystemPrompt } from '../../agent/systemPrompt';
 import { getCurrentContext } from '../../agent/tools/context';
 import { DashMessage } from '../DashMessage';
 import { SerializedDashMessages } from '../types';
-import { getChat, getChatInstance, getDash, getInput } from '../utils';
+import { getChat, getChatInstance, getDash, getInput, getSettings } from '../utils';
 
 import { Loader } from './Loader';
 
@@ -227,6 +227,10 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
     }
   }
 
+  public areToolsHidden(): boolean {
+    return !getSettings(this).state.showTools;
+  }
+
   public toJSON(): SerializedDashMessages {
     return {
       messages: this.state.messages.map((message) => message.toJSON()),
@@ -339,7 +343,7 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
         <message.Component model={message} key={message.state.key!} />
       ))}
 
-      {(loading || generatingWelcome) && !anyToolsWorking && <Loader />}
+      {(loading || generatingWelcome) && (!anyToolsWorking || model.areToolsHidden()) && <Loader />}
 
       <div ref={scrollRef} />
     </div>
@@ -355,6 +359,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     overflowY: 'auto',
     padding: theme.spacing(2),
     backgroundColor: theme.colors.background.primary,
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
   }),
 });
