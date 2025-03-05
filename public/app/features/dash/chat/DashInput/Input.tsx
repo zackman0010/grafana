@@ -73,11 +73,15 @@ export const Input = forwardRef<HTMLTextAreaElement, Props>(
               if (!evt.shiftKey) {
                 evt.preventDefault();
                 evt.stopPropagation();
-                evt.target.select();
                 if (loading) {
                   onInterruptAndSend();
                 } else {
                   onSendMessage();
+                  if (!listening) {
+                    onUpdateMessage('');
+                  } else {
+                    evt.target.select();
+                  }
                 }
               }
               break;

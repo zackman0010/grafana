@@ -4,8 +4,8 @@ import { backendSrv } from 'app/core/services/backend_srv';
 import { getDataSources } from 'app/features/datasources/api';
 import { DashboardSearchItem } from 'app/features/search/types';
 
-//const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
-const providers = ['dashboard', 'datasource'];
+const providers = ['dashboard', 'metrics_name', 'label_name', 'datasource', 'label_value'];
+//const providers = ['dashboard', 'datasource'];
 
 export function dataProvider(token: string) {
   return providers.filter((provider) => provider.startsWith(token));
