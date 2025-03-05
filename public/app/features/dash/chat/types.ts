@@ -8,6 +8,13 @@ export type Verbosity = 'concise' | 'educational';
 
 export type Mode = 'floating' | 'sidebar';
 
+export interface Settings {
+  codeOverflow: CodeOverflow;
+  mode: Mode;
+  showTools: boolean;
+  verbosity: Verbosity;
+}
+
 export type Sender = 'user' | 'ai' | 'system' | 'tool_notification';
 
 export interface ToolContent {
