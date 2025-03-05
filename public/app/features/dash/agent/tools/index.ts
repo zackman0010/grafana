@@ -1,5 +1,6 @@
 import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
+import { dashboardSearchTool } from './dashboardSearch';
 import { getCurrentTimeTool } from './getCurrentTime';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
@@ -62,6 +63,7 @@ export const tools = [
   updateDashboardPanelsTool,
   getDrilldownLogToSummarizeTool,
   simulateToolError,
+  dashboardSearchTool,
 ];
 
 export const toolsByName = tools.reduce(
