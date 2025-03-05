@@ -127,30 +127,40 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this.setState({ message });
   }
 
+  public selectText() {
+    if (this._inputRef) {
+      this._inputRef.select();
+    }
+  }
+
   public async cancelRequest() {
+    // Find any working tools and mark them as cancelled
+    const messages = getMessages(this);
+    messages.state.messages.forEach((message) => {
+      message.state.children.forEach((child) => {
+        if (child instanceof Tool && child.state.working) {
+          this._removeToolAndMessage(child.state.content.id);
+        }
+      });
+    });
+
+    // If we have an abort controller, abort it
     if (this._abortController) {
       this._abortController.abort();
-      // Find any working tools and mark them as cancelled
-      const messages = getMessages(this);
-      messages.state.messages.forEach((message) => {
-        message.state.children.forEach((child) => {
-          if (child instanceof Tool && child.state.working) {
-            this._removeToolAndMessage(child.state.content.id);
-          }
-        });
-      });
-      // Remove the last AI message that was processing the tool
-      if (messages.state.messages.length > 0) {
-        const lastMessage = messages.state.messages[messages.state.messages.length - 1];
-        if (lastMessage.state.sender === 'ai') {
-          messages.state.messages.pop();
-        }
-      }
       this._abortController = null;
-      messages.setLoading(false);
-      this.state.speech.resume();
-      this.updateMessage('', false);
     }
+
+    // Remove the last AI message that was processing the tool
+    if (messages.state.messages.length > 0) {
+      const lastMessage = messages.state.messages[messages.state.messages.length - 1];
+      if (lastMessage.state.sender === 'ai') {
+        messages.state.messages.pop();
+      }
+    }
+
+    messages.setLoading(false);
+    this.state.speech.resume();
+    this.updateMessage('', false);
   }
 
   public async interruptAndSendMessage() {
@@ -203,8 +213,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     } finally {
       getMessages(this).setLoading(false);
       this._abortController = null;
-      this.updateMessage('', false);
       this.state.speech.resume();
+      this._inputRef?.focus();
     }
   }
 
@@ -254,8 +264,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     } finally {
       getMessages(this).setLoading(false);
       this._abortController = null;
-      this.updateMessage('', false);
       this.state.speech.resume();
+      this._inputRef?.focus();
     }
   }
 
