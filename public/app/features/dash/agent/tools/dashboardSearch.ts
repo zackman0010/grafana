@@ -51,10 +51,12 @@ export const dashboardSearchTool = tool(
           dto,
           stringified: JSON.stringify(dto),
           expressions: [
-            ...get(dto, 'dashboard.panels', []),
-            ...get(dto, 'dashboard.rows', []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
+            // Get the panels
+            ...(get(dto, 'dashboard.panels', []) ?? []),
+            // Get the panels from every row
+            ...(get(dto, 'dashboard.rows', []) ?? []).reduce((acc, row) => [...acc, ...get(row, 'panels', [])], []),
           ].reduce<string[]>(
-            (acc, panel) => [...acc, ...(panel.targets.map((target: any) => get(target, 'expr', '')) ?? [])],
+            (acc, panel) => [...acc, ...(panel.targets?.map((target: any) => get(target, 'expr', '')) ?? [])],
             []
           ),
         }))
