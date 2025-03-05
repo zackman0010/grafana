@@ -53,7 +53,7 @@ const getJsonValueStyles = (theme: GrafanaTheme2) => ({
     label: 'json-value-container',
     cursor: 'pointer',
     width: '300px',
-    height: '212px', // Half of A4 ratio (300 * 1.414 / 2)
+    maxHeight: '212px', // Half of A4 ratio (300 * 1.414 / 2)
     overflow: 'hidden',
     position: 'relative',
     backgroundColor: theme.colors.background.secondary,
