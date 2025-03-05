@@ -2,6 +2,7 @@ import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
 import { dashboardPanelsTool } from './dashboardPanels';
 import { getCurrentTimeTool } from './getCurrentTime';
+import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
@@ -54,6 +55,7 @@ export const tools = [
   navigateToDashboardTool,
   navigateToOtherTool,
   updateDashboardPanelTool,
+  getDrilldownLogToSummarizeTool,
 ];
 
 export const toolsByName = tools.reduce(
