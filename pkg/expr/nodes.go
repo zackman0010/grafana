@@ -439,10 +439,17 @@ func (dn *DSNode) Execute(ctx context.Context, now time.Time, _ mathexp.Vars, s 
 			return result, nil
 		}
 
+		// Doesn't need conversion
+		// limit the count of rows in the dataframe to 100000
+		if dataFrames[0].Rows() > 5 {
+			return result, fmt.Errorf("data frame has more than 5 rows")
+		}
+
 		// Otherwise it is already Long format; return as is
 		result.Values = mathexp.Values{
 			mathexp.TableData{Frame: dataFrames[0]},
 		}
+
 		return result, nil
 	}
 
