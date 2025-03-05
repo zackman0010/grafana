@@ -15,8 +15,8 @@ interface ToolState extends SceneObjectState {
     name: string;
     input: Record<string, unknown>;
     output?: Record<string, unknown>;
+    error?: string;
   };
-  error: string | undefined;
   opened: boolean;
   working: boolean;
 }
@@ -32,11 +32,10 @@ export class Tool extends SceneObjectBase<ToolState> {
     return <ToolRenderer model={model} />;
   };
 
-  public constructor(state: Omit<ToolState, 'opened' | 'working' | 'error'>) {
+  public constructor(state: Omit<ToolState, 'opened' | 'working'>) {
     super({
       opened: false,
       working: false,
-      error: undefined,
       ...state,
     });
   }
@@ -50,7 +49,12 @@ export class Tool extends SceneObjectBase<ToolState> {
   }
 
   public setError(error: string | undefined) {
-    this.setState({ error });
+    this.setState({
+      content: {
+        ...this.state.content,
+        error,
+      },
+    });
   }
 
   public setOutput(output: Record<string, unknown> | undefined) {
@@ -64,10 +68,10 @@ export class Tool extends SceneObjectBase<ToolState> {
 }
 
 function ToolRenderer({ model }: SceneComponentProps<Tool>) {
-  const { content, opened, working, error } = model.useState();
+  const { content, opened, working } = model.useState();
   const hasInput = Object.keys(content.input).length > 0;
   const hasOutput = Boolean(content.output && Object.keys(content.output).length > 0);
-  const styles = useStyles2(getStyles, !!error, working, hasInput || hasOutput);
+  const styles = useStyles2(getStyles, !!content.error, working, hasInput || hasOutput);
 
   console.log('ToolRenderer state:', { content, hasOutput, output: content.output });
 
@@ -92,7 +96,7 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
             : undefined
         }
       >
-        <Icon name={working ? 'sync' : error ? 'times' : 'check'} className={styles.icon} />
+        <Icon name={working ? 'sync' : content.error ? 'times' : 'check'} className={styles.icon} />
 
         <span className={styles.name}>{content.name}</span>
 
@@ -123,10 +127,9 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
               ))}
             </>
           )}
-
-          {error && <div className={styles.detailsError}>{error}</div>}
         </div>
       )}
+      {content.error && <div className={styles.error}>{content.error}</div>}
     </div>
   );
 }
@@ -223,6 +226,16 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     marginTop: theme.spacing(1),
     color: theme.colors.error.main,
     fontSize: '0.85em',
+  }),
+  error: css({
+    label: 'dash-message-tool-error',
+    marginTop: theme.spacing(1),
+    color: theme.colors.warning.text,
+    fontSize: '0.85em',
+    padding: theme.spacing(1),
+    backgroundColor: theme.colors.background.primary,
+    borderRadius: theme.shape.borderRadius(1),
+    borderLeft: `3px solid ${theme.colors.warning.border}`,
   }),
   sectionHeader: css({
     label: 'dash-message-tool-section-header',

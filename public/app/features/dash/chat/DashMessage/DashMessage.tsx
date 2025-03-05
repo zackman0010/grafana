@@ -119,11 +119,12 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
               (child) => child instanceof Tool && child.state.content.id === item.id
             ) as Tool | undefined;
 
-            // If we found the tool, include its current output in the content
+            // If we found the tool, include its current output and error in the content
             if (tool) {
               return {
                 ...item,
                 output: tool.state.content.output,
+                error: tool.state.content.error,
               };
             }
           }
