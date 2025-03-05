@@ -6,6 +6,7 @@ import { CoreApp, dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
+import { buildPanelJson } from './buildPanelJson' ;
 import { summarizePrometheusQueryResult } from './prometheusQuerySummarizer';
 import { prometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
@@ -18,57 +19,123 @@ const prometheusInstantQuerySchema = z.object({
   time: z
     .number()
     .optional()
-    .describe('Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.')
+    .describe(
+      'Optional evaluation timestamp. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   summarize: z
     .string()
     .optional()
-    .describe('Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage patterns" or "Identify anomalies in error rates"'),
+    .describe(
+      'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage patterns" or "Identify anomalies in error rates"'
+    ),
 });
 
 // Wrap the implementation with error handling
-export const prometheusInstantQueryTool = tool(async (input: any): Promise<string> => {
-  const parsedInput = prometheusInstantQuerySchema.parse(input);
-  const { datasource_uid, query, time, summarize } = parsedInput;
-  const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
-  if (!datasource) {
-    throw new Error(`Datasource with uid ${datasource_uid} not found`);
-  }
-  const promDatasource = datasource as PrometheusDatasource;
-  const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
-  const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
-  const q = { ...defaultQuery, expr: query, range: false, instant: true };
-  const result = await lastValueFrom(
-    promDatasource.query({
-      requestId: '1',
-      interval: '1m',
-      intervalMs: 60000,
-      range: timeRange,
-      targets: [q],
-      scopedVars: {},
-      timezone: 'browser',
-      app: CoreApp.Explore,
-      startTime: timeRange.from.valueOf(),
-    })
-  );
-  
-  // If summarize parameter is provided, use the LLM-based summarizer
-  if (summarize) {
-    return await summarizePrometheusQueryResult(
-      'instant',
-      query,
-      result,
-      summarize,
-      {
-        from: timeRange.from.toISOString(),
-        to: timeRange.to.toISOString()
-      }
+export const prometheusInstantQueryTool = tool(
+  async (input: any) => {
+    const parsedInput = prometheusInstantQuerySchema.parse(input);
+    const { datasource_uid, query, time, summarize } = parsedInput;
+    const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
+    if (!datasource) {
+      throw new Error(`Datasource with uid ${datasource_uid} not found`);
+    }
+    const promDatasource = datasource as PrometheusDatasource;
+    const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
+    const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
+    const q = { ...defaultQuery, legendFormat: '', expr: query, range: false, instant: true };
+    q.datasource = {
+      type: datasource.type,
+      uid: datasource.uid,
+    };
+    const result = await lastValueFrom(
+      promDatasource.query({
+        requestId: '1',
+        interval: '1m',
+        intervalMs: 60000,
+        range: timeRange,
+        targets: [q],
+        scopedVars: {},
+        timezone: 'browser',
+        app: CoreApp.Explore,
+        startTime: timeRange.from.valueOf(),
+      })
     );
-  }
-  
-  // Otherwise return the raw result
-  return JSON.stringify(result);
-},
+
+    let panelJson = null;
+    if (result?.data?.length > 0) {
+      let type = 'stat';
+      let transformations: any[] = [];
+      if (result?.data[0]?.fields?.[0]?.values?.length > 1) {
+        type = 'table';
+        transformations = [
+          {
+            id: 'seriesToRows',
+            options: {},
+          },
+          {
+            id: 'sortBy',
+            options: {
+              fields: {},
+              sort: [
+                {
+                  field: 'Value',
+                  desc: true,
+                },
+              ],
+            },
+          },
+          {
+            id: 'extractFields',
+            options: {
+              delimiter: ',',
+              source: 'Metric',
+              replace: false,
+              keepTime: false,
+              format: 'kvp',
+            },
+          },
+          {
+            id: 'organize',
+            options: {
+              excludeByName: {
+                Time: true,
+                Metric: true,
+              },
+              indexByName: {
+                Time: 0,
+                Value: 999,
+              },
+              renameByName: {},
+              includeByName: {},
+            },
+          },
+        ];
+      }
+      panelJson = buildPanelJson(
+        timeRange,
+        type,
+        'Prometheus Instant Query',
+        'Prometheus Instant Query',
+        q,
+        transformations
+      );
+    }
+
+    // If summarize parameter is provided, use the LLM-based summarizer
+    if (summarize) {
+      return [
+        await summarizePrometheusQueryResult('instant', query, result, summarize, {
+          from: timeRange.from.toISOString(),
+          to: timeRange.to.toISOString(),
+        }),
+        panelJson,
+      ];
+    }
+
+    // Otherwise return the raw result
+    return [JSON.stringify(result), panelJson];
+  },
   {
     name: 'prometheus_instant_query',
     description: `
@@ -92,5 +159,6 @@ export const prometheusInstantQueryTool = tool(async (input: any): Promise<strin
     - "Provide an overview of memory utilization"
     `,
     schema: prometheusInstantQuerySchema,
+    responseFormat: 'content_and_artifact',
   }
 );

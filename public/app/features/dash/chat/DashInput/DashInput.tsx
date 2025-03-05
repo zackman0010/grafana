@@ -8,8 +8,8 @@ import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 
 import { getAgent } from '../../agent/agent';
 import { toolsByName } from '../../agent/tools';
-import { getChat, getDash, getMessages } from '../utils';
 import { Tool } from '../DashMessage/Tool';
+import { getChat, getDash, getMessages } from '../utils';
 
 import { Input } from './Input';
 import { Logger } from './Logger';
@@ -230,6 +230,9 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           });
 
           getMessages(this).addLangchainMessage(toolResponse);
+          if (toolResponse.artifact) {
+            getMessages(this).addArtifact(toolResponse.artifact);
+          }
           this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
 
           try {

@@ -11,10 +11,12 @@ import { CodeOverflow, Sender, SerializedDashMessage, ToolContent } from '../typ
 import { getSettings } from '../utils';
 
 import { Image } from './Image';
+import { Panel } from './Panel';
 import { Text } from './Text';
 import { Tool } from './Tool';
 
 interface DashMessageState extends SceneObjectState {
+  type?: string;
   children: SceneObject[];
   content: MessageContent;
   editedMessage: string | undefined;
@@ -35,24 +37,33 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
     > &
       Partial<Pick<DashMessageState, 'selected' | 'muted' | 'isError'>>
   ) {
-    const children =
-      typeof state.content === 'string'
-        ? [new Text({ content: state.content })]
-        : state.content.reduce<SceneObject[]>((acc, currentContent) => {
-            switch (currentContent.type) {
-              case 'text':
-                return [...acc, new Text({ content: currentContent.text })];
+    const children: SceneObject[] = [];
 
-              case 'tool_use':
-                return [...acc, new Tool({ content: currentContent as ToolContent })];
+    if (state.type === 'artifact') {
+      const c = (state.content as any);
+      children.push(new Panel({ panel: c.panel, timeRange: c.timeRange }));
+    } else if (typeof state.content === 'string') {
+      children.push(new Text({ content: state.content }));
+    } else {
+      state.content.forEach((content) => {
+        switch (content.type) {
+          case 'text':
+            children.push(new Text({ content: content.text }));
+            break;
 
-              case 'image_url':
-                return [...acc, new Image({ url: currentContent.image_url })];
+          case 'tool_use':
+            children.push(new Tool({ content: content as ToolContent }));
+            break;
 
-              default:
-                return acc;
-            }
-          }, []);
+          case 'image_url':
+            children.push(new Image({ url: content.image_url }));
+            break;
+
+          default:
+            break;
+        }
+      });
+    }
 
     super({
       ...state,
