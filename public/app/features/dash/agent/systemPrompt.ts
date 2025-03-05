@@ -3,7 +3,7 @@ import { getPersistedSetting } from '../chat/utils';
 import { getCurrentContext } from './tools/context';
 import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
 import { prometheusWorkflowSystemPrompt } from './tools/prometheusSystemPrompt';
-import { createDashboardTool } from './tools/tool_create_dashboard';
+import { createDashboardTool } from './tools/toolCreateDashboard';
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `
 # Grafana Observability Agent
