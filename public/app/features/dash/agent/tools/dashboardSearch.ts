@@ -39,8 +39,8 @@ export const dashboardSearchTool = tool(
       dashboards.push({ stringified: JSON.stringify(dto), dto });
     }
 
-    if (metricNames.length === 0) {
-      return JSON.stringify([]);
+    if (metricNames.length === 0 && queryExpressions.length === 0) {
+      return JSON.stringify(dashboardsList);
     }
 
     const result = dashboards
