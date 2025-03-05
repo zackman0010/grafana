@@ -76,6 +76,7 @@ export class DashStorage {
         const result =
           request.result?.reduce((acc, entry) => {
             acc[entry.id] = entry.value;
+            return acc;
           }, {}) ?? {};
 
         result.codeOverflow = result.codeOverflow ?? 'scroll';
