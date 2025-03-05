@@ -73,11 +73,11 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
       messages: [],
     });
     setTimeout(() => {
-      this.generateWelcomeMessage();
+      this.generateWelcomeMessage(false);
     }, 0);
   };
 
-  public async generateWelcomeMessage() {
+  public async generateWelcomeMessage(initial = true) {
     if (this.state.generatingWelcome) {
       console.log('Welcome message already generated, skipping.');
       return;
@@ -95,8 +95,13 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
       if (context.query.expression) {
         contextPrompt += `The current query is \`${context.query.expression}\`. `;
       }
-      contextPrompt +=
-        'Generate a concise overview message using as few words as possible, that introduces yourself as an "agent" (never assistant) and includes what the current page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
+      if (initial) {
+        contextPrompt +=
+          'Generate a concise overview message using as few words as possible, that introduces yourself as an "agent" (never assistant) and includes what the current page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
+      } else {
+        contextPrompt +=
+          'Generate a new overview message using as few words as possible, letting the user know that you know what this new page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
+      }
 
       const welcomeMessage = await makeSingleRequest({
         systemPrompt: contextPrompt,
