@@ -152,7 +152,7 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
 function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
   const { children, editedMessage, editing, isError, sender, selected } = model.useState();
-  const { codeOverflow } = getSettings(model).useState();
+  const { codeOverflow, showTools } = getSettings(model).useState();
   const styles = useStyles2(getStyles, codeOverflow, isError, selected, sender);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -182,11 +182,13 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
           otherChildren.map((child) => <child.Component model={child} key={child.state.key} />)
         )}
       </div>
-      <div className={styles.toolsContainer}>
-        {tools.map((tool) => (
-          <tool.Component model={tool} key={tool.state.key} />
-        ))}
-      </div>
+      {showTools && tools.length > 0 && (
+        <div className={styles.toolsContainer}>
+          {tools.map((tool) => (
+            <tool.Component model={tool} key={tool.state.key} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -220,6 +222,9 @@ const getStyles = (
 
     ...(sender === 'user' && {
       marginTop: theme.spacing(1),
+      '& p': {
+        color: theme.colors.text.primary,
+      },
     }),
 
     outline: selected ? 'none' : 'none',
@@ -263,7 +268,6 @@ const getStyles = (
 
     '& code': {
       wordBreak: 'break-all',
-      display: codeOverflow === 'wrap' ? 'initial' : 'block',
       overflow: 'auto',
       textOverflow: 'unset',
       whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
