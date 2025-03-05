@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { useState } from 'react';
 
 import { TimeRange } from '@grafana/data';
 import { config } from '@grafana/runtime';
@@ -12,7 +13,6 @@ import {
   VizPanel,
 } from '@grafana/scenes';
 import { Button, Modal, useStyles2 } from '@grafana/ui';
-import { useState } from 'react';
 
 import { PanelConfiguration } from '../types';
 
