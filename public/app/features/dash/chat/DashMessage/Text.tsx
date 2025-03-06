@@ -122,15 +122,21 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
       opacity: 0.9,
     },
 
-    'pre code': {
-      label: 'dash-message-text-pre-code',
-      backgroundColor: theme.colors.background.secondary,
-      borderRadius: theme.shape.radius.default,
+    pre: {
+      label: 'dash-message-text-pre',
       padding: theme.spacing(0.5, 1),
-      fontFamily: theme.typography.fontFamilyMonospace,
-      fontSize: '0.9em',
-      lineHeight: 1.5,
       overflow: 'auto',
+      whiteSpace: 'pre-wrap',
+      wordWrap: 'break-word',
+      wordBreak: 'break-all',
+      maxWidth: '100%',
+      maxHeight: '120px',
+      code: {
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'break-word',
+        wordBreak: 'break-all',
+        maxWidth: '100%',
+      },
     },
   }),
   systemMessage: css({
