@@ -252,6 +252,8 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
 
       <chat.Component model={chat} />
 
+      <div className={styles.watermark}>DASH</div>
+
       <div className={styles.bottomBar}>
         <settings.Component model={settings} />
       </div>
@@ -397,6 +399,29 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     '&:hover': {
       opacity: 1,
     },
+  }),
+  watermark: css({
+    label: 'dash-watermark',
+    position: 'absolute',
+    bottom: '100px',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: '90px',
+    fontWeight: 900,
+    lineHeight: 1,
+    letterSpacing: '-0.1em',
+    color: theme.colors.text.primary,
+    opacity: 0.03,
+    pointerEvents: 'none',
+    userSelect: 'none',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    transform: 'scale(2.2) rotate(-10deg)',
+    transformOrigin: 'center bottom',
+    overflow: 'visible',
   }),
 });
 
