@@ -9,7 +9,7 @@ export const toolGetCanSpeak = new DynamicTool({
   },
   metadata: {
     explainer: () => {
-      return `get speaking setting`;
+      return `get speech setting`;
     },
   },
 });

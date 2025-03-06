@@ -19,7 +19,7 @@ export const toolSetCanSpeak = new DynamicTool({
   },
   metadata: {
     explainer: () => {
-      return `change speaking setting`;
+      return `change speech setting`;
     },
   },
 });
