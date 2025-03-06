@@ -70,7 +70,7 @@ grafanaDashboardsSearch.description =
   'Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.';
 grafanaDashboardsSearch.metadata = {
   explainer: () => {
-    return `Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.`
+    return `Searching for community dashboards on Grafana.com`
   }
 }
 
