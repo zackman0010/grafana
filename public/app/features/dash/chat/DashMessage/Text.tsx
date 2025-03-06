@@ -112,13 +112,14 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
 
     code: {
       label: 'dash-message-text-code',
-      backgroundColor: theme.colors.background.secondary,
-      borderRadius: theme.shape.radius.default,
-      padding: theme.spacing(0.5, 1),
+      border: 'none',
+      padding: 0,
+      fontSize: '1.1em',
       fontFamily: theme.typography.fontFamilyMonospace,
-      fontSize: '0.9em',
-      lineHeight: 1.5,
+      lineHeight: 1.3,
       overflow: 'auto',
+      color: theme.colors.text.secondary,
+      opacity: 0.9,
     },
 
     'pre code': {
