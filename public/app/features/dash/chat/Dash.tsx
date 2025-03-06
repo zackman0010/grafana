@@ -308,7 +308,7 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     fontSize: '7px',
     color: theme.colors.text.primary,
     letterSpacing: '0.1em',
-    padding: theme.spacing(0.25),
+    margin: 0,
     textShadow: '0 0 2px rgba(155, 89, 182, 0.3)',
   }),
   titleContent: css({
