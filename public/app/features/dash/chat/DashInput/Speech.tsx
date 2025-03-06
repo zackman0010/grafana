@@ -2,9 +2,11 @@ import { css, keyframes } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, Tooltip, useStyles2 } from '@grafana/ui';
+import { Tooltip, useStyles2 } from '@grafana/ui';
 
 import { getInput, getMessages } from '../utils';
+
+import { MicIcon } from './MicIcon';
 
 interface SpeechRecognitionEvent extends Event {
   results: SpeechRecognitionResultList;
@@ -132,14 +134,14 @@ function SpeechRenderer({ model }: SceneComponentProps<Speech>) {
 
   return (
     <Tooltip content={listening ? 'Stop listening' : 'Use dictation'}>
-      <IconButton
-        size="xl"
-        name="record-audio"
+      <button
         aria-label={listening ? 'Stop voice input' : 'Start voice input'}
         disabled={loading}
         className={styles.icon}
         onClick={() => model.toggleSpeechRecognition()}
-      />
+      >
+        <MicIcon />
+      </button>
     </Tooltip>
   );
 }
@@ -164,7 +166,17 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
     ? css({
         label: 'dash-input-speech-icon',
         position: 'relative',
+        display: 'inline-flex',
+        background: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: 'none',
+        width: 24,
+        height: 24,
         color: theme.colors.warning.main,
+        margin: 0,
+        marginTop: theme.spacing(1),
+        padding: 0,
 
         '& svg': {
           opacity: 0.4,
@@ -180,16 +192,16 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
         },
 
         '&::before': {
-          width: '28px',
-          height: '28px',
-          marginTop: '-14px',
-          marginLeft: '-14px',
+          width: '32px',
+          height: '32px',
+          marginTop: '-16px',
+          marginLeft: '-16px',
           backgroundColor: theme.colors.warning.main,
         },
 
         '&::after': {
-          width: '42px',
-          height: '42px',
+          width: '45px',
+          height: '45px',
           marginTop: '-21px',
           marginLeft: '-21px',
           background: `radial-gradient(circle, ${theme.colors.warning.main} 0%, transparent 70%)`,
@@ -211,5 +223,16 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
       })
     : css({
         label: 'dash-input-speech-icon',
+        background: 'transparent',
+        border: 'none',
+        width: 24,
+        height: 24,
+        display: 'inline-flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        margin: 0,
+        marginTop: theme.spacing(1),
+        color: theme.colors.secondary.text,
       }),
 });

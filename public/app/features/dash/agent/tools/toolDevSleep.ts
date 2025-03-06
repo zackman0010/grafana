@@ -20,5 +20,10 @@ export const devSleep = tool(
     name: 'dev_sleep',
     description: 'Sleeps for a specified duration (defaults to 10 seconds) for testing and development purposes.',
     schema: devSleepSchema,
+    metadata: {
+      explainer: () => {
+        return `Sleeping for testing`;
+      },
+    },
   }
 );

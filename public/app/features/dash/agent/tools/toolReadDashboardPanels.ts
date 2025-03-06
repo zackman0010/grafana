@@ -40,5 +40,10 @@ export const readDashboardPanelsTool = tool(
     name: 'read_dashboard_panels',
     description: 'List panels in the current dashboard. Optionally pass a panel ID to get a specific details.',
     schema: dashboardPanelsSchema,
+    metadata: {
+      explainer: () => {
+        return `Reading dashboard panels`;
+      },
+    },
   }
 );

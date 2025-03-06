@@ -3,7 +3,7 @@ import { mapStoredMessagesToChatMessages } from '@langchain/core/messages';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Dropdown, IconButton, Menu, useStyles2 } from '@grafana/ui';
+import { Dropdown, Icon, IconButton, Menu, useStyles2 } from '@grafana/ui';
 
 import { DashChat } from './DashChat';
 import { DashChatInstance } from './DashChatInstance';
@@ -179,7 +179,43 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <div className={styles.chatTitle}>{name}</div>
+        <div className={styles.chatTitle}>
+          <Dropdown
+            overlay={
+              <Menu className={styles.chatMenu}>
+                {chats
+                  .map((chat, index) =>
+                    index === chatIndex ? null : (
+                      <div key={chat.state.key} className={styles.chatMenuItem}>
+                        <div className={styles.chatMenuItemText} onClick={() => model.setCurrentChat(index)}>
+                          {chat.state.name}
+                        </div>
+                        <Icon
+                          name="times"
+                          className={styles.removeChatIcon}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            model.removeChat(index);
+                          }}
+                        />
+                      </div>
+                    )
+                  )
+                  .reverse()}
+
+                <Menu.Divider />
+
+                {chats.length > 1 && <Menu.Item icon="times" label="Clear all" onClick={() => model.clearChats()} />}
+              </Menu>
+            }
+            placement="bottom-start"
+          >
+            <div className={styles.titleContent}>
+              <span className={styles.sparkle}>✨</span> {name}
+              <Icon name="angle-down" className={styles.titleCaret} />
+            </div>
+          </Dropdown>
+        </div>
         <div className={styles.actions}>
           <IconButton name="plus" aria-label="Add chat" onClick={() => model.addChat()} />
 
@@ -206,49 +242,6 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
               <IconButton name="history" aria-label="Previous versions" />
             </Dropdown>
           )}
-
-          <Dropdown
-            overlay={
-              <Menu>
-                {chats
-                  .map((chat, index) =>
-                    index === chatIndex ? null : (
-                      <Menu.Item
-                        key={chat.state.key}
-                        label={chat.state.name}
-                        icon="exchange-alt"
-                        childItems={[
-                          <Menu.Item
-                            key="clear-chat"
-                            icon="exchange-alt"
-                            label="Open"
-                            disabled={index === chatIndex}
-                            onClick={() => model.setCurrentChat(index)}
-                          />,
-                          <Menu.Item
-                            key="clear-chat"
-                            icon="times"
-                            label="Close"
-                            destructive
-                            onClick={() => model.removeChat(index)}
-                          />,
-                        ]}
-                        onClick={index === chatIndex ? undefined : () => model.setCurrentChat(index)}
-                      />
-                    )
-                  )
-                  .reverse()}
-
-                <Menu.Divider />
-
-                {chats.length > 1 && (
-                  <Menu.Item icon="times" label="Close all" destructive onClick={() => model.clearChats()} />
-                )}
-              </Menu>
-            }
-          >
-            <IconButton name="anchor" aria-label="Other chats" />
-          </Dropdown>
         </div>
       </div>
 
@@ -299,6 +292,23 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     fontWeight: theme.typography.fontWeightBold,
+    display: 'flex',
+    alignItems: 'center',
+  }),
+  titleContent: css({
+    label: 'dash-title-content',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.8,
+    },
+  }),
+  sparkle: css({
+    label: 'dash-sparkle',
+    filter: 'grayscale(100%)',
+    transform: 'scaleX(-1)',
   }),
   actions: css({
     label: 'dash-actions',
@@ -317,6 +327,56 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     justifyContent: withVersions ? 'space-between' : 'flex-end',
     gap: theme.spacing(1),
     padding: theme.spacing(1),
+  }),
+  titleCaret: css({
+    label: 'dash-title-caret',
+    fontSize: '14px',
+    opacity: 0.7,
+    marginLeft: theme.spacing(0.5),
+  }),
+  chatMenu: css({
+    label: 'dash-chat-menu',
+    minWidth: '200px',
+    backgroundColor: theme.colors.background.primary,
+    border: `1px solid ${theme.colors.border.weak}`,
+  }),
+  chatMenuItem: css({
+    label: 'dash-chat-menu-item',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1),
+    '&:hover': {
+      backgroundColor: theme.colors.action.hover,
+      '& [class*="remove-chat-icon"]': {
+        opacity: 0.7,
+      },
+    },
+  }),
+  chatMenuItemText: css({
+    label: 'dash-chat-menu-item-text',
+    flex: 1,
+    cursor: 'pointer',
+    padding: theme.spacing(0.5),
+    margin: theme.spacing(-0.5),
+  }),
+  removeChatIcon: css({
+    label: 'dash-remove-chat-icon',
+    cursor: 'pointer',
+    opacity: 0,
+    padding: theme.spacing(0.5),
+    fontSize: '20px',
+    width: '20px',
+    height: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '@media (prefers-reduced-motion: no-preference)': {
+      transition: 'opacity 0.2s ease',
+    },
+    '&:hover': {
+      opacity: 1,
+    },
   }),
 });
 

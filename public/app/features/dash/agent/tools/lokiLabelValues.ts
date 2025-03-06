@@ -109,5 +109,10 @@ export const lokiLabelValuesTool = tool(
 
     Use this tool to explore label values before constructing log stream selectors.`,
     schema: lokiLabelValuesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing Loki label values`;
+      },
+    },
   }
 );

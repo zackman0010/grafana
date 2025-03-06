@@ -80,5 +80,10 @@ export const dashboardSearchTool = tool(
     name: 'search_dashboard',
     description: 'Search for dashboards',
     schema: dashboardSearchToolSchema,
+    metadata: {
+      explainer: () => {
+        return `Searching for dashboards`;
+      },
+    },
   }
 );

@@ -49,5 +49,10 @@ export const navigateToDashboardTool = tool(
     description:
       'Use this tool when the user wants to navigate to a dashboard represented by its title or uid.  NEVER use it without asking the user for confirmation.',
     schema: navigateToDashboardToolSchema,
+    metadata: {
+      explainer: () => {
+        return `Navigating to dashboard`;
+      },
+    },
   }
 );

@@ -35,5 +35,10 @@ export const getDrilldownLogToSummarizeTool = tool(
     description:
       'When the current app is Drilldown Logs, use this tool to create a summary of the logs in display for the user. If the user is not in Drilldown logs, help them navigate to it with a filter.',
     schema: getDrilldownLogToSummarizeSchema,
+    metadata: {
+      explainer: () => {
+        return `Getting logs to summarize`;
+      },
+    },
   }
 );

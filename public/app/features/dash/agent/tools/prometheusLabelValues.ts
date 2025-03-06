@@ -64,5 +64,10 @@ export const prometheusLabelValuesTool = tool(
        It's better to use regex pattern that are more specific first, and then use more general patterns in case of no match.
        Default time range is last hour if not specified.`,
     schema: prometheusLabelValuesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing Prometheus label values`;
+      },
+    },
   }
 );

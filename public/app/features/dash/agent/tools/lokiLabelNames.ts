@@ -95,5 +95,10 @@ export const lokiLabelNamesTool = tool(
     description:
       'Lists all available Loki label names with powerful regex filtering capabilities. Use the regex parameter to filter labels with JavaScript regular expressions or simple string patterns. All regex matching is case-insensitive for easier discovery. The default time range is the last 5 minutes if not specified.',
     schema: lokiLabelNamesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing Loki label names`;
+      },
+    },
   }
 );

@@ -100,5 +100,10 @@ export const lokiQueryTool = tool(
     description:
       'Only when the data source type is Loki, and you or the user need to run a logs or logs metric query. If the query is for logs, the first log will be returned. To see more, tell the user to go to Drilldown Logs or to Explore.',
     schema: lokiQuerySchema,
+    metadata: {
+      explainer: () => {
+        return `Executing Loki query`;
+      },
+    },
   }
 );
