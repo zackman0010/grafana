@@ -13,7 +13,7 @@ import {
   ModalsController,
   Switch,
   useStyles2,
-} from '@grafana/ui/src';
+} from '@grafana/ui';
 import { Layout } from '@grafana/ui/src/components/Layout/Layout';
 import { Trans, t } from 'app/core/internationalization';
 import {
