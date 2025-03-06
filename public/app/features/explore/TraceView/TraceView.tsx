@@ -13,7 +13,6 @@ import {
   LinkModel,
   mapInternalLinkToExplore,
   SplitOpen,
-  TimeRange,
 } from '@grafana/data';
 import { getTraceToLogsOptions, TraceToMetricsData, TraceToProfilesData } from '@grafana/o11y-ds-frontend';
 import { getTemplateSrv } from '@grafana/runtime';
@@ -68,7 +67,6 @@ type Props = {
   focusedSpanId?: string;
   createFocusSpanLink?: (traceId: string, spanId: string) => LinkModel<Field>;
   spanFilters?: SearchProps;
-  timeRange: TimeRange;
 };
 
 export function TraceView(props: Props) {
@@ -240,8 +238,6 @@ export function TraceView(props: Props) {
             setTraceFlameGraphs={setTraceFlameGraphs}
             redrawListView={redrawListView}
             setRedrawListView={setRedrawListView}
-            timeRange={props.timeRange}
-            app={exploreId ? CoreApp.Explore : CoreApp.Unknown}
           />
         </>
       ) : (

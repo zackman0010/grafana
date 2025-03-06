@@ -1,27 +1,36 @@
 import { useMemo } from 'react';
 
-import { t } from 'app/core/internationalization';
+import { Button, Stack, Text } from '@grafana/ui';
+import { t, Trans } from 'app/core/internationalization';
 import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
-
-import { EditPaneHeader } from '../../edit-pane/EditPaneHeader';
 
 import { TabItems } from './TabItems';
 
-export function getEditOptions(model: TabItems): OptionsPaneCategoryDescriptor[] {
+export function getEditOptions(_model: TabItems): OptionsPaneCategoryDescriptor[] {
   const tabOptions = useMemo(() => {
-    const tabs = model.getTabs();
     return new OptionsPaneCategoryDescriptor({
-      title: ``,
+      title: t('dashboard.edit-pane.tab.multi-select.options-header', 'Multi-selected Tab options'),
       id: 'ms-tab-options',
-      isOpenable: false,
-      renderTitle: () => (
-        <EditPaneHeader
-          title={t('dashboard.tabs-layout.multi-select.title', '{{length}} tabs selected', { length: tabs.length })}
-          onDelete={() => model.onDelete()}
-        />
-      ),
+      isOpenDefault: true,
     });
-  }, [model]);
+  }, []);
 
   return [tabOptions];
+}
+
+export function renderActions(model: TabItems) {
+  const tabs = model.getTabs();
+
+  return (
+    <Stack direction="column">
+      <Text>
+        <Trans i18nKey="dashboard.edit-pane.tab.multi-select.selection-number">No. of tabs selected: </Trans>
+        {tabs.length}
+      </Text>
+      <Stack direction="row">
+        <Button size="sm" variant="secondary" icon="copy" />
+        <Button size="sm" variant="destructive" fill="outline" onClick={() => model.onDelete()} icon="trash-alt" />
+      </Stack>
+    </Stack>
+  );
 }

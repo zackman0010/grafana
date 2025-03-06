@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { t } from 'app/core/internationalization';
@@ -7,7 +8,7 @@ import { EditableDashboardElementInfo } from '../types/EditableDashboardElement'
 import { MultiSelectedEditableDashboardElement } from '../types/MultiSelectedEditableDashboardElement';
 
 import { RowItem } from './RowItem';
-import { getEditOptions } from './RowItemsEditor';
+import { getEditOptions, renderActions } from './RowItemsEditor';
 
 export class RowItems implements MultiSelectedEditableDashboardElement {
   public readonly isMultiSelectedEditableDashboardElement = true;
@@ -25,6 +26,10 @@ export class RowItems implements MultiSelectedEditableDashboardElement {
     return getEditOptions(this);
   }
 
+  public renderActions(): ReactNode {
+    return renderActions(this);
+  }
+
   public getRows(): RowItem[] {
     return this._rows;
   }
@@ -36,6 +41,4 @@ export class RowItems implements MultiSelectedEditableDashboardElement {
   public onHeaderHiddenToggle(value: boolean, indeterminate: boolean) {
     this._rows.forEach((row) => row.onHeaderHiddenToggle(indeterminate ? true : !value));
   }
-
-  public getNumberOfRowsSelected = () => this._rows.length;
 }

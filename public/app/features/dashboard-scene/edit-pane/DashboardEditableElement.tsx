@@ -6,7 +6,7 @@ import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components
 import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
 import { DashboardScene } from '../scene/DashboardScene';
-import { DashboardLayoutSelector } from '../scene/layouts-shared/DashboardLayoutSelector';
+import { useLayoutCategory } from '../scene/layouts-shared/DashboardLayoutSelector';
 import { EditableDashboardElement, EditableDashboardElementInfo } from '../scene/types/EditableDashboardElement';
 
 export class DashboardEditableElement implements EditableDashboardElement {
@@ -25,40 +25,32 @@ export class DashboardEditableElement implements EditableDashboardElement {
     const { body } = dashboard.useState();
 
     const dashboardOptions = useMemo(() => {
-      const editPaneHeaderOptions = new OptionsPaneCategoryDescriptor({
+      return new OptionsPaneCategoryDescriptor({
         title: t('dashboard.options.title', 'Dashboard options'),
         id: 'dashboard-options',
-        isOpenable: false,
+        isOpenDefault: true,
       })
         .addItem(
           new OptionsPaneItemDescriptor({
             title: t('dashboard.options.title-option', 'Title'),
-            render: () => <DashboardTitleInput dashboard={dashboard} />,
+            render: function renderTitle() {
+              return <DashboardTitleInput dashboard={dashboard} />;
+            },
           })
         )
         .addItem(
           new OptionsPaneItemDescriptor({
             title: t('dashboard.options.description', 'Description'),
-            render: () => <DashboardDescriptionInput dashboard={dashboard} />,
-          })
-        )
-        .addItem(
-          new OptionsPaneItemDescriptor({
-            title: t('dashboard.layout.common.layout', 'Layout'),
-            render: () => <DashboardLayoutSelector layoutManager={body} />,
+            render: function renderTitle() {
+              return <DashboardDescriptionInput dashboard={dashboard} />;
+            },
           })
         );
+    }, [dashboard]);
 
-      if (body.getOptions) {
-        for (const option of body.getOptions()) {
-          editPaneHeaderOptions.addItem(option);
-        }
-      }
+    const layoutCategory = useLayoutCategory(body);
 
-      return editPaneHeaderOptions;
-    }, [body, dashboard]);
-
-    return [dashboardOptions];
+    return [dashboardOptions, layoutCategory];
   }
 }
 

@@ -11,7 +11,6 @@ import (
 	grpcAuth "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"k8s.io/client-go/rest"
 
@@ -120,17 +119,9 @@ func newRemoteRBACClient(clientCfg *authzClientSettings, tracer tracing.Tracer) 
 		return nil, fmt.Errorf("failed to initialize token exchange client: %w", err)
 	}
 
-	transportCreds := insecure.NewCredentials()
-	if clientCfg.certFile != "" {
-		transportCreds, err = credentials.NewClientTLSFromFile(clientCfg.certFile, "")
-		if err != nil {
-			return nil, fmt.Errorf("failed to load TLS credentials: %w", err)
-		}
-	}
-
 	conn, err := grpc.NewClient(
 		clientCfg.remoteAddress,
-		grpc.WithTransportCredentials(transportCreds),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithPerRPCCredentials(
 			NewGRPCTokenAuth(AuthzServiceAudience, clientCfg.tokenNamespace, tokenClient),
 		),

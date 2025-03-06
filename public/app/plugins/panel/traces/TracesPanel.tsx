@@ -52,7 +52,6 @@ export const TracesPanel = ({ data, options, replaceVariables }: PanelProps<Trac
         focusedSpanId={options.focusedSpanId}
         createFocusSpanLink={options.createFocusSpanLink}
         spanFilters={replaceSearchVariables(replaceVariables, options.spanFilters)}
-        timeRange={data.timeRange}
       />
     </div>
   );

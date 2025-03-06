@@ -6,14 +6,13 @@ import (
 	"strconv"
 	"strings"
 
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	authlib "github.com/grafana/authlib/types"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/grafana/grafana/pkg/infra/slugify"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	"github.com/grafana/grafana/pkg/services/folder"
 	"github.com/grafana/grafana/pkg/services/user"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func (ss *FolderUnifiedStoreImpl) UnstructuredToLegacyFolder(ctx context.Context, item *unstructured.Unstructured) (*folder.Folder, error) {
@@ -58,7 +57,7 @@ func (ss *FolderUnifiedStoreImpl) UnstructuredToLegacyFolder(ctx context.Context
 	if updater.UID == "" {
 		updater = creator
 	}
-	manager, _ := meta.GetManagerProperties()
+
 	return &folder.Folder{
 		UID:         uid,
 		Title:       title,
@@ -66,7 +65,7 @@ func (ss *FolderUnifiedStoreImpl) UnstructuredToLegacyFolder(ctx context.Context
 		ID:          meta.GetDeprecatedInternalID(), // nolint:staticcheck
 		ParentUID:   meta.GetFolder(),
 		Version:     int(meta.GetGeneration()),
-		ManagedBy:   manager.Kind,
+		Repository:  meta.GetRepositoryName(),
 
 		URL:       url,
 		Created:   created,

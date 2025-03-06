@@ -47,8 +47,6 @@ type User struct {
 	Created    time.Time
 	Updated    time.Time
 	LastSeenAt time.Time
-
-	IsProvisioned bool `xorm:"is_provisioned"`
 }
 
 type CreateUserCommand struct {
@@ -66,7 +64,6 @@ type CreateUserCommand struct {
 	SkipOrgSetup     bool
 	DefaultOrgRole   string
 	IsServiceAccount bool
-	IsProvisioned    bool
 }
 
 type GetUserByLoginQuery struct {
@@ -117,8 +114,7 @@ type SearchUsersQuery struct {
 	SortOpts     []model.SortOption
 	Filters      []Filter
 
-	IsDisabled    *bool
-	IsProvisioned *bool
+	IsDisabled *bool
 }
 
 type SearchUserQueryResult struct {
@@ -141,7 +137,6 @@ type UserSearchHitDTO struct {
 	LastSeenAtAge string               `json:"lastSeenAtAge"`
 	AuthLabels    []string             `json:"authLabels"`
 	AuthModule    AuthModuleConversion `json:"-"`
-	IsProvisioned bool                 `json:"-" xorm:"is_provisioned"`
 }
 
 type GetUserProfileQuery struct {
@@ -166,7 +161,6 @@ type UserProfileDTO struct {
 	CreatedAt                      time.Time       `json:"createdAt"`
 	AvatarURL                      string          `json:"avatarUrl"`
 	AccessControl                  map[string]bool `json:"accessControl,omitempty"`
-	IsProvisioned                  bool            `json:"-"`
 }
 
 // implement Conversion interface to define custom field mapping (xorm feature)

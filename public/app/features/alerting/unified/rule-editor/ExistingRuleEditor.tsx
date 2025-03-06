@@ -17,35 +17,30 @@ interface ExistingRuleEditorProps {
 }
 
 export function ExistingRuleEditor({ identifier, prefill }: ExistingRuleEditorProps) {
-  const [queryParams] = useQueryParams();
-  const isManualRestore = Boolean(queryParams.isManualRestore);
-
   const {
     loading: loadingAlertRule,
     result: ruleWithLocation,
-    error: fetchRuleError,
+    error,
   } = useRuleWithLocation({ ruleIdentifier: identifier });
+  const [queryParams] = useQueryParams();
+  const isManualRestore = Boolean(queryParams.isManualRestore);
 
   const ruleSourceName = ruleId.ruleIdentifierToRuleSourceName(identifier);
-  const {
-    isEditable,
-    loading: loadingEditable,
-    error: errorEditable,
-  } = useIsRuleEditable(ruleSourceName, ruleWithLocation?.rule);
 
-  // error handling for fetching rule and rule RBAC
-  if (fetchRuleError || errorEditable) {
-    return (
-      <Alert severity="error" title="Failed to load rule">
-        {stringifyErrorLike(errorEditable ?? fetchRuleError)}
-      </Alert>
-    );
-  }
+  const { isEditable, loading: loadingEditable } = useIsRuleEditable(ruleSourceName, ruleWithLocation?.rule);
 
   const loading = loadingAlertRule || loadingEditable;
 
   if (loading) {
     return <LoadingPlaceholder text="Loading rule..." />;
+  }
+
+  if (error) {
+    return (
+      <Alert severity="error" title="Failed to load rule">
+        {stringifyErrorLike(error)}
+      </Alert>
+    );
   }
 
   if (!ruleWithLocation && !loading) {

@@ -7,13 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"google.golang.org/grpc"
-	"k8s.io/apimachinery/pkg/selection"
-
 	claims "github.com/grafana/authlib/types"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
-	dashboard "github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
+	"github.com/grafana/grafana/pkg/apis/dashboard"
 	folderv0alpha1 "github.com/grafana/grafana/pkg/apis/folder/v0alpha1"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	"github.com/grafana/grafana/pkg/services/dashboards/dashboardaccess"
@@ -21,6 +18,8 @@ import (
 	"github.com/grafana/grafana/pkg/services/sqlstore/searchstore"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 	unisearch "github.com/grafana/grafana/pkg/storage/unified/search"
+	"google.golang.org/grpc"
+	"k8s.io/apimachinery/pkg/selection"
 )
 
 type DashboardSearchClient struct {
@@ -180,22 +179,18 @@ func (c *DashboardSearchClient) Search(ctx context.Context, req *resource.Resour
 			}
 
 			query.FolderUIDs = folders
-		case resource.SEARCH_FIELD_SOURCE_PATH:
+		case resource.SEARCH_FIELD_REPOSITORY_PATH:
 			// only one value is supported in legacy search
 			if len(vals) != 1 {
 				return nil, fmt.Errorf("only one repo path query is supported")
 			}
-			query.SourcePath = vals[0]
-
-		case resource.SEARCH_FIELD_MANAGER_KIND:
-			if len(vals) != 1 {
-				return nil, fmt.Errorf("only one manager kind supported")
-			}
-			query.ManagedBy = utils.ManagerKind(vals[0])
-
-		case resource.SEARCH_FIELD_MANAGER_ID:
+			query.ProvisionedPath = vals[0]
+		case resource.SEARCH_FIELD_REPOSITORY_NAME:
 			if field.Operator == string(selection.NotIn) {
-				query.ManagerIdentityNotIn = vals
+				for _, val := range vals {
+					name, _ := dashboard.GetProvisionedFileNameFromMeta(val)
+					query.ProvisionedReposNotIn = append(query.ProvisionedReposNotIn, name)
+				}
 				continue
 			}
 
@@ -203,7 +198,8 @@ func (c *DashboardSearchClient) Search(ctx context.Context, req *resource.Resour
 			if len(vals) != 1 {
 				return nil, fmt.Errorf("only one repo name is supported")
 			}
-			query.ManagerIdentity = vals[0]
+
+			query.ProvisionedRepo, _ = dashboard.GetProvisionedFileNameFromMeta(vals[0])
 		}
 	}
 	searchFields := resource.StandardSearchFields()
@@ -223,21 +219,17 @@ func (c *DashboardSearchClient) Search(ctx context.Context, req *resource.Resour
 
 	// if we are querying for provisioning information, we need to use a different
 	// legacy sql query, since legacy search does not support this
-	if query.ManagerIdentity != "" || len(query.ManagerIdentityNotIn) > 0 {
-		if query.ManagedBy == utils.ManagerKindUnknown {
-			return nil, fmt.Errorf("query by manager identity also requires manager.kind parameter")
-		}
-
+	if query.ProvisionedRepo != "" || len(query.ProvisionedReposNotIn) > 0 {
 		var dashes []*dashboards.Dashboard
-		if query.ManagedBy == utils.ManagerKindPlugin {
+		if query.ProvisionedRepo == dashboard.PluginIDRepoName {
 			dashes, err = c.dashboardStore.GetDashboardsByPluginID(ctx, &dashboards.GetDashboardsByPluginIDQuery{
-				PluginID: query.ManagerIdentity,
+				PluginID: query.ProvisionedPath,
 				OrgID:    user.GetOrgID(),
 			})
-		} else if query.ManagerIdentity != "" {
-			dashes, err = c.dashboardStore.GetProvisionedDashboardsByName(ctx, query.ManagerIdentity)
-		} else if len(query.ManagerIdentityNotIn) > 0 {
-			dashes, err = c.dashboardStore.GetOrphanedProvisionedDashboards(ctx, query.ManagerIdentityNotIn)
+		} else if query.ProvisionedRepo != "" {
+			dashes, err = c.dashboardStore.GetProvisionedDashboardsByName(ctx, query.ProvisionedRepo)
+		} else if len(query.ProvisionedReposNotIn) > 0 {
+			dashes, err = c.dashboardStore.GetOrphanedProvisionedDashboards(ctx, query.ProvisionedReposNotIn)
 		}
 		if err != nil {
 			return nil, err

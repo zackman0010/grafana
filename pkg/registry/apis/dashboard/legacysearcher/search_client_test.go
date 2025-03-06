@@ -6,19 +6,18 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
-	"k8s.io/apimachinery/pkg/selection"
-
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
-	dashboard "github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
+	"github.com/grafana/grafana/pkg/apis/dashboard"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	"github.com/grafana/grafana/pkg/services/search/model"
 	"github.com/grafana/grafana/pkg/services/search/sort"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 	unisearch "github.com/grafana/grafana/pkg/storage/unified/search"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+	"k8s.io/apimachinery/pkg/selection"
 )
 
 func TestDashboardSearchClient_Search(t *testing.T) {
@@ -373,12 +372,12 @@ func TestDashboardSearchClient_Search(t *testing.T) {
 				Key: dashboardKey,
 				Fields: []*resource.Requirement{
 					{
-						Key:      resource.SEARCH_FIELD_MANAGER_ID,
+						Key:      resource.SEARCH_FIELD_REPOSITORY_PATH,
 						Operator: "in",
 						Values:   []string{"slo"},
 					},
 					{
-						Key:      resource.SEARCH_FIELD_MANAGER_KIND,
+						Key:      resource.SEARCH_FIELD_REPOSITORY_NAME,
 						Operator: "in",
 						Values:   []string{"plugin"},
 					},
@@ -402,14 +401,9 @@ func TestDashboardSearchClient_Search(t *testing.T) {
 				Key: dashboardKey,
 				Fields: []*resource.Requirement{
 					{
-						Key:      resource.SEARCH_FIELD_MANAGER_KIND,
-						Operator: "=",
-						Values:   []string{string(utils.ManagerKindClassicFP)}, // nolint:staticcheck
-					},
-					{
-						Key:      resource.SEARCH_FIELD_MANAGER_ID,
+						Key:      resource.SEARCH_FIELD_REPOSITORY_NAME,
 						Operator: "in",
-						Values:   []string{"test"},
+						Values:   []string{"file:test"}, // file prefix should be removed before going to legacy
 					},
 				},
 			},
@@ -431,14 +425,9 @@ func TestDashboardSearchClient_Search(t *testing.T) {
 				Key: dashboardKey,
 				Fields: []*resource.Requirement{
 					{
-						Key:      resource.SEARCH_FIELD_MANAGER_KIND,
-						Operator: "=",
-						Values:   []string{string(utils.ManagerKindClassicFP)}, // nolint:staticcheck
-					},
-					{
-						Key:      resource.SEARCH_FIELD_MANAGER_ID,
+						Key:      resource.SEARCH_FIELD_REPOSITORY_NAME,
 						Operator: string(selection.NotIn),
-						Values:   []string{"test", "test2"},
+						Values:   []string{"file:test", "file:test2"}, // file prefix should be removed before going to legacy
 					},
 				},
 			},

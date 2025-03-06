@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -10,12 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
-	dashboardv0alpha1 "github.com/grafana/grafana/pkg/apis/dashboard/v0alpha1"
+	"github.com/grafana/grafana/pkg/apis/dashboard"
 	"github.com/grafana/grafana/pkg/components/simplejson"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/apiserver/client"
@@ -540,38 +540,31 @@ func TestGetProvisionedDashboardData(t *testing.T) {
 
 	t.Run("Should use Kubernetes client if feature flags are enabled and get from relevant org", func(t *testing.T) {
 		ctx, k8sCliMock := setupK8sDashboardTests(service)
-		provisioningTimestamp := int64(1234567)
 		k8sCliMock.On("GetNamespace", mock.Anything, mock.Anything).Return("default")
-		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{
-			Object: map[string]interface{}{
-				"apiVersion": dashboardv0alpha1.DashboardResourceInfo.GroupVersion().String(),
-				"kind":       dashboardv0alpha1.DashboardResourceInfo.GroupVersionKind().Kind,
-				"metadata": map[string]interface{}{
-					"name": "uid",
-					"labels": map[string]interface{}{
-						utils.LabelKeyDeprecatedInternalID: "1", // nolint:staticcheck
-					},
-					"annotations": map[string]interface{}{
-						utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-						utils.AnnoKeyManagerIdentity: "test",
-						utils.AnnoKeySourceChecksum:  "hash",
-						utils.AnnoKeySourcePath:      "path/to/file",
-						utils.AnnoKeySourceTimestamp: fmt.Sprintf("%d", time.Unix(provisioningTimestamp, 0).UnixMilli()),
-					},
+		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{Object: map[string]any{
+			"metadata": map[string]any{
+				"name": "uid",
+				"labels": map[string]any{
+					utils.LabelKeyDeprecatedInternalID: "1", // nolint:staticcheck
 				},
-				"spec": map[string]interface{}{
-					"test":    "test",
-					"version": int64(1),
-					"title":   "testing slugify",
+				"annotations": map[string]any{
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("test"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
-		}, nil).Once()
+			"spec": map[string]any{
+				"test":    "test",
+				"version": int64(1),
+				"title":   "testing slugify",
+			},
+		}}, nil).Once()
 		repo := "test"
 		k8sCliMock.On("Search", mock.Anything, int64(1),
 			mock.MatchedBy(func(req *resource.ResourceSearchRequest) bool {
-				// make sure the kind is added to the query
-				return req.Options.Fields[0].Values[0] == string(utils.ManagerKindClassicFP) && // nolint:staticcheck
-					req.Options.Fields[1].Values[0] == repo
+				// ensure the prefix is added to the query
+				return req.Options.Fields[0].Values[0] == dashboard.ProvisionedFileNameWithPrefix(repo)
 			})).Return(&resource.ResourceSearchResponse{
 			Results: &resource.ResourceTable{
 				Columns: []*resource.ResourceTableColumnDefinition{},
@@ -580,9 +573,8 @@ func TestGetProvisionedDashboardData(t *testing.T) {
 			TotalHits: 0,
 		}, nil).Once()
 		k8sCliMock.On("Search", mock.Anything, int64(2), mock.MatchedBy(func(req *resource.ResourceSearchRequest) bool {
-			// make sure the kind is added to the query
-			return req.Options.Fields[0].Values[0] == string(utils.ManagerKindClassicFP) && // nolint:staticcheck
-				req.Options.Fields[1].Values[0] == repo
+			// ensure the prefix is added to the query
+			return req.Options.Fields[0].Values[0] == dashboard.ProvisionedFileNameWithPrefix(repo)
 		})).Return(&resource.ResourceSearchResponse{
 			Results: &resource.ResourceTable{
 				Columns: []*resource.ResourceTableColumnDefinition{
@@ -619,7 +611,7 @@ func TestGetProvisionedDashboardData(t *testing.T) {
 			Name:        "test",
 			ExternalID:  "path/to/file",
 			CheckSum:    "hash",
-			Updated:     provisioningTimestamp,
+			Updated:     1735689600,
 		})
 		k8sCliMock.AssertExpectations(t)
 	})
@@ -647,25 +639,21 @@ func TestGetProvisionedDashboardDataByDashboardID(t *testing.T) {
 
 	t.Run("Should use Kubernetes client if feature flags are enabled and get from whatever org it is in", func(t *testing.T) {
 		ctx, k8sCliMock := setupK8sDashboardTests(service)
-		provisioningTimestamp := int64(1234567)
 		k8sCliMock.On("GetNamespace", mock.Anything, mock.Anything).Return("default")
-		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{Object: map[string]interface{}{
-			"apiVersion": dashboardv0alpha1.DashboardResourceInfo.GroupVersion().String(),
-			"kind":       dashboardv0alpha1.DashboardResourceInfo.GroupVersionKind().Kind,
-			"metadata": map[string]interface{}{
+		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{Object: map[string]any{
+			"metadata": map[string]any{
 				"name": "uid",
-				"labels": map[string]interface{}{
+				"labels": map[string]any{
 					utils.LabelKeyDeprecatedInternalID: "1", // nolint:staticcheck
 				},
-				"annotations": map[string]interface{}{
-					utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-					utils.AnnoKeyManagerIdentity: "test",
-					utils.AnnoKeySourceChecksum:  "hash",
-					utils.AnnoKeySourcePath:      "path/to/file",
-					utils.AnnoKeySourceTimestamp: fmt.Sprintf("%d", time.Unix(provisioningTimestamp, 0).UnixMilli()),
+				"annotations": map[string]any{
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("test"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
-			"spec": map[string]interface{}{
+			"spec": map[string]any{
 				"test":    "test",
 				"version": int64(1),
 				"title":   "testing slugify",
@@ -713,7 +701,7 @@ func TestGetProvisionedDashboardDataByDashboardID(t *testing.T) {
 			Name:        "test",
 			ExternalID:  "path/to/file",
 			CheckSum:    "hash",
-			Updated:     provisioningTimestamp,
+			Updated:     1735689600,
 		})
 		k8sCliMock.AssertExpectations(t)
 	})
@@ -741,25 +729,21 @@ func TestGetProvisionedDashboardDataByDashboardUID(t *testing.T) {
 
 	t.Run("Should use Kubernetes client if feature flags are enabled", func(t *testing.T) {
 		ctx, k8sCliMock := setupK8sDashboardTests(service)
-		provisioningTimestamp := int64(1234567)
 		k8sCliMock.On("GetNamespace", mock.Anything, mock.Anything).Return("default")
-		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{Object: map[string]interface{}{
-			"apiVersion": dashboardv0alpha1.DashboardResourceInfo.GroupVersion().String(),
-			"kind":       dashboardv0alpha1.DashboardResourceInfo.GroupVersionKind().Kind,
-			"metadata": map[string]interface{}{
+		k8sCliMock.On("Get", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&unstructured.Unstructured{Object: map[string]any{
+			"metadata": map[string]any{
 				"name": "uid",
-				"labels": map[string]interface{}{
+				"labels": map[string]any{
 					utils.LabelKeyDeprecatedInternalID: "1", // nolint:staticcheck
 				},
-				"annotations": map[string]interface{}{
-					utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-					utils.AnnoKeyManagerIdentity: "test",
-					utils.AnnoKeySourceChecksum:  "hash",
-					utils.AnnoKeySourcePath:      "path/to/file",
-					utils.AnnoKeySourceTimestamp: fmt.Sprintf("%d", time.Unix(provisioningTimestamp, 0).UnixMilli()),
+				"annotations": map[string]any{
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("test"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
-			"spec": map[string]interface{}{
+			"spec": map[string]any{
 				"test":    "test",
 				"version": int64(1),
 				"title":   "testing slugify",
@@ -800,7 +784,7 @@ func TestGetProvisionedDashboardDataByDashboardUID(t *testing.T) {
 			Name:        "test",
 			ExternalID:  "path/to/file",
 			CheckSum:    "hash",
-			Updated:     provisioningTimestamp,
+			Updated:     1735689600,
 		})
 		k8sCliMock.AssertExpectations(t)
 	})
@@ -842,11 +826,10 @@ func TestDeleteOrphanedProvisionedDashboards(t *testing.T) {
 			"metadata": map[string]any{
 				"name": "uid",
 				"annotations": map[string]any{
-					utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-					utils.AnnoKeyManagerIdentity: "orphaned",
-					utils.AnnoKeySourceChecksum:  "hash",
-					utils.AnnoKeySourcePath:      "path/to/file",
-					utils.AnnoKeySourceTimestamp: "2025-01-01T00:00:00Z",
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("orphaned"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
 			"spec": map[string]any{},
@@ -856,8 +839,8 @@ func TestDeleteOrphanedProvisionedDashboards(t *testing.T) {
 			"metadata": map[string]any{
 				"name": "uid2",
 				"annotations": map[string]any{
-					utils.AnnoKeyManagerKind:     string(utils.ManagerKindPlugin),
-					utils.AnnoKeyManagerIdentity: "app",
+					utils.AnnoKeyRepoName: dashboard.PluginIDRepoName,
+					utils.AnnoKeyRepoHash: "app",
 				},
 			},
 			"spec": map[string]any{},
@@ -867,17 +850,16 @@ func TestDeleteOrphanedProvisionedDashboards(t *testing.T) {
 			"metadata": map[string]any{
 				"name": "uid3",
 				"annotations": map[string]any{
-					utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-					utils.AnnoKeyManagerIdentity: "orphaned",
-					utils.AnnoKeySourceChecksum:  "hash",
-					utils.AnnoKeySourcePath:      "path/to/file",
-					utils.AnnoKeySourceTimestamp: "2025-01-01T00:00:00Z",
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("orphaned"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
 			"spec": map[string]any{},
 		}}, nil).Once()
 		k8sCliMock.On("Search", mock.Anything, int64(1), mock.MatchedBy(func(req *resource.ResourceSearchRequest) bool {
-			return req.Options.Fields[0].Key == "manager.id" && req.Options.Fields[0].Values[0] == "test" && req.Options.Fields[0].Operator == "notin"
+			return req.Options.Fields[0].Key == "repo.name" && req.Options.Fields[0].Values[0] == dashboard.ProvisionedFileNameWithPrefix("test") && req.Options.Fields[0].Operator == "notin"
 		})).Return(&resource.ResourceSearchResponse{
 			Results: &resource.ResourceTable{
 				Columns: []*resource.ResourceTableColumnDefinition{
@@ -907,7 +889,7 @@ func TestDeleteOrphanedProvisionedDashboards(t *testing.T) {
 		}, nil).Once()
 
 		k8sCliMock.On("Search", mock.Anything, int64(2), mock.MatchedBy(func(req *resource.ResourceSearchRequest) bool {
-			return req.Options.Fields[0].Key == "manager.id" && req.Options.Fields[0].Values[0] == "test" && req.Options.Fields[0].Operator == "notin"
+			return req.Options.Fields[0].Key == "repo.name" && req.Options.Fields[0].Values[0] == dashboard.ProvisionedFileNameWithPrefix("test") && req.Options.Fields[0].Operator == "notin"
 		})).Return(&resource.ResourceSearchResponse{
 			Results: &resource.ResourceTable{
 				Columns: []*resource.ResourceTableColumnDefinition{
@@ -978,11 +960,10 @@ func TestUnprovisionDashboard(t *testing.T) {
 			"metadata": map[string]any{
 				"name": "uid",
 				"annotations": map[string]any{
-					utils.AnnoKeyManagerKind:     utils.ManagerKindClassicFP, // nolint:staticcheck
-					utils.AnnoKeyManagerIdentity: "test",
-					utils.AnnoKeySourceChecksum:  "hash",
-					utils.AnnoKeySourcePath:      "path/to/file",
-					utils.AnnoKeySourceTimestamp: "2025-01-01T00:00:00Z",
+					utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("test"),
+					utils.AnnoKeyRepoHash:      "hash",
+					utils.AnnoKeyRepoPath:      "path/to/file",
+					utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 				},
 			},
 			"spec": map[string]any{},
@@ -1002,7 +983,7 @@ func TestUnprovisionDashboard(t *testing.T) {
 			},
 		}}
 		// should update it to be without annotations
-		k8sCliMock.On("Update", mock.Anything, dashWithoutAnnotations, mock.Anything).Return(dashWithoutAnnotations, nil)
+		k8sCliMock.On("Update", mock.Anything, dashWithoutAnnotations, mock.Anything, mock.Anything).Return(dashWithoutAnnotations, nil)
 		k8sCliMock.On("GetNamespace", mock.Anything).Return("default")
 		k8sCliMock.On("GetUserFromMeta", mock.Anything, mock.Anything).Return(&user.User{}, nil)
 		k8sCliMock.On("Search", mock.Anything, mock.Anything, mock.Anything).Return(&resource.ResourceSearchResponse{
@@ -1073,9 +1054,8 @@ func TestGetDashboardsByPluginID(t *testing.T) {
 		k8sCliMock.On("Get", mock.Anything, "uid", mock.Anything, mock.Anything, mock.Anything).Return(uidUnstructured, nil)
 		k8sCliMock.On("GetUserFromMeta", mock.Anything, mock.Anything).Return(&user.User{}, nil)
 		k8sCliMock.On("Search", mock.Anything, mock.Anything, mock.MatchedBy(func(req *resource.ResourceSearchRequest) bool {
-			return ( // gofmt comment helper
-			req.Options.Fields[0].Key == "manager.kind" && req.Options.Fields[0].Values[0] == string(utils.ManagerKindPlugin) &&
-				req.Options.Fields[1].Key == "manager.id" && req.Options.Fields[1].Values[0] == "testing")
+			return req.Options.Fields[0].Key == "repo.name" && req.Options.Fields[0].Values[0] == dashboard.PluginIDRepoName &&
+				req.Options.Fields[1].Key == "repo.path" && req.Options.Fields[1].Values[0] == "testing"
 		})).Return(&resource.ResourceSearchResponse{
 			Results: &resource.ResourceTable{
 				Columns: []*resource.ResourceTableColumnDefinition{
@@ -2009,16 +1989,14 @@ func TestSearchProvisionedDashboardsThroughK8sRaw(t *testing.T) {
 	query := &dashboards.FindPersistedDashboardsQuery{
 		OrgId: 1,
 	}
-	provisioningTimestamp := int64(1234567)
 	dashboardUnstructuredProvisioned := unstructured.Unstructured{Object: map[string]any{
 		"metadata": map[string]any{
 			"name": "uid",
 			"annotations": map[string]any{
-				utils.AnnoKeyManagerKind:     string(utils.ManagerKindClassicFP), // nolint:staticcheck
-				utils.AnnoKeyManagerIdentity: "test",
-				utils.AnnoKeySourceChecksum:  "hash",
-				utils.AnnoKeySourcePath:      "path/to/file",
-				utils.AnnoKeySourceTimestamp: fmt.Sprintf("%d", time.Unix(provisioningTimestamp, 0).UnixMilli()),
+				utils.AnnoKeyRepoName:      dashboard.ProvisionedFileNameWithPrefix("test"),
+				utils.AnnoKeyRepoHash:      "hash",
+				utils.AnnoKeyRepoPath:      "path/to/file",
+				utils.AnnoKeyRepoTimestamp: "2025-01-01T00:00:00Z",
 			},
 		},
 		"spec": map[string]any{},
@@ -2078,7 +2056,7 @@ func TestSearchProvisionedDashboardsThroughK8sRaw(t *testing.T) {
 				Name:       "test",
 				ExternalID: "path/to/file",
 				CheckSum:   "hash",
-				Updated:    provisioningTimestamp,
+				Updated:    1735689600,
 			},
 		},
 	}, res) // only should return the one provisioned dashboard

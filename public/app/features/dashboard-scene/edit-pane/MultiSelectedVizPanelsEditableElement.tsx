@@ -1,14 +1,13 @@
+import { ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { VizPanel } from '@grafana/scenes';
-import { t } from 'app/core/internationalization';
-import { OptionsPaneCategoryDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneCategoryDescriptor';
+import { Button, Stack, Text } from '@grafana/ui';
+import { t, Trans } from 'app/core/internationalization';
 
 import { EditableDashboardElementInfo } from '../scene/types/EditableDashboardElement';
 import { MultiSelectedEditableDashboardElement } from '../scene/types/MultiSelectedEditableDashboardElement';
 import { dashboardSceneGraph } from '../utils/dashboardSceneGraph';
-
-import { EditPaneHeader } from './EditPaneHeader';
 
 export class MultiSelectedVizPanelsEditableElement implements MultiSelectedEditableDashboardElement {
   public readonly isMultiSelectedEditableDashboardElement = true;
@@ -22,22 +21,23 @@ export class MultiSelectedVizPanelsEditableElement implements MultiSelectedEdita
     return { name: t('dashboard.edit-pane.elements.panels', 'Panels'), typeId: 'panels', icon: 'folder' };
   }
 
-  public useEditPaneOptions(): OptionsPaneCategoryDescriptor[] {
-    const header = new OptionsPaneCategoryDescriptor({
-      title: ``,
-      id: 'panel-header',
-      isOpenable: false,
-      renderTitle: () => (
-        <EditPaneHeader
-          title={t('dashboard.layout.common.panels-title', '{{length}} panels selected', {
-            length: this._panels.length,
-          })}
-          onDelete={() => this.onDelete()}
-        />
-      ),
-    });
-
-    return [header];
+  renderActions(): ReactNode {
+    return (
+      <Stack direction="column">
+        <Text>
+          <Trans
+            i18nKey="dashboard.edit-pane.panels.multi-select.selection-number"
+            values={{ length: this._panels.length }}
+          >
+            No. of panels selected: {{ length }}
+          </Trans>
+        </Text>
+        <Stack direction="row">
+          <Button size="sm" variant="secondary" icon="copy" />
+          <Button size="sm" variant="destructive" fill="outline" onClick={() => this.onDelete()} icon="trash-alt" />
+        </Stack>
+      </Stack>
+    );
   }
 
   public onDelete() {

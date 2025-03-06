@@ -32,7 +32,6 @@ type Scheduler struct {
 	Ticker                              *ticker.Metrics
 	EvaluationMissed                    *prometheus.CounterVec
 	SimplifiedEditorRules               *prometheus.GaugeVec
-	PrometheusImportedRules             *prometheus.GaugeVec
 }
 
 func NewSchedulerMetrics(r prometheus.Registerer) *Scheduler {
@@ -192,15 +191,6 @@ func NewSchedulerMetrics(r prometheus.Registerer) *Scheduler {
 				Help:      "The number of alert rules using simplified editor settings.",
 			},
 			[]string{"org", "setting"},
-		),
-		PrometheusImportedRules: promauto.With(r).NewGaugeVec(
-			prometheus.GaugeOpts{
-				Namespace: Namespace,
-				Subsystem: Subsystem,
-				Name:      "prometheus_imported_rules",
-				Help:      "The number of rules imported from a Prometheus-compatible source.",
-			},
-			[]string{"org"},
 		),
 	}
 }

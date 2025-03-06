@@ -1,8 +1,8 @@
 {
   "key": {
     "namespace": "default",
-    "group": "folder.grafana.app",
-    "resource": "folders",
+    "group": "dashboard.grafana.app",
+    "resource": "dashboards",
     "name": "aaa"
   },
   "name": "aaa",
@@ -11,8 +11,7 @@
   "title_phrase": "test-aaa",
   "created": 1730490142000,
   "createdBy": "user:1",
-  "manager": {
-    "kind": "repo",
-    "id": "MyGIT"
+  "repo": {
+    "name": "SQL"
   }
 }

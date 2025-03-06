@@ -486,7 +486,6 @@ func saveDashboard(sess *db.Session, cmd *dashboards.SaveDashboardCommand, emitE
 		CreatedBy:     dash.UpdatedBy,
 		Message:       cmd.Message,
 		Data:          dash.Data,
-		APIVersion:    cmd.APIVersion,
 	}
 
 	// insert version entry

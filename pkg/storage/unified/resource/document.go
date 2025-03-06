@@ -102,10 +102,7 @@ type IndexableDocument struct {
 	References ResourceReferences `json:"reference,omitempty"`
 
 	// When the resource is managed by an upstream repository
-	Manager *utils.ManagerProperties `json:"manager,omitempty"`
-
-	// When the manager knows about file paths
-	Source *utils.SourceProperties `json:"source,omitempty"`
+	RepoInfo *utils.ResourceRepositoryInfo `json:"repo,omitempty"`
 }
 
 func (m *IndexableDocument) Type() string {
@@ -176,14 +173,7 @@ func NewIndexableDocument(key *ResourceKey, rv int64, obj utils.GrafanaMetaAcces
 		CreatedBy:   obj.GetCreatedBy(),
 		UpdatedBy:   obj.GetUpdatedBy(),
 	}
-	m, ok := obj.GetManagerProperties()
-	if ok {
-		doc.Manager = &m
-	}
-	s, ok := obj.GetSourceProperties()
-	if ok {
-		doc.Source = &s
-	}
+	doc.RepoInfo, _ = obj.GetRepositoryInfo()
 	ts := obj.GetCreationTimestamp()
 	if !ts.Time.IsZero() {
 		doc.Created = ts.Time.UnixMilli()
@@ -275,11 +265,10 @@ const SEARCH_FIELD_CREATED_BY = "createdBy"
 const SEARCH_FIELD_UPDATED = "updated"
 const SEARCH_FIELD_UPDATED_BY = "updatedBy"
 
-const SEARCH_FIELD_MANAGER_KIND = "manager.kind"
-const SEARCH_FIELD_MANAGER_ID = "manager.id"
-const SEARCH_FIELD_SOURCE_PATH = "source.path"
-const SEARCH_FIELD_SOURCE_CHECKSUM = "source.checksum"
-const SEARCH_FIELD_SOURCE_TIME = "source.timestampMillis"
+const SEARCH_FIELD_REPOSITORY_NAME = "repo.name"
+const SEARCH_FIELD_REPOSITORY_PATH = "repo.path"
+const SEARCH_FIELD_REPOSITORY_HASH = "repo.hash"
+const SEARCH_FIELD_REPOSITORY_TIME = "repo.time"
 
 const SEARCH_FIELD_SCORE = "_score"     // the match score
 const SEARCH_FIELD_EXPLAIN = "_explain" // score explanation as JSON object

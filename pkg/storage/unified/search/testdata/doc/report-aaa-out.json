@@ -1,8 +1,8 @@
 {
   "key": {
     "namespace": "default",
-    "group": "reporting.grafana.app",
-    "resource": "reports",
+    "group": "dashboard.grafana.app",
+    "resource": "dashboards",
     "name": "aaa"
   },
   "name": "aaa",

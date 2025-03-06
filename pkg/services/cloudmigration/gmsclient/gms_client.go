@@ -32,7 +32,7 @@ func NewGMSClient(cfg *setting.Cfg, httpClient *http.Client) (Client, error) {
 
 type gmsClientImpl struct {
 	cfg        *setting.Cfg
-	log        log.Logger
+	log        *log.ConcreteLogger
 	httpClient *http.Client
 
 	getStatusMux         sync.Mutex

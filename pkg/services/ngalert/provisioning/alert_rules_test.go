@@ -1726,7 +1726,7 @@ func TestDeleteRuleGroup(t *testing.T) {
 func TestDeleteRuleGroups(t *testing.T) {
 	orgID1 := rand.Int63()
 	orgID2 := rand.Int63()
-	u := &user.SignedInUser{OrgID: orgID1, UserUID: "test-test"}
+	u := &user.SignedInUser{OrgID: orgID1}
 
 	// Create groups across different orgs and namespaces
 	groupKey1 := models.AlertRuleGroupKey{
@@ -1805,7 +1805,6 @@ func TestDeleteRuleGroups(t *testing.T) {
 			// Verify only rules from group1 in org1 were deleted
 			deletes := getDeletedRules(t, ruleStore)
 			require.Len(t, deletes, 1)
-			require.Equal(t, "test-test", deletes[0].userID)
 			require.ElementsMatch(t, getUIDs(rules1), deletes[0].uids)
 		})
 
@@ -2046,9 +2045,8 @@ func getDeleteQueries(ruleStore *fakes.RuleStore) []fakes.GenericRecordedQuery {
 }
 
 type deleteRuleOperation struct {
-	orgID  int64
-	userID string
-	uids   []string
+	orgID int64
+	uids  []string
 }
 
 func getDeletedRules(t *testing.T, ruleStore *fakes.RuleStore) []deleteRuleOperation {
@@ -2060,20 +2058,12 @@ func getDeletedRules(t *testing.T, ruleStore *fakes.RuleStore) []deleteRuleOpera
 		orgID, ok := q.Params[0].(int64)
 		require.True(t, ok, "orgID parameter should be int64")
 
-		uid := ""
-		userUID, ok := q.Params[1].(*models.UserUID)
-		require.True(t, ok, "parameter should be UserUID")
-		if userUID != nil {
-			uid = string(*userUID)
-		}
-
-		uids, ok := q.Params[2].([]string)
+		uids, ok := q.Params[1].([]string)
 		require.True(t, ok, "uids parameter should be []string")
 
 		operations = append(operations, deleteRuleOperation{
-			orgID:  orgID,
-			userID: uid,
-			uids:   uids,
+			orgID: orgID,
+			uids:  uids,
 		})
 	}
 	return operations
@@ -2087,10 +2077,9 @@ func createAlertRuleService(t *testing.T, folderService folder.Service) AlertRul
 		Cfg: setting.UnifiedAlertingSettings{
 			BaseInterval: time.Second * 10,
 		},
-		Logger:         log.NewNopLogger(),
-		FolderService:  folderService,
-		Bus:            bus.ProvideBus(tracing.InitializeTracerForTest()),
-		FeatureToggles: featuremgmt.WithFeatures(),
+		Logger:        log.NewNopLogger(),
+		FolderService: folderService,
+		Bus:           bus.ProvideBus(tracing.InitializeTracerForTest()),
 	}
 	// store := fakes.NewRuleStore(t)
 	quotas := MockQuotaChecker{}

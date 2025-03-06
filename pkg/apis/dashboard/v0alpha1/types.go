@@ -17,19 +17,6 @@ type Dashboard struct {
 
 	// The dashboard body (unstructured for now)
 	Spec common.Unstructured `json:"spec"`
-
-	// Optional dashboard status
-	Status *DashboardStatus `json:"status,omitempty"`
-}
-
-type DashboardStatus struct {
-	ConversionStatus *ConversionStatus `json:"conversion,omitempty"`
-}
-
-type ConversionStatus struct {
-	Failed        bool   `json:"failed,omitempty"`
-	StoredVersion string `json:"storedVersion,omitempty"`
-	Error         string `json:"error,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

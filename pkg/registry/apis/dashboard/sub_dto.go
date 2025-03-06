@@ -10,10 +10,10 @@ import (
 	"k8s.io/apiserver/pkg/registry/rest"
 
 	claims "github.com/grafana/authlib/types"
-	"github.com/grafana/grafana-app-sdk/logging"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
-	"github.com/grafana/grafana/pkg/apis/dashboard"
+	dashboard "github.com/grafana/grafana/pkg/apis/dashboard"
+	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/infra/slugify"
 	"github.com/grafana/grafana/pkg/registry/apis/dashboard/legacy"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
@@ -24,8 +24,6 @@ import (
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
 
-type dtoBuilder = func(dashboard runtime.Object, access *dashboard.DashboardAccess) (runtime.Object, error)
-
 // The DTO returns everything the UI needs in a single request
 type DTOConnector struct {
 	getter        rest.Getter
@@ -34,27 +32,34 @@ type DTOConnector struct {
 	largeObjects  apistore.LargeObjectSupport
 	accessControl accesscontrol.AccessControl
 	scheme        *runtime.Scheme
-	builder       dtoBuilder
+	newFunc       func() runtime.Object
+	log           log.Logger
 }
 
 func NewDTOConnector(
-	getter rest.Getter,
+	dash rest.Storage,
 	largeObjects apistore.LargeObjectSupport,
 	legacyAccess legacy.DashboardAccess,
 	resourceClient resource.ResourceClient,
 	accessControl accesscontrol.AccessControl,
 	scheme *runtime.Scheme,
-	builder dtoBuilder,
+	newFunc func() runtime.Object,
 ) (rest.Storage, error) {
-	return &DTOConnector{
-		getter:        getter,
+	ok := false
+	v := &DTOConnector{
 		legacy:        legacyAccess,
 		accessControl: accessControl,
 		unified:       resourceClient,
 		largeObjects:  largeObjects,
-		builder:       builder,
+		newFunc:       newFunc,
 		scheme:        scheme,
-	}, nil
+		log:           log.New("grafana-apiserver.dashboards.dto-connector"),
+	}
+	v.getter, ok = dash.(rest.Getter)
+	if !ok {
+		return nil, fmt.Errorf("dashboard storage must implement getter")
+	}
+	return v, nil
 }
 
 var (
@@ -63,8 +68,7 @@ var (
 )
 
 func (r *DTOConnector) New() runtime.Object {
-	obj, _ := r.builder(nil, nil)
-	return obj
+	return r.newFunc()
 }
 
 func (r *DTOConnector) Destroy() {
@@ -75,7 +79,7 @@ func (r *DTOConnector) ConnectMethods() []string {
 }
 
 func (r *DTOConnector) NewConnectOptions() (runtime.Object, bool, string) {
-	return nil, false, ""
+	return &dashboard.VersionsQueryOptions{}, false, ""
 }
 
 func (r *DTOConnector) ProducesMIMETypes(verb string) []string {
@@ -83,7 +87,7 @@ func (r *DTOConnector) ProducesMIMETypes(verb string) []string {
 }
 
 func (r *DTOConnector) ProducesObject(verb string) interface{} {
-	return r.New()
+	return r.newFunc()
 }
 
 func (r *DTOConnector) Connect(ctx context.Context, name string, opts runtime.Object, responder rest.Responder) (http.Handler, error) {
@@ -101,10 +105,49 @@ func (r *DTOConnector) Connect(ctx context.Context, name string, opts runtime.Ob
 	if err != nil {
 		return nil, err
 	}
-	obj, err := utils.MetaAccessor(rawobj)
+
+	dash, err := ToInternalDashboard(r.scheme, rawobj)
 	if err != nil {
 		return nil, err
 	}
+
+	obj, err := utils.MetaAccessor(dash)
+	if err != nil {
+		return nil, err
+	}
+
+	dto := &dashboards.Dashboard{
+		UID:   name,
+		OrgID: info.OrgID,
+		ID:    obj.GetDeprecatedInternalID(), // nolint:staticcheck
+	}
+	repo, err := obj.GetRepositoryInfo()
+	if err != nil {
+		return nil, err
+	}
+	if repo != nil && repo.Name == dashboard.PluginIDRepoName {
+		dto.PluginID = repo.Path
+	}
+
+	guardian, err := guardian.NewByDashboard(ctx, dto, info.OrgID, user)
+	if err != nil {
+		return nil, err
+	}
+	canView, err := guardian.CanView()
+	if err != nil || !canView {
+		return nil, fmt.Errorf("not allowed to view")
+	}
+
+	access := dashboard.DashboardAccess{}
+	access.CanEdit, _ = guardian.CanEdit()
+	access.CanSave, _ = guardian.CanSave()
+	access.CanAdmin, _ = guardian.CanAdmin()
+	access.CanDelete, _ = guardian.CanDelete()
+	access.CanStar = user.IsIdentityType(claims.TypeUser)
+
+	access.AnnotationsPermissions = &dashboard.AnnotationPermission{}
+	r.getAnnotationPermissionsByScope(ctx, user, &access.AnnotationsPermissions.Dashboard, accesscontrol.ScopeAnnotationsTypeDashboard)
+	r.getAnnotationPermissionsByScope(ctx, user, &access.AnnotationsPermissions.Organization, accesscontrol.ScopeAnnotationsTypeOrganization)
 
 	// Check for blob info
 	blobInfo := obj.GetBlob()
@@ -121,80 +164,35 @@ func (r *DTOConnector) Connect(ctx context.Context, name string, opts runtime.Ob
 		}
 	}
 
+	access.Slug = slugify.Slugify(dash.Spec.GetNestedString("title"))
+	access.Url = dashboards.GetDashboardFolderURL(false, name, access.Slug)
+
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		// Skip the access info and return the dashboard that may be loaded with large object support
-		if req.URL.Query().Get("includeAccess") == "false" {
-			responder.Object(200, rawobj)
-			return
-		}
-
-		// Calculate access information -- needed to help smooth transition from /api/dashboard format
-		dto := &dashboards.Dashboard{
-			UID:   name,
-			OrgID: info.OrgID,
-			ID:    obj.GetDeprecatedInternalID(), // nolint:staticcheck
-		}
-		manager, ok := obj.GetManagerProperties()
-		if ok && manager.Kind == utils.ManagerKindPlugin {
-			dto.PluginID = manager.Identity
-		}
-
-		guardian, err := guardian.NewByDashboard(ctx, dto, info.OrgID, user)
-		if err != nil {
-			responder.Error(err)
-			return
-		}
-		canView, err := guardian.CanView()
-		if err != nil || !canView {
-			responder.Error(fmt.Errorf("not allowed to view"))
-			return
-		}
-
-		access := &dashboard.DashboardAccess{}
-		access.CanEdit, _ = guardian.CanEdit()
-		access.CanSave, _ = guardian.CanSave()
-		access.CanAdmin, _ = guardian.CanAdmin()
-		access.CanDelete, _ = guardian.CanDelete()
-		access.CanStar = user.IsIdentityType(claims.TypeUser)
-
-		access.AnnotationsPermissions = &dashboard.AnnotationPermission{}
-		r.getAnnotationPermissionsByScope(ctx, user, &access.AnnotationsPermissions.Dashboard, accesscontrol.ScopeAnnotationsTypeDashboard)
-		r.getAnnotationPermissionsByScope(ctx, user, &access.AnnotationsPermissions.Organization, accesscontrol.ScopeAnnotationsTypeOrganization)
-
-		// FIXME!!!! does not get the title!
-		// The title property next to unstructured and not found in this model
-		title := obj.FindTitle("")
-		access.Slug = slugify.Slugify(title)
-		access.Url = dashboards.GetDashboardFolderURL(false, name, access.Slug)
-
-		dash, err := r.builder(rawobj, access)
-		if err != nil {
-			responder.Error(err)
-			return
-		}
-		responder.Object(http.StatusOK, dash)
+		responder.Object(http.StatusOK, &dashboard.DashboardWithAccessInfo{
+			Dashboard: *dash,
+			Access:    access,
+		})
 	}), nil
 }
 
 func (r *DTOConnector) getAnnotationPermissionsByScope(ctx context.Context, user identity.Requester, actions *dashboard.AnnotationActions, scope string) {
 	var err error
-	logger := logging.FromContext(ctx).With("logger", "dto-connector")
 
 	evaluate := accesscontrol.EvalPermission(accesscontrol.ActionAnnotationsCreate, scope)
 	actions.CanAdd, err = r.accessControl.Evaluate(ctx, user, evaluate)
 	if err != nil {
-		logger.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsCreate, "scope", scope)
+		r.log.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsCreate, "scope", scope)
 	}
 
 	evaluate = accesscontrol.EvalPermission(accesscontrol.ActionAnnotationsDelete, scope)
 	actions.CanDelete, err = r.accessControl.Evaluate(ctx, user, evaluate)
 	if err != nil {
-		logger.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsDelete, "scope", scope)
+		r.log.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsDelete, "scope", scope)
 	}
 
 	evaluate = accesscontrol.EvalPermission(accesscontrol.ActionAnnotationsWrite, scope)
 	actions.CanEdit, err = r.accessControl.Evaluate(ctx, user, evaluate)
 	if err != nil {
-		logger.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsWrite, "scope", scope)
+		r.log.Warn("Failed to evaluate permission", "err", err, "action", accesscontrol.ActionAnnotationsWrite, "scope", scope)
 	}
 }

@@ -744,9 +744,6 @@ describe('graphiteDatasource', () => {
           params: [{ multiple: true }],
         },
         updateText: () => {},
-        render: () => {
-          return '';
-        },
       }));
     });
 

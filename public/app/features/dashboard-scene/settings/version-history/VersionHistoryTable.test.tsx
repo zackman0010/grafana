@@ -52,7 +52,7 @@ describe('VersionHistoryTable', () => {
       version: mockVersions[1].version,
       index: 1,
       confirm: false,
-      version_date: mockVersions[1].created,
+      timestamp: mockVersions[1].created,
     });
   });
 });

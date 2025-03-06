@@ -272,7 +272,6 @@ export type AnnotationPermission = {
 };
 export type DashboardMeta = {
   annotationsPermissions?: AnnotationPermission;
-  apiVersion?: string;
   canAdmin?: boolean;
   canDelete?: boolean;
   canEdit?: boolean;

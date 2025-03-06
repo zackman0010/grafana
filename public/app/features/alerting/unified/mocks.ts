@@ -57,7 +57,6 @@ import {
 import { DashboardSearchItem, DashboardSearchItemType } from '../../search/types';
 
 import { SimpleConditionIdentifier } from './components/rule-editor/query-and-alert-condition/SimpleCondition';
-import { GRAFANA_RULES_SOURCE_NAME } from './utils/datasource';
 import { parsePromQLStyleMatcherLooseSafe } from './utils/matchers';
 
 let nextDataSourceId = 1;
@@ -687,7 +686,7 @@ export function getGrafanaRule(override?: Partial<CombinedRule>, rulerOverride?:
     namespace: {
       groups: [],
       name: 'Grafana',
-      rulesSource: GRAFANA_RULES_SOURCE_NAME,
+      rulesSource: 'grafana',
     },
     rulerRule: mockGrafanaRulerRule(rulerOverride),
     ...override,

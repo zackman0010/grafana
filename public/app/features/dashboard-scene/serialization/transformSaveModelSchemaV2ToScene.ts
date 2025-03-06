@@ -203,9 +203,7 @@ export function transformSaveModelSchemaV2ToScene(dto: DashboardWithAccessInfo<D
     }),
     controls: new DashboardControls({
       variableControls: [new VariableValueSelectors({}), new SceneDataLayerControls()],
-      timePicker: new SceneTimePicker({
-        quickRanges: dashboard.timeSettings.quickRanges,
-      }),
+      timePicker: new SceneTimePicker({}),
       refreshPicker: new SceneRefreshPicker({
         refresh: dashboard.timeSettings.autoRefresh,
         intervals: dashboard.timeSettings.autoRefreshIntervals,

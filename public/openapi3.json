@@ -4295,9 +4295,6 @@
           },
           "state": {
             "$ref": "#/components/schemas/State"
-          },
-          "subject": {
-            "type": "string"
           }
         },
         "type": "object"
@@ -4587,9 +4584,6 @@
         "properties": {
           "annotationsPermissions": {
             "$ref": "#/components/schemas/AnnotationPermission"
-          },
-          "apiVersion": {
-            "type": "string"
           },
           "canAdmin": {
             "type": "boolean"
@@ -5572,9 +5566,6 @@
             "format": "int64",
             "type": "integer"
           },
-          "managedBy": {
-            "$ref": "#/components/schemas/ManagerKind"
-          },
           "orgId": {
             "format": "int64",
             "type": "integer"
@@ -5589,6 +5580,10 @@
               "$ref": "#/components/schemas/Folder"
             },
             "type": "array"
+          },
+          "repository": {
+            "description": "When the folder belongs to a repository\nNOTE: this is only populated when folders are managed by unified storage",
+            "type": "string"
           },
           "title": {
             "type": "string"
@@ -5619,10 +5614,11 @@
             "format": "int64",
             "type": "integer"
           },
-          "managedBy": {
-            "$ref": "#/components/schemas/ManagerKind"
-          },
           "parentUid": {
+            "type": "string"
+          },
+          "repository": {
+            "description": "When the folder belongs to a repository\nNOTE: this is only populated when folders are managed by unified storage",
             "type": "string"
           },
           "title": {
@@ -7103,11 +7099,6 @@
           }
         },
         "type": "object"
-      },
-      "ManagerKind": {
-        "description": "It can be a user or a tool or a generic API client.\n+enum",
-        "title": "ManagerKind is the type of manager, which is responsible for managing the resource.",
-        "type": "string"
       },
       "MassDeleteAnnotationsCmd": {
         "properties": {
@@ -9549,9 +9540,6 @@
           },
           "state": {
             "$ref": "#/components/schemas/State"
-          },
-          "subject": {
-            "type": "string"
           },
           "uid": {
             "type": "string"

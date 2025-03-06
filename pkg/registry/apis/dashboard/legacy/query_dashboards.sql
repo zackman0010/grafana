@@ -9,12 +9,10 @@ SELECT
   dashboard.created, created_user.uid as created_by, dashboard.created_by   as created_by_id,
   {{ if .Query.UseHistoryTable }}
   dashboard_version.created, updated_user.uid as updated_by,updated_user.id as created_by_id,
-  dashboard_version.version, dashboard_version.message, 
-  dashboard_version.data, dashboard_version.api_version
+  dashboard_version.version, dashboard_version.message, dashboard_version.data
   {{ else }}
   dashboard.updated, updated_user.uid as updated_by, dashboard.updated_by   as updated_by_id,
-  dashboard.version, '' as message, 
-  dashboard.data, dashboard.api_version
+  dashboard.version, '' as message, dashboard.data
   {{ end }}
 FROM {{ .Ident .DashboardTable }} as dashboard
 {{ if .Query.UseHistoryTable }}
@@ -46,7 +44,7 @@ WHERE dashboard.is_folder = {{ .Arg .Query.GetFolders }}
     {{ end }}
     {{ if .Query.GetTrash }}
     AND dashboard.deleted IS NOT NULL
-    {{ else }}
+    {{ else if .Query.LastID }}
     AND dashboard.deleted IS NULL
     {{ end }}
   ORDER BY dashboard.id DESC

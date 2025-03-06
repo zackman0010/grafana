@@ -1102,28 +1102,14 @@ func (a apiClient) GetRuleByUID(t *testing.T, ruleUID string) apimodels.Gettable
 	return rule
 }
 
-func (a apiClient) ConvertPrometheusPostRuleGroup(t *testing.T, namespaceTitle, datasourceUID string, promGroup apimodels.PrometheusRuleGroup, headers map[string]string) apimodels.ConvertPrometheusResponse {
+func (a apiClient) ConvertPrometheusPostRuleGroup(t *testing.T, namespaceTitle, datasourceUID string, promGroup apimodels.PrometheusRuleGroup, headers map[string]string) (apimodels.ConvertPrometheusResponse, int, string) {
 	t.Helper()
-
-	resp, status, body := a.RawConvertPrometheusPostRuleGroup(t, namespaceTitle, datasourceUID, promGroup, headers)
-	requireStatusCode(t, http.StatusAccepted, status, body)
-
-	return resp
-}
-
-func (a apiClient) RawConvertPrometheusPostRuleGroup(t *testing.T, namespaceTitle, datasourceUID string, promGroup apimodels.PrometheusRuleGroup, headers map[string]string) (apimodels.ConvertPrometheusResponse, int, string) {
-	t.Helper()
-
-	path := "%s/api/convert/prometheus/config/v1/rules/%s"
-	if a.prometheusConversionUseLokiPaths {
-		path = "%s/api/convert/api/prom/rules/%s"
-	}
 
 	data, err := yaml.Marshal(promGroup)
 	require.NoError(t, err)
 	buf := bytes.NewReader(data)
 
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf(path, a.url, namespaceTitle), buf)
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/api/convert/prometheus/config/v1/rules/%s", a.url, namespaceTitle), buf)
 	require.NoError(t, err)
 	req.Header.Add("X-Grafana-Alerting-Datasource-UID", datasourceUID)
 
@@ -1134,16 +1120,7 @@ func (a apiClient) RawConvertPrometheusPostRuleGroup(t *testing.T, namespaceTitl
 	return sendRequestJSON[apimodels.ConvertPrometheusResponse](t, req, http.StatusAccepted)
 }
 
-func (a apiClient) ConvertPrometheusGetRuleGroupRules(t *testing.T, namespaceTitle, groupName string, headers map[string]string) apimodels.PrometheusRuleGroup {
-	t.Helper()
-
-	rule, status, raw := a.RawConvertPrometheusGetRuleGroupRules(t, namespaceTitle, groupName, headers)
-	requireStatusCode(t, http.StatusOK, status, raw)
-
-	return rule
-}
-
-func (a apiClient) RawConvertPrometheusGetRuleGroupRules(t *testing.T, namespaceTitle, groupName string, headers map[string]string) (apimodels.PrometheusRuleGroup, int, string) {
+func (a apiClient) ConvertPrometheusGetRuleGroupRules(t *testing.T, namespaceTitle, groupName string) apimodels.PrometheusRuleGroup {
 	t.Helper()
 
 	path := "%s/api/convert/prometheus/config/v1/rules/%s/%s"
@@ -1153,17 +1130,12 @@ func (a apiClient) RawConvertPrometheusGetRuleGroupRules(t *testing.T, namespace
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(path, a.url, namespaceTitle, groupName), nil)
 	require.NoError(t, err)
-
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-
 	rule, status, raw := sendRequestYAML[apimodels.PrometheusRuleGroup](t, req, http.StatusOK)
-
-	return rule, status, raw
+	requireStatusCode(t, http.StatusOK, status, raw)
+	return rule
 }
 
-func (a apiClient) ConvertPrometheusGetNamespaceRules(t *testing.T, namespaceTitle string, headers map[string]string) map[string][]apimodels.PrometheusRuleGroup {
+func (a apiClient) ConvertPrometheusGetNamespaceRules(t *testing.T, namespaceTitle string) map[string][]apimodels.PrometheusRuleGroup {
 	t.Helper()
 
 	path := "%s/api/convert/prometheus/config/v1/rules/%s"
@@ -1173,18 +1145,12 @@ func (a apiClient) ConvertPrometheusGetNamespaceRules(t *testing.T, namespaceTit
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(path, a.url, namespaceTitle), nil)
 	require.NoError(t, err)
-
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-
 	ns, status, raw := sendRequestYAML[map[string][]apimodels.PrometheusRuleGroup](t, req, http.StatusOK)
 	requireStatusCode(t, http.StatusOK, status, raw)
-
 	return ns
 }
 
-func (a apiClient) ConvertPrometheusGetAllRules(t *testing.T, headers map[string]string) map[string][]apimodels.PrometheusRuleGroup {
+func (a apiClient) ConvertPrometheusGetAllRules(t *testing.T) map[string][]apimodels.PrometheusRuleGroup {
 	t.Helper()
 
 	path := "%s/api/convert/prometheus/config/v1/rules"
@@ -1194,25 +1160,12 @@ func (a apiClient) ConvertPrometheusGetAllRules(t *testing.T, headers map[string
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(path, a.url), nil)
 	require.NoError(t, err)
-
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-
 	result, status, raw := sendRequestYAML[map[string][]apimodels.PrometheusRuleGroup](t, req, http.StatusOK)
 	requireStatusCode(t, http.StatusOK, status, raw)
-
 	return result
 }
 
-func (a apiClient) ConvertPrometheusDeleteRuleGroup(t *testing.T, namespaceTitle, groupName string, headers map[string]string) {
-	t.Helper()
-
-	_, status, raw := a.RawConvertPrometheusDeleteRuleGroup(t, namespaceTitle, groupName, headers)
-	requireStatusCode(t, http.StatusAccepted, status, raw)
-}
-
-func (a apiClient) RawConvertPrometheusDeleteRuleGroup(t *testing.T, namespaceTitle, groupName string, headers map[string]string) (apimodels.ConvertPrometheusResponse, int, string) {
+func (a apiClient) ConvertPrometheusDeleteRuleGroup(t *testing.T, namespaceTitle, groupName string) {
 	t.Helper()
 
 	path := "%s/api/convert/prometheus/config/v1/rules/%s/%s"
@@ -1222,22 +1175,11 @@ func (a apiClient) RawConvertPrometheusDeleteRuleGroup(t *testing.T, namespaceTi
 
 	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf(path, a.url, namespaceTitle, groupName), nil)
 	require.NoError(t, err)
-
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-
-	return sendRequestJSON[apimodels.ConvertPrometheusResponse](t, req, http.StatusAccepted)
-}
-
-func (a apiClient) ConvertPrometheusDeleteNamespace(t *testing.T, namespaceTitle string, headers map[string]string) {
-	t.Helper()
-
-	_, status, raw := a.RawConvertPrometheusDeleteNamespace(t, namespaceTitle, headers)
+	_, status, raw := sendRequestJSON[apimodels.ConvertPrometheusResponse](t, req, http.StatusAccepted)
 	requireStatusCode(t, http.StatusAccepted, status, raw)
 }
 
-func (a apiClient) RawConvertPrometheusDeleteNamespace(t *testing.T, namespaceTitle string, headers map[string]string) (apimodels.ConvertPrometheusResponse, int, string) {
+func (a apiClient) ConvertPrometheusDeleteNamespace(t *testing.T, namespaceTitle string) {
 	t.Helper()
 
 	path := "%s/api/convert/prometheus/config/v1/rules/%s"
@@ -1247,12 +1189,8 @@ func (a apiClient) RawConvertPrometheusDeleteNamespace(t *testing.T, namespaceTi
 
 	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf(path, a.url, namespaceTitle), nil)
 	require.NoError(t, err)
-
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-
-	return sendRequestJSON[apimodels.ConvertPrometheusResponse](t, req, http.StatusAccepted)
+	_, status, raw := sendRequestJSON[apimodels.ConvertPrometheusResponse](t, req, http.StatusAccepted)
+	requireStatusCode(t, http.StatusAccepted, status, raw)
 }
 
 func sendRequestRaw(t *testing.T, req *http.Request) ([]byte, int, error) {

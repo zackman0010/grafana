@@ -1,6 +1,6 @@
 // This file contains the common parts of the rollup configuration that are shared across multiple packages.
 import nodeResolve from '@rollup/plugin-node-resolve';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import { nodeExternals } from 'rollup-plugin-node-externals';
@@ -28,7 +28,6 @@ export function cjsOutput(pkg) {
     format: 'cjs',
     sourcemap: true,
     dir: dirname(pkg.publishConfig.main),
-    entryFileNames: '[name].cjs',
     esModule: true,
     interop: 'compat',
   };
@@ -40,7 +39,6 @@ export function esmOutput(pkg, pkgName) {
     format: 'esm',
     sourcemap: true,
     dir: dirname(pkg.publishConfig.module),
-    entryFileNames: '[name].mjs',
     preserveModules: true,
     preserveModulesRoot: resolve(projectCwd, `packages/${pkgName}/src`),
   };
@@ -51,16 +49,10 @@ export function tsDeclarationOutput(pkg, overrides = {}) {
   return {
     input: './compiled/index.d.ts',
     plugins: [dts()],
-    output: [
-      {
-        file: pkg.publishConfig.types,
-        format: 'cjs',
-      },
-      {
-        file: join(dirname(pkg.publishConfig.module), 'index.d.mts'),
-        format: 'es',
-      },
-    ],
+    output: {
+      file: pkg.publishConfig.types,
+      format: 'es',
+    },
     ...overrides,
   };
 }

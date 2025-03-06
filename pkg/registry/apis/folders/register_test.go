@@ -9,7 +9,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apiserver/pkg/admission"
 
-	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/grafana/grafana/pkg/apis/folder/v0alpha1"
 	grafanarest "github.com/grafana/grafana/pkg/apiserver/rest"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
@@ -27,22 +26,13 @@ func TestFolderAPIBuilder_Validate_Create(t *testing.T) {
 		name        string
 	}
 
-	initialMaxDepth := folderValidationRules.maxDepth
-	folderValidationRules.maxDepth = 2
-	defer func() { folderValidationRules.maxDepth = initialMaxDepth }()
-	deepFolder := &v0alpha1.Folder{
+	circularObj := &v0alpha1.Folder{
 		Spec: v0alpha1.Spec{
 			Title: "foo",
 		},
 	}
-	deepFolder.Name = "valid-parent"
-	deepFolder.Annotations = map[string]string{"grafana.app/folder": "valid-grandparent"}
-	parentFolder := &v0alpha1.Folder{
-		Spec: v0alpha1.Spec{
-			Title: "foo-grandparent",
-		},
-	}
-	deepFolder.Name = "valid-grandparent"
+	circularObj.Name = "valid-name"
+	circularObj.Annotations = map[string]string{"grafana.app/folder": "valid-name"}
 
 	tests := []struct {
 		name    string
@@ -81,15 +71,12 @@ func TestFolderAPIBuilder_Validate_Create(t *testing.T) {
 						Title: "foo",
 					},
 				},
-				annotations: map[string]string{"grafana.app/folder": "valid-parent"},
+				annotations: map[string]string{"grafana.app/folder": "valid-name"},
 				name:        "valid-name",
 			},
 			setupFn: func(m *mock.Mock) {
-				m.On("Get", mock.Anything, "valid-parent", mock.Anything).Return(
-					deepFolder,
-					nil)
-				m.On("Get", mock.Anything, "valid-grandparent", mock.Anything).Return(
-					parentFolder,
+				m.On("Get", mock.Anything, "valid-name", mock.Anything).Return(
+					circularObj,
 					nil)
 			},
 			err: folder.ErrMaximumDepthReached,
@@ -105,19 +92,6 @@ func TestFolderAPIBuilder_Validate_Create(t *testing.T) {
 				name: "foo",
 			},
 			err: dashboards.ErrFolderTitleEmpty,
-		},
-		{
-			name: "should return error if folder is a parent of itself",
-			input: input{
-				annotations: map[string]string{utils.AnnoKeyFolder: "myself"},
-				obj: &v0alpha1.Folder{
-					Spec: v0alpha1.Spec{
-						Title: "title",
-					},
-				},
-				name: "myself",
-			},
-			err: folder.ErrFolderCannotBeParentOfItself,
 		},
 	}
 

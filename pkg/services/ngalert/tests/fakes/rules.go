@@ -102,10 +102,10 @@ func (f *RuleStore) GetRecordedCommands(predicate func(cmd any) (any, bool)) []a
 	return result
 }
 
-func (f *RuleStore) DeleteAlertRulesByUID(_ context.Context, orgID int64, user *models.UserUID, UIDs ...string) error {
+func (f *RuleStore) DeleteAlertRulesByUID(_ context.Context, orgID int64, UIDs ...string) error {
 	f.RecordedOps = append(f.RecordedOps, GenericRecordedQuery{
 		Name:   "DeleteAlertRulesByUID",
-		Params: []any{orgID, user, UIDs},
+		Params: []any{orgID, UIDs},
 	})
 
 	rules := f.Rules[orgID]
@@ -215,7 +215,11 @@ func (f *RuleStore) ListAlertRules(_ context.Context, q *models.ListAlertRulesQu
 			continue
 		}
 		if q.ImportedPrometheusRule != nil {
-			if *q.ImportedPrometheusRule != r.ImportedFromPrometheus() {
+			hasOriginalRuleDefinition := r.PrometheusRuleDefinition() != ""
+			if *q.ImportedPrometheusRule && !hasOriginalRuleDefinition {
+				continue
+			}
+			if !*q.ImportedPrometheusRule && hasOriginalRuleDefinition {
 				continue
 			}
 		}
@@ -264,58 +268,38 @@ func (f *RuleStore) GetNamespaceByUID(_ context.Context, uid string, orgID int64
 	return nil, fmt.Errorf("not found")
 }
 
-func (f *RuleStore) GetOrCreateNamespaceByTitle(ctx context.Context, title string, orgID int64, user identity.Requester, parentUID string) (*folder.Folder, error) {
+func (f *RuleStore) GetOrCreateNamespaceInRootByTitle(ctx context.Context, title string, orgID int64, user identity.Requester) (*folder.Folder, error) {
 	f.mtx.Lock()
 	defer f.mtx.Unlock()
 
 	for _, folder := range f.Folders[orgID] {
-		if folder.Title == title && folder.ParentUID == parentUID {
+		if folder.Title == title {
 			return folder, nil
 		}
 	}
 
 	newFolder := &folder.Folder{
-		ID:        rand.Int63(), // nolint:staticcheck
-		UID:       util.GenerateShortUID(),
-		Title:     title,
-		ParentUID: parentUID,
-		Fullpath:  "fullpath_" + title,
+		ID:       rand.Int63(), // nolint:staticcheck
+		UID:      util.GenerateShortUID(),
+		Title:    title,
+		Fullpath: "fullpath_" + title,
 	}
 
 	f.Folders[orgID] = append(f.Folders[orgID], newFolder)
 	return newFolder, nil
 }
 
-func (f *RuleStore) GetNamespaceByTitle(ctx context.Context, title string, orgID int64, user identity.Requester, parentUID string) (*folder.Folder, error) {
+func (f *RuleStore) GetNamespaceInRootByTitle(ctx context.Context, title string, orgID int64, user identity.Requester) (*folder.Folder, error) {
 	f.mtx.Lock()
 	defer f.mtx.Unlock()
 
 	for _, folder := range f.Folders[orgID] {
-		if folder.Title == title && folder.ParentUID == parentUID {
+		if folder.Title == title && folder.ParentUID == "" {
 			return folder, nil
 		}
 	}
 
 	return nil, dashboards.ErrFolderNotFound
-}
-
-func (f *RuleStore) GetNamespaceChildren(ctx context.Context, uid string, orgID int64, user identity.Requester) ([]*folder.Folder, error) {
-	f.mtx.Lock()
-	defer f.mtx.Unlock()
-
-	result := []*folder.Folder{}
-
-	for _, folder := range f.Folders[orgID] {
-		if folder.ParentUID == uid {
-			result = append(result, folder)
-		}
-	}
-
-	if len(result) == 0 {
-		return nil, dashboards.ErrFolderNotFound
-	}
-
-	return result, nil
 }
 
 func (f *RuleStore) UpdateAlertRules(_ context.Context, _ *models.UserUID, q []models.UpdateRule) error {

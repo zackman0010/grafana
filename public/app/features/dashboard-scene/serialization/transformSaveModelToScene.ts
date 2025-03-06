@@ -283,9 +283,7 @@ export function createDashboardSceneFromDashboardModel(oldModel: DashboardModel,
     $data: new DashboardDataLayerSet({ annotationLayers, alertStatesLayer }),
     controls: new DashboardControls({
       variableControls: [new VariableValueSelectors({}), new SceneDataLayerControls()],
-      timePicker: new SceneTimePicker({
-        quickRanges: oldModel.timepicker.quick_ranges,
-      }),
+      timePicker: new SceneTimePicker({}),
       refreshPicker: new SceneRefreshPicker({
         refresh: oldModel.refresh,
         intervals: oldModel.timepicker.refresh_intervals,

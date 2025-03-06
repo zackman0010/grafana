@@ -94,7 +94,6 @@ export function transformSceneToSaveModelSchemaV2(scene: DashboardScene, isSnaps
       weekStart: timeRange.weekStart,
       fiscalYearStartMonth: timeRange.fiscalYearStartMonth,
       nowDelay: timeRange.UNSAFE_nowDelay,
-      quickRanges: controlsState?.timePicker.state.quickRanges,
     },
     // EOF time settings
 

@@ -32,13 +32,8 @@ import { RowRepeaterBehavior } from '../../scene/layout-default/RowRepeaterBehav
 import { RowActions } from '../../scene/layout-default/row-actions/RowActions';
 import { setDashboardPanelContext } from '../../scene/setDashboardPanelContext';
 import { DashboardLayoutManager, LayoutManagerSerializer } from '../../scene/types/DashboardLayoutManager';
-import { getOriginalKey, isClonedKey } from '../../utils/clone';
-import {
-  calculateGridItemDimensions,
-  getPanelIdForVizPanel,
-  getVizPanelKeyForPanelId,
-  isLibraryPanel,
-} from '../../utils/utils';
+import { isClonedKey } from '../../utils/clone';
+import { calculateGridItemDimensions, getVizPanelKeyForPanelId, isLibraryPanel } from '../../utils/utils';
 import { GRID_ROW_HEIGHT } from '../const';
 
 import { buildVizPanel } from './utils';
@@ -148,7 +143,7 @@ function gridItemToGridLayoutItemKind(gridItem: DashboardGridItem, yOverride?: n
   const repeatVar = gridItem_.state.variableName;
 
   // FIXME: which name should we use for the element reference, key or something else ?
-  const elementName = getVizPanelKeyForPanelId(getPanelIdForVizPanel(gridItem_.state.body));
+  const elementName = gridItem_.state.body.state.key ?? 'DefaultName';
   elementGridItem = {
     kind: 'GridLayoutItem',
     spec: {
@@ -271,7 +266,7 @@ function createSceneGridLayoutForItems(layout: GridLayoutKind, elements: Record<
       }
     } else if (element.kind === 'GridLayoutRow') {
       const children = element.spec.elements.map((gridElement) => {
-        const panel = elements[getOriginalKey(gridElement.spec.element.name)];
+        const panel = elements[gridElement.spec.element.name];
         if (panel.kind === 'Panel') {
           return buildGridItem(gridElement.spec, panel, element.spec.y + GRID_ROW_HEIGHT + gridElement.spec.y);
         } else {

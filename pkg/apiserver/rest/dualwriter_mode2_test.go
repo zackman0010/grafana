@@ -1,4 +1,4 @@
-package dualwrite
+package rest
 
 import (
 	"context"
@@ -12,8 +12,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-
-	"github.com/grafana/grafana/pkg/apiserver/rest"
 )
 
 var createFn = func(context.Context, runtime.Object) error { return nil }
@@ -56,8 +54,8 @@ func TestMode2_Create(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -69,8 +67,7 @@ func TestMode2_Create(t *testing.T) {
 				tt.setupStorageFn(us.Mock, tt.input)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, err := dw.Create(context.Background(), tt.input, createFn, &metav1.CreateOptions{})
 
@@ -141,8 +138,8 @@ func TestMode2_Get(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -154,8 +151,7 @@ func TestMode2_Get(t *testing.T) {
 				tt.setupStorageFn(us.Mock, tt.input)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, err := dw.Get(context.Background(), tt.input, &metav1.GetOptions{})
 
@@ -216,8 +212,8 @@ func TestMode2_List(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -229,8 +225,7 @@ func TestMode2_List(t *testing.T) {
 				tt.setupStorageFn(us.Mock)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, err := dw.List(context.Background(), &metainternalversion.ListOptions{})
 
@@ -318,8 +313,8 @@ func TestMode2_Delete(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -331,8 +326,7 @@ func TestMode2_Delete(t *testing.T) {
 				tt.setupStorageFn(us.Mock, name)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, _, err := dw.Delete(context.Background(), name, func(context.Context, runtime.Object) error { return nil }, &metav1.DeleteOptions{})
 
@@ -388,8 +382,8 @@ func TestMode2_DeleteCollection(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -401,8 +395,7 @@ func TestMode2_DeleteCollection(t *testing.T) {
 				tt.setupStorageFn(us.Mock)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, err := dw.DeleteCollection(context.Background(), func(ctx context.Context, obj runtime.Object) error { return nil }, &metav1.DeleteOptions{TypeMeta: metav1.TypeMeta{Kind: name}}, &metainternalversion.ListOptions{})
 
@@ -458,8 +451,8 @@ func TestMode2_Update(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := (rest.Storage)(nil)
-			s := (rest.Storage)(nil)
+			l := (Storage)(nil)
+			s := (Storage)(nil)
 
 			ls := storageMock{&mock.Mock{}, l}
 			us := storageMock{&mock.Mock{}, s}
@@ -471,8 +464,7 @@ func TestMode2_Update(t *testing.T) {
 				tt.setupStorageFn(us.Mock, name)
 			}
 
-			dw, err := NewDualWriter(kind, rest.Mode2, ls, us)
-			require.NoError(t, err)
+			dw := NewDualWriter(Mode2, ls, us, p, kind)
 
 			obj, _, err := dw.Update(context.Background(), name, updatedObjInfoObj{}, func(ctx context.Context, obj runtime.Object) error { return nil }, func(ctx context.Context, obj, old runtime.Object) error { return nil }, false, &metav1.UpdateOptions{})
 

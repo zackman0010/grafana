@@ -3,7 +3,6 @@ import { useAsyncFn } from 'react-use';
 import { locationUtil } from '@grafana/data';
 import { locationService, reportInteraction } from '@grafana/runtime';
 import { Dashboard } from '@grafana/schema';
-import { DashboardV2Spec } from '@grafana/schema/dist/esm/schema/dashboard/v2alpha0';
 import appEvents from 'app/core/app_events';
 import { useAppNotification } from 'app/core/copy/appNotification';
 import { updateDashboardName } from 'app/core/reducers/navBarTree';
@@ -26,7 +25,7 @@ export function useSaveDashboard(isCopy = false) {
       options: SaveDashboardOptions &
         SaveDashboardAsOptions & {
           // When provided, will take precedence over the scene's save model
-          rawDashboardJSON?: Dashboard | DashboardV2Spec;
+          rawDashboardJSON?: Dashboard;
         }
     ) => {
       {

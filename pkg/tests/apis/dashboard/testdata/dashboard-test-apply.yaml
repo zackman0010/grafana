@@ -1,6 +1,6 @@
 apiVersion: dashboard.grafana.app/v0alpha1
 kind: Dashboard
 metadata:
-  name: test-v0
+  name: test
 spec:
-  title: Test dashboard. Created at v0
+  title: Test dashboard (apply from k8s; PATCH) X

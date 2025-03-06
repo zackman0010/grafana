@@ -131,13 +131,10 @@ func (in *Spec2) DeepCopy() *Spec2 {
 }
 
 func TestMetaAccessor(t *testing.T) {
-	repoInfo := utils.ManagerProperties{
-		Kind:     utils.ManagerKindRepo,
-		Identity: "test",
-	}
-	sourceInfo := utils.SourceProperties{
-		Path:     "a/b/c",
-		Checksum: "kkk",
+	repoInfo := &utils.ResourceRepositoryInfo{
+		Name: "test",
+		Path: "a/b/c",
+		Hash: "kkk",
 	}
 
 	t.Run("fails for non resource objects", func(t *testing.T) {
@@ -205,13 +202,14 @@ func TestMetaAccessor(t *testing.T) {
 			},
 		}
 
-		meta.SetManagerProperties(repoInfo)
+		meta.SetRepositoryInfo(repoInfo)
 		meta.SetFolder("folderUID")
 
 		require.Equal(t, map[string]string{
-			"grafana.app/managedBy": "repo",
-			"grafana.app/managerId": "test",
-			"grafana.app/folder":    "folderUID",
+			"grafana.app/repoName": "test",
+			"grafana.app/repoPath": "a/b/c",
+			"grafana.app/repoHash": "kkk",
+			"grafana.app/folder":   "folderUID",
 		}, res.GetAnnotations())
 
 		meta.SetNamespace("aaa")
@@ -257,16 +255,14 @@ func TestMetaAccessor(t *testing.T) {
 		meta, err := utils.MetaAccessor(res)
 		require.NoError(t, err)
 
-		meta.SetManagerProperties(repoInfo)
-		meta.SetSourceProperties(sourceInfo)
+		meta.SetRepositoryInfo(repoInfo)
 		meta.SetFolder("folderUID")
 
 		require.Equal(t, map[string]string{
-			"grafana.app/managedBy":      "repo",
-			"grafana.app/managerId":      "test",
-			"grafana.app/sourcePath":     "a/b/c",
-			"grafana.app/sourceChecksum": "kkk",
-			"grafana.app/folder":         "folderUID",
+			"grafana.app/repoName": "test",
+			"grafana.app/repoPath": "a/b/c",
+			"grafana.app/repoHash": "kkk",
+			"grafana.app/folder":   "folderUID",
 		}, res.GetAnnotations())
 
 		meta.SetNamespace("aaa")
@@ -310,13 +306,14 @@ func TestMetaAccessor(t *testing.T) {
 		meta, err := utils.MetaAccessor(res)
 		require.NoError(t, err)
 
-		meta.SetManagerProperties(repoInfo)
+		meta.SetRepositoryInfo(repoInfo)
 		meta.SetFolder("folderUID")
 
 		require.Equal(t, map[string]string{
-			"grafana.app/managedBy": "repo",
-			"grafana.app/managerId": "test",
-			"grafana.app/folder":    "folderUID",
+			"grafana.app/repoName": "test",
+			"grafana.app/repoPath": "a/b/c",
+			"grafana.app/repoHash": "kkk",
+			"grafana.app/folder":   "folderUID",
 		}, res.GetAnnotations())
 
 		meta.SetNamespace("aaa")
@@ -350,7 +347,7 @@ func TestMetaAccessor(t *testing.T) {
 		require.Equal(t, "ZZ", res.Status.Title)
 	})
 
-	t.Run("test reading old repo fields (now manager+source)", func(t *testing.T) {
+	t.Run("test reading old originInfo (now repository)", func(t *testing.T) {
 		res := &TestResource2{
 			ObjectMeta: metav1.ObjectMeta{
 				Annotations: map[string]string{
@@ -365,15 +362,11 @@ func TestMetaAccessor(t *testing.T) {
 		meta, err := utils.MetaAccessor(res)
 		require.NoError(t, err)
 
-		manager, ok := meta.GetManagerProperties()
-		require.True(t, ok)
-		require.Equal(t, utils.ManagerKindRepo, manager.Kind)
-		require.Equal(t, "test", manager.Identity)
-
-		source, ok := meta.GetSourceProperties()
-		require.True(t, ok)
-		require.Equal(t, "a/b/c", source.Path)
-		require.Equal(t, "zzz", source.Checksum)
+		info, err := meta.GetRepositoryInfo()
+		require.NoError(t, err)
+		require.Equal(t, "test", info.Name)
+		require.Equal(t, "a/b/c", info.Path)
+		require.Equal(t, "zzz", info.Hash)
 	})
 
 	t.Run("blob info", func(t *testing.T) {
@@ -398,16 +391,14 @@ func TestMetaAccessor(t *testing.T) {
 
 		meta, err := utils.MetaAccessor(obj)
 		require.NoError(t, err)
-		meta.SetManagerProperties(repoInfo)
-		meta.SetSourceProperties(sourceInfo)
+		meta.SetRepositoryInfo(repoInfo)
 		meta.SetFolder("folderUID")
 
 		require.Equal(t, map[string]string{
-			"grafana.app/managedBy":      "repo",
-			"grafana.app/managerId":      "test",
-			"grafana.app/sourcePath":     "a/b/c",
-			"grafana.app/sourceChecksum": "kkk",
-			"grafana.app/folder":         "folderUID",
+			"grafana.app/repoName": "test",
+			"grafana.app/repoPath": "a/b/c",
+			"grafana.app/repoHash": "kkk",
+			"grafana.app/folder":   "folderUID",
 		}, obj.GetAnnotations())
 
 		require.Equal(t, "HELLO", obj.Spec.Title)
@@ -423,13 +414,14 @@ func TestMetaAccessor(t *testing.T) {
 
 		meta, err = utils.MetaAccessor(obj2)
 		require.NoError(t, err)
-		meta.SetManagerProperties(repoInfo)
+		meta.SetRepositoryInfo(repoInfo)
 		meta.SetFolder("folderUID")
 
 		require.Equal(t, map[string]string{
-			"grafana.app/managedBy": "repo",
-			"grafana.app/managerId": "test",
-			"grafana.app/folder":    "folderUID",
+			"grafana.app/repoName": "test",
+			"grafana.app/repoPath": "a/b/c",
+			"grafana.app/repoHash": "kkk",
+			"grafana.app/folder":   "folderUID",
 		}, obj2.GetAnnotations())
 
 		require.Equal(t, "xxx", meta.FindTitle("xxx"))
@@ -455,7 +447,7 @@ func TestMetaAccessor(t *testing.T) {
 				wantProperties: utils.ManagerProperties{
 					Identity:    "",
 					Kind:        utils.ManagerKindUnknown,
-					AllowsEdits: false,
+					AllowsEdits: true,
 					Suspended:   false,
 				},
 				wantOK: false,
@@ -487,7 +479,7 @@ func TestMetaAccessor(t *testing.T) {
 				wantProperties: utils.ManagerProperties{
 					Identity:    "",
 					Kind:        utils.ManagerKindUnknown,
-					AllowsEdits: false,
+					AllowsEdits: true,
 					Suspended:   false,
 				},
 				wantOK: false,
@@ -542,14 +534,14 @@ func TestMetaAccessor(t *testing.T) {
 			{
 				name: "set and get valid values",
 				setProperties: &utils.SourceProperties{
-					Path:            "path",
-					Checksum:        "hash",
-					TimestampMillis: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC).UnixMilli(),
+					Path:      "path",
+					Checksum:  "hash",
+					Timestamp: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
 				},
 				wantProperties: utils.SourceProperties{
-					Path:            "path",
-					Checksum:        "hash",
-					TimestampMillis: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC).UnixMilli(),
+					Path:      "path",
+					Checksum:  "hash",
+					Timestamp: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
 				},
 				wantOK: true,
 			},

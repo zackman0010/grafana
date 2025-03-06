@@ -3,7 +3,6 @@ package dtos
 import (
 	"time"
 
-	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
 )
 
@@ -32,7 +31,7 @@ type Folder struct {
 
 	// When the folder belongs to a repository
 	// NOTE: this is only populated when folders are managed by unified storage
-	ManagedBy utils.ManagerKind `json:"managedBy,omitempty"`
+	Repository string `json:"repository,omitempty"`
 }
 
 type FolderSearchHit struct {
@@ -43,5 +42,5 @@ type FolderSearchHit struct {
 
 	// When the folder belongs to a repository
 	// NOTE: this is only populated when folders are managed by unified storage
-	ManagedBy utils.ManagerKind `json:"managedBy,omitempty"`
+	Repository string `json:"repository,omitempty"`
 }

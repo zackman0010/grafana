@@ -40,7 +40,7 @@ export const featureDiscoveryApi = alertingApi.injectEndpoints({
       queryFn: async (rulesSourceIdentifier) => {
         const dataSourceUID = getDataSourceUID(rulesSourceIdentifier);
         if (!dataSourceUID) {
-          return { error: new Error(`Unable to find data source for ${JSON.stringify(rulesSourceIdentifier)}`) };
+          return { error: new Error(`Unable to find data source for ${rulesSourceIdentifier}`) };
         }
 
         if (dataSourceUID === GrafanaRulesSourceSymbol) {

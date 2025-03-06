@@ -102,7 +102,6 @@ export class GrafanaJavascriptAgentBackend
         ? instrumentations
         : [...getWebInstrumentations(), new TracingInstrumentation()],
       consoleInstrumentation: consoleInstrumentationOptions,
-      trackWebVitalsAttribution: options.webVitalsInstrumentalizationEnabled || options.allInstrumentationsEnabled,
       transports,
       ignoreErrors: [
         'ResizeObserver loop limit exceeded',

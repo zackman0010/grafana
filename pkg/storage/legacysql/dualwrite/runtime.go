@@ -11,26 +11,25 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	"github.com/grafana/grafana-app-sdk/logging"
-
 	grafanarest "github.com/grafana/grafana/pkg/apiserver/rest"
 )
 
-func (m *service) NewStorage(gr schema.GroupResource, legacy grafanarest.Storage, unified grafanarest.Storage) (grafanarest.Storage, error) {
+func (m *service) NewStorage(gr schema.GroupResource,
+	legacy grafanarest.Storage,
+	storage grafanarest.Storage,
+) (grafanarest.Storage, error) {
 	status, err := m.Status(context.Background(), gr)
 	if err != nil {
 		return nil, err
 	}
-
-	log := logging.DefaultLogger.With("gr", gr.String())
 
 	if m.enabled && status.Runtime {
 		// Dynamic storage behavior
 		return &runtimeDualWriter{
 			service:   m,
 			legacy:    legacy,
-			unified:   unified,
-			dualwrite: &dualWriter{legacy: legacy, unified: unified, log: log}, // not used for read
+			unified:   storage,
+			dualwrite: grafanarest.NewDualWriter(grafanarest.Mode3, legacy, storage, m.reg, gr.String()),
 			gr:        gr,
 		}, nil
 	}
@@ -38,13 +37,13 @@ func (m *service) NewStorage(gr schema.GroupResource, legacy grafanarest.Storage
 	if status.ReadUnified {
 		if status.WriteLegacy {
 			// Write both, read unified
-			return &dualWriter{legacy: legacy, unified: unified, log: log, readUnified: true}, nil
+			return grafanarest.NewDualWriter(grafanarest.Mode3, legacy, storage, m.reg, gr.String()), nil
 		}
-		return unified, nil
+		return storage, nil
 	}
 	if status.WriteUnified {
 		// Write both, read legacy
-		return &dualWriter{legacy: legacy, unified: unified, log: log}, nil
+		return grafanarest.NewDualWriter(grafanarest.Mode2, legacy, storage, m.reg, gr.String()), nil
 	}
 	return legacy, nil
 }
@@ -56,7 +55,7 @@ type runtimeDualWriter struct {
 	service   Service
 	legacy    grafanarest.Storage
 	unified   grafanarest.Storage
-	dualwrite *dualWriter
+	dualwrite grafanarest.Storage
 	gr        schema.GroupResource
 }
 

@@ -2,8 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 
-import { TimeRange } from '@grafana/data';
-
 import { configureStore } from '../../../store/configureStore';
 
 import { frameOld } from './TraceView.test';
@@ -13,7 +11,6 @@ jest.mock('@grafana/runtime', () => {
   return {
     ...jest.requireActual('@grafana/runtime'),
     reportInteraction: jest.fn(),
-    usePluginLinks: jest.fn().mockReturnValue({ isLoading: false, links: [] }),
   };
 });
 
@@ -22,7 +19,7 @@ function renderTraceViewContainer(frames = [frameOld]) {
 
   const { container, baseElement } = render(
     <Provider store={store}>
-      <TraceViewContainer exploreId="left" dataFrames={frames} splitOpenFn={() => {}} timeRange={{} as TimeRange} />
+      <TraceViewContainer exploreId="left" dataFrames={frames} splitOpenFn={() => {}} />
     </Provider>
   );
   return {

@@ -4,22 +4,20 @@ import { useMemo, useRef } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import { SceneComponentProps, sceneGraph } from '@grafana/scenes';
-import { Checkbox, clearButtonStyles, Icon, useElementSelection, useStyles2 } from '@grafana/ui';
+import { Button, Icon, useElementSelection, useStyles2 } from '@grafana/ui';
 import { t } from 'app/core/internationalization';
 
 import { isClonedKey } from '../../utils/clone';
 import { getDashboardSceneFor } from '../../utils/utils';
 
 import { RowItem } from './RowItem';
-import { RowItemMenu } from './RowItemMenu';
 
 export function RowItemRenderer({ model }: SceneComponentProps<RowItem>) {
-  const { layout, title, isCollapsed, height = 'min', isHeaderHidden, key } = model.useState();
+  const { layout, title, isCollapsed, height = 'expand', isHeaderHidden, key } = model.useState();
   const isClone = useMemo(() => isClonedKey(key!), [key]);
   const dashboard = getDashboardSceneFor(model);
   const { isEditing, showHiddenElements } = dashboard.useState();
   const styles = useStyles2(getStyles);
-  const clearStyles = useStyles2(clearButtonStyles);
   const titleInterpolated = sceneGraph.interpolate(model, title, undefined, 'text');
   const ref = useRef<HTMLDivElement>(null);
   const shouldGrow = !isCollapsed && height === 'expand';
@@ -37,14 +35,9 @@ export function RowItemRenderer({ model }: SceneComponentProps<RowItem>) {
     >
       {(!isHeaderHidden || (isEditing && showHiddenElements)) && (
         <div className={styles.rowHeader}>
-          {!isClone && isEditing && (
-            <div className={styles.checkboxWrapper} onPointerDown={onSelect}>
-              <Checkbox value={!!isSelected} />
-            </div>
-          )}
           <button
             onClick={() => model.onCollapseToggle()}
-            className={cx(clearStyles, styles.rowTitleButton)}
+            className={styles.rowTitleButton}
             aria-label={
               isCollapsed
                 ? t('dashboard.rows-layout.row.expand', 'Expand row')
@@ -57,7 +50,9 @@ export function RowItemRenderer({ model }: SceneComponentProps<RowItem>) {
               {titleInterpolated}
             </span>
           </button>
-          {!isClone && isEditing && <RowItemMenu model={model} />}
+          {!isClone && isEditing && (
+            <Button icon="pen" variant="secondary" size="sm" fill="text" onPointerDown={(evt) => onSelect?.(evt)} />
+          )}
         </div>
       )}
       {!isCollapsed && <layout.Component model={layout} />}
@@ -74,6 +69,17 @@ function getStyles(theme: GrafanaTheme2) {
       padding: theme.spacing(0, 0, 0.5, 0),
       margin: theme.spacing(0, 0, 1, 0),
       alignItems: 'center',
+
+      '&:hover, &:focus-within': {
+        '& > div': {
+          opacity: 1,
+        },
+      },
+
+      '& > div': {
+        marginBottom: 0,
+        marginRight: theme.spacing(1),
+      },
     }),
     rowTitleButton: css({
       display: 'flex',
@@ -111,10 +117,6 @@ function getStyles(theme: GrafanaTheme2) {
     rowActions: css({
       display: 'flex',
       opacity: 0,
-    }),
-    checkboxWrapper: css({
-      display: 'flex',
-      alignItems: 'center',
     }),
   };
 }

@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { MonoTypeOperatorFunction, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 
@@ -13,6 +12,9 @@ import {
 import { getFrameMatchers } from './matchers';
 import { standardTransformersRegistry, TransformerRegistryItem } from './standardTransformersRegistry';
 
+// when running within Scenes, we can skip var interpolation, since it's already handled upstream
+const isScenes = window.__grafanaSceneContext != null;
+
 const getOperator =
   (config: DataTransformerConfig, ctx: DataTransformContext): MonoTypeOperatorFunction<DataFrame[]> =>
   (source) => {
@@ -25,12 +27,9 @@ const getOperator =
     const defaultOptions = info.transformation.defaultOptions ?? {};
     const options = { ...defaultOptions, ...config.options };
 
-    // when running within Scenes, we can skip var interpolation, since it's already handled upstream
-    const isScenes = window.__grafanaSceneContext != null;
-
     const interpolated = isScenes
       ? options
-      : deepIterate(cloneDeep(options), (v) => {
+      : deepIterate(options, (v) => {
           if (typeof v === 'string') {
             return ctx.interpolate(v);
           }

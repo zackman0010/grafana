@@ -66,20 +66,18 @@ export default function TracePageActions(props: TracePageActionsProps) {
 
   return (
     <div className={styles.TracePageActions}>
-      {config.feedbackLinksEnabled && (
-        <div className={styles.feedbackContainer}>
-          <Icon name="comment-alt-message" />
-          <a
-            href="https://forms.gle/RZDEx8ScyZNguDoC8"
-            className={styles.feedback}
-            title="Share your thoughts about tracing in Grafana."
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Give feedback
-          </a>
-        </div>
-      )}
+      <div className={styles.feedbackContainer}>
+        <Icon name="comment-alt-message" />
+        <a
+          href="https://forms.gle/RZDEx8ScyZNguDoC8"
+          className={styles.feedback}
+          title="Share your thoughts about tracing in Grafana."
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          Give feedback
+        </a>
+      </div>
 
       <ActionButton
         onClick={copyTraceId}
