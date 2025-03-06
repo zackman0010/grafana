@@ -30,7 +30,8 @@ import { devSleep } from './toolDevSleep';
 import { toolGetCanSpeak } from './toolGetCanSpeak';
 import { toolGetSpeechVoices } from './toolGetSpeechVoices';
 import { readDashboardPanelsTool } from './toolReadDashboardPanels';
-import { toolSetCanSpeak } from './toolSetCanSpeak';
+import { toolSetSpeakingOff } from './toolSetSpeakingOff';
+import { toolSetSpeakingOn } from './toolSetSpeakingOn';
 import { toolSetSpeechVoice } from './toolSetSpeechVoice';
 import { updateCurrentDashboardPanelsTool } from './toolUpdateCurrentDashboardPanels';
 
@@ -113,7 +114,8 @@ export const tools = [
   addDashboardVariableTool,
   readCommunityDashboardTool,
   toolGetCanSpeak,
-  toolSetCanSpeak,
+  toolSetSpeakingOff,
+  toolSetSpeakingOn,
   toolGetSpeechVoices,
   toolSetSpeechVoice,
 ];
