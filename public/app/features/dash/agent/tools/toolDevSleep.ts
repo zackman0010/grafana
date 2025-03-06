@@ -22,7 +22,7 @@ export const devSleep = tool(
     schema: devSleepSchema,
     metadata: {
       explainer: () => {
-        return `Sleeping for development`;
+        return `sleep`;
       },
     },
     verboseParsingErrors: true,

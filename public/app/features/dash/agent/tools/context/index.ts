@@ -40,7 +40,7 @@ export const contextTool = tool(() => JSON.stringify(getCurrentContext()), {
   schema: z.object({}),
   metadata: {
     explainer: () => {
-      return `Getting current context`;
+      return `get current context`;
     },
   },
   verboseParsingErrors: true,

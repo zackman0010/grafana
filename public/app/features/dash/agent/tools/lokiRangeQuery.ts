@@ -132,7 +132,7 @@ export const lokiRangeQueryTool = tool(
     schema: lokiRangeQuerySchema,
     metadata: {
       explainer: () => {
-        return `Executing Loki range query`;
+        return `run Loki range query`;
       },
     },
     verboseParsingErrors: true,

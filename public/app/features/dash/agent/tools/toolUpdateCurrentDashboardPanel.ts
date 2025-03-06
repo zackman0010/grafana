@@ -260,7 +260,7 @@ Remind users to save the dashboard to keep the changes.
     schema: panelUpdateSchema,
     metadata: {
       explainer: () => {
-        return `Updating dashboard panels`;
+        return `update dashboard panels`;
       },
     },
     verboseParsingErrors: true,

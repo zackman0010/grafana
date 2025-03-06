@@ -123,7 +123,7 @@ export const lokiInstantQueryTool = tool(
     schema: lokiInstantQuerySchema,
     metadata: {
       explainer: () => {
-        return `Executing Loki instant query`;
+        return `run Loki instant query`;
       },
     },
     verboseParsingErrors: true,

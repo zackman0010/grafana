@@ -204,7 +204,7 @@ export const lokiLogStreamSearchTool = tool(
     schema: lokiLogStreamSearchSchema,
     metadata: {
       explainer: () => {
-        return `Searching for Loki log streams`;
+        return `search for Loki log streams`;
       },
     },
     verboseParsingErrors: true,

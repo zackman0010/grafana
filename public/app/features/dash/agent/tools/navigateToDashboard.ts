@@ -55,7 +55,7 @@ export const navigateToDashboardTool = tool(
     schema: navigateToDashboardToolSchema,
     metadata: {
       explainer: () => {
-        return `Navigating to dashboard`;
+        return `navigate to dashboard`;
       },
     },
     verboseParsingErrors: true,

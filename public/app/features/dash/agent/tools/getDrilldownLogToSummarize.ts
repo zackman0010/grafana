@@ -37,7 +37,7 @@ export const getDrilldownLogToSummarizeTool = tool(
     schema: getDrilldownLogToSummarizeSchema,
     metadata: {
       explainer: () => {
-        return `Getting logs to summarize`;
+        return `get logs to summarize`;
       },
     },
     verboseParsingErrors: true,

@@ -300,7 +300,7 @@ Only call this tool when you have a variable to add.
     schema: addDashboardVariableSchema,
     metadata: {
       explainer: () => {
-        return `Adding dashboard variable`;
+        return `add dashboard variable`;
       },
     },
     verboseParsingErrors: true,

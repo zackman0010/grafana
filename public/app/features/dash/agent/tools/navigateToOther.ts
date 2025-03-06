@@ -29,7 +29,7 @@ export const navigateToOtherTool = tool(
     schema: navigateToOtherSchema,
     metadata: {
       explainer: () => {
-        return `Navigating to URL`;
+        return `navigate to URL`;
       },
     },
     verboseParsingErrors: true,

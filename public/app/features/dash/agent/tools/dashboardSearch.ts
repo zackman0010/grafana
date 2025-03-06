@@ -82,7 +82,7 @@ export const dashboardSearchTool = tool(
     schema: dashboardSearchToolSchema,
     metadata: {
       explainer: () => {
-        return `Searching for dashboards`;
+        return `search for dashboards`;
       },
     },
     verboseParsingErrors: true,

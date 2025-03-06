@@ -67,7 +67,7 @@ export const createDashboardTool = tool(
     schema: dashboardSchema,
     metadata: {
       explainer: () => {
-        return `Creating a new dashboard`;
+        return `create new dashboard`;
       },
     },
     verboseParsingErrors: true,

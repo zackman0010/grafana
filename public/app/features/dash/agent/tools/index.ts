@@ -46,7 +46,7 @@ grafanaComSearch.description =
   'Search for general information, such as blog posts on grafana.com. Only use this tool if `grafana_com_docs_search` tool was not helpful.';
 grafanaComSearch.metadata = {
   explainer: () => {
-    return `Searching for general information on grafana.com`;
+    return `search grafana.com`;
   },
 };
 
@@ -62,7 +62,7 @@ grafanaDocsSearch.description =
   'Search for documentation of Grafana, Grafana Cloud, and all the various Grafana applications. Use this tool over `grafana_com_search`.';
 grafanaDocsSearch.metadata = {
   explainer: () => {
-    return `Searching for documentation of Grafana, Grafana Cloud, and all the various Grafana applications`;
+    return `search Grafana docs`;
   },
 };
 const grafanaDashboardsSearch = new TavilySearchResults({
@@ -77,7 +77,7 @@ grafanaDashboardsSearch.description =
   'Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.';
 grafanaDashboardsSearch.metadata = {
   explainer: () => {
-    return `Searching for community dashboards on Grafana.com`;
+    return `search community dashboards`;
   },
 };
 

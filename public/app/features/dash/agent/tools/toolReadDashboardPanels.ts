@@ -42,7 +42,7 @@ export const readDashboardPanelsTool = tool(
     schema: dashboardPanelsSchema,
     metadata: {
       explainer: () => {
-        return `Reading dashboard panels`;
+        return `read dashboard panels`;
       },
     },
     verboseParsingErrors: true,

@@ -165,7 +165,7 @@ export const prometheusInstantQueryTool = tool(
     responseFormat: 'content_and_artifact',
     metadata: {
       explainer: () => {
-        return `Running Prometheus instant query`;
+        return `run Prometheus instant query`;
       },
     },
     verboseParsingErrors: true,

@@ -97,7 +97,7 @@ export const lokiLabelNamesTool = tool(
     schema: lokiLabelNamesSchema,
     metadata: {
       explainer: () => {
-        return `Listing Loki label names`;
+        return `list Loki label names`;
       },
     },
     verboseParsingErrors: true,

@@ -25,7 +25,7 @@ export const readCommunityDashboardTool = tool(
     schema: readCommunityDashboardSchema,
     metadata: {
       explainer: () => {
-        return 'Reading community dashboard';
+        return 'read community dashboard';
       },
     },
     verboseParsingErrors: true,

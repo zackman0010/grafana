@@ -47,7 +47,7 @@ export const listDatasourcesTool = tool(
     schema: listDatasourcesSchema,
     metadata: {
       explainer: () => {
-        return `Listing available datasources`;
+        return `list available datasources`;
       },
     },
     verboseParsingErrors: true,

@@ -104,7 +104,7 @@ export const createAlertRuleTool = tool(
     schema: alertSchema,
     metadata: {
       explainer: () => {
-        return `Creating an alert rule`;
+        return `create an alert rule`;
       },
     },
     verboseParsingErrors: true,

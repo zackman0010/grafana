@@ -17,7 +17,7 @@ export const getCurrentTimeTool = tool(
     schema: z.object({}),
     metadata: {
       explainer: () => {
-        return `Getting current time`;
+        return `get current time`;
       },
     },
     verboseParsingErrors: true,

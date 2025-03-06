@@ -110,7 +110,7 @@ export const prometheusRangeQueryTool = tool(
     responseFormat: 'content_and_artifact',
     metadata: {
       explainer: () => {
-        return `Running Prometheus range query`;
+        return `run Prometheus range query`;
       },
     },
     verboseParsingErrors: true,

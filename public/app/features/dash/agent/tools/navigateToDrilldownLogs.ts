@@ -70,7 +70,7 @@ export const navigateToDrilldownLogs = tool(
     schema: navigateToDrilldownLogsSchema,
     metadata: {
       explainer: () => {
-        return `Navigating to drilldown logs`;
+        return `navigate to drilldown logs`;
       },
     },
     verboseParsingErrors: true,

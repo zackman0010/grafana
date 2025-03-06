@@ -72,7 +72,7 @@ export const prometheusLabelValuesTool = tool(
     schema: prometheusLabelValuesSchema,
     metadata: {
       explainer: () => {
-        return `Listing Prometheus label values`;
+        return `list Prometheus label values`;
       },
     },
     verboseParsingErrors: true,

@@ -76,7 +76,7 @@ export const prometheusLabelNamesTool = tool(
     schema: prometheusLabelNamesSchema,
     metadata: {
       explainer: () => {
-        return `Listing Prometheus label names`;
+        return `list Prometheus label names`;
       },
     },
     verboseParsingErrors: true,

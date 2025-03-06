@@ -60,7 +60,7 @@ export const navigateToExploreTool = tool(
     schema: navigateToExploreSchema,
     metadata: {
       explainer: () => {
-        return `Navigating to Explore`;
+        return `navigate to Explore`;
       },
     },
     verboseParsingErrors: true,

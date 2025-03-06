@@ -102,7 +102,7 @@ export const lokiQueryTool = tool(
     schema: lokiQuerySchema,
     metadata: {
       explainer: () => {
-        return `Executing Loki query`;
+        return `run Loki query`;
       },
     },
     verboseParsingErrors: true,

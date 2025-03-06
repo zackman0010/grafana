@@ -22,7 +22,7 @@ export const simulateToolError = tool(
     schema: z.object({}),
     metadata: {
       explainer: () => {
-        return `Simulating tool error`;
+        return `simulate tool error`;
       },
     },
     verboseParsingErrors: true,

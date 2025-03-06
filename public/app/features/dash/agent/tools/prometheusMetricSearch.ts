@@ -312,7 +312,7 @@ export const prometheusMetricSearchTool = tool(
     schema: prometheusMetricSearchSchema,
     metadata: {
       explainer: () => {
-        return `Searching for Prometheus metrics`;
+        return `search for Prometheus metrics`;
       },
     },
     verboseParsingErrors: true,

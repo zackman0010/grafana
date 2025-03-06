@@ -246,7 +246,7 @@ export const addDashboardPanelTool = tool(
     schema: addDashboardPanelSchema,
     metadata: {
       explainer: () => {
-        return `Adding panel to dashboard`;
+        return `add panel to dashboard`;
       },
     },
     verboseParsingErrors: true,

@@ -41,7 +41,7 @@ export const navigateToDeclareIncidentTool = tool(
     schema: navigateToDeclareIncidentSchema,
     metadata: {
       explainer: () => {
-        return `Navigating to declare incident`;
+        return `navigate to declare incident`;
       },
     },
     verboseParsingErrors: true,

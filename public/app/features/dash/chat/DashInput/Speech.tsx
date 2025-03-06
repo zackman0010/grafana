@@ -76,18 +76,15 @@ export class Speech extends SceneObjectBase<SpeechState> {
   }
 
   public toggleSpeechRecognition() {
-    console.log('Toggling speech recognition, current state:', this.state.listening);
     if (!this._recognition) {
       console.error('Speech recognition not initialized');
       return;
     }
 
     if (this.state.listening) {
-      console.log('Stopping speech recognition...');
       this._recognition.stop();
       this.setState({ listening: false });
     } else {
-      console.log('Starting speech recognition...');
       this.setState({ listening: true });
       this._recognition.start();
     }
@@ -106,7 +103,6 @@ export class Speech extends SceneObjectBase<SpeechState> {
   }
 
   private _initializeSpeechRecognition() {
-    console.log('Initializing speech recognition...');
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       console.log('Speech recognition API available:', SpeechRecognition.name);
@@ -116,11 +112,9 @@ export class Speech extends SceneObjectBase<SpeechState> {
       this._recognition.lang = 'en-US';
 
       this._recognition.onresult = (event: SpeechRecognitionEvent) => {
-        console.log('Speech recognition result:', event.results);
         // Get the last result from the results array
         const lastResult = event.results[event.results.length - 1];
         const transcript = lastResult[0].transcript;
-        console.log('Final transcript:', transcript);
 
         // Update message and send it
         getInput(this).updateMessage(transcript, true);
@@ -133,9 +127,7 @@ export class Speech extends SceneObjectBase<SpeechState> {
       };
 
       this._recognition.onend = () => {
-        console.log('Speech recognition ended');
         if (this.state.listening) {
-          console.log('Restarting speech recognition...');
           this._recognition?.start();
         }
       };
