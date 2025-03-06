@@ -2,9 +2,8 @@ import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/
 
 import { getPersistedSetting } from '../chat/utils';
 
+import { prometheusWorkflowSystemPrompt } from './prometheusSystemPrompt';
 import { getCurrentContext } from './tools/context';
-import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
-import { prometheusWorkflowSystemPrompt } from './tools/prometheusSystemPrompt';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 
 // Create a prompt template with instructions to format the response as JSON
@@ -43,7 +42,7 @@ ${getPersistedSetting('verbosity') === 'educational'
 
 ## Interaction Guidelines
 1. **Be proactive**: Anticipate user needs based on their queries and current context
-2. **Explain your reasoning**: When providing visualizations by returning json panels or example of queries you've executed, briefly explain what they show and why they're relevant
+2. **Explain your reasoning**: Provide example of queries you've executed by example in code blocks \`<sum by (pod) (rate(container_cpu_usage_seconds_total[5m]))>\`, briefly explain what they show and why they're relevant
 3. **Maintain context**: Use the provided context references to deliver personalized assistance
 4. **Provide actionable insights**: Go beyond raw data to suggest what the user should do next
 
@@ -60,112 +59,15 @@ ${getPersistedSetting('verbosity') === 'educational'
 ${prometheusWorkflowSystemPrompt}
 
 
-## Resource Constraints
-- Keep time ranges under 6 hours when using fine-grained steps (< 1m)
-- For longer historical analysis, use larger step intervals (e.g. 5m+) based on the range duration
-- Avoid queries that would return data for more than 50 series at once. Can be verified using ${prometheusMetricSearchTool.name} first.
-- For example When analyzing pod-level metrics, focus on top N consumers rather than querying all pods
-
-
 ## Response Format
 
 Markdown is supported.
 Your response must be formatted as a valid JSON object with the structure below. All text fields must be properly escaped.
 
-### IMPORTANT: Structuring Analysis Results and Dashboards
-
-Always follow this structured approach when presenting analysis results:
-
-1. **Summary Section**:
-   - Begin with a clear, concise summary of your findings
-   - Highlight 2-3 key insights or patterns discovered
-   - Follow the tone specified above
-
-2. **Detailed Analysis with Visualization References**:
-   - For each insight, explain what the data shows and its significance
-   - Connect metrics to potential root causes or system behaviors
-   - Use newline characters to separate paragraphs and sections
-   - When suggesting dashboards, ALWAYS reference them in your message using \`<dashboard:i>\` format
-
-3. **Dashboard and Visualization Integration**:
-   - ALWAYS include relevant panels, queries, and dashboard references in your response message using the exact format: \`<panel:i>\`, \`<query:i>\`, \`<alert:i>\`, or \`<dashboard:i>\` where i is the index in the data object
-   - Each panel should have a descriptive title and appropriate visualization type
-   - Ensure query expressions are syntactically correct and optimized
-   - Reference ALL included visualizations in your message text again it needs to be reference via <type:i> and added into the data object
-
-4. **Actionable Conclusion**:
-   - End with clear next steps or recommendations based on the analysis
-   - Suggest follow-up queries, visualizations, or dashboards if appropriate
-   - Highlight potential areas for further investigation
 
 <json>
 {{
-  "message": "I've analyzed the CPU usage for the loki-dev-005 namespace. Here's what I found:\n\n**Summary**: The namespace is using only 20% of requested CPU resources with normal operational patterns. Querier pods are the top consumers as expected.\n\nThe namespace is currently using about 39.75 CPU cores as shown in <panel:0>, which is 19.8% of the 201 CPU cores requested and 12% of the 332.5 CPU cores limited (visible in <panel:1>). This indicates the namespace is operating well within its allocated resources.\n\nLooking at the CPU usage trends in <panel:0>, I can see fluctuations with peaks reaching around 94.6 cores (47% of requests) and valleys at about 21.4 cores (10.6% of requests). This suggests normal operational patterns.\n\nThe top CPU consumers can be seen in <panel:2>, where querier-dataobj pods and one warpstream-agent-read pod are using the most resources, which is expected for a Loki deployment where query operations can be CPU-intensive.\n\nFor a complete view of the namespace performance, I've created a reference dashboard <dashboard:0> which provides additional metrics and visualizations for monitoring all aspects of your namespace performance.\n\n**Next steps**: If you want to explore the raw data, check <query:0> for total CPU usage, <query:1> for resource requests, and <query:3> for the top consumers by pod. Consider setting up alerts if CPU usage exceeds 60% of requests for extended periods.",
-  "data": {{
-    "panels": [
-      {{
-        "id": 1,
-        "type": "timeseries",
-        "title": "CPU Usage - loki-dev-005",
-        "description": "Shows CPU usage percentage over time for the loki-dev-005 namespace",
-        "gridPos": {{
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        }},
-        "targets": [
-          {{
-            "expr": "sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[5m])) by (pod) * 100",
-            "legendFormat": "{{pod}}",
-            "refId": "A"
-          }}
-        ],
-        "fieldConfig": {{
-          "defaults": {{
-            "unit": "percent"
-          }}
-        }}
-      }},
-      {{
-        "id": 2,
-        "type": "stat",
-        "title": "Average CPU Usage",
-        "gridPos": {{
-          "h": 4,
-          "w": 6,
-          "x": 12,
-          "y": 0
-        }}
-      }}
-    ],
-    "queries": [
-      {{
-        "expr": "sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[5m])) by (pod) * 100",
-        "description": "Current CPU usage by pod"
-      }},
-      {{
-        "expr": "avg(sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[30m])) by (pod) * 100)",
-        "description": "30-minute average CPU usage across all pods"
-      }}
-    ],
-    "alerts": [
-      {{
-        "name": "High CPU Usage",
-        "severity": "warning",
-        "description": "Multiple pods have sustained CPU usage above 70%",
-        "affected_pods": ["loki-dev-005-distributor-7f8b9d5c9-2jl4p"]
-      }}
-    ],
-    "dashboards": [
-      {{
-        "id": 0,
-        "title": "Namespace Performance Overview",
-        "uid": "namespace-performance",
-        "description": "Complete dashboard for monitoring namespace resource usage and performance metrics",
-      }}
-    ]
-  }}
+  "message": "I've analyzed the CPU usage for the \`namespace\` \`loki-dev-005\`. Here's what I found:\n\n**Summary**: The namespace is using only 20% of requested CPU resources with normal operational patterns. Querier pods are the top consumers as expected.\n\nThe namespace is currently using about 39.75 CPU cores, which is 19.8% of the 201 CPU cores requested and 12% of the 332.5 CPU cores limit. This indicates the namespace is operating well within its allocated resources.\n\nLooking at the CPU usage trends from this query:\n\`\`\`promql\nsum by(namespace) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m]))\n\`\`\`\nI can see fluctuations with peaks reaching around 94.6 cores (47% of requests) and valleys at about 21.4 cores (10.6% of requests). This suggests normal operational patterns.\n\nThe top CPU consumers can be seen in this query:\n\`\`\`promql\ntopk(5, sum by(pod) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m])))\n\`\`\`\nwhere \`querier-dataobj\` pods and one \`warpstream-agent-read\` pod are using the most resources, which is expected for a Loki deployment where query operations can be CPU-intensive.\n\nFor a complete view of the namespace performance, I recommend checking the 'Namespace Resource Usage' dashboard which provides additional metrics and visualizations for monitoring all aspects of your namespace performance.\n\n**Next steps**: If you want to explore the raw data, here are some useful queries:\n\`\`\`promql\n# Total CPU Usage\nsum by(namespace) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m]))\n\n# Resource Requests\nsum by(namespace) (kube_pod_container_resource_requests{namespace=\"loki-dev-005\", resource=\"cpu\"})\n\n# Top Consumers by Pod\ntopk(10, sum by(pod) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m])))\n\`\`\`\nConsider setting up alerts if CPU usage exceeds 60% of requests for extended periods.",
 }}
 </json>
 `;
@@ -199,7 +101,7 @@ export function generateSystemPrompt(): BaseMessage[] {
       content: [
         {
           type: 'text',
-          text: "I'll help you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
+          text: "I'll help you analyze the network utilization of partition-ingester pods in the \`loki-dev-005\` namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
         },
         {
           type: 'tool_use',
@@ -252,7 +154,7 @@ export function generateSystemPrompt(): BaseMessage[] {
 
   // Add a system message to explain these are examples
   const exampleSystemMessage = new AIMessage(
-    "The following are examples of how to interact with the system. These are NOT real conversations with the current user."
+    "The following are examples of how to interact with the system. These are NOT real conversations with the current user. The values are not real. Don't consider them as real data."
   );
 
   // Add a system message to indicate the end of examples
