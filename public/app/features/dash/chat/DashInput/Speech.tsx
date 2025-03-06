@@ -164,7 +164,7 @@ const pulse = keyframes({
 const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
   icon: listening
     ? css({
-        label: 'dash-input-speech-icon',
+        label: 'dash-input-speech-icon-1',
         position: 'relative',
         display: 'inline-flex',
         background: 'transparent',
@@ -175,7 +175,7 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
         height: 24,
         color: theme.colors.warning.main,
         margin: 0,
-        marginTop: theme.spacing(1),
+        marginTop: '12px',
         padding: 0,
 
         '& svg': {
@@ -200,11 +200,11 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
         },
 
         '&::after': {
-          width: '45px',
-          height: '45px',
-          marginTop: '-21px',
-          marginLeft: '-21px',
-          background: `radial-gradient(circle, ${theme.colors.warning.main} 0%, transparent 70%)`,
+          width: '100px',
+          height: '100px',
+          marginTop: '-50px',
+          marginLeft: '-50px',
+          background: `radial-gradient(circle, ${theme.colors.warning.main} 0%, transparent 30%)`,
 
           [theme.transitions.handleMotion('no-preference', 'reduce')]: {
             animation: `${pulse} 2s ease-in-out infinite`,
@@ -222,7 +222,7 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
         },
       })
     : css({
-        label: 'dash-input-speech-icon',
+        label: 'dash-input-speech-icon-1-2',
         background: 'transparent',
         border: 'none',
         width: 24,
@@ -232,7 +232,7 @@ const getStyles = (theme: GrafanaTheme2, listening: boolean) => ({
         alignItems: 'center',
         padding: 0,
         margin: 0,
-        marginTop: theme.spacing(1),
+        marginTop: '12px',
         color: theme.colors.secondary.text,
       }),
 });
