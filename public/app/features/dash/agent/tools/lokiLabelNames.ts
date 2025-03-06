@@ -44,7 +44,7 @@ const lokiLabelNamesSchema = z.object({
     .string()
     .optional()
     .describe(
-      'Optional javascript regex pattern to filter label names. Use this when you want to filter the label names by a specific pattern.'
+      'Optional regex pattern to filter label names. This can be a JavaScript regular expression or a simple string pattern. For example, "app.*" will match labels like "app", "application", etc. Matching is always case-insensitive for easier discovery.'
     )
     .refine(regexRefiner.func, regexRefiner.message),
 });
@@ -58,20 +58,42 @@ export const lokiLabelNamesTool = tool(
     let filteredNames = labelNames;
     if (regex) {
       try {
-        const regexPattern = new RegExp(regex);
+        // Always use case insensitive flag
+        const regexPattern = new RegExp(regex, 'i');
         filteredNames = labelNames.filter((name) => regexPattern.test(name));
+
+        // If no matches found with regex, try simple substring match as fallback
+        if (filteredNames.length === 0) {
+          const fallbackNames = labelNames.filter((name) =>
+            name.toLowerCase().includes(regex.toLowerCase())
+          );
+
+          if (fallbackNames.length > 0) {
+            filteredNames = fallbackNames;
+            console.log(`No matches found with regex. Using substring match instead: ${regex}`);
+          }
+        }
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredNames = labelNames.filter((name) => name.includes(regex));
+        filteredNames = labelNames.filter((name) =>
+          name.toLowerCase().includes(regex.toLowerCase())
+        );
+        console.log(`Invalid regex. Using substring match instead: ${regex}`);
       }
     }
 
-    return filteredNames.join(',');
+    // Format the response as a JSON string with additional metadata
+    return JSON.stringify({
+      pattern: regex || '*',
+      total_label_count: labelNames.length,
+      filtered_label_count: filteredNames.length,
+      label_names: filteredNames,
+    }, null, 2);
   },
   {
     name: 'list_loki_label_names',
     description:
-      'Only when the data source type is Loki, list all available Loki label names. Default time range is last 5 minutes if not specified.',
+      'Lists all available Loki label names with powerful regex filtering capabilities. Use the regex parameter to filter labels with JavaScript regular expressions or simple string patterns. All regex matching is case-insensitive for easier discovery. The default time range is the last 5 minutes if not specified.',
     schema: lokiLabelNamesSchema,
   }
 );

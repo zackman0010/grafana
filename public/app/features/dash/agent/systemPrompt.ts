@@ -63,6 +63,7 @@ ${prometheusWorkflowSystemPrompt}
 
 Markdown is supported.
 Your response must be formatted as a valid JSON object with the structure below. All text fields must be properly escaped.
+Use code blocks only multiple queries or log samples you want to show to the user, otherwise use single quotes to point to the queries, label names, and values.
 
 
 <json>
@@ -95,13 +96,13 @@ export function generateSystemPrompt(): BaseMessage[] {
   // Create few-shot examples directly instead of using a template
   const fewshotMessages: BaseMessage[] = [
     new HumanMessage(
-      'Can you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace?'
+      'Can you analyze the something the foo namespace?'
     ),
     new AIMessage({
       content: [
         {
           type: 'text',
-          text: "I'll help you analyze the network utilization of partition-ingester pods in the \`loki-dev-005\` namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
+          text: "I'll help you analyze the something the foo namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for something the foo namespace.",
         },
         {
           type: 'tool_use',
@@ -109,7 +110,7 @@ export function generateSystemPrompt(): BaseMessage[] {
           name: 'search_prometheus_metrics',
           input: {
             datasource_uid: 'cortex-dev-01',
-            metric_patterns: ['container_network_.*', 'kube_pod_.*loki.*'],
+            metric_patterns: ['foo.*', 'bar.*'],
             start: 1741202198789,
             end: 1741205798789,
           },
@@ -122,7 +123,7 @@ export function generateSystemPrompt(): BaseMessage[] {
           type: 'tool_result',
           tool_use_id: 'toolu_01WZVskhEnnghSBhHPZ6mxVZ',
           content: JSON.stringify({
-            metric_patterns: ['container_network_.*', 'kube_pod_.*ingester.*'],
+            metric_patterns: ['foo.*', 'bar.*'],
             total_matches_found: 14,
             metrics_returned: 14,
             max_metrics_per_pattern: 50,
@@ -130,7 +131,7 @@ export function generateSystemPrompt(): BaseMessage[] {
             limited_patterns: [],
             metrics: [
               {
-                metric_name: 'container_network_receive_bytes_total',
+                metric_name: 'foo',
                 label_stats: [
                   {
                     name: 'interface',
