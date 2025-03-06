@@ -19,7 +19,7 @@ type SQLCommand struct {
 	query       string
 	varsToQuery []string
 	refID       string
-	limit       int
+	limit       int64
 }
 
 // NewSQLCommand creates a new SQLCommand.
@@ -42,7 +42,7 @@ func NewSQLCommand(refID, rawSQL string) (*SQLCommand, error) {
 		logger.Debug("REF tables", "tables", tables, "sql", rawSQL)
 	}
 
-	defaultLimit := 20
+	defaultLimit := int64(20)
 	return &SQLCommand{
 		query:       rawSQL,
 		varsToQuery: tables,
@@ -136,12 +136,12 @@ func (gr *SQLCommand) Type() string {
 	return TypeSQL.String()
 }
 
-func totalRows(frames []*data.Frame) int {
+func totalRows(frames []*data.Frame) int64 {
 	total := 0
 	for _, frame := range frames {
 		if frame != nil {
 			total += frame.Rows()
 		}
 	}
-	return total
+	return int64(total)
 }
