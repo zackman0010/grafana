@@ -196,7 +196,7 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     padding: theme.spacing(1),
     paddingTop: 0,
     backgroundColor: theme.colors.background.primary,
-    borderRadius: theme.shape.borderRadius(1),
+    borderRadius: theme.shape.radius.default,
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     gap: `${theme.spacing(1)} ${theme.spacing(2)}`,
@@ -239,7 +239,7 @@ const getStyles = (theme: GrafanaTheme2, withError: boolean, working: boolean, h
     fontSize: '0.85em',
     padding: theme.spacing(1),
     backgroundColor: theme.colors.background.primary,
-    borderRadius: theme.shape.borderRadius(1),
+    borderRadius: theme.shape.radius.default,
     borderLeft: `3px solid ${theme.colors.warning.border}`,
   }),
   sectionHeader: css({
