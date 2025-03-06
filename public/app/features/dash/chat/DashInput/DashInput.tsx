@@ -521,7 +521,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     label: 'dash-input-row',
     display: 'flex',
     flexDirection: 'row',
-    gap: theme.spacing(2),
-    padding: theme.spacing(2),
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 2.5),
   }),
 });
