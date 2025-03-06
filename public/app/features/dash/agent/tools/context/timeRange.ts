@@ -7,14 +7,8 @@ export interface TimeRangeContext {
 
 export function getTimeRangeContext({ url_parameters }: PageContext, _appContext: AppContext): TimeRangeContext {
   if (url_parameters.from && url_parameters.to) {
-    if (url_parameters.from.toString().includes('now-')) {
-      return {
-        text: url_parameters.from.toString(),
-      };
-    }
-
     return {
-      text: `${url_parameters.from} to ${url_parameters.to}`,
+      text: `from ${url_parameters.from} to ${url_parameters.to}`,
     };
   }
 

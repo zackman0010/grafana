@@ -87,7 +87,7 @@ export function generateSystemPrompt(): BaseMessage[] {
   The current page title is "${context.page.title}"  which corresponds to the module ${context.app.name} ${context.app.description ? `(${context.app.description}).` : ''}. `;
   contextPrompt += `The current URL is ${context.page.pathname}, and the URL search params are ${JSON.stringify(context.page.url_parameters)}. `;
   if (context.time_range) {
-    contextPrompt += `The selected time range is ${context.time_range.text}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
+    contextPrompt += `The current time range is ${context.time_range.text}, which should be displayed in a readable format to the user but sent as UNIX timestamps internally and for requests. `;
   }
   if (context.datasource.type !== 'Unknown') {
     contextPrompt += `The current data source type is ${context.datasource.type}. The data source should be displayed by name to the user but internally referenced by the uid. You can resolve the uid using the list_datasources tool. `;
