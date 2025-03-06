@@ -7,6 +7,7 @@ import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
+import { lokiQueryTool } from './lokiQueryTool';
 import { navigateToDashboardTool } from './navigateToDashboard';
 import { navigateToDeclareIncidentTool } from './navigateToDeclareIncident';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
@@ -70,6 +71,7 @@ export const tools = [
   simulateToolError,
   dashboardSearchTool,
   devSleep,
+  lokiQueryTool,
 ];
 
 export const toolsByName = tools.reduce(

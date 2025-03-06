@@ -27,17 +27,30 @@ const getLokiLabelValues = async (
 };
 
 const lokiLabelValuesSchema = z.object({
-  datasource_uid: z.string().describe('The datasource UID of the Loki datasource').refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
+  datasource_uid: z
+    .string()
+    .describe('The datasource UID of the Loki datasource')
+    .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
   label_name: z.string().describe('The label name to query values for'),
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 5 minutes ago if not provided. Should be a valid unix timestamp in milliseconds.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+    .describe(
+      'Optional start timestamp for the query range. Defaults to 6 hours ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.').refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
-  regex: z.string().optional().describe('Optional javascript regex pattern to filter label names').refine(regexRefiner.func, regexRefiner.message),
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  regex: z
+    .string()
+    .optional()
+    .describe('Optional javascript regex pattern to filter label names')
+    .refine(regexRefiner.func, regexRefiner.message),
 });
 
 export const lokiLabelValuesTool = tool(
