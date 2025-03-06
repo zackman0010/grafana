@@ -215,6 +215,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
             placement="bottom-start"
           >
             <div className={styles.titleContent}>
+              <div className={styles.dashText}>DASH</div>
               {name}
               <Icon name="angle-down" className={styles.titleCaret} />
             </div>
@@ -298,6 +299,17 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     fontWeight: theme.typography.fontWeightBold,
     display: 'flex',
     alignItems: 'center',
+    gap: theme.spacing(2),
+  }),
+  dashText: css({
+    label: 'dash-text',
+    writingMode: 'vertical-lr',
+    transform: 'rotate(180deg)',
+    fontSize: '7px',
+    color: theme.colors.text.primary,
+    letterSpacing: '0.1em',
+    padding: theme.spacing(0.25),
+    textShadow: '0 0 2px rgba(155, 89, 182, 0.3)',
   }),
   titleContent: css({
     label: 'dash-title-content',

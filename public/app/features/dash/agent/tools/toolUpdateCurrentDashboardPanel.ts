@@ -253,7 +253,10 @@ Best practices:
 - Ensure datasource references are valid
 - Test complex visualizations incrementally
 
-Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.`,
+Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.
+
+Remind users to save the dashboard to keep the changes.
+`,
     schema: panelUpdateSchema,
     metadata: {
       explainer: () => {

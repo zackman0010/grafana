@@ -16,11 +16,13 @@ import { getChat, getDash, getMessages, getSettings } from '../utils';
 import { Input } from './Input';
 import { Logger } from './Logger';
 import { Speech, SpeechState } from './Speech';
+import { TextToSpeech } from './TextToSpeech';
 
 interface DashInputState extends SceneObjectState {
   logger: Logger;
   message: string;
   speech: Speech;
+  textToSpeech: TextToSpeech;
 }
 
 export class DashInput extends SceneObjectBase<DashInputState> {
@@ -40,11 +42,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   private _removeToolAndMessage(toolId: string) {
     const messages = getMessages(this);
-    console.log('------ DashInput._removeToolAndMessage: Starting', {
-      toolId,
-      loading: messages.state.loading,
-      anyToolsWorking: messages.state.anyToolsWorking,
-    });
 
     // Remove the tool from messages
     messages.state.messages.forEach((message) => {
@@ -100,11 +97,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (!anyToolsStillWorking) {
       messages.setToolWorking(undefined, false);
     }
-
-    console.log('------ DashInput._removeToolAndMessage: Completing', {
-      loading: messages.state.loading,
-      anyToolsWorking: messages.state.anyToolsWorking,
-    });
   }
 
   public constructor(state: Partial<Pick<DashInputState, 'message'> & Pick<SpeechState, 'listening'>>) {
@@ -113,6 +105,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       logger: new Logger(),
       message: state.message ?? '',
       speech: new Speech({ listening: state.listening ?? false }),
+      textToSpeech: new TextToSpeech({ speaking: false, canSpeak: false }),
     });
 
     const handle = window.setInterval(() => {
@@ -157,18 +150,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   public async cancelRequest() {
-    console.log('------ DashInput.cancelRequest: Starting', {
-      hasAbortController: !!this._abortController,
-      messagesLoading: getMessages(this).state.loading,
-      anyToolsWorking: getMessages(this).state.anyToolsWorking,
-    });
-
     // Find any working tools and mark them as cancelled
     const messages = getMessages(this);
     messages.state.messages.forEach((message) => {
       message.state.children.forEach((child) => {
         if (child instanceof Tool && child.state.working) {
-          console.log('------ DashInput.cancelRequest: Cancelling tool', { toolId: child.state.content.id });
           this._removeToolAndMessage(child.state.content.id);
         }
       });
@@ -184,17 +170,13 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (messages.state.messages.length > 0) {
       const lastMessage = messages.state.messages[messages.state.messages.length - 1];
       if (lastMessage.state.sender === 'ai') {
-        console.log('------ DashInput.cancelRequest: Removing last AI message');
         messages.state.messages.pop();
       }
     }
 
-    console.log('------ DashInput.cancelRequest: Completing', {
-      messagesLoading: messages.state.loading,
-      anyToolsWorking: messages.state.anyToolsWorking,
-    });
     messages.setLoading(false);
     this.state.speech.resume();
+    this.state.textToSpeech.stop();
     this.updateMessage('', false);
   }
 
@@ -211,11 +193,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (!message) {
       return;
     }
-
-    console.log('------ DashInput.interruptAndSendMessage: Starting', {
-      message,
-      hasAbortController: !!this._abortController,
-    });
 
     // Store the message before canceling the request
     const messageToSend = message;
@@ -262,17 +239,12 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       await this._handleToolCalls(aiMessage);
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
-        console.log('------ DashInput.interruptAndSendMessage: Request aborted');
         return;
       }
 
       console.error('\n❌ Error:', error.message || 'Unknown error occurred');
       getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
     } finally {
-      console.log('------ DashInput.interruptAndSendMessage: Completing', {
-        loading: getMessages(this).state.loading,
-        anyToolsWorking: getMessages(this).state.anyToolsWorking,
-      });
       getMessages(this).setLoading(false);
       this._abortController = null;
       this.state.speech.resume();
@@ -285,11 +257,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (!message) {
       return;
     }
-
-    console.log('------ DashInput.sendMessage: Starting', {
-      message,
-      hasAbortController: !!this._abortController,
-    });
 
     // Normal flow for new messages
     this._abortController = new AbortController();
@@ -323,17 +290,12 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       await this._handleToolCalls(aiMessage);
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
-        console.log('------ DashInput.sendMessage: Request aborted');
         return;
       }
 
       console.error('\n❌ Error:', error.message || 'Unknown error occurred');
       getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
     } finally {
-      console.log('------ DashInput.sendMessage: Completing', {
-        loading: getMessages(this).state.loading,
-        anyToolsWorking: getMessages(this).state.anyToolsWorking,
-      });
       getMessages(this).setLoading(false);
       this._abortController = null;
       this.state.speech.resume();
@@ -386,6 +348,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   private async _handleToolCalls(aiMessage: AIMessageChunk, callCount = 0, maxCalls = 20) {
     if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0 || callCount >= maxCalls) {
+      // Speak the AI message if text-to-speech is enabled
+      if (this.state.textToSpeech.state.canSpeak) {
+        const content = typeof aiMessage.content === 'string' ? aiMessage.content : JSON.stringify(aiMessage.content);
+        this.state.textToSpeech.speak(content);
+      }
       return;
     }
 
@@ -508,8 +475,9 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message, speech } = model.useState();
+  const { message, speech, textToSpeech } = model.useState();
   const { listening } = speech.useState();
+  const { speaking } = textToSpeech.useState();
   const { loading, anyToolsWorking } = getMessages(model).useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -520,7 +488,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
         <speech.Component model={speech} />
 
         <Input
-          listening={listening}
+          listening={listening || speaking}
           loading={loading}
           message={message}
           ref={(ref) => model.setInputRef(ref)}

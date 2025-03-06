@@ -27,7 +27,11 @@ import { addDashboardPanelTool } from './toolAddDashboardPanel';
 import { createDashboardTool } from './toolCreateDashboard';
 import { simulateToolError } from './toolDevSimulateToolError';
 import { devSleep } from './toolDevSleep';
+import { toolGetCanSpeak } from './toolGetCanSpeak';
+import { toolGetSpeechVoices } from './toolGetSpeechVoices';
 import { readDashboardPanelsTool } from './toolReadDashboardPanels';
+import { toolSetCanSpeak } from './toolSetCanSpeak';
+import { toolSetSpeechVoice } from './toolSetSpeechVoice';
 import { updateCurrentDashboardPanelsTool } from './toolUpdateCurrentDashboardPanels';
 
 const grafanaComSearch = new TavilySearchResults({
@@ -73,9 +77,9 @@ grafanaDashboardsSearch.description =
   'Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.';
 grafanaDashboardsSearch.metadata = {
   explainer: () => {
-    return `Searching for community dashboards on Grafana.com`
-  }
-}
+    return `Searching for community dashboards on Grafana.com`;
+  },
+};
 
 export const tools = [
   listDatasourcesTool,
@@ -108,6 +112,10 @@ export const tools = [
   lokiQueryTool,
   addDashboardVariableTool,
   readCommunityDashboardTool,
+  toolGetCanSpeak,
+  toolSetCanSpeak,
+  toolGetSpeechVoices,
+  toolSetSpeechVoice,
 ];
 
 export const toolsByName = tools.reduce(
