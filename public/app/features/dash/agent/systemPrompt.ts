@@ -154,7 +154,7 @@ export function generateSystemPrompt(): BaseMessage[] {
 
   // Add a system message to explain these are examples
   const exampleSystemMessage = new AIMessage(
-    "The following are examples of how to interact with the system. These are NOT real conversations with the current user."
+    "The following are examples of how to interact with the system. These are NOT real conversations with the current user. The values are not real. Don't consider them as real data."
   );
 
   // Add a system message to indicate the end of examples
