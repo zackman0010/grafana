@@ -475,9 +475,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message, speech, textToSpeech } = model.useState();
+  const { message, speech } = model.useState();
   const { listening } = speech.useState();
-  const { speaking } = textToSpeech.useState();
   const { loading, anyToolsWorking } = getMessages(model).useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
