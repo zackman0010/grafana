@@ -148,6 +148,7 @@ async function updateSinglePanel(
 
     // Check for panel errors after update
     const panelState = panel.state;
+    panel.forceRender();
 
     // Check for plugin load errors
     if ('_pluginLoadError' in panelState && panelState._pluginLoadError) {
