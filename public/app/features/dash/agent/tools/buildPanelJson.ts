@@ -6,10 +6,12 @@ export function buildPanelJson(
   title: string,
   description: string,
   queryObject: any,
-  transformations: any[] = []
+  transformations: any[] = [],
+  collapsed = true,
 ) {
   return {
     timeRange: timeRange,
+    collapsed: collapsed,
     panel: {
       type: type,
       title: title,
@@ -34,7 +36,7 @@ export function buildPanelJson(
       transformations: transformations,
       targets: [queryObject],
       options: {
-        showHeader: true,
+        showHeader: false,
       },
     },
   };

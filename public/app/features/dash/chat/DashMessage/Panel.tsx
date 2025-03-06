@@ -12,7 +12,7 @@ import {
   SceneTimeRange,
   VizPanel,
 } from '@grafana/scenes';
-import { Button, Modal, useStyles2 } from '@grafana/ui';
+import { Button, Collapse, Icon, Modal, Tooltip, useStyles2 } from '@grafana/ui';
 
 import { PanelConfiguration } from '../types';
 
@@ -20,6 +20,7 @@ interface PanelState extends SceneObjectState {
   panel: PanelConfiguration;
   timeRange: TimeRange;
   vizPanel: VizPanel;
+  collapsed: boolean;
 }
 
 export class Panel extends SceneObjectBase<PanelState> {
@@ -29,8 +30,7 @@ export class Panel extends SceneObjectBase<PanelState> {
     const targets = state.panel.targets ?? [];
 
     const vizPanel = new VizPanel({
-      title: state.panel.title ?? '',
-      description: state.panel.description ?? '',
+      title: '',
       pluginId: state.panel.type ?? 'timeseries',
       options: state.panel.options ?? {},
       fieldConfig: state.panel.fieldConfig,
@@ -59,22 +59,46 @@ export class Panel extends SceneObjectBase<PanelState> {
 }
 
 function PanelRenderer({ model }: SceneComponentProps<Panel>) {
-  const { vizPanel } = model.useState();
+  const { vizPanel, collapsed, panel } = model.useState();
   const styles = useStyles2(getStyles);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Get the collapsed state from localStorage, default to false (expanded)
+  const [isCollapsed, setIsCollapsed] = useState(collapsed ?? true);
+
+  const handleToggleCollapse = (collapsed: boolean) => {
+    setIsCollapsed(!collapsed);
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.panelWrapper}>
-        <vizPanel.Component model={vizPanel} />
-        <Button
-          className={styles.expandButton}
-          icon="eye"
-          variant="secondary"
-          onClick={() => setIsExpanded(!isExpanded)}
-          aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
-        />
-      </div>
+      <Collapse
+        isOpen={!isCollapsed}
+        label={
+          <>
+            <Icon name="chart-line" /> {panel.title}{' '}
+            {panel.description && (
+              <Tooltip content={panel.description}>
+                <Icon name="info-circle" className={styles.infoIcon} />
+              </Tooltip>
+            )}
+          </>
+        }
+        collapsible={true}
+        onToggle={handleToggleCollapse}
+        className={styles.collapsible}
+      >
+        <div className={styles.panelWrapper}>
+          <vizPanel.Component model={vizPanel} />
+          <Button
+            className={styles.expandButton}
+            icon="eye"
+            variant="secondary"
+            onClick={() => setIsExpanded(!isExpanded)}
+            aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
+          />
+        </div>
+      </Collapse>
       {isExpanded && (
         <Modal
           title={vizPanel.state.title || 'Panel'}
@@ -95,11 +119,18 @@ function PanelRenderer({ model }: SceneComponentProps<Panel>) {
 const getStyles = () => ({
   container: css({
     label: 'dash-message-panel-container',
-    height: '300px',
+  }),
+  collapsible: css({
+    marginBottom: '0',
+  }),
+  infoIcon: css({
+    marginLeft: '4px',
+    color: 'var(--colors-text-secondary)',
+    cursor: 'help',
   }),
   panelWrapper: css({
     position: 'relative',
-    height: '100%',
+    height: '300px',
   }),
   expandButton: css({
     position: 'absolute',
