@@ -91,12 +91,21 @@ func (gr *SQLCommand) Execute(ctx context.Context, now time.Time, vars mathexp.V
 		allFrames = append(allFrames, frames...)
 	}
 
-	rsp := mathexp.Results{}
-
-	db := sql.DB{}
+	totalRows := totalRows(allFrames)
+	if totalRows > 20 {
+		return mathexp.Results{},
+			fmt.Errorf(
+				"SQL expression: total row count across all input tables exceeds limit of 20. Total rows: %d",
+				totalRows,
+			)
+	}
 
 	logger.Debug("Executing query", "query", gr.query, "frames", len(allFrames))
+
+	db := sql.DB{}
 	frame, err := db.QueryFrames(ctx, gr.refID, gr.query, allFrames)
+
+	rsp := mathexp.Results{}
 	if err != nil {
 		logger.Error("Failed to query frames", "error", err.Error())
 		rsp.Error = err
@@ -120,4 +129,14 @@ func (gr *SQLCommand) Execute(ctx context.Context, now time.Time, vars mathexp.V
 
 func (gr *SQLCommand) Type() string {
 	return TypeSQL.String()
+}
+
+func totalRows(frames []*data.Frame) int {
+	total := 0
+	for _, frame := range frames {
+		if frame != nil {
+			total += frame.Rows()
+		}
+	}
+	return total
 }
