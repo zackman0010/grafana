@@ -4,6 +4,7 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Icon, useStyles2 } from '@grafana/ui';
 
+import { ToolExplainer } from '../../agent/tools/ToolExplainer';
 import { getSettings } from '../utils';
 
 import { JSONPreview } from './JSONPreview';
@@ -96,7 +97,9 @@ function ToolRenderer({ model }: SceneComponentProps<Tool>) {
       >
         <Icon name={working ? 'sync' : content.error ? 'times' : 'check'} className={styles.icon} />
 
-        <span className={styles.name}>{content.name}</span>
+        <span className={styles.name}>
+          <ToolExplainer toolName={content.name} isRunning={working} error={content.error} />
+        </span>
 
         {(hasInput || hasOutput) && <Icon name={opened ? 'angle-up' : 'angle-down'} size="sm" />}
       </div>

@@ -65,5 +65,10 @@ export const createDashboardTool = tool(
     description:
       'Creates a new empty dashboard with the specified title, optional UID, and folder. After creating the dashboard, you should use the add_dashboard_panels tool to add panels to it. This separation allows for better control over dashboard creation and panel addition.',
     schema: dashboardSchema,
+    metadata: {
+      explainer: () => {
+        return `Creating a new dashboard`;
+      },
+    },
   }
 );

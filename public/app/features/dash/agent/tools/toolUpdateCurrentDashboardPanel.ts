@@ -255,5 +255,10 @@ Best practices:
 
 Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.`,
     schema: panelUpdateSchema,
+    metadata: {
+      explainer: () => {
+        return `Updating dashboard panels`;
+      },
+    },
   }
 );

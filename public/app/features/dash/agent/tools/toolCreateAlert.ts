@@ -102,5 +102,10 @@ export const createAlertRuleTool = tool(
     description:
       'Creates a new alert rule with the specified title, condition, and optional parameters. Automatically navigates to the alert view page after creation where you can see the details of your alert.',
     schema: alertSchema,
+    metadata: {
+      explainer: () => {
+        return `Creating an alert rule`;
+      },
+    },
   }
 );

@@ -77,5 +77,10 @@ export const lokiLabelValuesTool = tool(
     description:
       'Only when the data source type is Loki, list all values for the given label_name. Default time range is last 5 minutes if not specified.',
     schema: lokiLabelValuesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing Loki label values`;
+      },
+    },
   }
 );

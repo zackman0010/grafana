@@ -68,5 +68,10 @@ export const prometheusLabelNamesTool = tool(
        Prefer to use ${prometheusMetricSearchTool.name} for label names and metric discovery first to see if the labels contains a lot of values.
        Default time range is last hour if not specified.`,
     schema: prometheusLabelNamesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing Prometheus label names`;
+      },
+    },
   }
 );

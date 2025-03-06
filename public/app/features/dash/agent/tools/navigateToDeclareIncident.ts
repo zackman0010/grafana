@@ -42,5 +42,10 @@ export const navigateToDeclareIncidentTool = tool(
     description:
       'Use this tool when the user wants to declare a new incident in Grafana Incident. NEVER use it without asking the user for confirmation.',
     schema: navigateToDeclareIncidentSchema,
+    metadata: {
+      explainer: () => {
+        return `Navigating to declare incident`;
+      },
+    },
   }
 );

@@ -379,5 +379,10 @@ Complex panel update with data source and targets:
 ]
 \`\`\``,
     schema: panelUpdateSchema,
+    metadata: {
+      explainer: () => {
+        return `Updating multiple dashboard panels`;
+      },
+    },
   }
 );
