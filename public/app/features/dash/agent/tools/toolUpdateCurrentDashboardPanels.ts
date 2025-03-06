@@ -7,7 +7,7 @@ import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 import { findOriginalVizPanelByKey } from '../../../dashboard-scene/utils/utils';
 
 const panelUpdateItemSchema = z.object({
-  id: z.string().describe('The ID of the panel to update'),
+  id: z.number().describe('The ID of the panel to update'),
   title: z.string().optional().describe('The title of the panel'),
   description: z.string().optional().describe('The description of the panel'),
   pluginId: z.string().optional().describe('The ID of the panel plugin to use'),
@@ -52,7 +52,7 @@ function generateDiffMarkdown(oldState: VizPanelState, newState: VizPanelState):
 }
 
 async function updateSinglePanel(
-  id: string,
+  id: number,
   title?: string,
   description?: string,
   pluginId?: string,
@@ -62,7 +62,7 @@ async function updateSinglePanel(
   transformations?: unknown[],
   datasource_uid?: string
 ): Promise<string> {
-  const panel = findOriginalVizPanelByKey(window.__grafanaSceneContext, id);
+  const panel = findOriginalVizPanelByKey(window.__grafanaSceneContext, `${id}`);
   if (!panel) {
     return JSON.stringify({
       error: `Panel with ID ${id} not found`,
