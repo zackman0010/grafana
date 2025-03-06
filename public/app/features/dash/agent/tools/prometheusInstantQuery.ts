@@ -29,13 +29,22 @@ const prometheusInstantQuerySchema = z.object({
     .describe(
       'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage patterns" or "Identify anomalies in error rates"'
     ),
+  collapsed: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'Whether to collapse the panel by default. Defaults to true. Set it to `false` if you think that this panel will be interesting to the user, for example if you think this is the only query in the conversation.'
+    ),
+  title: z.string().describe('The title of the query.'),
+  description: z.string().describe('The description of the query.'),
 });
 
 // Wrap the implementation with error handling
 export const prometheusInstantQueryTool = tool(
   async (input: any) => {
     const parsedInput = prometheusInstantQuerySchema.parse(input);
-    const { datasource_uid, query, time, summarize } = parsedInput;
+    const { datasource_uid, query, time, summarize, collapsed, title, description } = parsedInput;
     const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
     if (!datasource) {
       throw new Error(`Datasource with uid ${datasource_uid} not found`);
@@ -112,14 +121,7 @@ export const prometheusInstantQueryTool = tool(
           },
         ];
       }
-      panelJson = buildPanelJson(
-        timeRange,
-        type,
-        'Prometheus Instant Query',
-        'Prometheus Instant Query',
-        q,
-        transformations
-      );
+      panelJson = buildPanelJson(timeRange, type, title, description, q, transformations, collapsed);
     }
 
     // If summarize parameter is provided, use the LLM-based summarizer

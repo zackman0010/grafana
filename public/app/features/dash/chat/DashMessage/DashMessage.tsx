@@ -41,7 +41,7 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
     if (state.type === 'artifact') {
       const c = state.content as any;
-      children.push(new Panel({ panel: c.panel, timeRange: c.timeRange }));
+      children.push(new Panel({ panel: c.panel, timeRange: c.timeRange, collapsed: c.collapsed ?? true }));
     } else if (typeof state.content === 'string') {
       children.push(new Text({ content: state.content }));
     } else {
