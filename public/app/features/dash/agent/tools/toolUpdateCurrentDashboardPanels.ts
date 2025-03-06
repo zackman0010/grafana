@@ -93,13 +93,13 @@ async function updateSinglePanel(
 
     if (options) {
       panel.setState({
-        options: options,
+        options: { ...panel.state.options, ...options },
       });
     }
 
     if (fieldConfig) {
       panel.setState({
-        fieldConfig: fieldConfig as any,
+        fieldConfig: { ...panel.state.fieldConfig, ...fieldConfig },
       });
     }
 
@@ -194,8 +194,7 @@ async function updatePanels(panelUpdates: Array<z.infer<typeof panelUpdateItemSc
   const results: Record<string, any> = {};
 
   for (const update of panelUpdates) {
-    const { id, title, description, pluginId, options, fieldConfig, targets, transformations, datasource_uid } =
-      update;
+    const { id, title, description, pluginId, options, fieldConfig, targets, transformations, datasource_uid } = update;
 
     const result = await updateSinglePanel(
       id,
@@ -317,18 +316,60 @@ Complex panel update with data source and targets:
     },
     "fieldConfig": {
       "defaults": {
-        "color": {
-          "mode": "palette-classic"
-        },
         "custom": {
-          "axisCenteredZero": false,
-          "axisColorMode": "text",
-          "axisLabel": "",
+          "drawStyle": "line",
+          "lineInterpolation": "linear",
+          "barAlignment": 0,
+          "barWidthFactor": 0.6,
+          "lineWidth": 1,
+          "fillOpacity": 10,
+          "gradientMode": "none",
+          "spanNulls": false,
+          "insertNulls": false,
+          "showPoints": "never",
+          "pointSize": 5,
+          "stacking": {
+            "mode": "none",
+            "group": "A"
+          },
           "axisPlacement": "auto",
-          "fillOpacity": 80
+          "axisLabel": "",
+          "axisColorMode": "text",
+          "axisBorderShow": false,
+          "scaleDistribution": {
+            "type": "linear"
+          },
+          "axisCenteredZero": false,
+          "hideFrom": {
+            "tooltip": false,
+            "viz": false,
+            "legend": false
+          },
+          "thresholdsStyle": {
+            "mode": "off"
+          }
         },
-        "unit": "percent"
-      }
+        "color": {
+          "mode": "shades",
+          "fixedColor": "orange"
+        },
+        "mappings": [],
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {
+              "color": "green",
+              "value": null
+            },
+            {
+              "color": "red",
+              "value": 80
+            }
+          ]
+        },
+        "unit": "reqps"
+      },
+      "overrides": []
     }
   }
 ]
