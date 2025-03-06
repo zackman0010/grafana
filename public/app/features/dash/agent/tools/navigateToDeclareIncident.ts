@@ -13,9 +13,10 @@ const navigateToDeclareIncidentSchema = z.object({
 export const navigateToDeclareIncidentTool = tool(
   async (input) => {
     const { title, url, caption, navigate } = navigateToDeclareIncidentSchema.parse(input);
-
     const params = new URLSearchParams();
-    params.append('title', title);
+    if (title) {
+      params.append('title', title);
+    }
 
     if (url) {
       params.append('url', url);
