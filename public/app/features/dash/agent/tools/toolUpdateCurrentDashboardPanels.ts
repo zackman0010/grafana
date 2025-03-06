@@ -11,7 +11,7 @@ const panelUpdateSchema = z.object({
   config: z.record(z.unknown()).describe('The new configuration to apply to the panel'),
 });
 
-const updateDashboardPanelsSchema = z.object({
+const updateCurrentDashboardPanelsSchema = z.object({
   updates: z.array(panelUpdateSchema).describe('Array of panel updates to apply'),
 });
 
@@ -100,9 +100,9 @@ async function updateSinglePanel(panelId: string, config: Record<string, unknown
   }
 }
 
-export const updateDashboardPanelsTool = tool(
+export const updateCurrentDashboardPanelsTool = tool(
   async (input): Promise<string> => {
-    const parsedInput = updateDashboardPanelsSchema.parse(input);
+    const parsedInput = updateCurrentDashboardPanelsSchema.parse(input);
     const { updates } = parsedInput;
 
     if (!(window.__grafanaSceneContext instanceof DashboardScene)) {
@@ -128,9 +128,9 @@ export const updateDashboardPanelsTool = tool(
     });
   },
   {
-    name: 'update_dashboard_panels',
+    name: 'update_current_dashboard_panels',
     description:
       'Updates multiple dashboard panels with new configurations. Get the configurations via read_dashboard_panels tool first. If there are no panels to read, or you are creating a new dashboard, use the grafana_com_docs_search tool to figure out the schema. Automatically navigate the user to view the dashboard before making any changes. Always call this tool by passing in the panel data. Generate good titles and help text.',
-    schema: updateDashboardPanelsSchema,
+    schema: updateCurrentDashboardPanelsSchema,
   }
 );

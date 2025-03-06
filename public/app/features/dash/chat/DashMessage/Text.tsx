@@ -66,7 +66,12 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
 
   return (
     <div
-      className={cx(styles.container, 'markdown-html', sender === 'system' && styles.systemMessage)}
+      className={cx(
+        styles.container,
+        'markdown-html',
+        sender === 'system' && styles.systemMessage,
+        sender === 'user' && 'user-message'
+      )}
       dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }}
     />
   );
@@ -101,8 +106,8 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
       fontWeight: theme.typography.fontWeightMedium,
     },
 
-    p: {
-      marginBottom: theme.spacing(1),
+    '&:not(.user-message) p': {
+      margin: theme.spacing(1, 0),
     },
 
     code: {
