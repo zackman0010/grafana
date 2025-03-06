@@ -19,6 +19,7 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
+import { readCommunityDashboardTool } from './readCommunityDashboard';
 import { addDashboardPanelTool } from './toolAddDashboardPanel';
 import { createDashboardTool } from './toolCreateDashboard';
 import { simulateToolError } from './toolDevSimulateToolError';
@@ -57,6 +58,21 @@ grafanaDocsSearch.metadata = {
     return `Searching for documentation of Grafana, Grafana Cloud, and all the various Grafana applications`;
   },
 };
+const grafanaDashboardsSearch = new TavilySearchResults({
+  apiKey: process.env.TAVILY_API_KEY,
+  maxResults: 1,
+  includeDomains: ['grafana.com/grafana/dashboards/'],
+  includeRawContent: true,
+  includeAnswer: true,
+});
+grafanaDashboardsSearch.name = 'grafana_community_dashboards';
+grafanaDashboardsSearch.description =
+  'Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.';
+grafanaDashboardsSearch.metadata = {
+  explainer: () => {
+    return `Search for community dashboards on Grafana.com. Use this tool if you need to get some examples of dashboards.`
+  }
+}
 
 export const tools = [
   listDatasourcesTool,
@@ -73,6 +89,7 @@ export const tools = [
   navigateToDrilldownLogs,
   grafanaComSearch,
   grafanaDocsSearch,
+  grafanaDashboardsSearch,
   navigateToDashboardTool,
   navigateToOtherTool,
   navigateToDeclareIncidentTool,
@@ -84,6 +101,7 @@ export const tools = [
   devSleep,
   lokiQueryTool,
   addDashboardVariableTool,
+  readCommunityDashboardTool,
 ];
 
 export const toolsByName = tools.reduce(
