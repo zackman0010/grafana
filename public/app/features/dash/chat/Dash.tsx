@@ -211,7 +211,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
             placement="bottom-start"
           >
             <div className={styles.titleContent}>
-              <span className={styles.sparkle}>✨</span> {name}
+              {name}
               <Icon name="angle-down" className={styles.titleCaret} />
             </div>
           </Dropdown>
@@ -304,11 +304,6 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     '&:hover': {
       opacity: 0.8,
     },
-  }),
-  sparkle: css({
-    label: 'dash-sparkle',
-    filter: 'grayscale(100%)',
-    transform: 'scaleX(-1)',
   }),
   actions: css({
     label: 'dash-actions',
