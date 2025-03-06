@@ -7,8 +7,8 @@ import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
-import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
+import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
 const lokiInstantQuerySchema = z.object({
   datasource_uid: z
@@ -114,5 +114,10 @@ export const lokiInstantQueryTool = tool(
     - "Provide an overview of current request rates"
     `,
     schema: lokiInstantQuerySchema,
+    metadata: {
+      explainer: () => {
+        return `Executing Loki instant query`;
+      },
+    },
   }
 );

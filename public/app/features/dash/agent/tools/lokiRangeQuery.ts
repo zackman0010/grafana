@@ -7,8 +7,8 @@ import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
-import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
+import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
 const lokiRangeQuerySchema = z.object({
   datasource_uid: z
@@ -121,5 +121,10 @@ export const lokiRangeQueryTool = tool(
     - "Analyze response time trends over this period"
     `,
     schema: lokiRangeQuerySchema,
+    metadata: {
+      explainer: () => {
+        return `Executing Loki range query`;
+      },
+    },
   }
 );
