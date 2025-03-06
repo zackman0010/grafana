@@ -113,7 +113,7 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     code: {
       label: 'dash-message-text-code',
       backgroundColor: theme.colors.background.secondary,
-      borderRadius: theme.shape.borderRadius(1),
+      borderRadius: theme.shape.radius.default,
       padding: theme.spacing(0.5, 1),
       fontFamily: theme.typography.fontFamilyMonospace,
       fontSize: '0.9em',
@@ -124,7 +124,7 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     'pre code': {
       label: 'dash-message-text-pre-code',
       backgroundColor: theme.colors.background.secondary,
-      borderRadius: theme.shape.borderRadius(1),
+      borderRadius: theme.shape.radius.default,
       padding: theme.spacing(0.5, 1),
       fontFamily: theme.typography.fontFamilyMonospace,
       fontSize: '0.9em',
