@@ -92,23 +92,6 @@ export const toolsByName = tools.reduce(
   {} as Record<string, (typeof tools)[number]>
 );
 
-export function toolExplainer(toolName: string, isRunning: boolean, error?: string): string {
-  const tool = toolsByName[toolName];
-  if (tool.metadata?.explainer && typeof tool.metadata.explainer === 'function') {
-    let explainer = tool.metadata.explainer();
-    if (!isRunning) {
-      if (error) {
-        return `Failed ${explainer.toLowerCase()}.`;
-      }
-      explainer = explainer.replace('ing', 'ed');
-      return `${explainer}.`;
-    } else {
-      return `${explainer}...`;
-    }
-  }
-  return toolName;
-}
-
 let handle: number | undefined;
 handle = window.setInterval(() => {
   const events = getAppEvents();
