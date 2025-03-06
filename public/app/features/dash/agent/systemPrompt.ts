@@ -5,6 +5,7 @@ import { getPersistedSetting } from '../chat/utils';
 import { prometheusWorkflowSystemPrompt } from './prometheusSystemPrompt';
 import { queryLanguageGuide } from './queryLanguageGuide';
 import { getCurrentContext } from './tools/context';
+import { listDatasourcesTool } from './tools/listDatasources';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 
 // Create a prompt template with instructions to format the response as JSON
@@ -26,11 +27,10 @@ IMPORTANT TIMESTAMP USAGE:
 - Calculate time values before calling this tool
 
 ## Tone
-${
-  getPersistedSetting('verbosity') === 'educational'
+${getPersistedSetting('verbosity') === 'educational'
     ? '- Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available". Always suggest helpful next steps.'
     : '- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
-}
+  }
 - Be friendly and helpful.
 - Refer to yourself as an Agent - never as an assistant.
 
@@ -54,7 +54,8 @@ ${
 - When a tool fails, attempt alternative approaches and explain your methodology
 - Combine information from multiple tools when appropriate for comprehensive analysis
 - If tools are failing too often, explain why you are failing and ask the user to try again
-- Only use the list_datasources tool if you need to know the uid of a datasource
+- When a datasource uid is required for a tool don't guess it, use the ${listDatasourcesTool.name} tool to find out which datasources are available.
+- Make sure to use the correct tool for the type of query you are trying to execute. Logs use loki, metrics use prometheus.
 
 
 ${prometheusWorkflowSystemPrompt}
