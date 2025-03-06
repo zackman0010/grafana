@@ -308,6 +308,7 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
   sparkle: css({
     label: 'dash-sparkle',
     filter: 'grayscale(100%)',
+    transform: 'scaleX(-1)',
   }),
   actions: css({
     label: 'dash-actions',
@@ -370,7 +371,9 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'opacity 0.2s ease',
+    '@media (prefers-reduced-motion: no-preference)': {
+      transition: 'opacity 0.2s ease',
+    },
     '&:hover': {
       opacity: 1,
     },
