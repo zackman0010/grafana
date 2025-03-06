@@ -32,13 +32,17 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public constructor() {
+    const initialTitle = 'New chat'; // Temporary title before we can call this._generateTimeBasedTitle()
     super({
-      chats: [new DashChat({ name: 'Chat 1' })],
+      chats: [new DashChat({ name: initialTitle })],
       chatIndex: 0,
       initializing: true,
       opened: false,
       settings: new DashSettings(),
     });
+
+    // Now we can safely use this to generate and set the proper title
+    this.state.chats[0].setName(this._generateTimeBasedTitle());
 
     this.addActivationHandler(() => this._activationHandler());
 
@@ -88,7 +92,7 @@ export class Dash extends SceneObjectBase<DashState> {
         } catch (err) {}
 
         if (chats.length === 0) {
-          chats = [new DashChat({ name: 'Chat 1' })];
+          chats = [new DashChat({ name: this._generateTimeBasedTitle() })];
         }
 
         this._chatNumber = chatNumber ?? 2;
@@ -153,7 +157,7 @@ export class Dash extends SceneObjectBase<DashState> {
 
   public removeChat(index: number) {
     if (this.state.chats.length === 1) {
-      this.setState({ chats: [new DashChat({ name: `Chat ${this._chatNumber++}` })], chatIndex: 0 });
+      this.setState({ chats: [new DashChat({ name: this._generateTimeBasedTitle() })], chatIndex: 0 });
       this.persist();
       return;
     }
@@ -165,7 +169,7 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public clearChats() {
-    const newChat = new DashChat({ name: `Chat ${this._chatNumber++}` });
+    const newChat = new DashChat({ name: this._generateTimeBasedTitle() });
     this.setState({
       chats: [newChat],
       chatIndex: 0,
