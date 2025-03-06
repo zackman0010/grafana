@@ -6,6 +6,7 @@ import { getPageContext, PageContext } from './page';
 import { getPanelsContext, PanelsContext } from './panels';
 import { getQueryContext, QueryContext } from './query';
 import { getTimeRangeContext, TimeRangeContext } from './timeRange';
+import { getVariablesContext, VariablesContext } from './variables';
 
 export interface Contexts {
   page: PageContext;
@@ -14,6 +15,7 @@ export interface Contexts {
   datasource: DataSourceContext;
   query: QueryContext;
   panels: PanelsContext;
+  variables: VariablesContext;
 }
 
 export function getCurrentContext(): Contexts {
@@ -27,6 +29,7 @@ export function getCurrentContext(): Contexts {
     datasource: getDataSourceContext(page, app),
     query: getQueryContext(page, app),
     panels: getPanelsContext(page, app),
+    variables: getVariablesContext(page, app),
   };
 }
 
