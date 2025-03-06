@@ -2,7 +2,8 @@ import { DynamicTool } from '@langchain/core/tools';
 
 export const toolSetCanSpeak = new DynamicTool({
   name: 'set_can_speak',
-  description: 'Set whether the agent can speak (write to localStorage)',
+  description:
+    "Set whether the agent can speak (write to localStorage). Only adjust the voice setting on the user's request.",
   func: async (input: string) => {
     if (!input) {
       return JSON.stringify({ error: 'Input is required' });
