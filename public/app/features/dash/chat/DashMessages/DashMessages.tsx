@@ -207,6 +207,12 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   public setLoading(loading: boolean) {
     if (loading !== this.state.loading) {
+      console.log('------ DashMessages.setLoading:', {
+        from: this.state.loading,
+        to: loading,
+        anyToolsWorking: this.state.anyToolsWorking,
+        areToolsHidden: this.areToolsHidden(),
+      });
       this.setState({ loading });
     }
   }
@@ -336,6 +342,14 @@ function DashMessagesRenderer({ model }: SceneComponentProps<DashMessages>) {
   const scrollRef = useRef<HTMLInputElement>(null);
 
   setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+
+  console.log('------ DashMessagesRenderer state:', {
+    loading,
+    generatingWelcome,
+    anyToolsWorking,
+    areToolsHidden: model.areToolsHidden(),
+    shouldShowLoader: (loading || generatingWelcome) && (!anyToolsWorking || model.areToolsHidden()),
+  });
 
   return (
     <div className={styles.container}>
