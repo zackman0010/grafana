@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { SceneDataTransformer, SceneQueryRunner, VizPanelState } from '@grafana/scenes';
+import { SceneDataTransformer, sceneGraph, SceneQueryRunner, VizPanelState } from '@grafana/scenes';
 
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 import { findOriginalVizPanelByKey } from '../../../dashboard-scene/utils/utils';
@@ -116,8 +116,6 @@ async function updateSinglePanel(
         $data: data,
       });
     }
-    const dashboard = window.__grafanaSceneContext;
-    dashboard.forceRender();
 
     if (transformations?.length && transformations.length > 0) {
       const data = new SceneDataTransformer({
@@ -145,6 +143,10 @@ async function updateSinglePanel(
         $data: data,
       });
     }
+
+    const dashboard = window.__grafanaSceneContext;
+    dashboard.forceRender();
+    sceneGraph.getTimeRange(dashboard).forceRender();
 
     // Check for panel errors after update
     const panelState = panel.state;
