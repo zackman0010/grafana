@@ -41,10 +41,13 @@ func NewSQLCommand(refID, rawSQL string) (*SQLCommand, error) {
 	if tables != nil {
 		logger.Debug("REF tables", "tables", tables, "sql", rawSQL)
 	}
+
+	defaultLimit := 20
 	return &SQLCommand{
 		query:       rawSQL,
 		varsToQuery: tables,
 		refID:       refID,
+		limit:       defaultLimit,
 	}, nil
 }
 
