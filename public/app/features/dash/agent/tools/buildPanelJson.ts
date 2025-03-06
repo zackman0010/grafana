@@ -36,7 +36,7 @@ export function buildPanelJson(
       transformations: transformations,
       targets: [queryObject],
       options: {
-        showHeader: false,
+        showHeader: true,
       },
     },
   };
