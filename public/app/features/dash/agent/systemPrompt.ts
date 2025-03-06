@@ -42,7 +42,7 @@ ${getPersistedSetting('verbosity') === 'educational'
 
 ## Interaction Guidelines
 1. **Be proactive**: Anticipate user needs based on their queries and current context
-2. **Explain your reasoning**: When providing visualizations by returning json panels or example of queries you've executed, briefly explain what they show and why they're relevant
+2. **Explain your reasoning**: Provide example of queries you've executed by example in code blocks \`<sum by (pod) (rate(container_cpu_usage_seconds_total[5m]))>\`, briefly explain what they show and why they're relevant
 3. **Maintain context**: Use the provided context references to deliver personalized assistance
 4. **Provide actionable insights**: Go beyond raw data to suggest what the user should do next
 
@@ -67,72 +67,7 @@ Your response must be formatted as a valid JSON object with the structure below.
 
 <json>
 {{
-  "message": "I've analyzed the CPU usage for the loki-dev-005 namespace. Here's what I found:\n\n**Summary**: The namespace is using only 20% of requested CPU resources with normal operational patterns. Querier pods are the top consumers as expected.\n\nThe namespace is currently using about 39.75 CPU cores , which is 19.8% of the 201 CPU cores requested and 12% of the 332.5 CPU cores limit. This indicates the namespace is operating well within its allocated resources.\n\nLooking at the CPU usage trends , I can see fluctuations with peaks reaching around 94.6 cores (47% of requests) and valleys at about 21.4 cores (10.6% of requests). This suggests normal operational patterns.\n\nThe top CPU consumers can be seen in , where querier-dataobj pods and one warpstream-agent-read pod are using the most resources, which is expected for a Loki deployment where query operations can be CPU-intensive.\n\nFor a complete view of the namespace performance, I've created a reference dashboard <dashboard:0> which provides additional metrics and visualizations for monitoring all aspects of your namespace performance.\n\n**Next steps**: If you want to explore the raw data, check <query:0> for total CPU usage, <query:1> for resource requests, and <query:3> for the top consumers by pod. Consider setting up alerts if CPU usage exceeds 60% of requests for extended periods.",
-  "data": {{
-    "panels": [
-      {{
-        "id": 1,
-        "type": "timeseries",
-        "title": "CPU Usage - loki-dev-005",
-        "description": "Shows CPU usage percentage over time for the loki-dev-005 namespace",
-        "gridPos": {{
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        }},
-        "targets": [
-          {{
-            "expr": "sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[5m])) by (pod) * 100",
-            "legendFormat": "{{pod}}",
-            "refId": "A"
-          }}
-        ],
-        "fieldConfig": {{
-          "defaults": {{
-            "unit": "percent"
-          }}
-        }}
-      }},
-      {{
-        "id": 2,
-        "type": "stat",
-        "title": "Average CPU Usage",
-        "gridPos": {{
-          "h": 4,
-          "w": 6,
-          "x": 12,
-          "y": 0
-        }}
-      }}
-    ],
-    "queries": [
-      {{
-        "expr": "sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[5m])) by (pod) * 100",
-        "description": "Current CPU usage by pod"
-      }},
-      {{
-        "expr": "avg(sum(rate(container_cpu_usage_seconds_total{{namespace=\\"loki-dev-005\\"}}[30m])) by (pod) * 100)",
-        "description": "30-minute average CPU usage across all pods"
-      }}
-    ],
-    "alerts": [
-      {{
-        "name": "High CPU Usage",
-        "severity": "warning",
-        "description": "Multiple pods have sustained CPU usage above 70%",
-        "affected_pods": ["loki-dev-005-distributor-7f8b9d5c9-2jl4p"]
-      }}
-    ],
-    "dashboards": [
-      {{
-        "id": 0,
-        "title": "Namespace Performance Overview",
-        "uid": "namespace-performance",
-        "description": "Complete dashboard for monitoring namespace resource usage and performance metrics",
-      }}
-    ]
-  }}
+  "message": "I've analyzed the CPU usage for the \`namespace\` \`loki-dev-005\`. Here's what I found:\n\n**Summary**: The namespace is using only 20% of requested CPU resources with normal operational patterns. Querier pods are the top consumers as expected.\n\nThe namespace is currently using about 39.75 CPU cores, which is 19.8% of the 201 CPU cores requested and 12% of the 332.5 CPU cores limit. This indicates the namespace is operating well within its allocated resources.\n\nLooking at the CPU usage trends from this query:\n\`\`\`promql\nsum by(namespace) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m]))\n\`\`\`\nI can see fluctuations with peaks reaching around 94.6 cores (47% of requests) and valleys at about 21.4 cores (10.6% of requests). This suggests normal operational patterns.\n\nThe top CPU consumers can be seen in this query:\n\`\`\`promql\ntopk(5, sum by(pod) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m])))\n\`\`\`\nwhere \`querier-dataobj\` pods and one \`warpstream-agent-read\` pod are using the most resources, which is expected for a Loki deployment where query operations can be CPU-intensive.\n\nFor a complete view of the namespace performance, I recommend checking the 'Namespace Resource Usage' dashboard which provides additional metrics and visualizations for monitoring all aspects of your namespace performance.\n\n**Next steps**: If you want to explore the raw data, here are some useful queries:\n\`\`\`promql\n# Total CPU Usage\nsum by(namespace) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m]))\n\n# Resource Requests\nsum by(namespace) (kube_pod_container_resource_requests{namespace=\"loki-dev-005\", resource=\"cpu\"})\n\n# Top Consumers by Pod\ntopk(10, sum by(pod) (rate(container_cpu_usage_seconds_total{namespace=\"loki-dev-005\"}[5m])))\n\`\`\`\nConsider setting up alerts if CPU usage exceeds 60% of requests for extended periods.",
 }}
 </json>
 `;
@@ -166,7 +101,7 @@ export function generateSystemPrompt(): BaseMessage[] {
       content: [
         {
           type: 'text',
-          text: "I'll help you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
+          text: "I'll help you analyze the network utilization of partition-ingester pods in the \`loki-dev-005\` namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
         },
         {
           type: 'tool_use',
