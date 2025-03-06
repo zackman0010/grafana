@@ -96,7 +96,7 @@ export const lokiLabelValuesTool = tool(
 
     Features:
     - Returns values for a specific label name
-    - Supports regex filtering to find specific patterns
+    - Supports regex filtering to find specific patterns. Some labels returns a lot of values so use regex to filter.
     - Limits results to ${MAX_VALUES} values by default (can be changed)
     - Returns total count and whether there are more values available
 
