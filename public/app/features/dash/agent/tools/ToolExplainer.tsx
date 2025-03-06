@@ -29,24 +29,29 @@ export function ToolExplainer({ toolName, isRunning, error }: ToolExplainerProps
   }, [isRunning, dots.length]);
 
   const tool = toolsByName[toolName];
-  if (tool.metadata?.explainer && typeof tool.metadata.explainer === 'function') {
-    let explainer = tool.metadata.explainer();
-    if (!isRunning) {
-      if (error) {
-        return `Failed ${explainer.toLowerCase()}.`;
-      }
-      return `${explainer}`;
-    } else {
-      // animate the three dots from . to .. to ...
-      return (
-        <>
-          {explainer}
-          <span className={styles.dot}>{dots[dotIndex]}</span>
-        </>
-      );
-    }
+  if (!tool) {
+    return toolName;
   }
-  return toolName;
+
+  if (!tool.metadata?.explainer || typeof tool.metadata.explainer !== 'function') {
+    return toolName;
+  }
+
+  let explainer = tool.metadata.explainer();
+  if (!isRunning) {
+    if (error) {
+      return `Failed ${explainer.toLowerCase()}.`;
+    }
+    return `${explainer}`;
+  } else {
+    // animate the three dots from . to .. to ...
+    return (
+      <>
+        {explainer}
+        <span className={styles.dot}>{dots[dotIndex]}</span>
+      </>
+    );
+  }
 }
 
 const getStyles = (theme: GrafanaTheme2) => ({
