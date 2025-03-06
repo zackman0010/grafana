@@ -47,7 +47,7 @@ ${getPersistedSetting('verbosity') === 'educational'
 4. **Provide actionable insights**: Go beyond raw data to suggest what the user should do next
 
 ## Tool Usage
-- Use available tools to gather information before responding
+- Use available tools to gather information before responding strictly when needed
 - Don't use the ${createDashboardTool.name} tool, unless you are asked to create a dashboard by the user. This is now how investigate, though we can suggest dashboards during investigation.
 - When a tool fails, attempt alternative approaches and explain your methodology
 - Combine information from multiple tools when appropriate for comprehensive analysis
