@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { useState } from 'react';
 
-import { TimeRange } from '@grafana/data';
+import { getDefaultTimeRange } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import {
   SceneComponentProps,
@@ -18,7 +18,10 @@ import { PanelConfiguration } from '../types';
 
 interface PanelState extends SceneObjectState {
   panel: PanelConfiguration;
-  timeRange: TimeRange;
+  timeRange: {
+    from: string;
+    to: string;
+  };
   vizPanel: VizPanel;
   collapsed: boolean;
 }
@@ -37,10 +40,7 @@ export class Panel extends SceneObjectBase<PanelState> {
       fieldConfig: state.panel.fieldConfig,
       pluginVersion: state.panel.pluginVersion ?? config.buildInfo.version,
       displayMode: 'transparent',
-      $timeRange: new SceneTimeRange({
-        from: state.timeRange.from.toISOString(),
-        to: state.timeRange.to.toISOString(),
-      }),
+      $timeRange: new SceneTimeRange(state.timeRange ?? getDefaultTimeRange()),
       $data:
         targets.length === 0
           ? undefined
