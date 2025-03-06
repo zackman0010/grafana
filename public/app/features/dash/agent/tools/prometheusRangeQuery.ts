@@ -31,12 +31,21 @@ const prometheusRangeQuerySchema = z.object({
     .describe(
       'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize CPU usage trends" or "Identify spikes in error rates"'
     ),
+  collapsed: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'Whether to collapse the panel by default. Defaults to true. Set it to `false` if you think that this panel will be interesting to the user, for example if you think this is the only query in the conversation.'
+    ),
+  title: z.string().describe('The title of the query.'),
+  description: z.string().describe('The description of the query.'),
 });
 
 export const prometheusRangeQueryTool = tool(
   async (input) => {
     const parsedInput = prometheusRangeQuerySchema.parse(input);
-    const { datasource_uid, query, start, end, summarize } = parsedInput;
+    const { datasource_uid, query, start, end, summarize, collapsed, title, description } = parsedInput;
     const datasource = await getDatasourceSrv().get({ uid: datasource_uid });
     if (!datasource) {
       throw new Error(`Datasource with uid ${datasource_uid} not found`);
@@ -44,7 +53,7 @@ export const prometheusRangeQueryTool = tool(
     const promDatasource = datasource as PrometheusDatasource;
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
     const defaultQuery = promDatasource.getDefaultQuery(CoreApp.Explore);
-    const q = { ...defaultQuery, legendFormat:"__auto", expr: query, range: true, instant: false };
+    const q = { ...defaultQuery, legendFormat: '__auto', expr: query, range: true, instant: false };
     const result = await lastValueFrom(
       promDatasource.query({
         requestId: '1',
@@ -59,7 +68,7 @@ export const prometheusRangeQueryTool = tool(
       })
     );
 
-    const panelJson = buildPanelJson(timeRange, 'timeseries', 'Prometheus Range Query', 'Prometheus Range Query', q);
+    const panelJson = buildPanelJson(timeRange, 'timeseries', title, description, q, [], collapsed);
 
     // If summarize parameter is provided, use the LLM-based summarizer
     if (summarize) {
