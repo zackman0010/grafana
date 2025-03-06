@@ -9,7 +9,7 @@ import { SpanLinkDef, TNil } from '../../types';
 import { TraceLink, TraceSpan } from '../../types/trace';
 
 import AccordianKeyValues from './AccordianKeyValues';
-import { EntityAssertion } from './EntityAssertion';
+import { EntityAssertion, EntityPropertyTypes, StringRules } from './EntityAssertion';
 import { getAttributeLinks } from './span-utils';
 
 interface CategoryWidgetProps {
@@ -36,7 +36,14 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       }
 
       const serviceNamespace = attributes['service.namespace'];
-      return <EntityAssertion name={`otel-demo-${serviceName}`} namespace={serviceNamespace} range={timeRange} />;
+      const additionalMatchers = serviceNamespace ? [{
+        id: 1,
+        name: 'otel_namespace',
+        value: serviceNamespace,
+        op: StringRules.EQUALS,
+        type: EntityPropertyTypes.STRING,
+      }] : undefined;
+      return <EntityAssertion entityType="Service" name={`otel-demo-${serviceName}`} additionalMatchers={additionalMatchers} scope={{}} range={timeRange} />;
     },
     getTitle: (attributes) => {
       const name = attributes['service.name'];
@@ -68,6 +75,15 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
 
       return undefined;
     },
+    component: ({ attributes, timeRange }) => {
+      const namespace = attributes['k8s.namespace.name'];
+      const pod = attributes['k8s.pod.name'];
+      if (!(namespace || pod)) {
+        return null
+      }
+
+      return <EntityAssertion name={pod} additionalMatchers={undefined} scope={{ namespace }} entityType="Pod" range={timeRange} />;
+    }
   },
   'telemetry.sdk': {
     icon: 'graph-bar',

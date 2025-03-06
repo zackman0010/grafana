@@ -58,29 +58,22 @@ interface EntityAssertionsWidgetProps {
 
 interface Props {
   name: string;
-  namespace?: string;
+  additionalMatchers: EntityFilterPropertyMatcher[] | undefined;
+  entityType: string;
+  scope: {
+    env?: string;
+    site?: string;
+    namespace?: string;
+  }
   range: TimeRange;
 }
 
-export function EntityAssertion({ name, namespace, range }: Props) {
+export function EntityAssertion({ additionalMatchers, scope, name, entityType, range }: Props) {
   const { component: EntityAssertionsWidgetExternal, isLoading } = usePluginComponent<EntityAssertionsWidgetProps>('grafana-asserts-app/entity-assertions-widget/v1')
 
   if (isLoading || !EntityAssertionsWidgetExternal) {
     return null;
   }
-
-  const additionalMatchers = namespace
-    ? [
-      {
-        id: 1,
-        name: 'otel_namespace',
-        value: namespace,
-        op: StringRules.EQUALS,
-        type: EntityPropertyTypes.STRING,
-      },
-    ]
-    : undefined;
-
 
   return <EntityAssertionsWidgetExternal
     size="md"
@@ -89,9 +82,9 @@ export function EntityAssertion({ name, namespace, range }: Props) {
       start: range.from.valueOf(),
       end: range.to.valueOf(),
       entityName: name,
-      entityType: 'Service',
+      entityType,
       additionalMatchers,
-      scope: {},
+      scope,
     }}
   />
 
