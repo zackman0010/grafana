@@ -1,10 +1,10 @@
-import { css } from "@emotion/css";
+import { css } from '@emotion/css';
 import { useState, useEffect } from 'react';
 
-import { GrafanaTheme2 } from "@grafana/data";
-import { useStyles2 } from "@grafana/ui";
+import { GrafanaTheme2 } from '@grafana/data';
+import { useStyles2 } from '@grafana/ui';
 
-import { toolsByName } from "./index";
+import { toolsByName } from './index';
 
 interface ToolExplainerProps {
   toolName: string;
@@ -22,7 +22,7 @@ export function ToolExplainer({ toolName, isRunning, error }: ToolExplainerProps
       const interval = setInterval(() => {
         setDotIndex((prevIndex) => (prevIndex + 1) % dots.length);
       }, 500);
-      
+
       return () => clearInterval(interval);
     }
     return () => {};
@@ -35,8 +35,7 @@ export function ToolExplainer({ toolName, isRunning, error }: ToolExplainerProps
       if (error) {
         return `Failed ${explainer.toLowerCase()}.`;
       }
-      explainer = explainer.replace('ing', 'ed');
-      return `${explainer}.`;
+      return `${explainer}`;
     } else {
       // animate the three dots from . to .. to ...
       return (
