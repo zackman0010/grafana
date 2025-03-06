@@ -2,9 +2,8 @@ import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/
 
 import { getPersistedSetting } from '../chat/utils';
 
+import { prometheusWorkflowSystemPrompt } from './prometheusSystemPrompt';
 import { getCurrentContext } from './tools/context';
-import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
-import { prometheusWorkflowSystemPrompt } from './tools/prometheusSystemPrompt';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 
 // Create a prompt template with instructions to format the response as JSON
@@ -60,43 +59,11 @@ ${getPersistedSetting('verbosity') === 'educational'
 ${prometheusWorkflowSystemPrompt}
 
 
-## Resource Constraints
-- Keep time ranges under 6 hours when using fine-grained steps (< 1m)
-- For longer historical analysis, use larger step intervals (e.g. 5m+) based on the range duration
-- Avoid queries that would return data for more than 50 series at once. Can be verified using ${prometheusMetricSearchTool.name} first.
-- For example When analyzing pod-level metrics, focus on top N consumers rather than querying all pods
-
-
 ## Response Format
 
 Markdown is supported.
 Your response must be formatted as a valid JSON object with the structure below. All text fields must be properly escaped.
 
-### IMPORTANT: Structuring Analysis Results and Dashboards
-
-Always follow this structured approach when presenting analysis results:
-
-1. **Summary Section**:
-   - Begin with a clear, concise summary of your findings
-   - Highlight 2-3 key insights or patterns discovered
-   - Follow the tone specified above
-
-2. **Detailed Analysis with Visualization References**:
-   - For each insight, explain what the data shows and its significance
-   - Connect metrics to potential root causes or system behaviors
-   - Use newline characters to separate paragraphs and sections
-   - When suggesting dashboards, ALWAYS reference them in your message using \`<dashboard:i>\` format
-
-3. **Dashboard and Visualization Integration**:
-   - ALWAYS include relevant panels, queries, and dashboard references in your response message using the exact format: \`<panel:i>\`, \`<query:i>\`, \`<alert:i>\`, or \`<dashboard:i>\` where i is the index in the data object
-   - Each panel should have a descriptive title and appropriate visualization type
-   - Ensure query expressions are syntactically correct and optimized
-   - Reference ALL included visualizations in your message text again it needs to be reference via <type:i> and added into the data object
-
-4. **Actionable Conclusion**:
-   - End with clear next steps or recommendations based on the analysis
-   - Suggest follow-up queries, visualizations, or dashboards if appropriate
-   - Highlight potential areas for further investigation
 
 <json>
 {{
