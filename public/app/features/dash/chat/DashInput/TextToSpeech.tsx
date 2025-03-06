@@ -9,6 +9,7 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
   private _utterance: SpeechSynthesisUtterance | null = null;
   private _defaultVoice: SpeechSynthesisVoice | null = null;
   private _voiceInitialized = false;
+  private _isSpeaking = false;
 
   public constructor(state: TextToSpeechState) {
     super({
@@ -87,54 +88,56 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
       return;
     }
 
-    if (!this.state.speaking) {
-      try {
-        // Cancel any existing speech
-        window.speechSynthesis.cancel();
+    // Stop any current speech before starting new speech
+    this.stop();
 
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.0; // Normal speed
-        utterance.pitch = 1.0; // Normal pitch
-        utterance.volume = 1.0; // Full volume
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0; // Normal speed
+      utterance.pitch = 1.0; // Normal pitch
+      utterance.volume = 1.0; // Full volume
 
-        // Set the voice if available
-        if (this._defaultVoice) {
-          utterance.voice = this._defaultVoice;
-        }
-
-        utterance.onstart = () => {
-          this.setState({ speaking: true });
-        };
-
-        utterance.onend = () => {
-          this.setState({ speaking: false });
-        };
-
-        utterance.onerror = () => {
-          this.setState({ speaking: false });
-        };
-
-        utterance.onpause = () => {
-          // Handle pause if needed
-        };
-
-        utterance.onresume = () => {
-          // Handle resume if needed
-        };
-
-        this._utterance = utterance;
-        window.speechSynthesis.speak(utterance);
-
-        // Add a timeout to check if speech actually started
-        setTimeout(() => {
-          if (!this.state.speaking) {
-            this.stop();
-            window.speechSynthesis.speak(utterance);
-          }
-        }, 1000);
-      } catch (error) {
-        this.setState({ speaking: false });
+      // Set the voice if available
+      if (this._defaultVoice) {
+        utterance.voice = this._defaultVoice;
       }
+
+      utterance.onstart = () => {
+        this._isSpeaking = true;
+        this.setState({ speaking: true });
+      };
+
+      utterance.onend = () => {
+        this._isSpeaking = false;
+        this.setState({ speaking: false });
+      };
+
+      utterance.onerror = () => {
+        this._isSpeaking = false;
+        this.setState({ speaking: false });
+      };
+
+      utterance.onpause = () => {
+        // Handle pause if needed
+      };
+
+      utterance.onresume = () => {
+        // Handle resume if needed
+      };
+
+      this._utterance = utterance;
+      window.speechSynthesis.speak(utterance);
+
+      // Add a timeout to check if speech actually started
+      setTimeout(() => {
+        if (!this._isSpeaking) {
+          this.stop();
+          window.speechSynthesis.speak(utterance);
+        }
+      }, 1000);
+    } catch (error) {
+      this._isSpeaking = false;
+      this.setState({ speaking: false });
     }
   }
 
@@ -142,6 +145,7 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
     if (this._utterance) {
       window.speechSynthesis.cancel();
       this._utterance = null;
+      this._isSpeaking = false;
       this.setState({ speaking: false });
     }
   }

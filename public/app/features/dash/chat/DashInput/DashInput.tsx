@@ -488,7 +488,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
         <speech.Component model={speech} />
 
         <Input
-          listening={listening || speaking}
+          listening={listening}
           loading={loading}
           message={message}
           ref={(ref) => model.setInputRef(ref)}
