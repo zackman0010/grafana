@@ -36,14 +36,28 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       }
 
       const serviceNamespace = attributes['service.namespace'];
-      const additionalMatchers = serviceNamespace ? [{
-        id: 1,
-        name: 'otel_namespace',
-        value: serviceNamespace,
-        op: StringRules.EQUALS,
-        type: EntityPropertyTypes.STRING,
-      }] : undefined;
-      return <EntityAssertion entityType="Service" name={`otel-demo-${serviceName}`} additionalMatchers={additionalMatchers} scope={{}} range={timeRange} />;
+      const additionalMatchers = serviceNamespace
+        ? [
+            {
+              id: 1,
+              name: 'otel_namespace',
+              value: serviceNamespace,
+              op: StringRules.EQUALS,
+              type: EntityPropertyTypes.STRING,
+            },
+          ]
+        : undefined;
+      return (
+        <EntityAssertion
+          entityType="Service"
+          // uncomment when working with appo11ydev01 stack
+          // name={`otel-demo-${serviceName}`}
+          name={serviceName}
+          additionalMatchers={additionalMatchers}
+          scope={{}}
+          range={timeRange}
+        />
+      );
     },
     getTitle: (attributes) => {
       const name = attributes['service.name'];
@@ -62,6 +76,21 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       const name = attributes['gf.feo11y.app.name'];
       return `Grafana RUM${name ? `(${name})` : ''}`;
     },
+    component: ({ attributes, timeRange }) => {
+      const name = attributes['gf.feo11y.app.name'];
+      if (!name) {
+        return null;
+      }
+      return (
+        <EntityAssertion
+          name={name}
+          additionalMatchers={undefined}
+          scope={{}}
+          entityType="Frontend"
+          range={timeRange}
+        />
+      );
+    },
   },
   k8s: {
     icon: 'kubernetes',
@@ -79,11 +108,19 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       const namespace = attributes['k8s.namespace.name'];
       const pod = attributes['k8s.pod.name'];
       if (!(namespace || pod)) {
-        return null
+        return null;
       }
 
-      return <EntityAssertion name={pod} additionalMatchers={undefined} scope={{ namespace }} entityType="Pod" range={timeRange} />;
-    }
+      return (
+        <EntityAssertion
+          name={pod}
+          additionalMatchers={undefined}
+          scope={{ namespace }}
+          entityType="Pod"
+          range={timeRange}
+        />
+      );
+    },
   },
   'telemetry.sdk': {
     icon: 'graph-bar',
