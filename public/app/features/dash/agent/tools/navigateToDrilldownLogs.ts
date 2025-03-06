@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { locationService } from '@grafana/runtime';
 
-import { lokiTypeRefiner } from './refiners';
+import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
 const navigateToDrilldownLogsSchema = z.object({
   datasource_uid: z
@@ -21,6 +21,20 @@ const navigateToDrilldownLogsSchema = z.object({
     .describe(
       'Array of error levels to include in the filters. Use only valid error levels like error, err, warning, warn, critical, info, debug.'
     ),
+  start: z
+    .number()
+    .optional()
+    .describe(
+      'Optional start timestamp. Defaults to 15 minutes ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  end: z
+    .number()
+    .optional()
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   navigate: z
     .boolean()
     .describe(
@@ -30,12 +44,19 @@ const navigateToDrilldownLogsSchema = z.object({
 
 export const navigateToDrilldownLogs = tool(
   async (input) => {
-    const { datasource_uid, label_filters, levels = [], navigate } = navigateToDrilldownLogsSchema.parse(input);
+    const {
+      datasource_uid,
+      label_filters,
+      levels = [],
+      navigate,
+      start,
+      end,
+    } = navigateToDrilldownLogsSchema.parse(input);
 
     const varFilters = label_filters.map((filter) => `var-filters=${encodeURIComponent(filter)}`);
     const varLevels = levels.map((level) => `var-levels=${encodeURIComponent(`detected_level|=|${level}`)}`);
 
-    const url = `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=now-15m&to=now&var-ds=${datasource_uid}&${varFilters.join('&')}&${varLevels.join('&')}`;
+    const url = `/a/grafana-lokiexplore-app/explore/service_name/grafana/logs?from=${start ?? 'now-15m'}&to=${end ?? 'now'}&var-ds=${datasource_uid}&${varFilters.join('&')}&${varLevels.join('&')}`;
     if (navigate) {
       locationService.push(url);
     }
@@ -45,7 +66,7 @@ export const navigateToDrilldownLogs = tool(
   {
     name: 'navigate_to_drilldown_logs',
     description:
-      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels.  NEVER use it without asking the user for confirmation.',
+      'Use this tool when the user wants to see their logs in the Drilldown Logs app with a set of indexed labels and optional error levels. Consider if the user wants to see a particular range in time and generate the appropriate start and end timestamps. NEVER use it without asking the user for confirmation.',
     schema: navigateToDrilldownLogsSchema,
     metadata: {
       explainer: () => {
