@@ -35,6 +35,11 @@ const grafanaComSearch = new TavilySearchResults({
 grafanaComSearch.name = 'grafana_com_search';
 grafanaComSearch.description =
   'Search for general information, such as blog posts on grafana.com. Only use this tool if `grafana_com_docs_search` tool was not helpful.';
+grafanaComSearch.metadata = {
+  explainer: () => {
+    return `Searching for general information on grafana.com`;
+  },
+};
 
 const grafanaDocsSearch = new TavilySearchResults({
   apiKey: process.env.TAVILY_API_KEY,
@@ -46,6 +51,11 @@ const grafanaDocsSearch = new TavilySearchResults({
 grafanaDocsSearch.name = 'grafana_com_docs_search';
 grafanaDocsSearch.description =
   'Search for documentation of Grafana, Grafana Cloud, and all the various Grafana applications. Use this tool over `grafana_com_search`.';
+grafanaDocsSearch.metadata = {
+  explainer: () => {
+    return `Searching for documentation of Grafana, Grafana Cloud, and all the various Grafana applications`;
+  },
+};
 
 export const tools = [
   listDatasourcesTool,
@@ -81,6 +91,23 @@ export const toolsByName = tools.reduce(
   },
   {} as Record<string, (typeof tools)[number]>
 );
+
+export function toolExplainer(toolName: string, isRunning: boolean, error?: string): string {
+  const tool = toolsByName[toolName];
+  if (tool.metadata?.explainer && typeof tool.metadata.explainer === 'function') {
+    let explainer = tool.metadata.explainer();
+    if (!isRunning) {
+      if (error) {
+        return `Failed ${explainer.toLowerCase()}.`;
+      }
+      explainer = explainer.replace('ing', 'ed');
+      return `${explainer}.`;
+    } else {
+      return `${explainer}...`;
+    }
+  }
+  return toolName;
+}
 
 let handle: number | undefined;
 handle = window.setInterval(() => {

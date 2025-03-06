@@ -108,5 +108,10 @@ export const prometheusRangeQueryTool = tool(
     `,
     schema: prometheusRangeQuerySchema,
     responseFormat: 'content_and_artifact',
+    metadata: {
+      explainer: () => {
+        return `Running Prometheus range query`;
+      },
+    },
   }
 );

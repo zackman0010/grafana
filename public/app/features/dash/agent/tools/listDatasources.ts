@@ -45,5 +45,10 @@ export const listDatasourcesTool = tool(
     description:
       'When there is no current data source, use this tool to get all the available data sources. Can filter by uid (exact match) or name (regex pattern).',
     schema: listDatasourcesSchema,
+    metadata: {
+      explainer: () => {
+        return `Listing available datasources`;
+      },
+    },
   }
 );

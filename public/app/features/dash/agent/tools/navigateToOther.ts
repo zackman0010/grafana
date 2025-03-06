@@ -23,5 +23,10 @@ export const navigateToOtherTool = tool(
     description:
       'Use this tool when the user wants to navigate to a URL. NEVER use it without asking the user for confirmation.',
     schema: navigateToOtherSchema,
+    metadata: {
+      explainer: () => {
+        return `Navigating to URL`;
+      },
+    },
   }
 );

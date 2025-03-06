@@ -20,5 +20,10 @@ export const simulateToolError = tool(
     name: 'dev_simulate_tool_error',
     description: 'Simulates a tool error for testing and dev purposes. Use this to test error handling in the UI.',
     schema: simulateToolErrorSchema,
+    metadata: {
+      explainer: () => {
+        return `Simulating tool error`;
+      },
+    },
   }
 );

@@ -221,5 +221,10 @@ export const addDashboardPanelTool = tool(
       Only call this tool when you have a panel to add.
       `,
     schema: addDashboardPanelSchema,
+    metadata: {
+      explainer: () => {
+        return `Adding panel to dashboard`;
+      },
+    },
   }
 );

@@ -163,5 +163,10 @@ export const prometheusInstantQueryTool = tool(
     `,
     schema: prometheusInstantQuerySchema,
     responseFormat: 'content_and_artifact',
+    metadata: {
+      explainer: () => {
+        return `Running Prometheus instant query`;
+      },
+    },
   }
 );

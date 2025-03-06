@@ -314,5 +314,10 @@ export const prometheusMetricSearchTool = tool(
 
        The tool will indicate when results were limited by the maximum values.`,
     schema: prometheusMetricSearchSchema,
+    metadata: {
+      explainer: () => {
+        return `Searching for Prometheus metrics`;
+      },
+    },
   }
 );

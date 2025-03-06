@@ -50,5 +50,10 @@ export const navigateToExploreTool = tool(
     description:
       'Use this tool when the user wants to execute a query in Grafana Explore. NEVER use it without asking the user for confirmation.',
     schema: navigateToExploreSchema,
+    metadata: {
+      explainer: () => {
+        return `Navigating to Explore`;
+      },
+    },
   }
 );
