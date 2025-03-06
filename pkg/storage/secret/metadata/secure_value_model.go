@@ -65,11 +65,20 @@ func (sv *secureValueDB) toKubernetes() (*secretv0alpha1.SecureValue, error) {
 		}
 	}
 
+	statusMessage := ""
+	if sv.Message != nil && *sv.Message != "" {
+		statusMessage = *sv.Message
+	}
+
 	resource := &secretv0alpha1.SecureValue{
 		Spec: secretv0alpha1.SecureValueSpec{
 			Title:      sv.Title,
 			Keeper:     sv.Keeper,
 			Decrypters: decrypters,
+		},
+		Status: secretv0alpha1.SecureValueStatus{
+			Phase:   secretv0alpha1.SecureValuePhase(sv.Phase),
+			Message: statusMessage,
 		},
 	}
 	if sv.Ref != nil {

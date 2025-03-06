@@ -31,6 +31,7 @@ var SecureValuesResourceInfo = utils.NewResourceInfo(
 			{Name: "Title", Type: "string", Format: "string", Description: "The display name of the secure value"},
 			{Name: "Keeper", Type: "string", Format: "string", Description: "Storage of the secure value"},
 			{Name: "Ref", Type: "string", Format: "string", Description: "If present, the reference to a secret"},
+			{Name: "Status", Type: "string", Format: "string", Description: "The status of the secure value"},
 		},
 		// Decodes the object into a concrete type. Return order in the slice must be the same as in `Definition`.
 		Reader: func(obj any) ([]interface{}, error) {
@@ -41,6 +42,7 @@ var SecureValuesResourceInfo = utils.NewResourceInfo(
 					r.Spec.Title,
 					r.Spec.Keeper,
 					r.Spec.Ref,
+					r.Status.Phase,
 				}, nil
 			}
 
@@ -88,6 +90,22 @@ var (
 	AddToScheme        = localSchemeBuilder.AddToScheme
 )
 
+// func SelectableFields(obj *SecureValue) fields.Set {
+// 	if obj == nil {
+// 		return nil
+// 	}
+// 	selectable := Schema().SelectableFields()
+// 	set := make(fields.Set, len(selectable))
+// 	for _, field := range selectable {
+// 		f, err := field.FieldValueFunc(obj)
+// 		if err != nil {
+// 			continue
+// 		}
+// 		set[field.FieldSelector] = f
+// 	}
+// 	return generic.MergeFieldsSets(generic.ObjectMetaFieldsSet(&obj.ObjectMeta, false), set)
+// }
+
 // Adds the list of known types to the given scheme.
 func AddKnownTypes(scheme *runtime.Scheme, version string) {
 	// TODO: do we need a type for the secure value decrypt?
@@ -100,4 +118,19 @@ func AddKnownTypes(scheme *runtime.Scheme, version string) {
 		&KeeperList{},
 		// &secretV0.SecureValueActivityList{},
 	)
+
+	scheme.AddFieldLabelConversionFunc(
+		SecureValuesResourceInfo.GroupVersionKind(),
+		func(label, value string) (string, string, error) {
+			switch label {
+			case "metadata.name", "metadata.namespace":
+				return label, value, nil
+			case "status.phase":
+				return "status.phase", value, nil
+			default:
+				return "", "", fmt.Errorf("unsupported field selector: %s", label)
+			}
+		},
+	)
+
 }

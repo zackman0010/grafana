@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	claims "github.com/grafana/authlib/types"
-	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
 	"github.com/grafana/grafana/pkg/infra/db"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
@@ -16,6 +15,7 @@ import (
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/secret/migrator"
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
+	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
 )
 
@@ -234,29 +234,34 @@ func (s *secureValueMetadataStorage) Delete(ctx context.Context, namespace xkube
 }
 
 func (s *secureValueMetadataStorage) List(ctx context.Context, namespace xkube.Namespace, options *internalversion.ListOptions) (*secretv0alpha1.SecureValueList, error) {
-	user, ok := claims.AuthInfoFrom(ctx)
-	if !ok {
-		return nil, fmt.Errorf("missing auth info in context")
-	}
+	// user, ok := claims.AuthInfoFrom(ctx)
+	// if !ok {
+	// 	return nil, fmt.Errorf("missing auth info in context")
+	// }
 
-	hasPermissionFor, err := s.accessClient.Compile(ctx, user, claims.ListRequest{
-		Group:     secretv0alpha1.GROUP,
-		Resource:  secretv0alpha1.SecureValuesResourceInfo.GetName(),
-		Namespace: namespace.String(),
-		Verb:      utils.VerbGet, // Why not VerbList?
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to compile checker: %w", err)
-	}
+	// hasPermissionFor, err := s.accessClient.Compile(ctx, user, claims.ListRequest{
+	// 	Group:     secretv0alpha1.GROUP,
+	// 	Resource:  secretv0alpha1.SecureValuesResourceInfo.GetName(),
+	// 	Namespace: namespace.String(),
+	// 	Verb:      utils.VerbGet, // Why not VerbList?
+	// })
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to compile checker: %w", err)
+	// }
 
 	labelSelector := options.LabelSelector
 	if labelSelector == nil {
 		labelSelector = labels.Everything()
 	}
 
+	fieldSelector := options.FieldSelector
+	if fieldSelector == nil {
+		fieldSelector = fields.Everything()
+	}
+
 	secureValueRows := make([]*secureValueDB, 0)
 
-	err = s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
+	err := s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
 		cond := &secureValueDB{Namespace: namespace.String()}
 
 		if err := sess.Find(&secureValueRows, cond); err != nil {
@@ -273,9 +278,10 @@ func (s *secureValueMetadataStorage) List(ctx context.Context, namespace xkube.N
 
 	for _, row := range secureValueRows {
 		// Check whether the user has permission to access this specific SecureValue in the namespace.
-		if !hasPermissionFor(row.Name, "") {
-			continue
-		}
+		// TODO: uncomment
+		// if !hasPermissionFor(row.Name, "") {
+		// 	continue
+		// }
 
 		secureValue, err := row.toKubernetes()
 		if err != nil {
@@ -283,7 +289,19 @@ func (s *secureValueMetadataStorage) List(ctx context.Context, namespace xkube.N
 		}
 
 		if labelSelector.Matches(labels.Set(secureValue.Labels)) {
-			secureValues = append(secureValues, *secureValue)
+			fieldSet := fields.Set{
+				"status.phase": string(secureValue.Status.Phase),
+			}
+
+			fmt.Println("DEBUG | labelSelector", labelSelector)
+			fmt.Println("DEBUG | fieldSelector", fieldSelector)
+			fmt.Println("DEBUG | fieldSet", fieldSet)
+			fmt.Println("DEBUG | secureValue.Status", secureValue.Status)
+
+			if fieldSelector.Matches(fieldSet) {
+				secureValues = append(secureValues, *secureValue)
+			}
+			// secureValues = append(secureValues, *secureValue)
 		}
 	}
 
