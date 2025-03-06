@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { SceneDataTransformer, SceneQueryRunner, VizPanel } from '@grafana/scenes';
+import { SceneDataTransformer, sceneGraph, SceneQueryRunner, VizPanel } from '@grafana/scenes';
 
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 
@@ -24,7 +24,9 @@ const panelConfigSchema = z.object({
       y: z.number().optional().describe('Y position in grid units'),
     })
     .optional()
-    .describe('Grid position configuration. A dashboard has 24 columns and unlimited rows. A default panel is 12 columns wide and 8 rows high.'),
+    .describe(
+      'Grid position configuration. A dashboard has 24 columns and unlimited rows. A default panel is 12 columns wide and 8 rows high.'
+    ),
 });
 
 const addDashboardPanelSchema = panelConfigSchema;
@@ -64,6 +66,7 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
     // Add the panel to the dashboard
     dashboard.addPanel(vizPanel, config.gridPos?.x, config.gridPos?.y, config.gridPos?.w, config.gridPos?.h);
     dashboard.forceRender();
+    sceneGraph.getTimeRange(dashboard).onRefresh();
     return JSON.stringify({
       success: true,
       panelId: vizPanel.state.key,
@@ -89,7 +92,7 @@ export const addDashboardPanelTool = tool(
   {
     name: 'add_dashboard_panel',
     description: `Adds a new panel to the current dashboard. A panel requires a pluginId and options configuration. Never call this tool without a pluginId and options configuration.
-  
+
       The pluginId is the ID of the panel plugin to use. It is a string that uniquely identifies the panel plugin.
       The options are the configuration options for the panel. They are a record of key-value pairs.
 
