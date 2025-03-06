@@ -5,16 +5,16 @@ import { getDataSources } from 'app/features/datasources/api';
 import { DashboardSearchItem } from 'app/features/search/types';
 
 const providers = [
-  'Metrics',
-  'Datasources',
-  'Dashboards',
-  'Labels',
-  'Alerts',
-  'SLOs',
-  'Scopes',
-  'Investigations',
-  'IRM',
-  'People',
+  'metrics',
+  'datasources',
+  'dashboards',
+  'labels',
+  'alerts',
+  'slos',
+  'scopes',
+  'investigations',
+  'irm',
+  'people',
 ];
 //const providers = ['dashboard', 'datasource'];
 

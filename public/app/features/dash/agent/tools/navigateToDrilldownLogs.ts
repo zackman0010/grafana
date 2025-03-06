@@ -6,17 +6,26 @@ import { locationService } from '@grafana/runtime';
 import { lokiTypeRefiner } from './refiners';
 
 const navigateToDrilldownLogsSchema = z.object({
-  datasource_uid: z.string().describe('Datasource UID that will execute the query').refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
+  datasource_uid: z
+    .string()
+    .describe('Datasource UID that will execute the query')
+    .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
   label_filters: z
     .array(z.string())
     .describe(
       'Array of Loki indexed labels to include in the filters with the following format: label_name|=|label_value'
     ),
   levels: z
-    .array(z.enum(['critical', 'error', 'debug', 'info', 'warning', 'fatal']))
+    .array(z.string())
     .optional()
-    .describe('Array of error levels to include in the filters.'),
-  navigate: z.boolean().describe('Whether to navigate to the Drilldown Logs page. Only ever set this to true if the user has confirmed to navigate to Drilldown Logs.'),
+    .describe(
+      'Array of error levels to include in the filters. Use only valid error levels like error, err, warning, warn, critical, info, debug.'
+    ),
+  navigate: z
+    .boolean()
+    .describe(
+      'Whether to navigate to the Drilldown Logs page. Only ever set this to true if the user has confirmed to navigate to Drilldown Logs.'
+    ),
 });
 
 export const navigateToDrilldownLogs = tool(

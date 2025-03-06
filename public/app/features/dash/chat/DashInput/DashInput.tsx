@@ -39,8 +39,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   private _removeToolAndMessage(toolId: string) {
-    // Remove the tool from messages
     const messages = getMessages(this);
+    console.log('------ DashInput._removeToolAndMessage: Starting', {
+      toolId,
+      loading: messages.state.loading,
+      anyToolsWorking: messages.state.anyToolsWorking,
+    });
+
+    // Remove the tool from messages
     messages.state.messages.forEach((message) => {
       const updatedChildren = message.state.children.filter((child) => {
         if (child instanceof Tool && child.state.content.id === toolId) {
@@ -88,6 +94,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       content: JSON.stringify({ status: 'cancelled', message: 'Operation cancelled by user' }),
     });
     messages.addLangchainMessage(cancelResult);
+
+    // Update loading state if no more tools are working
+    const anyToolsStillWorking = messages.state.messages.some((message) => message.hasWorkingTools());
+    if (!anyToolsStillWorking) {
+      messages.setToolWorking(undefined, false);
+    }
+
+    console.log('------ DashInput._removeToolAndMessage: Completing', {
+      loading: messages.state.loading,
+      anyToolsWorking: messages.state.anyToolsWorking,
+    });
   }
 
   public constructor(state: Partial<Pick<DashInputState, 'message'> & Pick<SpeechState, 'listening'>>) {
@@ -140,11 +157,18 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   public async cancelRequest() {
+    console.log('------ DashInput.cancelRequest: Starting', {
+      hasAbortController: !!this._abortController,
+      messagesLoading: getMessages(this).state.loading,
+      anyToolsWorking: getMessages(this).state.anyToolsWorking,
+    });
+
     // Find any working tools and mark them as cancelled
     const messages = getMessages(this);
     messages.state.messages.forEach((message) => {
       message.state.children.forEach((child) => {
         if (child instanceof Tool && child.state.working) {
+          console.log('------ DashInput.cancelRequest: Cancelling tool', { toolId: child.state.content.id });
           this._removeToolAndMessage(child.state.content.id);
         }
       });
@@ -160,10 +184,15 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (messages.state.messages.length > 0) {
       const lastMessage = messages.state.messages[messages.state.messages.length - 1];
       if (lastMessage.state.sender === 'ai') {
+        console.log('------ DashInput.cancelRequest: Removing last AI message');
         messages.state.messages.pop();
       }
     }
 
+    console.log('------ DashInput.cancelRequest: Completing', {
+      messagesLoading: messages.state.loading,
+      anyToolsWorking: messages.state.anyToolsWorking,
+    });
     messages.setLoading(false);
     this.state.speech.resume();
     this.updateMessage('', false);
@@ -183,18 +212,31 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       return;
     }
 
+    console.log('------ DashInput.interruptAndSendMessage: Starting', {
+      message,
+      hasAbortController: !!this._abortController,
+    });
+
+    // Store the message before canceling the request
+    const messageToSend = message;
+
     if (this._abortController) {
       await this.cancelRequest();
+      // Wait a tick to ensure state updates are processed
+      await new Promise((resolve) => setTimeout(resolve, 0));
     }
+
+    // Clear the input before starting new message
+    this.updateMessage('', false);
 
     // Normal flow for new messages
     this._abortController = new AbortController();
-    const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
+    const messageWithTimeTag = `${messageToSend}\n<time>${new Date().getTime()}</time>`;
     console.log('\n👤 User Message:', messageWithTimeTag);
     getMessages(this).setLoading(true);
     this.state.speech.pause();
 
-    const userMessage = getMessages(this).addUserMessage(message);
+    const userMessage = getMessages(this).addUserMessage(messageToSend);
     const isFirstMessage =
       getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
     const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
@@ -207,7 +249,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
 
       if (isFirstMessage && hasDefaultName) {
-        const titleSummary = await this._generateTitleSummary(message);
+        const titleSummary = await this._generateTitleSummary(messageToSend);
         this._updateChatTitle(titleSummary);
       }
 
@@ -220,12 +262,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       await this._handleToolCalls(aiMessage);
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
+        console.log('------ DashInput.interruptAndSendMessage: Request aborted');
         return;
       }
 
       console.error('\n❌ Error:', error.message || 'Unknown error occurred');
       getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
     } finally {
+      console.log('------ DashInput.interruptAndSendMessage: Completing', {
+        loading: getMessages(this).state.loading,
+        anyToolsWorking: getMessages(this).state.anyToolsWorking,
+      });
       getMessages(this).setLoading(false);
       this._abortController = null;
       this.state.speech.resume();
@@ -239,6 +286,11 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       return;
     }
 
+    console.log('------ DashInput.sendMessage: Starting', {
+      message,
+      hasAbortController: !!this._abortController,
+    });
+
     // Normal flow for new messages
     this._abortController = new AbortController();
     const messageWithTimeTag = `${message}\n<time>${new Date().getTime()}</time>`;
@@ -271,12 +323,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       await this._handleToolCalls(aiMessage);
     } catch (error: any) {
       if (error.name === 'AbortError' || error.message?.includes('AbortError')) {
+        console.log('------ DashInput.sendMessage: Request aborted');
         return;
       }
 
       console.error('\n❌ Error:', error.message || 'Unknown error occurred');
       getMessages(this).addSystemMessage(error.message || 'Unknown error occurred', false, true);
     } finally {
+      console.log('------ DashInput.sendMessage: Completing', {
+        loading: getMessages(this).state.loading,
+        anyToolsWorking: getMessages(this).state.anyToolsWorking,
+      });
       getMessages(this).setLoading(false);
       this._abortController = null;
       this.state.speech.resume();
@@ -476,7 +533,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
 
         <IconButton
           size="xl"
-          name={loading ? 'times' : 'play'}
+          name={loading ? 'times' : 'message'}
           aria-label={loading ? 'Cancel request' : 'Send message'}
           onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
         />

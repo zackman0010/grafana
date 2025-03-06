@@ -3,7 +3,7 @@ import { mapStoredMessagesToChatMessages } from '@langchain/core/messages';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { Dropdown, Icon, IconButton, Menu, Tab, TabsBar, useStyles2 } from '@grafana/ui';
+import { Dropdown, IconButton, Menu, useStyles2 } from '@grafana/ui';
 
 import { DashChat } from './DashChat';
 import { DashChatInstance } from './DashChatInstance';
@@ -139,6 +139,14 @@ export class Dash extends SceneObjectBase<DashState> {
     this.persist();
   }
 
+  public clearChats() {
+    this.setState({
+      chats: this.state.chats.filter((_chat, index) => index === this.state.chatIndex),
+      chatIndex: 0,
+    });
+    this.persist();
+  }
+
   public async persist() {
     if (this._savingPromise) {
       await this._savingPromise;
@@ -161,7 +169,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
   const { chatIndex, initializing, settings, chats } = model.useState();
   const { mode } = settings.useState();
   const chat = chats[chatIndex]!;
-  const { versions } = chat.useState();
+  const { name, versions, versionIndex } = chat.useState();
   const styles = useStyles2(getStyles, mode, versions.length > 1);
 
   if (initializing) {
@@ -170,69 +178,83 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
 
   return (
     <div className={styles.container}>
-      <TabsBar className={styles.tabs}>
-        {chats.map((chat, index) => (
-          <Tab
-            key={chat.state.key}
-            title={chat.state.name}
-            label={chat.state.name}
-            active={chatIndex === index}
-            className={styles.tab}
-            suffix={
-              chatIndex === index
-                ? () => (
-                    <Icon
-                      name="times"
-                      aria-label="Remove"
-                      onClick={(evt) => {
-                        evt.preventDefault();
-                        evt.stopPropagation();
-                        model.removeChat(index);
-                      }}
-                    />
-                  )
-                : undefined
-            }
-            onChangeTab={(evt) => {
-              evt.preventDefault();
-              model.setCurrentChat(index);
-            }}
-          />
-        ))}
+      <div className={styles.topBar}>
+        <div className={styles.chatTitle}>{name}</div>
+        <div className={styles.actions}>
+          <IconButton name="plus" aria-label="Add chat" onClick={() => model.addChat()} />
 
-        <Tab
-          icon="plus"
-          label=""
-          onChangeTab={(evt) => {
-            evt.preventDefault();
-            model.addChat();
-          }}
-        />
-      </TabsBar>
+          {versions.length > 1 && (
+            <Dropdown
+              overlay={
+                <Menu>
+                  {versions
+                    .map((version, index) => (
+                      <Menu.Item
+                        key={version.state.key}
+                        disabled={index === versionIndex}
+                        icon={index === versionIndex ? 'arrow-right' : 'history-alt'}
+                        label={version.state.timestamp.toLocaleString()}
+                        onClick={() => chat.setVersionIndex(version)}
+                      />
+                    ))
+                    .reverse()}
+                  <Menu.Divider />
+                  <Menu.Item label="Clear all" destructive onClick={() => chat.clearHistory()} />
+                </Menu>
+              }
+            >
+              <IconButton name="history" aria-label="Previous versions" />
+            </Dropdown>
+          )}
+
+          <Dropdown
+            overlay={
+              <Menu>
+                {chats
+                  .map((chat, index) =>
+                    index === chatIndex ? null : (
+                      <Menu.Item
+                        key={chat.state.key}
+                        label={chat.state.name}
+                        icon="exchange-alt"
+                        childItems={[
+                          <Menu.Item
+                            key="clear-chat"
+                            icon="exchange-alt"
+                            label="Open"
+                            disabled={index === chatIndex}
+                            onClick={() => model.setCurrentChat(index)}
+                          />,
+                          <Menu.Item
+                            key="clear-chat"
+                            icon="times"
+                            label="Close"
+                            destructive
+                            onClick={() => model.removeChat(index)}
+                          />,
+                        ]}
+                        onClick={index === chatIndex ? undefined : () => model.setCurrentChat(index)}
+                      />
+                    )
+                  )
+                  .reverse()}
+
+                <Menu.Divider />
+
+                {chats.length > 1 && (
+                  <Menu.Item icon="times" label="Close all" destructive onClick={() => model.clearChats()} />
+                )}
+              </Menu>
+            }
+          >
+            <IconButton name="anchor" aria-label="Other chats" />
+          </Dropdown>
+        </div>
+      </div>
 
       <chat.Component model={chat} />
 
       <div className={styles.bottomBar}>
-        {versions.length > 1 && (
-          <Dropdown
-            overlay={
-              <Menu>
-                {versions.map((version) => (
-                  <Menu.Item
-                    key={version.state.key}
-                    label={version.state.timestamp.toLocaleString()}
-                    onClick={() => chat.setVersionIndex(version)}
-                  />
-                ))}
-                <Menu.Divider />
-                <Menu.Item label="Clear history" onClick={() => chat.clearHistory()} />
-              </Menu>
-            }
-          >
-            <IconButton name="history" aria-label="Previous versions" />
-          </Dropdown>
-        )}
-
         <settings.Component model={settings} />
       </div>
     </div>
@@ -256,23 +278,35 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
       borderBottom: 'none',
     }),
   }),
-  tabs: css({
-    label: 'dash-tabs',
-    overflow: 'hidden',
+  topBar: css({
+    label: 'dash-top-bar',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1),
+    backgroundColor: theme.colors.background.canvas,
 
     '&:hover': {
       overflow: 'auto',
     },
   }),
-  tab: css({
-    label: 'dash-tab',
-
-    '& > button': {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: theme.spacing(1.5),
-    },
+  chatTitle: css({
+    label: 'dash-chat-title',
+    flex: 1,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontWeight: theme.typography.fontWeightBold,
+  }),
+  actions: css({
+    label: 'dash-actions',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(1),
   }),
   bottomBar: css({
     label: 'dash-bottom-bar',

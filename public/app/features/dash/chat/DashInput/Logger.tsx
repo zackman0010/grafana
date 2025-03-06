@@ -41,6 +41,7 @@ export class Logger extends SceneObjectBase {
   }
 
   public logAIMessage(message: MessageContent, type: 'initial' | 'tool' | 'final' = 'initial') {
+    return; // muted
     const timestamp = new Date().toLocaleTimeString();
     const prefix = type === 'initial' ? '🤖' : type === 'tool' ? '🛠️' : '✨';
     const messageText = typeof message === 'string' ? message : JSON.stringify(message);
@@ -48,6 +49,7 @@ export class Logger extends SceneObjectBase {
   }
 
   public logMessagesToLLM(messages: Array<HumanMessage | AIMessageChunk | SystemMessage>) {
+    return; // muted
     const timestamp = new Date().toLocaleTimeString();
     const counts = {
       system: messages.filter((m) => m instanceof SystemMessage).length,

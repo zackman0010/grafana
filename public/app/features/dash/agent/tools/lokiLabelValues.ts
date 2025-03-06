@@ -45,7 +45,9 @@ const lokiLabelValuesSchema = z.object({
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 5 minutes ago if not provided. Should be a valid unix timestamp in milliseconds.')
+    .describe(
+      'Optional start timestamp for the query range. Defaults to 6 hours ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()

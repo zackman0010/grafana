@@ -10,6 +10,7 @@ import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
 import { lokiLogStreamSearchTool } from './lokiLogStreamSearch';
 import { lokiRangeQueryTool } from './lokiRangeQuery';
+import { lokiQueryTool } from './lokiQueryTool';
 import { navigateToDashboardTool } from './navigateToDashboard';
 import { navigateToDeclareIncidentTool } from './navigateToDeclareIncident';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
@@ -20,7 +21,7 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
-import { addDashboardPanelsTool } from './toolAddDashboardPanels';
+import { addDashboardPanelTool } from './toolAddDashboardPanel';
 import { createDashboardTool } from './toolCreateDashboard';
 import { simulateToolError } from './toolDevSimulateToolError';
 import { devSleep } from './toolDevSleep';
@@ -71,11 +72,12 @@ export const tools = [
   navigateToOtherTool,
   navigateToDeclareIncidentTool,
   updateCurrentDashboardPanelsTool,
-  addDashboardPanelsTool,
+  addDashboardPanelTool,
   getDrilldownLogToSummarizeTool,
   simulateToolError,
   dashboardSearchTool,
   devSleep,
+  lokiQueryTool,
 ];
 
 export const toolsByName = tools.reduce(

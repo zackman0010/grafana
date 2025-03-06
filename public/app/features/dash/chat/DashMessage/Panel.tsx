@@ -11,7 +11,6 @@ import {
   SceneQueryRunner,
   SceneTimeRange,
   VizPanel,
-  VizPanelBuilder,
 } from '@grafana/scenes';
 import { Button, Collapse, Icon, Modal, Tooltip, useStyles2 } from '@grafana/ui';
 
