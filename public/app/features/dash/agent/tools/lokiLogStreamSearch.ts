@@ -208,5 +208,10 @@ export const lokiLogStreamSearchTool = tool(
        Log streams in Loki are identified by their label sets, e.g. {app="foo",env="prod"}
        Understanding label structure is crucial before querying logs.`,
     schema: lokiLogStreamSearchSchema,
+    metadata: {
+      explainer: () => {
+        return `Searching for Loki log streams`;
+      },
+    },
   }
 );
