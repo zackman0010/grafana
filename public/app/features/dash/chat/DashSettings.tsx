@@ -3,13 +3,20 @@ import { useState, useEffect, useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, useStyles2 } from '@grafana/ui';
+import { IconButton, useStyles2, Badge } from '@grafana/ui';
 
 import { DashStorage } from './DashStorage';
 import { Settings, Verbosity } from './types';
 import { persistSetting } from './utils';
 
-type DashSettingsState = Settings & SceneObjectState;
+// Token limit is 200k
+const TOKEN_LIMIT = 200000;
+const TOKEN_WARNING_THRESHOLD = 0.75; // 75%
+const TOKEN_DANGER_THRESHOLD = 0.8; // 80%
+
+type DashSettingsState = Settings & SceneObjectState & {
+  inputTokens: number;
+};
 
 export class DashSettings extends SceneObjectBase<DashSettingsState> {
   public static Component = DashSettingsRenderer;
@@ -26,6 +33,7 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
       mode: 'sidebar',
       showTools: true,
       verbosity: 'concise',
+      inputTokens: 0,
     });
   }
 
@@ -53,6 +61,10 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
     persistSetting('verbosity', verbosity);
   }
 
+  public updateInputTokens(tokens: number) {
+    this.setState({ inputTokens: tokens });
+  }
+
   private async _persist<T extends keyof Settings = keyof Settings>(key: T, value: Settings[T]) {
     if (this._savingPromise) {
       await this._savingPromise;
@@ -66,7 +78,7 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
 
 function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const styles = useStyles2(getStyles);
-  const { codeOverflow, mode, showTools, verbosity } = model.useState();
+  const { codeOverflow, mode, showTools, verbosity, inputTokens } = model.useState();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +98,18 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const codeOverflowText = codeOverflow === 'scroll' ? 'Enable soft wrap' : 'Disable soft wrap';
   const showToolsText = showTools ? 'Hide tools' : 'Show tools';
   const modeText = mode === 'floating' ? 'View as sidebar' : 'View as chat window';
+  // Format tokens to display in K format
+  const formattedTokens = inputTokens >= 1000 ? `${(inputTokens / 1000).toFixed(1)}k` : inputTokens.toString();
+
+  // Determine token counter color based on usage
+  const tokenPercentage = inputTokens / TOKEN_LIMIT;
+  let tokenColor: 'darkgrey' | 'orange' | 'red' = 'darkgrey';
+  if (tokenPercentage >= TOKEN_DANGER_THRESHOLD) {
+    tokenColor = 'red';
+  } else if (tokenPercentage >= TOKEN_WARNING_THRESHOLD) {
+    tokenColor = 'orange';
+  }
+
 
   return (
     <div className={styles.container}>
@@ -120,6 +144,15 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
         )}
       </div>
       <div className={styles.rightSection}>
+        {inputTokens > 0 && (
+          <span className={styles.tokenCounter} title={`Input tokens: ${inputTokens} / ${TOKEN_LIMIT}`}>
+            <Badge
+              color={tokenColor}
+              text={formattedTokens}
+              className={styles.noBg}
+            />
+          </span>
+        )}
         <IconButton
           name={codeOverflow === 'scroll' ? 'ellipsis-h' : 'wrap-text'}
           size="lg"
@@ -208,5 +241,15 @@ const getStyles = (theme: GrafanaTheme2) => ({
   active: css({
     background: theme.colors.action.selected,
     color: theme.colors.text.primary,
+  }),
+  tokenCounter: css({
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: theme.spacing(1),
+    fontSize: '11px',
+  }),
+  noBg: css({
+    background: 'transparent !important',
+    border: 'none !important',
   }),
 });

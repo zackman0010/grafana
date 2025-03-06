@@ -10,7 +10,7 @@ import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 import { getAgent } from '../../agent/agent';
 import { toolsByName } from '../../agent/tools';
 import { Tool } from '../DashMessage/Tool';
-import { getChat, getDash, getMessages } from '../utils';
+import { getChat, getDash, getMessages, getSettings } from '../utils';
 
 import { Input } from './Input';
 import { Logger } from './Logger';
@@ -31,6 +31,12 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   private _agentConfig = getAgent();
   private _currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
+
+
+  // Helper function to extract token information from various response formats
+  private _extractTokenInfo(response: any): number | null {
+    return response.response_metadata?.usage?.input_tokens ?? null;
+  }
 
   private _removeToolAndMessage(toolId: string) {
     // Remove the tool from messages
@@ -400,6 +406,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             this.state.logger.logAIMessage(nextAiMessage.content, 'tool');
             getMessages(this).addAiMessage(nextAiMessage.content);
             getMessages(this).addLangchainMessage(nextAiMessage);
+
+            // Update token usage if available in the response
+            const toolInputTokens = this._extractTokenInfo(nextAiMessage);
+            if (toolInputTokens !== null) {
+              const settings = getSettings(this);
+              settings.updateInputTokens(toolInputTokens);
+            }
+
             await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
           } catch (error) {
             throw error;
