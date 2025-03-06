@@ -3,6 +3,7 @@ import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/
 import { getPersistedSetting } from '../chat/utils';
 
 import { prometheusWorkflowSystemPrompt } from './prometheusSystemPrompt';
+import { queryLanguageGuide } from './queryLanguageGuide';
 import { getCurrentContext } from './tools/context';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 
@@ -55,16 +56,20 @@ ${
 - If tools are failing too often, explain why you are failing and ask the user to try again
 - Only use the list_datasources tool if you need to know the uid of a datasource
 
-### Prometheus Query and Analysis Workflow
 
 ${prometheusWorkflowSystemPrompt}
+
+### Query Language Reference
+
+${queryLanguageGuide}
 
 
 ## Response Format
 
 Markdown is supported.
 Your response must be formatted as a valid JSON object with the structure below. All text fields must be properly escaped.
-
+Use code blocks only multiple queries or log samples you want to show to the user, otherwise use single quotes to point to the queries, label names, and values.
+When retuning message about time use relative time or date time but never timestamp values.
 
 <json>
 {{
@@ -99,21 +104,21 @@ export function generateSystemPrompt(): BaseMessage[] {
   // Create few-shot examples directly instead of using a template
   const fewshotMessages: BaseMessage[] = [
     new HumanMessage(
-      'Can you analyze the network utilization of partition-ingester pods in the loki-dev-005 namespace?'
+      'Can you analyze the something the foo namespace?'
     ),
     new AIMessage({
       content: [
         {
           type: 'text',
-          text: "I'll help you analyze the network utilization of partition-ingester pods in the \`loki-dev-005\` namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for network utilization.",
+          text: "I'll help you analyze the something the foo namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for something the foo namespace.",
         },
         {
           type: 'tool_use',
           id: 'toolu_01WZVskhEnnghSBhHPZ6mxVZ',
           name: 'search_prometheus_metrics',
           input: {
-            datasource_uid: 'cortex-dev-01',
-            metric_patterns: ['container_network_.*', 'kube_pod_.*loki.*'],
+            datasource_uid: 'foo-datasource-uid',
+            metric_patterns: ['foo.*', 'bar.*'],
             start: 1741202198789,
             end: 1741205798789,
           },
@@ -126,7 +131,7 @@ export function generateSystemPrompt(): BaseMessage[] {
           type: 'tool_result',
           tool_use_id: 'toolu_01WZVskhEnnghSBhHPZ6mxVZ',
           content: JSON.stringify({
-            metric_patterns: ['container_network_.*', 'kube_pod_.*ingester.*'],
+            metric_patterns: ['foo.*', 'bar.*'],
             total_matches_found: 14,
             metrics_returned: 14,
             max_metrics_per_pattern: 50,
@@ -134,7 +139,7 @@ export function generateSystemPrompt(): BaseMessage[] {
             limited_patterns: [],
             metrics: [
               {
-                metric_name: 'container_network_receive_bytes_total',
+                metric_name: 'foo',
                 label_stats: [
                   {
                     name: 'interface',

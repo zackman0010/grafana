@@ -6,9 +6,12 @@ import { addDashboardVariableTool } from './addDashboardVariable';
 import { dashboardSearchTool } from './dashboardSearch';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
+import { lokiInstantQueryTool } from './lokiInstantQuery';
 import { lokiLabelNamesTool } from './lokiLabelNames';
 import { lokiLabelValuesTool } from './lokiLabelValues';
+import { lokiLogStreamSearchTool } from './lokiLogStreamSearch';
 import { lokiQueryTool } from './lokiQueryTool';
+import { lokiRangeQueryTool } from './lokiRangeQuery';
 import { navigateToDashboardTool } from './navigateToDashboard';
 import { navigateToDeclareIncidentTool } from './navigateToDeclareIncident';
 import { navigateToDrilldownLogs } from './navigateToDrilldownLogs';
@@ -69,6 +72,9 @@ export const tools = [
   readDashboardPanelsTool,
   lokiLabelNamesTool,
   lokiLabelValuesTool,
+  lokiLogStreamSearchTool,
+  lokiInstantQueryTool,
+  lokiRangeQueryTool,
   navigateToExploreTool,
   navigateToDrilldownLogs,
   grafanaComSearch,
