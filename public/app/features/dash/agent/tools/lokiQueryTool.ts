@@ -84,8 +84,8 @@ export const lokiQueryTool = tool(
     const values = response.data[0].fields?.find((field: Field) => field.type === 'number');
     if (body) {
       return JSON.stringify({
-        labels,
-        firstLogResult: body,
+        labels: labels.values,
+        firstLogResult: body.values[0],
       });
     }
     return JSON.stringify({
