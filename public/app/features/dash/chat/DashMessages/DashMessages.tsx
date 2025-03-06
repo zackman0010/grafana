@@ -59,7 +59,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
 
   private prevLocation: Location = locationService.getLocation();
   private _handleLocationChange = async (location: Location) => {
-    if (this.state.langchainMessages.length > 1 || this.state.messages.length > 1) {
+    if (this.state.messages.length > 1) {
       return;
     }
     if (this.prevLocation.pathname === location.pathname) {
