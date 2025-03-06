@@ -11,6 +11,7 @@ import {
   SceneQueryRunner,
   SceneTimeRange,
   VizPanel,
+  VizPanelBuilder,
 } from '@grafana/scenes';
 import { Button, Collapse, Icon, Modal, Tooltip, useStyles2 } from '@grafana/ui';
 
@@ -31,6 +32,7 @@ export class Panel extends SceneObjectBase<PanelState> {
 
     const vizPanel = new VizPanel({
       title: '',
+      seriesLimit: 25,
       pluginId: state.panel.type ?? 'timeseries',
       options: state.panel.options ?? {},
       fieldConfig: state.panel.fieldConfig,
