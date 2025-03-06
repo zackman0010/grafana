@@ -8,6 +8,7 @@ import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana
 import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 
 import { getAgent } from '../../agent/agent';
+import { generateSystemPrompt } from '../../agent/systemPrompt';
 import { toolsByName } from '../../agent/tools';
 import { Tool } from '../DashMessage/Tool';
 import { getChat, getDash, getMessages, getSettings } from '../utils';
@@ -31,7 +32,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
   private _agentConfig = getAgent();
   private _currentAgent = this._agentConfig.withTools(this._agentConfig.tools);
-
 
   // Helper function to extract token information from various response formats
   private _extractTokenInfo(response: any): number | null {
@@ -169,6 +169,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     this.updateMessage('', false);
   }
 
+  private _updateSystemPrompt() {
+    const messages = getMessages(this);
+    const newSystemPrompt = generateSystemPrompt();
+    if (messages.state.langchainMessages.length > 0 && messages.state.langchainMessages[0] instanceof SystemMessage) {
+      messages.state.langchainMessages[0] = newSystemPrompt[0];
+    }
+  }
+
   public async interruptAndSendMessage() {
     const message = this.state.message.trim();
     if (!message) {
@@ -195,6 +203,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       getMessages(this).addLangchainMessage(
         new HumanMessage({ content: messageWithTimeTag, id: userMessage.state.key })
       );
+      this._updateSystemPrompt();
       this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages);
 
       if (isFirstMessage && hasDefaultName) {
@@ -391,6 +400,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
           if (toolResponse.artifact) {
             getMessages(this).addArtifact(toolResponse.artifact);
           }
+          this._updateSystemPrompt();
           this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
 
           try {
