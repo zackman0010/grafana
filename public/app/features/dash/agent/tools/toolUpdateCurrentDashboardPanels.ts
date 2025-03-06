@@ -237,7 +237,7 @@ export const updateCurrentDashboardPanelsTool = tool(
     const parsedInput = panelUpdateSchema.parse(input);
 
     // Multiple panel updates
-    const results = await updatePanels(parsedInput);
+    await updatePanels(parsedInput);
     dashboard.forceRender();
     return JSON.stringify({
       success: true,
