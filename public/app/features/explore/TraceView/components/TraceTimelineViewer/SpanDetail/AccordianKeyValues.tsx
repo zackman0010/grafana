@@ -17,7 +17,7 @@ import cx from 'classnames';
 import * as React from 'react';
 
 import { GrafanaTheme2, TraceKeyValuePair } from '@grafana/data';
-import { Icon, useStyles2 } from '@grafana/ui';
+import { Icon, Tooltip, useStyles2 } from '@grafana/ui';
 
 import { autoColor } from '../../Theme';
 import { TraceLink, TNil, SpanLinkDef } from '../../types';
@@ -110,6 +110,7 @@ export type AccordianKeyValuesProps = {
   headerLink?: SpanLinkDef;
   links: SpanLinkDef[];
   widget?: React.ReactNode;
+  tooltip?: React.ReactElement;
 };
 
 interface KeyValuesSummaryProps {
@@ -152,6 +153,7 @@ export default function AccordianKeyValues({
   headerLink,
   links,
   widget: AssertionsWidget,
+  tooltip,
 }: AccordianKeyValuesProps) {
   const isEmpty = (!Array.isArray(data) || !data.length) && !logName;
   const styles = useStyles2(getStyles);
@@ -190,6 +192,11 @@ export default function AccordianKeyValues({
             {label}
             {showDataSummaryFields && ':'}
           </strong>
+          {!headerLink && tooltip && (
+            <Tooltip content={tooltip} interactive theme="info">
+              <Icon name="info-circle" />
+            </Tooltip>
+          )}
           {headerLink && (
             <AccordionHeaderLink href={headerLink.href} title={headerLink.title} className={styles.headerLink} />
           )}

@@ -21,6 +21,7 @@ interface AttributeCategory {
   icon: IconName;
   title: string;
   component?: React.FunctionComponent<CategoryWidgetProps>;
+  notEnabledTooltip?: React.FunctionComponent;
   getTitle?: (attributes: AttributesKeyValueMap) => string | undefined;
 }
 
@@ -119,6 +120,17 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
           entityType="Pod"
           range={timeRange}
         />
+      );
+    },
+    notEnabledTooltip: () => {
+      return (
+        <span>
+          Enable{' '}
+          <a href="https://grafana.com/solutions/kubernetes/" style={{ textDecoration: 'underline' }}>
+            Kubernetes Monitoring
+          </a>{' '}
+          to gain insights into your clusters
+        </span>
       );
     },
   },
@@ -257,6 +269,7 @@ export const Attributes = ({
             const category =
               standardAttributeResources[key as keyof typeof standardAttributeResources] ?? otherCategory;
             const AssertionsWidget = category.component;
+            const NotEnabledTooltip = category.notEnabledTooltip;
             const headerLink = sortBy(Object.values(linksMap), (link) => link.href.length ?? 0)
               .reverse()
               .at(0);
@@ -273,6 +286,7 @@ export const Attributes = ({
                 isOpen={resourceAttributesState.openedItems.has(key)}
                 onToggle={() => detailAttributeItemToggle(span.spanID, key)}
                 headerLink={headerLink}
+                tooltip={NotEnabledTooltip ? <NotEnabledTooltip /> : undefined}
                 links={links}
                 withSummary={false}
               />
