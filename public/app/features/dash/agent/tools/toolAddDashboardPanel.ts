@@ -1,9 +1,11 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { SceneDataTransformer, sceneGraph, SceneQueryRunner, VizPanel } from '@grafana/scenes';
+import { SceneDataTransformer, sceneGraph, SceneQueryRunner, VizPanel, VizPanelMenu } from '@grafana/scenes';
 
 import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
+import { VizPanelLinks, VizPanelLinksMenu } from '../../../dashboard-scene/scene/PanelLinks';
+import { panelMenuBehavior } from '../../../dashboard-scene/scene/PanelMenuBehavior';
 
 const panelConfigSchema = z.object({
   title: z.string().optional().describe('The title of the panel'),
@@ -50,6 +52,10 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
       pluginId: config.pluginId,
       options: config.options,
       fieldConfig: config.fieldConfig as any,
+      titleItems: [new VizPanelLinks({ menu: new VizPanelLinksMenu({}) })],
+      menu: new VizPanelMenu({
+        $behaviors: [panelMenuBehavior],
+      }),
       $data:
         config.targets.length === 0
           ? undefined
@@ -152,6 +158,23 @@ export const addDashboardPanelTool = tool(
         },
         "overrides": []
       }
+
+      The "defaults.color.mode" property above can have one of the following shapes { "mode": "palette" } or { "mode": "shades", "fixedColor": "a fixed color" }.
+      The possible palettes are:
+      - "palette-classic" - Classic Grafana palette
+      - "palette-classic-by-name" - Classic Grafana palette by series name
+      - "continuous-GrYlRd" - Green to Yellow to Red by value
+      - "continuous-RdYlGr" - Red to Yellow to Green by value
+      - "continuous-BlYlRd" - Blue to Yellow to Red by value
+      - "continuous-YlRd" - Yellow to Red by value
+      - "continuous-BlPu" - Blue to Purple by value
+      - "continuous-YlBl" - Yellow to Blue by value
+      - "continuous-blues" - Blue palette
+      - "continuous-reds" - Red palette
+      - "continuous-greens" - Green palette
+      - "continuous-purples" - Purple palette
+      Fixed colors can be either a RGB color or one of: red, orange, yellow, green, blue, purple.
+      By default try to use something that is using the Grafana colors but it's more modern or futuristic
 
       The targets are the targets to use for a query to run. Each target is one query to run. An EXAMPLE of a target is:
       {
