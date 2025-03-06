@@ -28,7 +28,7 @@ const lokiRangeQuerySchema = z.object({
     .number()
     .optional()
     .default(100)
-    .describe('Maximum number of log lines to return (for log queries only, default is 100)'),
+    .describe('Maximum number of log lines to return (for log queries only, default is 100). This is is the only way to limit the number of logs in LogQL. | limit 100 is not valid in LogQL.'),
   summarize: z
     .string()
     .optional()

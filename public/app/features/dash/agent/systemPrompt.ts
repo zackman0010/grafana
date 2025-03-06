@@ -3,6 +3,7 @@ import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from '@langchain/
 import { getPersistedSetting } from '../chat/utils';
 
 import { prometheusWorkflowSystemPrompt } from './prometheusSystemPrompt';
+import { queryLanguageGuide } from './queryLanguageGuide';
 import { getCurrentContext } from './tools/context';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 
@@ -57,6 +58,10 @@ ${getPersistedSetting('verbosity') === 'educational'
 ### Prometheus Query and Analysis Workflow
 
 ${prometheusWorkflowSystemPrompt}
+
+### Query Language Reference
+
+${queryLanguageGuide}
 
 
 ## Response Format

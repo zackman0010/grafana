@@ -1,0 +1,205 @@
+export const queryLanguageGuide = `
+# Query Language Quick Reference
+
+## LogQL (Loki)
+
+- To return limited number of logs, use tool par parameter.
+- Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
+
+### Basic Structure
+\`\`\`
+{label="value"} |> pipeline operations
+\`\`\`
+
+### Log Stream Selection
+- \`{app="frontend", env="prod"}\` - Simple label matching
+- \`{app=~"api.*", env!~"test|dev"}\` - Regex matching
+- \`{app="frontend", status="500"}\` - Multiple labels
+
+### Label Matchers
+- \`=\` - Exactly equal
+- \`!=\` - Not equal
+- \`=~\` - Regex match
+- \`!~\` - Regex does not match
+
+### Pipeline Operations
+- \`|= "error"\` - Contains text
+- \`|!= "timeout"\` - Does not contain
+- \`|~ "error.*timeout"\` - Regex match
+- \`|!~ "expected"\` - Negative regex
+
+### Parser Operations
+- \`| json\` - Parse JSON
+- \`| logfmt\` - Parse logfmt format
+- \`| pattern "<pattern>"\` - Parse using patterns
+- \`| regexp "<regex>"\` - Parse using regexp
+- \`| unpack\` - Unpack JSON from a single label
+- \`| xml\` - Parse XML
+- \`| kvpairs\` - Parse key-value pairs
+- \`| yaml\` - Parse YAML
+
+### Transformations
+- \`| line_format "{{.level}}: {{.message}}"\` - Format log line
+- \`| label_format status_code="{{.status}}"\` - Create/modify labels
+- \`| drop level, method="GET"\` - Remove labels
+- \`| keep level, status\` - Keep only specified labels
+- \`| unwrap duration\` - Convert label to sample value used with range vector functions aka transform logs to metrics
+
+### Template Functions
+- \`{{.foo}}\` - Reference label value
+- \`{{__line__}}\` - Original log line
+- \`{{__error__}}\` - Error message
+- \`{{toLower .val}}\` - Convert to lowercase
+- \`{{toUpper .val}}\` - Convert to uppercase
+- \`{{len .val}}\` - Length of string
+- \`{{regexReplaceAll pattern .val replacement}}\` - Regex replace
+
+### Metric Queries
+
+Extracted data from parsers in pipelines can be used to transform logs into metrics. Be careful with high cardinality as it can impact performance.
+
+#### Basic Structures
+
+\`\`\`
+# Count log lines by label
+sum by(label) (count_over_time({app="frontend"}[5m]))
+
+# Unwrapping numerical values from logs
+sum by(label) (rate({app="frontend"} | json | unwrap duration[5m]))
+
+# Range vector selector format
+{label="value"}[5m] | <parser> | unwrap <label_name>
+
+# Binary operations
+sum(rate({app="frontend"}[5m])) / sum(rate({app="backend"}[5m]))
+\`\`\`
+
+#### Common Patterns
+
+- \`sum by(status) (count_over_time({app="frontend"}[5m]))\` - Count logs grouped by status
+- \`max by(instance) (rate({app="frontend"} | json | unwrap response_time[5m]))\` - Maximum rate by instance
+- \`avg(rate({app="frontend"} | json | unwrap duration[5m]))\` - Average value across all streams
+- \`histogram_quantile(0.95, sum by(le) (rate({app="frontend"} | json | unwrap duration[5m])))\` - Percentile from histogram buckets
+- \`sum by(method, status) (rate({app="frontend"} | json | unwrap request_count[5m]))\` - Multi-dimension grouping
+- \`topk(5, sum by(path) (rate({app="frontend"} | json | unwrap request_time[5m])))\` - Top 5 values by path
+
+### Range Vector Operations
+- \`rate({app="frontend"}[5m])\` - Per-second rate
+- \`count_over_time({app="frontend"}[5m])\` - Count logs
+- \`sum_over_time({app="frontend"} | unwrap bytes[5m])\` - Sum of values
+- \`avg_over_time(...)\` - Average over time
+- \`max_over_time(...)\` - Maximum over time
+- \`min_over_time(...)\` - Minimum over time
+- \`quantile_over_time(0.95, ...)\` - Calculate percentile
+- \`stddev_over_time(...)\` - Standard deviation
+- \`stdvar_over_time(...)\` - Standard variance
+- \`first_over_time(...)\` - First value in range
+- \`last_over_time(...)\` - Last value in range
+
+### Aggregation Operators
+- \`sum\` - Sum values
+- \`avg\` - Calculate average
+- \`count\` - Count entries
+- \`max\` - Maximum value
+- \`min\` - Minimum value
+- \`topk\` - Top K entries
+- \`bottomk\` - Bottom K entries
+- \`stddev\` - Standard deviation
+- \`stdvar\` - Standard variance
+
+## PromQL (Prometheus)
+
+### Basic Structure
+\`\`\`
+metric_name{label="value"}[time_range] operator
+\`\`\`
+
+### Metric Selection
+- \`http_requests_total\` - All values for metric
+- \`http_requests_total{status="500"}\` - Label matching
+- \`http_requests_total{status!="200"}\` - Negative matching
+- \`http_requests_total{status=~"5.."}\` - Regex matching
+
+### Label Matchers
+- \`=\` - Exactly equal
+- \`!=\` - Not equal
+- \`=~\` - Regex match
+- \`!~\` - Regex does not match
+
+### Time Ranges
+- \`[5m]\` - Last 5 minutes
+- \`[1h]\` - Last hour
+- \`[1d]\` - Last day
+- \`[1w]\` - Last week
+
+### Range Vector Functions
+- \`rate(http_requests_total[5m])\` - Per-second rate
+- \`irate(http_requests_total[5m])\` - Instant rate (last two samples)
+- \`increase(http_requests_total[1h])\` - Absolute increase
+- \`delta(temperature[1h])\` - Difference between first and last
+- \`idelta(temperature[1h])\` - Difference between last two samples
+- \`sum_over_time(temperature[1h])\` - Sum values
+- \`avg_over_time(temperature[1h])\` - Average values
+- \`min_over_time(temperature[1h])\` - Minimum value
+- \`max_over_time(temperature[1h])\` - Maximum value
+- \`stddev_over_time(temperature[1h])\` - Standard deviation
+- \`stdvar_over_time(temperature[1h])\` - Standard variance
+- \`quantile_over_time(0.99, temperature[1h])\` - Percentile
+- \`count_over_time(temperature[1h])\` - Count samples
+- \`last_over_time(temperature[1h])\` - Last value
+- \`present_over_time(temperature[1h])\` - Whether metric exists
+- \`absent_over_time(temperature[1h])\` - Whether metric is absent
+
+### Aggregation Operators
+- \`sum by(status) (rate(http_requests_total[5m]))\` - Sum by label
+- \`avg by(instance) (...)\` - Average by label
+- \`min by(instance) (...)\` - Minimum by label
+- \`max by(instance) (...)\` - Maximum by label
+- \`count by(instance) (...)\` - Count by label
+- \`group by(instance) (...)\` - Group by label
+- \`topk(5, http_requests_total)\` - Top K values
+- \`bottomk(5, http_requests_total)\` - Bottom K values
+- \`count_values("value", http_requests_total)\` - Count value frequencies
+- \`quantile(0.9, http_requests_total)\` - Calculate percentile
+
+### Instant Vector Functions
+- \`abs(v)\` - Absolute value
+- \`ceil(v)\` - Round up
+- \`floor(v)\` - Round down
+- \`round(v)\` - Round to nearest integer
+- \`sqrt(v)\` - Square root
+- \`ln(v)\` - Natural logarithm
+- \`log2(v)\` - Binary logarithm
+- \`log10(v)\` - Decimal logarithm
+- \`exp(v)\` - Exponential function
+- \`day_of_month(v)\`, \`day_of_week(v)\`, \`month(v)\` - Time functions
+- \`clamp(v, min, max)\` - Clamp to range
+- \`predict_linear(v[1h], 24*3600)\` - Linear prediction
+- \`label_join(v, "dst", ",", "src1", "src2")\` - Join labels
+- \`label_replace(v, "dst", "repl", "src", "regex")\` - Replace label
+- \`histogram_quantile(0.9, rate(hist[5m]))\` - Calculate histogram quantile
+- \`resets(counter[5m])\` - Counter reset detection
+- \`changes(gauge[5m])\` - Number of gauge changes
+- \`vector(s)\` - Convert scalar to vector
+- \`time()\` - Current time
+- \`sort(v)\`, \`sort_desc(v)\` - Sort results
+
+### Binary Operators
+- Arithmetic: \`+\`, \`-\`, \`*\`, \`/\`, \`%\`, \`^\`
+- Comparison: \`==\`, \`!=\`, \`>\`, \`<\`, \`>=\`, \`<=\`
+- Logical/Set: \`and\`, \`or\`, \`unless\`
+
+### Matching Types
+- \`on(label1, label2, ...)\` - Match only on specified labels
+- \`ignoring(label1, label2, ...)\` - Match ignoring specified labels
+- \`group_left(label1, label2, ...)\` - Many-to-one matching
+- \`group_right(label1, label2, ...)\` - One-to-many matching
+
+### Best Practices
+- Use label selectors to narrow scope
+- Avoid high-cardinality queries
+- Use time-bounded ranges
+- Escape special regex characters with \\
+- Use subqueries sparingly \`rate(http_requests_total[5m])[30m:1m]\`
+- Prefer more specific metrics/labels over post-processing
+`;
