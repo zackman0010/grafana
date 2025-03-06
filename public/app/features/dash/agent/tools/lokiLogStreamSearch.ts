@@ -175,9 +175,9 @@ export const lokiLogStreamSearchTool = tool(
         label_names: logStreamStats.label_names,
         label_stats: logStreamStats.label_stats,
       },
-      label_names: logStreamStats.label_names,
-      label_stats: logStreamStats.label_stats
-    }, null, 2);
+      null,
+      2
+    );
   },
   {
     name: 'search_loki_log_streams',
