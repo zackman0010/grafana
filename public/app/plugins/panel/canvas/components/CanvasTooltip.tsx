@@ -12,7 +12,7 @@ import {
   getFieldDisplayName,
   ScopedVars,
   ValueLinkConfig,
-} from '@grafana/data/src';
+} from '@grafana/data';
 import { ActionModel } from '@grafana/data/src/types/action';
 import { Portal, useStyles2, VizTooltipContainer } from '@grafana/ui';
 import { VizTooltipContent } from '@grafana/ui/src/components/VizTooltip/VizTooltipContent';
