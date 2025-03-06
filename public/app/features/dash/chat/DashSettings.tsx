@@ -103,7 +103,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
 
   // Determine token counter color based on usage
   const tokenPercentage = inputTokens / TOKEN_LIMIT;
-  let tokenColor: 'blue' | 'orange' | 'red' = 'blue';
+  let tokenColor: 'darkgrey' | 'orange' | 'red' = 'darkgrey';
   if (tokenPercentage >= TOKEN_DANGER_THRESHOLD) {
     tokenColor = 'red';
   } else if (tokenPercentage >= TOKEN_WARNING_THRESHOLD) {

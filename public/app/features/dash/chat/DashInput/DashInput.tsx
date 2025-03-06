@@ -400,7 +400,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
             // Update token usage if available in the response
             const toolInputTokens = this._extractTokenInfo(nextAiMessage);
             if (toolInputTokens !== null) {
-              console.log('Input tokens from tool call:', toolInputTokens);
               const settings = getSettings(this);
               settings.updateInputTokens(toolInputTokens);
             }
