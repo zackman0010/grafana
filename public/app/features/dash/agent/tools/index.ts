@@ -2,6 +2,7 @@ import { TavilySearchResults } from '@langchain/community/tools/tavily_search';
 
 import { getAppEvents, ToolAddedEvent } from '@grafana/runtime';
 
+import { addDashboardVariableTool } from './addDashboardVariable';
 import { dashboardSearchTool } from './dashboardSearch';
 import { getDrilldownLogToSummarizeTool } from './getDrilldownLogToSummarize';
 import { listDatasourcesTool } from './listDatasources';
@@ -72,6 +73,7 @@ export const tools = [
   dashboardSearchTool,
   devSleep,
   lokiQueryTool,
+  addDashboardVariableTool,
 ];
 
 export const toolsByName = tools.reduce(
