@@ -6,7 +6,7 @@ import { PureComponent } from 'react';
 import tinycolor from 'tinycolor2';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { selectors } from '@grafana/e2e-selectors/src';
+import { selectors } from '@grafana/e2e-selectors';
 import { config } from 'app/core/config';
 
 interface Props {

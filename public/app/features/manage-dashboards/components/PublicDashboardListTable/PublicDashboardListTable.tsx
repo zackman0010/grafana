@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useMedia } from 'react-use';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { selectors as e2eSelectors } from '@grafana/e2e-selectors/src';
+import { selectors as e2eSelectors } from '@grafana/e2e-selectors';
 import { config, reportInteraction } from '@grafana/runtime';
 import {
   Card,

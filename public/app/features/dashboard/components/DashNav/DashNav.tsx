@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { useLocation } from 'react-router-dom-v5-compat';
 
 import { textUtil } from '@grafana/data';
-import { selectors as e2eSelectors } from '@grafana/e2e-selectors/src';
+import { selectors as e2eSelectors } from '@grafana/e2e-selectors';
 import { locationService } from '@grafana/runtime';
 import {
   ButtonGroup,

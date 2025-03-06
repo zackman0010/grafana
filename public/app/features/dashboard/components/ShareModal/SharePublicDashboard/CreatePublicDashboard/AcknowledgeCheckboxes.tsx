@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { UseFormRegister } from 'react-hook-form';
 
 import { GrafanaTheme2 } from '@grafana/data';
-import { selectors as e2eSelectors } from '@grafana/e2e-selectors/src';
+import { selectors as e2eSelectors } from '@grafana/e2e-selectors';
 import { Checkbox, FieldSet, HorizontalGroup, LinkButton, useStyles2, VerticalGroup } from '@grafana/ui';
 import { t, Trans } from 'app/core/internationalization';
 
