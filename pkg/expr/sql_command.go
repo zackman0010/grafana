@@ -19,6 +19,7 @@ type SQLCommand struct {
 	query       string
 	varsToQuery []string
 	refID       string
+	limit       int
 }
 
 // NewSQLCommand creates a new SQLCommand.
@@ -91,11 +92,13 @@ func (gr *SQLCommand) Execute(ctx context.Context, now time.Time, vars mathexp.V
 		allFrames = append(allFrames, frames...)
 	}
 
+	limit := 3
 	totalRows := totalRows(allFrames)
-	if totalRows > 20 {
+	if totalRows > limit {
 		return mathexp.Results{},
 			fmt.Errorf(
-				"SQL expression: total row count across all input tables exceeds limit of 20. Total rows: %d",
+				"SQL expression: total row count across all input tables exceeds limit of %d. Total rows: %d",
+				limit,
 				totalRows,
 			)
 	}
