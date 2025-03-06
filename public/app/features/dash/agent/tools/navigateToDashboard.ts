@@ -9,7 +9,11 @@ const navigateToDashboardToolSchema = z.object({
   dashboard_uid: z.string().optional().describe('UID of the dashboard'),
   dashboard_title: z.string().optional().describe('Title of the dashboard'),
   dashboard_tag: z.string().optional().describe('String tag that labels the dashboard'),
-  navigate: z.boolean().describe('Whether to navigate to the dashboard. Only ever set this to true if the user has confirmed to navigate to the dashboard.'),
+  navigate: z
+    .boolean()
+    .describe(
+      'Whether to navigate to the dashboard. Only ever set this to true if the user has confirmed to navigate to the dashboard.'
+    ),
 });
 
 export const navigateToDashboardTool = tool(
@@ -54,5 +58,6 @@ export const navigateToDashboardTool = tool(
         return `Navigating to dashboard`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

@@ -1,4 +1,5 @@
 import { tool } from '@langchain/core/tools';
+import { z } from 'zod';
 
 import { AppContext, getAppContext } from './app';
 import { DataSourceContext, getDataSourceContext } from './dataSource';
@@ -34,7 +35,13 @@ export function getCurrentContext(): Contexts {
 }
 
 export const contextTool = tool(() => JSON.stringify(getCurrentContext()), {
-  name: 'update_current_context',
-  description:
-    'Use this tool when you need an update about the module where the user is at and the current state of the application',
+  name: 'context',
+  description: 'Get the current context.',
+  schema: z.object({}),
+  metadata: {
+    explainer: () => {
+      return `Getting current context`;
+    },
+  },
+  verboseParsingErrors: true,
 });

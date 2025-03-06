@@ -73,5 +73,6 @@ export const navigateToDrilldownLogs = tool(
         return `Navigating to drilldown logs`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

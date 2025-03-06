@@ -47,5 +47,6 @@ export const navigateToDeclareIncidentTool = tool(
         return `Navigating to declare incident`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

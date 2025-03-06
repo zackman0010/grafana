@@ -113,5 +113,6 @@ export const prometheusRangeQueryTool = tool(
         return `Running Prometheus range query`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

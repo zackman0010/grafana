@@ -298,5 +298,11 @@ The properties include:
 Only call this tool when you have a variable to add.
       `,
     schema: addDashboardVariableSchema,
+    metadata: {
+      explainer: () => {
+        return `Adding dashboard variable`;
+      },
+    },
+    verboseParsingErrors: true,
   }
 );

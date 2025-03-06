@@ -34,9 +34,7 @@ const lokiLabelValuesSchema = z.object({
     .string()
     .describe('The datasource UID of the Loki datasource')
     .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
-  label_name: z
-    .string()
-    .describe('The label name to query values for'),
+  label_name: z.string().describe('The label name to query values for'),
   limit: z
     .number()
     .optional()
@@ -52,12 +50,16 @@ const lokiLabelValuesSchema = z.object({
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.')
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   regex: z
     .string()
     .optional()
-    .describe('Optional regex pattern to filter label values. Use this to find specific patterns or reduce the number of results returned.')
+    .describe(
+      'Optional regex pattern to filter label values. Use this to find specific patterns or reduce the number of results returned.'
+    )
     .refine(regexRefiner.func, regexRefiner.message),
 });
 
@@ -84,13 +86,17 @@ export const lokiLabelValuesTool = tool(
     const hasMoreValues = labelValues.length > filteredValues.length;
 
     // Return as a formatted string with metadata
-    return JSON.stringify({
-      label_name,
-      total_values_found: labelValues.length,
-      values_returned: filteredValues.length,
-      has_more: hasMoreValues,
-      values: filteredValues,
-    }, null, 2);
+    return JSON.stringify(
+      {
+        label_name,
+        total_values_found: labelValues.length,
+        values_returned: filteredValues.length,
+        has_more: hasMoreValues,
+        values: filteredValues,
+      },
+      null,
+      2
+    );
   },
   {
     name: 'list_loki_label_values',
@@ -114,5 +120,6 @@ export const lokiLabelValuesTool = tool(
         return `Listing Loki label values`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

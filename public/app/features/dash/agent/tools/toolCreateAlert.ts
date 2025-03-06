@@ -107,5 +107,6 @@ export const createAlertRuleTool = tool(
         return `Creating an alert rule`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

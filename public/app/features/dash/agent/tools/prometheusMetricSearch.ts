@@ -71,7 +71,7 @@ const getPrometheusLabelStats = async (
       const regex = new RegExp(pattern, 'i');
 
       // Filter metric names matching this pattern
-      const metricsForPattern = matchingMetricNames.filter(name => regex.test(name));
+      const metricsForPattern = matchingMetricNames.filter((name) => regex.test(name));
       totalMetricsFound += metricsForPattern.length;
 
       // Check if we have too many metrics for this pattern
@@ -84,11 +84,7 @@ const getPrometheusLabelStats = async (
     }
 
     // Get a flat list of all unique metrics to process, limited by MAX_METRICS total
-    const allMetricsToProcess = Array.from(
-      new Set(
-        Array.from(metricsByPattern.values()).flat()
-      )
-    ).slice(0, MAX_METRICS);
+    const allMetricsToProcess = Array.from(new Set(Array.from(metricsByPattern.values()).flat())).slice(0, MAX_METRICS);
 
     // 3. For each metric, fetch its labels and their statistics
     const metricStatsPromises = allMetricsToProcess.map(async (metricName) => {
@@ -100,7 +96,7 @@ const getPrometheusLabelStats = async (
     return {
       metricStats,
       limitedPatterns,
-      totalMetricsFound
+      totalMetricsFound,
     };
   } catch (error) {
     console.error('Error fetching Prometheus metric stats:', error);
@@ -120,9 +116,9 @@ const fetchMatchingMetricNames = async (
   const allMetricNames = await promDatasource.languageProvider.fetchLabelValues(NAME_LABEL, timeRange);
 
   // Filter metric names by patterns
-  const matchedMetrics = allMetricNames.filter(metricName => {
+  const matchedMetrics = allMetricNames.filter((metricName) => {
     // Check if the metric name matches any of the patterns
-    return metricPatterns.some(pattern => {
+    return metricPatterns.some((pattern) => {
       try {
         const regex = new RegExp(pattern, 'i');
         return regex.test(metricName);
@@ -158,8 +154,8 @@ const fetchMetricStats = async (
 
   // Get all labels for this metric (excluding __name__)
   const labelNames = new Set<string>();
-  seriesData.forEach(s => {
-    Object.keys(s).forEach(label => {
+  seriesData.forEach((s) => {
+    Object.keys(s).forEach((label) => {
       if (label !== NAME_LABEL) {
         labelNames.add(label);
       }
@@ -167,10 +163,10 @@ const fetchMetricStats = async (
   });
 
   // Calculate statistics for each label
-  const labelStats: LabelStats[] = Array.from(labelNames).map(labelName => {
+  const labelStats: LabelStats[] = Array.from(labelNames).map((labelName) => {
     const values = new Set<string>();
 
-    seriesData.forEach(s => {
+    seriesData.forEach((s) => {
       if (s[labelName]) {
         values.add(s[labelName]);
       }
@@ -181,7 +177,7 @@ const fetchMetricStats = async (
     return {
       name: labelName,
       cardinality: values.size,
-      sampleValues: valuesArray.slice(0, 5) // Get first 5 values
+      sampleValues: valuesArray.slice(0, 5), // Get first 5 values
     };
   });
 
@@ -191,7 +187,7 @@ const fetchMetricStats = async (
   return {
     metric_name: metricName,
     label_stats: labelStats,
-    limited: seriesResult.limited
+    limited: seriesResult.limited,
   };
 };
 
@@ -212,7 +208,7 @@ const fetchSeriesWithLimit = async (
   const params = {
     ...range,
     'match[]': match,
-    limit: limit.toString()
+    limit: limit.toString(),
   };
 
   try {
@@ -236,13 +232,13 @@ const fetchSeriesWithLimit = async (
 
     return {
       data: seriesData,
-      limited
+      limited,
     };
   } catch (error) {
     console.error(`Error fetching series for ${match}:`, error);
     return {
       data: [],
-      limited: false
+      limited: false,
     };
   }
 };
@@ -289,7 +285,7 @@ export const prometheusMetricSearchTool = tool(
       max_metrics_per_pattern: MAX_METRICS,
       max_series_per_metric: MAX_SERIES_PER_METRIC,
       limited_patterns: limitedPatterns,
-      metrics: metricStats
+      metrics: metricStats,
     });
   },
   {
@@ -319,5 +315,6 @@ export const prometheusMetricSearchTool = tool(
         return `Searching for Prometheus metrics`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

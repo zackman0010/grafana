@@ -64,9 +64,7 @@ export const lokiLabelNamesTool = tool(
 
         // If no matches found with regex, try simple substring match as fallback
         if (filteredNames.length === 0) {
-          const fallbackNames = labelNames.filter((name) =>
-            name.toLowerCase().includes(regex.toLowerCase())
-          );
+          const fallbackNames = labelNames.filter((name) => name.toLowerCase().includes(regex.toLowerCase()));
 
           if (fallbackNames.length > 0) {
             filteredNames = fallbackNames;
@@ -75,20 +73,22 @@ export const lokiLabelNamesTool = tool(
         }
       } catch (error) {
         // If regex is invalid, treat it as a simple string match
-        filteredNames = labelNames.filter((name) =>
-          name.toLowerCase().includes(regex.toLowerCase())
-        );
+        filteredNames = labelNames.filter((name) => name.toLowerCase().includes(regex.toLowerCase()));
         console.log(`Invalid regex. Using substring match instead: ${regex}`);
       }
     }
 
     // Format the response as a JSON string with additional metadata
-    return JSON.stringify({
-      pattern: regex || '*',
-      total_label_count: labelNames.length,
-      filtered_label_count: filteredNames.length,
-      label_names: filteredNames,
-    }, null, 2);
+    return JSON.stringify(
+      {
+        pattern: regex || '*',
+        total_label_count: labelNames.length,
+        filtered_label_count: filteredNames.length,
+        label_names: filteredNames,
+      },
+      null,
+      2
+    );
   },
   {
     name: 'list_loki_label_names',
@@ -100,5 +100,6 @@ export const lokiLabelNamesTool = tool(
         return `Listing Loki label names`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

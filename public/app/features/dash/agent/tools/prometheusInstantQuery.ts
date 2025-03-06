@@ -168,5 +168,6 @@ export const prometheusInstantQueryTool = tool(
         return `Running Prometheus instant query`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

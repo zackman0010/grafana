@@ -45,5 +45,6 @@ export const readDashboardPanelsTool = tool(
         return `Reading dashboard panels`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

@@ -70,5 +70,6 @@ export const createDashboardTool = tool(
         return `Creating a new dashboard`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

@@ -105,5 +105,6 @@ export const lokiQueryTool = tool(
         return `Executing Loki query`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

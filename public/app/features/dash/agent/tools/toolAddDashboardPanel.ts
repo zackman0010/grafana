@@ -249,5 +249,6 @@ export const addDashboardPanelTool = tool(
         return `Adding panel to dashboard`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

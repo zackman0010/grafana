@@ -94,7 +94,7 @@ const getLokiLogStreamStats = async (
             labelStatsMap.set(labelName, {
               name: labelName,
               cardinality: 1,
-              sampleValues: [labelValue].slice(0, MAX_LABEL_VALUES)
+              sampleValues: [labelValue].slice(0, MAX_LABEL_VALUES),
             });
           }
         }
@@ -114,7 +114,7 @@ const getLokiLogStreamStats = async (
     return {
       label_stats: labelStats,
       label_names: labelNames,
-      limited: limited
+      limited: limited,
     };
   } catch (error) {
     console.error('Error fetching Loki log stream stats:', error);
@@ -148,38 +148,32 @@ const lokiLogStreamSearchSchema = z.object({
 export const lokiLogStreamSearchTool = tool(
   async (input): Promise<string> => {
     const parsedInput = lokiLogStreamSearchSchema.parse(input);
-    const {
-      datasource_uid,
-      stream_selectors = [],
-      start,
-      end,
-    } = parsedInput;
+    const { datasource_uid, stream_selectors = [], start, end } = parsedInput;
 
-    const logStreamStats = await getLokiLogStreamStats(
-      datasource_uid,
-      stream_selectors,
-      start,
-      end
-    );
+    const logStreamStats = await getLokiLogStreamStats(datasource_uid, stream_selectors, start, end);
 
     // No regex filtering on label names as per user's request
 
     // Prepare statistics about the result
     const usedStreams = logStreamStats.limited ? MAX_STREAMS : 'all';
-    const nonEmptyLabels = logStreamStats.label_stats.filter(stat => stat.cardinality > 0);
-    const maxCardinalitySeen = Math.max(...logStreamStats.label_stats.map(stat => stat.cardinality), 0);
+    const nonEmptyLabels = logStreamStats.label_stats.filter((stat) => stat.cardinality > 0);
+    const maxCardinalitySeen = Math.max(...logStreamStats.label_stats.map((stat) => stat.cardinality), 0);
 
     // Format the response as a JSON string with clear structure
-    return JSON.stringify({
-      stream_selectors: stream_selectors.length > 0 ? stream_selectors : ['{}'],
-      max_streams: MAX_STREAMS,
-      max_label_values: MAX_LABEL_VALUES,
-      stats: {
-        processed_streams: usedStreams,
-        limited: logStreamStats.limited,
-        total_label_count: logStreamStats.label_names.length,
-        non_empty_labels: nonEmptyLabels.length,
-        max_cardinality: maxCardinalitySeen,
+    return JSON.stringify(
+      {
+        stream_selectors: stream_selectors.length > 0 ? stream_selectors : ['{}'],
+        max_streams: MAX_STREAMS,
+        max_label_values: MAX_LABEL_VALUES,
+        stats: {
+          processed_streams: usedStreams,
+          limited: logStreamStats.limited,
+          total_label_count: logStreamStats.label_names.length,
+          non_empty_labels: nonEmptyLabels.length,
+          max_cardinality: maxCardinalitySeen,
+        },
+        label_names: logStreamStats.label_names,
+        label_stats: logStreamStats.label_stats,
       },
       label_names: logStreamStats.label_names,
       label_stats: logStreamStats.label_stats
@@ -213,5 +207,6 @@ export const lokiLogStreamSearchTool = tool(
         return `Searching for Loki log streams`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

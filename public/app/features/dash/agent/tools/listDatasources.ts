@@ -50,5 +50,6 @@ export const listDatasourcesTool = tool(
         return `Listing available datasources`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

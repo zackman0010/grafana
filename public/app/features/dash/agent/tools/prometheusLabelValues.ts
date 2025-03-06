@@ -17,17 +17,23 @@ const prometheusLabelValuesSchema = z.object({
   start: z
     .number()
     .optional()
-    .describe('Optional start timestamp for the query range. Defaults to 1 hour ago if not provided. Should be a valid unix timestamp in milliseconds.')
+    .describe(
+      'Optional start timestamp for the query range. Defaults to 1 hour ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   end: z
     .number()
     .optional()
-    .describe('Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.')
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
     .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   regex: z
     .string()
     .optional()
-    .describe(`Optional regex pattern to filter label values. Avoid broad regexes, analyze labels cardinality using ${prometheusMetricSearchTool.name} first to see if the labels contains a lot of values.`)
+    .describe(
+      `Optional regex pattern to filter label values. Avoid broad regexes, analyze labels cardinality using ${prometheusMetricSearchTool.name} first to see if the labels contains a lot of values.`
+    )
     .refine(regexRefiner.func, regexRefiner.message),
 });
 
@@ -69,5 +75,6 @@ export const prometheusLabelValuesTool = tool(
         return `Listing Prometheus label values`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

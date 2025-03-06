@@ -52,9 +52,16 @@ export const lokiInstantQueryTool = tool(
     const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
 
     // Detect if this is likely a logs query or a metric query
-    const isLikelyLogsQuery = !query.includes('rate(') && !query.includes('sum(') && !query.includes('avg(') &&
-      !query.includes('max(') && !query.includes('min(') && !query.includes('count(') &&
-      !query.includes('quantile(') && !query.includes('stddev(') && !query.includes('stdvar(');
+    const isLikelyLogsQuery =
+      !query.includes('rate(') &&
+      !query.includes('sum(') &&
+      !query.includes('avg(') &&
+      !query.includes('max(') &&
+      !query.includes('min(') &&
+      !query.includes('count(') &&
+      !query.includes('quantile(') &&
+      !query.includes('stddev(') &&
+      !query.includes('stdvar(');
 
     // Set up the query object
     const lokiQuery: LokiQuery = {
@@ -119,5 +126,6 @@ export const lokiInstantQueryTool = tool(
         return `Executing Loki instant query`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

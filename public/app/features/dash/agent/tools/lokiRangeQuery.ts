@@ -28,7 +28,9 @@ const lokiRangeQuerySchema = z.object({
     .number()
     .optional()
     .default(100)
-    .describe('Maximum number of log lines to return (for log queries only, default is 100). This is is the only way to limit the number of logs in LogQL. | limit 100 is not valid in LogQL.'),
+    .describe(
+      'Maximum number of log lines to return (for log queries only, default is 100). This is is the only way to limit the number of logs in LogQL. | limit 100 is not valid in LogQL.'
+    ),
   summarize: z
     .string()
     .optional()
@@ -55,9 +57,16 @@ export const lokiRangeQueryTool = tool(
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
 
     // Detect if this is likely a logs query or a metric query
-    const isLikelyLogsQuery = !query.includes('rate(') && !query.includes('sum(') && !query.includes('avg(') &&
-      !query.includes('max(') && !query.includes('min(') && !query.includes('count(') &&
-      !query.includes('quantile(') && !query.includes('stddev(') && !query.includes('stdvar(');
+    const isLikelyLogsQuery =
+      !query.includes('rate(') &&
+      !query.includes('sum(') &&
+      !query.includes('avg(') &&
+      !query.includes('max(') &&
+      !query.includes('min(') &&
+      !query.includes('count(') &&
+      !query.includes('quantile(') &&
+      !query.includes('stddev(') &&
+      !query.includes('stdvar(');
 
     // Set up the query object
     const lokiQuery: LokiQuery = {
@@ -126,5 +135,6 @@ export const lokiRangeQueryTool = tool(
         return `Executing Loki range query`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

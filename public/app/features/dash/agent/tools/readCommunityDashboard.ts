@@ -28,5 +28,6 @@ export const readCommunityDashboardTool = tool(
         return 'Reading community dashboard';
       },
     },
+    verboseParsingErrors: true,
   }
 );

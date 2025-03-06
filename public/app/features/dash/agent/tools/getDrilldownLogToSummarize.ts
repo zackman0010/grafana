@@ -40,5 +40,6 @@ export const getDrilldownLogToSummarizeTool = tool(
         return `Getting logs to summarize`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

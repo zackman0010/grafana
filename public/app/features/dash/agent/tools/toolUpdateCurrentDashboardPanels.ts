@@ -384,5 +384,6 @@ Complex panel update with data source and targets:
         return `Updating multiple dashboard panels`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

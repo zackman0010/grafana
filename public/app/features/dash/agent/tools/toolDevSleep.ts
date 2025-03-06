@@ -18,12 +18,13 @@ export const devSleep = tool(
   },
   {
     name: 'dev_sleep',
-    description: 'Sleeps for a specified duration (defaults to 10 seconds) for testing and development purposes.',
+    description: 'Sleep for a specified duration for development purposes.',
     schema: devSleepSchema,
     metadata: {
       explainer: () => {
-        return `Sleeping for testing`;
+        return `Sleeping for development`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

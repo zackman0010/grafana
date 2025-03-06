@@ -260,5 +260,6 @@ Example usage: Update multiple panels in a single operation, such as changing ti
         return `Updating dashboard panels`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

@@ -85,5 +85,6 @@ export const dashboardSearchTool = tool(
         return `Searching for dashboards`;
       },
     },
+    verboseParsingErrors: true,
   }
 );

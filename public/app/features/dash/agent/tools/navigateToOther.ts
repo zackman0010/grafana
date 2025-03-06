@@ -5,7 +5,11 @@ import { locationService } from '@grafana/runtime';
 
 const navigateToOtherSchema = z.object({
   url: z.string().describe('URL to navigate to'),
-  navigate: z.boolean().describe('Whether to navigate to the URL. Only ever set this to true if the user has confirmed to navigate to the URL.'),
+  navigate: z
+    .boolean()
+    .describe(
+      'Whether to navigate to the URL. Only ever set this to true if the user has confirmed to navigate to the URL.'
+    ),
 });
 
 export const navigateToOtherTool = tool(
@@ -28,5 +32,6 @@ export const navigateToOtherTool = tool(
         return `Navigating to URL`;
       },
     },
+    verboseParsingErrors: true,
   }
 );
