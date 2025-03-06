@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { locationService } from '@grafana/runtime';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
 
-import { lokiOrPrometheusTypeRefiner } from './refiners';
+import { lokiOrPrometheusTypeRefiner, unixTimestampRefiner } from './refiners';
 
 const navigateToExploreSchema = z.object({
   datasource_uid: z
@@ -12,6 +12,20 @@ const navigateToExploreSchema = z.object({
     .describe('Datasource UID that will execute the query')
     .refine(lokiOrPrometheusTypeRefiner.func, lokiOrPrometheusTypeRefiner.message),
   query: z.string().describe('Query to be executed'),
+  start: z
+    .number()
+    .optional()
+    .describe(
+      'Optional start timestamp. Defaults to 1 hour ago if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
+  end: z
+    .number()
+    .optional()
+    .describe(
+      'Optional end timestamp for the query range. Defaults to current time if not provided. Should be a valid unix timestamp in milliseconds.'
+    )
+    .refine(unixTimestampRefiner.func, unixTimestampRefiner.message),
   navigate: z
     .boolean()
     .describe(
@@ -21,7 +35,7 @@ const navigateToExploreSchema = z.object({
 
 export const navigateToExploreTool = tool(
   async (input) => {
-    const { datasource_uid, query, navigate } = navigateToExploreSchema.parse(input);
+    const { datasource_uid, query, navigate, start, end } = navigateToExploreSchema.parse(input);
     const type = getDatasourceSrv()
       .getAll()
       .find((ds) => ds.uid === datasource_uid)?.type;
@@ -40,8 +54,8 @@ export const navigateToExploreTool = tool(
           },
         ],
         range: {
-          from: 'now-1h',
-          to: 'now',
+          from: (start ?? 'now-1h').toString(),
+          to: (end ?? 'now').toString(),
         },
       },
     };
@@ -56,7 +70,7 @@ export const navigateToExploreTool = tool(
   {
     name: 'navigate_to_explore',
     description:
-      'Use this tool when the user wants to execute a query in Grafana Explore. NEVER use it without asking the user for confirmation.',
+      'Use this tool when the user wants to execute a query in Grafana Explore. Consider if the user wants to see a particular range in time and generate the appropriate start and end timestamps. NEVER use it without asking the user for confirmation.',
     schema: navigateToExploreSchema,
     metadata: {
       explainer: () => {
