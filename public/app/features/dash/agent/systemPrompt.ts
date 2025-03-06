@@ -26,11 +26,10 @@ IMPORTANT TIMESTAMP USAGE:
 - Calculate time values before calling this tool
 
 ## Tone
-${
-  getPersistedSetting('verbosity') === 'educational'
+${getPersistedSetting('verbosity') === 'educational'
     ? '- Explain concepts as if speaking to someone new to Grafana. Break down technical terms, explain the reasoning behind each step, and provide context for why certain approaches are used. Use analogies where helpful and encourage questions. Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available". Always suggest helpful next steps.'
     : '- Be as concise as possible in your responses. Use short, clear sentences and avoid unnecessary explanations or repetition.'
-}
+  }
 - Be friendly and helpful.
 - Refer to yourself as an Agent - never as an assistant.
 
@@ -251,5 +250,20 @@ export function generateSystemPrompt(): BaseMessage[] {
     }),
   ];
 
-  return [new SystemMessage(SYSTEM_PROMPT_TEMPLATE + contextPrompt), ...fewshotMessages];
+  // Add a system message to explain these are examples
+  const exampleSystemMessage = new AIMessage(
+    "The following are examples of how to interact with the system. These are NOT real conversations with the current user."
+  );
+
+  // Add a system message to indicate the end of examples
+  const endExamplesMessage = new AIMessage(
+    "Now, let's begin the actual conversation with the user."
+  );
+
+  return [
+    new SystemMessage(SYSTEM_PROMPT_TEMPLATE + contextPrompt),
+    exampleSystemMessage,
+    ...fewshotMessages,
+    endExamplesMessage
+  ];
 }
