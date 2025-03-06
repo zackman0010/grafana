@@ -7,10 +7,13 @@ export function buildPanelJson(
   description: string,
   queryObject: any,
   transformations: any[] = [],
-  collapsed = true,
+  collapsed = true
 ) {
   return {
-    timeRange: timeRange,
+    timeRange: {
+      from: timeRange.from.toISOString(),
+      to: timeRange.to.toISOString(),
+    },
     collapsed: collapsed,
     panel: {
       type: type,
