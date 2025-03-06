@@ -186,11 +186,19 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
                 {chats
                   .map((chat, index) =>
                     index === chatIndex ? null : (
-                      <Menu.Item
-                        key={chat.state.key}
-                        label={chat.state.name}
-                        onClick={() => model.setCurrentChat(index)}
-                      />
+                      <div key={chat.state.key} className={styles.chatMenuItem}>
+                        <div className={styles.chatMenuItemText} onClick={() => model.setCurrentChat(index)}>
+                          {chat.state.name}
+                        </div>
+                        <Icon
+                          name="times"
+                          className={styles.removeChatIcon}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            model.removeChat(index);
+                          }}
+                        />
+                      </div>
                     )
                   )
                   .reverse()}
@@ -329,6 +337,43 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     label: 'dash-chat-menu',
     minWidth: '200px',
     backgroundColor: theme.colors.background.primary,
+    border: `1px solid ${theme.colors.border.weak}`,
+  }),
+  chatMenuItem: css({
+    label: 'dash-chat-menu-item',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1),
+    '&:hover': {
+      backgroundColor: theme.colors.action.hover,
+      '& [class*="remove-chat-icon"]': {
+        opacity: 0.7,
+      },
+    },
+  }),
+  chatMenuItemText: css({
+    label: 'dash-chat-menu-item-text',
+    flex: 1,
+    cursor: 'pointer',
+    padding: theme.spacing(0.5),
+    margin: theme.spacing(-0.5),
+  }),
+  removeChatIcon: css({
+    label: 'dash-remove-chat-icon',
+    cursor: 'pointer',
+    opacity: 0,
+    padding: theme.spacing(0.5),
+    fontSize: '20px',
+    width: '20px',
+    height: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'opacity 0.2s ease',
+    '&:hover': {
+      opacity: 1,
+    },
   }),
 });
 
