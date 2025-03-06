@@ -160,6 +160,59 @@ export function generateSystemPrompt(): BaseMessage[] {
         },
       ],
     }),
+    new HumanMessage(
+      'Can you show me some logs?'
+    ),
+    new AIMessage({
+      content: [
+        {
+          type: 'text',
+          text: "I'll help you find some logs. Let me gather that data for you.\n\nFirst, I need to find the appropriate logs.",
+        },
+        {
+          type: 'tool_use',
+          id: 'toolu_02WZVskhEnnghSBhHPZ6mxVZ',
+          name: 'search_loki_log_streams',
+          input: {
+            datasource_uid: 'foo-datasource-uid',
+            metric_patterns: ['foo.*', 'bar.*'],
+            start: 1741202198789,
+            end: 1741205798789,
+          },
+        },
+      ],
+    }),
+    new HumanMessage({
+      content: [
+        {
+          type: 'tool_result',
+          tool_use_id: 'toolu_02WZVskhEnnghSBhHPZ6mxVZ',
+          content: JSON.stringify({
+
+            stream_selectors: 2,
+            max_streams: 10,
+            max_label_values: 10,
+            stats: {
+              processed_streams: 10,
+              limited: false,
+            },
+            label_names: ['app', 'env'],
+            label_stats: [
+              {
+                name: 'app',
+                cardinality: 10,
+                sampleValues: ['foo', 'bar', 'baz'],
+              },
+              {
+                name: 'env',
+                cardinality: 10,
+                sampleValues: ['prod', 'dev', 'test'],
+              },
+            ],
+          }),
+        },
+      ],
+    }),
   ];
 
   // Add a system message to explain these are examples
