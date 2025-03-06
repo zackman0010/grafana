@@ -476,7 +476,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
 
         <IconButton
           size="xl"
-          name={loading ? 'times' : 'play'}
+          name={loading ? 'times' : 'message'}
           aria-label={loading ? 'Cancel request' : 'Send message'}
           onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
         />

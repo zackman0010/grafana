@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { TabContent, useStyles2 } from '@grafana/ui';
+import { useStyles2 } from '@grafana/ui';
 
 import { DashChatInstance } from './DashChatInstance';
 import { DashInput } from './DashInput';
@@ -89,9 +89,9 @@ function DashChatRenderer({ model }: SceneComponentProps<DashChat>) {
   const chat = versions[versionIndex];
 
   return (
-    <TabContent className={styles.container}>
+    <div className={styles.container}>
       <chat.Component model={chat} />
-    </TabContent>
+    </div>
   );
 }
 
