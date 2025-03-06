@@ -23,5 +23,10 @@ export const readCommunityDashboardTool = tool(
 - details: The details of the dashboard
 - dashboardJson: The JSON of the dashboard itself.`,
     schema: readCommunityDashboardSchema,
+    metadata: {
+      explainer: () => {
+        return 'Reading community dashboard';
+      },
+    },
   }
 );
