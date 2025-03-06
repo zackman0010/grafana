@@ -11,16 +11,11 @@ export const readCommunityDashboardTool = tool(
   async (input) => {
     const { id } = readCommunityDashboardSchema.parse(input);
 
-    // Get details
-    const details = await getBackendSrv().get(`https://grafana.com/api/dashboards/${id}`);
-    const dashboardJson = await getBackendSrv().get(
-      `https://grafana.com/api/dashboards/${id}/revisions/${details.revision}/download`
-    );
-
-    return JSON.stringify({
-      details,
-      dashboardJson,
-    });
+    try {
+      return JSON.stringify(await getBackendSrv().get(`/api/gnet/dashboards/${id}`));
+    } catch (error) {
+      return JSON.stringify({});
+    }
   },
   {
     name: 'read_community_dashboard',
