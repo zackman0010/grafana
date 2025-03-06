@@ -42,7 +42,7 @@ const lokiRangeQuerySchema = z.object({
 export const lokiRangeQueryTool = tool(
   async (input) => {
     const parsedInput = lokiRangeQuerySchema.parse(input);
-    const { datasource_uid, query, start, end, limit, summarize, title, description } = parsedInput;
+    const { datasource_uid, query, start, end, limit, summarize } = parsedInput;
 
     // Get datasource
     const datasource = await getDataSourceSrv().get({ uid: datasource_uid });
@@ -108,6 +108,7 @@ export const lokiRangeQueryTool = tool(
     - For metrics: Returns time series data for metric queries
 
     Usage recommendations:
+    - When querying or search always try to limit the number of logs returned by 100 or less. Then if you need more increase the limit.
     - For simple log searches, use queries like '{app="myapp"} |= "error"'
     - For metrics, use aggregation operators like 'sum(rate({app="myapp"} |= "error" [5m]))'
     - Use appropriate time ranges to limit data volume

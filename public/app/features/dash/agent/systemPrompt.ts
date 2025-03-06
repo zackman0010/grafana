@@ -55,7 +55,6 @@ ${getPersistedSetting('verbosity') === 'educational'
 - If tools are failing too often, explain why you are failing and ask the user to try again
 - Only use the list_datasources tool if you need to know the uid of a datasource
 
-### Prometheus Query and Analysis Workflow
 
 ${prometheusWorkflowSystemPrompt}
 
@@ -69,7 +68,7 @@ ${queryLanguageGuide}
 Markdown is supported.
 Your response must be formatted as a valid JSON object with the structure below. All text fields must be properly escaped.
 Use code blocks only multiple queries or log samples you want to show to the user, otherwise use single quotes to point to the queries, label names, and values.
-
+When retuning message about time use relative time or date time but never timestamp values.
 
 <json>
 {{

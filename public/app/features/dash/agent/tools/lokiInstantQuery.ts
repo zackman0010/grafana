@@ -34,14 +34,12 @@ const lokiInstantQuerySchema = z.object({
     .describe(
       'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize current errors" or "Analyze current request rates"'
     ),
-  title: z.string().describe('The title of the query.'),
-  description: z.string().describe('The description of the query.'),
 });
 
 export const lokiInstantQueryTool = tool(
   async (input) => {
     const parsedInput = lokiInstantQuerySchema.parse(input);
-    const { datasource_uid, query, time, limit, summarize, title, description } = parsedInput;
+    const { datasource_uid, query, time, limit, summarize } = parsedInput;
 
     // Get datasource
     const datasource = await getDataSourceSrv().get({ uid: datasource_uid });

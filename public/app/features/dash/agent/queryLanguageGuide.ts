@@ -5,6 +5,7 @@ export const queryLanguageGuide = `
 
 - To return limited number of logs, use tool par parameter.
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
+- You can't limit the number of logs in LogQL you need to use the tool parameter.
 
 ### Basic Structure
 \`\`\`
@@ -22,21 +23,28 @@ export const queryLanguageGuide = `
 - \`=~\` - Regex match
 - \`!~\` - Regex does not match
 
+
+## Union Operations / or operations for logs
+
+Important: or operations is only support for fields {app="foo"} | duration > 10s or level="error"
+To combine multiple search use regex:
+
+- {app="foo|bar"}
+- {app="foo"} |~ "error|warning"
+
 ### Pipeline Operations
 - \`|= "error"\` - Contains text
 - \`|!= "timeout"\` - Does not contain
 - \`|~ "error.*timeout"\` - Regex match
 - \`|!~ "expected"\` - Negative regex
 
+
 ### Parser Operations
 - \`| json\` - Parse JSON
 - \`| logfmt\` - Parse logfmt format
 - \`| pattern "<pattern>"\` - Parse using patterns
 - \`| regexp "<regex>"\` - Parse using regexp
-- \`| unpack\` - Unpack JSON from a single label
-- \`| xml\` - Parse XML
-- \`| kvpairs\` - Parse key-value pairs
-- \`| yaml\` - Parse YAML
+- \`| unpack\` - Unpack JSON into labels.
 
 ### Transformations
 - \`| line_format "{{.level}}: {{.message}}"\` - Format log line
@@ -79,7 +87,7 @@ sum(rate({app="frontend"}[5m])) / sum(rate({app="backend"}[5m]))
 - \`sum by(status) (count_over_time({app="frontend"}[5m]))\` - Count logs grouped by status
 - \`max by(instance) (rate({app="frontend"} | json | unwrap response_time[5m]))\` - Maximum rate by instance
 - \`avg(rate({app="frontend"} | json | unwrap duration[5m]))\` - Average value across all streams
-- \`histogram_quantile(0.95, sum by(le) (rate({app="frontend"} | json | unwrap duration[5m])))\` - Percentile from histogram buckets
+- \`histogram_quantile(0.95, sum by(le) (rate({app="frontend"} | json | unwrap duration[5m]))) by (namespace)\` - Percentile from histogram buckets
 - \`sum by(method, status) (rate({app="frontend"} | json | unwrap request_count[5m]))\` - Multi-dimension grouping
 - \`topk(5, sum by(path) (rate({app="frontend"} | json | unwrap request_time[5m])))\` - Top 5 values by path
 

@@ -3,14 +3,12 @@
  * to use the proper workflow for Prometheus metric discovery and analysis
  */
 
+import { lokiLabelNamesTool } from 'app/features/dash/agent/tools/lokiLabelNames';
+import { lokiLabelValuesTool } from 'app/features/dash/agent/tools/lokiLabelValues';
 import { lokiLogStreamSearchTool } from 'app/features/dash/agent/tools/lokiLogStreamSearch';
 import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
-import { lokiLabelValuesTool } from 'app/features/dash/agent/tools/lokiLabelValues';
-import { lokiLabelNamesTool } from 'app/features/dash/agent/tools/lokiLabelNames';
 
 export const prometheusWorkflowSystemPrompt = `
-# Observability Data Workflow
-
 ## Intent Recognition
 
 FIRST, determine the user's intent from these three categories:
@@ -35,6 +33,8 @@ FIRST, determine the user's intent from these three categories:
 
 ## Data Source Prioritization
 
+If not datasource is specified start by listing them. Never guess the datasource.
+
 When working with observability data:
 - PRIORITIZE METRICS FIRST: Use Prometheus metrics as the primary data source
 - USE LOGS ONLY WHEN NEEDED: Only use logs when metrics don't provide enough detail
@@ -54,8 +54,14 @@ When working with observability data:
   5. Returns a single message explaining what was done and what the result is
 
 ### 2. INVESTIGATION
-- COMPREHENSIVE ANALYSIS: Examine multiple metrics and potentially logs
-- WORK WITH THE USER: Don't go too far go step by step, if you need more information ask the user for more details.
+- COMPREHENSIVE ANALYSIS: Examine metrics and potentially logs
+- EFFECTIVE: Only use the necessary amount of tools to answer the question.
+- Use Summarization mode in query tools to get a concise overview. Only use raw results if you need to see the raw data.
+- UNDERSTAND THE USER'S NEEDS:
+  - If the user is asking why most likely need to use logs to diagnose the issue.
+  - If the user is not specific about the time range, use 3 hours ago as default.
+  - If this wasn't clear that it was an investigations, don't go too far.
+- WORK WITH THE USER: After 5 tool calls, always ask the user if you to continue and explain where you are in the investigation.
 - METHODICAL APPROACH: Follow a structured troubleshooting process
 - CORRELATION: Connect different signals to identify patterns and root causes
 - WORKFLOW:

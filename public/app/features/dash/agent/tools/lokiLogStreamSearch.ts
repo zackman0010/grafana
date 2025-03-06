@@ -5,7 +5,7 @@ import { getDefaultTimeRange, dateTime, TimeRange } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
 
-import { lokiTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
+import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
 interface LabelStats {
   name: string;
