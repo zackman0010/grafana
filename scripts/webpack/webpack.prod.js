@@ -6,7 +6,7 @@ const { EsbuildPlugin } = require('esbuild-loader');
 const { resolveToEsbuildTarget } = require('esbuild-plugin-browserslist');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
-const { EnvironmentPlugin } = require('webpack');
+const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { merge } = require('webpack-merge');
@@ -74,6 +74,13 @@ module.exports = (env = {}) =>
        * I know we have two manifest plugins here.
        * WebpackManifestPlugin was only used in prod before and does not support integrity hashes
        */
+      new DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify('development'),
+          ANTHROPIC_API_KEY: JSON.stringify(process.env.ANTHROPIC_API_KEY || ''),
+          TAVILY_API_KEY: JSON.stringify(process.env.TAVILY_API_KEY || ''),
+        },
+      }),
       new WebpackAssetsManifest({
         entrypoints: true,
         integrity: true,
