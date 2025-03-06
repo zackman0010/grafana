@@ -123,6 +123,9 @@ const getStyles = () => ({
   }),
   collapsible: css({
     marginBottom: '0',
+    '& > button': {
+      padding: '8px 12px',
+    },
   }),
   infoIcon: css({
     marginLeft: '4px',
