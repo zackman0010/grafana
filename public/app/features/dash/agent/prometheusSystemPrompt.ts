@@ -6,6 +6,7 @@
 import { lokiLabelNamesTool } from 'app/features/dash/agent/tools/lokiLabelNames';
 import { lokiLabelValuesTool } from 'app/features/dash/agent/tools/lokiLabelValues';
 import { lokiLogStreamSearchTool } from 'app/features/dash/agent/tools/lokiLogStreamSearch';
+
 import { prometheusMetricSearchTool } from './tools/prometheusMetricSearch';
 
 export const prometheusWorkflowSystemPrompt = `
