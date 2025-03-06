@@ -148,7 +148,7 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     wordWrap: 'break-word',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
     '& code': {
       background: 'transparent',
       border: 'none',
