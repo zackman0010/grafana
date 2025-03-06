@@ -12,7 +12,7 @@ export const readCommunityDashboardTool = tool(
     const { id } = readCommunityDashboardSchema.parse(input);
 
     try {
-      return JSON.stringify(await getBackendSrv().get(`/api/gnet/dashboards/${id}`));
+      return JSON.stringify((await getBackendSrv().get(`/api/gnet/dashboards/${id}`)).json);
     } catch (error) {
       return JSON.stringify({});
     }
