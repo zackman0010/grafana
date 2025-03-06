@@ -114,7 +114,7 @@ export function generateSystemPrompt(): BaseMessage[] {
           id: 'toolu_01WZVskhEnnghSBhHPZ6mxVZ',
           name: 'search_prometheus_metrics',
           input: {
-            datasource_uid: 'cortex-dev-01',
+            datasource_uid: 'foo-datasource-uid',
             metric_patterns: ['foo.*', 'bar.*'],
             start: 1741202198789,
             end: 1741205798789,

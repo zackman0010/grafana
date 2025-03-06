@@ -55,6 +55,7 @@ When working with observability data:
 
 ### 2. INVESTIGATION
 - COMPREHENSIVE ANALYSIS: Examine multiple metrics and potentially logs
+- WORK WITH THE USER: Don't go too far go step by step, if you need more information ask the user for more details.
 - METHODICAL APPROACH: Follow a structured troubleshooting process
 - CORRELATION: Connect different signals to identify patterns and root causes
 - WORKFLOW:
