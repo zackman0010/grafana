@@ -26,6 +26,29 @@ interface AttributeCategory {
 
 // Order matters
 const standardAttributeResources: Record<string, AttributeCategory> = {
+  'gf.feo11y': {
+    icon: 'frontend-observability',
+    title: 'Grafana RUM',
+    getTitle: (attributes) => {
+      const name = attributes['gf.feo11y.app.name'];
+      return `Grafana RUM${name ? ` (${name})` : ''}`;
+    },
+    component: ({ attributes, timeRange }) => {
+      const name = attributes['gf.feo11y.app.name'];
+      if (!name) {
+        return null;
+      }
+      return (
+        <EntityAssertion
+          name={name}
+          additionalMatchers={undefined}
+          scope={{}}
+          entityType="Frontend"
+          range={timeRange}
+        />
+      );
+    },
+  },
   service: {
     icon: 'application-observability',
     title: 'Service',
@@ -69,29 +92,6 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       return undefined;
     },
   },
-  'gf.feo11y': {
-    icon: 'frontend-observability',
-    title: 'Grafana RUM',
-    getTitle: (attributes) => {
-      const name = attributes['gf.feo11y.app.name'];
-      return `Grafana RUM${name ? `(${name})` : ''}`;
-    },
-    component: ({ attributes, timeRange }) => {
-      const name = attributes['gf.feo11y.app.name'];
-      if (!name) {
-        return null;
-      }
-      return (
-        <EntityAssertion
-          name={name}
-          additionalMatchers={undefined}
-          scope={{}}
-          entityType="Frontend"
-          range={timeRange}
-        />
-      );
-    },
-  },
   k8s: {
     icon: 'kubernetes',
     title: 'Kubernetes',
@@ -122,6 +122,30 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
       );
     },
   },
+  process: { icon: 'process', title: 'Process' },
+  'process.runtime': {
+    icon: 'process',
+    title: 'Runtime',
+    getTitle: (attributes) => {
+      const name = attributes['process.runtime.name'];
+      const version = attributes['process.runtime.version'];
+      // Note for post hackathon: I'm starting to see a pattern of " (name version)" which could be a template that is reused instead of this WET
+      return `Runtime${name ? ` (${name}${version ? ` ${version}` : ''})` : ''}`;
+    },
+  },
+  container: { icon: 'docker', title: 'Container' },
+  host: { icon: 'cube', title: 'Host' },
+  deployment: { icon: 'rocket', title: 'Deployment' },
+  cloud: {
+    icon: 'cloud',
+    title: 'Cloud',
+    getTitle: (attributes) => {
+      const provider = attributes['cloud.provider'];
+      const zone = attributes['cloud.availability_zone'];
+      return `Cloud${provider ? ` (${provider}${zone ? ` ${zone}` : ''})` : ''}`;
+    },
+  },
+  db: { icon: 'database', title: 'Database' },
   'telemetry.sdk': {
     icon: 'graph-bar',
     title: 'Telemetry SDK',
@@ -137,29 +161,6 @@ const standardAttributeResources: Record<string, AttributeCategory> = {
     },
   },
   'telemetry.distro': { icon: 'graph-bar', title: 'Telemetry Distro' },
-  cloud: {
-    icon: 'cloud',
-    title: 'Cloud',
-    getTitle: (attributes) => {
-      const provider = attributes['cloud.provider'];
-      const zone = attributes['cloud.availability_zone'];
-      return `Cloud${provider ? ` (${provider}${zone ? ` ${zone}` : ''})` : ''}`;
-    },
-  },
-  host: { icon: 'cube', title: 'Host' },
-  deployment: { icon: 'rocket', title: 'Deployment' },
-  db: { icon: 'database', title: 'Database' },
-  'process.runtime': {
-    icon: 'process',
-    title: 'Runtime',
-    getTitle: (attributes) => {
-      const name = attributes['process.runtime.name'];
-      const version = attributes['process.runtime.version'];
-      // Note for post hackathon: I'm starting to see a pattern of " (name version)" which could be a template that is reused instead of this WET
-      return `Runtime${name ? ` (${name}${version ? ` ${version}` : ''})` : ''}`;
-    },
-  },
-  process: { icon: 'process', title: 'Process' },
   // 'os': { icon: 'os-linux', title: 'OS' },
 } as const;
 
