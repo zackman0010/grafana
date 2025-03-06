@@ -44,7 +44,6 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
       }
 
       if (!voices.length) {
-        console.error('No voices available after loading attempt');
         return;
       }
 
@@ -55,7 +54,6 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
         if (savedVoice) {
           this._defaultVoice = savedVoice;
           this._voiceInitialized = true;
-          console.log('Using saved voice:', savedVoice.name);
           return;
         }
       }
@@ -78,18 +76,14 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
       }
 
       this._voiceInitialized = true;
-      console.log('Selected voice:', this._defaultVoice?.name);
     } catch (error) {
-      console.error('Error initializing voice:', error);
+      // Silently handle errors
     }
   }
 
   public speak(text: string) {
     this.checkCanSpeak();
-    console.log('Attempting to speak:', { canSpeak: this.state.canSpeak, speaking: this.state.speaking, text });
-
     if (!this.state.canSpeak) {
-      console.log('Speech is disabled');
       return;
     }
 
@@ -106,52 +100,41 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
         // Set the voice if available
         if (this._defaultVoice) {
           utterance.voice = this._defaultVoice;
-          console.log('Using voice:', this._defaultVoice.name);
-        } else {
-          console.log('No voice selected, using default');
         }
 
         utterance.onstart = () => {
-          console.log('Speech started');
           this.setState({ speaking: true });
         };
 
         utterance.onend = () => {
-          console.log('Speech ended');
           this.setState({ speaking: false });
         };
 
-        utterance.onerror = (event) => {
-          console.error('Speech error:', event);
+        utterance.onerror = () => {
           this.setState({ speaking: false });
         };
 
         utterance.onpause = () => {
-          console.log('Speech paused');
+          // Handle pause if needed
         };
 
         utterance.onresume = () => {
-          console.log('Speech resumed');
+          // Handle resume if needed
         };
 
         this._utterance = utterance;
-        console.log('Starting speech synthesis');
         window.speechSynthesis.speak(utterance);
 
         // Add a timeout to check if speech actually started
         setTimeout(() => {
           if (!this.state.speaking) {
-            console.log('Speech did not start within timeout, retrying...');
             this.stop();
             window.speechSynthesis.speak(utterance);
           }
         }, 1000);
       } catch (error) {
-        console.error('Error in speak method:', error);
         this.setState({ speaking: false });
       }
-    } else {
-      console.log('Already speaking, ignoring new speech request');
     }
   }
 
@@ -164,7 +147,6 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
   }
 
   public setCanSpeak(canSpeak: boolean) {
-    console.log('Setting canSpeak to:', canSpeak);
     localStorage.setItem('grafana.dash.exp.canSpeak', String(canSpeak));
     this.setState({ canSpeak });
   }
@@ -172,7 +154,6 @@ export class TextToSpeech extends SceneObjectBase<TextToSpeechState> {
   private checkCanSpeak() {
     const canSpeak = localStorage.getItem('grafana.dash.exp.canSpeak') === 'true';
     if (canSpeak !== this.state.canSpeak) {
-      console.log('Updating canSpeak state:', canSpeak);
       this.setState({ canSpeak });
     }
   }
