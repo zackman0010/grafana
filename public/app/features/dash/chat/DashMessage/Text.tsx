@@ -102,7 +102,7 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     },
 
     p: {
-      marginBottom: theme.spacing(1),
+      margin: theme.spacing(1, 0),
     },
 
     code: {
