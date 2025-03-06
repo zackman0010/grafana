@@ -39,6 +39,7 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
 
   try {
     const dashboard = window.__grafanaSceneContext;
+    dashboard.onEnterEditMode();
 
     // Create a new VizPanel with the provided configuration
     const vizPanel = new VizPanel({
@@ -62,7 +63,7 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
 
     // Add the panel to the dashboard
     dashboard.addPanel(vizPanel, config.gridPos?.x, config.gridPos?.y, config.gridPos?.w, config.gridPos?.h);
-
+    dashboard.forceRender();
     return JSON.stringify({
       success: true,
       panelId: vizPanel.state.key,
@@ -77,7 +78,7 @@ async function addSinglePanel(config: z.infer<typeof panelConfigSchema>): Promis
   }
 }
 
-export const addDashboardPanelsTool = tool(
+export const addDashboardPanelTool = tool(
   async (input): Promise<string> => {
     const panelConfig = addDashboardPanelSchema.parse(input);
 

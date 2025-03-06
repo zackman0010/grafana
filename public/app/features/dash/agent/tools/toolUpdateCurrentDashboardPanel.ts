@@ -7,7 +7,7 @@ import { DashboardScene } from '../../../dashboard-scene/scene/DashboardScene';
 import { findOriginalVizPanelByKey } from '../../../dashboard-scene/utils/utils';
 
 const panelUpdateItemSchema = z.object({
-  id: z.number().describe('The ID of the panel to update'),
+  panelId: z.string().describe('The ID of the panel to update'),
   title: z.string().optional().describe('The title of the panel'),
   description: z.string().optional().describe('The description of the panel'),
   pluginId: z.string().optional().describe('The ID of the panel plugin to use'),
@@ -52,7 +52,7 @@ function generateDiffMarkdown(oldState: VizPanelState, newState: VizPanelState):
 }
 
 async function updateSinglePanel(
-  id: number,
+  panelId: string,
   title?: string,
   description?: string,
   pluginId?: string,
@@ -62,10 +62,10 @@ async function updateSinglePanel(
   transformations?: unknown[],
   datasource_uid?: string
 ): Promise<string> {
-  const panel = findOriginalVizPanelByKey(window.__grafanaSceneContext, `${id}`);
+  const panel = findOriginalVizPanelByKey(window.__grafanaSceneContext, panelId);
   if (!panel) {
     return JSON.stringify({
-      error: `Panel with ID ${id} not found`,
+      error: `Panel with ID ${panelId} not found`,
       details: 'The panel you are trying to update does not exist in the current dashboard.',
     });
   }
@@ -93,13 +93,13 @@ async function updateSinglePanel(
 
     if (options) {
       panel.setState({
-        options: { ...panel.state.options, ...options },
+        options: options,
       });
     }
 
     if (fieldConfig) {
       panel.setState({
-        fieldConfig: { ...panel.state.fieldConfig, ...fieldConfig },
+        fieldConfig: fieldConfig as any,
       });
     }
 
@@ -148,7 +148,6 @@ async function updateSinglePanel(
 
     // Check for panel errors after update
     const panelState = panel.state;
-    panel.forceRender();
 
     // Check for plugin load errors
     if ('_pluginLoadError' in panelState && panelState._pluginLoadError) {
@@ -195,10 +194,11 @@ async function updatePanels(panelUpdates: Array<z.infer<typeof panelUpdateItemSc
   const results: Record<string, any> = {};
 
   for (const update of panelUpdates) {
-    const { id, title, description, pluginId, options, fieldConfig, targets, transformations, datasource_uid } = update;
+    const { panelId, title, description, pluginId, options, fieldConfig, targets, transformations, datasource_uid } =
+      update;
 
     const result = await updateSinglePanel(
-      id,
+      panelId,
       title,
       description,
       pluginId,
@@ -209,13 +209,13 @@ async function updatePanels(panelUpdates: Array<z.infer<typeof panelUpdateItemSc
       datasource_uid
     );
 
-    results[id] = JSON.parse(result);
+    results[panelId] = JSON.parse(result);
   }
 
   return results;
 }
 
-export const updateCurrentDashboardPanelsTool = tool(
+export const updateCurrentDashboardPanelTool = tool(
   async (input): Promise<string> => {
     if (!(window.__grafanaSceneContext instanceof DashboardScene)) {
       return JSON.stringify({
@@ -226,22 +226,13 @@ export const updateCurrentDashboardPanelsTool = tool(
     const dashboard = window.__grafanaSceneContext;
     dashboard.onEnterEditMode();
 
-    if (typeof input === 'string') {
-      input = JSON.parse(input);
-    }
-
-    if (!Array.isArray(input)) {
-      input = [input] as any;
-    }
-
     const parsedInput = panelUpdateSchema.parse(input);
 
     // Multiple panel updates
     const results = await updatePanels(parsedInput);
-    dashboard.forceRender();
     return JSON.stringify({
       success: true,
-      // results,
+      results,
     });
   },
   {
@@ -260,122 +251,7 @@ Best practices:
 - Ensure datasource references are valid
 - Test complex visualizations incrementally
 
-Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.
-
-Examples of valid input:
-
-Simple panel title update:
-\`\`\`json
-[
-  {
-    "id": "panel-123",
-    "title": "New Panel Title"
-  }
-]
-\`\`\`
-
-Multiple panel updates:
-\`\`\`json
-[
-  {
-    "id": "panel-123",
-    "title": "CPU Usage",
-    "description": "Shows CPU usage over time"
-  },
-  {
-    "id": "panel-456",
-    "pluginId": "timeseries",
-    "options": {
-      "legend": {
-        "displayMode": "table",
-        "placement": "bottom"
-      }
-    }
-  }
-]
-\`\`\`
-
-Complex panel update with data source and targets:
-\`\`\`json
-[
-  {
-    "id": "panel-789",
-    "title": "Memory Usage",
-    "pluginId": "timeseries",
-    "datasource_uid": "prometheus",
-    "targets": [
-      {
-        "refId": "A",
-        "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / sum(node_memory_MemTotal_bytes) * 100",
-        "legendFormat": "Memory Usage"
-      }
-    ],
-    "options": {
-      "tooltip": {
-        "mode": "single",
-        "sort": "none"
-      }
-    },
-    "fieldConfig": {
-      "defaults": {
-        "custom": {
-          "drawStyle": "line",
-          "lineInterpolation": "linear",
-          "barAlignment": 0,
-          "barWidthFactor": 0.6,
-          "lineWidth": 1,
-          "fillOpacity": 10,
-          "gradientMode": "none",
-          "spanNulls": false,
-          "insertNulls": false,
-          "showPoints": "never",
-          "pointSize": 5,
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          },
-          "axisPlacement": "auto",
-          "axisLabel": "",
-          "axisColorMode": "text",
-          "axisBorderShow": false,
-          "scaleDistribution": {
-            "type": "linear"
-          },
-          "axisCenteredZero": false,
-          "hideFrom": {
-            "tooltip": false,
-            "viz": false,
-            "legend": false
-          },
-          "thresholdsStyle": {
-            "mode": "off"
-          }
-        },
-        "color": {
-          "mode": "shades",
-          "fixedColor": "orange"
-        },
-        "mappings": [],
-        "thresholds": {
-          "mode": "absolute",
-          "steps": [
-            {
-              "color": "green",
-              "value": null
-            },
-            {
-              "color": "red",
-              "value": 80
-            }
-          ]
-        },
-        "unit": "reqps"
-      },
-      "overrides": []
-    }
-  }
-]
-\`\`\``,
+Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.`,
     schema: panelUpdateSchema,
   }
 );

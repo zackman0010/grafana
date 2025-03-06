@@ -18,7 +18,7 @@ import { prometheusLabelNamesTool } from './prometheusLabelNames';
 import { prometheusLabelValuesTool } from './prometheusLabelValues';
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusRangeQueryTool } from './prometheusRangeQuery';
-import { addDashboardPanelsTool } from './toolAddDashboardPanels';
+import { addDashboardPanelTool } from './toolAddDashboardPanel';
 import { createDashboardTool } from './toolCreateDashboard';
 import { simulateToolError } from './toolDevSimulateToolError';
 import { devSleep } from './toolDevSleep';
@@ -66,7 +66,7 @@ export const tools = [
   navigateToOtherTool,
   navigateToDeclareIncidentTool,
   updateCurrentDashboardPanelsTool,
-  addDashboardPanelsTool,
+  addDashboardPanelTool,
   getDrilldownLogToSummarizeTool,
   simulateToolError,
   dashboardSearchTool,
