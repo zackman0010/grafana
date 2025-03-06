@@ -39,8 +39,14 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   }
 
   private _removeToolAndMessage(toolId: string) {
-    // Remove the tool from messages
     const messages = getMessages(this);
+    console.log('------ DashInput._removeToolAndMessage: Starting', {
+      toolId,
+      loading: messages.state.loading,
+      anyToolsWorking: messages.state.anyToolsWorking,
+    });
+
+    // Remove the tool from messages
     messages.state.messages.forEach((message) => {
       const updatedChildren = message.state.children.filter((child) => {
         if (child instanceof Tool && child.state.content.id === toolId) {
@@ -88,6 +94,17 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       content: JSON.stringify({ status: 'cancelled', message: 'Operation cancelled by user' }),
     });
     messages.addLangchainMessage(cancelResult);
+
+    // Update loading state if no more tools are working
+    const anyToolsStillWorking = messages.state.messages.some((message) => message.hasWorkingTools());
+    if (!anyToolsStillWorking) {
+      messages.setToolWorking(undefined, false);
+    }
+
+    console.log('------ DashInput._removeToolAndMessage: Completing', {
+      loading: messages.state.loading,
+      anyToolsWorking: messages.state.anyToolsWorking,
+    });
   }
 
   public constructor(state: Partial<Pick<DashInputState, 'message'> & Pick<SpeechState, 'listening'>>) {
