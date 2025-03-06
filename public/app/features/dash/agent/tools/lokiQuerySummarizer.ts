@@ -17,6 +17,15 @@ interface SummarizationRequest {
 }
 
 /**
+ * Simple interface for data frame structure
+ */
+interface DataFrame {
+  fields?: Array<{ name: string; values?: any; labels?: any }>;
+  name?: string;
+  length?: number;
+}
+
+/**
  * System prompt template for guiding the LLM in summarizing Loki query results
  */
 const SYSTEM_PROMPT_TEMPLATE = `
@@ -84,11 +93,11 @@ function prepareQueryResultForLLM(result: any): string {
   let formattedData = "QUERY_RESULT:";
 
   // Determine result type (logs or metrics)
-  const isLogResult = frames.some(frame =>
+  const isLogResult = frames.some((frame: DataFrame) =>
     frame.fields && frame.fields.some((field: any) => field.name === 'line')
   );
 
-  const isMetricResult = frames.some(frame =>
+  const isMetricResult = frames.some((frame: DataFrame) =>
     frame.fields && frame.fields.some((field: any) => field.name === 'Value')
   );
 
@@ -102,9 +111,9 @@ function prepareQueryResultForLLM(result: any): string {
       formattedData += "\nLOG_ENTRIES:";
 
       for (let i = 0; i < maxLogEntries; i++) {
-        const timestampField = frames[0].fields.find((f: any) => f.name === 'ts' || f.name === 'Time');
-        const lineField = frames[0].fields.find((f: any) => f.name === 'line');
-        const labelsField = frames[0].fields.find((f: any) => f.name === 'labels');
+        const timestampField = frames[0].fields?.find((f: any) => f.name === 'ts' || f.name === 'Time');
+        const lineField = frames[0].fields?.find((f: any) => f.name === 'line');
+        const labelsField = frames[0].fields?.find((f: any) => f.name === 'labels');
 
         if (timestampField && lineField) {
           const timestamp = timestampField.values.get(i);
@@ -137,11 +146,11 @@ function prepareQueryResultForLLM(result: any): string {
 
     // Process each series (frame)
     for (let i = 0; i < frames.length; i++) {
-      const frame = frames[i];
+      const frame = frames[i] as DataFrame;
       const nameField = frame.name || `Series ${i + 1}`;
 
       // Find label fields to extract metric names and labels
-      const labelField = frame.fields.find((f: any) => f.labels);
+      const labelField = frame.fields?.find((f: any) => f.labels);
       let labels = '';
       if (labelField && labelField.labels) {
         labels = Object.entries(labelField.labels)
@@ -152,8 +161,8 @@ function prepareQueryResultForLLM(result: any): string {
       formattedData += `\n\nSERIES ${i + 1}: ${nameField} {${labels}}`;
 
       // Extract times and values
-      const timeField = frame.fields.find((f: any) => f.name === 'Time');
-      const valueField = frame.fields.find((f: any) => f.name === 'Value');
+      const timeField = frame.fields?.find((f: any) => f.name === 'Time');
+      const valueField = frame.fields?.find((f: any) => f.name === 'Value');
 
       if (timeField && valueField) {
         const times = timeField.values.toArray();

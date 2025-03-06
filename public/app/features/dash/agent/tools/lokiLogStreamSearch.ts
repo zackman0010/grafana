@@ -192,6 +192,8 @@ export const lokiLogStreamSearchTool = tool(
        1. Processing up to ${MAX_STREAMS} log streams and extracting all their labels
        2. For each label name, collecting statistics (cardinality and sample values)
 
+       Never use this tool with a broad matchers like {}
+
        Features:
        - Limits processing to ${MAX_STREAMS} streams for performance
        - Returns all label names observed in the streams (without limitation)
