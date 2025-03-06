@@ -4,14 +4,10 @@ import { z } from 'zod';
 import { locationService } from '@grafana/runtime';
 
 const navigateToDeclareIncidentSchema = z.object({
-  title: z.string().describe('The title of the incident'),
+  title: z.string().optional().describe('The title of the incident'),
   url: z.string().url().optional().describe('Optional URL to link to the incident'),
   caption: z.string().optional().describe('Optional caption/description for the incident'),
-  navigate: z
-    .boolean()
-    .describe(
-      'Whether to navigate to the incident declaration page. Only ever set this to true if the user has confirmed to navigate.'
-    ),
+  navigate: z.boolean().describe('Whether to navigate to the incident declaration page.'),
 });
 
 export const navigateToDeclareIncidentTool = tool(
