@@ -159,7 +159,7 @@ export const addDashboardPanelTool = tool(
         "overrides": []
       }
 
-      The "defaults.color.mode" property above can have one of the following shapes { "mode": "palette" }.
+      The "defaults.color.mode" property above can have one of the following shapes { "mode": "palette" } or { "mode": "shades", "fixedColor": "a fixed color" }.
       The possible palettes are:
       - "palette-classic" - Classic Grafana palette
       - "palette-classic-by-name" - Classic Grafana palette by series name
@@ -173,6 +173,8 @@ export const addDashboardPanelTool = tool(
       - "continuous-reds" - Red palette
       - "continuous-greens" - Green palette
       - "continuous-purples" - Purple palette
+      Fixed colors can be either a RGB color or one of: red, orange, yellow, green, blue, purple.
+      By default try to use something that is using the Grafana colors but it's more modern or futuristic
 
       The targets are the targets to use for a query to run. Each target is one query to run. An EXAMPLE of a target is:
       {
