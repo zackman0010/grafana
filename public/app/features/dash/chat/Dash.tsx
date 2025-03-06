@@ -183,29 +183,33 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
           <Dropdown
             overlay={
               <Menu className={styles.chatMenu}>
-                {chats
-                  .map((chat, index) =>
-                    index === chatIndex ? null : (
-                      <div key={chat.state.key} className={styles.chatMenuItem}>
-                        <div className={styles.chatMenuItemText} onClick={() => model.setCurrentChat(index)}>
-                          {chat.state.name}
-                        </div>
-                        <Icon
-                          name="times"
-                          className={styles.removeChatIcon}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            model.removeChat(index);
-                          }}
-                        />
-                      </div>
-                    )
-                  )
-                  .reverse()}
-
-                <Menu.Divider />
-
-                {chats.length > 1 && <Menu.Item icon="times" label="Clear all" onClick={() => model.clearChats()} />}
+                {chats.length > 1 ? (
+                  <>
+                    {chats
+                      .map((chat, index) =>
+                        index === chatIndex ? null : (
+                          <div key={chat.state.key} className={styles.chatMenuItem}>
+                            <div className={styles.chatMenuItemText} onClick={() => model.setCurrentChat(index)}>
+                              {chat.state.name}
+                            </div>
+                            <Icon
+                              name="times"
+                              className={styles.removeChatIcon}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                model.removeChat(index);
+                              }}
+                            />
+                          </div>
+                        )
+                      )
+                      .reverse()}
+                    <Menu.Divider />
+                    <Menu.Item icon="times" label="Clear all" onClick={() => model.clearChats()} />
+                  </>
+                ) : (
+                  <Menu.Item disabled label="No chat history yet" />
+                )}
               </Menu>
             }
             placement="bottom-start"
@@ -334,6 +338,15 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     minWidth: '200px',
     backgroundColor: theme.colors.background.primary,
     border: `1px solid ${theme.colors.border.weak}`,
+    '&:focus': {
+      outline: 'none',
+      border: `1px solid ${theme.colors.border.weak}`,
+    },
+    '& [class*="menu-item"]': {
+      '&[class*="disabled"]': {
+        color: theme.colors.text.secondary,
+      },
+    },
   }),
   chatMenuItem: css({
     label: 'dash-chat-menu-item',
