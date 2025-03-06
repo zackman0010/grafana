@@ -254,8 +254,6 @@ Before using this tool:
 1. First retrieve existing panel configurations using the read_dashboard_panels tool
 2. For new dashboards or unfamiliar panel types, research panel schemas using grafana_com_docs_search
 
-This tool will automatically put the dashboard in edit mode. Each panel update in the array should include a panelId and any properties you wish to modify (title, description, options, etc.).
-
 Best practices:
 - Provide clear, descriptive panel titles and helpful descriptions
 - Keep panel configurations focused on visualizing specific metrics or data points
@@ -264,120 +262,8 @@ Best practices:
 
 Example usage: Update multiple panels in a single operation, such as changing titles, visualization options, or data sources across several panels.
 
-Examples of valid input:
-
-Simple panel title update:
-\`\`\`json
-[
-  {
-    "id": "panel-123",
-    "title": "New Panel Title"
-  }
-]
-\`\`\`
-
-Multiple panel updates:
-\`\`\`json
-[
-  {
-    "id": "panel-123",
-    "title": "CPU Usage",
-    "description": "Shows CPU usage over time"
-  },
-  {
-    "id": "panel-456",
-    "pluginId": "timeseries",
-    "options": {
-      "legend": {
-        "displayMode": "table",
-        "placement": "bottom"
-      }
-    }
-  }
-]
-\`\`\`
-
-Complex panel update with data source and targets:
-\`\`\`json
-[
-  {
-    "id": "panel-789",
-    "title": "Memory Usage",
-    "pluginId": "timeseries",
-    "datasource_uid": "prometheus",
-    "targets": [
-      {
-        "refId": "A",
-        "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / sum(node_memory_MemTotal_bytes) * 100",
-        "legendFormat": "Memory Usage"
-      }
-    ],
-    "options": {
-      "tooltip": {
-        "mode": "single",
-        "sort": "none"
-      }
-    },
-    "fieldConfig": {
-      "defaults": {
-        "custom": {
-          "drawStyle": "line",
-          "lineInterpolation": "linear",
-          "barAlignment": 0,
-          "barWidthFactor": 0.6,
-          "lineWidth": 1,
-          "fillOpacity": 10,
-          "gradientMode": "none",
-          "spanNulls": false,
-          "insertNulls": false,
-          "showPoints": "never",
-          "pointSize": 5,
-          "stacking": {
-            "mode": "none",
-            "group": "A"
-          },
-          "axisPlacement": "auto",
-          "axisLabel": "",
-          "axisColorMode": "text",
-          "axisBorderShow": false,
-          "scaleDistribution": {
-            "type": "linear"
-          },
-          "axisCenteredZero": false,
-          "hideFrom": {
-            "tooltip": false,
-            "viz": false,
-            "legend": false
-          },
-          "thresholdsStyle": {
-            "mode": "off"
-          }
-        },
-        "color": {
-          "mode": "shades",
-          "fixedColor": "orange"
-        },
-        "mappings": [],
-        "thresholds": {
-          "mode": "absolute",
-          "steps": [
-            {
-              "color": "green",
-              "value": null
-            },
-            {
-              "color": "red",
-              "value": 80
-            }
-          ]
-        },
-        "unit": "reqps"
-      },
-      "overrides": []
-    }
-  }
-]
-\`\`\``,
+Remind users to save the dashboard to keep the changes.
+`,
     schema: panelUpdateSchema,
     metadata: {
       explainer: () => {
