@@ -36,6 +36,7 @@ Follow these guidelines:
 6. Highlight critical anomalies or threshold breaches first
 7. Do not explain methodology or provide context - just the key findings
 8. Include labels and series name in the observation if relevant
+9. If nothing is found, just say "No data found"
 
 Your response should be extremely brief - no introductions, no explanations, just the 1-5 most important observations in bullet point format.
 `;
@@ -208,7 +209,7 @@ function prepareQueryResultForLLM(result: any): string {
     const frame = cleanFrames[i];
 
     // Extract name, either from frame.name, schema.meta.executedQueryString, or using the series index
-    let name = frame.name || `Series${i+1}`;
+    let name = frame.name || `Series${i + 1}`;
     let query = "";
     if (!frame.name && frame.schema?.meta?.executedQueryString) {
       const queryMatch = frame.schema.meta.executedQueryString.match(/Expr: (.+)(?:\nStep:|$)/);
@@ -229,7 +230,7 @@ function prepareQueryResultForLLM(result: any): string {
     const labelField = fieldsList.find((f: any) => f.labels);
     if (labelField) {
       metricName = labelField.name || "";
-      labels = {...labelField.labels};
+      labels = { ...labelField.labels };
 
       // Remove common labels to avoid repetition
       Object.keys(commonLabels).forEach(key => {
@@ -256,7 +257,7 @@ function prepareQueryResultForLLM(result: any): string {
       );
 
       if (timeIndex >= 0 && valueIndex >= 0 &&
-          frame.data.values[timeIndex] && frame.data.values[valueIndex]) {
+        frame.data.values[timeIndex] && frame.data.values[valueIndex]) {
         times = frame.data.values[timeIndex];
         values = frame.data.values[valueIndex];
       }
@@ -295,7 +296,7 @@ function prepareQueryResultForLLM(result: any): string {
     // Calculate intervals between consecutive timestamps
     const intervals = new Set<number>();
     for (let i = 1; i < sortedTimestamps.length; i++) {
-      intervals.add(sortedTimestamps[i] - sortedTimestamps[i-1]);
+      intervals.add(sortedTimestamps[i] - sortedTimestamps[i - 1]);
     }
 
     // If there's only one unique interval, it's regular
@@ -322,7 +323,7 @@ function prepareQueryResultForLLM(result: any): string {
   for (let i = 0; i < allSeriesData.length; i++) {
     const series = allSeriesData[i];
 
-    formattedData += `\nSERIES${i+1}:${series.metricName}`;
+    formattedData += `\nSERIES${i + 1}:${series.metricName}`;
 
     // Add unique labels for this series
     if (Object.keys(series.labels).length > 0) {

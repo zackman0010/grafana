@@ -10,7 +10,21 @@ export const queryLanguageGuide = `
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
 - You cannot limit the number of logs in LogQL you need to use the tool parameter. (eg. \`{app="frontend"} | limit 10\` is not syntactically correct)
 
-Use backticks to escape strings in the query specially for regexes and go template syntax in queries. |= \`foo\`
+Use backticks to for strings in the query specially for regexes and go template syntax in queries. |= \`foo\` This makes query easier to craft.
+However when using backticks, you need can't escape them in the query. So if you need to match a backtick in the query, you need to use "\\\`" instead.
+
+Regexes in LogQL are golang RE2 syntax. When searching for multiple wild card use multiples regex filter since ordering matters.
+
+|= "dash.*foo" does not match "foo dash"
+|= "foo" |~ "dash.*" matches "foo dash"
+
+You cannot combine logs and metrics in the same query. It's either logs or metrics.
+
+Invalid:
+{app="frontend"} | sum by (foo) (rate({app="frontend"}[5m]))
+
+Valid:
+sum by (foo) (rate({app="frontend"}[5m]))
 
 ### Basic Structure
 \`\`\`
@@ -38,6 +52,9 @@ To combine multiple search use regex:
 - {app="foo"} |~ "error|warning"
 
 ### Pipeline Operations
+
+Pipeline operations are used to transform and filter the log lines.
+
 - \`|= "error"\` - Contains text
 - \`|!= "timeout"\` - Does not contain
 - \`|~ \`"error.*timeout"\`\` - Regex match
@@ -91,6 +108,14 @@ You should always use grouping either by or vector aggregations or range vector 
 
 Avoid querying with only regex selectors as it will return a lot of data and impact performance. {service_name=~".+"}
 Always filter with at least one label to narrow down the data.
+
+PILINE AS | ...  CANNOT BE USED TO GROUP BY OR AGGREGATE BY LABELS LOGS You need to use range and vector aggregations.
+
+Valid:
+sum by (foo) (rate({app="frontend"}[5m]))
+
+Invalid:
+{app="frontend"} | count by (foo)
 
 
 Valid:

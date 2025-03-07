@@ -44,12 +44,14 @@ Follow these guidelines:
    - Extract key information related to the user's intent
    - Highlight anomalies, errors, or unusual patterns
    - Provide concise, actionable insights
+   - If nothing is found, just say "No data found"
 
 3. For metrics:
    - Focus on 3-5 key observations about the data patterns
    - Include specific numbers, min/max values, and interesting trends
    - Identify anomalies, spikes, or unusual behavior
    - Relate findings directly to the user's intent
+   - If nothing is found, just say "No data found"
 
 Be extremely concise, focus solely on insights directly related to the user's intent.
 Format your response in clear sections with bullet points for observations.
