@@ -27,12 +27,7 @@ import { addDashboardPanelTool } from './toolAddDashboardPanel';
 import { createDashboardTool } from './toolCreateDashboard';
 import { simulateToolError } from './toolDevSimulateToolError';
 import { devSleep } from './toolDevSleep';
-import { toolGetCanSpeak } from './toolGetCanSpeak';
-import { toolGetSpeechVoices } from './toolGetSpeechVoices';
 import { readDashboardPanelsTool } from './toolReadDashboardPanels';
-import { toolSetSpeakingOff } from './toolSetSpeakingOff';
-import { toolSetSpeakingOn } from './toolSetSpeakingOn';
-import { toolSetSpeechVoice } from './toolSetSpeechVoice';
 import { updateCurrentDashboardPanelsTool } from './toolUpdateCurrentDashboardPanels';
 
 const grafanaComSearch = new TavilySearchResults({
@@ -113,11 +108,6 @@ export const tools = [
   lokiQueryTool,
   addDashboardVariableTool,
   readCommunityDashboardTool,
-  toolGetCanSpeak,
-  toolSetSpeakingOff,
-  toolSetSpeakingOn,
-  toolGetSpeechVoices,
-  toolSetSpeechVoice,
 ];
 
 export const toolsByName = tools.reduce(
