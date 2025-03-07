@@ -44,9 +44,9 @@ export function getProviderTriggers(component: React.FunctionComponent<{ entity:
 
 function getDataProviderForTrigger(trigger: string) {
   switch (trigger) {
-    case 'Datasources':
+    case 'datasources':
       return datasourceDataProvider;
-    case 'Dashboards':
+    case 'dashboards':
       return dashboardDataProvider;
     default:
       return notImplementedDataProvider;
@@ -55,7 +55,7 @@ function getDataProviderForTrigger(trigger: string) {
 
 async function datasourceDataProvider(token: string) {
   // Removes the datasource prefix from the trigger
-  const actualToken = token.substring(10);
+  const actualToken = token.substring(11);
   const dataSources = await getDataSources();
 
   return dataSources
@@ -66,7 +66,7 @@ async function datasourceDataProvider(token: string) {
 let dashboards: DashboardSearchItem[];
 async function dashboardDataProvider(token: string) {
   // Removes the dashboard prefix from the trigger
-  const actualToken = token.substring(9);
+  const actualToken = token.substring(10);
 
   if (!dashboards) {
     await getDashboards();
