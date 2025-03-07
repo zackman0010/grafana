@@ -41,9 +41,6 @@ export class Dash extends SceneObjectBase<DashState> {
       settings: new DashSettings(),
     });
 
-    // Now we can safely use this to generate and set the proper title
-    this.state.chats[0].setName(this._generateTimeBasedTitle());
-
     this.addActivationHandler(() => this._activationHandler());
 
     this.activate();
@@ -103,7 +100,11 @@ export class Dash extends SceneObjectBase<DashState> {
           opened: opened ?? false,
         });
       }),
-    ]).finally(() => this.setState({ initializing: false }));
+    ]).finally(() => {
+      this.setState({ initializing: false });
+      // Now we can safely use this to generate and set the proper title
+      this.state.chats[0].setName(this._generateTimeBasedTitle());
+    });
   }
 
   public setOpened(opened: boolean) {
