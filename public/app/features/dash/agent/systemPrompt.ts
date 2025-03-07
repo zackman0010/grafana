@@ -14,7 +14,6 @@ import { listDatasourcesTool } from './tools/listDatasources';
 import { createDashboardTool } from './tools/toolCreateDashboard';
 import { workflowSystemPrompt } from './workflowSystemPrompt';
 
-
 // Create a prompt template with instructions to format the response as JSON
 const SYSTEM_PROMPT_TEMPLATE = `
 # Grafana Observability Agent
@@ -97,10 +96,11 @@ Your response must always follow this format:
 </json>
 
 ## Communication Style and Tone
-${getPersistedSetting('verbosity') === 'educational'
+${
+  getPersistedSetting('verbosity') === 'educational'
     ? '- Explain concepts as if speaking to someone new to Grafana\n- Break down technical terms and explain the reasoning behind each step\n- Provide context for why certain approaches are used\n- Use analogies where helpful and encourage questions\n- Be more verbose and provide helpful reminders in brackets, for example "The following datasources (systems we can pull data from) are available"\n- Always suggest helpful next steps for further exploration or improvement'
     : '- Be concise and efficient in your responses\n- Use clear, direct language that conveys information with minimal text\n- Avoid unnecessary explanations or repetition\n- Focus on delivering exactly what was requested without extra context'
-  }
+}
 - Always maintain a friendly, helpful demeanor
 - Refer to yourself as an "Agent" rather than an assistant
 - Balance technical accuracy with accessibility
@@ -157,14 +157,12 @@ export function generateSystemPrompt(): BaseMessage[] {
 
   // Create few-shot examples directly instead of using a template
   const fewshotMessages: BaseMessage[] = [
-    new HumanMessage(
-      'Can you analyze the something the foo namespace?'
-    ),
+    new HumanMessage('Can you analyze <something> the <foo> namespace?'),
     new AIMessage({
       content: [
         {
           type: 'text',
-          text: "I'll help with the something the foo namespace. Let me gather that data for you.\n\nFirst, I need to find the appropriate metrics for something the foo namespace.",
+          text: "I'll help with analyzing <something> in the <foo> namespace. Let me gather some data for you.\n\nFirst, I need to make sure I am using the right data source, and then find the appropriate metrics for <something> in the <foo> namespace.",
         },
         {
           type: 'tool_use',
@@ -213,14 +211,12 @@ export function generateSystemPrompt(): BaseMessage[] {
         },
       ],
     }),
-    new HumanMessage(
-      'Can you show me some logs?'
-    ),
+    new HumanMessage('Can you show me some logs?'),
     new AIMessage({
       content: [
         {
           type: 'text',
-          text: "I'll help you find some logs. Let me gather that data for you.\n\nFirst, I need to find the appropriate log streams.",
+          text: "I'll help you find some logs. Let me gather some data for you.\n\nFirst, I need to make sure I am using the right data source, and then find the appropriate log streams.",
         },
         {
           type: 'tool_use',
@@ -241,7 +237,6 @@ export function generateSystemPrompt(): BaseMessage[] {
           type: 'tool_result',
           tool_use_id: 'toolu_02WZVskhEnnghSBhHPZ6mxVZ',
           content: JSON.stringify({
-
             stream_selectors: 2,
             max_streams: 10,
             max_label_values: 10,
