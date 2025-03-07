@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
-import { isLogsQuery } from 'app/plugins/datasource/loki/queryUtils';
+import { isLogsQuery, isQueryWithError } from 'app/plugins/datasource/loki/queryUtils';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
 import { buildPanelJson } from './buildPanelJson';
@@ -17,7 +17,11 @@ const lokiRangeQuerySchema = z.object({
     .string()
     .describe('The datasource UID, only supports Loki datasource')
     .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
-  query: z.string().describe('(REQUIRED) The LogQL query to execute. `{app="frontend"} | limit 10` is not valid in LogQL use tool parameter limit instead.'),
+  query: z
+    .string()
+    .describe(
+      '(REQUIRED) The LogQL query to execute. `{app="frontend"} | limit 10` is not valid in LogQL use tool parameter limit instead.'
+    ),
   start: z
     .number()
     .describe('Start timestamp for the query range (Unix millisecond timestamp)')
@@ -64,6 +68,10 @@ export const lokiRangeQueryTool = tool(
 
     // Set up time range
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
+
+    if (isQueryWithError(query)) {
+      return 'Failure. The generated query is not valid Loki LogQL syntax. Please double check and try again.';
+    }
 
     // Detect if this is likely a logs query or a metric query
     const isLogsExpr = isLogsQuery(query);
