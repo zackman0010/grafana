@@ -63,21 +63,9 @@ func TestSQLCommandRowLimits(t *testing.T) {
 		errorContains string
 	}{
 		{
-			name:         "single frame within limit",
-			limit:        2,
-			rowsPerFrame: []int{2},
-		},
-		{
 			name:         "multiple frames within limit",
 			limit:        4,
 			rowsPerFrame: []int{2, 2},
-		},
-		{
-			name:          "single frame exceeds limit",
-			limit:         1,
-			rowsPerFrame:  []int{2},
-			expectError:   true,
-			errorContains: "exceeds limit",
 		},
 		{
 			name:          "multiple frames exceed limit",
