@@ -10,6 +10,7 @@ import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 import { buildPanelJson } from './buildPanelJson';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
 import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
+import { isQueryWithError } from 'app/plugins/datasource/loki/queryUtils';
 
 const lokiInstantQuerySchema = z.object({
   datasource_uid: z
@@ -61,23 +62,15 @@ export const lokiInstantQueryTool = tool(
     // Set up time range
     const timeRange = time ? makeTimeRange(dateTime(time), dateTime(time)) : getDefaultTimeRange();
 
-    // Detect if this is likely a logs query or a metric query
-    const isLikelyLogsQuery =
-      !query.includes('rate(') &&
-      !query.includes('sum(') &&
-      !query.includes('avg(') &&
-      !query.includes('max(') &&
-      !query.includes('min(') &&
-      !query.includes('count(') &&
-      !query.includes('quantile(') &&
-      !query.includes('stddev(') &&
-      !query.includes('stdvar(');
+    if (isQueryWithError(query)) {
+      throw new Error('Failure. The generated query is not valid Loki LogQL syntax. Please double check and try again.');
+    }
 
     // Set up the query object
     const lokiQuery: LokiQuery = {
       expr: query,
       refId: 'A',
-      queryType: isLikelyLogsQuery ? LokiQueryType.Instant : LokiQueryType.Instant,
+      queryType: LokiQueryType.Instant,
       maxLines: limit,
     };
 
