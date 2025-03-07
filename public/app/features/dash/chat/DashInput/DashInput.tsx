@@ -340,7 +340,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _updateChatTitle(title: string) {
     try {
       const dash = getDash(this);
-      dash.state.chats[dash.state.chatIndex].setName(title);
+      dash.state.chats[dash.state.chatIndex].setName(title, true);
     } catch (error) {
       console.error('Error updating chat title:', error);
     }

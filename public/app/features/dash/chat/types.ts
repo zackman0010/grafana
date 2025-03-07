@@ -54,6 +54,7 @@ export interface SerializedDashChatInstance {
 
 export interface SerializedDashChat {
   name: string;
+  nameGenerated: boolean;
   versions: SerializedDashChatInstance[];
   versionIndex: number;
 }
