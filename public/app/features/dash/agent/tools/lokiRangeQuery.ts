@@ -70,7 +70,7 @@ export const lokiRangeQueryTool = tool(
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
 
     if (isQueryWithError(query)) {
-      return 'Failure. The generated query is not valid Loki LogQL syntax. Please double check and try again.';
+      throw new Error('Failure. The generated query is not valid Loki LogQL syntax. Please double check and try again.');
     }
 
     // Detect if this is likely a logs query or a metric query
