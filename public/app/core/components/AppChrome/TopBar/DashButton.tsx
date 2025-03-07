@@ -41,7 +41,7 @@ export const DashButton = () => {
 
   return (
     <>
-      <ToolbarButton iconOnly icon="ai" aria-label="Dash" ref={refs.setReference} {...getReferenceProps()} />
+      <ToolbarButton variant={opened ? 'active' : undefined} iconOnly icon="ai" aria-label="Dash" ref={refs.setReference} {...getReferenceProps()} />
 
       {opened && mode === 'floating' && (
         <Portal>
