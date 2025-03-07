@@ -1,6 +1,4 @@
-import { ChatAnthropic } from '@langchain/anthropic';
-
-import { ANTHROPIC_API_KEY } from '../agent';
+import { getAgent } from '../agent';
 
 /**
  * Interface for summarization request
@@ -223,15 +221,8 @@ export async function summarizeLokiQueryResult(
     const systemPrompt = generateSystemPrompt(request);
     const formattedData = prepareQueryResultForLLM(queryResult);
 
-    // Create LLM instance for summarization
-    const summaryLLM = new ChatAnthropic({
-      model: 'claude-3-haiku-20240307',
-      temperature: 0,
-      apiKey: ANTHROPIC_API_KEY,
-    });
-
     // Call LLM directly
-    const response = await summaryLLM.invoke([
+    const response = await getAgent().haikuLlm.invoke([
       { role: 'system', content: systemPrompt },
       { role: 'user', content: formattedData }
     ]);
