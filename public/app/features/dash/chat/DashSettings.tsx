@@ -150,7 +150,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
           </span>
         )}
         <IconButton
-          name={codeOverflow === 'scroll' ? 'ellipsis-h' : 'wrap-text'}
+          name={codeOverflow === 'scroll' ? 'wrap-text' : 'bars'}
           size="lg"
           tooltip={codeOverflowText}
           aria-label={codeOverflowText}
@@ -158,7 +158,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
         />
 
         <IconButton
-          name={showTools ? 'eye' : 'eye-slash'}
+          name={showTools ? 'wrench' : 'eye-slash'}
           size="lg"
           tooltip={showToolsText}
           aria-label={showToolsText}
@@ -166,7 +166,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
         />
 
         <IconButton
-          name={mode === 'floating' ? 'library-panel' : 'columns'}
+          name={mode === 'floating' ? 'columns' : 'layer-group'}
           size="lg"
           tooltip={modeText}
           aria-label={modeText}
