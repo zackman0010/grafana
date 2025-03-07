@@ -104,7 +104,7 @@ export class Dash extends SceneObjectBase<DashState> {
     ]).finally(() => {
       this.setState({ initializing: false });
       // Now we can safely use this to generate and set the proper title
-      this.state.chats[0].setName(this._generateTimeBasedTitle(), true);
+      this.state.chats[0].setName(this._generateTimeBasedTitle(), false);
     });
   }
 
