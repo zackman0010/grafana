@@ -5,12 +5,12 @@ import { z } from 'zod';
 import { CoreApp, dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
+import { isQueryWithError } from 'app/plugins/datasource/loki/queryUtils';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
 import { buildPanelJson } from './buildPanelJson';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
 import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
-import { isQueryWithError } from 'app/plugins/datasource/loki/queryUtils';
 
 const lokiInstantQuerySchema = z.object({
   datasource_uid: z
