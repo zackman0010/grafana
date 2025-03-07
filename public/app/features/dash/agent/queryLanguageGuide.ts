@@ -10,7 +10,7 @@ export const queryLanguageGuide = `
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
 - You cannot limit the number of logs in LogQL you need to use the tool parameter. (eg. \`{app="frontend"} | limit 10\` is not syntactically correct)
 
-Use backticks to escape strings in the query specially for regexes in queries. |= \`foo\`
+Use backticks to escape strings in the query specially for regexes and go template syntax in queries. |= \`foo\`
 
 ### Basic Structure
 \`\`\`
@@ -40,8 +40,8 @@ To combine multiple search use regex:
 ### Pipeline Operations
 - \`|= "error"\` - Contains text
 - \`|!= "timeout"\` - Does not contain
-- \`|~ "error.*timeout"\` - Regex match
-- \`|!~ "expected"\` - Negative regex
+- \`|~ \`"error.*timeout"\`\` - Regex match
+- \`|!~ \`"expected"\`\` - Negative regex
 
 
 ### Parser Operations
