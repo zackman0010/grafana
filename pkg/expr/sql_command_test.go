@@ -2,6 +2,7 @@ package expr
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"testing"
@@ -33,46 +34,55 @@ func TestNewCommand(t *testing.T) {
 	}
 }
 
+// Helper functions for creating test data
+func createFrameWithRows(rows int) *data.Frame {
+	values := make([]string, rows)
+	for i := range values {
+		values[i] = "dummy"
+	}
+	return data.NewFrame("dummy", data.NewField("dummy", nil, values))
+}
+
+func createVarsWithFrames(frames ...*data.Frame) mathexp.Vars {
+	vars := mathexp.Vars{}
+	for i, frame := range frames {
+		varName := fmt.Sprintf("var_%d", i)
+		vars[varName] = mathexp.Results{
+			Values: mathexp.Values{mathexp.TableData{Frame: frame}},
+		}
+	}
+	return vars
+}
+
 func TestSQLCommandRowLimits(t *testing.T) {
 	tests := []struct {
 		name          string
 		limit         int64
-		frames        []*data.Frame
-		vars          []string
+		rowsPerFrame  []int
 		expectError   bool
 		errorContains string
 	}{
 		{
-			name:   "single frame within limit",
-			limit:  2,
-			frames: []*data.Frame{data.NewFrame("a", data.NewField("a", nil, []string{"1", "2"}))},
-			vars:   []string{"foo"},
+			name:         "single frame within limit",
+			limit:        2,
+			rowsPerFrame: []int{2},
 		},
 		{
-			name:  "multiple frames within limit",
-			limit: 4,
-			frames: []*data.Frame{
-				data.NewFrame("a", data.NewField("a", nil, []string{"1", "2"})),
-				data.NewFrame("b", data.NewField("a", nil, []string{"3", "4"})),
-			},
-			vars: []string{"foo", "bar"},
+			name:         "multiple frames within limit",
+			limit:        4,
+			rowsPerFrame: []int{2, 2},
 		},
 		{
 			name:          "single frame exceeds limit",
 			limit:         1,
-			frames:        []*data.Frame{data.NewFrame("a", data.NewField("a", nil, []string{"1", "2"}))},
-			vars:          []string{"foo"},
+			rowsPerFrame:  []int{2},
 			expectError:   true,
 			errorContains: "exceeds limit",
 		},
 		{
-			name:  "multiple frames exceed limit",
-			limit: 3,
-			frames: []*data.Frame{
-				data.NewFrame("a", data.NewField("a", nil, []string{"1", "2"})),
-				data.NewFrame("b", data.NewField("a", nil, []string{"3", "4"})),
-			},
-			vars:          []string{"foo", "bar"},
+			name:          "multiple frames exceed limit",
+			limit:         3,
+			rowsPerFrame:  []int{2, 2},
 			expectError:   true,
 			errorContains: "exceeds limit",
 		},
@@ -80,17 +90,18 @@ func TestSQLCommandRowLimits(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd, err := NewSQLCommand("a", "select a from foo, bar")
+			cmd, err := NewSQLCommand("test", "select * from dummy")
 			require.NoError(t, err, "Failed to create SQL command")
 
 			cmd.limit = tt.limit
-			vars := mathexp.Vars{}
 
-			for i, frame := range tt.frames {
-				vars[tt.vars[i]] = mathexp.Results{
-					Values: mathexp.Values{mathexp.TableData{Frame: frame}},
-				}
+			// Create frames with specified number of rows
+			frames := make([]*data.Frame, len(tt.rowsPerFrame))
+			for i, rows := range tt.rowsPerFrame {
+				frames[i] = createFrameWithRows(rows)
 			}
+
+			vars := createVarsWithFrames(frames...)
 
 			_, err = cmd.Execute(context.Background(), time.Now(), vars, &testTracer{})
 
