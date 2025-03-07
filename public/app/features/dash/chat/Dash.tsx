@@ -248,7 +248,7 @@ function DashRenderer({ model }: SceneComponentProps<Dash>) {
           >
             <div className={styles.titleContent}>
               <div className={styles.dashText}>DASH</div>
-              {name}
+              <div className={styles.titleEllipsis}>{name}</div>
               <Icon name="angle-down" className={styles.titleCaret} />
             </div>
           </Dropdown>
@@ -352,6 +352,11 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     '&:hover': {
       opacity: 0.8,
     },
+  }),
+  titleEllipsis: css({
+    maxWidth: '16vw',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
   }),
   actions: css({
     label: 'dash-actions',

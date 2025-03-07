@@ -308,7 +308,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       // Create a system message with instructions for generating a title
       const systemMessage = new SystemMessage({
         content:
-          "Generate a concise title (maximum 20 characters) that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation. Use 'Title lower' case.",
+          "Generate a concise title, 20 characters or less, that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation.",
       });
 
       // Create a human message with the user's input
@@ -322,11 +322,6 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
       // Extract and clean the title
       let title = titleResponse.content.toString().trim();
-
-      // Ensure the title isn't too long
-      if (title.length > 20) {
-        title = title.substring(0, 17) + '...';
-      }
 
       console.log('Generated title:', title);
       return title;
