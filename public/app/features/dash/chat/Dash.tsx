@@ -62,6 +62,7 @@ export class Dash extends SceneObjectBase<DashState> {
               (chat) =>
                 new DashChat({
                   name: chat.name,
+                  nameGenerated: chat.nameGenerated,
                   versionIndex: chat.versionIndex,
                   versions: chat.versions.map(
                     (instance) =>
@@ -103,7 +104,7 @@ export class Dash extends SceneObjectBase<DashState> {
     ]).finally(() => {
       this.setState({ initializing: false });
       // Now we can safely use this to generate and set the proper title
-      this.state.chats[0].setName(this._generateTimeBasedTitle());
+      this.state.chats[0].setName(this._generateTimeBasedTitle(), false);
     });
   }
 

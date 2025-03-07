@@ -216,7 +216,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const userMessage = getMessages(this).addUserMessage(messageToSend);
     const isFirstMessage =
       getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
-    const hasDefaultName = getChat(this).state.name.startsWith('Friday ') ?? false;
+    const hasDefaultName = !getChat(this).state.nameGenerated;
 
     try {
       getMessages(this).addLangchainMessage(
@@ -268,7 +268,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const userMessage = getMessages(this).addUserMessage(message);
     const isFirstMessage =
       getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
-    const hasDefaultName = getChat(this).state.name.startsWith('Friday ') ?? false;
+    const hasDefaultName = !getChat(this).state.nameGenerated;
 
     try {
       getMessages(this).addLangchainMessage(
@@ -340,7 +340,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
   private _updateChatTitle(title: string) {
     try {
       const dash = getDash(this);
-      dash.state.chats[dash.state.chatIndex].setName(title);
+      dash.state.chats[dash.state.chatIndex].setName(title, true);
     } catch (error) {
       console.error('Error updating chat title:', error);
     }

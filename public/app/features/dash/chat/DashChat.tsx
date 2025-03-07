@@ -11,6 +11,7 @@ import { getDash } from './utils';
 
 interface DashChatState extends SceneObjectState {
   name: string;
+  nameGenerated: boolean;
   versions: DashChatInstance[];
   versionIndex: number;
 }
@@ -18,11 +19,14 @@ interface DashChatState extends SceneObjectState {
 export class DashChat extends SceneObjectBase<DashChatState> {
   public static Component = DashChatRenderer;
 
-  public constructor(state: Pick<DashChatState, 'name'> & Partial<Pick<DashChatState, 'versionIndex' | 'versions'>>) {
+  public constructor(
+    state: Pick<DashChatState, 'name'> & Partial<Pick<DashChatState, 'versionIndex' | 'versions' | 'nameGenerated'>>
+  ) {
     const versions = state.versions?.length ? state.versions : [new DashChatInstance({})];
 
     super({
       ...state,
+      nameGenerated: state.nameGenerated ?? false,
       versions,
       versionIndex:
         state.versionIndex !== undefined && versions[state.versionIndex] ? state.versionIndex : versions.length - 1,
@@ -34,9 +38,21 @@ export class DashChat extends SceneObjectBase<DashChatState> {
     getDash(this).persist();
   }
 
-  public setName(name: string) {
-    this.setState({ name });
-    getDash(this).persist();
+  public setName(name: string, isGenerated?: boolean) {
+    const payload: Partial<DashChatState> = {};
+
+    if (name !== this.state.name) {
+      payload.name = name;
+    }
+
+    if (isGenerated !== undefined && isGenerated !== this.state.nameGenerated) {
+      payload.nameGenerated = isGenerated;
+    }
+
+    if (Object.keys(payload).length > 0) {
+      this.setState(payload);
+      getDash(this).persist();
+    }
   }
 
   public cloneChat(chat: DashChatInstance) {
@@ -77,6 +93,7 @@ export class DashChat extends SceneObjectBase<DashChatState> {
   public toJSON(): SerializedDashChat {
     return {
       name: this.state.name,
+      nameGenerated: this.state.nameGenerated,
       versions: this.state.versions.map((chat) => chat.toJSON()),
       versionIndex: this.state.versionIndex,
     };
