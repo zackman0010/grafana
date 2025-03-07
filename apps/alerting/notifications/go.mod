@@ -5,7 +5,7 @@ go 1.23.7
 replace github.com/grafana/grafana => ../../..
 
 require (
-	github.com/grafana/grafana v11.4.0-00010101000000-000000000000+incompatible
+	github.com/grafana/grafana v1.9.2-0.20250307113815-f0d260ba5bfb
 	github.com/grafana/grafana-app-sdk v0.31.0
 	k8s.io/apimachinery v0.32.1
 	k8s.io/apiserver v0.32.1

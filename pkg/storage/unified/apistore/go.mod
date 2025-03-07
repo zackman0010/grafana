@@ -15,10 +15,10 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/google/uuid v1.6.0
 	github.com/grafana/authlib/types v0.0.0-20250224151205-5ef97131cc82
-	github.com/grafana/grafana v11.4.0-00010101000000-000000000000+incompatible
+	github.com/grafana/grafana v1.9.2-0.20250307113815-f0d260ba5bfb
 	github.com/grafana/grafana/pkg/apimachinery v0.0.0-20250220154326-6e5de80ef295
 	github.com/grafana/grafana/pkg/apiserver v0.0.0-20250220154326-6e5de80ef295
-	github.com/grafana/grafana/pkg/storage/unified/resource v0.0.0-20250220154326-6e5de80ef295
+	github.com/grafana/grafana/pkg/storage/unified/resource v0.0.0-20250307000317-df3e58cb1126
 	github.com/stretchr/testify v1.10.0
 	gocloud.dev v0.40.0
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
