@@ -11,9 +11,16 @@ const llm = new ChatAnthropic({
   apiKey: ANTHROPIC_API_KEY,
 });
 
+const haikuLlm = new ChatAnthropic({
+  model: 'claude-3-haiku-20240307',
+  temperature: 0,
+  apiKey: ANTHROPIC_API_KEY,
+});
+
 export function getAgent() {
   return {
     llm: llm,
+    haikuLlm: haikuLlm,
     tools: tools,
     withTools: (tools: StructuredTool[]) => llm.bindTools(tools),
   };

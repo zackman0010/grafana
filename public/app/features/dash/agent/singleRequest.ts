@@ -17,7 +17,7 @@ export async function makeSingleRequest({ systemPrompt, userMessage }: SingleReq
   messages.push(new HumanMessage(userMessage));
 
   try {
-    const response = await getAgent().llm.invoke(messages);
+    const response = await getAgent().haikuLlm.invoke(messages);
     return response.content.toString();
   } catch (error) {
     return `Tool execution failed: ${error instanceof Error ? error.message : String(error)}`;

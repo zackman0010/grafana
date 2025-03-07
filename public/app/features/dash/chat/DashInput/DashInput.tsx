@@ -317,7 +317,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       });
 
       // Make a separate LLM call with just these two messages
-      const titleGenerator = this._agentConfig.llm.bind({});
+      const titleGenerator = this._agentConfig.haikuLlm.bind({});
       const titleResponse = await titleGenerator.invoke([systemMessage, humanMessage]);
 
       // Extract and clean the title
