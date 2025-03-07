@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { locationService } from '@grafana/runtime';
+import { config, locationService } from '@grafana/runtime';
 
 const dashboardSchema = z.object({
   title: z.string().describe('The title of the dashboard'),
@@ -25,8 +25,9 @@ export const createDashboardTool = tool(
       overwrite: false,
     };
 
+    const subUrl = config.appSubUrl ?? '';
     // Create dashboard
-    const response = await fetch('/api/dashboards/db', {
+    const response = await fetch(`${subUrl}/api/dashboards/db`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
