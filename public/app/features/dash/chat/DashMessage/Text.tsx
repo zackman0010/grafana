@@ -46,7 +46,7 @@ function processMessageContent(content: string): string {
     return JSON.stringify(jsonContent);
   } catch (e) {
     // If JSON parsing fails, try to extract just the message content using regex
-    const messageMatch = jsonStr.match(/"message"\s*:\s*"((.|\n)+)"/gim);
+    const messageMatch = jsonStr.match(/"message"\s*:\s*"((.|\n)+)"/im);
     if (messageMatch?.[1]) {
       return messageMatch[1].replace(/\\n/g, '\n');
     }

@@ -52,7 +52,11 @@ export const createDashboardTool = tool(
     }
 
     // Navigate to the new dashboard
-    locationService.push({ pathname: result.url });
+    if (result?.url?.startsWith(config.appSubUrl)) {
+      locationService.push(result.url.replace(config.appSubUrl, ''));
+    } else {
+      locationService.push(result.url);
+    }
 
     return JSON.stringify({
       success: true,
