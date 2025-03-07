@@ -7,6 +7,7 @@ import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
+import { buildPanelJson } from './buildPanelJson';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
 import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
@@ -34,12 +35,21 @@ const lokiInstantQuerySchema = z.object({
     .describe(
       'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize current errors" or "Analyze current request rates"'
     ),
+  collapsed: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'Whether to collapse the panel by default. Defaults to true. Set it to `false` if you think that this panel will be interesting to the user, for example if you think this is the only query in the conversation.'
+    ),
+  title: z.string().describe('The title of the query.'),
+  description: z.string().describe('The description of the query.'),
 });
 
 export const lokiInstantQueryTool = tool(
   async (input) => {
     const parsedInput = lokiInstantQuerySchema.parse(input);
-    const { datasource_uid, query, time, limit, summarize } = parsedInput;
+    const { datasource_uid, query, time, limit, summarize, collapsed, title, description } = parsedInput;
 
     // Get datasource
     const datasource = await getDataSourceSrv().get({ uid: datasource_uid });
@@ -86,16 +96,73 @@ export const lokiInstantQueryTool = tool(
       })
     );
 
+    let panelJson = null;
+    if (result?.data?.length > 0 && result?.data[0]?.fields?.[0]?.values?.length > 0) {
+      lokiQuery.datasource = { uid: datasource_uid };
+      let type = 'stat';
+      let transformations: any[] = [];
+      if (result?.data[0]?.fields?.[0]?.values?.length > 1) {
+        type = 'table';
+        transformations = [
+          {
+            id: 'seriesToRows',
+            options: {},
+          },
+          {
+            id: 'sortBy',
+            options: {
+              fields: {},
+              sort: [
+                {
+                  field: 'Value',
+                  desc: true,
+                },
+              ],
+            },
+          },
+          {
+            id: 'extractFields',
+            options: {
+              delimiter: ',',
+              source: 'Metric',
+              replace: false,
+              keepTime: false,
+              format: 'kvp',
+            },
+          },
+          {
+            id: 'organize',
+            options: {
+              excludeByName: {
+                Time: true,
+                Metric: true,
+              },
+              indexByName: {
+                Time: 0,
+                Value: -1,
+              },
+              renameByName: {},
+              includeByName: {},
+            },
+          },
+        ];
+      }
+      panelJson = buildPanelJson(timeRange, type, title, description, lokiQuery, transformations, collapsed);
+    }
+
     // If summarize parameter is provided, use the LLM-based summarizer
     if (summarize) {
-      return await summarizeLokiQueryResult('instant', query, result, summarize, {
-        from: timeRange.from.toISOString(),
-        to: timeRange.to.toISOString(),
-      });
+      return [
+        await summarizeLokiQueryResult('instant', query, result, summarize, {
+          from: timeRange.from.toISOString(),
+          to: timeRange.to.toISOString(),
+        }),
+        panelJson,
+      ];
     }
 
     // Otherwise return the raw result
-    return JSON.stringify(result);
+    return [JSON.stringify(result), panelJson];
   },
   {
     name: 'loki_instant_query',
@@ -128,5 +195,6 @@ export const lokiInstantQueryTool = tool(
       },
     },
     verboseParsingErrors: true,
+    responseFormat: 'content_and_artifact',
   }
 );

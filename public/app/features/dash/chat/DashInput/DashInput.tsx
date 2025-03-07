@@ -308,7 +308,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       // Create a system message with instructions for generating a title
       const systemMessage = new SystemMessage({
         content:
-          "Generate a concise title (maximum 20 characters) that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation.",
+          "Generate a concise title (maximum 20 characters) that summarizes the user's message. The title should be descriptive but brief. Return only the title text with no additional formatting or explanation. Use 'Title lower' case.",
       });
 
       // Create a human message with the user's input
@@ -475,9 +475,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message, speech, textToSpeech } = model.useState();
+  const { message, speech } = model.useState();
   const { listening } = speech.useState();
-  const { speaking } = textToSpeech.useState();
   const { loading, anyToolsWorking } = getMessages(model).useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -517,12 +516,13 @@ const getStyles = (theme: GrafanaTheme2) => ({
     flexDirection: 'column',
     background: theme.colors.background.elevated,
     borderTop: `1px solid ${theme.colors.border.medium}`,
+    borderBottom: `1px solid ${theme.colors.border.weak}`,
   }),
   row: css({
     label: 'dash-input-row',
     display: 'flex',
     flexDirection: 'row',
-    gap: theme.spacing(2),
-    padding: theme.spacing(2),
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 2.5),
   }),
 });

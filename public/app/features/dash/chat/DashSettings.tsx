@@ -14,9 +14,10 @@ const TOKEN_LIMIT = 200000;
 const TOKEN_WARNING_THRESHOLD = 0.75; // 75%
 const TOKEN_DANGER_THRESHOLD = 0.8; // 80%
 
-type DashSettingsState = Settings & SceneObjectState & {
-  inputTokens: number;
-};
+type DashSettingsState = Settings &
+  SceneObjectState & {
+    inputTokens: number;
+  };
 
 export class DashSettings extends SceneObjectBase<DashSettingsState> {
   public static Component = DashSettingsRenderer;
@@ -110,7 +111,6 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
     tokenColor = 'orange';
   }
 
-
   return (
     <div className={styles.container}>
       <div className={styles.leftSection}>
@@ -146,11 +146,7 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
       <div className={styles.rightSection}>
         {inputTokens > 0 && (
           <span className={styles.tokenCounter} title={`Input tokens: ${inputTokens} / ${TOKEN_LIMIT}`}>
-            <Badge
-              color={tokenColor}
-              text={formattedTokens}
-              className={styles.noBg}
-            />
+            <Badge color={tokenColor} text={formattedTokens} className={styles.noBg} />
           </span>
         )}
         <IconButton
@@ -247,6 +243,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     alignItems: 'center',
     marginRight: theme.spacing(1),
     fontSize: '11px',
+    opacity: 0.8,
   }),
   noBg: css({
     background: 'transparent !important',

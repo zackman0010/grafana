@@ -5,8 +5,10 @@ import { z } from 'zod';
 import { CoreApp, dateTime, makeTimeRange } from '@grafana/data';
 import { getDataSourceSrv } from '@grafana/runtime';
 import { LokiDatasource } from 'app/plugins/datasource/loki/datasource';
+import { isLogsQuery } from 'app/plugins/datasource/loki/queryUtils';
 import { LokiQuery, LokiQueryType } from 'app/plugins/datasource/loki/types';
 
+import { buildPanelJson } from './buildPanelJson';
 import { summarizeLokiQueryResult } from './lokiQuerySummarizer';
 import { lokiTypeRefiner, unixTimestampRefiner } from './refiners';
 
@@ -37,6 +39,13 @@ const lokiRangeQuerySchema = z.object({
     .describe(
       'Optional intent for summarization. If provided, returns a summary of the query results instead of the raw data. Example: "Summarize error patterns in logs" or "Identify traffic spikes in metrics"'
     ),
+  collapsed: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe(
+      'Whether to collapse the panel by default. Defaults to true. Set it to `false` if you think that this panel will be interesting to the user, for example if you think this is the only query in the conversation.'
+    ),
   title: z.string().describe('The title of the query.'),
   description: z.string().describe('The description of the query.'),
 });
@@ -44,7 +53,7 @@ const lokiRangeQuerySchema = z.object({
 export const lokiRangeQueryTool = tool(
   async (input) => {
     const parsedInput = lokiRangeQuerySchema.parse(input);
-    const { datasource_uid, query, start, end, limit, summarize } = parsedInput;
+    const { datasource_uid, query, start, end, limit, summarize, collapsed, title, description } = parsedInput;
 
     // Get datasource
     const datasource = await getDataSourceSrv().get({ uid: datasource_uid });
@@ -57,22 +66,13 @@ export const lokiRangeQueryTool = tool(
     const timeRange = makeTimeRange(dateTime(start), dateTime(end));
 
     // Detect if this is likely a logs query or a metric query
-    const isLikelyLogsQuery =
-      !query.includes('rate(') &&
-      !query.includes('sum(') &&
-      !query.includes('avg(') &&
-      !query.includes('max(') &&
-      !query.includes('min(') &&
-      !query.includes('count(') &&
-      !query.includes('quantile(') &&
-      !query.includes('stddev(') &&
-      !query.includes('stdvar(');
+    const isLogsExpr = isLogsQuery(query);
 
     // Set up the query object
     const lokiQuery: LokiQuery = {
       expr: query,
       refId: 'A',
-      queryType: isLikelyLogsQuery ? LokiQueryType.Range : LokiQueryType.Range,
+      queryType: LokiQueryType.Range,
       maxLines: limit,
     };
 
@@ -91,16 +91,33 @@ export const lokiRangeQueryTool = tool(
       })
     );
 
+    let panelJson = null;
+    if (!result.errors && result.data.length > 0 && result.data[0].length > 0) {
+      lokiQuery.datasource = { uid: datasource_uid };
+      panelJson = buildPanelJson(
+        timeRange,
+        isLogsExpr ? 'logs' : 'timeseries',
+        title,
+        description,
+        lokiQuery,
+        [],
+        collapsed
+      );
+    }
+
     // If summarize parameter is provided, use the LLM-based summarizer
     if (summarize) {
-      return await summarizeLokiQueryResult('range', query, result, summarize, {
-        from: timeRange.from.toISOString(),
-        to: timeRange.to.toISOString(),
-      });
+      return [
+        await summarizeLokiQueryResult('range', query, result, summarize, {
+          from: timeRange.from.toISOString(),
+          to: timeRange.to.toISOString(),
+        }),
+        panelJson,
+      ];
     }
 
     // Otherwise return the raw result
-    return JSON.stringify(result);
+    return [JSON.stringify(result), panelJson];
   },
   {
     name: 'loki_range_query',
@@ -138,5 +155,6 @@ export const lokiRangeQueryTool = tool(
       },
     },
     verboseParsingErrors: true,
+    responseFormat: 'content_and_artifact',
   }
 );

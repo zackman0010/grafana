@@ -32,13 +32,17 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public constructor() {
+    const initialTitle = 'New chat'; // Temporary title before we can call this._generateTimeBasedTitle()
     super({
-      chats: [new DashChat({ name: 'Chat 1' })],
+      chats: [new DashChat({ name: initialTitle })],
       chatIndex: 0,
       initializing: true,
       opened: false,
       settings: new DashSettings(),
     });
+
+    // Now we can safely use this to generate and set the proper title
+    this.state.chats[0].setName(this._generateTimeBasedTitle());
 
     this.addActivationHandler(() => this._activationHandler());
 
@@ -88,7 +92,7 @@ export class Dash extends SceneObjectBase<DashState> {
         } catch (err) {}
 
         if (chats.length === 0) {
-          chats = [new DashChat({ name: 'Chat 1' })];
+          chats = [new DashChat({ name: this._generateTimeBasedTitle() })];
         }
 
         this._chatNumber = chatNumber ?? 2;
@@ -119,8 +123,33 @@ export class Dash extends SceneObjectBase<DashState> {
     }
   }
 
+  private _generateTimeBasedTitle(): string {
+    const now = new Date();
+    const hour = now.getHours();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayName = days[now.getDay()];
+
+    if (hour === 23 || hour === 0) {
+      return 'Midnight chat';
+    }
+
+    let timeOfDay = '';
+    if (hour >= 2 && hour < 12) {
+      timeOfDay = 'morning';
+    } else if (hour >= 12 && hour < 17) {
+      timeOfDay = 'afternoon';
+    } else {
+      timeOfDay = 'evening';
+    }
+
+    const titles = ['chat', 'discussion', 'conversation'];
+    const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+
+    return `${dayName} ${timeOfDay} ${randomTitle}`;
+  }
+
   public async addChat() {
-    const newChat = new DashChat({ name: `Chat ${this._chatNumber++}` });
+    const newChat = new DashChat({ name: this._generateTimeBasedTitle() });
     const newChatIndex = this.state.chats.length;
     this.setState({ chats: [...this.state.chats, newChat], chatIndex: newChatIndex });
     this.persist();
@@ -128,7 +157,7 @@ export class Dash extends SceneObjectBase<DashState> {
 
   public removeChat(index: number) {
     if (this.state.chats.length === 1) {
-      this.setState({ chats: [new DashChat({ name: `Chat ${this._chatNumber++}` })], chatIndex: 0 });
+      this.setState({ chats: [new DashChat({ name: this._generateTimeBasedTitle() })], chatIndex: 0 });
       this.persist();
       return;
     }
@@ -140,8 +169,9 @@ export class Dash extends SceneObjectBase<DashState> {
   }
 
   public clearChats() {
+    const newChat = new DashChat({ name: this._generateTimeBasedTitle() });
     this.setState({
-      chats: this.state.chats.filter((_chat, index) => index === this.state.chatIndex),
+      chats: [newChat],
       chatIndex: 0,
     });
     this.persist();
@@ -308,7 +338,7 @@ const getStyles = (theme: GrafanaTheme2, mode: Mode, withVersions: boolean) => (
     fontSize: '7px',
     color: theme.colors.text.primary,
     letterSpacing: '0.1em',
-    padding: theme.spacing(0.25),
+    margin: 0,
     textShadow: '0 0 2px rgba(155, 89, 182, 0.3)',
   }),
   titleContent: css({

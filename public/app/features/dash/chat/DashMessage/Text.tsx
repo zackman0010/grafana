@@ -5,7 +5,7 @@ import { GrafanaTheme2, renderMarkdown } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { useStyles2 } from '@grafana/ui';
 
-import { getMessage } from '../utils';
+import { getMessage, getInput } from '../utils';
 
 interface TextState extends SceneObjectState {
   content: string;
@@ -64,6 +64,19 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
 
   const message = useMemo(() => processMessageContent(content), [content]);
 
+  const handleCodeClick = (evt: React.MouseEvent<HTMLDivElement>) => {
+    const target = evt.target as HTMLElement;
+    if (target.tagName.toLowerCase() === 'code') {
+      evt.preventDefault();
+      evt.stopPropagation();
+      const input = getInput(model);
+      if (input) {
+        input.updateMessage(target.textContent || '', true);
+        input.focus();
+      }
+    }
+  };
+
   return (
     <div
       className={cx(
@@ -72,6 +85,7 @@ function TextRenderer({ model }: SceneComponentProps<Text>) {
         sender === 'system' && styles.systemMessage,
         sender === 'user' && 'user-message'
       )}
+      onClick={handleCodeClick}
       dangerouslySetInnerHTML={{ __html: renderMarkdown(message) }}
     />
   );
@@ -120,6 +134,10 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
       overflow: 'auto',
       color: theme.colors.text.secondary,
       opacity: 0.9,
+      cursor: 'pointer',
+      '&:hover': {
+        color: theme.colors.text.primary,
+      },
     },
 
     pre: {
@@ -148,7 +166,7 @@ const getStyles = (theme: GrafanaTheme2, muted: boolean) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     wordWrap: 'break-word',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
     '& code': {
       background: 'transparent',
       border: 'none',
