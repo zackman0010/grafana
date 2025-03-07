@@ -157,7 +157,7 @@ export function generateSystemPrompt(): BaseMessage[] {
 
   // Create few-shot examples directly instead of using a template
   const fewshotMessages: BaseMessage[] = [
-    new HumanMessage('Can you analyze <something> the <foo> namespace?'),
+    new HumanMessage('Can you analyze <something> in the <foo> namespace?'),
     new AIMessage({
       content: [
         {
