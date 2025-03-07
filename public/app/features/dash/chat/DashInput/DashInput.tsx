@@ -216,7 +216,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const userMessage = getMessages(this).addUserMessage(messageToSend);
     const isFirstMessage =
       getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
-    const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
+    const hasDefaultName = getChat(this).state.name.startsWith('Friday ') ?? false;
 
     try {
       getMessages(this).addLangchainMessage(
@@ -268,7 +268,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     const userMessage = getMessages(this).addUserMessage(message);
     const isFirstMessage =
       getMessages(this).state.messages.filter((message) => message.state.sender === 'user').length === 1;
-    const hasDefaultName = getChat(this).state.name.startsWith('Chat ') ?? false;
+    const hasDefaultName = getChat(this).state.name.startsWith('Friday ') ?? false;
 
     try {
       getMessages(this).addLangchainMessage(
