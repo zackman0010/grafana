@@ -17,7 +17,7 @@ const lokiRangeQuerySchema = z.object({
     .string()
     .describe('The datasource UID, only supports Loki datasource')
     .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
-  query: z.string().describe('(REQUIRED) The LogQL query to execute'),
+  query: z.string().describe('(REQUIRED) The LogQL query to execute. `{app="frontend"} | limit 10` is not valid in LogQL use tool parameter limit instead.'),
   start: z
     .number()
     .describe('Start timestamp for the query range (Unix millisecond timestamp)')

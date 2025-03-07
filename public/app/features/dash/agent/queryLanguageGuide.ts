@@ -10,6 +10,8 @@ export const queryLanguageGuide = `
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
 - You cannot limit the number of logs in LogQL you need to use the tool parameter. (eg. \`{app="frontend"} | limit 10\` is not syntactically correct)
 
+Use backticks to escape strings in the query. |= \`foo\`
+
 ### Basic Structure
 \`\`\`
 {label="value"} |> pipeline operations
@@ -43,17 +45,21 @@ To combine multiple search use regex:
 
 
 ### Parser Operations
+
+Parser allows to add extra labels/fields to the log line that can be used in the query for filtering (| msg="error") and grouping (by msg).
+
 - \`| json\` - Parse JSON
 - \`| logfmt\` - Parse logfmt format
 - \`| pattern "<pattern>"\` - Parse using patterns
-- \`| regexp "<regex>"\` - Parse using regexp
-- \`| unpack\` - Unpack JSON into labels.
+- \`| regexp "<regex>"\` - Parse using regexp go regex syntax
+- \`| unpack\` - Unpack JSON into labels flattening the JSON object into labels.
 
 ### Transformations
-- \`| line_format "{{.level}}: {{.message}}"\` - Format log line
-- \`| label_format status_code="{{.status}}"\` - Create/modify labels
-- \`| drop level, method="GET"\` - Remove labels
-- \`| keep level, status\` - Keep only specified labels
+
+- \`| line_format "{{.level}}: {{.message}}"\` - Format log line using fields and labels go template syntax
+- \`| label_format status_code="{{.status}}"\` - Create/modify labels from other labels or fields using go template syntax
+- \`| drop level, method="GET"\` - Remove labels from the log line
+- \`| keep level, status\` - Keep only specified labels (useful to remove high cardinality labels)
 - \`| unwrap duration\` - Convert label to sample value used with range vector functions aka transform logs to metrics
 
 ### Template Functions
@@ -70,6 +76,43 @@ To combine multiple search use regex:
 Extracted data from parsers in pipelines can be used to transform logs into metrics. Be careful with high cardinality as it can impact performance.
 
 #### Basic Structures
+
+Log Selector always needs to be aggregated with Range Vector Operations first then you can use Aggregation Operators to aggregate by labels.
+Range aggregation interval e.g [1m] should be as the query step to cover the whole time range.
+
+Unlike Prometheus, some of those range operations allow you to use grouping without vector operations.
+This is the case for avg_over_time, max_over_time, min_over_time, stdvar_over_time, stddev_over_time, and quantile_over_time.
+This is super useful to aggregate the data on specific dimensions and would not be possible otherwise.
+
+With the exception of rate(), count_over_time() use vector aggregations to group by labels.
+
+For range vector most functions needs to unwraped first to transform logs samples to metrics samples.
+You should always use grouping either by or vector aggregations or range vector functions directly if supported to get the desired result.
+
+Avoid querying with only regex selectors as it will return a lot of data and impact performance. {service_name=~".+"}
+Always filter with at least one label to narrow down the data.
+
+
+Valid:
+topk(20, count by (service_name, pod) (count_over_time({service_name=~"foo", pod=~"bar"}[5m])))
+sum by (service_name, pod) (count_over_time({service_name=~"foo", pod=~"bar"}[5m]))
+quantile_over_time(0.99,{cluster="ops-tools1",container="ingress-nginx"}| json| __error__ = ""| unwrap request_time [1m])) by (path)
+sum by (foo) (rate({app="frontend"}[5m]))
+
+Invalid:
+topk(20, count by (service_name, pod) ({service_name=~"foo", pod=~"bar"}))
+count_over_time({service_name=~"foo", pod=~"bar"}[5m])) by (service_name, pod)
+quantile_over_time(0.95, count by (service_name, pod) (count_over_time({service_name=~"foo", pod=~"bar"}[5m])))
+quantile_over_time(0.95, sum by (service_name, pod) (count_over_time({service_name=~"foo", pod=~"bar"}[5m])))
+quantile_over_time(0.95,{service_name=~"foo", pod=~"bar"}[5m]))
+sum_over_time by (foo) (rate({app="frontend"}[5m]))
+rate({app="frontend"}[5m]) by (foo)
+
+
+
+
+
+Use a good combination of drop/keep, by on range vector and vector aggregations to get the desired result.
 
 \`\`\`
 # Count log lines by label

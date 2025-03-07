@@ -16,7 +16,7 @@ const lokiInstantQuerySchema = z.object({
     .string()
     .describe('The datasource UID, only supports Loki datasource')
     .refine(lokiTypeRefiner.func, lokiTypeRefiner.message),
-  query: z.string().describe('The LogQL query to execute'),
+  query: z.string().describe('The LogQL query to execute. `{app="frontend"} | limit 10` is not valid in LogQL use tool parameter limit instead.'),
   time: z
     .number()
     .optional()
