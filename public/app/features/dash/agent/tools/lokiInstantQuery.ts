@@ -182,6 +182,8 @@ export const lokiInstantQueryTool = tool(
     - Set a reasonable limit for log queries to avoid overwhelming results
     - For complex results, use the summarize parameter to get a concise overview with relevant log examples
     - Prefer instant queries over range queries when you only need current values
+    - | limit 100 is not valid in LogQL use limit parameter instead.
+
 
     Summarization examples:
     - "Summarize current error logs"

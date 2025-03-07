@@ -142,6 +142,7 @@ export const lokiRangeQueryTool = tool(
     - Use appropriate time ranges to limit data volume
     - Set a reasonable limit for log queries to avoid overwhelming results
     - For complex data, use the summarize parameter to get trend analysis with relevant log examples
+    - | limit 100 is not valid in LogQL use limit parameter instead.
 
     Summarization examples:
     - "Summarize error patterns in the application logs"
