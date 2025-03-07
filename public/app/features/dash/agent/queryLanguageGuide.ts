@@ -10,7 +10,7 @@ export const queryLanguageGuide = `
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
 - You cannot limit the number of logs in LogQL you need to use the tool parameter. (eg. \`{app="frontend"} | limit 10\` is not syntactically correct)
 
-Use backticks to escape strings in the query. |= \`foo\`
+Use backticks to escape strings in the query specially for regexes in queries. |= \`foo\`
 
 ### Basic Structure
 \`\`\`
