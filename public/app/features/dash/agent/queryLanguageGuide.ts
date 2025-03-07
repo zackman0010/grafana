@@ -1,11 +1,14 @@
+import { lokiInstantQueryTool } from 'app/features/dash/agent/tools/lokiInstantQuery';
+import { lokiRangeQueryTool } from 'app/features/dash/agent/tools/lokiRangeQuery';
+
 export const queryLanguageGuide = `
 # Query Language Quick Reference
 
 ## LogQL (Loki)
 
-- To return limited number of logs, use tool par parameter.
+- To return limited number of logs, use tool parameters ${lokiInstantQueryTool.name} or ${lokiRangeQueryTool.name}.
 - Avoid asking broad logql labels selectors: {app=".*"}, {cluster="foo"}, {namespace=".*"}
-- You can't limit the number of logs in LogQL you need to use the tool parameter.
+- You cannot limit the number of logs in LogQL you need to use the tool parameter. (eg. \`{app="frontend"} | limit 10\` is not syntactically correct)
 
 ### Basic Structure
 \`\`\`
