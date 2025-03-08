@@ -77,10 +77,12 @@ function PanelRenderer({ model }: SceneComponentProps<Panel>) {
         isOpen={!isCollapsed}
         label={
           <>
-            <Icon name="chart-line" /> {panel.title}{' '}
+            {panel.title}{' '}
             {panel.description && (
               <Tooltip content={panel.description}>
-                <Icon name="info-circle" className={styles.infoIcon} />
+                <span className={styles.infoIconWrapper}>
+                  <Icon name="info-circle" className={styles.infoIcon} />
+                </span>
               </Tooltip>
             )}
           </>
@@ -124,13 +126,27 @@ const getStyles = () => ({
   collapsible: css({
     marginBottom: '0',
     '& > button': {
-      padding: '8px 12px',
+      padding: '8px 16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      minHeight: '36px',
+    },
+    '& svg': {
+      margin: 'auto 0',
     },
   }),
+  infoIconWrapper: css({
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginLeft: '8px',
+  }),
   infoIcon: css({
-    marginLeft: '4px',
     color: 'var(--colors-text-secondary)',
     cursor: 'help',
+    display: 'inline-flex',
+    alignItems: 'center',
+    opacity: 0.8,
   }),
   panelWrapper: css({
     position: 'relative',
