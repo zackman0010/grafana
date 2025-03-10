@@ -1,7 +1,6 @@
 import { css } from '@emotion/css';
-import { useState } from 'react';
 
-import { getDefaultTimeRange } from '@grafana/data';
+import { getDefaultTimeRange, GrafanaTheme2 } from '@grafana/data';
 import { config } from '@grafana/runtime';
 import {
   SceneComponentProps,
@@ -12,7 +11,7 @@ import {
   SceneTimeRange,
   VizPanel,
 } from '@grafana/scenes';
-import { Button, Collapse, Icon, Modal, Tooltip, useStyles2 } from '@grafana/ui';
+import { Button, Icon, Modal, Tooltip, useStyles2 } from '@grafana/ui';
 
 import { PanelConfiguration } from '../types';
 
@@ -24,6 +23,7 @@ interface PanelState extends SceneObjectState {
   };
   vizPanel: VizPanel;
   collapsed: boolean;
+  expanded: boolean;
 }
 
 export class Panel extends SceneObjectBase<PanelState> {
@@ -55,58 +55,55 @@ export class Panel extends SceneObjectBase<PanelState> {
       $behaviors: [],
     });
 
-    super({ ...state, vizPanel });
+    super({ ...state, vizPanel, collapsed: false, expanded: false });
+  }
+
+  public toggleCollapsed() {
+    this.setState({ collapsed: !this.state.collapsed });
+  }
+
+  public setExpanded(expanded: boolean) {
+    this.setState({ expanded });
   }
 }
 
 function PanelRenderer({ model }: SceneComponentProps<Panel>) {
-  const { vizPanel, collapsed, panel } = model.useState();
+  const { vizPanel, collapsed, expanded, panel } = model.useState();
   const styles = useStyles2(getStyles);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  // Get the collapsed state from localStorage, default to false (expanded)
-  const [isCollapsed, setIsCollapsed] = useState(collapsed ?? true);
-
-  const handleToggleCollapse = (collapsed: boolean) => {
-    setIsCollapsed(!collapsed);
-  };
 
   return (
-    <div className={styles.container}>
-      <Collapse
-        isOpen={!isCollapsed}
-        label={
-          <>
-            {panel.title}{' '}
+    <>
+      <div className={styles.container}>
+        <div className={styles.header} role="button" onClick={() => model.toggleCollapsed()}>
+          <div className={styles.headerLeft}>
+            <Icon name="chart-line" className={styles.titleIcon} />
+            <p className={styles.title}>{panel.title}</p>
             {panel.description && (
               <Tooltip content={panel.description}>
-                <span className={styles.infoIconWrapper}>
-                  <Icon name="info-circle" className={styles.infoIcon} />
-                </span>
+                <Icon name="info-circle" className={styles.infoIcon} />
               </Tooltip>
             )}
-          </>
-        }
-        collapsible={true}
-        onToggle={handleToggleCollapse}
-        className={styles.collapsible}
-      >
-        <div className={styles.panelWrapper}>
-          <vizPanel.Component model={vizPanel} />
-          <Button
-            className={styles.expandButton}
-            icon="eye"
-            variant="secondary"
-            onClick={() => setIsExpanded(!isExpanded)}
-            aria-label={isExpanded ? 'Collapse panel' : 'Expand panel'}
-          />
+          </div>
+          <Icon name={collapsed ? 'angle-down' : 'angle-up'} size="sm" />
         </div>
-      </Collapse>
-      {isExpanded && (
+        {!collapsed && (
+          <div className={styles.panelWrapper}>
+            <vizPanel.Component model={vizPanel} />
+            <Button
+              className={styles.expandButton}
+              icon="eye"
+              variant="secondary"
+              onClick={() => model.setExpanded(!expanded)}
+              aria-label={expanded ? 'Collapse panel' : 'Expand panel'}
+            />
+          </div>
+        )}
+      </div>
+      {expanded && (
         <Modal
           title={vizPanel.state.title || 'Panel'}
-          isOpen={isExpanded}
-          onDismiss={() => setIsExpanded(false)}
+          isOpen={expanded}
+          onDismiss={() => model.setExpanded(false)}
           className={styles.modal}
           contentClassName={styles.modalContent}
         >
@@ -115,59 +112,70 @@ function PanelRenderer({ model }: SceneComponentProps<Panel>) {
           </div>
         </Modal>
       )}
-    </div>
+    </>
   );
 }
 
-const getStyles = () => ({
+const getStyles = (theme: GrafanaTheme2) => ({
   container: css({
     label: 'dash-message-panel-container',
   }),
-  collapsible: css({
-    marginBottom: '0',
-    '& > button': {
-      padding: '8px 16px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      minHeight: '36px',
-    },
-    '& svg': {
-      margin: 'auto 0',
-    },
-  }),
-  infoIconWrapper: css({
-    display: 'inline-flex',
+  header: css({
+    label: 'dash-message-panel-header',
+    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '8px',
+    flexWrap: 'nowrap',
+  }),
+  headerLeft: css({
+    label: 'dash-message-panel-header-left',
+    fontFamily: theme.typography.fontFamilyMonospace,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    flex: 1,
+  }),
+  titleIcon: css({
+    label: 'dash-message-panel-title-icon',
+    color: theme.colors.text.secondary,
+  }),
+  title: css({
+    label: 'dash-message-panel-title',
+    opacity: 0.9,
   }),
   infoIcon: css({
-    color: 'var(--colors-text-secondary)',
+    label: 'dash-message-panel-info',
+    color: theme.colors.text.secondary,
     cursor: 'help',
-    display: 'inline-flex',
     alignItems: 'center',
     opacity: 0.8,
   }),
   panelWrapper: css({
+    label: 'dash-message-panel-wrapper',
     position: 'relative',
     height: '300px',
   }),
   expandButton: css({
+    label: 'dash-message-panel-expand-button',
     position: 'absolute',
-    top: '8px',
-    right: '8px',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
     zIndex: 1,
   }),
   modal: css({
+    label: 'dash-message-panel-modal',
     minWidth: '400px',
     width: '80vw',
   }),
   modalContent: css({
+    label: 'dash-message-panel-modal-content',
     padding: 0,
   }),
   expandedPanel: css({
+    label: 'dash-message-panel-modal-expanded-panel',
     height: '80vh',
     width: '100%',
-    padding: '16px',
+    padding: theme.spacing(2),
   }),
 });

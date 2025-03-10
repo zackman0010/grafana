@@ -87,7 +87,9 @@ export class Dash extends SceneObjectBase<DashState> {
             chatNumber = dash.chatNumber;
             opened = dash.opened;
           }
-        } catch (err) {}
+        } catch (err) {
+          console.error('Could not initialize Dash from storage', err);
+        }
 
         if (chats.length === 0) {
           chats = [new DashChat({ name: this._generateTimeBasedTitle() })];
@@ -101,11 +103,20 @@ export class Dash extends SceneObjectBase<DashState> {
           opened: opened ?? false,
         });
       }),
-    ]).finally(() => {
-      this.setState({ initializing: false });
-      // Now we can safely use this to generate and set the proper title
-      this.state.chats[0].setName(this._generateTimeBasedTitle(), false);
-    });
+    ])
+      .catch((err) => {
+        console.error('Could not initialize Dash from storage', err);
+      })
+      .finally(() => {
+        this.setState({ initializing: false });
+
+        setTimeout(() => {
+          if (!this.state.chats[0].state.nameGenerated) {
+            // Now we can safely use this to generate and set the proper title
+            this.state.chats[0].setName(this._generateTimeBasedTitle(), false);
+          }
+        });
+      });
   }
 
   public setOpened(opened: boolean) {
