@@ -1,7 +1,8 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { locationService } from '@grafana/runtime';
+import { config, locationService } from '@grafana/runtime';
+import { locationUtil } from '@grafana/data';
 
 import { getDashboards } from './context/autocomplete';
 
@@ -41,7 +42,23 @@ export const navigateToDashboardTool = tool(
       return 'Failure. Tell the user that the dashboard does not exist';
     }
 
-    const url = dashboard.url;
+    // Get the raw URL from the dashboard
+    let url = dashboard.url;
+
+    // Get configuration information
+    const appSubUrl = config.appSubUrl || '';
+
+    // Strip the appSubUrl from the url if it's there, to prevent duplication
+    // locationService.push() will add it back automatically
+    if (appSubUrl && url.startsWith(appSubUrl)) {
+      url = url.substring(appSubUrl.length);
+      // Ensure the URL still starts with a slash
+      if (!url.startsWith('/')) {
+        url = '/' + url;
+      }
+    }
+
+    // If we're navigating, use locationService with the clean URL
     if (navigate) {
       locationService.push(url);
     }
