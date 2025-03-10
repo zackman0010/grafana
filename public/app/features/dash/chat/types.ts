@@ -65,3 +65,5 @@ export interface SerializedDash {
   chatNumber: number;
   opened: boolean;
 }
+
+export type SerializedDashSettings = Settings;

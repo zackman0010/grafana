@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { useState, useEffect, useRef } from 'react';
 
 import { AppEvents, GrafanaTheme2 } from '@grafana/data';
@@ -7,7 +7,7 @@ import { IconButton, useStyles2, Badge, Modal, Button, Switch } from '@grafana/u
 import { appEvents } from 'app/core/core';
 
 import { DashStorage } from './DashStorage';
-import { Settings, Verbosity } from './types';
+import { SerializedDashSettings, Settings, Verbosity } from './types';
 import { getDash, persistSetting } from './utils';
 
 // Token limit is 200k
@@ -65,6 +65,15 @@ export class DashSettings extends SceneObjectBase<DashSettingsState> {
 
   public updateInputTokens(tokens: number) {
     this.setState({ inputTokens: tokens });
+  }
+
+  public toJSON(): SerializedDashSettings {
+    return {
+      codeOverflow: this.state.codeOverflow,
+      mode: this.state.mode,
+      showTools: this.state.showTools,
+      verbosity: this.state.verbosity,
+    };
   }
 
   private async _persist<T extends keyof Settings = keyof Settings>(key: T, value: Settings[T]) {
@@ -154,7 +163,12 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
         )}
         <IconButton name="bug" title="Debug" aria-label="Debug" onClick={() => setDebugOpened(true)} />
         {debugOpened && (
-          <Modal title="Debug Dash" isOpen={debugOpened} onDismiss={() => setDebugOpened(false)}>
+          <Modal
+            title="Debug Dash"
+            isOpen={debugOpened}
+            onDismiss={() => setDebugOpened(false)}
+            contentClassName={styles.debugModalOriginalContent}
+          >
             <div className={styles.debugModalContent}>
               <div className={styles.debugModalContentHeader}>
                 <Switch
@@ -165,11 +179,16 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
                 />
                 <span>Include all chats</span>
               </div>
-              <pre className={styles.debugModalContentBody}>
+              <h3>Settings</h3>
+              <pre className={styles.debugModalContentJson}>{JSON.stringify(model.toJSON(), null, 2)}</pre>
+              <h3>Message{debugAllChats ? 's' : ''}</h3>
+              <pre className={cx(styles.debugModalContentJson, styles.debugModalContentJsonLarge)}>
                 {JSON.stringify(
                   debugAllChats
                     ? getDash(model).toJSON().chats
-                    : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON()
+                    : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON(),
+                  null,
+                  2
                 )}
               </pre>
             </div>
@@ -179,14 +198,67 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
               </Button>
               <Button
                 type="submit"
-                variant="primary"
+                variant="secondary"
                 onClick={() => {
                   try {
                     navigator.clipboard.writeText(
                       JSON.stringify(
                         debugAllChats
                           ? getDash(model).toJSON().chats
-                          : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON()
+                          : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON(),
+                        null,
+                        2
+                      )
+                    );
+
+                    const url = new URL(`https://github.com/grafana/hackathon-dash/issues/new`);
+                    url.searchParams.set(
+                      'body',
+                      `
+### Settings
+\`\`\`json
+${JSON.stringify(model.toJSON(), null, 2)}
+\`\`\`
+
+### Chat${debugAllChats ? 's' : ''}
+\`\`\`json
+Chat${debugAllChats ? 's' : ''} was copied to your clipboard. Please paste ${debugAllChats ? 'them' : 'it'} here.
+\`\`\`
+`
+                    );
+
+                    window.open(url.toString(), '_blank');
+
+                    setDebugOpened(false);
+                  } catch (err) {
+                    appEvents.publish({
+                      type: AppEvents.alertError.name,
+                      payload: ['Debug info could not be copied to clipboard'],
+                    });
+                  }
+
+                  setDebugOpened(false);
+                }}
+                icon="external-link-alt"
+              >
+                Open GitHub Issue
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                onClick={() => {
+                  try {
+                    navigator.clipboard.writeText(
+                      JSON.stringify(
+                        {
+                          settings: model.toJSON(),
+                          chat: debugAllChats
+                            ? undefined
+                            : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON(),
+                          chats: debugAllChats ? getDash(model).toJSON().chats : undefined,
+                        },
+                        null,
+                        2
                       )
                     );
 
@@ -310,6 +382,11 @@ const getStyles = (theme: GrafanaTheme2) => ({
     background: 'transparent !important',
     border: 'none !important',
   }),
+  debugModalOriginalContent: css({
+    display: 'grid',
+    gridTemplateColumns: '100%',
+    gridTemplateRows: `calc(100% - ${theme.spacing(7)}) auto`,
+  }),
   debugModalContent: css({
     label: 'debug-modal-content',
     display: 'flex',
@@ -325,10 +402,14 @@ const getStyles = (theme: GrafanaTheme2) => ({
     justifyContent: 'flex-start',
     gap: theme.spacing(1),
   }),
-  debugModalContentBody: css({
-    label: 'debug-modal-content-body',
-    flex: 1,
+  debugModalContentJson: css({
+    label: 'debug-modal-content-json',
     overflow: 'auto',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'break-spaces',
+    wordBreak: 'unset',
+  }),
+  debugModalContentJsonLarge: css({
+    label: 'debug-modal-content-json',
+    flex: 1,
   }),
 });
