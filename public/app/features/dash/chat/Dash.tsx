@@ -11,7 +11,7 @@ import { DashMessage } from './DashMessage';
 import { DashMessages } from './DashMessages';
 import { DashSettings } from './DashSettings';
 import { DashStorage } from './DashStorage';
-import { Mode } from './types';
+import { Mode, SerializedDash } from './types';
 
 interface DashState extends SceneObjectState {
   chats: DashChat[];
@@ -195,16 +195,18 @@ export class Dash extends SceneObjectBase<DashState> {
       await this._savingPromise;
     }
 
-    DashStorage.instance
-      .setChat({
-        chats: this.state.chats.map((chat) => chat.toJSON()),
-        chatIndex: this.state.chatIndex,
-        chatNumber: this._chatNumber,
-        opened: this.state.opened,
-      })
-      .finally(() => {
-        this._savingPromise = undefined;
-      });
+    DashStorage.instance.setChat(this.toJSON()).finally(() => {
+      this._savingPromise = undefined;
+    });
+  }
+
+  public toJSON(): SerializedDash {
+    return {
+      chats: this.state.chats.map((chat) => chat.toJSON()),
+      chatIndex: this.state.chatIndex,
+      chatNumber: this._chatNumber,
+      opened: this.state.opened,
+    };
   }
 }
 

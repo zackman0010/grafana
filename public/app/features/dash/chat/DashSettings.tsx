@@ -1,13 +1,14 @@
 import { css } from '@emotion/css';
 import { useState, useEffect, useRef } from 'react';
 
-import { GrafanaTheme2 } from '@grafana/data';
+import { AppEvents, GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, useStyles2, Badge } from '@grafana/ui';
+import { IconButton, useStyles2, Badge, Modal, Button, Switch } from '@grafana/ui';
+import { appEvents } from 'app/core/core';
 
 import { DashStorage } from './DashStorage';
 import { Settings, Verbosity } from './types';
-import { persistSetting } from './utils';
+import { getDash, persistSetting } from './utils';
 
 // Token limit is 200k
 const TOKEN_LIMIT = 200000;
@@ -81,6 +82,8 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const styles = useStyles2(getStyles);
   const { codeOverflow, mode, showTools, verbosity, inputTokens } = model.useState();
   const [showMenu, setShowMenu] = useState(false);
+  const [debugOpened, setDebugOpened] = useState(false);
+  const [debugAllChats, setDebugAllChats] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -148,6 +151,64 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
           <span className={styles.tokenCounter} title={`Input tokens: ${inputTokens} / ${TOKEN_LIMIT}`}>
             <Badge color={tokenColor} text={formattedTokens} className={styles.noBg} />
           </span>
+        )}
+        <IconButton name="bug" title="Debug" aria-label="Debug" onClick={() => setDebugOpened(true)} />
+        {debugOpened && (
+          <Modal title="Debug Dash" isOpen={debugOpened} onDismiss={() => setDebugOpened(false)}>
+            <div className={styles.debugModalContent}>
+              <div className={styles.debugModalContentHeader}>
+                <Switch
+                  label="Include all chats"
+                  title="Include all chats"
+                  checked={debugAllChats}
+                  onChange={() => setDebugAllChats(!debugAllChats)}
+                />
+                <span>Include all chats</span>
+              </div>
+              <pre className={styles.debugModalContentBody}>
+                {JSON.stringify(
+                  debugAllChats
+                    ? getDash(model).toJSON().chats
+                    : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON()
+                )}
+              </pre>
+            </div>
+            <Modal.ButtonRow>
+              <Button onClick={() => setDebugOpened(false)} fill="outline" variant="secondary">
+                Close
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                onClick={() => {
+                  try {
+                    navigator.clipboard.writeText(
+                      JSON.stringify(
+                        debugAllChats
+                          ? getDash(model).toJSON().chats
+                          : getDash(model).state.chats[getDash(model).state.chatIndex].toJSON()
+                      )
+                    );
+
+                    setDebugOpened(false);
+
+                    appEvents.publish({
+                      type: AppEvents.alertInfo.name,
+                      payload: ['Debug info copied to clipboard'],
+                    });
+                  } catch (err) {
+                    appEvents.publish({
+                      type: AppEvents.alertError.name,
+                      payload: ['Debug info could not be copied to clipboard'],
+                    });
+                  }
+                }}
+                icon="copy"
+              >
+                Copy
+              </Button>
+            </Modal.ButtonRow>
+          </Modal>
         )}
         <IconButton
           name={codeOverflow === 'scroll' ? 'wrap-text' : 'bars'}
@@ -248,5 +309,26 @@ const getStyles = (theme: GrafanaTheme2) => ({
   noBg: css({
     background: 'transparent !important',
     border: 'none !important',
+  }),
+  debugModalContent: css({
+    label: 'debug-modal-content',
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+  }),
+  debugModalContentHeader: css({
+    label: 'debug-modal-content-header',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: theme.spacing(1),
+  }),
+  debugModalContentBody: css({
+    label: 'debug-modal-content-body',
+    flex: 1,
+    overflow: 'auto',
+    whiteSpace: 'nowrap',
   }),
 });
