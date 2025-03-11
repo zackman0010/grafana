@@ -110,7 +110,7 @@ async function updateSinglePanel(
           queries: targets as any,
           maxDataPointsFromWidth: true,
         }),
-        transformations: transformations as any,
+        transformations: (transformations as any) ?? [],
       });
       panel.setState({
         $data: data,
@@ -124,7 +124,7 @@ async function updateSinglePanel(
           queries: targets as any,
           maxDataPointsFromWidth: true,
         }),
-        transformations: transformations as any,
+        transformations: (transformations as any) ?? [],
       });
       panel.setState({
         $data: data,
@@ -137,7 +137,7 @@ async function updateSinglePanel(
           queries: targets as any,
           maxDataPointsFromWidth: true,
         }),
-        transformations: transformations as any,
+        transformations: (transformations as any) ?? [],
       });
       panel.setState({
         $data: data,
