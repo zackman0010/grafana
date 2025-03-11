@@ -103,11 +103,27 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
           'Generate a new overview message using as few words as possible, letting the user know that you know what this new page is about. Do not personify yourself. Ask them what they want to know and where they want to go. Do not use titles.';
       }
 
-      const welcomeMessage = await makeSingleRequest({
+      let welcomeMessage = await makeSingleRequest({
         systemPrompt: contextPrompt,
         userMessage: 'Generate a welcome message',
       });
       console.log('Generated welcome message:', welcomeMessage);
+      // add some Grafana dev specific examples
+      // todo: remove these before going public
+      const examples = [
+        'Which Mimir cluster collects the most metrics?',
+        'How many errors are there in each cluster?',
+        'Do we have any crashlooping or unschedulable pods?',
+        'Create an alert for high error rates in any of our mimir clusters.',
+        'Declare an incident for high latency in one of the clusters.',
+        'Create a dashboard showing resource usage of each pod.',
+        `What version of Tempo are we running?`,
+        `What's the most common error in Grafana pods?`,
+      ];
+      welcomeMessage += `
+      
+For example: **${examples[Math.floor(Math.random() * examples.length)]}**
+`
       this.addSystemMessage(welcomeMessage);
     } catch (error) {
       console.error('Error generating welcome message:', error);
