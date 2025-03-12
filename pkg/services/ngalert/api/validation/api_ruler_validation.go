@@ -1,4 +1,4 @@
-package api
+package validation
 
 import (
 	"errors"
@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
+	. "github.com/grafana/grafana/pkg/services/ngalert/api/compat"
 	apimodels "github.com/grafana/grafana/pkg/services/ngalert/api/tooling/definitions"
 	ngmodels "github.com/grafana/grafana/pkg/services/ngalert/models"
 	"github.com/grafana/grafana/pkg/services/ngalert/store"
@@ -32,15 +33,15 @@ func RuleLimitsFromConfig(cfg *setting.UnifiedAlertingSettings, toggles featurem
 	}
 }
 
-// validateRuleNode validates API model (definitions.PostableExtendedRuleNode) and converts it to models.AlertRule
-func validateRuleNode(
+// ValidateRuleNode validates API model (definitions.PostableExtendedRuleNode) and converts it to models.AlertRule
+func ValidateRuleNode(
 	ruleNode *apimodels.PostableExtendedRuleNode,
 	groupName string,
 	interval time.Duration,
 	orgId int64,
 	namespaceUID string,
 	limits RuleLimits) (*ngmodels.AlertRule, error) {
-	intervalSeconds, err := validateInterval(interval, limits.BaseInterval)
+	intervalSeconds, err := ValidateInterval(interval, limits.BaseInterval)
 	if err != nil {
 		return nil, err
 	}
@@ -240,7 +241,7 @@ func validateCondition(condition string, queries []apimodels.AlertQuery, canPatc
 	return nil
 }
 
-func validateInterval(interval, baseInterval time.Duration) (int64, error) {
+func ValidateInterval(interval, baseInterval time.Duration) (int64, error) {
 	intervalSeconds := int64(interval.Seconds())
 
 	baseIntervalSeconds := int64(baseInterval.Seconds())
@@ -302,7 +303,7 @@ func ValidateRuleGroup(
 	result := make([]*ngmodels.AlertRuleWithOptionals, 0, len(ruleGroupConfig.Rules))
 	uids := make(map[string]int, cap(result))
 	for idx := range ruleGroupConfig.Rules {
-		rule, err := validateRuleNode(&ruleGroupConfig.Rules[idx], ruleGroupConfig.Name, interval, orgId, namespaceUID, limits)
+		rule, err := ValidateRuleNode(&ruleGroupConfig.Rules[idx], ruleGroupConfig.Name, interval, orgId, namespaceUID, limits)
 		// TODO do not stop on the first failure but return all failures
 		if err != nil {
 			return nil, fmt.Errorf("invalid rule specification at index [%d]: %w", idx, err)
