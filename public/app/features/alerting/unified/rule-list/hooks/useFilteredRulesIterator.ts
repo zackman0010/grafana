@@ -1,7 +1,7 @@
 import { AsyncIterableX, empty, from } from 'ix/asynciterable';
 import { merge } from 'ix/asynciterable/merge';
 import { filter, flatMap, map } from 'ix/asynciterable/operators';
-import { compact } from 'lodash';
+import { compact, includes, isEmpty } from 'lodash';
 
 import { Matcher } from 'app/plugins/datasource/alertmanager/types';
 import {
@@ -19,7 +19,7 @@ import {
 import { RulesFilter } from '../../search/rulesSearchParser';
 import { labelsMatchMatchers } from '../../utils/alertmanager';
 import { Annotation } from '../../utils/constants';
-import { getDatasourceAPIUid, getExternalRulesSources } from '../../utils/datasource';
+import { getDataSourceByUid, getDatasourceAPIUid, getExternalRulesSources } from '../../utils/datasource';
 import { parseMatcher } from '../../utils/matchers';
 import { prometheusRuleType } from '../../utils/rules';
 
@@ -52,15 +52,9 @@ export function useFilteredRulesIteratorProvider() {
 
   const getFilteredRulesIterator = (filterState: RulesFilter, groupLimit: number): AsyncIterableX<RuleWithOrigin> => {
     const normalizedFilterState = normalizeFilterState(filterState);
+    const hasDataSourceFilterActive = Boolean(filterState.dataSourceNames.length);
 
-    const ruleSourcesToFetchFrom = filterState.dataSourceNames.length
-      ? filterState.dataSourceNames.map<DataSourceRulesSourceIdentifier>((ds) => ({
-          name: ds,
-          uid: getDatasourceAPIUid(ds),
-          ruleSourceType: 'datasource',
-        }))
-      : allExternalRulesSources;
-
+    // create the iterable sequence for Grafana managed implementation
     const grafanaIterator = from(grafanaGroupsGenerator(groupLimit)).pipe(
       filter((group) => groupFilter(group, normalizedFilterState)),
       flatMap((group) => group.rules.map((rule) => [group, rule] as const)),
@@ -68,14 +62,20 @@ export function useFilteredRulesIteratorProvider() {
       map(([group, rule]) => mapGrafanaRuleToRuleWithOrigin(group, rule))
     );
 
-    const sourceIterables = ruleSourcesToFetchFrom.map((ds) => {
-      const generator = prometheusGroupsGenerator(ds, groupLimit);
-      return from(generator).pipe(map((group) => [ds, group] as const));
+    // check filters for potential data source filter to we don't pull from all data sources
+    const externalRulesSourcesToFetchFrom = hasDataSourceFilterActive
+      ? getRulesSourcesFromFilter(filterState)
+      : allExternalRulesSources;
+
+    // create the iterable sequence for upstream Prometheus / Mimir managed implementation
+    const prometheusRulesSourceIterables = externalRulesSourcesToFetchFrom.map((dataSourceIdentifier) => {
+      const generator = prometheusGroupsGenerator(dataSourceIdentifier, groupLimit);
+      return from(generator).pipe(map((group) => [dataSourceIdentifier, group] as const));
     });
 
     // if we have no prometheus data sources, use an empty async iterable
-    const source = sourceIterables.at(0) ?? empty();
-    const otherIterables = sourceIterables.slice(1);
+    const source = isEmpty(prometheusRulesSourceIterables) ? empty() : prometheusRulesSourceIterables[0];
+    const otherIterables = prometheusRulesSourceIterables.slice(1);
 
     const dataSourcesIterator = merge(source, ...otherIterables).pipe(
       filter(([_, group]) => groupFilter(group, normalizedFilterState)),
@@ -88,6 +88,30 @@ export function useFilteredRulesIteratorProvider() {
   };
 
   return { getFilteredRulesIterator };
+}
+
+// find all data sources that the user might want to filter by, only allow Prometheus and Loki data source types
+const SUPPORTED_RULES_SOURCE_TYPES = ['loki', 'prometheus'];
+function getRulesSourcesFromFilter(filter: RulesFilter): DataSourceRulesSourceIdentifier[] {
+  return filter.dataSourceNames.reduce<DataSourceRulesSourceIdentifier[]>((acc, dataSourceName) => {
+    // since "getDatasourceAPIUid" can throw we'll omit any non-existing data sources
+    try {
+      const uid = getDatasourceAPIUid(dataSourceName);
+      const type = getDataSourceByUid(uid)?.type;
+
+      if (!includes(SUPPORTED_RULES_SOURCE_TYPES, type)) {
+        return acc;
+      }
+
+      acc.push({
+        name: dataSourceName,
+        uid,
+        ruleSourceType: 'datasource',
+      });
+    } catch {}
+
+    return acc;
+  }, []);
 }
 
 function mapRuleToRuleWithOrigin(
