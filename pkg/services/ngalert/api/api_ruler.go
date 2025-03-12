@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"slices"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -812,4 +814,11 @@ func (srv RulerSrv) resolveUserIdToNameFn(ctx context.Context) userIDToUserInfoF
 		cache[*id] = result
 		return result
 	}
+}
+
+func getPanelIDFromQuery(v url.Values) (int64, error) {
+	if s := strings.TrimSpace(v.Get("panel_id")); s != "" {
+		return strconv.ParseInt(s, 10, 64)
+	}
+	return 0, nil
 }
