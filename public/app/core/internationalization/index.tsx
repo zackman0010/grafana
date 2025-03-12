@@ -3,6 +3,8 @@ import LanguageDetector, { DetectorOptions } from 'i18next-browser-languagedetec
 import { ReactElement } from 'react';
 import { Trans as I18NextTrans, initReactI18next } from 'react-i18next'; // eslint-disable-line no-restricted-imports
 
+import { setTFunction, setTransComponent, setI18nInstance } from '@grafana/runtime';
+
 import { DEFAULT_LANGUAGE, NAMESPACES, VALID_LANGUAGES } from './constants';
 import { loadTranslations } from './loadTranslations';
 
@@ -46,6 +48,9 @@ export async function initializeI18n(language: string): Promise<{ language: stri
   await loadPromise;
 
   tFunc = i18n.getFixedT(null, NAMESPACES);
+  setTFunction(tFunc);
+  setTransComponent(Trans);
+  setI18nInstance(i18nInstance);
 
   return {
     language: i18nInstance.resolvedLanguage,

@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 
 import { PanelPlugin, PanelPluginMeta, PanelProps, PluginLoadingStrategy } from '@grafana/data';
 import config from 'app/core/config';
+import { getI18next } from 'app/core/internationalization';
 
 import { getPanelPluginLoadError } from '../panel/components/PanelPluginError';
 
@@ -81,6 +82,13 @@ function getPanelPlugin(meta: PanelPluginMeta): Promise<PanelPlugin> {
 
       if (!plugin.panel && plugin.angularPanelCtrl) {
         plugin.panel = getAngularPanelReactWrapper(plugin);
+      }
+      return plugin;
+    })
+    .then(async (plugin) => {
+      const i18nResources = plugin.getI18nResources();
+      for (const [language, loader] of i18nResources.entries()) {
+        loader().then((resources) => getI18next().addResourceBundle(language, meta.id, resources, false, true));
       }
       return plugin;
     })

@@ -9,6 +9,7 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+  i18nRegistry,
   locationUtil,
   monacoLanguageRegistry,
   setLocale,
@@ -122,6 +123,7 @@ export class GrafanaApp {
       // Let iframe container know grafana has started loading
       parent.postMessage('GrafanaAppInit', '*');
 
+      i18nRegistry.setInit(() => []);
       const initI18nPromise = initializeI18n(config.bootData.user.language);
       initI18nPromise.then(({ language }) => updateConfig({ language }));
 

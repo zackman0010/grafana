@@ -873,3 +873,5 @@ export {
   userHasAllPermissions,
   userHasAnyPermission,
 } from './rbac/rbac';
+
+export { i18nRegistry } from './i18n/i18nRegistry';

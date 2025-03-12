@@ -66,3 +66,5 @@ export {
   getCorrelationsService,
   setCorrelationsService,
 } from './services/CorrelationsService';
+
+export { i18nNext, setI18nInstance, setTFunction, setTransComponent, t, Trans } from './i18n';

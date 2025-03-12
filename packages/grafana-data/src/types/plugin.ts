@@ -1,5 +1,7 @@
 import { ComponentType } from 'react';
 
+import { LocaleFileLoader } from '../i18n/types';
+
 import { KeyValue } from './data';
 import { IconName } from './icon';
 
@@ -261,5 +263,29 @@ export class GrafanaPlugin<T extends PluginMeta = PluginMeta> {
 
   constructor() {
     this.meta = {} as T;
+    this.i18nResources = new Map();
+  }
+
+  private readonly i18nResources: Map<string, LocaleFileLoader>;
+
+  /**
+   * Adds a resource to the plugin.
+   * @param language - The language of the resource bundle.
+   * @param loader - The loader for the resource bundle.
+   * @returns The plugin instance.
+   * @internal
+   */
+  addResource(language: string, loader: LocaleFileLoader) {
+    this.i18nResources.set(language, loader);
+    return this;
+  }
+
+  /**
+   * Returns the i18n resources for the plugin.
+   * @returns The i18n resources for the plugin.
+   * @internal
+   */
+  getI18nResources() {
+    return this.i18nResources;
   }
 }

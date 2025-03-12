@@ -13,6 +13,8 @@
     "typings/jest",
     "../../public/app/types/jquery/*.ts",
     "../../public/app/types/*.d.ts",
-    "../grafana-ui/src/types/react-table-config.d.ts"
+    "../grafana-ui/src/types/react-table-config.d.ts",
+    "../../public/app/features/plugins/registry/i18nRegistry.tsx",
+    "../../public/app/features/plugins/registry/types.ts"
   ]
 }
