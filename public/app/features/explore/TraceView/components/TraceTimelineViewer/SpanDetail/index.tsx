@@ -15,30 +15,26 @@
 import { css } from '@emotion/css';
 import { SpanStatusCode } from '@opentelemetry/api';
 import cx from 'classnames';
-import * as React from 'react';
-import { useMemo } from 'react';
 
 import {
+  CoreApp,
   DataFrame,
   dateTimeFormat,
   GrafanaTheme2,
-  IconName,
   LinkModel,
+  TimeRange,
   TraceKeyValuePair,
   TraceLog,
 } from '@grafana/data';
 import { TraceToProfilesOptions } from '@grafana/o11y-ds-frontend';
-import { config, locationService, reportInteraction } from '@grafana/runtime';
 import { TimeZone } from '@grafana/schema';
-import { DataLinkButton, Divider, Icon, TextArea, useStyles2 } from '@grafana/ui';
-import { RelatedProfilesTitle } from '@grafana-plugins/tempo/resultTransformer';
+import { Divider, Icon, TextArea, useStyles2 } from '@grafana/ui';
 
 import { pyroscopeProfileIdTagKey } from '../../../createSpanLink';
 import { autoColor } from '../../Theme';
 import LabeledList from '../../common/LabeledList';
 import { KIND, LIBRARY_NAME, LIBRARY_VERSION, STATUS, STATUS_MESSAGE, TRACE_STATE } from '../../constants/span';
 import { SpanLinkFunc, TNil } from '../../types';
-import { SpanLinkDef, SpanLinkType } from '../../types/links';
 import { TraceLink, TraceSpan, TraceSpanReference } from '../../types/trace';
 import { formatDuration } from '../utils';
 
@@ -47,6 +43,7 @@ import AccordianReferences from './AccordianReferences';
 import AccordianText from './AccordianText';
 import { Attributes } from './Attributes';
 import DetailState from './DetailState';
+import { getSpanDetailLinkButtons } from './SpanDetailLinkButtons';
 import SpanFlameGraph from './SpanFlameGraph';
 
 const getStyles = (theme: GrafanaTheme2) => {
@@ -145,43 +142,6 @@ export type TraceFlameGraphs = {
   [spanID: string]: DataFrame;
 };
 
-const createLinkButton = (
-  link: SpanLinkDef,
-  datasourceType: string,
-  type: SpanLinkType,
-  title: string,
-  icon: IconName
-) => {
-  return (
-    <DataLinkButton
-      link={{
-        ...link,
-        title: title,
-        target: '_blank',
-        origin: link.field,
-        onClick: (event: React.MouseEvent) => {
-          // DataLinkButton assumes if you provide an onClick event you would want to prevent default behavior like navigation
-          // In this case, if an onClick is not defined, restore navigation to the provided href while keeping the tracking
-          // this interaction will not be tracked with link right clicks
-          reportInteraction('grafana_traces_trace_view_span_link_clicked', {
-            datasourceType: datasourceType,
-            grafana_version: config.buildInfo.version,
-            type,
-            location: 'spanDetails',
-          });
-
-          if (link.onClick) {
-            link.onClick?.(event);
-          } else {
-            locationService.push(link.href);
-          }
-        },
-      }}
-      buttonProps={{ icon }}
-    />
-  );
-};
-
 export type SpanDetailProps = {
   detailState: DetailState;
   linksGetter: ((links: TraceKeyValuePair[], index: number) => TraceLink[]) | TNil;
@@ -207,6 +167,8 @@ export type SpanDetailProps = {
   traceFlameGraphs: TraceFlameGraphs;
   setTraceFlameGraphs: (flameGraphs: TraceFlameGraphs) => void;
   setRedrawListView: (redraw: {}) => void;
+  timeRange: TimeRange;
+  app: CoreApp;
 };
 
 export default function SpanDetail(props: SpanDetailProps) {
@@ -233,6 +195,8 @@ export default function SpanDetail(props: SpanDetailProps) {
     setTraceFlameGraphs,
     traceToProfilesOptions,
     setRedrawListView,
+    timeRange,
+    app,
   } = props;
   const {
     isTagsOpen,
@@ -329,49 +293,14 @@ export default function SpanDetail(props: SpanDetailProps) {
     });
   }
 
-  const { links, logLinkButton, profileLinkButton, sessionLinkButton } = useMemo(() => {
-    const links = createSpanLink?.(span) ?? [];
-
-    let logLinkButton: JSX.Element | null = null;
-    let profileLinkButton: JSX.Element | null = null;
-    let sessionLinkButton: JSX.Element | null = null;
-
-    const logsLink = links.filter((link) => link.type === SpanLinkType.Logs);
-    if (logsLink && logsLink.length > 0) {
-      logLinkButton = createLinkButton(logsLink[0], datasourceType, SpanLinkType.Logs, 'Logs for this span', 'gf-logs');
-    }
-
-    const profilesLink = links.filter(
-      (link) => link.type === SpanLinkType.Profiles && link.title === RelatedProfilesTitle
-    );
-    if (profilesLink && profilesLink.length > 0) {
-      profileLinkButton = createLinkButton(
-        profilesLink[0],
-        datasourceType,
-        SpanLinkType.Profiles,
-        'Profiles for this span',
-        'link'
-      );
-    }
-
-    const sessionLink = links.filter((link) => link.type === SpanLinkType.Session);
-    if (sessionLink && sessionLink.length > 0) {
-      sessionLinkButton = createLinkButton(
-        sessionLink[0],
-        datasourceType,
-        SpanLinkType.Session,
-        'Session for this span',
-        'frontend-observability'
-      );
-    }
-
-    return {
-      links,
-      logLinkButton,
-      profileLinkButton,
-      sessionLinkButton,
-    };
-  }, [span, createSpanLink, datasourceType]);
+  const { profileLinkButtons, logLinkButton, sessionLinkButton, links } = getSpanDetailLinkButtons({
+    span,
+    createSpanLink,
+    datasourceType,
+    traceToProfilesOptions,
+    timeRange,
+    app,
+  });
 
   const focusSpanLink = createFocusSpanLink(traceID, spanID);
   const operationResult = span.tags.find((tag) => ['http.status_code', 'http.response.status_code'].includes(tag.key));
@@ -393,7 +322,7 @@ export default function SpanDetail(props: SpanDetailProps) {
       </div>
       <div className={styles.linkList}>
         {logLinkButton}
-        {profileLinkButton}
+        {profileLinkButtons}
         {sessionLinkButton}
       </div>
       <Divider spacing={1} />
