@@ -15,7 +15,7 @@ export interface Settings {
   verbosity: Verbosity;
 }
 
-export type Sender = 'user' | 'ai' | 'system' | 'tool_notification';
+export type Sender = 'user' | 'ai' | 'system' | 'tool_notification' | 'action';
 
 export interface ToolContent {
   type: string;
@@ -23,6 +23,12 @@ export interface ToolContent {
   name: string;
   input: Record<string, unknown>;
   output?: Record<string, unknown>;
+}
+
+export interface ActionContent {
+  text: string;
+  options: Array<{ label: string; value: string; primary?: boolean }>;
+  actionId: string;
 }
 
 export interface PanelConfiguration {

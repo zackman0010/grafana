@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { AIMessageChunk, HumanMessage, SystemMessage, ToolMessage } from '@langchain/core/messages';
+import { AIMessage, AIMessageChunk, HumanMessage, SystemMessage, ToolMessage } from '@langchain/core/messages';
 import { useRef } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
@@ -10,8 +10,10 @@ import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
 import { getAgent } from '../../agent/agent';
 import { generateSystemPrompt } from '../../agent/systemPrompt';
 import { toolsByName } from '../../agent/tools';
+import { ActionMessage, actionEvents } from '../DashMessage/ActionMessage';
 import { Tool } from '../DashMessage/Tool';
 import { getChat, getDash, getMessages, getSettings } from '../utils';
+
 
 import { Input } from './Input';
 import { Logger } from './Logger';
@@ -188,6 +190,46 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
+  // Helper method to cancel any pending tool calls before adding a new human message
+  private _cancelPendingToolCalls() {
+    const messages = getMessages(this);
+    const langchainMessages = messages.state.langchainMessages;
+
+    // Find tool calls that don't have corresponding tool results
+    const pendingToolCalls = new Set<string>();
+
+    // First pass: collect all tool calls
+    for (let i = 0; i < langchainMessages.length; i++) {
+      const msg = langchainMessages[i];
+      if (msg instanceof AIMessage && msg.tool_calls) {
+        msg.tool_calls.forEach(call => {
+          if (call.id) {
+            pendingToolCalls.add(call.id);
+          }
+        });
+      }
+    }
+
+    // Second pass: remove tool calls that have results
+    for (let i = 0; i < langchainMessages.length; i++) {
+      const msg = langchainMessages[i];
+      if (msg instanceof ToolMessage && msg.tool_call_id) {
+        pendingToolCalls.delete(msg.tool_call_id);
+      }
+    }
+
+    // Add cancellation results for any remaining pending tool calls
+    pendingToolCalls.forEach(toolId => {
+      const cancelResult = new ToolMessage({
+        tool_call_id: toolId,
+        content: JSON.stringify({ status: 'cancelled', message: 'Cancelled by user' }),
+      });
+      messages.addLangchainMessage(cancelResult);
+    });
+
+    return pendingToolCalls.size > 0;
+  }
+
   public async interruptAndSendMessage() {
     const message = this.state.message.trim();
     if (!message) {
@@ -197,10 +239,35 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     // Store the message before canceling the request
     const messageToSend = message;
 
+    // Check if there's an action message displayed
+    const messages = getMessages(this);
+
+    // Find the most recent active action message
+    const activeActionMessages = messages.state.messages.filter(
+      (msg) => msg.state.sender === 'action' && !msg.state.muted
+    );
+
+    if (activeActionMessages.length > 0) {
+      // Get the most recent action message
+      const mostRecentActionMessage = activeActionMessages[activeActionMessages.length - 1];
+
+      // Find the ActionMessage component in the children
+      mostRecentActionMessage.state.children.forEach((child) => {
+        if (child instanceof ActionMessage) {
+          // Disable the button and mark as muted
+          child.setState({ disabled: true, hideButton: true });
+          mostRecentActionMessage.setState({ muted: true });
+        }
+      });
+    }
+
     if (this._abortController) {
       await this.cancelRequest();
       // Wait a tick to ensure state updates are processed
       await new Promise((resolve) => setTimeout(resolve, 0));
+    } else {
+      // Cancel any pending tool calls if we're not already cancelling a request
+      this._cancelPendingToolCalls();
     }
 
     // Clear the input before starting new message
@@ -257,6 +324,31 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     if (!message) {
       return;
     }
+
+    // Check if there's an action message displayed
+    const messages = getMessages(this);
+
+    // Find the most recent active action message
+    const activeActionMessages = messages.state.messages.filter(
+      (msg) => msg.state.sender === 'action' && !msg.state.muted
+    );
+
+    if (activeActionMessages.length > 0) {
+      // Get the most recent action message
+      const mostRecentActionMessage = activeActionMessages[activeActionMessages.length - 1];
+
+      // Find the ActionMessage component in the children
+      mostRecentActionMessage.state.children.forEach((child) => {
+        if (child instanceof ActionMessage) {
+          // Disable the button and mark as muted
+          child.setState({ disabled: true, hideButton: true });
+          mostRecentActionMessage.setState({ muted: true });
+        }
+      });
+    }
+
+    // Cancel any pending tool calls
+    this._cancelPendingToolCalls();
 
     // Normal flow for new messages
     this._abortController = new AbortController();
@@ -341,8 +433,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
   }
 
-  private async _handleToolCalls(aiMessage: AIMessageChunk, callCount = 0, maxCalls = 20) {
-    if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0 || callCount >= maxCalls) {
+  private async _handleToolCalls(aiMessage: AIMessageChunk, callCount = 0, maxCalls = 8) {
+    if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0) {
       // Speak the AI message if text-to-speech is enabled
       if (this.state.textToSpeech.state.canSpeak) {
         const content = typeof aiMessage.content === 'string' ? aiMessage.content : JSON.stringify(aiMessage.content);
@@ -351,118 +443,174 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       return;
     }
 
-    for (const toolCall of aiMessage.tool_calls) {
-      if (this._abortController?.signal.aborted) {
-        this._removeToolAndMessage(toolCall.id ?? '');
-        return;
-      }
+    // Check if we've already reached the maximum number of tool calls
+    if (callCount >= maxCalls) {
+      const messages = getMessages(this);
+      const actionId = `continue-tool-calls-${Date.now()}`;
 
-      console.log('\n🛠️ Tool Call:', {
-        name: toolCall.name,
-        type: 'tool_notification',
+      // Set up the event listener for this specific action
+      const unsubscribe = actionEvents.on('action-button-clicked', async (eventData) => {
+        if (eventData.actionId === actionId) {
+          // Remove the listener to avoid memory leaks
+          unsubscribe();
+
+          // Set loading state to true
+          getMessages(this).setLoading(true);
+
+          try {
+            // Process the next tool call with a reset counter
+            await this._processNextToolCall(aiMessage, 0, maxCalls);
+          } catch (error) {
+            console.error('Error processing next tool call:', error);
+            if (error instanceof Error) {
+              getMessages(this).addSystemMessage(error.message, false, true);
+            }
+          } finally {
+            // Make sure to reset loading state if there was an error
+            if (!getMessages(this).state.anyToolsWorking) {
+              getMessages(this).setLoading(false);
+            }
+          }
+        }
       });
 
-      const selectedTool = toolsByName[toolCall.name];
+      // Create an action message asking the user if they want to continue
+      messages.addActionMessage(
+        `I've made ${callCount} tool calls so far. Should I run the next tool call or would you like to provide new instructions?`,
+        [
+          { label: 'Continue', value: 'continue', primary: true }
+        ],
+        actionId
+      );
 
-      if (selectedTool) {
-        getMessages(this).setToolWorking(toolCall.id, true);
+      return;
+    }
 
-        let toolResponse: ToolMessage;
+    // Process the next tool call
+    await this._processNextToolCall(aiMessage, callCount, maxCalls);
+  }
+
+  private async _processNextToolCall(aiMessage: AIMessageChunk, callCount = 0, maxCalls = 8) {
+    if (!aiMessage.tool_calls || aiMessage.tool_calls.length === 0) {
+      return;
+    }
+
+    const toolCall = aiMessage.tool_calls[0];
+
+    if (this._abortController?.signal.aborted) {
+      this._removeToolAndMessage(toolCall.id ?? '');
+      return;
+    }
+
+    console.log('\n🛠️ Tool Call:', {
+      name: toolCall.name,
+      type: 'tool_notification',
+    });
+
+    const selectedTool = toolsByName[toolCall.name];
+
+    if (selectedTool) {
+      getMessages(this).setToolWorking(toolCall.id, true);
+
+      let toolResponse: ToolMessage;
+      try {
         try {
-          try {
-            toolResponse = await selectedTool.invoke(toolCall);
-          } catch (err: unknown) {
-            if (this._abortController?.signal.aborted) {
-              this._removeToolAndMessage(toolCall.id ?? '');
-              return;
-            }
-            console.error(`Tool ${toolCall.name} failed:`, err);
-            const message = err instanceof Error ? err.message : String(err);
-            toolResponse = new ToolMessage({
-              tool_call_id: toolCall.id ?? '1',
-              content: `An error occurred while executing the tool: ${message}`,
-            });
-            getMessages(this).setToolError(toolCall.id, message);
+          toolResponse = await selectedTool.invoke(toolCall);
+        } catch (err: unknown) {
+          if (this._abortController?.signal.aborted) {
+            this._removeToolAndMessage(toolCall.id ?? '');
+            return;
           }
+          console.error(`Tool ${toolCall.name} failed:`, err);
+          const message = err instanceof Error ? err.message : String(err);
+          toolResponse = new ToolMessage({
+            tool_call_id: toolCall.id ?? '1',
+            content: `An error occurred while executing the tool: ${message}`,
+          });
+          getMessages(this).setToolError(toolCall.id, message);
+        }
 
-          getMessages(this).setToolWorking(toolCall.id, false);
+        getMessages(this).setToolWorking(toolCall.id, false);
+
+        if (this._abortController?.signal.aborted) {
+          this._removeToolAndMessage(toolCall.id ?? '');
+          return;
+        }
+
+        console.log('\n📥 Tool Response:', {
+          content: toolResponse.content,
+          type: 'tool_response',
+        });
+
+        // Set the tool's output
+        getMessages(this).state.messages.forEach((message) => {
+          message.state.children.forEach((child) => {
+            if (child instanceof Tool) {
+              const tool = child as Tool;
+              if (tool.state.content.id === toolCall.id) {
+                try {
+                  const output = JSON.parse(toolResponse.content as string);
+                  tool.setOutput(output);
+                } catch (e) {
+                  // If the response isn't JSON, set it as a string
+                  tool.setOutput({ result: toolResponse.content as string });
+                }
+              }
+            }
+          });
+        });
+
+        getMessages(this).addLangchainMessage(toolResponse);
+        if (toolResponse.artifact) {
+          getMessages(this).addArtifact(toolResponse.artifact);
+        }
+        this._updateSystemPrompt();
+        this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
+
+        try {
+          // Increment the counter before checking if we've reached the maximum
+          const newCallCount = callCount + 1;
+
+          const nextAiMessage = await this._currentAgent.invoke(getMessages(this).state.langchainMessages!, {
+            signal: this._abortController?.signal,
+          });
 
           if (this._abortController?.signal.aborted) {
             this._removeToolAndMessage(toolCall.id ?? '');
             return;
           }
 
-          console.log('\n📥 Tool Response:', {
-            content: toolResponse.content,
-            type: 'tool_response',
-          });
+          this.state.logger.logAIMessage(nextAiMessage.content, 'tool');
+          getMessages(this).addAiMessage(nextAiMessage.content);
+          getMessages(this).addLangchainMessage(nextAiMessage);
 
-          // Set the tool's output
-          getMessages(this).state.messages.forEach((message) => {
-            message.state.children.forEach((child) => {
-              if (child instanceof Tool) {
-                const tool = child as Tool;
-                if (tool.state.content.id === toolCall.id) {
-                  try {
-                    const output = JSON.parse(toolResponse.content as string);
-                    tool.setOutput(output);
-                  } catch (e) {
-                    // If the response isn't JSON, set it as a string
-                    tool.setOutput({ result: toolResponse.content as string });
-                  }
-                }
-              }
-            });
-          });
-
-          getMessages(this).addLangchainMessage(toolResponse);
-          if (toolResponse.artifact) {
-            getMessages(this).addArtifact(toolResponse.artifact);
-          }
-          this._updateSystemPrompt();
-          this.state.logger.logMessagesToLLM(getMessages(this).state.langchainMessages!);
-
-          try {
-            const nextAiMessage = await this._currentAgent.invoke(getMessages(this).state.langchainMessages!, {
-              signal: this._abortController?.signal,
-            });
-
-            if (this._abortController?.signal.aborted) {
-              this._removeToolAndMessage(toolCall.id ?? '');
-              return;
-            }
-
-            this.state.logger.logAIMessage(nextAiMessage.content, 'tool');
-            getMessages(this).addAiMessage(nextAiMessage.content);
-            getMessages(this).addLangchainMessage(nextAiMessage);
-
-            // Update token usage if available in the response
-            const toolInputTokens = this._extractTokenInfo(nextAiMessage);
-            if (toolInputTokens !== null) {
-              const settings = getSettings(this);
-              settings.updateInputTokens(toolInputTokens);
-            }
-
-            await this._handleToolCalls(nextAiMessage, callCount + 1, maxCalls);
-          } catch (error) {
-            throw error;
-          }
-        } catch (error: unknown) {
-          if (error instanceof Error && error.name === 'AbortError') {
-            console.log('Request was cancelled during tool execution');
-            getMessages(this).setToolWorking(toolCall.id, false);
-            this._removeToolAndMessage(toolCall.id ?? '');
-            return;
+          // Update token usage if available in the response
+          const toolInputTokens = this._extractTokenInfo(nextAiMessage);
+          if (toolInputTokens !== null) {
+            const settings = getSettings(this);
+            settings.updateInputTokens(toolInputTokens);
           }
 
-          getMessages(this).setToolError(
-            toolCall.id,
-            error instanceof Error ? error.message : 'An error occurred while executing the tool'
-          );
-          getMessages(this).setToolWorking(toolCall.id, false);
-          console.error(`Tool ${toolCall.name} failed:`, error);
-          this._removeToolAndMessage(toolCall.id ?? '');
+          // Process the next tool call with an incremented counter
+          await this._handleToolCalls(nextAiMessage, newCallCount, maxCalls);
+        } catch (error) {
+          throw error;
         }
+      } catch (error: unknown) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.log('Request was cancelled during tool execution');
+          getMessages(this).setToolWorking(toolCall.id, false);
+          this._removeToolAndMessage(toolCall.id ?? '');
+          return;
+        }
+
+        getMessages(this).setToolError(
+          toolCall.id,
+          error instanceof Error ? error.message : 'An error occurred while executing the tool'
+        );
+        getMessages(this).setToolWorking(toolCall.id, false);
+        console.error(`Tool ${toolCall.name} failed:`, error);
+        this._removeToolAndMessage(toolCall.id ?? '');
       }
     }
   }
