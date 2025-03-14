@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { getAppEvents, ToolAddedEvent } from '@grafana/runtime';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
+import { LoadingBar, useStyles2, Button } from '@grafana/ui';
 
 import { getAgent } from '../../agent/agent';
 import { generateSystemPrompt } from '../../agent/systemPrompt';
@@ -635,12 +635,14 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           onInterruptAndSend={() => model.interruptAndSendMessage()}
         />
 
-        <IconButton
-          size="xl"
-          name={loading ? 'times' : 'message'}
-          aria-label={loading ? 'Cancel request' : 'Send message'}
+        <Button
+          icon={loading ? 'times' : 'enter'}
+          size="sm"
           onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
-        />
+          disabled={!loading && !message.trim()}
+        >
+          {loading ? 'Cancel' : 'Send'}
+        </Button>
       </div>
     </div>
   );
@@ -657,8 +659,10 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   row: css({
     label: 'dash-input-row',
+    background: theme.colors.background.primary,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: theme.spacing(1.5),
     padding: theme.spacing(0.5),
   }),

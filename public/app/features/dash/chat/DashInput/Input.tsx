@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { forwardRef } from 'react';
+import { forwardRef, useCallback } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2, TextArea } from '@grafana/ui';
@@ -36,6 +36,22 @@ export const Input = forwardRef<HTMLTextAreaElement, Props>(
   ) => {
     const styles = useStyles2(getStyles);
 
+    const adjustHeight = useCallback((textarea: HTMLTextAreaElement) => {
+      if (!textarea) {
+        return;
+      }
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }, []);
+
+    const handleTextAreaChange = useCallback(
+      (evt: any) => {
+        onUpdateMessage(evt.target.value ?? '');
+        adjustHeight(evt.target);
+      },
+      [onUpdateMessage, adjustHeight]
+    );
+
     return (
       <ReactTextareaAutocomplete<string>
         autoFocus
@@ -65,8 +81,11 @@ export const Input = forwardRef<HTMLTextAreaElement, Props>(
               ref(actualRef);
             }
           }
+          if (actualRef) {
+            adjustHeight(actualRef);
+          }
         }}
-        onChange={(evt) => onUpdateMessage(evt.target.value ?? '')}
+        onChange={handleTextAreaChange}
         onKeyDown={(evt: any) => {
           switch (evt.key) {
             case 'Enter':
@@ -113,6 +132,16 @@ const getStyles = (theme: GrafanaTheme2) => ({
     label: 'dash-input',
     flexGrow: 1,
     fontSize: theme.typography.fontSize,
+    '& textarea': {
+      resize: 'none',
+      minHeight: theme.spacing(4),
+      maxHeight: '200px',
+      height: 'auto',
+      overflow: 'hidden',
+      padding: `${theme.spacing(0.75)} ${theme.spacing(1)}`,
+      border: 'none',
+      background: 'transparent',
+    },
   }),
   autoCompleteList: css({
     label: 'dash-input-list',
