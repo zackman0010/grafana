@@ -105,7 +105,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       ...state,
       logger: new Logger(),
       message: state.message ?? '',
-      speech: new Speech({ listening: state.listening ?? false }),
+      speech: new Speech({ listening: state.listening ?? false, isRunning: false }),
       textToSpeech: new TextToSpeech({ speaking: false, canSpeak: false }),
     });
 
@@ -660,6 +660,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1, 2.5),
+    padding: theme.spacing(0.5),
   }),
 });
