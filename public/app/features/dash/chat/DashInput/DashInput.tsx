@@ -656,6 +656,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     background: theme.colors.background.elevated,
     borderTop: `1px solid ${theme.colors.border.medium}`,
     borderBottom: `1px solid ${theme.colors.border.weak}`,
+    boxShadow: `0 -4px 20px ${theme.colors.background.canvas}`,
   }),
   row: css({
     label: 'dash-input-row',
