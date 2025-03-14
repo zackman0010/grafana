@@ -2,7 +2,6 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
 import { config, locationService } from '@grafana/runtime';
-import { locationUtil } from '@grafana/data';
 
 import { getDashboards } from './context/autocomplete';
 
