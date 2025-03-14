@@ -26,14 +26,14 @@ class EventEmitter {
     if (!this.listeners[event]) {
       return;
     }
-    this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+    this.listeners[event] = this.listeners[event].filter((cb) => cb !== callback);
   }
 
   public emit(event: string, data: any) {
     if (!this.listeners[event]) {
       return;
     }
-    this.listeners[event].forEach(callback => callback(data));
+    this.listeners[event].forEach((callback) => callback(data));
   }
 }
 
@@ -71,7 +71,7 @@ export class ActionMessage extends SceneObjectBase<ActionMessageState> {
       // Emit an event with the action ID and value
       actionEvents.emit('action-button-clicked', {
         actionId: this.state.actionId,
-        value: value
+        value: value,
       });
     }
   }
@@ -82,7 +82,7 @@ function ActionMessageRenderer({ model }: SceneComponentProps<ActionMessage>) {
   const styles = useStyles2(getStyles);
 
   // Find the primary option or use the first one
-  const primaryOption = options.find(option => option.primary) || options[0];
+  const primaryOption = options.find((option) => option.primary) || options[0];
 
   return (
     <div className={styles.container}>
@@ -111,7 +111,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
     width: '100%',
   }),
   message: css({
-    fontSize: theme.typography.size.sm,
     color: theme.colors.text.primary,
     '& p': {
       margin: 0,
@@ -119,7 +118,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   actions: css({
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     marginTop: theme.spacing(1),
   }),
 });

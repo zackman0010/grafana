@@ -14,7 +14,6 @@ import { ActionMessage, actionEvents } from '../DashMessage/ActionMessage';
 import { Tool } from '../DashMessage/Tool';
 import { getChat, getDash, getMessages, getSettings } from '../utils';
 
-
 import { Input } from './Input';
 import { Logger } from './Logger';
 import { Speech, SpeechState } from './Speech';
@@ -202,7 +201,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     for (let i = 0; i < langchainMessages.length; i++) {
       const msg = langchainMessages[i];
       if (msg instanceof AIMessage && msg.tool_calls) {
-        msg.tool_calls.forEach(call => {
+        msg.tool_calls.forEach((call) => {
           if (call.id) {
             pendingToolCalls.add(call.id);
           }
@@ -219,7 +218,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
     }
 
     // Add cancellation results for any remaining pending tool calls
-    pendingToolCalls.forEach(toolId => {
+    pendingToolCalls.forEach((toolId) => {
       const cancelResult = new ToolMessage({
         tool_call_id: toolId,
         content: JSON.stringify({ status: 'cancelled', message: 'Cancelled by user' }),
@@ -476,10 +475,8 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
       // Create an action message asking the user if they want to continue
       messages.addActionMessage(
-        `I have made ${callCount} requests, shall I keep going or look into something else?`,
-        [
-          { label: 'Continue', value: 'continue', primary: true }
-        ],
+        `This is a long investigation, shall I keep going or look into something else?`,
+        [{ label: 'Continue', value: 'continue', primary: true }],
         actionId
       );
 
