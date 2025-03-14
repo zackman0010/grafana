@@ -638,6 +638,7 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
         <Button
           icon={loading ? 'times' : 'enter'}
           size="sm"
+          variant={loading ? 'secondary' : 'primary'}
           onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
           disabled={!loading && !message.trim()}
         >

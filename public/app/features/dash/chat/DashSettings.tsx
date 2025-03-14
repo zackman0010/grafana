@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import { AppEvents, GrafanaTheme2 } from '@grafana/data';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, useStyles2, Badge, Modal, Button, Switch } from '@grafana/ui';
+import { IconButton, useStyles2, Badge, Modal, Button, Switch, Tooltip } from '@grafana/ui';
 import { appEvents } from 'app/core/core';
 
 import { DashStorage } from './DashStorage';
@@ -121,8 +121,13 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const codeOverflowText = codeOverflow === 'scroll' ? 'Enable soft wrap' : 'Disable soft wrap';
   const showToolsText = showTools ? 'Hide tools' : 'Show tools';
   const modeText = mode === 'floating' ? 'View as sidebar' : 'View as chat window';
+  const remainingTokens = TOKEN_LIMIT - inputTokens;
   // Format tokens to display in K format
-  const formattedTokens = inputTokens >= 1000 ? `${(inputTokens / 1000).toFixed(1)}k` : inputTokens.toString();
+  const formattedTokens =
+    remainingTokens >= 1000 ? `${(remainingTokens / 1000).toFixed(1)}k` : remainingTokens.toString();
+
+  // Calculate percentage remaining
+  const percentRemaining = Math.round((remainingTokens / TOKEN_LIMIT) * 100);
 
   // Determine token counter color based on usage
   const tokenPercentage = inputTokens / TOKEN_LIMIT;
@@ -167,9 +172,11 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
       </div>
       <div className={styles.rightSection}>
         {inputTokens > 0 && (
-          <span className={styles.tokenCounter} title={`Input tokens: ${inputTokens} / ${TOKEN_LIMIT}`}>
-            <Badge color={tokenColor} text={formattedTokens} className={styles.noBg} />
-          </span>
+          <Tooltip content={`${percentRemaining}% remaining`}>
+            <span className={styles.tokenCounter}>
+              <Badge color={tokenColor} text={formattedTokens} className={styles.noBg} />
+            </span>
+          </Tooltip>
         )}
         <IconButton
           name="microphone"
