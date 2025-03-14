@@ -29,7 +29,7 @@ interface PanelState extends SceneObjectState {
 export class Panel extends SceneObjectBase<PanelState> {
   public static Component = PanelRenderer;
 
-  public constructor(state: Omit<PanelState, 'vizPanel'>) {
+  public constructor(state: Omit<PanelState, 'vizPanel' | 'expanded'> & Partial<Pick<PanelState, 'expanded'>>) {
     const targets = state.panel.targets ?? [];
 
     const vizPanel = new VizPanel({
@@ -55,7 +55,7 @@ export class Panel extends SceneObjectBase<PanelState> {
       $behaviors: [],
     });
 
-    super({ ...state, vizPanel, collapsed: false, expanded: false });
+    super({ ...state, vizPanel, collapsed: false, expanded: state.expanded ?? false });
   }
 
   public toggleCollapsed() {
