@@ -10,6 +10,7 @@ import { getFocusStyles } from '@grafana/ui/src/themes/mixins';
 import { CodeOverflow, Sender, SerializedDashMessage, ToolContent } from '../types';
 import { getSettings } from '../utils';
 
+import { ActionMessage } from './ActionMessage';
 import { Image } from './Image';
 import { Panel } from './Panel';
 import { Text } from './Text';
@@ -41,10 +42,25 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
     if (state.type === 'artifact') {
       const c = state.content as any;
-      children.push(new Panel({ panel: c.panel, timeRange: c.timeRange, collapsed: c.collapsed ?? true }));
+      children.push(new Panel({
+        panel: c.panel,
+        timeRange: c.timeRange,
+        collapsed: c.collapsed ?? true,
+        expanded: false
+      }));
+    } else if (state.type === 'action' && typeof state.content === 'object' && !Array.isArray(state.content)) {
+      // Handle action message
+      const actionContent = state.content as any;
+      children.push(
+        new ActionMessage({
+          content: actionContent.text,
+          options: actionContent.options,
+          actionId: actionContent.actionId,
+        })
+      );
     } else if (typeof state.content === 'string') {
       children.push(new Text({ content: state.content }));
-    } else {
+    } else if (Array.isArray(state.content)) {
       state.content.forEach((content) => {
         switch (content.type) {
           case 'text':
@@ -122,26 +138,38 @@ export class DashMessage extends SceneObjectBase<DashMessageState> {
 
   public toJSON(): SerializedDashMessage {
     // If the content is an array (contains tools), we need to update the content with the current tool states
-    const content = Array.isArray(this.state.content)
-      ? this.state.content.map((item) => {
-          if (item.type === 'tool_use') {
-            // Find the corresponding tool in children
-            const tool = this.state.children.find(
-              (child) => child instanceof Tool && child.state.content.id === item.id
-            ) as Tool | undefined;
+    let content = this.state.content;
 
-            // If we found the tool, include its current output and error in the content
-            if (tool) {
-              return {
-                ...item,
-                output: tool.state.content.output,
-                error: tool.state.content.error,
-              };
-            }
+    if (Array.isArray(this.state.content)) {
+      content = this.state.content.map((item) => {
+        if (item.type === 'tool_use') {
+          // Find the corresponding tool in children
+          const tool = this.state.children.find(
+            (child) => child instanceof Tool && child.state.content.id === item.id
+          ) as Tool | undefined;
+
+          // If we found the tool, include its current output and error in the content
+          if (tool) {
+            return {
+              ...item,
+              output: tool.state.content.output,
+              error: tool.state.content.error,
+            };
           }
-          return item;
-        })
-      : this.state.content;
+        }
+        return item;
+      });
+    } else if (this.state.type === 'action') {
+      // For action messages, ensure we preserve the actionId
+      const actionChild = this.state.children.find(child => child instanceof ActionMessage) as ActionMessage | undefined;
+      if (actionChild) {
+        content = {
+          text: actionChild.state.content,
+          options: actionChild.state.options,
+          actionId: actionChild.state.actionId,
+        } as unknown as MessageContent;
+      }
+    }
 
     return {
       content,
@@ -166,9 +194,12 @@ function DashMessageRenderer({ model }: SceneComponentProps<DashMessage>) {
   const tools = children.filter((child) => child instanceof Tool);
   const otherChildren = children.filter((child) => !(child instanceof Tool));
 
+  // For action messages, use the same styling as AI messages
+  const containerStyle = styles.container;
+
   return (
     <>
-      <div className={styles.container} ref={containerRef}>
+      <div className={containerStyle} ref={containerRef}>
         {editing ? (
           <textarea
             // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -230,7 +261,7 @@ const getStyles = (
 
     outline: selected ? 'none' : 'none',
     background:
-      sender === 'ai'
+      sender === 'ai' || sender === 'action'
         ? theme.colors.background.primary
         : sender === 'system'
           ? 'transparent'
@@ -274,6 +305,7 @@ const getStyles = (
       whiteSpace: codeOverflow === 'wrap' ? 'initial' : 'nowrap',
     },
   }),
+
   toolsContainer: css({
     label: 'dash-message-tools-container',
     paddingLeft: theme.spacing(2),
@@ -281,6 +313,7 @@ const getStyles = (
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   }),
+
   editInput: css({
     label: 'dash-message-edit-input',
     background: 'none',

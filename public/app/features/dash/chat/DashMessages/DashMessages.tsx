@@ -121,7 +121,7 @@ export class DashMessages extends SceneObjectBase<DashMessagesState> {
         `What's the most common error in Grafana pods?`,
       ];
       welcomeMessage += `
-      
+
 For example: **${examples[Math.floor(Math.random() * examples.length)]}**
 `
       this.addSystemMessage(welcomeMessage);
@@ -163,14 +163,33 @@ For example: **${examples[Math.floor(Math.random() * examples.length)]}**
   public addSystemMessage(content: string, muted?: boolean, isError?: boolean): DashMessage {
     const message = new DashMessage({ content, sender: 'system', muted, isError });
     this.setState({ messages: [...this.state.messages, message] });
-    getDash(this).persist();
     return message;
   }
 
   public addToolNotification(content: string): DashMessage {
     const message = new DashMessage({ content, sender: 'tool_notification' });
     this.setState({ messages: [...this.state.messages, message] });
-    getDash(this).persist();
+    return message;
+  }
+
+  public addActionMessage(
+    text: string,
+    options: Array<{ label: string; value: string; primary?: boolean }>,
+    actionId: string
+  ): DashMessage {
+    const content = {
+      text,
+      options,
+      actionId,
+    } as unknown as MessageContent;
+
+    const message = new DashMessage({
+      content,
+      sender: 'action',
+      type: 'action'
+    });
+
+    this.setState({ messages: [...this.state.messages, message] });
     return message;
   }
 
