@@ -19,13 +19,21 @@ function processMessageContent(content: string): string {
   // Remove time tags
   const contentWithoutTimeTag = content.replace(/<time>.*?<\/time>/s, '').trim();
 
+  // Helper function to convert line breaks to markdown line breaks (two spaces at end of line)
+  const convertToMarkdownLineBreaks = (text: string) => {
+    return text
+      .split('\n')
+      .map((line, i, arr) => (i < arr.length - 1 ? `${line}  ` : line))
+      .join('\n');
+  };
+
   // Find json tags anywhere in the content
   const jsonStartIndex = contentWithoutTimeTag.indexOf('<json>');
   const jsonEndIndex = contentWithoutTimeTag.indexOf('</json>');
 
   // If no json tags found, return the content as is
   if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
-    return contentWithoutTimeTag;
+    return convertToMarkdownLineBreaks(contentWithoutTimeTag);
   }
 
   // Extract content between tags and normalize it
@@ -39,7 +47,7 @@ function processMessageContent(content: string): string {
 
     // If we have a valid object with a message property, return the message
     if (jsonContent && typeof jsonContent === 'object' && 'message' in jsonContent) {
-      return jsonContent.message;
+      return convertToMarkdownLineBreaks(jsonContent.message);
     }
 
     // If we have a valid object but no message, return the stringified content
@@ -48,11 +56,11 @@ function processMessageContent(content: string): string {
     // If JSON parsing fails, try to extract just the message content using regex
     const messageMatch = jsonStr.match(/"message"\s*:\s*"((.|\n)+)"/im);
     if (messageMatch?.[1]) {
-      return messageMatch[1].replace(/\\n/g, '\n');
+      return convertToMarkdownLineBreaks(messageMatch[1]);
     }
 
     // If all else fails, return the original content without the json tags
-    return contentWithoutTimeTag.replace(/<\/?json>/g, '').trim();
+    return convertToMarkdownLineBreaks(contentWithoutTimeTag.replace(/<\/?json>/g, '').trim());
   }
 }
 

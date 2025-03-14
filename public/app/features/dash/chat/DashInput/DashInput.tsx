@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { getAppEvents, ToolAddedEvent } from '@grafana/runtime';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
-import { IconButton, LoadingBar, useStyles2 } from '@grafana/ui';
+import { LoadingBar, useStyles2, Button } from '@grafana/ui';
 
 import { getAgent } from '../../agent/agent';
 import { generateSystemPrompt } from '../../agent/systemPrompt';
@@ -105,7 +105,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
       ...state,
       logger: new Logger(),
       message: state.message ?? '',
-      speech: new Speech({ listening: state.listening ?? false }),
+      speech: new Speech({ listening: state.listening ?? false, isRunning: false }),
       textToSpeech: new TextToSpeech({ speaking: false, canSpeak: false }),
     });
 
@@ -615,8 +615,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message, speech } = model.useState();
-  const { listening } = speech.useState();
+  const { message } = model.useState();
   const { loading, anyToolsWorking } = getMessages(model).useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -624,10 +623,8 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     <div className={styles.container} ref={containerRef}>
       {loading && !anyToolsWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
-        <speech.Component model={speech} />
-
         <Input
-          listening={listening}
+          listening={model.state.speech.state.listening}
           loading={loading}
           message={message}
           ref={(ref) => model.setInputRef(ref)}
@@ -638,12 +635,14 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
           onInterruptAndSend={() => model.interruptAndSendMessage()}
         />
 
-        <IconButton
-          size="xl"
-          name={loading ? 'times' : 'message'}
-          aria-label={loading ? 'Cancel request' : 'Send message'}
+        <Button
+          icon={loading ? 'times' : 'enter'}
+          size="sm"
           onClick={() => (loading ? model.cancelRequest() : model.sendMessage())}
-        />
+          disabled={!loading && !message.trim()}
+        >
+          {loading ? 'Cancel' : 'Send'}
+        </Button>
       </div>
     </div>
   );
@@ -660,9 +659,11 @@ const getStyles = (theme: GrafanaTheme2) => ({
   }),
   row: css({
     label: 'dash-input-row',
+    background: theme.colors.background.primary,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1, 2.5),
+    padding: theme.spacing(0.5),
   }),
 });

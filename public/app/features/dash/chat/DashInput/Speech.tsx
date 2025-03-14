@@ -52,6 +52,7 @@ declare global {
 
 export interface SpeechState extends SceneObjectState {
   listening: boolean;
+  isRunning: boolean;
 }
 
 export class Speech extends SceneObjectBase<SpeechState> {
@@ -60,7 +61,10 @@ export class Speech extends SceneObjectBase<SpeechState> {
   private _recognition: SpeechRecognition | null = null;
 
   public constructor(state: SpeechState) {
-    super(state);
+    super({
+      ...state,
+      isRunning: false,
+    });
 
     this.addActivationHandler(() => this._activationHandler());
   }
@@ -83,22 +87,35 @@ export class Speech extends SceneObjectBase<SpeechState> {
 
     if (this.state.listening) {
       this._recognition.stop();
-      this.setState({ listening: false });
+      this.setState({ listening: false, isRunning: false });
     } else {
       this.setState({ listening: true });
-      this._recognition.start();
+      if (!this.state.isRunning) {
+        this._recognition.start();
+        this.setState({ isRunning: true });
+      }
     }
   }
 
   public resume() {
-    if (this.state.listening && this._recognition) {
+    if (!this._recognition) {
+      return;
+    }
+
+    if (this.state.listening && !this.state.isRunning) {
       this._recognition.start();
+      this.setState({ isRunning: true });
     }
   }
 
   public pause() {
-    if (this.state.listening && this._recognition) {
+    if (!this._recognition) {
+      return;
+    }
+
+    if (this.state.listening && this.state.isRunning) {
       this._recognition.stop();
+      this.setState({ isRunning: false });
     }
   }
 
@@ -112,23 +129,25 @@ export class Speech extends SceneObjectBase<SpeechState> {
       this._recognition.lang = 'en-US';
 
       this._recognition.onresult = (event: SpeechRecognitionEvent) => {
-        // Get the last result from the results array
         const lastResult = event.results[event.results.length - 1];
         const transcript = lastResult[0].transcript;
 
-        // Update message and send it
         getInput(this).updateMessage(transcript, true);
         getInput(this).sendMessage();
       };
 
       this._recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error('Speech recognition error:', event.error);
-        this.setState({ listening: false });
+        if (event.error !== 'no-speech') {
+          this.setState({ listening: false, isRunning: false });
+        }
       };
 
       this._recognition.onend = () => {
+        this.setState({ isRunning: false });
         if (this.state.listening) {
           this._recognition?.start();
+          this.setState({ isRunning: true });
         }
       };
     } else {

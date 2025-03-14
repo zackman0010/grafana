@@ -94,6 +94,16 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
   const [debugOpened, setDebugOpened] = useState(false);
   const [debugAllChats, setDebugAllChats] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dash = getDash(model);
+  const currentChat = dash.state.chats[dash.state.chatIndex];
+  const currentInstance = currentChat.state.versions[currentChat.state.versionIndex];
+  const speech = currentInstance.state.input.state.speech;
+  const { listening } = speech.useState();
+
+  // Ensure speech component is activated
+  useEffect(() => {
+    speech.activate();
+  }, [speech]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -161,7 +171,20 @@ function DashSettingsRenderer({ model }: SceneComponentProps<DashSettings>) {
             <Badge color={tokenColor} text={formattedTokens} className={styles.noBg} />
           </span>
         )}
-        <IconButton name="bug" title="Debug" aria-label="Debug" onClick={() => setDebugOpened(true)} />
+        <IconButton
+          name="microphone"
+          className={cx(styles.micButton, { [styles.micActive]: listening })}
+          onClick={() => speech.toggleSpeechRecognition()}
+          tooltip={listening ? 'Stop dictation' : 'Start dictation'}
+          aria-label={listening ? 'Stop dictation' : 'Start dictation'}
+        />
+        <IconButton
+          name="bug"
+          tooltip="Debug chat and send feedback"
+          aria-label="Debug chat and send feedback"
+          className={styles.rightBorder}
+          onClick={() => setDebugOpened(true)}
+        />
         {debugOpened && (
           <Modal
             title="Debug Dash"
@@ -284,23 +307,18 @@ Chat${debugAllChats ? 's' : ''} was copied to your clipboard. Please paste ${deb
         )}
         <IconButton
           name={codeOverflow === 'scroll' ? 'wrap-text' : 'bars'}
-          size="lg"
           tooltip={codeOverflowText}
           aria-label={codeOverflowText}
           onClick={() => model.toggleCodeOverflow()}
         />
-
         <IconButton
           name={showTools ? 'wrench' : 'eye-slash'}
-          size="lg"
           tooltip={showToolsText}
           aria-label={showToolsText}
           onClick={() => model.toggleShowTools()}
         />
-
         <IconButton
           name={mode === 'floating' ? 'columns' : 'layer-group'}
-          size="lg"
           tooltip={modeText}
           aria-label={modeText}
           onClick={() => model.toggleMode()}
@@ -411,5 +429,44 @@ const getStyles = (theme: GrafanaTheme2) => ({
   debugModalContentJsonLarge: css({
     label: 'debug-modal-content-json',
     flex: 1,
+  }),
+  micButton: css({
+    label: 'mic-button',
+    borderRight: `1px solid ${theme.colors.border.weak}`,
+    marginRight: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  }),
+  rightBorder: css({
+    borderRight: `1px solid ${theme.colors.border.weak}`,
+    marginRight: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  }),
+  micActive: css({
+    label: 'mic-active',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      top: '-4px',
+      left: '-4px',
+      right: '0px',
+      bottom: '0px',
+      border: `2px solid ${theme.colors.warning.border}`,
+      borderRadius: '50%',
+      animation: 'pulse 2s infinite',
+    },
+    '@keyframes pulse': {
+      '0%': {
+        transform: 'scale(1)',
+        opacity: 1,
+      },
+      '50%': {
+        transform: 'scale(1.1)',
+        opacity: 0.8,
+      },
+      '100%': {
+        transform: 'scale(1)',
+        opacity: 1,
+      },
+    },
   }),
 });
