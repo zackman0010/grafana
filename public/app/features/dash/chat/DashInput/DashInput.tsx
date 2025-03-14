@@ -615,8 +615,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
 function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
   const styles = useStyles2(getStyles);
-  const { message, speech } = model.useState();
-  const { listening } = speech.useState();
+  const { message } = model.useState();
   const { loading, anyToolsWorking } = getMessages(model).useState();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -624,10 +623,8 @@ function DashInputRenderer({ model }: SceneComponentProps<DashInput>) {
     <div className={styles.container} ref={containerRef}>
       {loading && !anyToolsWorking && <LoadingBar width={containerRef.current?.getBoundingClientRect().width ?? 0} />}
       <div className={styles.row}>
-        <speech.Component model={speech} />
-
         <Input
-          listening={listening}
+          listening={model.state.speech.state.listening}
           loading={loading}
           message={message}
           ref={(ref) => model.setInputRef(ref)}
