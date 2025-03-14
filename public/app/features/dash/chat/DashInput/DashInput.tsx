@@ -476,7 +476,7 @@ export class DashInput extends SceneObjectBase<DashInputState> {
 
       // Create an action message asking the user if they want to continue
       messages.addActionMessage(
-        `I've made ${callCount} tool calls so far. Should I run the next tool call or would you like to provide new instructions?`,
+        `I have made ${callCount} requests, shall I keep going or look into something else?`,
         [
           { label: 'Continue', value: 'continue', primary: true }
         ],
