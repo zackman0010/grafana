@@ -10,6 +10,7 @@ import { TraceLink, TraceSpan } from '../../types/trace';
 
 import AccordianKeyValues from './AccordianKeyValues';
 import { EntityAssertion, EntityPropertyTypes, StringRules } from './EntityAssertion';
+import { getLinksByAttribute } from './span-utils';
 
 interface CategoryWidgetProps {
   attributes: AttributesKeyValueMap;
@@ -219,18 +220,18 @@ export const Attributes = ({
 
         if (key) {
           // Fix this later
-          // const scopedLinks = getAttributeLinks(attribute.key, links).reduce<Record<string, SpanLinkDef>>(
-          //   (linkMap, link) => {
-          //     linkMap[link.href] = link;
-          //     return linkMap;
-          //   },
-          //   {}
-          // );
+          const attributeLinks = getLinksByAttribute(attribute.key, links).reduce<Record<string, SpanLinkDef>>(
+            (linkMap, link) => {
+              linkMap[link.href] = link;
+              return linkMap;
+            },
+            {}
+          );
 
           const group = acc[key] ?? { attributes: [], attributesMap: {}, linksMap: {} };
           group.attributes.push(attribute);
           group.attributesMap[attribute.key] = attribute.value;
-          //group.linksMap = { ...group.linksMap, ...scopedLinks };
+          group.linksMap = { ...group.linksMap, ...attributeLinks };
 
           acc[key] = group;
         } else {
@@ -270,9 +271,7 @@ export const Attributes = ({
               standardAttributeResources[key as keyof typeof standardAttributeResources] ?? otherCategory;
             const AssertionsWidget = category.component;
             const NotEnabledTooltip = category.notEnabledTooltip;
-            const headerLink = sortBy(Object.values(linksMap), (link) => link.href.length ?? 0)
-              .reverse()
-              .at(0);
+            const headerLink = sortBy(Object.values(linksMap), (link) => link.linkAttributes?.length ?? 0).at(-1);
 
             return (
               <AccordianKeyValues
