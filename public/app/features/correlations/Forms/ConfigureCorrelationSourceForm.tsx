@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { uniqBy } from 'lodash';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DataSourceInstanceSettings, GrafanaTheme2 } from '@grafana/data';
@@ -62,7 +63,8 @@ export const ConfigureCorrelationSourceForm = () => {
 
   const currentTargetQuery = getValues('config.target');
   const currentType = getValues('type');
-  const variables = getVariableUsageInfo(currentTargetQuery, {}).variables.map(
+  const variableData = getVariableUsageInfo(currentTargetQuery, {});
+  const variables = uniqBy(variableData.variables, 'variableName').map(
     (variable) => variable.variableName + (variable.fieldPath ? `.${variable.fieldPath}` : '')
   );
   const dataSourceName = getDatasourceSrv().getInstanceSettings(getValues('targetUID'))?.name;

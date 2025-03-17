@@ -10,7 +10,6 @@ import { TraceLink, TraceSpan } from '../../types/trace';
 
 import AccordianKeyValues from './AccordianKeyValues';
 import { EntityAssertion, EntityPropertyTypes, StringRules } from './EntityAssertion';
-import { getAttributeLinks } from './span-utils';
 
 interface CategoryWidgetProps {
   attributes: AttributesKeyValueMap;
@@ -219,18 +218,19 @@ export const Attributes = ({
         const [key] = Object.entries(standardAttributeResources).find(([key]) => attribute.key.startsWith(key)) || [];
 
         if (key) {
-          const scopedLinks = getAttributeLinks(attribute.key, links).reduce<Record<string, SpanLinkDef>>(
-            (linkMap, link) => {
-              linkMap[link.href] = link;
-              return linkMap;
-            },
-            {}
-          );
+          // Fix this later
+          // const scopedLinks = getAttributeLinks(attribute.key, links).reduce<Record<string, SpanLinkDef>>(
+          //   (linkMap, link) => {
+          //     linkMap[link.href] = link;
+          //     return linkMap;
+          //   },
+          //   {}
+          // );
 
           const group = acc[key] ?? { attributes: [], attributesMap: {}, linksMap: {} };
           group.attributes.push(attribute);
           group.attributesMap[attribute.key] = attribute.value;
-          group.linksMap = { ...group.linksMap, ...scopedLinks };
+          //group.linksMap = { ...group.linksMap, ...scopedLinks };
 
           acc[key] = group;
         } else {

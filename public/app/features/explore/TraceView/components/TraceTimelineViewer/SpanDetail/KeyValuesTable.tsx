@@ -25,7 +25,7 @@ import CopyIcon from '../../common/CopyIcon';
 import { TraceLink, TNil, SpanLinkDef } from '../../types';
 
 import jsonMarkup from './jsonMarkup';
-import { getAttributeLinks } from './span-utils';
+import { getBestLinkByAttribute } from './span-utils';
 
 const copyIconClassName = 'copyIcon';
 
@@ -152,10 +152,7 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
               __html: jsonMarkup(parseIfComplexJson(row.value)),
             };
             const jsonTable = <div className={styles.jsonTable} dangerouslySetInnerHTML={markup} />;
-            // Find all links targeting this attribute
-            const scopedLinks = getAttributeLinks(row.key, links);
-            // Find the most specific link the possibly multiple links targeting this attribute
-            const keyLink = scopedLinks.sort((a, b) => b.linkAttributes!.length - a.linkAttributes!.length).at(0);
+            const keyLink = getBestLinkByAttribute(row.key, links);
             const valueMarkup = keyLink ? <Link href={keyLink.href}>{jsonTable}</Link> : jsonTable;
 
             // const links = linksGetter ? linksGetter(data, i) : null;

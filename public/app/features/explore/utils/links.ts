@@ -1,4 +1,4 @@
-import { first, uniqBy } from 'lodash';
+import { first } from 'lodash';
 import { useCallback } from 'react';
 
 import {
@@ -90,6 +90,32 @@ export const exploreDataLinkPostProcessorFactory = (
     return links.length ? first(links) : undefined;
   };
   return exploreDataLinkPostProcessor;
+};
+
+const getLinkableAttributes = (variables: VariableInterpolation[]) => {
+  // Define the regex to extract tag names from tags["tagname"] pattern in fieldPath
+  const tagNameRegex = /^tags\["([^"]+)"\]$/;
+
+  return variables.reduce((acc: string[], variable) => {
+    /*
+      {
+          "match": "${__span.tags[\"service.namespace\"]}",
+          "variableName": "__span",
+          "fieldPath": "tags[\"service.namespace\"]",
+          "value": "oteldemo01",
+          "found": true
+      }
+    */
+    if (variable.variableName === '__span' && variable.fieldPath && tagNameRegex.test(variable.fieldPath)) {
+      // Extract the tag name from fieldPath using regex
+      const match = tagNameRegex.exec(variable.fieldPath);
+      if (match && match[1]) {
+        acc.push(match[1]);
+      }
+    }
+
+    return acc;
+  }, []);
 };
 
 /**
@@ -213,7 +239,13 @@ export const getFieldLinksForExplore = (options: {
             linkModel.title = getTitleFromHref(linkModel.href);
           }
           linkModel.target = linkModel.target ?? '_blank';
-          return { ...linkModel, variables: variables, linkAttributes: link.meta?.linkAttributes };
+
+          let linkAttributes: string[] = [];
+          if (link.origin === 'Correlations') {
+            linkAttributes = getLinkableAttributes(variableData.variables);
+          }
+
+          return { ...linkModel, variables: variables, linkAttributes };
         } else {
           const splitFnWithTracking = (options?: SplitOpenOptions<DataQuery>) => {
             reportInteraction(DATA_LINK_USAGE_KEY, {
@@ -322,7 +354,7 @@ export function getVariableUsageInfo(
   const replaceFn = getTemplateSrv().replace.bind(getTemplateSrv());
   // This adds info to the variables array while interpolating
   replaceFn(getStringsFromObject(query), scopedVars, undefined, variables);
-  variables = uniqBy(variables, 'variableName');
+  // variables = uniqBy(variables, 'variableName');
   return {
     variables: variables,
     allVariablesDefined: variables

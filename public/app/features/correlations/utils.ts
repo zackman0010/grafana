@@ -80,7 +80,6 @@ const decorateDataFrameWithInternalDataLinks = (dataFrame: DataFrame, correlatio
             origin: DataLinkConfigOrigin.Correlations,
             meta: {
               transformations: correlation.config?.transformations,
-              linkAttributes: correlation.linkAttributes,
             },
           });
         }
@@ -133,7 +132,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Application observability > Service overview',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['service.namespace', 'service.name'],
+            // linkAttributes: ['service.namespace', 'service.name'],
             config: {
               field: 'traceID',
               target: {
@@ -148,7 +147,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Application observability > Service overview',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['service.name'],
+            // linkAttributes: ['service.name'],
             config: {
               field: 'traceID',
               target: {
@@ -163,7 +162,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Cluster view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.cluster.name'],
+            // linkAttributes: ['k8s.cluster.name'],
             config: {
               field: 'traceID',
               target: {
@@ -178,7 +177,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Namespace view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.namespace.name'],
+            // linkAttributes: ['k8s.namespace.name'],
             config: {
               field: 'traceID',
               target: {
@@ -193,7 +192,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Node view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.node.name'],
+            // linkAttributes: ['k8s.node.name'],
             config: {
               field: 'traceID',
               target: {
@@ -208,7 +207,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Deployment view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.deployment.name'],
+            // linkAttributes: ['k8s.deployment.name'],
             config: {
               field: 'traceID',
               target: {
@@ -223,7 +222,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Pod view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.pod.name'],
+            // linkAttributes: ['k8s.pod.name'],
             config: {
               field: 'traceID',
               target: {
@@ -238,7 +237,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Frontend observability',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
+            // linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
             config: {
               field: 'traceID',
               target: {
@@ -254,7 +253,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Application observability > Service overview',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['service.namespace', 'service.name'],
+            // linkAttributes: ['service.namespace', 'service.name'],
             config: {
               field: 'traceID',
               target: {
@@ -269,7 +268,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Application observability > Service overview',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['service.name'],
+            //  linkAttributes: ['service.name'],
             config: {
               field: 'traceID',
               target: {
@@ -284,7 +283,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Cluster view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.cluster.name'],
+            // linkAttributes: ['k8s.cluster.name'],
             config: {
               field: 'traceID',
               target: {
@@ -299,7 +298,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Namespace view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.namespace.name'],
+            // linkAttributes: ['k8s.namespace.name'],
             config: {
               field: 'traceID',
               target: {
@@ -314,7 +313,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Node view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.node.name'],
+            // linkAttributes: ['k8s.node.name'],
             config: {
               field: 'traceID',
               target: {
@@ -329,7 +328,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Deployment view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.deployment.name'],
+            // linkAttributes: ['k8s.deployment.name'],
             config: {
               field: 'traceID',
               target: {
@@ -344,7 +343,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Kubernetes monitoring > Pod view',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['k8s.pod.name'],
+            // linkAttributes: ['k8s.pod.name'],
             config: {
               field: 'traceID',
               target: {
@@ -359,7 +358,7 @@ export const getCorrelationsBySourceUIDs = async (sourceUIDs: string[]): Promise
             label: 'Frontend observability',
             type: 'external',
             provisioned: false,
-            linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
+            // linkAttributes: ['gf.feo11y.app.id', 'gf.feo11y.app.name'],
             config: {
               field: 'traceID',
               target: {

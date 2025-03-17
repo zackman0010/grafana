@@ -55,7 +55,6 @@ export interface DataLink<T extends DataQuery = any> {
   meta?: {
     correlationData?: ExploreCorrelationHelperData;
     transformations?: DataLinkTransformationConfig[];
-    linkAttributes?: string[];
   };
 
   oneClick?: boolean;
