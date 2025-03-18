@@ -71,6 +71,8 @@ type DashboardHit struct {
 	Field *common.Unstructured `json:"field,omitempty"`
 	// When using "real" search, this is the score
 	Score float64 `json:"score,omitempty"`
+	// A managed dashboard
+	ManagedBy string `json:"managedBy,omitempty"`
 	// Explain the score (if possible)
 	Explain *common.Unstructured `json:"explain,omitempty"`
 }

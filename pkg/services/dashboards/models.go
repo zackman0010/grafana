@@ -320,6 +320,7 @@ type DashboardSearchProjection struct {
 	FolderUID   string `xorm:"folder_uid"`
 	FolderSlug  string
 	FolderTitle string
+	ManagedBy   string
 	SortMeta    int64
 	Tags        []string
 	Deleted     *time.Time

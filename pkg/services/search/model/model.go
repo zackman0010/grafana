@@ -79,6 +79,7 @@ type Hit struct {
 	FolderURL             string     `json:"folderUrl,omitempty"`
 	SortMeta              int64      `json:"sortMeta"`
 	SortMetaName          string     `json:"sortMetaName,omitempty"`
+	ManagedBy             string     `json:"managedBy,omitempty"`
 	IsDeleted             bool       `json:"isDeleted"`
 	PermanentlyDeleteDate *time.Time `json:"permanentlyDeleteDate,omitempty"`
 }

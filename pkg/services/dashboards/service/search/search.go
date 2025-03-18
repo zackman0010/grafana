@@ -13,13 +13,15 @@ import (
 
 var (
 	excludedFields = map[string]string{
-		resource.SEARCH_FIELD_EXPLAIN: "",
-		resource.SEARCH_FIELD_SCORE:   "",
-		resource.SEARCH_FIELD_TITLE:   "",
-		resource.SEARCH_FIELD_FOLDER:  "",
-		resource.SEARCH_FIELD_TAGS:    "",
+		resource.SEARCH_FIELD_EXPLAIN:      "",
+		resource.SEARCH_FIELD_SCORE:        "",
+		resource.SEARCH_FIELD_TITLE:        "",
+		resource.SEARCH_FIELD_FOLDER:       "",
+		resource.SEARCH_FIELD_TAGS:         "",
+		resource.SEARCH_FIELD_MANAGER_KIND: "", // has its own field
 	}
 
+	// Added the the request
 	IncludeFields = []string{
 		resource.SEARCH_FIELD_TITLE,
 		resource.SEARCH_FIELD_TAGS,
@@ -46,11 +48,12 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (v0alph
 		return v0alpha1.SearchResults{}, nil
 	}
 
-	titleIDX := 0
+	titleIDX := -1
 	folderIDX := -1
 	tagsIDX := -1
-	scoreIDX := 0
-	explainIDX := 0
+	scoreIDX := -1
+	explainIDX := -1
+	managedByIDX := -1
 
 	for i, v := range result.Results.Columns {
 		switch v.Name {
@@ -64,6 +67,8 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (v0alph
 			folderIDX = i
 		case resource.SEARCH_FIELD_TAGS:
 			tagsIDX = i
+		case resource.SEARCH_FIELD_MANAGER_KIND:
+			managedByIDX = i
 		}
 	}
 
@@ -102,10 +107,15 @@ func ParseResults(result *resource.ResourceSearchResponse, offset int64) (v0alph
 			Resource: row.Key.Resource, // folders | dashboards
 			Name:     row.Key.Name,     // The Grafana UID
 			Title:    string(row.Cells[titleIDX]),
-			Field:    fields,
+		}
+		if len(fields.Object) > 0 {
+			hit.Field = fields // only include fields if we have them
 		}
 		if folderIDX > 0 && row.Cells[folderIDX] != nil {
 			hit.Folder = string(row.Cells[folderIDX])
+		}
+		if managedByIDX > 0 && row.Cells[managedByIDX] != nil {
+			hit.ManagedBy = string(row.Cells[managedByIDX])
 		}
 		if tagsIDX > 0 && row.Cells[tagsIDX] != nil {
 			_ = json.Unmarshal(row.Cells[tagsIDX], &hit.Tags)

@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/grafana/grafana/pkg/util/retryer"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel"
 	"golang.org/x/exp/maps"
@@ -21,6 +20,8 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/selection"
+
+	"github.com/grafana/grafana/pkg/util/retryer"
 
 	claims "github.com/grafana/authlib/types"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
@@ -1292,6 +1293,7 @@ func (dr *DashboardServiceImpl) FindDashboards(ctx context.Context, query *dashb
 				IsFolder:    false,
 				FolderUID:   hit.Folder,
 				FolderTitle: folderNames[hit.Folder],
+				ManagedBy:   hit.ManagedBy,
 				Tags:        hit.Tags,
 			}
 
@@ -1691,11 +1693,13 @@ func (dr *DashboardServiceImpl) listDashboardsThroughK8s(ctx context.Context, or
 
 func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Context, query *dashboards.FindPersistedDashboardsQuery) (dashboardv0alpha1.SearchResults, error) {
 	request := &resource.ResourceSearchRequest{
+		Fields: dashboardsearch.IncludeFields,
 		Options: &resource.ListOptions{
 			Fields: []*resource.Requirement{},
 			Labels: []*resource.Requirement{},
 		},
-		Limit: 100000}
+		Limit: 100000,
+	}
 
 	if len(query.DashboardUIDs) > 0 {
 		request.Options.Fields = []*resource.Requirement{{
@@ -1780,8 +1784,6 @@ func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Contex
 	if query.Title != "" {
 		// allow wildcard search
 		request.Query = "*" + strings.ToLower(query.Title) + "*"
-		// if using query, you need to specify the fields you want
-		request.Fields = dashboardsearch.IncludeFields
 	}
 
 	if len(query.Tags) > 0 {
