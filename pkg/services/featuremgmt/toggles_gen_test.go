@@ -92,7 +92,7 @@ func TestFeatureToggleFiles(t *testing.T) {
 					}
 				} else if item.DeletionTimestamp == nil {
 					item.DeletionTimestamp = &created
-					fmt.Printf("mark feature as deleted")
+					fmt.Printf("mark feature as deleted\n")
 				}
 				current.Items = append(current.Items, item)
 			}

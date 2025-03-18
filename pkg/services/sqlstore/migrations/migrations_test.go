@@ -35,7 +35,7 @@ func TestMigrations(t *testing.T) {
 
 	t.Cleanup(func() {
 		if err := x.Close(); err != nil {
-			fmt.Printf("failed to close xorm engine: %v", err)
+			fmt.Printf("failed to close xorm engine: %v\n", err)
 		}
 	})
 
@@ -92,7 +92,7 @@ func TestIntegrationMigrationLock(t *testing.T) {
 
 	t.Cleanup(func() {
 		if err := x.Close(); err != nil {
-			fmt.Printf("failed to close xorm engine: %v", err)
+			fmt.Printf("failed to close xorm engine: %v\n", err)
 		}
 	})
 
@@ -203,7 +203,7 @@ func TestMigratorLocking(t *testing.T) {
 
 	t.Cleanup(func() {
 		if err := x.Close(); err != nil {
-			fmt.Printf("failed to close xorm engine: %v", err)
+			fmt.Printf("failed to close xorm engine: %v\n", err)
 		}
 	})
 
@@ -250,7 +250,7 @@ func TestDatabaseLocking(t *testing.T) {
 
 	t.Cleanup(func() {
 		if err := x.Close(); err != nil {
-			fmt.Printf("failed to close xorm engine: %v", err)
+			fmt.Printf("failed to close xorm engine: %v\n", err)
 		}
 	})
 

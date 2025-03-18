@@ -90,7 +90,7 @@ func TestIntegrationSimpleQuery(t *testing.T) {
 
 		body, err = result.Raw()
 		require.NoError(t, err)
-		fmt.Printf("OUT: %s", string(body))
+		fmt.Printf("OUT: %s\n", string(body))
 
 		rsp := &backend.QueryDataResponse{}
 		err = json.Unmarshal(body, rsp)

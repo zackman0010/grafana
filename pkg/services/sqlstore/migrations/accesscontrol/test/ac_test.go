@@ -56,7 +56,7 @@ func setupTestDB(t *testing.T) *xorm.Engine {
 
 	t.Cleanup(func() {
 		if err := x.Close(); err != nil {
-			fmt.Printf("failed to close xorm engine: %v", err)
+			fmt.Printf("failed to close xorm engine: %v\n", err)
 		}
 	})
 
