@@ -61,6 +61,9 @@ export function BootstrapStep({ onOptionSelect, settingsData, repoName }: Props)
 
   const handleOptionSelect = useCallback(
     (option: ModeOption) => {
+      if (option.disabled) {
+        return;
+      }
       // Select the new option and update form state
       setSelectedOption(option);
       setValue('repository.sync.target', option.target);
@@ -123,9 +126,7 @@ export function BootstrapStep({ onOptionSelect, settingsData, repoName }: Props)
                   key={`${action.target}-${action.operation}`}
                   isSelected={action === selectedOption}
                   onClick={() => {
-                    if (!action.disabled) {
-                      handleOptionSelect(action);
-                    }
+                    handleOptionSelect(action);
                   }}
                   disabled={action.disabled}
                   autoFocus={index === 0 && !action.disabled}
