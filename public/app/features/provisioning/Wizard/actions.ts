@@ -107,7 +107,7 @@ export function getState(
     if (disabledReason) {
       return { ...action, disabled: true, description: disabledReason };
     }
-    return { ...action, disabled: false };
+    return action;
   });
 
   // Sort actions so enabled ones come first
