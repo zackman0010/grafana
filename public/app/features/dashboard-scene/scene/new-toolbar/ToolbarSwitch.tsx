@@ -74,7 +74,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   containerChecked: css({
     '&.blue': {
       backgroundColor: theme.colors.primary.main,
-      borderColor: theme.colors.primary.border,
+      border: `1px solid ${theme.colors.primary.main}`,
 
       '&:hover': {
         backgroundColor: theme.colors.primary.shade,
@@ -108,9 +108,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     borderColor: theme.colors.border.weak,
   }),
   box: css({
-    backgroundColor: theme.isDark
-      ? theme.colors.background.secondary
-      : tinycolor2(theme.colors.background.secondary).darken(5).toRgbString(),
+    background: theme.colors.background.primary,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -118,15 +116,25 @@ const getStyles = (theme: GrafanaTheme2) => ({
     height: theme.spacing(2.5),
     borderRadius: theme.shape.radius.default,
     transform: 'translateX(0)',
+    position: 'relative',
 
     [theme.transitions.handleMotion('no-preference', 'reduce')]: {
       transition: 'all 0.2s ease-in-out',
     },
+
+    '&:after': {
+      content: "''",
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderRadius: theme.shape.radius.default,
+      background: theme.colors.secondary.main,
+      border: `1px solid ${theme.colors.secondary.border}`,
+    },
   }),
   boxChecked: css({
-    backgroundColor: theme.isDark
-      ? tinycolor2(theme.colors.background.secondary).darken(5).toRgbString()
-      : tinycolor2(theme.colors.background.secondary).lighten(5).toRgbString(),
     transform: `translateX(calc(100% - ${theme.spacing(0.25)}))`,
   }),
 });
