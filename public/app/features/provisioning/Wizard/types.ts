@@ -28,7 +28,7 @@ export interface ModeOption {
   operation: Operation;
   label: string;
   description: string;
-  disabledReason?: string;
+  disabled?: boolean;
 }
 
 export interface SystemState {
@@ -37,6 +37,5 @@ export interface SystemState {
 
   fileCount: number;
   actions: ModeOption[];
-  disabled: ModeOption[];
   folderConnected?: boolean;
 }

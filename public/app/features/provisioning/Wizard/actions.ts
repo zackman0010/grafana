@@ -82,18 +82,17 @@ export function getState(
     resourceCount,
     resourceCountString: counts.join(','),
     fileCount,
-    actions: [],
-    disabled: [],
     folderConnected,
+    actions: [],
   };
 
   // Legacy storage can only migrate
   if (settings?.legacyStorage) {
-    const disabledReason = 'Instance must be migrated first';
-    state.actions = [migrateInstance];
-    state.disabled = [
-      { ...pullInstance, disabledReason },
-      { ...pullFolder, disabledReason },
+    const migrationRequired = 'Instance must be migrated first';
+    state.actions = [
+      { ...migrateInstance, disabled: false },
+      { ...pullInstance, disabled: true, description: migrationRequired },
+      { ...pullFolder, disabled: true, description: migrationRequired },
     ];
     return state;
   }
@@ -101,13 +100,22 @@ export function getState(
   const actionsToEvaluate = resourceCount
     ? [pullFolder, pullInstance, migrateInstance] // recommend pull when resources already exist
     : [migrateInstance, pullInstance, pullFolder];
-  actionsToEvaluate.forEach((action) => {
-    const reason = getDisabledReason(action, resourceCount, folderConnected);
-    if (reason) {
-      state.disabled.push({ ...action, disabledReason: reason });
-    } else {
-      state.actions.push(action);
+
+  // Process all actions and mark them as disabled if necessary
+  const allActions = actionsToEvaluate.map((action) => {
+    const disabledReason = getDisabledReason(action, resourceCount, folderConnected);
+    if (disabledReason) {
+      return { ...action, disabled: true, description: disabledReason };
     }
+    return { ...action, disabled: false };
+  });
+
+  // Sort actions so enabled ones come first
+  state.actions = allActions.sort((a, b) => {
+    if (a.disabled === b.disabled) {
+      return 0;
+    }
+    return a.disabled ? 1 : -1;
   });
 
   return state;

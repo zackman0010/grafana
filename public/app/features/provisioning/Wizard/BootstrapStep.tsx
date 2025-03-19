@@ -123,29 +123,29 @@ export function BootstrapStep({ onOptionSelect, settingsData, repoName }: Props)
                   key={`${action.target}-${action.operation}`}
                   isSelected={action === selectedOption}
                   onClick={() => {
-                    handleOptionSelect(action);
+                    if (!action.disabled) {
+                      handleOptionSelect(action);
+                    }
                   }}
-                  autoFocus={index === 0}
+                  disabled={action.disabled}
+                  autoFocus={index === 0 && !action.disabled}
                 >
-                  <Card.Heading>{action.label}</Card.Heading>
+                  <Card.Heading>
+                    {action.disabled ? (
+                      <Stack direction="row" alignItems="center" gap={2}>
+                        <Text color="secondary">{action.label}</Text>
+                        <Badge color="blue" text="Not available" icon="info" />
+                      </Stack>
+                    ) : (
+                      action.label
+                    )}
+                  </Card.Heading>
                   <Card.Description>{action.description}</Card.Description>
                 </Card>
               ))}
             </>
           )}
         />
-
-        {state.disabled.map((action) => (
-          <Card disabled={true} key={`${action.target}-${action.operation}`}>
-            <Card.Heading>
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Text color="secondary">{action.label}</Text>
-                <Badge color="blue" text="Not available" icon="info" />
-              </Stack>
-            </Card.Heading>
-            <Card.Description>{action.disabledReason ?? action.description}</Card.Description>
-          </Card>
-        ))}
 
         {/* Add migration options */}
         {selectedOption?.operation === 'migrate' && (
