@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import {
   Alert,
+  Badge,
   Box,
   Card,
   Field,
@@ -154,7 +155,7 @@ export function BootstrapStep({ onOptionSelect, settingsData, repoName }: Props)
                 Dashboards will be unavailable while running this process.
               </Alert>
             )}
-            {Boolean(state.fileCount) && Boolean(state.resourceCount) && (
+            {Boolean(state.fileCount && state.resourceCount) && (
               <Alert title="Files exist in the target" severity="info">
                 The {state.resourceCount} resources in grafana will be added to the repository. Grafana will then
                 include both the current resources and anything from the repository when done.
@@ -197,7 +198,7 @@ export function BootstrapStep({ onOptionSelect, settingsData, repoName }: Props)
             <Input
               {...register('repository.title', { required: 'This field is required.' })}
               placeholder="My repository connection"
-              // Auto-focus the title field if it's the only available option
+              // Autofocus the title field if it's the only available option
               autoFocus={state.actions.length === 1 && state.actions[0].target === 'folder'}
             />
           </Field>

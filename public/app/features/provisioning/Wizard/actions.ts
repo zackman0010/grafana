@@ -80,7 +80,7 @@ export function getState(
 
   const state: SystemState = {
     resourceCount,
-    resourceCountString: counts.join(','),
+    resourceCountString: counts.join(', '),
     fileCount,
     folderConnected,
     actions: [],
