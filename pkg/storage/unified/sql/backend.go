@@ -781,12 +781,18 @@ func (b *backend) listAtRevision(ctx context.Context, req *resource.ListRequest,
 	return iter.listRV, err
 }
 
-// listLatest fetches the resources from the resource table.
+// getHistory fetches the resources from the resource table.
 func (b *backend) getHistory(ctx context.Context, req *resource.ListRequest, cb func(resource.ListIterator) error) (int64, error) {
 	listReq := sqlGetHistoryRequest{
 		SQLTemplate: sqltemplate.New(b.dialect),
 		Key:         req.Options.Key,
 		Trash:       req.Source == resource.ListRequest_TRASH,
+	}
+
+	// We are assuming that users want history in reverse chronological order
+	// when they are using NotOlderThan matching.
+	if req.VersionMatch == resource.ResourceVersionMatch_NotOlderThan {
+		listReq.SortAscending = true
 	}
 
 	iter := &listIter{}

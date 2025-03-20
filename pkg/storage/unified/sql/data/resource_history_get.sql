@@ -24,4 +24,8 @@ WHERE 1 = 1
   {{ if (gt .ExactRV 0) }}
   AND {{ .Ident "resource_version" }} = {{ .Arg .ExactRV }}
   {{ end }}
+{{ if .SortAscending }}
+ORDER BY resource_version ASC
+{{ else }}
 ORDER BY resource_version DESC
+{{ end }}

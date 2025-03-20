@@ -492,36 +492,130 @@ func runTestIntegrationBackendListHistory(t *testing.T, backend resource.Storage
 	require.NoError(t, err)
 	require.Greater(t, rvHistory5, rvHistory4)
 
-	t.Run("fetch first history page at revision with limit", func(t *testing.T) {
-		res, err := server.List(ctx, &resource.ListRequest{
-			Limit:  3,
-			Source: resource.ListRequest_HISTORY,
-			Options: &resource.ListOptions{
-				Key: &resource.ResourceKey{
-					Namespace: ns,
-					Group:     "group",
-					Resource:  "resource",
-					Name:      "item1",
-				},
-			},
-		})
-		require.NoError(t, err)
-		require.NoError(t, err)
-		require.Nil(t, res.Error)
-		require.Len(t, res.Items, 3)
-		t.Log(res.Items)
-		// should be in desc order, so the newest RVs are returned first
-		require.Equal(t, "item1 MODIFIED", string(res.Items[0].Value))
-		require.Equal(t, rvHistory5, res.Items[0].ResourceVersion)
-		require.Equal(t, "item1 MODIFIED", string(res.Items[1].Value))
-		require.Equal(t, rvHistory4, res.Items[1].ResourceVersion)
-		require.Equal(t, "item1 MODIFIED", string(res.Items[2].Value))
-		require.Equal(t, rvHistory3, res.Items[2].ResourceVersion)
+	t.Run("fetch history with different version matching", func(t *testing.T) {
+		baseKey := &resource.ResourceKey{
+			Namespace: ns,
+			Group:     "group",
+			Resource:  "resource",
+			Name:      "item1",
+		}
 
-		continueToken, err := resource.GetContinueToken(res.NextPageToken)
-		require.NoError(t, err)
-		//  should return the furthest back RV as the next page token
-		require.Equal(t, rvHistory3, continueToken.ResourceVersion)
+		tests := []struct {
+			name               string
+			request            *resource.ListRequest
+			expectedVersions   []int64
+			expectedValues     []string
+			minExpectedHeadRV  int64
+			expectedContinueRV int64
+		}{
+			{
+				name: "NotOlderThan with rv1 (ASC order)",
+				request: &resource.ListRequest{
+					Limit:           3,
+					Source:          resource.ListRequest_HISTORY,
+					ResourceVersion: rv1,
+					VersionMatch:    resource.ResourceVersionMatch_NotOlderThan,
+					Options: &resource.ListOptions{
+						Key: baseKey,
+					},
+				},
+				expectedVersions:   []int64{rv1, rvHistory1, rvHistory2},
+				expectedValues:     []string{"item1 ADDED", "item1 MODIFIED", "item1 MODIFIED"},
+				minExpectedHeadRV:  rvHistory2,
+				expectedContinueRV: rvHistory2,
+			},
+			{
+				name: "NotOlderThan with rv=0 (ASC order)",
+				request: &resource.ListRequest{
+					Limit:           3,
+					Source:          resource.ListRequest_HISTORY,
+					ResourceVersion: 0,
+					VersionMatch:    resource.ResourceVersionMatch_NotOlderThan,
+					Options: &resource.ListOptions{
+						Key: baseKey,
+					},
+				},
+				expectedVersions:   []int64{rv1, rvHistory1, rvHistory2},
+				expectedValues:     []string{"item1 ADDED", "item1 MODIFIED", "item1 MODIFIED"},
+				minExpectedHeadRV:  rvHistory2,
+				expectedContinueRV: rvHistory2,
+			},
+			{
+				name: "ResourceVersionMatch_Unset (DESC order)",
+				request: &resource.ListRequest{
+					Limit:  3,
+					Source: resource.ListRequest_HISTORY,
+					Options: &resource.ListOptions{
+						Key: baseKey,
+					},
+				},
+				expectedVersions:   []int64{rvHistory5, rvHistory4, rvHistory3},
+				expectedValues:     []string{"item1 MODIFIED", "item1 MODIFIED", "item1 MODIFIED"},
+				minExpectedHeadRV:  rvHistory5,
+				expectedContinueRV: rvHistory3,
+			},
+		}
+
+		for _, tc := range tests {
+			t.Run(tc.name, func(t *testing.T) {
+				res, err := server.List(ctx, tc.request)
+				require.NoError(t, err)
+				require.Nil(t, res.Error)
+				require.Len(t, res.Items, 3)
+
+				// Check versions and values match expectations
+				for i := 0; i < 3; i++ {
+					require.Equal(t, tc.expectedVersions[i], res.Items[i].ResourceVersion)
+					require.Equal(t, tc.expectedValues[i], string(res.Items[i].Value))
+				}
+
+				// Check resource version in response
+				require.GreaterOrEqual(t, res.ResourceVersion, tc.minExpectedHeadRV)
+
+				// Check continue token
+				continueToken, err := resource.GetContinueToken(res.NextPageToken)
+				require.NoError(t, err)
+				require.Equal(t, tc.expectedContinueRV, continueToken.ResourceVersion)
+			})
+		}
+
+		// Test pagination for NotOlderThan (second page)
+		t.Run("second page with NotOlderThan", func(t *testing.T) {
+			// Get first page
+			firstRequest := &resource.ListRequest{
+				Limit:           3,
+				Source:          resource.ListRequest_HISTORY,
+				ResourceVersion: rv1,
+				VersionMatch:    resource.ResourceVersionMatch_NotOlderThan,
+				Options:         &resource.ListOptions{Key: baseKey},
+			}
+			firstPageRes, err := server.List(ctx, firstRequest)
+			require.NoError(t, err)
+
+			// Get continue token for second page
+			continueToken, err := resource.GetContinueToken(firstPageRes.NextPageToken)
+			require.NoError(t, err)
+
+			// Get second page
+			secondPageRes, err := server.List(ctx, &resource.ListRequest{
+				Limit:           3,
+				Source:          resource.ListRequest_HISTORY,
+				ResourceVersion: rv1,
+				VersionMatch:    resource.ResourceVersionMatch_NotOlderThan,
+				NextPageToken:   continueToken.String(),
+				Options:         &resource.ListOptions{Key: baseKey},
+			})
+			require.NoError(t, err)
+			require.Nil(t, secondPageRes.Error)
+			require.Len(t, secondPageRes.Items, 3)
+
+			// Second page should continue in ascending order
+			expectedRVs := []int64{rvHistory3, rvHistory4, rvHistory5}
+			for i, expectedRV := range expectedRVs {
+				require.Equal(t, expectedRV, secondPageRes.Items[i].ResourceVersion)
+				require.Equal(t, "item1 MODIFIED", string(secondPageRes.Items[i].Value))
+			}
+		})
 	})
 
 	t.Run("fetch second page of history at revision", func(t *testing.T) {
