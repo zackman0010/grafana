@@ -1,11 +1,9 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { dateTime, makeTimeRange } from '@grafana/data';
+import { dateTime, getDefaultTimeRange, makeTimeRange } from '@grafana/data';
 import { PrometheusDatasource } from '@grafana/prometheus';
 import { getDatasourceSrv } from 'app/features/plugins/datasource_srv';
-
-import { getDefaultTimeRange } from '../utils';
 
 import { prometheusMetricSearchTool } from './prometheusMetricSearch';
 import { prometheusTypeRefiner, regexRefiner, unixTimestampRefiner } from './refiners';
