@@ -25,6 +25,11 @@
       "user": "Ůşęř"
     }
   },
+  "admin": {
+    "ldap-user-groups": {
+      "no-org-found": "Ńő mäŧčĥ"
+    }
+  },
   "alert-labels": {
     "button": {
       "hide": "Ħįđę čőmmőŉ ľäþęľş",

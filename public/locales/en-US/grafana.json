@@ -25,6 +25,11 @@
       "user": "User"
     }
   },
+  "admin": {
+    "ldap-user-groups": {
+      "no-org-found": "No match"
+    }
+  },
   "alert-labels": {
     "button": {
       "hide": "Hide common labels",
