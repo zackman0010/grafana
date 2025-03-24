@@ -15,6 +15,7 @@ var (
 	ErrTokenNotFound               = errutil.NotFound("cloudmigrations.tokenNotFound").Errorf("Token not found")
 	ErrSnapshotNotFound            = errutil.NotFound("cloudmigrations.snapshotNotFound").Errorf("Snapshot not found")
 	ErrEmptyResourceTypes          = errutil.BadRequest("cloudmigrations.emptyResourceTypes").Errorf("Resource types cannot be empty")
+	ErrResourceMigrationScope      = errutil.BadRequest("cloudmigrations.invalidResourceMigrationScope")
 )
 
 // CloudMigration domain structs
@@ -163,11 +164,42 @@ type CloudMigrationSessionListResponse struct {
 	Sessions []CloudMigrationSessionResponse
 }
 
-type ResourceTypes map[MigrateDataType]struct{}
+type ResourceMigrationScope string
+
+const (
+	// Migrate all resources regardless of whether they are used by other resources.
+	ResourceMigrationScopeAll ResourceMigrationScope = "ALL"
+
+	// Only migrate resources that are used by other resources.
+	ResourceMigrationScopeUsed ResourceMigrationScope = "USED"
+)
+
+func NewResourceMigrationScope(scope string) (ResourceMigrationScope, error) {
+	switch scope {
+	case "ALL":
+		return ResourceMigrationScopeAll, nil
+	case "USED":
+		return ResourceMigrationScopeUsed, nil
+	default:
+		return "", ErrResourceMigrationScope.Errorf("invalid resource migration scope: %s", scope)
+	}
+}
+
+type ResourceTypes map[MigrateDataType]ResourceMigrationScope
+
+type ParsedResourceTypes ResourceTypes
+
+func (r ParsedResourceTypes) Scope(t MigrateDataType) ResourceMigrationScope {
+	return r[t]
+}
+
+func (r ParsedResourceTypes) ShouldMigrate(t MigrateDataType) bool {
+	return r[t] == ResourceMigrationScopeAll || r[t] == ResourceMigrationScopeUsed
+}
 
 type CreateSnapshotCommand struct {
 	SessionUID    string
-	ResourceTypes ResourceTypes
+	ResourceTypes ParsedResourceTypes
 }
 
 type GetSnapshotsQuery struct {

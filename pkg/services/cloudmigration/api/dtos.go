@@ -275,8 +275,9 @@ type CreateSnapshotRequest struct {
 	Body CreateSnapshotRequestDTO `json:"body"`
 }
 
+// swagger:model CreateSnapshotRequestDTO
 type CreateSnapshotRequestDTO struct {
-	ResourceTypes []MigrateDataType `json:"resourceTypes"`
+	ResourceTypes map[MigrateDataType]string `json:"resourceTypes"`
 }
 
 // swagger:response createSnapshotResponse

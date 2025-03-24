@@ -172,19 +172,19 @@ export const Page = () => {
         createSnapshotRequestDto: {
           // TODO: For the moment, pass all resource types. Once we have a frontend for selecting resource types,
           // we should pass the selected resource types instead.
-          resourceTypes: [
-            'DASHBOARD',
-            'DATASOURCE',
-            'FOLDER',
-            'LIBRARY_ELEMENT',
-            'ALERT_RULE',
-            'ALERT_RULE_GROUP',
-            'CONTACT_POINT',
-            'NOTIFICATION_POLICY',
-            'NOTIFICATION_TEMPLATE',
-            'MUTE_TIMING',
-            'PLUGIN',
-          ],
+          resourceTypes: {
+            DASHBOARD: 'ALL',
+            DATASOURCE: 'ALL',
+            FOLDER: 'ALL',
+            LIBRARY_ELEMENT: 'ALL',
+            ALERT_RULE: 'ALL',
+            ALERT_RULE_GROUP: 'ALL',
+            CONTACT_POINT: 'ALL',
+            NOTIFICATION_POLICY: 'ALL',
+            NOTIFICATION_TEMPLATE: 'ALL',
+            MUTE_TIMING: 'ALL',
+            PLUGIN: 'USED',
+          },
         },
       });
     }

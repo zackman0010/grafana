@@ -176,19 +176,9 @@ export type CreateSnapshotResponseDto = {
   uid?: string;
 };
 export type CreateSnapshotRequestDto = {
-  resourceTypes?: (
-    | 'DASHBOARD'
-    | 'DATASOURCE'
-    | 'FOLDER'
-    | 'LIBRARY_ELEMENT'
-    | 'ALERT_RULE'
-    | 'ALERT_RULE_GROUP'
-    | 'CONTACT_POINT'
-    | 'NOTIFICATION_POLICY'
-    | 'NOTIFICATION_TEMPLATE'
-    | 'MUTE_TIMING'
-    | 'PLUGIN'
-  )[];
+  resourceTypes?: {
+    [key: string]: string;
+  };
 };
 export type MigrateDataResponseItemDto = {
   errorCode?:

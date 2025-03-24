@@ -337,12 +337,20 @@ func (cma *CloudMigrationAPI) CreateSnapshot(c *contextmodel.ReqContext) respons
 		return response.ErrOrFallback(http.StatusBadRequest, "at least one resource type is required", cloudmigration.ErrEmptyResourceTypes)
 	}
 
-	rawResourceTypes := make([]cloudmigration.MigrateDataType, 0, len(cmd.ResourceTypes))
-	for _, t := range cmd.ResourceTypes {
-		rawResourceTypes = append(rawResourceTypes, cloudmigration.MigrateDataType(t))
+	resourceTypes := make(cloudmigration.ResourceTypes)
+	for dataType, rawScope := range cmd.ResourceTypes {
+		scope, err := cloudmigration.NewResourceMigrationScope(rawScope)
+		if err != nil {
+			span.SetStatus(codes.Error, "invalid resource migration scope")
+			span.RecordError(err)
+
+			return response.ErrOrFallback(http.StatusBadRequest, "invalid resource migration scope", err)
+		}
+
+		resourceTypes[cloudmigration.MigrateDataType(dataType)] = scope
 	}
 
-	resourceTypes, err := cloudmigration.ResourceDependency.Parse(rawResourceTypes)
+	parsedResourceTypes, err := cma.resourceDependencyMap.Parse(resourceTypes)
 	if err != nil {
 		span.SetStatus(codes.Error, "invalid resource types")
 		span.RecordError(err)
@@ -352,7 +360,7 @@ func (cma *CloudMigrationAPI) CreateSnapshot(c *contextmodel.ReqContext) respons
 
 	ss, err := cma.cloudMigrationService.CreateSnapshot(ctx, c.SignedInUser, cloudmigration.CreateSnapshotCommand{
 		SessionUID:    uid,
-		ResourceTypes: resourceTypes,
+		ResourceTypes: parsedResourceTypes,
 	})
 	if err != nil {
 		span.SetStatus(codes.Error, "error creating snapshot")

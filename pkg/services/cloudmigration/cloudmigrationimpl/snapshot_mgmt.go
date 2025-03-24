@@ -48,28 +48,18 @@ var currentMigrationTypes = []cloudmigration.MigrateDataType{
 	cloudmigration.PluginDataType,
 }
 
-func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.SignedInUser) (*cloudmigration.MigrateDataRequest, error) {
+func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.SignedInUser, resources cloudmigration.ParsedResourceTypes) (*cloudmigration.MigrateDataRequest, error) {
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.getMigrationDataJSON")
 	defer span.End()
 
-	migrationDataSlice := make([]cloudmigration.MigrateDataRequestItem, 0)
+	resourcesToMigrate := make(map[cloudmigration.MigrateDataType][]MigratableResource)
 
-	folderHierarchy := make(map[cloudmigration.MigrateDataType]map[string]string, 0)
-
+	/// FETCH THE RESOURCES ///
 	// Plugins
 	plugins, err := s.getPlugins(ctx, signedInUser)
 	if err != nil {
 		s.log.Error("Failed to get plugins", "err", err)
 		return nil, err
-	}
-
-	for _, plugin := range plugins {
-		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
-			Type:  cloudmigration.PluginDataType,
-			RefID: plugin.ID,
-			Name:  plugin.Name,
-			Data:  plugin.SettingCmd,
-		})
 	}
 
 	// Data sources
@@ -79,6 +69,119 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 		return nil, err
 	}
 
+	// Dashboards & Folders: linked via the schema, so we need to get both
+	dashs, folders, err := s.getDashboardAndFolderCommands(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get dashboards and folders", "err", err)
+		return nil, err
+	}
+	folders = sortFolders(folders)
+
+	// Library Elements
+	libraryElements, err := s.getLibraryElementsCommands(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get library elements", "err", err)
+		return nil, err
+	}
+	resourcesToMigrate[cloudmigration.LibraryElementDataType] = libraryElements
+
+	// Alerts: Mute Timings
+	muteTimings, err := s.getAlertMuteTimings(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert mute timings", "err", err)
+		return nil, err
+	}
+
+	// Alerts: Notification Templates
+	notificationTemplates, err := s.getNotificationTemplates(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert notification templates", "err", err)
+		return nil, err
+	}
+
+	// Alerts: Contact Points
+	contactPoints, err := s.getContactPoints(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert contact points", "err", err)
+		return nil, err
+	}
+
+	// Alerts: Notification Policies
+	notificationPolicies, err := s.getNotificationPolicies(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert notification policies", "err", err)
+		return nil, err
+	}
+
+	// Alerts: Alert Rule Groups
+	alertRuleGroups, err := s.getAlertRuleGroups(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert rule groups", "err", err)
+		return nil, err
+	}
+
+	// Alerts: Alert Rules
+	alertRules, err := s.getAlertRules(ctx, signedInUser)
+	if err != nil {
+		s.log.Error("Failed to get alert rules", "err", err)
+		return nil, err
+	}
+
+	/// Resolve dependencies in reverse order, so that everything that depends on (ROOT NODES) is resolved first recursively
+	// Make this resolution dynamic by walking the graph with DFS from the root?
+	// Root Node: Folders
+	if resources.Scope(cloudmigration.FolderDataType) == cloudmigration.ResourceMigrationScopeUsed {
+		requiredFolderUIDs := make(map[string]struct{})
+
+		// Add all folders used by other resources.
+		directDependants := cloudmigration.ResourceDependency.DirectDependantsOf(cloudmigration.FolderDataType)
+		for _, dependant := range directDependants {
+			if !resources.ShouldMigrate(dependant) {
+				continue
+			}
+
+			for _, resource := range resourcesToMigrate[dependant] {
+				// By now, this resource should have been resolved and filtered accordingly if its scope is "USED".
+				// For example, if selecting to migrate "ALL" Dashboards, but only "USED" Library Elements, this needs
+				// to be filtered out already, otherwise we _could_ be adding folders that are not needed.
+				folderDep, ok := resource.(FolderDependant)
+				if !ok {
+					continue
+				}
+
+				folderUID := folderDep.ReadFolderUID()
+				if folderUID != nil {
+					requiredFolderUIDs[*folderUID] = struct{}{}
+				}
+			}
+		}
+
+		// Specially, folders can depend on other folders.
+		// Walk the tree upwards until we hit the General folder.
+		for folderUID := range requiredFolderUIDs {
+			s.addParentFolders(requiredFolderUIDs, folders, folderUID)
+		}
+	}
+
+	///// CONDITIONALLY APPEND TO MIGRATION DATA SLICE /////
+	migrationDataSlice := make([]cloudmigration.MigrateDataRequestItem, 0)
+
+	folderHierarchy := make(map[cloudmigration.MigrateDataType]map[string]string, 0)
+
+	// Migrate all plugins: some core plugins do not include their dependencies in the list so we can't map it back to a datasource type.
+	// The premise is that it would already be installed in the target instance.
+	if resources.ShouldMigrate(cloudmigration.PluginDataType) {
+		for _, plugin := range plugins {
+			migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
+				Type:  cloudmigration.PluginDataType,
+				RefID: plugin.ID,
+				Name:  plugin.Name,
+				Data:  plugin.SettingCmd,
+			})
+		}
+	}
+
+	// Data Sources
 	for _, ds := range dataSources {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.DatasourceDataType,
@@ -88,13 +191,7 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 		})
 	}
 
-	// Dashboards & Folders: linked via the schema, so we need to get both
-	dashs, folders, err := s.getDashboardAndFolderCommands(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get dashboards and folders", "err", err)
-		return nil, err
-	}
-
+	// Dashboards
 	folderHierarchy[cloudmigration.DashboardDataType] = make(map[string]string, 0)
 
 	for _, dashboard := range dashs {
@@ -115,6 +212,7 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 		folderHierarchy[cloudmigration.DashboardDataType][dashboard.UID] = dashboard.FolderUID
 	}
 
+	// Folders
 	folderHierarchy[cloudmigration.FolderDataType] = make(map[string]string, 0)
 
 	folders = sortFolders(folders)
@@ -130,34 +228,24 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Library Elements
-	libraryElements, err := s.getLibraryElementsCommands(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get library elements", "err", err)
-		return nil, err
-	}
-
 	folderHierarchy[cloudmigration.LibraryElementDataType] = make(map[string]string, 0)
 
 	for _, libraryElement := range libraryElements {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.LibraryElementDataType,
-			RefID: libraryElement.UID,
-			Name:  libraryElement.Name,
+			RefID: libraryElement.ID(),
+			Name:  libraryElement.Title(),
 			Data:  libraryElement,
 		})
 
-		if libraryElement.FolderUID != nil {
-			folderHierarchy[cloudmigration.LibraryElementDataType][libraryElement.UID] = *libraryElement.FolderUID
+		if folderDep, ok := libraryElement.(FolderDependant); ok {
+			if folderUID := folderDep.ReadFolderUID(); folderUID != nil {
+				folderHierarchy[cloudmigration.LibraryElementDataType][libraryElement.ID()] = *folderUID
+			}
 		}
 	}
 
 	// Alerts: Mute Timings
-	muteTimings, err := s.getAlertMuteTimings(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert mute timings", "err", err)
-		return nil, err
-	}
-
 	for _, muteTiming := range muteTimings {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.MuteTimingType,
@@ -168,12 +256,6 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Alerts: Notification Templates
-	notificationTemplates, err := s.getNotificationTemplates(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert notification templates", "err", err)
-		return nil, err
-	}
-
 	for _, notificationTemplate := range notificationTemplates {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.NotificationTemplateType,
@@ -184,12 +266,6 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Alerts: Contact Points
-	contactPoints, err := s.getContactPoints(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert contact points", "err", err)
-		return nil, err
-	}
-
 	for _, contactPoint := range contactPoints {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.ContactPointType,
@@ -200,12 +276,6 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Alerts: Notification Policies
-	notificationPolicies, err := s.getNotificationPolicies(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert notification policies", "err", err)
-		return nil, err
-	}
-
 	if len(notificationPolicies.Name) > 0 {
 		// Notification Policy can only be managed by updating its entire tree, so we send the whole thing as one item.
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
@@ -217,12 +287,6 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Alerts: Alert Rule Groups
-	alertRuleGroups, err := s.getAlertRuleGroups(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert rule groups", "err", err)
-		return nil, err
-	}
-
 	for _, alertRuleGroup := range alertRuleGroups {
 		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItem{
 			Type:  cloudmigration.AlertRuleGroupType,
@@ -233,12 +297,6 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 	}
 
 	// Alerts: Alert Rules
-	alertRules, err := s.getAlertRules(ctx, signedInUser)
-	if err != nil {
-		s.log.Error("Failed to get alert rules", "err", err)
-		return nil, err
-	}
-
 	folderHierarchy[cloudmigration.AlertRuleType] = make(map[string]string, 0)
 
 	for _, alertRule := range alertRules {
@@ -249,7 +307,9 @@ func (s *Service) getMigrationDataJSON(ctx context.Context, signedInUser *user.S
 			Data:  alertRule,
 		})
 
-		folderHierarchy[cloudmigration.AlertRuleType][alertRule.UID] = alertRule.FolderUID
+		if alertRule.FolderUID != "" {
+			folderHierarchy[cloudmigration.AlertRuleType][alertRule.UID] = alertRule.FolderUID
+		}
 	}
 
 	// Obtain the names of parent elements for data types that have folders.
@@ -357,6 +417,16 @@ func (s *Service) getDashboardAndFolderCommands(ctx context.Context, signedInUse
 	return dashboardCmds, folderCmds, nil
 }
 
+type MigratableResource interface {
+	ID() string
+	Title() string
+	Data() any
+}
+
+type FolderDependant interface {
+	ReadFolderUID() *string
+}
+
 type libraryElement struct {
 	FolderUID *string         `json:"folderUid"`
 	Name      string          `json:"name"`
@@ -365,14 +435,33 @@ type libraryElement struct {
 	Kind      int64           `json:"kind"`
 }
 
+var _ MigratableResource = &libraryElement{}
+var _ FolderDependant = &libraryElement{}
+
+func (le libraryElement) ID() string {
+	return le.UID
+}
+
+func (le libraryElement) Title() string {
+	return le.Name
+}
+
+func (le libraryElement) Data() any {
+	return le
+}
+
+func (le libraryElement) ReadFolderUID() *string {
+	return le.FolderUID
+}
+
 // getLibraryElementsCommands returns the json payloads required by the library elements creation API
-func (s *Service) getLibraryElementsCommands(ctx context.Context, signedInUser *user.SignedInUser) ([]libraryElement, error) {
+func (s *Service) getLibraryElementsCommands(ctx context.Context, signedInUser *user.SignedInUser) ([]MigratableResource, error) {
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.getLibraryElementsCommands")
 	defer span.End()
 
 	const perPage = 100
 
-	cmds := make([]libraryElement, 0)
+	cmds := make([]MigratableResource, 0)
 
 	page := 1
 	count := 0
@@ -514,7 +603,7 @@ func (s *Service) getPlugins(ctx context.Context, signedInUser *user.SignedInUse
 }
 
 // asynchronous process for writing the snapshot to the filesystem and updating the snapshot status
-func (s *Service) buildSnapshot(ctx context.Context, signedInUser *user.SignedInUser, maxItemsPerPartition uint32, metadata []byte, snapshotMeta cloudmigration.CloudMigrationSnapshot) error {
+func (s *Service) buildSnapshot(ctx context.Context, signedInUser *user.SignedInUser, maxItemsPerPartition uint32, metadata []byte, snapshotMeta cloudmigration.CloudMigrationSnapshot, resourceTypes cloudmigration.ParsedResourceTypes) error {
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.buildSnapshot")
 	defer span.End()
 
@@ -548,7 +637,7 @@ func (s *Service) buildSnapshot(ctx context.Context, signedInUser *user.SignedIn
 
 	s.log.Debug(fmt.Sprintf("buildSnapshot: created snapshot writing in %d ms", time.Since(start).Milliseconds()))
 
-	migrationData, err := s.getMigrationDataJSON(ctx, signedInUser)
+	migrationData, err := s.getMigrationDataJSON(ctx, signedInUser, resourceTypes)
 	if err != nil {
 		return fmt.Errorf("fetching migration data: %w", err)
 	}
@@ -863,4 +952,24 @@ func (s *Service) getParentNames(
 	}
 
 	return parentNamesByType, err
+}
+
+// addParentFolders recursively adds all parent folders to the required folders map
+func (s *Service) addParentFolders(requiredFolderUIDs map[string]struct{}, folders []folder.CreateFolderCommand, folderUID string) {
+	for _, f := range folders {
+		if f.UID != folderUID {
+			continue
+		}
+
+		// We've reached the General folder, stop.
+		if f.ParentUID == "" {
+			break
+		}
+
+		// Add the parent to the list of required folders.
+		requiredFolderUIDs[f.ParentUID] = struct{}{}
+
+		// Recursively add its parents.
+		s.addParentFolders(requiredFolderUIDs, folders, f.ParentUID)
+	}
 }
