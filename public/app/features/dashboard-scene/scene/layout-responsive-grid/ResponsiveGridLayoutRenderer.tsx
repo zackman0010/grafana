@@ -3,16 +3,16 @@ import { useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { LazyLoader, SceneComponentProps } from '@grafana/scenes';
-import { useStyles2 } from '@grafana/ui';
+import { Button, useStyles2 } from '@grafana/ui';
 
-import { getDashboardSceneFor } from '../../utils/utils';
+import { getDashboardSceneFor, useDashboardState } from '../../utils/utils';
 
 import { ResponsiveGridLayout, ResponsiveGridLayoutState } from './ResponsiveGridLayout';
 
 export function ResponsiveGridLayoutRenderer({ model }: SceneComponentProps<ResponsiveGridLayout>) {
   const { children, isHidden, isLazy } = model.useState();
   const styles = useStyles2(getStyles, model.state);
-  const { layoutOrchestrator } = getDashboardSceneFor(model).state;
+  const { layoutOrchestrator, isEditing } = useDashboardState(model);
 
   const { activeLayoutItemRef } = layoutOrchestrator.useState();
   const activeLayoutItem = activeLayoutItemRef?.resolve();
@@ -46,6 +46,11 @@ export function ResponsiveGridLayoutRenderer({ model }: SceneComponentProps<Resp
           display: currentLayoutIsActive && model.activeIndex !== undefined ? 'grid' : 'none',
         }}
       />
+      {children.length === 0 && isEditing && (
+        <div className={styles.emptyState}>
+          <Button variant="secondary">Add panel</Button>
+        </div>
+      )}
       {children.map((item) => {
         const Wrapper = isLazy ? LazyLoader : 'div';
         const isDragging = activeLayoutItem === item;
@@ -114,5 +119,21 @@ const getStyles = (theme: GrafanaTheme2, state: ResponsiveGridLayoutState) => ({
     left: 0,
     zIndex: theme.zIndex.portal + 1,
     pointerEvents: 'none',
+  }),
+  emptyState: css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: `1px dashed ${theme.colors.border.strong}`,
+    opacity: 0,
+
+    borderRadius: theme.shape.radius.default,
+    [theme.transitions.handleMotion('no-preference', 'reduce')]: {
+      transition: theme.transitions.create(['opacity', 'background']),
+    },
+    '&:hover': {
+      opacity: 1,
+      background: theme.colors.background.primary,
+    },
   }),
 });
