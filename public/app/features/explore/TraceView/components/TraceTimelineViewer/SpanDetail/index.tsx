@@ -327,17 +327,6 @@ export default function SpanDetail(props: SpanDetailProps) {
       </div>
       <Divider spacing={1} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
-        <Attributes
-          span={span}
-          linksGetter={linksGetter}
-          detailAttributeItemToggle={attributeItemToggle}
-          tagsToggle={tagsToggle}
-          resourceAttributesState={resourceAttributesState}
-          processToggle={processToggle}
-          isTagsOpen={isTagsOpen}
-          isProcessOpen={isProcessOpen}
-          links={links}
-        />
         {logs && logs.length > 0 && (
           <AccordianLogs
             linksGetter={linksGetter}
@@ -359,6 +348,17 @@ export default function SpanDetail(props: SpanDetailProps) {
             onToggle={() => warningsToggle(spanID)}
           />
         )}
+        <Attributes
+          span={span}
+          linksGetter={linksGetter}
+          detailAttributeItemToggle={attributeItemToggle}
+          tagsToggle={tagsToggle}
+          resourceAttributesState={resourceAttributesState}
+          processToggle={processToggle}
+          isTagsOpen={isTagsOpen}
+          isProcessOpen={isProcessOpen}
+          links={links}
+        />
         {stackTraces?.length ? (
           <AccordianText
             label="Stack trace"
