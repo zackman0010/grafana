@@ -24,6 +24,12 @@ import (
 	"github.com/grafana/grafana/pkg/storage/legacysql/dualwrite"
 )
 
+var (
+	ErrTooManyResources = errors.New("too many resources")
+)
+
+const maxNumberOfResources = 1000
+
 // SyncWorker synchronizes the external repo with grafana database
 // this function updates the status for both the job and the referenced repository
 type SyncWorker struct {
@@ -237,13 +243,20 @@ func (r *syncJob) run(ctx context.Context, options provisioning.SyncJobOptions) 
 	if err != nil {
 		return fmt.Errorf("error listing current: %w", err)
 	}
+
 	source, err := r.repository.ReadTree(ctx, currentRef)
 	if err != nil {
 		return fmt.Errorf("error reading tree: %w", err)
 	}
+
 	changes, err := Changes(source, target)
 	if err != nil {
 		return fmt.Errorf("error calculating changes: %w", err)
+	}
+
+	// Check if we will have too many resources
+	if err := r.tooManyResources(changes, target); err != nil {
+		return nil
 	}
 
 	if len(changes) == 0 {
@@ -256,6 +269,23 @@ func (r *syncJob) run(ctx context.Context, options provisioning.SyncJobOptions) 
 
 	// Now apply the changes
 	return r.applyChanges(ctx, changes)
+}
+
+func (r *syncJob) tooManyResources(changes []ResourceFileChange, target *provisioning.ResourceList) error {
+	var writeCount, deleteCount int
+	for _, change := range changes {
+		if change.Action == repository.FileActionDeleted {
+			deleteCount++
+		} else {
+			writeCount++
+		}
+	}
+
+	if writeCount+len(target.Items)-deleteCount > maxNumberOfResources {
+		return ErrTooManyResources
+	}
+
+	return nil
 }
 
 func (r *syncJob) applyChanges(ctx context.Context, changes []ResourceFileChange) error {
@@ -324,8 +354,12 @@ func (r *syncJob) applyVersionedChanges(ctx context.Context, repo repository.Ver
 		r.progress.SetFinalMessage(ctx, "no changes detected between commits")
 		return nil
 	}
-
 	r.progress.SetTotal(ctx, len(diff))
+
+	if err := r.tooManyResourcesAfterVersionedChange(ctx, diff); err != nil {
+		return nil
+	}
+
 	r.progress.SetMessage(ctx, "replicating versioned changes")
 
 	for _, change := range diff {
@@ -365,6 +399,36 @@ func (r *syncJob) applyVersionedChanges(ctx context.Context, repo repository.Ver
 	}
 
 	r.progress.SetMessage(ctx, "versioned changes replicated")
+
+	return nil
+}
+
+func (r *syncJob) tooManyResourcesAfterVersionedChange(ctx context.Context, changes []repository.VersionedFileChange) error {
+	var deleteCount, writeCount int
+	for _, change := range changes {
+		if err := resources.IsPathSupported(change.Path); err != nil || change.Action == repository.FileActionIgnored {
+			r.progress.Record(ctx, jobs.JobResourceResult{
+				Path:   change.Path,
+				Action: repository.FileActionIgnored,
+			})
+			continue
+		}
+		if change.Action == repository.FileActionDeleted {
+			deleteCount++
+		} else {
+			writeCount++
+		}
+	}
+
+	// TODO: improve by having only the count
+	list, err := r.lister.List(ctx, r.repository.Config().Namespace, r.repository.Config().Name)
+	if err != nil {
+		return fmt.Errorf("error listing current: %w", err)
+	}
+
+	if writeCount+len(list.Items)-deleteCount > maxNumberOfResources {
+		return ErrTooManyResources
+	}
 
 	return nil
 }
