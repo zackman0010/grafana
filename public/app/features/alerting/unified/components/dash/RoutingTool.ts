@@ -1,7 +1,7 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { locationService } from '@grafana/runtime';
+import { config, locationService } from '@grafana/runtime';
 
 import { createRelativeUrl } from '../../utils/url';
 
@@ -85,7 +85,15 @@ export const createAlertTool = tool(
       queryParams.defaults = JSON.stringify(defaults);
     }
 
-    const url = createRelativeUrl('/alerting/new', queryParams);
+    let url = createRelativeUrl('/alerting/new', queryParams);
+
+    if (url.startsWith(config.appSubUrl)) {
+      url = url.substring(config.appSubUrl.length);
+      // Ensure the URL still starts with a slash
+      if (!url.startsWith('/')) {
+        url = '/' + url;
+      }
+    }
 
     if (navigate) {
       locationService.push(url);
