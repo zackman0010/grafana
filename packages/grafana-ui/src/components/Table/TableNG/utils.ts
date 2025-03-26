@@ -22,6 +22,7 @@ import {
   TableCellDisplayMode,
   TableCellHeight,
   TableCellOptions,
+  TableSortByFieldState,
 } from '@grafana/schema';
 
 import { TableCellInspectorMode } from '../..';
@@ -488,6 +489,7 @@ export interface MapFrameToGridOptions extends TableNGProps {
   textWrap: boolean;
   theme: GrafanaTheme2;
   showTypeIcons?: boolean;
+  onSortByChange?: (sortBy: TableSortByFieldState[]) => void;
 }
 
 /* ----------------------------- Data grid comparator ---------------------------- */
