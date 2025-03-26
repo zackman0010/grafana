@@ -57,6 +57,7 @@ Content-Type: application/json
 [
   {
     "id": 163,
+    "orgId": 1,
     "uid": "000000163",
     "title": "Folder",
     "url": "/dashboards/f/000000163/folder",
@@ -67,6 +68,7 @@ Content-Type: application/json
   },
   {
     "id":1,
+    "orgId": 1,
     "uid": "cIBgcSjkk",
     "title":"Production Overview",
     "url": "/d/cIBgcSjkk/production-overview",
