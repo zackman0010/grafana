@@ -12,6 +12,11 @@ import * as common from '@grafana/schema';
 
 export const pluginVersion = "11.6.0-pre";
 
+export enum ElasticSearchQueryMode {
+  Builder = 'builder',
+  Raw = 'raw',
+}
+
 export type BucketAggregation = (DateHistogram | Histogram | Terms | Filters | GeoHashGrid | Nested);
 
 export type MetricAggregation = (Count | PipelineMetricAggregation | MetricAggregationWithSettings);
@@ -395,6 +400,18 @@ export interface ElasticsearchDataQuery extends common.DataQuery {
    * Lucene query
    */
   query?: string;
+  /**
+   * Builder or raw query
+   */
+  queryMode?: ElasticSearchQueryMode;
+  /**
+   * settingsfor raw query
+   */
+  rawQuerySettings?: {
+    timeField?: string;
+    valueField?: string;
+    processAs?: ('logs' | 'time_series' | 'table');
+  };
   /**
    * Name of time field
    */
