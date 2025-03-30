@@ -334,7 +334,7 @@ func (proxy *DataSourceProxy) hasAccessToRoute(route *plugins.Route) bool {
 	ctxLogger := logger.FromContext(proxy.ctx.Req.Context())
 	if route.ReqAction != "" {
 		routeEval := pluginac.GetDataSourceRouteEvaluator(proxy.ds.UID, route.ReqAction)
-		hasAccess := routeEval.Evaluate(proxy.ctx.GetPermissions())
+		hasAccess := routeEval.Evaluate(proxy.ctx.Req.Context(), proxy.ctx.GetPermissions())
 		if !hasAccess {
 			ctxLogger.Debug("plugin route is covered by RBAC, user doesn't have access", "route", proxy.ctx.Req.URL.Path, "action", route.ReqAction, "path", route.Path, "method", route.Method)
 		}

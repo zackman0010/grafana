@@ -25,7 +25,7 @@ func (a *recordingAccessControlFake) Evaluate(_ context.Context, ur identity.Req
 		Evaluator   accesscontrol.Evaluator
 	}{Permissions: ur.GetPermissions(), Evaluator: evaluator})
 	if a.Callback == nil {
-		return evaluator.Evaluate(ur.GetPermissions()), nil
+		return evaluator.Evaluate(context.Background(), ur.GetPermissions()), nil
 	}
 	return a.Callback(ur, evaluator)
 }

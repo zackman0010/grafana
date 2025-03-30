@@ -11,13 +11,13 @@ import (
 
 var logger = log.New("accesscontrol.evaluator")
 
-type CheckerFn func(action string, scopes ...string) (bool, error)
+type CheckerFn func(ctx context.Context, action string, scopes ...string) (bool, error)
 
 type Evaluator interface {
 	// Evaluate permissions that are grouped by action
-	Evaluate(permissions map[string][]string) bool
+	Evaluate(ctx context.Context, permissions map[string][]string) bool
 	// EvaluateCustom allows to perform evaluation with custom check function
-	EvaluateCustom(fn CheckerFn) (bool, error)
+	EvaluateCustom(ctx context.Context, fn CheckerFn) (bool, error)
 	// MutateScopes executes a sequence of ScopeModifier functions on all embedded scopes of an evaluator and returns a new Evaluator
 	MutateScopes(ctx context.Context, mutate ScopeAttributeMutator) (Evaluator, error)
 	// String returns a string representation of permission required by the evaluator
@@ -37,7 +37,7 @@ type permissionEvaluator struct {
 	Scopes []string
 }
 
-func (p permissionEvaluator) Evaluate(permissions map[string][]string) bool {
+func (p permissionEvaluator) Evaluate(ctx context.Context, permissions map[string][]string) bool {
 	userScopes, ok := permissions[p.Action]
 	if !ok {
 		return false
@@ -84,12 +84,12 @@ func match(scope, target string) bool {
 	return scope == target
 }
 
-func (p permissionEvaluator) EvaluateCustom(fn CheckerFn) (bool, error) {
+func (p permissionEvaluator) EvaluateCustom(ctx context.Context, fn CheckerFn) (bool, error) {
 	if len(p.Scopes) == 0 {
-		return fn(p.Action, "")
+		return fn(ctx, p.Action, "")
 	}
 
-	matches, err := fn(p.Action, p.Scopes...)
+	matches, err := fn(ctx, p.Action, p.Scopes...)
 	if err != nil {
 		return false, err
 	}
@@ -146,18 +146,18 @@ type allEvaluator struct {
 	allOf []Evaluator
 }
 
-func (a allEvaluator) Evaluate(permissions map[string][]string) bool {
+func (a allEvaluator) Evaluate(ctx context.Context, permissions map[string][]string) bool {
 	for _, e := range a.allOf {
-		if !e.Evaluate(permissions) {
+		if !e.Evaluate(ctx, permissions) {
 			return false
 		}
 	}
 	return true
 }
 
-func (a allEvaluator) EvaluateCustom(fn CheckerFn) (bool, error) {
+func (a allEvaluator) EvaluateCustom(ctx context.Context, fn CheckerFn) (bool, error) {
 	for _, e := range a.allOf {
-		allowed, err := e.EvaluateCustom(fn)
+		allowed, err := e.EvaluateCustom(ctx, fn)
 		if err != nil {
 			return false, err
 		}
@@ -222,18 +222,18 @@ type anyEvaluator struct {
 	anyOf []Evaluator
 }
 
-func (a anyEvaluator) Evaluate(permissions map[string][]string) bool {
+func (a anyEvaluator) Evaluate(ctx context.Context, permissions map[string][]string) bool {
 	for _, e := range a.anyOf {
-		if e.Evaluate(permissions) {
+		if e.Evaluate(ctx, permissions) {
 			return true
 		}
 	}
 	return false
 }
 
-func (a anyEvaluator) EvaluateCustom(fn CheckerFn) (bool, error) {
+func (a anyEvaluator) EvaluateCustom(ctx context.Context, fn CheckerFn) (bool, error) {
 	for _, e := range a.anyOf {
-		allowed, err := e.EvaluateCustom(fn)
+		allowed, err := e.EvaluateCustom(ctx, fn)
 		if err != nil {
 			return false, err
 		}

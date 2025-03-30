@@ -566,6 +566,8 @@ require (
 
 require github.com/1NCE-GmbH/grpc-go-pool v0.0.0-20231117122434-2a5bb974daa2 // @grafana/grafana-search-and-storage
 
+require github.com/grafana/grafana/pkg/build v0.0.0-20250330144245-88e51d549c8f
+
 require (
 	github.com/RoaringBitmap/roaring/v2 v2.4.5 // indirect
 	github.com/blevesearch/vellum v1.1.0 // indirect
