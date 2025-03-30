@@ -79,54 +79,80 @@ func parseResponse(ctx context.Context, responses []*es.SearchResponse, targets 
 		}
 
 		queryRes := backend.DataResponse{}
+		switch getProcessingType(target) {
+		case "raw_data":
+			{
+				err := processRawDataResponse(res, target, configuredFields, &queryRes, logger)
+				if err != nil {
+					// TODO: This error never happens so we should remove it
+					return &backend.QueryDataResponse{}, err
+				}
+				result.Responses[target.RefID] = queryRes
+			}
+		case "raw_document":
+			{
+				err := processRawDocumentResponse(res, target, &queryRes, logger)
+				if err != nil {
+					// TODO: This error never happens so we should remove it
+					return &backend.QueryDataResponse{}, err
+				}
+				result.Responses[target.RefID] = queryRes
+			}
+		case "logs":
+			{
+				err := processLogsResponse(res, target, configuredFields, &queryRes, logger)
+				if err != nil {
+					// TODO: This error never happens so we should remove it
+					return &backend.QueryDataResponse{}, err
+				}
+				result.Responses[target.RefID] = queryRes
+			}
+		case "metrics":
+			{
+				// Process as metric query result
+				props := make(map[string]string)
+				err := processBuckets(res.Aggregations, target, &queryRes, props, 0)
+				logger.Debug("Processed metric query response")
+				if err != nil {
+					mt, _ := json.Marshal(target)
+					span.RecordError(err)
+					span.SetStatus(codes.Error, err.Error())
+					resSpan.RecordError(err)
+					resSpan.SetStatus(codes.Error, err.Error())
+					logger.Error("Error processing buckets", "error", err, "query", string(mt), "aggregationsLength", len(res.Aggregations), "stage", es.StageParseResponse)
+					instrumentation.UpdatePluginParsingResponseDurationSeconds(ctx, time.Since(start), "error")
+					resSpan.End()
+					return &backend.QueryDataResponse{}, err
+				}
+				nameFields(queryRes, target, keepLabelsInResponse)
+				trimDatapoints(queryRes, target)
 
-		if isRawDataQuery(target) {
-			err := processRawDataResponse(res, target, configuredFields, &queryRes, logger)
-			if err != nil {
-				// TODO: This error never happens so we should remove it
-				return &backend.QueryDataResponse{}, err
+				result.Responses[target.RefID] = queryRes
 			}
-			result.Responses[target.RefID] = queryRes
-		} else if isRawDocumentQuery(target) {
-			err := processRawDocumentResponse(res, target, &queryRes, logger)
-			if err != nil {
-				// TODO: This error never happens so we should remove it
-				return &backend.QueryDataResponse{}, err
-			}
-			result.Responses[target.RefID] = queryRes
-		} else if isLogsQuery(target) {
-			err := processLogsResponse(res, target, configuredFields, &queryRes, logger)
-			if err != nil {
-				// TODO: This error never happens so we should remove it
-				return &backend.QueryDataResponse{}, err
-			}
-			result.Responses[target.RefID] = queryRes
-		} else {
-			// Process as metric query result
-			props := make(map[string]string)
-			err := processBuckets(res.Aggregations, target, &queryRes, props, 0)
-			logger.Debug("Processed metric query response")
-			if err != nil {
-				mt, _ := json.Marshal(target)
-				span.RecordError(err)
-				span.SetStatus(codes.Error, err.Error())
-				resSpan.RecordError(err)
-				resSpan.SetStatus(codes.Error, err.Error())
-				logger.Error("Error processing buckets", "error", err, "query", string(mt), "aggregationsLength", len(res.Aggregations), "stage", es.StageParseResponse)
-				instrumentation.UpdatePluginParsingResponseDurationSeconds(ctx, time.Since(start), "error")
-				resSpan.End()
-				return &backend.QueryDataResponse{}, err
-			}
-			nameFields(queryRes, target, keepLabelsInResponse)
-			trimDatapoints(queryRes, target)
-
-			result.Responses[target.RefID] = queryRes
 		}
 		instrumentation.UpdatePluginParsingResponseDurationSeconds(ctx, time.Since(start), "ok")
 		logger.Info("Finished processing of response", "duration", time.Since(start), "stage", es.StageParseResponse)
 		resSpan.End()
 	}
+
 	return &result, nil
+}
+
+func getProcessingType(target *Query) string {
+	if target.QueryMode == "raw" {
+		return target.RawQueryModeSettings.ProcessAs
+	} else {
+		if isRawDataQuery(target) {
+			// yeah the namings's not great
+			return "raw_data"
+		} else if isRawDocumentQuery(target) {
+			return "raw_document"
+
+		} else if isLogsQuery(target) {
+			return "logs"
+		}
+		return "metrics"
+	}
 }
 
 func processLogsResponse(res *es.SearchResponse, target *Query, configuredFields es.ConfiguredFields, queryRes *backend.DataResponse, logger log.Logger) error {
@@ -408,6 +434,8 @@ func processBuckets(aggs map[string]interface{}, target *Query,
 	sort.Strings(aggIDs)
 	for _, aggID := range aggIDs {
 		v := aggs[aggID]
+		// TODO for raw query editor: here it should find the timeField and valueField (or multiple) from rawQuerySettings config
+		// value fields can be separated by comma, validation should probably occur before this on FE or BE
 		aggDef, _ := findAgg(target, aggID)
 		esAgg := simplejson.NewFromAny(v)
 		if aggDef == nil {
@@ -1083,6 +1111,7 @@ func findAgg(target *Query, aggID string) (*BucketAgg, error) {
 			return v, nil
 		}
 	}
+
 	return nil, errors.New("can't found aggDef, aggID:" + aggID)
 }
 

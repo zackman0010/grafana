@@ -60,7 +60,17 @@ func (e *elasticsearchDataQuery) execute() (*backend.QueryDataResponse, error) {
 
 	ms := e.client.MultiSearch()
 
+	builderQueries := []*Query{}
+	rawQueries := []*Query{}
 	for _, q := range queries {
+		if q.QueryMode == "" || q.QueryMode == "builder" {
+			builderQueries = append(builderQueries, q)
+		} else {
+			rawQueries = append(rawQueries, q)
+		}
+	}
+
+	for _, q := range builderQueries {
 		from := q.TimeRange.From.UnixNano() / int64(time.Millisecond)
 		to := q.TimeRange.To.UnixNano() / int64(time.Millisecond)
 		if err := e.processQuery(q, ms, from, to); err != nil {
@@ -72,6 +82,26 @@ func (e *elasticsearchDataQuery) execute() (*backend.QueryDataResponse, error) {
 	}
 
 	req, err := ms.Build()
+
+	rawQueryRequests := []es.RawSearchRequest{}
+	for _, q := range rawQueries {
+		request := es.RawSearchRequest{
+			Index:     "",
+			Query:     q.RawQuery,
+			TimeRange: q.TimeRange,
+		}
+		if err != nil {
+			continue
+		}
+		rawQueryRequests = append(rawQueryRequests, request)
+	}
+	
+
+	for _, r := range rawQueryRequests {
+		req.Requests = append(req.Requests, r)
+	}
+
+	
 	if err != nil {
 		mqs, _ := json.Marshal(e.dataQueries)
 		e.logger.Error("Failed to build multisearch request", "error", err, "queriesLength", len(queries), "queries", string(mqs), "duration", time.Since(start), "stage", es.StagePrepareRequest)
@@ -81,7 +111,7 @@ func (e *elasticsearchDataQuery) execute() (*backend.QueryDataResponse, error) {
 
 	e.logger.Info("Prepared request", "queriesLength", len(queries), "duration", time.Since(start), "stage", es.StagePrepareRequest)
 	res, err := e.client.ExecuteMultisearch(req)
-	if err != nil {
+ 	if err != nil {
 		if backend.IsDownstreamHTTPError(err) {
 			err = backend.DownstreamError(err)
 		}

@@ -22,6 +22,20 @@ type SearchRequest struct {
 	TimeRange   backend.TimeRange
 }
 
+// RawSearchRequest represents a raw search request
+type RawSearchRequest struct {
+	Index       string
+	Query 		string
+	TimeRange   backend.TimeRange
+
+}
+
+func (r *RawSearchRequest) MarshalJSON() ([]byte, error) {
+	root := make(map[string]interface{})
+	root["query"] = r.Query
+
+	return json.Marshal(root)
+}
 // MarshalJSON returns the JSON encoding of the request.
 func (r *SearchRequest) MarshalJSON() ([]byte, error) {
 	root := make(map[string]interface{})
@@ -58,7 +72,7 @@ type SearchResponse struct {
 
 // MultiSearchRequest represents a multi search request
 type MultiSearchRequest struct {
-	Requests []*SearchRequest
+	Requests []interface{}
 }
 
 // MultiSearchResponse represents a multi search response
