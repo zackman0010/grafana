@@ -63,6 +63,16 @@ export const usePluginDetailsTabs = (
       });
     }
 
+    if (isPublished && plugin?.details?.screenshots?.length) {
+      navModelChildren.push({
+        text: PluginTabLabels.SCREENSHOTS,
+        id: PluginTabIds.SCREENSHOTS,
+        icon: 'camera',
+        url: `${pathname}?page=${PluginTabIds.SCREENSHOTS}`,
+        active: PluginTabIds.SCREENSHOTS === currentPageId,
+      });
+    }
+
     if (isPublished && isNarrowScreen && config.featureToggles.pluginsDetailsRightPanel) {
       navModelChildren.push({
         text: PluginTabLabels.PLUGINDETAILS,
@@ -155,6 +165,7 @@ export const usePluginDetailsTabs = (
   const navModel: NavModelItem = {
     text: plugin?.name ?? '',
     img: plugin?.info.logos.small,
+    url: pathname,
     children: [
       {
         text: PluginTabLabels.OVERVIEW,
