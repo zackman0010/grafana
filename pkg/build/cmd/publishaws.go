@@ -10,11 +10,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ecr"
-	"github.com/aws/aws-sdk-go/service/marketplacecatalog"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ecr"
+	"github.com/aws/aws-sdk-go-v2/service/marketplacecatalog"
+	"github.com/aws/aws-sdk-go-v2/service/marketplacecatalog/types"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/client"
@@ -66,12 +66,12 @@ type AwsMarketplaceDocker interface {
 }
 
 type AwsMarketplaceRegistry interface {
-	GetAuthorizationTokenWithContext(ctx context.Context, input *ecr.GetAuthorizationTokenInput, opts ...request.Option) (*ecr.GetAuthorizationTokenOutput, error)
+	GetAuthorizationToken(ctx context.Context, input *ecr.GetAuthorizationTokenInput, opts ...func(*ecr.Options)) (*ecr.GetAuthorizationTokenOutput, error)
 }
 
 type AwsMarketplaceCatalog interface {
-	DescribeEntityWithContext(ctx context.Context, input *marketplacecatalog.DescribeEntityInput, opts ...request.Option) (*marketplacecatalog.DescribeEntityOutput, error)
-	StartChangeSetWithContext(ctx context.Context, input *marketplacecatalog.StartChangeSetInput, opts ...request.Option) (*marketplacecatalog.StartChangeSetOutput, error)
+	DescribeEntity(ctx context.Context, input *marketplacecatalog.DescribeEntityInput, opts ...func(*marketplacecatalog.Options)) (*marketplacecatalog.DescribeEntityOutput, error)
+	StartChangeSet(ctx context.Context, input *marketplacecatalog.StartChangeSetInput, opts ...func(*marketplacecatalog.Options)) (*marketplacecatalog.StartChangeSetOutput, error)
 }
 
 func PublishAwsMarketplace(ctx *cli.Context) error {
@@ -143,9 +143,15 @@ func getAwsMarketplacePublishingService() (*AwsMarketplacePublishingService, err
 		return nil, err
 	}
 
-	mySession := session.Must(session.NewSession())
-	ecr := ecr.New(mySession, aws.NewConfig().WithRegion(marketplaceRegistryRegion))
-	mkt := marketplacecatalog.New(mySession, aws.NewConfig().WithRegion(marketplaceRegistryRegion))
+	// Load AWS configuration
+	cfg, err := awsconfig.LoadDefaultConfig(context.Background(), awsconfig.WithRegion(marketplaceRegistryRegion))
+	if err != nil {
+		return nil, err
+	}
+
+	ecr := ecr.NewFromConfig(cfg)
+	mkt := marketplacecatalog.NewFromConfig(cfg)
+
 	return &AwsMarketplacePublishingService{
 		docker: cli,
 		ecr:    ecr,
@@ -154,7 +160,7 @@ func getAwsMarketplacePublishingService() (*AwsMarketplacePublishingService, err
 }
 
 func (s *AwsMarketplacePublishingService) Login(ctx context.Context) error {
-	out, err := s.ecr.GetAuthorizationTokenWithContext(ctx, &ecr.GetAuthorizationTokenInput{})
+	out, err := s.ecr.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenInput{})
 	if err != nil {
 		return err
 	}
@@ -221,7 +227,7 @@ func (s *AwsMarketplacePublishingService) PushToMarketplace(ctx context.Context,
 }
 
 func (s *AwsMarketplacePublishingService) GetProductIdentifier(ctx context.Context, product string) (string, error) {
-	out, err := s.mkt.DescribeEntityWithContext(ctx, &marketplacecatalog.DescribeEntityInput{
+	out, err := s.mkt.DescribeEntity(ctx, &marketplacecatalog.DescribeEntityInput{
 		EntityId: aws.String(product),
 		Catalog:  aws.String(marketplaceCatalogId),
 	})
@@ -232,10 +238,10 @@ func (s *AwsMarketplacePublishingService) GetProductIdentifier(ctx context.Conte
 }
 
 func (s *AwsMarketplacePublishingService) ReleaseToProduct(ctx context.Context, pid string, repo string, version string) error {
-	_, err := s.mkt.StartChangeSetWithContext(ctx, &marketplacecatalog.StartChangeSetInput{
+	_, err := s.mkt.StartChangeSet(ctx, &marketplacecatalog.StartChangeSetInput{
 		Catalog:       aws.String(marketplaceCatalogId),
 		ChangeSetName: aws.String(marketplaceChangeSetName),
-		ChangeSet: []*marketplacecatalog.Change{
+		ChangeSet: []types.Change{
 			buildAwsMarketplaceChangeSet(pid, repo, version),
 		},
 	})
@@ -269,10 +275,10 @@ func buildAwsMarketplaceReleaseNotesUrl(version string) string {
 	return strings.ReplaceAll(releaseNotesTemplateUrl, "${TAG}", sanitizedVersion)
 }
 
-func buildAwsMarketplaceChangeSet(entityId string, repo string, version string) *marketplacecatalog.Change {
-	return &marketplacecatalog.Change{
+func buildAwsMarketplaceChangeSet(entityId string, repo string, version string) types.Change {
+	return types.Change{
 		ChangeType: aws.String("AddDeliveryOptions"),
-		Entity: &marketplacecatalog.Entity{
+		Entity: &types.Entity{
 			Type:       aws.String("ContainerProduct@1.0"),
 			Identifier: aws.String(entityId),
 		},

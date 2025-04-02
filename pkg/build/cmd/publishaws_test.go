@@ -9,15 +9,15 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/ecr"
-	"github.com/aws/aws-sdk-go/service/marketplacecatalog"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ecr"
+	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
+	"github.com/aws/aws-sdk-go-v2/service/marketplacecatalog"
 	"github.com/docker/docker/api/types/image"
-	"github.com/grafana/grafana/pkg/build/cmd/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
+
+	"github.com/grafana/grafana/pkg/build/cmd/util"
 )
 
 type awsPublishTestCase struct {
@@ -46,10 +46,10 @@ func TestPublishAwsMarketplace(t *testing.T) {
 			args: []string{"--image", "test/test", "--repo", "test/test", "--product", "test", "--version", "1.0.0"},
 			mockedService: &AwsMarketplacePublishingService{
 				ecr: &mockAwsMarketplaceRegistry{
-					GetAuthorizationTokenWithContextError: credentials.ErrNoValidProvidersFoundInChain,
+					GetAuthorizationTokenError: errors.New("no valid providers found"),
 				},
 			},
-			expectedError: credentials.ErrNoValidProvidersFoundInChain,
+			expectedError: errors.New("no valid providers found"),
 		},
 		{
 			name: "try to publish with valid credentials and nonexisting version",
@@ -76,10 +76,10 @@ func TestPublishAwsMarketplace(t *testing.T) {
 			args: []string{"--dry-run", "--image", "test/test", "--repo", "test/test", "--product", "test", "--version", "1.0.0"},
 			mockedService: &AwsMarketplacePublishingService{
 				ecr: &mockAwsMarketplaceRegistry{
-					GetAuthorizationTokenWithContextError: credentials.ErrNoValidProvidersFoundInChain,
+					GetAuthorizationTokenError: errors.New("no valid providers found"),
 				},
 			},
-			expectedError: credentials.ErrNoValidProvidersFoundInChain,
+			expectedError: errors.New("no valid providers found"),
 		},
 		{
 			name: "dry run with valid credentials",
@@ -90,7 +90,7 @@ func TestPublishAwsMarketplace(t *testing.T) {
 					ImagePushError: errShouldNotCallMock,
 				},
 				mkt: &mockAwsMarketplaceCatalog{
-					StartChangeSetWithContextError: errShouldNotCallMock,
+					StartChangeSetError: errShouldNotCallMock,
 				},
 			},
 			expectedOutput: "Dry-Run: Releasing to product",
@@ -182,30 +182,30 @@ func (m *mockAwsMarketplaceDocker) ImagePush(ctx context.Context, image string, 
 }
 
 type mockAwsMarketplaceRegistry struct {
-	GetAuthorizationTokenWithContextError error
+	GetAuthorizationTokenError error
 }
 
-func (m *mockAwsMarketplaceRegistry) GetAuthorizationTokenWithContext(ctx context.Context, input *ecr.GetAuthorizationTokenInput, opts ...request.Option) (*ecr.GetAuthorizationTokenOutput, error) {
+func (m *mockAwsMarketplaceRegistry) GetAuthorizationToken(ctx context.Context, input *ecr.GetAuthorizationTokenInput, opts ...func(*ecr.Options)) (*ecr.GetAuthorizationTokenOutput, error) {
 	return &ecr.GetAuthorizationTokenOutput{
-		AuthorizationData: []*ecr.AuthorizationData{
+		AuthorizationData: []types.AuthorizationData{
 			{
 				AuthorizationToken: aws.String(base64.StdEncoding.EncodeToString([]byte("username:password"))),
 			},
 		},
-	}, m.GetAuthorizationTokenWithContextError
+	}, m.GetAuthorizationTokenError
 }
 
 type mockAwsMarketplaceCatalog struct {
-	DescribeEntityWithContextError error
-	StartChangeSetWithContextError error
+	DescribeEntityError error
+	StartChangeSetError error
 }
 
-func (m *mockAwsMarketplaceCatalog) DescribeEntityWithContext(ctx context.Context, input *marketplacecatalog.DescribeEntityInput, opts ...request.Option) (*marketplacecatalog.DescribeEntityOutput, error) {
+func (m *mockAwsMarketplaceCatalog) DescribeEntity(ctx context.Context, input *marketplacecatalog.DescribeEntityInput, opts ...func(*marketplacecatalog.Options)) (*marketplacecatalog.DescribeEntityOutput, error) {
 	return &marketplacecatalog.DescribeEntityOutput{
 		EntityIdentifier: aws.String("productid"),
-	}, m.DescribeEntityWithContextError
+	}, m.DescribeEntityError
 }
 
-func (m *mockAwsMarketplaceCatalog) StartChangeSetWithContext(ctx context.Context, input *marketplacecatalog.StartChangeSetInput, opts ...request.Option) (*marketplacecatalog.StartChangeSetOutput, error) {
-	return &marketplacecatalog.StartChangeSetOutput{}, m.StartChangeSetWithContextError
+func (m *mockAwsMarketplaceCatalog) StartChangeSet(ctx context.Context, input *marketplacecatalog.StartChangeSetInput, opts ...func(*marketplacecatalog.Options)) (*marketplacecatalog.StartChangeSetOutput, error) {
+	return &marketplacecatalog.StartChangeSetOutput{}, m.StartChangeSetError
 }

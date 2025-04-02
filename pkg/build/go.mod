@@ -9,15 +9,19 @@ replace github.com/docker/docker => github.com/moby/moby v27.5.1+incompatible
 
 require (
 	cloud.google.com/go/storage v1.50.0 // @grafana/grafana-backend-group
+	dagger.io/dagger v0.11.8-rc.2 // @grafana/grafana-developer-enablement-squad
 	github.com/Masterminds/semver/v3 v3.3.0 // @grafana/grafana-developer-enablement-squad
-	github.com/aws/aws-sdk-go v1.55.6 // @grafana/aws-datasources
+	github.com/aws/aws-sdk-go-v2 v1.36.3 // @grafana/grafana-developer-enablement-squad
+	github.com/aws/aws-sdk-go-v2/config v1.29.4 // @grafana/grafana-developer-enablement-squad
+	github.com/aws/aws-sdk-go-v2/service/ecr v1.43.0 // @grafana/grafana-developer-enablement-squad
+	github.com/aws/aws-sdk-go-v2/service/marketplacecatalog v1.31.1 // @grafana/grafana-developer-enablement-squad
 	github.com/docker/docker v27.5.1+incompatible // @grafana/grafana-developer-enablement-squad
 	github.com/drone/drone-cli v1.8.0 // @grafana/grafana-developer-enablement-squad
 	github.com/gogo/protobuf v1.3.2 // indirect; @grafana/alerting-backend
 	github.com/google/go-cmp v0.7.0 // @grafana/grafana-backend-group
+	github.com/google/go-github/v70 v70.0.0 // @grafana/grafana-developer-enablement-squad
 	github.com/google/uuid v1.6.0 // indirect; @grafana/grafana-backend-group
 	github.com/googleapis/gax-go/v2 v2.14.1 // indirect; @grafana/grafana-backend-group
-	github.com/jmespath/go-jmespath v0.4.0 // indirect; @grafana/grafana-backend-group
 	github.com/stretchr/testify v1.10.0 // @grafana/grafana-backend-group
 	github.com/urfave/cli v1.22.16 // @grafana/grafana-backend-group
 	github.com/urfave/cli/v2 v2.27.1 // @grafana/grafana-backend-group
@@ -79,11 +83,6 @@ require (
 )
 
 require (
-	dagger.io/dagger v0.11.8-rc.2
-	github.com/google/go-github/v70 v70.0.0
-)
-
-require (
 	cel.dev/expr v0.19.1 // indirect
 	cloud.google.com/go/monitoring v1.23.0 // indirect
 	github.com/99designs/gqlgen v0.17.44 // indirect
@@ -93,6 +92,17 @@ require (
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.49.0 // indirect
 	github.com/Khan/genqlient v0.7.0 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.57 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.27 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.12 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.24.14 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.28.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.33.12 // indirect
+	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20241223141626-cff3c89139a3 // indirect
