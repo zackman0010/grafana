@@ -1083,5 +1083,8 @@ export interface FeatureToggles {
   * Enables localization for plugins
   */
   localizationForPlugins?: boolean;
+  /**
+  * Improve the installation experience for managed plugins
+  */
   managedPluginsInstallationImprovements?: boolean;
 }

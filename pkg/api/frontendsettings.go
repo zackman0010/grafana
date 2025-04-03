@@ -413,6 +413,8 @@ func (hs *HTTPServer) getFrontendSettings(c *contextmodel.ReqContext) (*dtos.Fro
 		frontendSettings.ListDashboardScopesEndpoint = hs.Cfg.ScopesListDashboardsURL
 	}
 
+	frontendSettings.ManagedPlugins = hs.managedPluginsService.ManagedPlugins(c.Req.Context())
+
 	return frontendSettings, nil
 }
 
