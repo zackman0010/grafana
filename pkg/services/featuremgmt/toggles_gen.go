@@ -994,4 +994,8 @@ const (
 	// FlagLocalizationForPlugins
 	// Enables localization for plugins
 	FlagLocalizationForPlugins = "localizationForPlugins"
+
+	// FlagManagedPluginsInstallationImprovements
+	// Improve the installation experience for managed plugins
+	FlagManagedPluginsInstallationImprovements = "managedPluginsInstallationImprovements"
 )

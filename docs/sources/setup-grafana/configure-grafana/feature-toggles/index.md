@@ -227,6 +227,7 @@ Experimental features might be changed or removed without prior notice.
 | `localeFormatPreference`                    | Specifies the locale so the correct format for numbers and dates can be shown                                                                                                                                                                                                     |
 | `extensionSidebar`                          | Enables the extension sidebar                                                                                                                                                                                                                                                     |
 | `localizationForPlugins`                    | Enables localization for plugins                                                                                                                                                                                                                                                  |
+| `managedPluginsInstallationImprovements`    | Improve the installation experience for managed plugins                                                                                                                                                                                                                           |
 
 ## Development feature toggles
 

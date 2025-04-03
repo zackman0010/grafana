@@ -486,3 +486,10 @@ export function isNonAngularVersion(version?: Version) {
 export function isDisabledAngularPlugin(plugin: CatalogPlugin) {
   return plugin.isDisabled && plugin.error === PluginErrorCode.angular;
 }
+
+export function pluginRequiresRestartForInstall(plugin: CatalogPlugin) {
+  return (
+    config.pluginAdminExternalManageEnabled &&
+    !(plugin.isManaged && config.featureToggles.managedPluginsInstallationImprovements)
+  );
+}

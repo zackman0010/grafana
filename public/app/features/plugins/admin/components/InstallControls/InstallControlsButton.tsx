@@ -9,7 +9,7 @@ import { useQueryParams } from 'app/core/hooks/useQueryParams';
 import { removePluginFromNavTree } from 'app/core/reducers/navBarTree';
 import { useDispatch } from 'app/types';
 
-import { isDisabledAngularPlugin } from '../../helpers';
+import { isDisabledAngularPlugin, pluginRequiresRestartForInstall } from '../../helpers';
 import {
   useInstallStatus,
   useUninstallStatus,
@@ -72,7 +72,7 @@ export function InstallControlsButton({
     const result = await install(plugin.id, latestCompatibleVersion?.version);
     if (!errorInstalling && !('error' in result)) {
       let successMessage = `Installed ${plugin.name}`;
-      if (config.pluginAdminExternalManageEnabled) {
+      if (pluginRequiresRestartForInstall(plugin)) {
         successMessage = 'Install requested, this may take a few minutes.';
       }
 
@@ -98,7 +98,7 @@ export function InstallControlsButton({
       }
 
       let successMessage = `Uninstalled ${plugin.name}`;
-      if (config.pluginAdminExternalManageEnabled) {
+      if (pluginRequiresRestartForInstall(plugin)) {
         successMessage = 'Uninstall requested, this may take a few minutes.';
       }
 
@@ -167,7 +167,7 @@ export function InstallControlsButton({
   }
 
   if (pluginStatus === PluginStatus.UPDATE) {
-    const disableUpdate = config.pluginAdminExternalManageEnabled ? plugin.isUpdatingFromInstance : isInstalling;
+    const disableUpdate = pluginRequiresRestartForInstall(plugin) ? plugin.isUpdatingFromInstance : isInstalling;
 
     return (
       <Stack alignItems="flex-start" width="auto" height="auto">
@@ -193,7 +193,7 @@ function shouldDisableUninstall(isUninstalling: boolean, plugin: CatalogPlugin) 
     return true;
   }
 
-  if (config.pluginAdminExternalManageEnabled) {
+  if (pluginRequiresRestartForInstall(plugin)) {
     return plugin.isUninstallingFromInstance || !plugin.isFullyInstalled || plugin.isUpdatingFromInstance;
   }
 
