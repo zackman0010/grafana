@@ -228,6 +228,7 @@ Experimental features might be changed or removed without prior notice.
 | `extensionSidebar`                          | Enables the extension sidebar                                                                                                                                                                                                                                                     |
 | `localizationForPlugins`                    | Enables localization for plugins                                                                                                                                                                                                                                                  |
 | `managedPluginsInstallationImprovements`    | Improve the installation experience for managed plugins                                                                                                                                                                                                                           |
+| `managedPlugins`                            | Opt into the managed plugin experience                                                                                                                                                                                                                                            |
 
 ## Development feature toggles
 

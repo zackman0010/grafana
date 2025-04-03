@@ -2836,6 +2836,18 @@
     },
     {
       "metadata": {
+        "name": "managedPlugins",
+        "resourceVersion": "1743677587753",
+        "creationTimestamp": "2025-04-03T10:53:07Z"
+      },
+      "spec": {
+        "description": "Opt into the managed plugin experience",
+        "stage": "experimental",
+        "codeowner": "@grafana/plugins-platform-backend"
+      }
+    },
+    {
+      "metadata": {
         "name": "managedPluginsInstall",
         "resourceVersion": "1720021873452",
         "creationTimestamp": "2023-10-18T13:17:03Z",

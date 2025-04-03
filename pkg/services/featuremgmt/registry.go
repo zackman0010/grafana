@@ -1877,6 +1877,12 @@ var (
 			Stage:       FeatureStageExperimental,
 			Owner:       grafanaPluginsPlatformSquad,
 		},
+		{
+			Name:        "managedPlugins",
+			Description: "Opt into the managed plugin experience",
+			Stage:       FeatureStageExperimental,
+			Owner:       grafanaPluginsPlatformSquad,
+		},
 	}
 )
 

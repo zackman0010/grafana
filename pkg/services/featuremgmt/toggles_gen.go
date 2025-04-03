@@ -998,4 +998,8 @@ const (
 	// FlagManagedPluginsInstallationImprovements
 	// Improve the installation experience for managed plugins
 	FlagManagedPluginsInstallationImprovements = "managedPluginsInstallationImprovements"
+
+	// FlagManagedPlugins
+	// Opt into the managed plugin experience
+	FlagManagedPlugins = "managedPlugins"
 )

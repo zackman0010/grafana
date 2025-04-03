@@ -1090,4 +1090,8 @@ export interface FeatureToggles {
   * Improve the installation experience for managed plugins
   */
   managedPluginsInstallationImprovements?: boolean;
+  /**
+  * Opt into the managed plugin experience
+  */
+  managedPlugins?: boolean;
 }
