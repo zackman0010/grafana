@@ -250,10 +250,25 @@ func TestIntegrationProvisioning_RunLocalRepository(t *testing.T) {
 		require.Equal(t, repo, val, "should have repo annotations")
 
 		// Read the file we wrote
-		obj, err = helper.Repositories.Resource.Get(ctx, repo, metav1.GetOptions{}, "files", targetPath)
-		require.NoError(t, err, "read value")
-		name, _, _ = unstructured.NestedString(obj.Object, "resource", "file", "metadata", "name")
-		require.Equal(t, allPanels, name, "read the name out of the saved file")
+		result = helper.AdminREST.Get().
+			Namespace("default").
+			Resource("repositories").
+			Name(repo).
+			SubResource("files", targetPath).
+			Do(ctx).StatusCode(&code)
+
+		raw, err = result.Raw()
+		require.NoError(t, err)
+
+		err = json.Unmarshal(raw, wrapper)
+		require.NoError(t, err)
+
+		if code == 202 {
+			name, _, _ = unstructured.NestedString(obj.Object, "resource", "file", "metadata", "name")
+			require.Equal(t, allPanels, name, "read the name out of the saved file")
+		} else {
+			require.FailNowf(t, "error reading file", "code=%v // %v", code, wrapper.Errors)
+		}
 	})
 
 	t.Run("fail using invalid paths", func(t *testing.T) {
