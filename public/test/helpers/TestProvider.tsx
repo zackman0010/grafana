@@ -11,7 +11,7 @@ import { ModalRoot } from '@grafana/ui';
 import { GrafanaContext, GrafanaContextType } from 'app/core/context/GrafanaContext';
 import { ModalsContextProvider } from 'app/core/context/ModalsContextProvider';
 import { configureStore } from 'app/store/configureStore';
-import { StoreState } from 'app/types/store';
+import { StoreState } from '../../../packages/grafana-frontend/src/types/store';
 
 export interface Props {
   storeState?: Partial<StoreState>;
