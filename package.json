@@ -2,7 +2,7 @@
   "author": "Grafana Labs",
   "license": "AGPL-3.0-only",
   "private": true,
-  "name": "grafana",
+  "name": "@grafana/grafana-frontend",
   "version": "12.0.0-pre",
   "repository": "github:grafana/grafana",
   "scripts": {
