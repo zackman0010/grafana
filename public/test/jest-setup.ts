@@ -11,8 +11,8 @@ import 'blob-polyfill';
 import 'mutationobserver-shim';
 import './mocks/workers';
 
-import '../vendor/flot/jquery.flot';
-import '../vendor/flot/jquery.flot.time';
+import '../../packages/grafana-frontend/vendor/flot/jquery.flot';
+import '../../packages/grafana-frontend/vendor/flot/jquery.flot.time';
 
 const testAppEvents = new EventBusSrv();
 const global = window as any;

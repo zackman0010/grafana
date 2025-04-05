@@ -4,7 +4,7 @@ const { readFileSync, existsSync } = require('node:fs');
 const path = require('path');
 
 const getEnvConfig = () => {
-  const grafanaRoot = path.join(__dirname, '../..');
+  const grafanaRoot = path.join(__dirname, '../../../..');
   const defaultSettings = readFileSync(`${grafanaRoot}/conf/defaults.ini`, {
     encoding: 'utf-8',
   });

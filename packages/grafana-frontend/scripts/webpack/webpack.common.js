@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const CorsWorkerPlugin = require('./plugins/CorsWorkerPlugin');
 
@@ -7,7 +8,7 @@ module.exports = {
   target: 'web',
   entry: {
     app: './src/index.ts',
-    swagger: './src/swagger/index.tsx',
+    // swagger: './src/swagger/index.tsx',
   },
   experiments: {
     // Required to load WASM modules.
@@ -17,7 +18,6 @@ module.exports = {
     clean: true,
     path: path.resolve(__dirname, '../../dist'),
     filename: '[name].[contenthash].js',
-    // Keep publicPath relative for host.com/grafana/ deployments
     publicPath: 'auto',
   },
   resolve: {
@@ -34,8 +34,9 @@ module.exports = {
         '@locker/near-membrane-dom/custom-devtools-formatter.js'
       ),
 
-      // map bare 'app' imports to the new src directory
-      app: path.resolve(__dirname, '../../packages/grafana-frontend/src'),
+      // map bare imports to the new src directory
+      app: path.resolve(__dirname, '../../src'),
+      vendor: path.resolve(__dirname, '../../vendor'),
     },
     modules: [
       // default value
@@ -70,6 +71,14 @@ module.exports = {
     new CorsWorkerPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../../../../public/emails'),
+          to: 'emails', // relative to output.output (dist folder)
+        },
+      ],
     }),
   ],
   module: {

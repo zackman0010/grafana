@@ -30,6 +30,7 @@ const envConfig = getEnvConfig();
 module.exports = (env = {}) => {
   env.noMinify = 1;
   return merge(common, {
+    bail: true,
     mode: 'production',
     devtool: 'source-map',
 
@@ -89,7 +90,7 @@ module.exports = (env = {}) => {
         publicPath: true,
       }),
       new WebpackManifestPlugin({
-        fileName: path.join(process.cwd(), 'manifest.json'),
+        fileName: path.resolve(__dirname, '../../dist/manifest.json'),
         filter: (file) => !file.name.endsWith('.map'),
       }),
       function () {

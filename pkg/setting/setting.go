@@ -1058,8 +1058,8 @@ func (cfg *Cfg) validateStaticRootPath() error {
 		return nil
 	}
 
-	if _, err := os.Stat(path.Join(cfg.StaticRootPath, "build")); err != nil {
-		cfg.Logger.Error("Failed to detect generated javascript files in public/build")
+	if _, err := os.Stat(path.Join(cfg.StaticRootPath, "assets-manifest.json")); err != nil {
+		cfg.Logger.Error("Failed to detect generated javascript files", "path", cfg.StaticRootPath)
 	}
 
 	return nil

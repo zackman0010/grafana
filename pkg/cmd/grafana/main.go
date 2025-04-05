@@ -21,7 +21,11 @@ var buildBranch = "main"
 var buildstamp string
 
 func main() {
+	fmt.Println("hello world")
+
 	app := MainApp()
+
+	fmt.Println("hello world 2")
 
 	if err := app.Run(os.Args); err != nil {
 		fmt.Printf("%s: %s %s\n", color.RedString("Error"), color.RedString("✗"), err)
