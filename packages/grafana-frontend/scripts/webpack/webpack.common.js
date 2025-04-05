@@ -33,6 +33,9 @@ module.exports = {
       '@locker/near-membrane-dom/custom-devtools-formatter': require.resolve(
         '@locker/near-membrane-dom/custom-devtools-formatter.js'
       ),
+
+      // map bare 'app' imports to the new src directory
+      app: path.resolve(__dirname, '../../packages/grafana-frontend/src'),
     },
     modules: [
       // default value
@@ -42,7 +45,7 @@ module.exports = {
       path.resolve('node_modules'),
 
       // required to for 'bare' imports (like 'app/core/utils' etc)
-      path.resolve('public'),
+      // path.resolve('public'),
     ],
     fallback: {
       buffer: false,

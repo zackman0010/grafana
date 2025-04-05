@@ -13,7 +13,8 @@
     "moduleResolution": "bundler",
     "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
     "paths": {
-      "@grafana/schema/dist/esm/*": ["../packages/grafana-schema/src/*"]
+      "@grafana/schema/dist/esm/*": ["../packages/grafana-schema/src/*"],
+      "app/*": ["packages/grafana-frontend/src/*"]
     }
   },
   "ts-node": {
