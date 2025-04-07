@@ -6,4 +6,4 @@ The dashboard list panel allows you to display dynamic links to other dashboards
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/features/panels/dashlist/](https://grafana.com/docs/grafana/latest/features/panels/dashlist/)
+<https://grafana.com/docs/grafana/latest/features/panels/dashlist/>

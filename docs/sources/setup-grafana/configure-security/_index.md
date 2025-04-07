@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - ../administration/security/
-  - ../installation/security/
-description: Learn how to make Grafana secure.
-labels:
+
+- ../administration/security/
+- ../installation/security/
+  description: Learn how to make Grafana secure.
+  labels:
   products:
-    - enterprise
-    - oss
-title: Configure security
-weight: 600
----
+  - enterprise
+  - oss
+    title: Configure security
+    weight: 600
+
+-----
 
 # Configure security
 
@@ -19,7 +22,7 @@ To prevent this type of exploitation from happening, we recommend that you apply
 
 ## Limit IP addresses/hostnames for data source URL
 
-You can configure Grafana to only allow certain IP addresses or hostnames to be used as data source URLs and proxied through the Grafana data source proxy. Refer to [data_source_proxy_whitelist](../configure-grafana/#data_source_proxy_whitelist) for usage instructions.
+You can configure Grafana to only allow certain IP addresses or hostnames to be used as data source URLs and proxied through the Grafana data source proxy. Refer to [data\_source\_proxy\_whitelist](../configure-grafana/#data_source_proxy_whitelist) for usage instructions.
 
 ## Request security
 
@@ -47,7 +50,7 @@ Self-hosted reverse proxy options include but are not limited to:
 
 ## Limit Viewer query permissions
 
-Users with the `Viewer role` can enter _any possible query_ in _any_ of the data sources available in the **organization**, not just the queries that are defined on the dashboards for which the user has Viewer permissions.
+Users with the `Viewer role` can enter *any possible query* in *any* of the data sources available in the **organization**, not just the queries that are defined on the dashboards for which the user has Viewer permissions.
 
 For example, in a Grafana instance with one data source, one dashboard, and one panel that has one query defined, you might assume that a Viewer can only see the result of the query defined in that panel. Actually, the Viewer has access to send any query to the data source. With a command-line tool like curl (there are many tools for this), the Viewer can make their own query to the data source and potentially access sensitive data.
 

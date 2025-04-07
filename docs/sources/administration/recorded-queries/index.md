@@ -1,19 +1,22 @@
----
+-----
+
 aliases:
-  - ../enterprise/recorded-queries/
-description: Grafana Enterprise recorded queries
-keywords:
-  - grafana
-  - query
-  - queries
-  - recorded
-labels:
+
+- ../enterprise/recorded-queries/
+  description: Grafana Enterprise recorded queries
+  keywords:
+- grafana
+- query
+- queries
+- recorded
+  labels:
   products:
-    - cloud
-    - enterprise
-title: Recorded queries
-weight: 300
----
+  - cloud
+  - enterprise
+    title: Recorded queries
+    weight: 300
+
+-----
 
 # Recorded queries
 
@@ -22,7 +25,7 @@ Recorded queries allow you to see trends over time by taking a snapshot of a dat
 For our plugins that do not return time series, it might be useful to plot historical data. For example, you might want to query ServiceNow to see a history of request response times but it can only return current point-in-time metrics.
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](https://grafana.com/docs/grafana-cloud/).
+Available in [Grafana Enterprise](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](https://grafana.com/docs/grafana-cloud/).
 {{% /admonition %}}
 
 ## How recorded queries work
@@ -46,27 +49,27 @@ To use a recorded query, create one and add it to a dashboard. After that, it ca
 
 ### Create a recorded query
 
-1.  Find/create a query you want to record on a dashboard in an edit panel. The query must only return one row and column. If it returns more, you can still record the number of results returned using the “count” option.
-    - The query's data source must be a backend data source.
-    - Expressions can be used to aggregate data from a time series query. Refer to [Write expression queries](../../panels-visualizations/query-transform-data/expression-queries/) to learn more about creating and using expressions.
-1.  Click the record query button located in the top right of the query editor.
-1.  Enter recorded query information. All fields are required unless otherwise indicated.
-    - Name - Name of the recorded query.
-    - Description - (optional) Describe the recorded query as you want it to appear in the recorded query list.
-    - Interval - The interval on which the snapshot will be taken. The interval starts when you create the recorded query and will stop if you pause or delete the recorded query. Refer to [Managing recorded queries](#manage-recorded-queries) for more information on pausing and deleting recorded queries.
-    - Range - The relative time range of the query. If you select a range of `30m` and an interval of `1h` the query will take a snapshot every hour of the past 30 minutes.
-    - Count query results - If you want to count the rows returned from your query toggle this option on. If this option is off, your query must return one row with one value.
-1.  Test your recorded query by clicking the test recorded query button.
-1.  Click `Start recording query` to start recording your query.
+1. Find/create a query you want to record on a dashboard in an edit panel. The query must only return one row and column. If it returns more, you can still record the number of results returned using the “count” option.
+   - The query's data source must be a backend data source.
+   - Expressions can be used to aggregate data from a time series query. Refer to [Write expression queries](../../panels-visualizations/query-transform-data/expression-queries/) to learn more about creating and using expressions.
+2. Click the record query button located in the top right of the query editor.
+3. Enter recorded query information. All fields are required unless otherwise indicated.
+   - Name - Name of the recorded query.
+   - Description - (optional) Describe the recorded query as you want it to appear in the recorded query list.
+   - Interval - The interval on which the snapshot will be taken. The interval starts when you create the recorded query and will stop if you pause or delete the recorded query. Refer to [Managing recorded queries](#manage-recorded-queries) for more information on pausing and deleting recorded queries.
+   - Range - The relative time range of the query. If you select a range of `30m` and an interval of `1h` the query will take a snapshot every hour of the past 30 minutes.
+   - Count query results - If you want to count the rows returned from your query toggle this option on. If this option is off, your query must return one row with one value.
+4. Test your recorded query by clicking the test recorded query button.
+5. Click `Start recording query` to start recording your query.
 
 ### Add a recorded query
 
 You can add existing recorded queries to panels in a dashboard. For each recorded query that you add, a Prometheus query is created: `generated_recorded_query_name{id="generated_id", name="recorded query name"}`. The created query from Prometheus returns all the recorded query’s gathered snapshots.
 
 1. Navigate to a panel in a dashboard where you wish to add a recorded query.
-1. Click the `+ Recorded query` button located below the queries.
-1. If you want to filter recorded queries by data source, select a data source from the filter by data source drop down menu.
-1. Click the `Add` button on your recorded query to add it to the panel.
+2. Click the `+ Recorded query` button located below the queries.
+3. If you want to filter recorded queries by data source, select a data source from the filter by data source drop down menu.
+4. Click the `Add` button on your recorded query to add it to the panel.
 
 After adding your recorded query to the panel, the panel data source will become `-- Mixed --`. Your recorded query is represented by a `Prometheus` query with a name label matching your recorded query name. Refer to [Prometheus](../../datasources/prometheus/) to learn more about the `Prometheus` data source.
 

@@ -1,36 +1,40 @@
----
+-----
+
 description: Feature and improvement highlights for Grafana v11.3
 keywords:
-  - grafana
-  - new
-  - documentation
-  - '11.3'
-  - release notes
-labels:
-products:
-  - cloud
-  - enterprise
-  - oss
-title: What's new in Grafana v11.3
-weight: -45
----
+
+- grafana
+- new
+- documentation
+- '11.3'
+- release notes
+  labels:
+  products:
+- cloud
+- enterprise
+- oss
+  title: What's new in Grafana v11.3
+  weight: -45
+
+-----
 
 <!-- vale GoogleWe = NO -->
+
 <!-- vale We = NO -->
 
 # What’s new in Grafana v11.3
 
-Welcome to Grafana 11.3! Scenes-powered dashboards are now generally available and the Explore Logs plugin is now installed by default. The dashboard experience has also improved in other ways including the ability to trigger API calls from any canvas element with the new **Actions** option and an update to transformations so you can apply calculations to dynamic fields. We've also simplified the alert setup experience, added customizable announcement banners that admins can send to all users, and improved some default permissions.
+Welcome to Grafana 11.3\! Scenes-powered dashboards are now generally available and the Explore Logs plugin is now installed by default. The dashboard experience has also improved in other ways including the ability to trigger API calls from any canvas element with the new **Actions** option and an update to transformations so you can apply calculations to dynamic fields. We've also simplified the alert setup experience, added customizable announcement banners that admins can send to all users, and improved some default permissions.
 
-{{< youtube id="a0rdRbYPCls" >}}
+{{\< youtube id="a0rdRbYPCls" \>}}
 
-For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md). For the specific steps we recommend when you upgrade to v11.3, check out our [Upgrade Guide](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/upgrade-guide/upgrade-v11.3/).
+For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md). For the specific steps we recommend when you upgrade to v11.3, check out our [Upgrade Guide](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/upgrade-guide/upgrade-v11.3/).
 
 ## Scenes-powered Dashboards are generally available
 
 <!-- #grafana-dashboards -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 For the past few months we've been working on a major update of our **Dashboards** architecture and migrated it to the Scenes library. This migration provides us with more stable, dynamic, and flexible dashboards as well as setting the foundation for what we envision the future of Grafana dashboards will be. Here are four of the improvements that are being introduced as part of this work:
 
@@ -40,7 +44,7 @@ It can be difficult to efficiently navigate through the visually cluttered optio
 
 **Template variables and the time range picker remain visible as your scroll**
 
-The time picker is now the dashboard canvas rather than the toolbar, and now, together with template variables, it will stick to the top as you scroll through your dashboard. This is a highly [requested feature](https://github.com/grafana/grafana/issues/11166) that we're very happy to be able to roll out!
+The time picker is now the dashboard canvas rather than the toolbar, and now, together with template variables, it will stick to the top as you scroll through your dashboard. This is a highly [requested feature](https://github.com/grafana/grafana/issues/11166) that we're very happy to be able to roll out\!
 
 **Timezone parameter in Grafana URL**
 
@@ -60,9 +64,10 @@ For configuring controls outside of playlist playback, you can use the following
 
 ### Known limitations
 
-- The [variable usage check](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/variables/inspect-variable/) is not yet available.
-- Editing a panel:
+- The [variable usage check](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/variables/inspect-variable/) is not yet available.
 
+- Editing a panel:
+  
   - The **Library panels** tab is not available anymore. You can replace a library panel from the panel menu.
   - The **Overrides** tab is not in panel options (coming in Grafana v11.3.0). Overrides are shown at the bottom of the option list.
   - The drop-down menu to collapse the visualization picker is missing (coming in Grafana v11.3.0).
@@ -71,9 +76,9 @@ For configuring controls outside of playlist playback, you can use the following
 
 If you want to learn more, in detail, about all the improvements we've made, don't miss our blog post.
 
-{{< youtube id="kcKwBhvrsHc" >}}
+{{\< youtube id="kcKwBhvrsHc" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/)
 
 ## Additional dashboard and visualization improvements
 
@@ -81,21 +86,21 @@ If you want to learn more, in detail, about all the improvements we've made, don
 
 <!-- Kyle Cunningham, Isabel Matwawana -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 We've improved the inspect value experience in table visualizations with the addition of tabs in the **Inspect value** drawer: **Plain text** and **Code editor**.
 
 When the **Cell inspect value** switch is toggled on, clicking the inspect icon in a cell opens the drawer. Grafana attempts to automatically detect the type of data in the cell and opens the drawer with the associated tab showing. However, you can switch back and forth between tabs.
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-cell-inspect-11.3.png" max-width="650px" alt="Inspect value drawer opened to Plain text tab" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-cell-inspect-11.3.png" max-width="650px" alt="Inspect value drawer opened to Plain text tab" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/#cell-value-inspect)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/panels-visualizations/visualizations/table/#cell-value-inspect)
 
 ### Canvas actions
 
 <!-- Adela Almasan, #grafana-dataviz -->
 
-_Experimental in all editions of Grafana_
+*Experimental in all editions of Grafana*
 
 We've updated canvas visualizations so that now you can add actions to canvas elements, like opening an issue in GitHub or calling any API. The **Selected element** configuration now includes a **Data links and actions** section where you can add actions to elements. Each action can be configured to call an API endpoint.
 
@@ -103,7 +108,7 @@ Actions can also be configured to be triggered with a single click. To enable th
 
 Also, we've also added the ability to control the order in which actions are displayed in the tooltip by dragging and dropping them.
 
-{{< video-embed src="/media/docs/grafana/panels-visualizations/canvas-actions-11.3.mp4" >}}
+{{\< video-embed src="/media/docs/grafana/panels-visualizations/canvas-actions-11.3.mp4" \>}}
 
 To try out this feature, enable the `vizActions` feature toggle.
 
@@ -111,39 +116,39 @@ To try out this feature, enable the `vizActions` feature toggle.
 
 <!-- Adela Almasan, #grafana-dataviz -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 We've added legend support to bar gauge visualizations. This is part an effort to standardize legends and make them available across more panels. You can customize legends by navigating to the **Legend** section in panel options. By default, the legend is disabled.
 
 You can also hide names in each bar gauge, since they are redundant to the legend. To do that, in the **Name placement** option, choose **Hidden**.
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-bargauge-legend1-11.3.png" alt="Bar gauge legend" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-bargauge-legend1-11.3.png" alt="Bar gauge legend" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-gauge/#legend-options)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/panels-visualizations/visualizations/bar-gauge/#legend-options)
 
 ### Apply the same binary transformation to all the number fields in a given table at once
 
 <!-- Drew Slobodnjak; #grafana-dataviz -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 When you set up a binary operation using the **Add field from calculation** transformation (for example, dividing each column by a certain value), there's a new **All number fields** option available to select. Use this to apply a mathematical operator to multiple number fields simultaneously. This feature is particularly useful when you're scaling or offsetting data containing multiple, dynamically-named fields, allowing the transformation to be applied when dealing with unknown field names.
 
-{{< figure src="/media/docs/grafana/transformations/screenshot-grafana-11-3-all-number-fields-binary-operation.png" max-width="650px" alt="Binary operation calculation being applied to all number fields" >}}
+{{\< figure src="/media/docs/grafana/transformations/screenshot-grafana-11-3-all-number-fields-binary-operation.png" max-width="650px" alt="Binary operation calculation being applied to all number fields" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/#add-field-from-calculation)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/panels-visualizations/query-transform-data/transform-data/#add-field-from-calculation)
 
 ### Actions for visualizations
 
 <!-- Adela Almasan, #grafana-dataviz -->
 
-_Experimental in all editions of Grafana_
+*Experimental in all editions of Grafana*
 
 We've updated several visualizations so that now you can add actions to them. The panel configuration now includes a **Data links and actions** section where you can add actions that can each be configured to call an API endpoint.
 
 Also, we've also added the ability to control the order in which actions are displayed in the tooltip by dragging and dropping them.
 
-{{< video-embed src="/media/docs/grafana/panels-visualizations/visualizations-actions-11.3.mp4" >}}
+{{\< video-embed src="/media/docs/grafana/panels-visualizations/visualizations-actions-11.3.mp4" \>}}
 
 This functionality has been added for the following visualizations:
 
@@ -164,13 +169,13 @@ To try out this feature, enable the `vizActions` feature toggle.
 
 <!-- #proj-explorelogs-dev -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 With **Explore Logs** you can visualize and explore your logs to troubleshoot without having to write queries. It is easy to find spikes in your log volume, filter your logs and pinpoint problematic log lines.
 
 While **Explore Logs** is [GA in cloud](https://grafana.com/blog/2024/09/24/queryless-metrics-logs-traces-profiles/#explore-logs) and installed there by default already, with Grafana v11.3.0 it will be automatically installed on your Open Source or Enterprise instance as well. This will let you use Explore Logs alongside **Explore Metrics** without needing to install it manually.
 
-This is configured by the [`preinstall` configuration parameter](https://github.com/grafana/grafana/blob/9ece88d5852dceb90f83271e66902eece24f908f/conf/defaults.ini#L1748) in your Grafana configuration. For more information about Explore logs, refer to [the documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/explore/simplified-exploration/logs/).
+This is configured by the [`preinstall` configuration parameter](https://github.com/grafana/grafana/blob/9ece88d5852dceb90f83271e66902eece24f908f/conf/defaults.ini#L1748) in your Grafana configuration. For more information about Explore logs, refer to [the documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/explore/simplified-exploration/logs/).
 
 ## Correlations
 
@@ -178,15 +183,15 @@ This is configured by the [`preinstall` configuration parameter](https://github.
 
 <!-- #grafana-correlations or @kdurivage -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 Correlations is a feature that allows Grafana users to set up links between their data sources. Previously, the link generated would only be from one query to another—meaning results from a query could only generate links to open a second Explore pane with other query results.
 
 With this feature, users can now link to third party web-based software based on their search results. The format follows the standard Grafana format for using variables.
 
-{{< youtube id="KuVlzjaVc0Y" >}}
+{{\< youtube id="KuVlzjaVc0Y" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/correlations/)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/correlations/)
 
 ## Alerting
 
@@ -194,7 +199,7 @@ With this feature, users can now link to third party web-based software based on
 
 <!-- Sonia Aguilar -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 Use a simplified version of the query and alert conditions step to create Grafana-managed alert rules. The default options streamline rule creation with a cleaner header and a single query and condition. For more complex rules, switch to advanced options to add multiple queries and expressions.
 
@@ -204,15 +209,15 @@ Grafana Enterprise and OSS:
 
 To use this feature, enable the `alertingQueryAndExpressionsStepMode` feature toggle.
 
-{{< figure src="/media/docs/alerting/screenshot-simple-query-form-v11.3.png" max-width="800px"alt="Image shows the alert creation form in simple mode" >}}
+{{\< figure src="/media/docs/alerting/screenshot-simple-query-form-v11.3.png" max-width="800px"alt="Image shows the alert creation form in simple mode" \>}}
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/)
 
 ### Role-based access control for notifications in Alerting
 
 <!-- #alerting, #alerting-xl-rbac -->
 
-_Available in public preview in Grafana Enterprise and Grafana Cloud_
+*Available in public preview in Grafana Enterprise and Grafana Cloud*
 
 Manage contact points, mute timings, and notification templates through Role-Based Access Control (RBAC). Choose who can create, edit, and read contact points, mute timings, and notification templates using permissions or fixed roles.
 
@@ -222,13 +227,13 @@ For mute timings and notification templates, you can grant all users all permiss
 
 <!-- Alex Weaver -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 Create recording rules for Grafana-managed alert rules to calculate frequently needed expressions or computationally expensive expressions in advance and save the result as a new set of time series. Querying this new time series is faster, especially for dashboards since they query the same expression every time the dashboards refresh. Previously, this was only available for data-source managed alert rules.
 
 In Grafana OSS and Enterprise, you can create both Grafana-managed and data source-managed recording rules if you enable the `grafanaManagedRecordingRules` feature flag.
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-mimir-loki-managed-recording-rule/)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/alerting-rules/create-mimir-loki-managed-recording-rule/)
 
 ## Data sources
 
@@ -236,7 +241,7 @@ In Grafana OSS and Enterprise, you can create both Grafana-managed and data sour
 
 <!-- #grafana-oss-big-tent -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 Authenticate the GitHub data source using a GitHub App, an alternative to personal access tokens (PATs). GitHub App authentication offers enhanced security by granting more granular permissions, reducing the risk of over-permissioning.
 
@@ -248,25 +253,25 @@ For more information, refer to the [GitHub data source documentation](https://gr
 
 <!-- #grafana-frontend-platform -->
 
-_Available in public preview in Grafana Enterprise and Grafana Cloud_
+*Available in public preview in Grafana Enterprise and Grafana Cloud*
 
 Grafana admins struggle to effectively communicate important updates and maintenance information to their users through traditional channels like email and Slack. Now you can display customizable banners within the Grafana interface to ensure critical information is visible and timely. This ensures that all users are immediately informed of important updates, maintenance schedules, compliance info, or other crucial messages, reducing the likelihood of missed communications and enhancing overall user awareness and engagement.
 
-By default, only organization administrators can create announcement banners. You can customize who can create announcement banners with [Role-based access control](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/).
+By default, only organization administrators can create announcement banners. You can customize who can create announcement banners with [Role-based access control](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/access-control/).
 
-To use the Announcement banner in self-managed Grafana, turn on the `notificationBanner` [feature toggle](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/feature-toggles/) in Grafana v11.3 or newer and navigate in your Grafana instance to Admin > General > Announcement Banner
+To use the Announcement banner in self-managed Grafana, turn on the `notificationBanner` [feature toggle](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/feature-toggles/) in Grafana v11.3 or newer and navigate in your Grafana instance to Admin \> General \> Announcement Banner
 
-{{< figure src="/media/docs/grafana/grafana-announcement-banner.png" max-width="650px" caption="Announcement banner configuration page." alt="Announcement banner configuration page" >}}
+{{\< figure src="/media/docs/grafana/grafana-announcement-banner.png" max-width="650px" caption="Announcement banner configuration page." alt="Announcement banner configuration page" \>}}
 
 ## Improved subfolder creation flow
 
 <!-- #identity-access -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 You can now create subfolders within folders where you have Edit or Admin rights without needing any additional permissions. This enables users and teams to fully manage their folder and dashboard hierarchy, and allows you to keep your instance secure by granting users the minimum necessary set of permissions.
 
-[Documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/manage-dashboards/#create-a-dashboard-folder)
+[Documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/manage-dashboards/#create-a-dashboard-folder)
 
 ## Plugins
 
@@ -274,7 +279,7 @@ You can now create subfolders within folders where you have Edit or Admin rights
 
 <!-- #grafana-plugins-platform -->
 
-_Available in public preview in all editions of Grafana_
+*Available in public preview in all editions of Grafana*
 
 To help make it easier for administrators to assess and interact with Grafana plugins, we are reworking the plugin details page to highlight important metadata, such as when the plugin was last updated.
 
@@ -286,9 +291,9 @@ We intend to further extend this new layout with consistent links for all plugin
 
 <!-- #proj-grafana-sso-config -->
 
-_Available in public preview in all editions of Grafana_
+*Available in public preview in all editions of Grafana*
 
-{{< figure src="/media/docs/grafana/2024-10-04-sso_ldap_2.png" max-width="700px" alt="Advanced LDAP settings" >}}
+{{\< figure src="/media/docs/grafana/2024-10-04-sso\_ldap\_2.png" max-width="700px" alt="Advanced LDAP settings" \>}}
 
 Use the new UI to set up your LDAP server as an Identity Provider, to smooth out the setup process and get quick confirmation that it works properly.
 
@@ -300,17 +305,17 @@ To use LDAP in the UI, enable the feature toggle `ssoSettingsLDAP`.
 
 <!-- Gabriel Mabille -->
 
-_Generally available in all editions of Grafana_
+*Generally available in all editions of Grafana*
 
 [Documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json#roles)
 
-We're excited to announce that plugins can now leverage [Grafana's role based access control](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/#about-rbac) to define their own roles and permissions in order to control access to their routes.
+We're excited to announce that plugins can now leverage [Grafana's role based access control](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/access-control/#about-rbac) to define their own roles and permissions in order to control access to their routes.
 
 To define roles and their default assignments, plugin developers need to add a `roles` section to their `plugin.json` file. Grafana will automatically register these roles and assign them to the corresponding basic roles: `Viewer`, `Editor`, `Admin`, and `Grafana Admin`.
 
 Following is an example of defining two RBAC plugin roles and assigning them to Admins and Viewers (and thus Editors and Admins) by default:
 
-```json
+``` json
 "roles": [
   {
     "role": {

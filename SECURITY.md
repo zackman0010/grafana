@@ -2,7 +2,7 @@
 
 This product is in scope for our Bug Bounty Program. To submit a vulnerability report, please visit [Grafana Labs Bug Bounty Policy page](https://github.com/grafana/bugbounty) and follow the instructions provided. Our security team will review your submission and get back to you as soon as possible.
 
----
+-----
 
 For any other security issues, please send an email to security@grafana.com
 

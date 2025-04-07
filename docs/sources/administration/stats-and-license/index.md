@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../admin/view-server-settings/
-  - ../admin/view-server-stats/
-  - view-server/
-  - view-server/view-server-settings/
-  - view-server/view-server-stats/
-description: How to view server settings in the Grafana UI
-keywords:
-  - grafana
-  - configuration
-  - server
-  - settings
-labels:
+
+- ../admin/view-server-settings/
+- ../admin/view-server-stats/
+- view-server/
+- view-server/view-server-settings/
+- view-server/view-server-stats/
+  description: How to view server settings in the Grafana UI
+  keywords:
+- grafana
+- configuration
+- server
+- settings
+  labels:
   products:
-    - cloud
-    - enterprise
-title: View server statistics and license
-weight: 400
----
+  - cloud
+  - enterprise
+    title: View server statistics and license
+    weight: 400
+
+-----
 
 # View server statistics and license
 
@@ -34,7 +37,7 @@ If you are a Grafana server administrator, use the Settings tab to view the sett
 ### View server settings
 
 1. Log in to your Grafana server with an account that has the Grafana Admin flag set.
-1. Click **Administration** in the left-side menu, **General**, and then **Settings**.
+2. Click **Administration** in the left-side menu, **General**, and then **Settings**.
 
 ### Available settings
 
@@ -51,7 +54,7 @@ If you are a Grafana server admin, then you can view useful statistics about you
 ### View server stats
 
 1. Log in to your Grafana server with an account that has the Grafana Admin flag set.
-1. Click **Administration** in the left-side menu, **General**, and then **Stats and license**.
+2. Click **Administration** in the left-side menu, **General**, and then **Stats and license**.
 
 ### Available stats
 

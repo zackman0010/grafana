@@ -1,10 +1,6 @@
----
-title: Legend options
-comments: |
-  There are two legend shared files to cover the most common combinations of options. 
-  Using two shared files ensures that content remains consistent across visualizations that share the same options and users don't have to figure out which options apply to a specific visualization when reading that content. 
-  This file is used in the following visualizations: bar chart, candlestick, histogram, time series, trend, xy chart
----
+-----
+
+## title: Legend options comments: | There are two legend shared files to cover the most common combinations of options. Using two shared files ensures that content remains consistent across visualizations that share the same options and users don't have to figure out which options apply to a specific visualization when reading that content. This file is used in the following visualizations: bar chart, candlestick, histogram, time series, trend, xy chart
 
 Legend options control the series names and statistics that appear under or to the right of the graph. For more information about the legend, refer to [Configure a legend](../configure-legend/).
 

@@ -14,14 +14,14 @@ Grafana allows you to query, visualize, alert on and understand your metrics no 
 - **Explore Metrics:** Explore your data through ad-hoc queries and dynamic drilldown. Split view and compare different time ranges, queries and data sources side by side.
 - **Explore Logs:** Experience the magic of switching from metrics to logs with preserved label filters. Quickly search through all your logs or streaming them live.
 - **Alerting:** Visually define alert rules for your most important metrics. Grafana will continuously evaluate and send notifications to systems like Slack, PagerDuty, VictorOps, OpsGenie.
-- **Mixed Data Sources:** Mix different data sources in the same graph! You can specify a data source on a per-query basis. This works for even custom datasources.
+- **Mixed Data Sources:** Mix different data sources in the same graph\! You can specify a data source on a per-query basis. This works for even custom datasources.
 
 ## Get started
 
 - [Get Grafana](https://grafana.com/get)
 - [Installation guides](https://grafana.com/docs/grafana/latest/setup-grafana/installation/)
 
-Unsure if Grafana is for you? Watch Grafana in action on [play.grafana.org](https://play.grafana.org/)!
+Unsure if Grafana is for you? Watch Grafana in action on [play.grafana.org](https://play.grafana.org/)\!
 
 ## Documentation
 

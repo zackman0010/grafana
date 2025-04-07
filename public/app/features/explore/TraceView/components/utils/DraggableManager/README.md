@@ -13,14 +13,14 @@ The demo contains two components:
 
 This DraggableManager utility does not actually "drag" anything, it does not move or drag DOM elements, it just tells us where the mouse is while the mouse is down. Primarily, it listens for `mousedown` and subsequent `mousemove` and then finally `mouseup` events. (It listens to `window` for the `mousemove` and `mouseup` events.)
 
-What we do with that information is up to us. This is mentioned because you need to handle the DraggableManager callbacks _to create the illusion of dragging_.
+What we do with that information is up to us. This is mentioned because you need to handle the DraggableManager callbacks *to create the illusion of dragging*.
 
 ## In brief
 
 DraggableManager instances provide three (and a half) conveniences:
 
 - Handle mouse events related to dragging.
-- Maps `MouseEvent.clientX` from the [client area](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX) to the local context (yielding `x` (pixels) and `value` (0 -> 1, e.g, `x/width`)).
+- Maps `MouseEvent.clientX` from the [client area](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX) to the local context (yielding `x` (pixels) and `value` (0 -\> 1, e.g, `x/width`)).
 - Maintains a sense of state in terms of whether or not the subject DOM element is being dragged. For example, it fires `onMouseMove` callbacks when not being dragged and `onDragMove` when being dragged.
 - Two other minor conveniences (relating to window events)
 
@@ -43,7 +43,7 @@ For the purposes of handling mouse events related to the intended dragging funct
 
 To use a DraggableManager instance, relevant mouse events should be piped to the above handlers:
 
-```jsx
+``` jsx
 <div className="DividerDemo--realm">
   <div className="DividerDemo--divider" onMouseDown={this._dragManager.handleMouseDown} />
 </div>
@@ -55,7 +55,7 @@ To use a DraggableManager instance, relevant mouse events should be piped to the
 
 `MouseEvent` (and `SyntheticMouseEvent`) events provide the [`clientX`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX) property, which generally needs some adjustments before it's useful. For instance, in the following snippet we transform `clientX` to the `x` within the `<div>`. The `value` is simply the `x/width` ratio, which is pretty much the percent but divided by `100`.
 
-```jsx
+``` jsx
 <div className="DividerDemo--realm">
   <div
     className="DividerDemo--divider"
@@ -104,7 +104,7 @@ In my use, DraggbaleManager instances become the receiver of the relevant mouse 
 
 For instance, if implementing a draggable divider (see `DividerDemo.js` and the top half of the gif), only `onMouseDown` needs to be handled:
 
-```jsx
+``` jsx
 <div className="DividerDemo--realm">
   <div className="DividerDemo--divider" onMouseDown={this._dragManager.handleMouseDown} />
 </div>
@@ -112,7 +112,7 @@ For instance, if implementing a draggable divider (see `DividerDemo.js` and the 
 
 But, if implementing the ability to drag a sub-range (see `RegionDemo.js` and the bottom of demo gif), you generally want to show a vertical line at the mouse cursor until the dragging starts (`onMouseDown`), then you want to draw the region being dragged. So, the `onMouseMove`, `onMouseLeave` and `onMouseDown` handlers are necessary:
 
-```jsx
+``` jsx
 <div
   className="RegionDemo--realm"
   onMouseDown={this._dragManager.handleMouseDown}
@@ -129,20 +129,18 @@ The crux of the conversion from `clientX` to `x` and `value` is the `getBounds()
 
 The function is a required constructor parameter, and it must return a `DraggableBounds` object:
 
-```
-type DraggableBounds = {
-  clientXLeft: number,
-  maxValue?: number,
-  minValue?: number,
-  width: number,
-};
-```
+    type DraggableBounds = {
+      clientXLeft: number,
+      maxValue?: number,
+      minValue?: number,
+      width: number,
+    };
 
 This generally amounts to calling [`Element#getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) on the DOM element that defines the valid dragging range.
 
 For instance, in the `DividerDemo`, the function used is `DivideDemo#_getDraggingBounds()`:
 
-```ts
+``` ts
 _getDraggingBounds = (): DraggableBounds => {
   if (!this._realmElm) {
     throw new Error('invalid state');
@@ -176,12 +174,12 @@ The `RegionDemo` is a bit more involved, so, to break down how we handle the cal
 - `regionCursor` is where we draw the cursor indicator (a red vertical line, in the demo).
 - `regionDragging` represents the start (at index `0`) and current position (at index `1`) of the region currently being dragged.
 
-```
-{
-  regionCursor: ?number,
-  regionDragging: ?[number, number],
-}
-```
+<!-- end list -->
+
+    {
+      regionCursor: ?number,
+      regionDragging: ?[number, number],
+    }
 
 Then, we handle the callbacks as follows:
 
@@ -209,44 +207,38 @@ This is a contrived demo, so `onDragEnd` is kind of boring... Usually we would d
 
 Used as the `type` field on `DraggingUpdate` objects.
 
-```
-{
-  DRAG_END: 'DRAG_END',
-  DRAG_MOVE: 'DRAG_MOVE',
-  DRAG_START: 'DRAG_START',
-  MOUSE_ENTER: 'MOUSE_ENTER',
-  MOUSE_LEAVE: 'MOUSE_LEAVE',
-  MOUSE_MOVE: 'MOUSE_MOVE',
-};
-```
+    {
+      DRAG_END: 'DRAG_END',
+      DRAG_MOVE: 'DRAG_MOVE',
+      DRAG_START: 'DRAG_START',
+      MOUSE_ENTER: 'MOUSE_ENTER',
+      MOUSE_LEAVE: 'MOUSE_LEAVE',
+      MOUSE_MOVE: 'MOUSE_MOVE',
+    };
 
 ### Type `DraggingUpdate`
 
 The data type issued for all callbacks.
 
-```
-type DraggingUpdate = {
-  event: SyntheticMouseEvent<any>,
-  manager: DraggableManager,
-  tag: ?string,
-  type: UpdateType,
-  value: number,
-  x: number,
-};
-```
+    type DraggingUpdate = {
+      event: SyntheticMouseEvent<any>,
+      manager: DraggableManager,
+      tag: ?string,
+      type: UpdateType,
+      value: number,
+      x: number,
+    };
 
 ### Type `DraggableBounds`
 
 The type the `getBounds()` constructor parameter must return.
 
-```
-type DraggableBounds = {
-  clientXLeft: number,
-  maxValue?: number,
-  minValue?: number,
-  width: number,
-};
-```
+    type DraggableBounds = {
+      clientXLeft: number,
+      maxValue?: number,
+      minValue?: number,
+      width: number,
+    };
 
 `clientXLeft` is used to convert [`MouseEvent.clientX`](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX) from the client area to the dragging area.
 
@@ -256,19 +248,17 @@ type DraggableBounds = {
 
 ### Constructor parameters
 
-```
-type DraggableManagerOptions = {
-  getBounds: (?string) => DraggableBounds,
-  onMouseEnter?: DraggingUpdate => void,
-  onMouseLeave?: DraggingUpdate => void,
-  onMouseMove?: DraggingUpdate => void,
-  onDragStart?: DraggingUpdate => void,
-  onDragMove?: DraggingUpdate => void,
-  onDragEnd?: DraggingUpdate => void,
-  resetBoundsOnResize?: boolean,
-  tag?: string,
-};
-```
+    type DraggableManagerOptions = {
+      getBounds: (?string) => DraggableBounds,
+      onMouseEnter?: DraggingUpdate => void,
+      onMouseLeave?: DraggingUpdate => void,
+      onMouseMove?: DraggingUpdate => void,
+      onDragStart?: DraggingUpdate => void,
+      onDragMove?: DraggingUpdate => void,
+      onDragEnd?: DraggingUpdate => void,
+      resetBoundsOnResize?: boolean,
+      tag?: string,
+    };
 
 `getBounds()` is used to map the `clientX` to whatever the dragging context is. **It is called lazily** and the returned value is cached, until either `DraggableManager#resetBounds()` is called, the window is resized (when `resetBoundsOnResize` is `true`) or `DraggableManager#dispose()` is called.
 

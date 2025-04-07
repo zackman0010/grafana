@@ -1,49 +1,52 @@
----
+-----
+
 description: This document provides instructions for configuring the PostgreSQL data source.
 keywords:
-  - grafana
-  - postgresql
-  - guide
-labels:
+
+- grafana
+- postgresql
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure the PostgreSQL data source
-title: Configure the PostgreSQL data source
-weight: 10
-refs:
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  add-template-variables-interval-ms:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval_ms
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval_ms
-  add-template-variables-interval:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-  variable-syntax-advanced-variable-format-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/#advanced-variable-format-options
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/#advanced-variable-format-options
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure the PostgreSQL data source
+    title: Configure the PostgreSQL data source
+    weight: 10
+    refs:
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    add-template-variables-interval-ms:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+    add-template-variables-interval:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+    variable-syntax-advanced-variable-format-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/\#advanced-variable-format-options
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/\#advanced-variable-format-options
+
+-----
 
 # Configure the PostgreSQL data source
 
@@ -56,13 +59,13 @@ Organization administrators can also [configure the data source via YAML](#provi
 
 Grafana comes with a built-in PostgreSQL data source plugin, eliminating the need to install a plugin.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 When adding a data source, the database user you specify should have only `SELECT` permissions on the relevant database and tables. Grafana does not validate the safety of queries, which means they can include potentially harmful SQL statements, such as `USE otherdb;` or `DROP TABLE user;`, that could be executed. To mitigate this risk, Grafana strongly recommends creating a dedicated PostgreSQL user with restricted permissions.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Example:
 
-```sql
+``` sql
  CREATE USER grafanareader WITH PASSWORD 'password';
  GRANT USAGE ON SCHEMA schema TO grafanareader;
  GRANT SELECT ON schema.table TO grafanareader;
@@ -73,10 +76,10 @@ Example:
 Complete the following steps to set up a new PostgreSQL data source:
 
 1. Click **Connections** in the left-side menu.
-1. Click **Add new connection**
-1. Type `PostgreSQL` in the search bar.
-1. Select the **PostgreSQL data source**.
-1. Click **Add new data source** in the upper right.
+2. Click **Add new connection**
+3. Type `PostgreSQL` in the search bar.
+4. Select the **PostgreSQL data source**.
+5. Click **Add new data source** in the upper right.
 
 You are taken to the **Settings** tab where you will configure the data source.
 
@@ -133,7 +136,7 @@ If you select the TLS/SSL Mode options **verify-ca** or **verify-full** with the
 - **Max idle** - The maximum number of connections in the idle connection pool. The default `100`.
 - **Max lifetime** - The maximum amount of time in seconds a connection may be reused. The default is `14400`, or 4 hours.
 
-**Private data source connect** - _Only for Grafana Cloud users._ Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
+**Private data source connect** - *Only for Grafana Cloud users.* Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
 
 Click **Manage private data source connect** to be taken to your PDC connection page, where you’ll find your PDC configuration details.
 
@@ -160,12 +163,12 @@ This value must be formatted as a number followed by a valid time identifier:
 
 ## Provision the data source
 
-You can define and configure the data source in YAML files with [provisioning](/docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources).
+You can define and configure the data source in YAML files with [provisioning](/docs/grafana/\<GRAFANA_VERSION\>/administration/provisioning/#data-sources).
 For more information about provisioning, and available configuration options, refer to [Provision Grafana](ref:provisioning-data-sources).
 
 ### PostgreSQL provisioning example
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -191,4 +194,4 @@ datasources:
 If you encounter metric request errors or other issues:
 
 - Ensure that the parameters in your data source YAML file precisely match the example provided, including parameter names and the correct use of quotation marks.
-- Verify that the database name _isn't_ included in the URL.
+- Verify that the database name *isn't* included in the URL.

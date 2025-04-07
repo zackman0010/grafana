@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../../../auth/google/
-description: Grafana Google OAuth Guide
-labels:
+
+- ../../../auth/google/
+  description: Grafana Google OAuth Guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Google OAuth
-title: Configure Google OAuth authentication
-weight: 1100
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Google OAuth
+    title: Configure Google OAuth authentication
+    weight: 1100
+
+-----
 
 # Configure Google OAuth authentication
 
@@ -25,23 +28,23 @@ If Users use the same email address in Google that they use with other authentic
 First, you need to create a Google OAuth Client:
 
 1. Go to https://console.developers.google.com/apis/credentials.
-1. Create a new project if you don't have one already.
+2. Create a new project if you don't have one already.
    1. Enter a project name. The **Organization** and **Location** fields should both be set to your organization's information.
-   1. In **OAuth consent screen** select the **External** User Type. Click **CREATE**.
-   1. Fill out the requested information using the URL of your Grafana Cloud instance.
-   1. Accept the defaults, or customize the consent screen options.
-1. Click **Create Credentials**, then click **OAuth Client ID** in the drop-down menu
-1. Enter the following:
+   2. In **OAuth consent screen** select the **External** User Type. Click **CREATE**.
+   3. Fill out the requested information using the URL of your Grafana Cloud instance.
+   4. Accept the defaults, or customize the consent screen options.
+3. Click **Create Credentials**, then click **OAuth Client ID** in the drop-down menu
+4. Enter the following:
    - **Application Type**: Web application
    - **Name**: Grafana
    - **Authorized JavaScript origins**: `https://<YOUR_GRAFANA_URL>`
    - **Authorized redirect URIs**: `https://<YOUR_GRAFANA_URL>/login/google`
    - Replace `<YOUR_GRAFANA_URL>` with the URL of your Grafana instance.
-     {{< admonition type="note" >}}
+     {{\< admonition type="note" \>}}
      The URL you enter is the one for your Grafana instance home page, not your Grafana Cloud portal URL.
-     {{< /admonition >}}
-1. Click Create
-1. Copy the Client ID and Client Secret from the 'OAuth Client' modal
+     {{\< /admonition \>}}
+5. Click Create
+6. Copy the Client ID and Client Secret from the 'OAuth Client' modal
 
 ## Configure Google authentication client using the Grafana UI
 
@@ -49,7 +52,7 @@ First, you need to create a Google OAuth Client:
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle.
 {{% /admonition %}}
 
-As a Grafana Admin, you can configure Google OAuth client from within Grafana using the Google UI. To do this, navigate to **Administration > Authentication > Google** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
+As a Grafana Admin, you can configure Google OAuth client from within Grafana using the Google UI. To do this, navigate to **Administration \> Authentication \> Google** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
 
 After you have filled in the form, click **Save**. If the save was successful, Grafana will apply the new configurations.
 
@@ -65,7 +68,7 @@ If you run Grafana in high availability mode, configuration changes may not get 
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle. Supported in the Terraform provider since v2.12.0.
 {{% /admonition %}}
 
-```terraform
+``` terraform
 resource "grafana_sso_settings" "google_sso_settings" {
   provider_name = "google"
   oauth2_settings {
@@ -92,7 +95,7 @@ Ensure that you have access to the [Grafana configuration file](../../../configu
 
 Specify the Client ID and Secret in the [Grafana configuration file](../../../configure-grafana/#configuration-file-location). For example:
 
-```bash
+``` bash
 [auth.google]
 enabled = true
 allow_sign_up = true
@@ -161,9 +164,7 @@ The `accessTokenExpirationCheck` feature toggle has been removed in Grafana v10.
 Set `auto_login` option to true to attempt login automatically, skipping the login screen.
 This setting is ignored if multiple auth providers are configured to use auto login.
 
-```
-auto_login = true
-```
+    auto_login = true
 
 ### Configure team synchronization
 
@@ -173,20 +174,20 @@ To set up team sync for Google OAuth:
 
 1. Enable the Google Cloud Identity API on your [organization's dashboard](https://console.cloud.google.com/apis/api/cloudidentity.googleapis.com/).
 
-1. Add the `https://www.googleapis.com/auth/cloud-identity.groups.readonly` scope to your Grafana `[auth.google]` configuration:
-
+2. Add the `https://www.googleapis.com/auth/cloud-identity.groups.readonly` scope to your Grafana `[auth.google]` configuration:
+   
    Example:
-
-   ```ini
+   
+   ``` ini
    [auth.google]
    # ..
    scopes = openid email profile https://www.googleapis.com/auth/cloud-identity.groups.readonly
    ```
 
-1. Configure team sync in your Grafana team's `External group sync` tab.
+3. Configure team sync in your Grafana team's `External group sync` tab.
    The external group ID for a Google group is the group's email address, such as `dev@grafana.com`.
 
-To learn more about Team Sync, refer to [Configure Team Sync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
+To learn more about Team Sync, refer to [Configure Team Sync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
 
 #### Configure allowed groups
 
@@ -211,7 +212,7 @@ You can disable this default role assignment by setting `role_attribute_strict =
 
 To ease configuration of a proper JMESPath expression, go to [JMESPath](http://jmespath.org/) to test and evaluate expressions with custom payloads.
 {{% admonition type="note" %}}
-By default skip_org_role_sync is enabled. skip_org_role_sync will default to false in Grafana v10.3.0 and later versions.
+By default skip\_org\_role\_sync is enabled. skip\_org\_role\_sync will default to false in Grafana v10.3.0 and later versions.
 {{% /admonition %}}
 
 ##### Role mapping examples
@@ -228,7 +229,7 @@ The external user is part of the following Google groups: `group-1` and `group-2
 
 Config:
 
-```ini
+``` ini
 org_mapping = group-1:org_foo:Viewer group-2:org_bar:Editor *:org_baz:Editor
 ```
 
@@ -237,7 +238,7 @@ org_mapping = group-1:org_foo:Viewer group-2:org_bar:Editor *:org_baz:Editor
 In this example, the user with email `admin@company.com` has been granted the `Admin` role.
 All other users are granted the `Viewer` role.
 
-```ini
+``` ini
 role_attribute_path = email=='admin@company.com' && 'Admin' || 'Viewer'
 skip_org_role_sync = false
 ```
@@ -247,7 +248,7 @@ skip_org_role_sync = false
 In this example, the user from Google group 'example-group@google.com' have been granted the `Editor` role.
 All other users are granted the `Viewer` role.
 
-```ini
+``` ini
 role_attribute_path = contains(groups[*], 'example-group@google.com') && 'Editor' || 'Viewer'
 skip_org_role_sync = false
 ```
@@ -261,7 +262,7 @@ Add the `https://www.googleapis.com/auth/cloud-identity.groups.readonly` scope t
 In this example, the user with email `admin@company.com` has been granted the `Admin` organization role as well as the Grafana server admin role.
 All other users are granted the `Viewer` role.
 
-```ini
+``` ini
 allow_assign_grafana_admin = true
 skip_org_role_sync = false
 role_attribute_path = email=='admin@company.com' && 'GrafanaAdmin' || 'Viewer'
@@ -271,7 +272,7 @@ role_attribute_path = email=='admin@company.com' && 'GrafanaAdmin' || 'Viewer'
 
 In this example, all users will be assigned `Viewer` role regardless of the user information received from the identity provider.
 
-```ini
+``` ini
 role_attribute_path = "'Viewer'"
 skip_org_role_sync = false
 ```
@@ -304,7 +305,7 @@ The following table outlines the various Google OAuth configuration options. You
 | `allowed_groups`             | No       | Yes                | List of comma- or space-separated groups. The user should be a member of at least one group to log in. If you configure `allowed_groups`, you must also configure Google to include the `groups` claim following [Configure allowed groups](#configure-allowed-groups).                                                                                                                                                                                                                         |                                                    |
 | `allowed_organizations`      | No       | Yes                | List of comma- or space-separated Azure tenant identifiers. The user should be a member of at least one tenant to log in.                                                                                                                                                                                                                                                                                                                                                                       |                                                    |
 | `allowed_domains`            | No       | Yes                | List of comma- or space-separated domains. The user should belong to at least one domain to log in.                                                                                                                                                                                                                                                                                                                                                                                             |                                                    |
-| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. _You should only use this for testing_, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                          | `false`                                            |
+| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. *You should only use this for testing*, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                          | `false`                                            |
 | `tls_client_cert`            | No       | No                 | The path to the certificate.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |                                                    |
 | `tls_client_key`             | No       | No                 | The path to the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                                                    |
 | `tls_client_ca`              | No       | No                 | The path to the trusted certificate authority list.                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                                    |

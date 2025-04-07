@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../data-sources/opentsdb/
-  - ../features/datasources/opentsdb/
-  - ../features/opentsdb/
-description: Guide for using OpenTSDB in Grafana
-keywords:
-  - grafana
-  - opentsdb
-  - guide
-labels:
+
+- ../data-sources/opentsdb/
+- ../features/datasources/opentsdb/
+- ../features/opentsdb/
+  description: Guide for using OpenTSDB in Grafana
+  keywords:
+- grafana
+- opentsdb
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: OpenTSDB
-title: OpenTSDB data source
-weight: 1100
-refs:
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: OpenTSDB
+    title: OpenTSDB data source
+    weight: 1100
+    refs:
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+
+-----
 
 # OpenTSDB data source
 
@@ -47,14 +50,17 @@ Administrators can also [configure the data source via YAML](#provision-the-data
 
 To configure basic settings for the data source, complete the following steps:
 
-1.  Click **Connections** in the left-side menu.
-1.  Under Your connections, click **Data sources**.
-1.  Enter `OpenTSDB` in the search bar.
-1.  Select **OpenTSDB**.
+1. Click **Connections** in the left-side menu.
 
-    The **Settings** tab of the data source is displayed.
+2. Under Your connections, click **Data sources**.
 
-1.  Set the data source's basic configuration options:
+3. Enter `OpenTSDB` in the search bar.
+
+4. Select **OpenTSDB**.
+   
+   The **Settings** tab of the data source is displayed.
+
+5. Set the data source's basic configuration options:
 
 | Name                | Description                                                                              |
 | ------------------- | ---------------------------------------------------------------------------------------- |
@@ -73,7 +79,7 @@ For more information about provisioning, and for available configuration options
 
 #### Provisioning example
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -88,7 +94,7 @@ datasources:
 
 ## Query editor
 
-Open a graph in edit mode by click the title. Query editor will differ if the data source has version <=2.1 or = 2.2.
+Open a graph in edit mode by click the title. Query editor will differ if the data source has version \<=2.1 or = 2.2.
 In the former version, only tags can be used to query OpenTSDB. But in the latter version, filters as well as tags
 can be used to query OpenTSDB. Fill Policy is also introduced in OpenTSDB 2.2.
 

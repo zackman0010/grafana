@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../../auth/team-sync/
-  - ../../enterprise/team-sync/
-description: Learn how to use Team Sync to synchronize between your authentication
+
+- ../../auth/team-sync/
+- ../../enterprise/team-sync/
+  description: Learn how to use Team Sync to synchronize between your authentication
   provider teams and Grafana teams.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-title: Configure Team Sync
-weight: 1000
----
+  - cloud
+  - enterprise
+    title: Configure Team Sync
+    weight: 1000
+
+-----
 
 # Configure Team Sync
 
@@ -27,33 +30,35 @@ This mechanism allows Grafana to remove an existing synchronized user from a tea
 
 ## Supported providers
 
-- [Auth Proxy](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-authentication/auth-proxy/#team-sync-enterprise-only)
-- [Azure AD](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/azuread#team-sync-enterprise-only)
-- [Generic OAuth integration](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/generic-oauth#configure-team-synchronization)
-- [GitHub OAuth](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/github#configure-team-synchronization)
-- [GitLab OAuth](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/gitlab#configure-team-synchronization)
-- [Google OAuth](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/google#configure-team-sync-for-google-oauth)
-- [LDAP](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/enhanced-ldap#ldap-group-synchronization-for-teams)
-- [Okta](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/okta#configure-team-synchronization-enterprise-only)
-- [SAML](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-authentication/saml#configure-team-sync)
+- [Auth Proxy](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-authentication/auth-proxy/#team-sync-enterprise-only)
+- [Azure AD](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/azuread#team-sync-enterprise-only)
+- [Generic OAuth integration](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/generic-oauth#configure-team-synchronization)
+- [GitHub OAuth](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/github#configure-team-synchronization)
+- [GitLab OAuth](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/gitlab#configure-team-synchronization)
+- [Google OAuth](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/google#configure-team-sync-for-google-oauth)
+- [LDAP](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/enhanced-ldap#ldap-group-synchronization-for-teams)
+- [Okta](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/okta#configure-team-synchronization-enterprise-only)
+- [SAML](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-authentication/saml#configure-team-sync)
 
 ## Synchronize a Grafana team with an external group
 
 If you have already grouped some users into a team, then you can synchronize that team with an external group.
 
-1. In Grafana, navigate to **Administration > Users and access > Teams**.
-1. Select a team.
-1. Go to the External group sync tab, and click **Add group**.
+1. In Grafana, navigate to **Administration \> Users and access \> Teams**.
 
+2. Select a team.
+
+3. Go to the External group sync tab, and click **Add group**.
+   
    ![External group sync](/static/img/docs/enterprise/team_add_external_group.png)
 
-1. Insert the value of the group you want to sync with. This becomes the Grafana `GroupID`.
+4. Insert the value of the group you want to sync with. This becomes the Grafana `GroupID`.
    Examples:
-
+   
    - For LDAP, this is the LDAP distinguished name (DN) of LDAP group you want to synchronize with the team.
    - For Auth Proxy, this is the value we receive as part of the custom `Groups` header.
 
-1. Click **Add group** to save.
+5. Click **Add group** to save.
 
 > Group matching is case insensitive.
 

@@ -1,25 +1,28 @@
----
+-----
+
 description: Learn how to implement SCIM provisioning in Grafana for automated user and team synchronization. SCIM integrates with identity providers like Okta and Azure AD to streamline user management, automate team provisioning, and replace Team Sync.
 keywords:
-  - grafana
-  - scim
-  - provisioning
-  - user-management
-  - team-management
-labels:
+
+- grafana
+- scim
+- provisioning
+- user-management
+- team-management
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Manage users and teams with SCIM
-title: Manage users and teams with SCIM
-weight: 310
----
+  - cloud
+  - enterprise
+    menuTitle: Manage users and teams with SCIM
+    title: Manage users and teams with SCIM
+    weight: 310
+
+-----
 
 # Manage users and teams with SCIM
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in [Grafana Enterprise](../../../introduction/grafana-enterprise/) and [Grafana Cloud Advanced](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 SCIM streamlines identity management in Grafana by automating user lifecycle and team membership operations. This guide explains how SCIM works with existing Grafana setups, handles user provisioning, and manages team synchronization.
 
@@ -35,13 +38,13 @@ With SCIM, you can:
 
 SCIM provisioning works in conjunction with existing user management methods in Grafana. While SCIM automates user provisioning from the identity provider, users can still be created through SAML just-in-time provisioning when they log in, manually through the Grafana UI, or via automation tools like Terraform and the Grafana API. For the most consistent user management experience, we recommend centralizing user provisioning through SCIM.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 User provisioning requires `user_sync_enabled = true` in the SCIM configuration. See [Configure SCIM in Grafana](../_index.md#configure-scim-in-grafana) for more information.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 After a user is provisioned through SCIM, they cannot be deleted from Grafana - they can only be deactivated through the identity provider. This is important to consider when planning your user management strategy, especially for compliance and data retention requirements.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 For detailed configuration steps specific to the identity provider, see:
 
@@ -53,17 +56,18 @@ For detailed configuration steps specific to the identity provider, see:
 SCIM uses a specific process to establish and maintain user identity between the identity provider and Grafana:
 
 1. Initial user lookup:
-
+   
    - The identity provider looks up users in Grafana using the user's login and the Unique identifier field (configurable at IdP)
    - The identity provider expects a single result from Grafana for each user
 
 2. Identity linking:
-
+   
    - The identity provider learns the relationship between the found Grafana user and the Grafana internal ID
    - The identity provider updates Grafana with the External ID
    - Grafana updates the authentication validations to expect this External ID
 
 3. Authentication validation:
+   
    - Grafana expects the SAML integration to return the same External ID in SAML assertions
    - This External ID is used to validate that the logged-in user matches the provisioned user
 
@@ -71,9 +75,9 @@ This process ensures secure and consistent user identification across both syste
 
 ### Existing Grafana users
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Existing users must be assigned to the Grafana app in the identity provider to maintain access once SCIM is enabled.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 For users who already exist in the Grafana instance:
 
@@ -87,17 +91,18 @@ For users who already exist in the Grafana instance:
 To prevent conflicts and maintain consistent user management, disable or restrict other provisioning methods when implementing SCIM. This ensures that all new users are created through SCIM and prevents duplicate or conflicting user records.
 
 - SAML Just-in-Time (JIT) provisioning:
-
+  
   - Disable `allow_sign_up` in SAML settings to prevent automatic user creation
   - Existing JIT-provisioned users will continue to work but should be migrated to SCIM
 
 - Terraform or API provisioning:
-
+  
   - Stop creating new users through these methods
   - Existing users will continue to work but should be migrated to SCIM
   - Consider removing or archiving Terraform user creation resources
 
 - Manual user creation:
+  
   - Restrict UI-based user creation to administrators only
   - Plan to migrate manually created users to SCIM
 
@@ -117,13 +122,13 @@ SCIM handles user synchronization but not role assignments. Role management is h
 
 SCIM provides automated team management capabilities that go beyond what Team Sync offers. While Team Sync only maps identity provider groups to existing Grafana teams, SCIM can automatically create and delete teams based on group changes in the identity provider.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Team provisioning requires `group_sync_enabled = true` in the SCIM configuration. See [Configure SCIM in Grafana](../_index.md#configure-scim-in-grafana) for more information.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Teams provisioned through SCIM cannot be deleted manually from Grafana - they can only be deleted by removing their corresponding groups from the identity provider.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 For detailed configuration steps specific to the identity provider, see:
 
@@ -132,18 +137,18 @@ For detailed configuration steps specific to the identity provider, see:
 
 ### SCIM vs Team Sync
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Do not enable both SCIM Group Sync and Team Sync simultaneously as these methods can conflict with each other. However, you can use SCIM for user provisioning while keeping Team Sync for team management until migration support is available.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Choose one team synchronization method:
 
 - If you enable SCIM Group Sync, disable Team Sync and use SCIM for team management
 - If you prefer Team Sync, do not enable SCIM Group Sync
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 **Team Sync Migration:** Support for migrating from Team Sync to SCIM Group Sync is coming soon. Until this support is released, we recommend keeping your existing Team Sync setup for team management. You can still benefit from SCIM user provisioning capabilities while using Team Sync for team management.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Key differences
 

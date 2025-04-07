@@ -1,41 +1,44 @@
----
+-----
+
 aliases:
-  - ../../features/panels/dashlist/
-  - ../../panels/visualizations/dashboard-list-panel/
-  - ../../reference/dashlist/
-  - ../../visualizations/dashboard-list-panel/
-keywords:
-  - grafana
-  - dashboard list
-  - documentation
-  - panel
-  - dashlist
-labels:
+
+- ../../features/panels/dashlist/
+- ../../panels/visualizations/dashboard-list-panel/
+- ../../reference/dashlist/
+- ../../visualizations/dashboard-list-panel/
+  keywords:
+- grafana
+- dashboard list
+- documentation
+- panel
+- dashlist
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-description: Configure options for Grafana's dashboard list visualization
-title: Dashboard list
-weight: 100
-refs:
-  dashboard-url-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard-url-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard-url-variables/
-  dashboard:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
----
+  - cloud
+  - enterprise
+  - oss
+    description: Configure options for Grafana's dashboard list visualization
+    title: Dashboard list
+    weight: 100
+    refs:
+    dashboard-url-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard-url-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard-url-variables/
+    dashboard:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
+
+-----
 
 # Dashboard list
 
 Dashboard lists allow you to display dynamic links to other dashboards. You can configure the list to use starred dashboards, recently viewed dashboards, a search query, and dashboard tags.
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-dashboard-list-v11.6.png" max-width="750px" alt="A dashboard list visualization" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-dashboard-list-v11.6.png" max-width="750px" alt="A dashboard list visualization" \>}}
 
 On each dashboard load, this panel queries the dashboard list, always providing the most up-to-date results.
 
@@ -45,17 +48,17 @@ You can use a dashboard list visualization to display a list of important dashbo
 
 Once you’ve created a [dashboard](ref:dashboard), the following video shows you how to configure a dashboard list visualization:
 
-{{< youtube id="MserjWGWsh8" >}}
+{{\< youtube id="MserjWGWsh8" \>}}
 
-{{< docs/play title="Dashboard List Visualization" url="https://play.grafana.org/d/fdlojrg7daebka/" >}}
+{{\< docs/play title="Dashboard List Visualization" url="https://play.grafana.org/d/fdlojrg7daebka/" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Dashboard list options
 
@@ -96,6 +99,6 @@ This option is only applied when the **Search** switch is toggled on.
 Enter tags by which you want to search. Note that tags don't appear as you type, and they're case sensitive.
 Tag search uses an `OR` condition, so if a dashboard has one of the defined tags, it's included in the list.
 
-When multiple tags and strings appear, the dashboard list displays those matching _all_ conditions.
+When multiple tags and strings appear, the dashboard list displays those matching *all* conditions.
 
 This option is only applied when the **Search** switch is toggled on.

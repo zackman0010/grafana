@@ -28,7 +28,7 @@ There is a `handleMotion` utility function exposed on the theme that can help wi
 
 #### Examples
 
-```tsx
+``` tsx
 // Bad ❌
 const getStyles = (theme: GrafanaTheme2) => ({
   loading: css({
@@ -75,7 +75,7 @@ Note we've switched the potentially sensitive rotating animation to a less inten
 
 Animations that involve only non-moving properties, like opacity, color, and blurs, are unlikely to be problematic. In those cases, you still need to wrap the animation in a `prefers-reduced-motion` media query, but you can use the same animation for both cases:
 
-```tsx
+``` tsx
 // Bad ❌
 const getStyles = (theme: GrafanaTheme2) => ({
   card: css({
@@ -110,13 +110,13 @@ const getStyles = (theme: GrafanaTheme2) => ({
 
 ### `theme-token-usage`
 
-Used to find all instances of `theme` tokens being used in the codebase and emit the counts as metrics. Should **not** be used as an actual lint rule!
+Used to find all instances of `theme` tokens being used in the codebase and emit the counts as metrics. Should **not** be used as an actual lint rule\!
 
 ### `no-untranslated-strings`
 
 Check if strings are marked for translation.
 
-```tsx
+``` tsx
 // Bad ❌
 <InlineToast placement="top" referenceElement={buttonRef.current}>
   Copied
@@ -131,7 +131,7 @@ Check if strings are marked for translation.
 
 #### Passing variables to translations
 
-```tsx
+``` tsx
 // Bad ❌
 const SearchTitle = ({ term }) => <div>Results for {term}</div>;
 
@@ -169,7 +169,9 @@ The below props are checked for untranslated strings:
 - `text`
 - `tooltip`
 
-```tsx
+<!-- end list -->
+
+``` tsx
 // Bad ❌
 <input type="value" placeholder={'Username'} />;
 
@@ -188,7 +190,7 @@ This is to prevent calling the translation method before it's been instantiated.
 This does not cause an error if a file is lazily loaded, but refactors can cause errors, and it can cause problems in tests.
 Fix the
 
-```tsx
+``` tsx
 // Bad ❌
 const someTranslatedText = t('some.key', 'Some text');
 const SomeComponent = () => {

@@ -1,37 +1,40 @@
----
+-----
+
 aliases:
-  - ../fundamentals/alert-rules/recording-rules/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/recording-rules/
-  - ../unified-alerting/alerting-rules/create-cortex-loki-managed-recording-rule/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/alerting-rules/create-cortex-loki-managed-recording-rule/
-  - ../unified-alerting/alerting-rules/create-mimir-loki-managed-recording-rule/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/alerting-rules/create-mimir-loki-managed-recording-rule/
-  - ../alerting-rules/create-mimir-loki-managed-recording-rule/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-mimir-loki-managed-recording-rule/
-canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-recording-rules/
-description: Recording rules allow you to pre-compute frequently needed or computationally expensive expressions and save the results as a new set of time series. Querying precomputed results is faster and can reduce system load.
-keywords:
-  - grafana
-  - alerting
-  - guide
-  - rules
-  - recording rules
-  - configure
-labels:
+
+- ../fundamentals/alert-rules/recording-rules/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/recording-rules/
+- ../unified-alerting/alerting-rules/create-cortex-loki-managed-recording-rule/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/alerting-rules/create-cortex-loki-managed-recording-rule/
+- ../unified-alerting/alerting-rules/create-mimir-loki-managed-recording-rule/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/alerting-rules/create-mimir-loki-managed-recording-rule/
+- ../alerting-rules/create-mimir-loki-managed-recording-rule/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-mimir-loki-managed-recording-rule/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-recording-rules/
+  description: Recording rules allow you to pre-compute frequently needed or computationally expensive expressions and save the results as a new set of time series. Querying precomputed results is faster and can reduce system load.
+  keywords:
+- grafana
+- alerting
+- guide
+- rules
+- recording rules
+- configure
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Create recording rules
-weight: 400
-refs:
-  grafana-managed-recording-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-recording-rules/create-grafana-managed-recording-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/create-grafana-managed-recording-rules/
-  data-source-managed-recording-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-recording-rules/create-data-source-managed-recording-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/create-data-source-managed-recording-rules/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Create recording rules
+    weight: 400
+    refs:
+    grafana-managed-recording-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-recording-rules/create-grafana-managed-recording-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/create-grafana-managed-recording-rules/
+    data-source-managed-recording-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-recording-rules/create-data-source-managed-recording-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/create-data-source-managed-recording-rules/
+
+-----
 
 # Configure recording rules
 

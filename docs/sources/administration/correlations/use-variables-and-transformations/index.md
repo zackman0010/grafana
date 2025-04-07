@@ -1,11 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: 'Use variables and transformations in a correlation'
-weight: 60
----
+-----
+
+## labels: products: - enterprise - oss title: 'Use variables and transformations in a correlation' weight: 60
 
 # Use variables and transformations in a correlation
 
@@ -23,13 +18,13 @@ Instructions below show how to set up a link that can run metrics query for the 
 ## Use variables and transformations in provisioning
 
 1. Add the following provisioning configuration to your Grafana:
-
-   ```yaml
+   
+   ``` yaml
    datasources:
      - name: Target
        uid: test-target
        type: testdata
-
+   
      - name: Source
        uid: test-source
        type: testdata
@@ -64,9 +59,9 @@ Instructions below show how to set up a link that can run metrics query for the 
                - type: logfmt
                  field: msg
    ```
-
+   
    Two data sources are created: Source (emulating logs data source) and Target (emulating metrics data source):
-
+   
    - A correlation called “App metrics” is created targeting the Target data source with its UID.
      - The label and description are provided as text
      - Each correlation contains the following configuration:
@@ -81,9 +76,11 @@ Instructions below show how to set up a link that can run metrics query for the 
        - For example, when a logline “2020-01-01 10:00 level=error message=error service=app1.loginService” is provided as the input, the transformation produces new variables: level, message, and service.
        - “service” variable is used as the alias in the target query.
 
-1. Navigate to Explore and open “Source” data source.
-1. Select the “Raw Frames” scenario and provide the following data frames to emulate returning log lines:
-   ```json
+2. Navigate to Explore and open “Source” data source.
+
+3. Select the “Raw Frames” scenario and provide the following data frames to emulate returning log lines:
+   
+   ``` json
    [
      {
        "meta": {
@@ -105,25 +102,28 @@ Instructions below show how to set up a link that can run metrics query for the 
      }
    ]
    ```
-1. Run the query and open log details by clicking on the log line.
 
-   {{< figure src="/static/img/docs/correlations/correlations-in-logs-panel-10-0.png" max-width="600px" caption="Correlation links in Logs panel" >}}
-
+4. Run the query and open log details by clicking on the log line.
+   
+   {{\< figure src="/static/img/docs/correlations/correlations-in-logs-panel-10-0.png" max-width="600px" caption="Correlation links in Logs panel" \>}}
+   
    A link “App metrics” and “Service metrics” show next to variables extracted out of the log line with transformations
 
-1. Click on the “App metrics” link.
-1. A split view is opened and the target query is run.
-1. Notice how the application name from the log line is filled in as the alias property in the target query.
+5. Click on the “App metrics” link.
 
-   {{< figure src="/static/img/docs/correlations/interpolated-target-query-10-0.png" max-width="600px" caption="Interpolated target query" >}}
+6. A split view is opened and the target query is run.
 
+7. Notice how the application name from the log line is filled in as the alias property in the target query.
+   
+   {{\< figure src="/static/img/docs/correlations/interpolated-target-query-10-0.png" max-width="600px" caption="Interpolated target query" \>}}
+   
    This allows you to run a specific query based on the source results:
+   
+   {{\< figure src="/static/img/docs/correlations/target-query-results-10-0.png" max-width="600px" caption="Interpolated target query results" \>}}
 
-   {{< figure src="/static/img/docs/correlations/target-query-results-10-0.png" max-width="600px" caption="Interpolated target query results" >}}
-
-1. Go back to the source query and change raw frames’ preferred visualization type to “table” to see how links are displayed in a Table visualization.
-
-   ```json
+8. Go back to the source query and change raw frames’ preferred visualization type to “table” to see how links are displayed in a Table visualization.
+   
+   ``` json
    [
      {
        "meta": {
@@ -134,6 +134,6 @@ Instructions below show how to set up a link that can run metrics query for the 
    ]
    ```
 
-1. Run the query and notice how links are created in the Table cell:
-
-   {{< figure src="/static/img/docs/correlations/correlations-in-table-10-0.png" max-width="600px" caption="Correlations links in table" >}}
+9. Run the query and notice how links are created in the Table cell:
+   
+   {{\< figure src="/static/img/docs/correlations/correlations-in-table-10-0.png" max-width="600px" caption="Correlations links in table" \>}}

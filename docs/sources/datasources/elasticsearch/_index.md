@@ -1,43 +1,46 @@
----
+-----
+
 aliases:
-  - ../data-sources/elasticsearch/
-  - ../features/datasources/elasticsearch/
-description: Guide for using Elasticsearch in Grafana
-keywords:
-  - grafana
-  - elasticsearch
-  - guide
-  - data source
-labels:
+
+- ../data-sources/elasticsearch/
+- ../features/datasources/elasticsearch/
+  description: Guide for using Elasticsearch in Grafana
+  keywords:
+- grafana
+- elasticsearch
+- guide
+- data source
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Elasticsearch
-title: Elasticsearch data source
-weight: 325
-refs:
-  configuration:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#sigv4_auth_enabled
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#sigv4_auth_enabled
-  provisioning-grafana:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Elasticsearch
+    title: Elasticsearch data source
+    weight: 325
+    refs:
+    configuration:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#sigv4\_auth\_enabled
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#sigv4\_auth\_enabled
+    provisioning-grafana:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+
+-----
 
 # Elasticsearch data source
 
@@ -75,7 +78,7 @@ Please see the examples below.
 
 **Basic provisioning**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -91,7 +94,7 @@ datasources:
 
 **Provision for logs**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -126,7 +129,7 @@ To sign requests to your Amazon Elasticsearch Service domain, you can enable Sig
 Once AWS SigV4 is enabled, you can configure it on the Elasticsearch data source configuration page.
 For more information about AWS authentication options, refer to [AWS authentication](../aws-cloudwatch/aws-authentication/).
 
-{{< figure src="/static/img/docs/v73/elasticsearch-sigv4-config-editor.png" max-width="500px" class="docs-image--no-shadow" caption="SigV4 configuration for AWS Elasticsearch Service" >}}
+{{\< figure src="/static/img/docs/v73/elasticsearch-sigv4-config-editor.png" max-width="500px" class="docs-image--no-shadow" caption="SigV4 configuration for AWS Elasticsearch Service" \>}}
 
 ## Query the data source
 

@@ -1,58 +1,61 @@
----
+-----
+
 aliases:
-  - ../panels/add-panels-dynamically/
-  - ../panels/configure-panel-options/
-  - ../panels/repeat-panels-or-rows/
-  - ../panels/working-with-panels/add-title-and-description/
-  - ../panels/working-with-panels/view-json-model/
-keywords:
-  - panel
-  - dynamic
-  - add
-  - title
-  - description
-  - JSON model
-labels:
+
+- ../panels/add-panels-dynamically/
+- ../panels/configure-panel-options/
+- ../panels/repeat-panels-or-rows/
+- ../panels/working-with-panels/add-title-and-description/
+- ../panels/working-with-panels/view-json-model/
+  keywords:
+- panel
+- dynamic
+- add
+- title
+- description
+- JSON model
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure panel options
-title: Configure panel options
-description: Add titles, descriptions, repeating rows and panel links
-weight: 50
-refs:
-  global-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#global-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#global-variables
-  links-to-the-panel:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/#panel-links
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/#panel-links
-  configure-repeating-rows:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/#configure-repeating-rows
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/#configure-repeating-rows
-  set-up-generative-ai-features-for-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/manage-dashboards/#set-up-generative-ai-features-for-dashboards
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/#set-up-generative-ai-features-for-dashboards
-  variables-you-have-defined:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  grafana-llm-plugin:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana-cloud/alerting-and-irm/machine-learning/configure/llm-plugin/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/machine-learning/configure/llm-plugin/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure panel options
+    title: Configure panel options
+    description: Add titles, descriptions, repeating rows and panel links
+    weight: 50
+    refs:
+    global-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#global-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#global-variables
+    links-to-the-panel:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/\#panel-links
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/\#panel-links
+    configure-repeating-rows:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/\#configure-repeating-rows
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/\#configure-repeating-rows
+    set-up-generative-ai-features-for-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/manage-dashboards/\#set-up-generative-ai-features-for-dashboards
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/\#set-up-generative-ai-features-for-dashboards
+    variables-you-have-defined:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    grafana-llm-plugin:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana-cloud/alerting-and-irm/machine-learning/configure/llm-plugin/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/machine-learning/configure/llm-plugin/
+
+-----
 
 # Configure panel options
 
@@ -85,18 +88,26 @@ To see an example of repeating panels, refer to [this dashboard with repeating p
 To configure repeating panels, follow these steps:
 
 1. Navigate to the panel you want to update.
-1. Hover over any part of the panel to display the menu on the top right corner.
-1. Click the menu and select **Edit**.
-1. Open the **Panel options** section of the panel editor pane.
-1. Under **Repeat options**, select a variable in the **Repeat by variable** drop-down list.
-1. Under **Repeat direction**, choose one of the following:
 
+2. Hover over any part of the panel to display the menu on the top right corner.
+
+3. Click the menu and select **Edit**.
+
+4. Open the **Panel options** section of the panel editor pane.
+
+5. Under **Repeat options**, select a variable in the **Repeat by variable** drop-down list.
+
+6. Under **Repeat direction**, choose one of the following:
+   
    - **Horizontal** - Arrange panels side-by-side. Grafana adjusts the width of a repeated panel. You can't mix other panels on a row with a repeated panel.
    - **Vertical** - Arrange panels in a column. The width of repeated panels is the same as the original, repeated panel.
 
-1. If you selected **Horizontal** in the previous step, select a value in the **Max per row** drop-down list to control the maximum number of panels that can be in a row.
-1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
-1. To propagate changes to all panels, reload the dashboard.
+7. If you selected **Horizontal** in the previous step, select a value in the **Max per row** drop-down list to control the maximum number of panels that can be in a row.
+
+8. Click **Save dashboard**.
+
+9. Click **Back to dashboard** and then **Exit edit**.
+
+10. To propagate changes to all panels, reload the dashboard.
 
 You can stop a panel from repeating by selecting **Disable repeating** in the **Repeat by variable** drop-down list.

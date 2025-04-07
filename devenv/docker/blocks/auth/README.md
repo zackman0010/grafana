@@ -8,7 +8,7 @@ interact with different Authentication Providers.
 Spin up a service with the following command from the base directory of this
 repository.
 
-```bash
+``` bash
 make devenv=auth/oauth
 ```
 
@@ -17,14 +17,14 @@ by the `devenv` target.
 
 ## Available Authentication Providers
 
-- [apache_proxy](./apache_proxy)
-- [apache_proxy_mac](./apache_proxy_mac)
+- [apache\_proxy](./apache_proxy)
+- [apache\_proxy\_mac](./apache_proxy_mac)
 - [freeipa](./freeipa)
-- [jwt_proxy](./jwt_proxy)
+- [jwt\_proxy](./jwt_proxy)
 - [oauth](./oauth)
-- [nginx_proxy](./nginx_proxy)
-- [nginx_proxy_mac](./nginx_proxy_mac)
+- [nginx\_proxy](./nginx_proxy)
+- [nginx\_proxy\_mac](./nginx_proxy_mac)
 - [oauth](./oauth)
 - [openldap](./openldap)
 - [openldap-multiple](./openldap-multiple)
-- [prometheus_basic_auth_proxy](./prometheus_basic_auth_proxy)
+- [prometheus\_basic\_auth\_proxy](./prometheus_basic_auth_proxy)

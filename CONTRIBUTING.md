@@ -1,6 +1,6 @@
 # Contributing to Grafana
 
-Thank you for your interest in contributing to Grafana! We welcome all people who want to contribute in a healthy and constructive manner within our community. To help us create a safe and positive community experience for all, we require all participants to adhere to the [Code of Conduct](CODE_OF_CONDUCT.md).
+Thank you for your interest in contributing to Grafana\! We welcome all people who want to contribute in a healthy and constructive manner within our community. To help us create a safe and positive community experience for all, we require all participants to adhere to the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 This document is a guide to help you through the process of contributing to Grafana.
 
@@ -54,7 +54,7 @@ To edit or write technical content, refer to [Contribute to our documentation](/
 
 ### Triage issues
 
-If you don't have the knowledge or time to code, consider helping with _issue triage_. The community will thank you for saving them time by spending some of yours.
+If you don't have the knowledge or time to code, consider helping with *issue triage*. The community will thank you for saving them time by spending some of yours.
 
 Read more about the ways you can [Triage issues](/contribute/triage-issues.md).
 

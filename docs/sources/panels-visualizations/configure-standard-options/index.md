@@ -1,122 +1,125 @@
----
+-----
+
 aliases:
-  - ../panels/apply-color-to-series/
-  - ../panels/configure-standard-options/
-  - ../panels/field-options/
-  - ../panels/field-options/standard-field-options/
-  - ../panels/reference-standard-field-definitions/
-  - ../panels/standard-field-definitions/
-  - ../panels/working-with-panels/format-standard-fields/
-keywords:
-  - panel
-  - dashboard
-  - standard
-  - option
-labels:
+
+- ../panels/apply-color-to-series/
+- ../panels/configure-standard-options/
+- ../panels/field-options/
+- ../panels/field-options/standard-field-options/
+- ../panels/reference-standard-field-definitions/
+- ../panels/standard-field-definitions/
+- ../panels/working-with-panels/format-standard-fields/
+  keywords:
+- panel
+- dashboard
+- standard
+- option
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure standard options
-title: Configure standard options
-description: Configure standard options like units, min, max, and colors
-weight: 60
-refs:
-  bar-gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
-  candlestick:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/candlestick/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
-  canvas:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/canvas/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
-  threshold:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-thresholds/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-thresholds/
-  trend:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/trend/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
-  stat:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/stat/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
-  time-series:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
-  pie-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/pie-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  status-history:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/status-history/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
-  gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
-  state-timeline:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/state-timeline/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
-  xy-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/xy-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
-  geomap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/geomap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
-  histogram:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
-  bar-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
-  configure-overrides:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-overrides/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure standard options
+    title: Configure standard options
+    description: Configure standard options like units, min, max, and colors
+    weight: 60
+    refs:
+    bar-gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
+    candlestick:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/candlestick/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
+    canvas:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/canvas/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
+    threshold:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-thresholds/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-thresholds/
+    trend:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/trend/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
+    stat:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/stat/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
+    time-series:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+    pie-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/pie-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    status-history:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/status-history/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
+    gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
+    state-timeline:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/state-timeline/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
+    xy-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/xy-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
+    geomap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/geomap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
+    histogram:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
+    bar-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
+    configure-overrides:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-overrides/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
+
+-----
 
 # Configure standard options
 
-**Standard options** in the panel editor pane let you change how field data is displayed in your visualizations. Options that you apply don't change the data, they just change how Grafana _displays_ the data.
+**Standard options** in the panel editor pane let you change how field data is displayed in your visualizations. Options that you apply don't change the data, they just change how Grafana *displays* the data.
 
 When you set a standard option, the change is applied to all fields or series. For example, if you set the **Unit** option to **Percentage**, all fields with numeric values are displayed as percentages.
 
@@ -126,7 +129,7 @@ For more granular control over the display of fields, refer to [Configure overri
 
 You can configure standard options for the following visualizations:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Bar chart](ref:bar-chart)
 - [Bar gauge](ref:bar-gauge)
@@ -144,7 +147,7 @@ You can configure standard options for the following visualizations:
 - [Trend](ref:trend)
 - [XY chart](ref:xy-chart)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ## Standard options
 
@@ -193,7 +196,7 @@ By default, Grafana automatically scales the unit based on the magnitude of the 
 
 #### String units
 
-Sometimes Grafana is too aggressive in interpreting strings and displaying them as numbers. To configure Grafana to show the original string value, select **Misc > String** in the **Unit** drop-down.
+Sometimes Grafana is too aggressive in interpreting strings and displaying them as numbers. To configure Grafana to show the original string value, select **Misc \> String** in the **Unit** drop-down.
 
 ### Min
 

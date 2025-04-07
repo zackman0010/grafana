@@ -1,24 +1,27 @@
----
+-----
+
 aliases:
-  - ../../http_api/dashboardpermissions/
-  - ../../http_api/folder_permissions/
-canonical: /docs/grafana/latest/developers/http_api/folder_permissions/
-description: Grafana Folder Permissions HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - folder
-  - permission
-  - permissions
-  - acl
-labels:
+
+- ../../http\_api/dashboardpermissions/
+- ../../http\_api/folder\_permissions/
+  canonical: /docs/grafana/latest/developers/http\_api/folder\_permissions/
+  description: Grafana Folder Permissions HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- folder
+- permission
+- permissions
+- acl
+  labels:
   products:
-    - enterprise
-    - oss
-title: Folder Permissions HTTP API
----
+  - enterprise
+  - oss
+    title: Folder Permissions HTTP API
+
+-----
 
 # Folder Permissions API
 
@@ -50,7 +53,7 @@ See note in the [introduction](#folder-permission-api) for an explanation.
 
 **Example request**:
 
-```http
+``` http
 GET /api/folders/nErXDvCkzz/permissions HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -59,7 +62,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 551
@@ -129,7 +132,7 @@ See note in the [introduction](#folder-permission-api) for an explanation.
 
 **Example request**:
 
-```http
+``` http
 POST /api/folders/nErXDvCkzz/permissions
 Accept: application/json
 Content-Type: application/json
@@ -162,7 +165,7 @@ JSON body schema:
 
 **Example response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35

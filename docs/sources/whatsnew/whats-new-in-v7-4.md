@@ -1,29 +1,32 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v7-4/
-description: Learn about new and updated features in Grafana v7.4
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '7.4'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v7-4/
+  description: Learn about new and updated features in Grafana v7.4
+  keywords:
+- grafana
+- new
+- documentation
+- '7.4'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v7.4
-weight: -31
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v7.4
+    weight: -31
+
+-----
 
 # What's new in Grafana v7.4
 
 This topic includes the release notes for Grafana v7.4. For all details, read the full [CHANGELOG.md](https://github.com/grafana/grafana/blob/main/CHANGELOG.md).
 
-Check out the [New Features in 7.4](https://play.grafana.org/d/nP8rcffGk/1-new-features-in-v7-4?orgId=1) dashboard on Grafana Play!
+Check out the [New Features in 7.4](https://play.grafana.org/d/nP8rcffGk/1-new-features-in-v7-4?orgId=1) dashboard on Grafana Play\!
 
 ## Grafana OSS features
 
@@ -31,13 +34,13 @@ These features are included in the Grafana open source edition.
 
 ### Time series panel visualization (Beta)
 
-Grafana 7.4 adds a beta version of the next-gen graph visualization. The new graph panel, the _Time series_ visualization, is high-performance visualization based on the uPlot library. This new graph visualization uses the new panel architecture introduced in Grafana 7.0 and integrates with field options, overrides, and transformations.
+Grafana 7.4 adds a beta version of the next-gen graph visualization. The new graph panel, the *Time series* visualization, is high-performance visualization based on the uPlot library. This new graph visualization uses the new panel architecture introduced in Grafana 7.0 and integrates with field options, overrides, and transformations.
 
 The Time series beta panel implements the majority of the functionalities available in the current Graph panel. Our plan is to have close to full coverage of the features in Grafana 8.0, coming later this year.
 
 Apart from major performance improvements, the new Time series panel implements new features like line interpolation modes, support for more than two Y-axes, soft min and max axis limits, automatic points display based on data density, and gradient fill modes.
 
-{{< figure src="/static/img/docs/v74/timeseries_panel.png" max-width="900px" caption="Time series panel" >}}
+{{\< figure src="/static/img/docs/v74/timeseries\_panel.png" max-width="900px" caption="Time series panel" \>}}
 
 The following documentation topics were added for this feature:
 
@@ -49,7 +52,7 @@ The following documentation topics were added for this feature:
 
 ### Node graph panel visualization (Beta)
 
-_Node graph_ is a new panel type that can visualize directed graphs or network in dashboards, but also in Explore. It uses directed force layout to effectively position the nodes so it can help with displaying complex infrastructure maps, hierarchies, or execution diagrams.
+*Node graph* is a new panel type that can visualize directed graphs or network in dashboards, but also in Explore. It uses directed force layout to effectively position the nodes so it can help with displaying complex infrastructure maps, hierarchies, or execution diagrams.
 
 All the information and stats shown in the Node graph beta are driven by the data provided in the response from the data source. The first data source that is using this panel is AWS X-Ray, for displaying their service map data.
 
@@ -63,13 +66,13 @@ The following transformations were added in Grafana 7.4.
 
 #### Sort by transformation
 
-The _Sort by_ transformation allows you to sort data before sending it to the visualization.
+The *Sort by* transformation allows you to sort data before sending it to the visualization.
 
 For more information, refer to [Sort by](../../panels-visualizations/query-transform-data/transform-data/#sort-by).
 
 #### Filter data by value transform
 
-The new _Filter data by value_ transformation allows you to filter your data directly in Grafana and remove some data points from your query result.
+The new *Filter data by value* transformation allows you to filter your data directly in Grafana and remove some data points from your query result.
 
 This transformation is very useful if your data source does not natively filter by values. You might also use this to narrow values to display if you are using a shared query.
 
@@ -83,11 +86,11 @@ For more information, refer to [About field overrides](../../panels-visualizatio
 
 ### Exemplar support
 
-Grafana graphs now support Prometheus _exemplars_. They are displayed as diamonds in the graph visualization.
+Grafana graphs now support Prometheus *exemplars*. They are displayed as diamonds in the graph visualization.
 
 > **Note:** Support for exemplars will be added in version Prometheus 2.25+.
 
-{{< figure src="/static/img/docs/v74/exemplars.png" max-width="900px" caption="Exemplar example" >}}
+{{\< figure src="/static/img/docs/v74/exemplars.png" max-width="900px" caption="Exemplar example" \>}}
 
 For more information, refer to [Exemplars](../../fundamentals/exemplars/).
 
@@ -104,7 +107,7 @@ The following topics were updated as a result of this feature:
 
 ### Server-side expressions
 
-_Server-side expressions_ is an experimental feature that allows you to manipulate data returned from backend data source queries. Expressions allow you to manipulate data with math and other operations when the data source is a backend data source or a **--Mixed--** data source.
+*Server-side expressions* is an experimental feature that allows you to manipulate data returned from backend data source queries. Expressions allow you to manipulate data with math and other operations when the data source is a backend data source or a **--Mixed--** data source.
 
 The main use case is for [multi-dimensional](../../fundamentals/timeseries-dimensions/) data sources used with the upcoming next generation alerting, but expressions can be used with backend data sources and visualization as well.
 
@@ -116,7 +119,7 @@ For more information, refer to [Write expression queries](../../panels-visualiza
 
 You can now provide detailed information to alert notification recipients by injecting alert label data as template variables into an alert notification. Labels that exist from the evaluation of the alert query can be used in the alert rule name and in the alert notification message fields using the `${Label}` syntax. The alert label data is automatically injected into the notification fields when the alert is in the alerting state. When there are multiple unique values for the same label, the values are comma-separated.
 
-{{< figure src="/static/img/docs/alerting/alert-notification-template-7-4.png" max-width="700px" caption="Variable support in alert notifications" >}}
+{{\< figure src="/static/img/docs/alerting/alert-notification-template-7-4.png" max-width="700px" caption="Variable support in alert notifications" \>}}
 
 ### Content security policy support
 
@@ -126,7 +129,7 @@ CSP support is disabled by default, to enable it you must set `content_security_
 
 You can lock down what can be done in the frontend code. Lock down what can be loaded, what JavaScript is executed. Not compatible with some plugins.
 
-[content_security_policy](../../setup-grafana/configure-grafana/#content_security_policy) and [content_security_policy_template](../../setup-grafana/configure-grafana/#content_security_policy_template) were added to [Configuration](../../setup-grafana/configure-grafana/) as a result of this change.
+[content\_security\_policy](../../setup-grafana/configure-grafana/#content_security_policy) and [content\_security\_policy\_template](../../setup-grafana/configure-grafana/#content_security_policy_template) were added to [Configuration](../../setup-grafana/configure-grafana/) as a result of this change.
 
 ### Hide users in UI
 
@@ -163,13 +166,13 @@ MQL uses a set of operations and functions. Operations are linked together using
 
 Once query type Metrics is selected in the Cloud Monitoring query editor, you can toggle between the editor modes for visual query builder and MQL. For more information, refer to the [Google Cloud Monitoring docs](../../datasources/google-cloud-monitoring/#import-pre-configured-dashboards).
 
-Many thanks to [mtanda](https://github.com/mtanda) this contribution!
+Many thanks to [mtanda](https://github.com/mtanda) this contribution\!
 
 ## Curated dashboards for Google Cloud Monitoring
 
 Google Cloud Monitoring data source ships with pre-configured dashboards for some of the most popular GCP services. These curated dashboards are based on similar dashboards in the GCP dashboard samples repository. In this release, we have expanded the set of pre-configured dashboards.
 
-{{< figure src="/static/img/docs/google-cloud-monitoring/curated-dashboards-7-4.png" max-width= "650px" alt="Google Cloud Monitoring pre-configured dashboards" >}}
+{{\< figure src="/static/img/docs/google-cloud-monitoring/curated-dashboards-7-4.png" max-width= "650px" alt="Google Cloud Monitoring pre-configured dashboards" \>}}
 
 If you want to customize a dashboard, we recommend that you save it under a different name. Otherwise the dashboard will be overwritten when a new version of the dashboard is released.
 

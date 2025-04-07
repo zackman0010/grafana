@@ -4,4 +4,4 @@ Grafana ships with **advanced support** for Elasticsearch. You can do many types
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/features/datasources/elasticsearch/](https://grafana.com/docs/grafana/latest/features/datasources/elasticsearch/)
+<https://grafana.com/docs/grafana/latest/features/datasources/elasticsearch/>

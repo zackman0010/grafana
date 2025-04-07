@@ -1,30 +1,33 @@
----
+-----
+
 aliases:
-  - ../../reference/templating/
-  - ../../variables/inspect-variable/
-keywords:
-  - grafana
-  - templating
-  - documentation
-  - guide
-  - template
-  - variable
-labels:
+
+- ../../reference/templating/
+- ../../variables/inspect-variable/
+  keywords:
+- grafana
+- templating
+- documentation
+- guide
+- template
+- variable
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Manage and inspect variables
-menuTitle: Inspect variables
-description: Review and manage your dashboard variables
-refs:
-  add:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/
-weight: 200
----
+  - cloud
+  - enterprise
+  - oss
+    title: Manage and inspect variables
+    menuTitle: Inspect variables
+    description: Review and manage your dashboard variables
+    refs:
+    add:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/
+    weight: 200
+
+-----
 
 # Manage and inspect variables
 

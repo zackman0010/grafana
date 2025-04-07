@@ -1,51 +1,54 @@
----
+-----
+
 aliases:
-  - ../dashboards/add-organize-panels/
-  - ../dashboards/dashboard-create/
-  - ../panels/add-panels-dynamically/about-repeating-panels-rows/
-  - ../panels/add-panels-dynamically/configure-repeating-panels/
-  - ../panels/add-panels-dynamically/configure-repeating-rows/
-  - ../panels/working-with-panels/
-  - ../panels/working-with-panels/add-panel/
-  - ../panels/working-with-panels/navigate-inspector-panel/
-  - ../panels/working-with-panels/navigate-panel-editor/
-  - add-organize-panels/
-keywords:
-  - panel
-  - dashboard
-  - dynamic
-  - add
-labels:
+
+- ../dashboards/add-organize-panels/
+- ../dashboards/dashboard-create/
+- ../panels/add-panels-dynamically/about-repeating-panels-rows/
+- ../panels/add-panels-dynamically/configure-repeating-panels/
+- ../panels/add-panels-dynamically/configure-repeating-rows/
+- ../panels/working-with-panels/
+- ../panels/working-with-panels/add-panel/
+- ../panels/working-with-panels/navigate-inspector-panel/
+- ../panels/working-with-panels/navigate-panel-editor/
+- add-organize-panels/
+  keywords:
+- panel
+- dashboard
+- dynamic
+- add
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Panel editor
-title: Panel editor
-description: Learn about the features of the panel editor
-weight: 20
-refs:
-  transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/
-  the-overview-of-grafana-alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-  add-a-query:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/#add-a-query
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/#add-a-query
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Panel editor
+    title: Panel editor
+    description: Learn about the features of the panel editor
+    weight: 20
+    refs:
+    transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/
+    the-overview-of-grafana-alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+    add-a-query:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/\#add-a-query
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/\#add-a-query
+
+-----
 
 # Panel editor
 

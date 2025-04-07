@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../data-sources/google-cloud-monitoring/query-editor/
-description: Guide for using the Google Cloud Monitoring data source's query editor
-keywords:
-  - grafana
-  - google
-  - cloud
-  - monitoring
-  - queries
-labels:
+
+- ../../data-sources/google-cloud-monitoring/query-editor/
+  description: Guide for using the Google Cloud Monitoring data source's query editor
+  keywords:
+- grafana
+- google
+- cloud
+- monitoring
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Google Cloud Monitoring query editor
-weight: 300
-refs:
-  annotate-visualizations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  add-template-variables-add-interval-variable:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-an-interval-variable
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-an-interval-variable
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Google Cloud Monitoring query editor
+    weight: 300
+    refs:
+    annotate-visualizations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    add-template-variables-add-interval-variable:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-an-interval-variable
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-an-interval-variable
+
+-----
 
 # Google Cloud Monitoring query editor
 
@@ -44,7 +47,7 @@ For general documentation on querying data sources in Grafana, see [Query and tr
 The Google Cloud Monitoring query editor helps you build queries for two types of data, which both return time series data:
 
 - [Metrics](#query-metrics)
-
+  
   You can also create [Monitoring Query Language (MQL)](#use-the-monitoring-query-language) queries.
 
 - [Service Level Objectives (SLO)](#query-service-level-objectives)
@@ -53,17 +56,17 @@ You also use the query editor when you [annotate](#apply-annotations) visualizat
 
 ## Query metrics
 
-{{< figure src="/static/img/docs/google-cloud-monitoring/metric-query-builder-8-0.png" max-width="400px" class="docs-image--no-shadow" caption="Google Cloud Monitoring metrics query builder" >}}
+{{\< figure src="/static/img/docs/google-cloud-monitoring/metric-query-builder-8-0.png" max-width="400px" class="docs-image--no-shadow" caption="Google Cloud Monitoring metrics query builder" \>}}
 
 The metrics query editor helps you select metrics, group and aggregate by labels and time, and use filters to specify which time series you want to query.
 
 ### Create a metrics query
 
 1. Select the **Metrics** option in the **Query Type** dropdown.
-1. Select a project from the **Project** dropdown.
-1. Select a Google Cloud Platform service from the **Service** dropdown.
-1. Select a metric from the **Metric** dropdown.
-1. _(Optional)_ Use the plus and minus icons in the filter and group-by sections to add and remove filters or group-by clauses.
+2. Select a project from the **Project** dropdown.
+3. Select a Google Cloud Platform service from the **Service** dropdown.
+4. Select a metric from the **Metric** dropdown.
+5. *(Optional)* Use the plus and minus icons in the filter and group-by sections to add and remove filters or group-by clauses.
 
 Google Cloud Monitoring supports several metrics types, such as `GAUGE`, `DELTA,` and `CUMULATIVE`.
 Each supports different aggregation options, such as reducers and aligners. Additionally, metrics have specific value types that can be either scalar or a distribution.
@@ -83,8 +86,8 @@ Distribution metrics are typically best visualized as either a heatmap or histog
 **To add and apply a filter:**
 
 1. Click the plus icon in the filter section.
-1. Select a field to filter by.
-1. Enter a filter value, such as `instance_name = grafana-1`.
+2. Select a field to filter by.
+3. Enter a filter value, such as `instance_name = grafana-1`.
 
 To remove the filter, click the trash icon.
 
@@ -158,9 +161,9 @@ These enable you to compare graphs in Grafana with graphs in the Google Cloud Mo
 
 The default values for "cloud monitoring auto" are:
 
-- 1m for time ranges < 23 hours
-- 5m for time ranges >= 23 hours and < 6 days
-- 1h for time ranges >= 6 days
+- 1m for time ranges \< 23 hours
+- 5m for time ranges \>= 23 hours and \< 6 days
+- 1h for time ranges \>= 6 days
 
 The other automatic option is "grafana auto", which automatically sets the Group By time depending on the time range chosen and width of the time series panel.
 
@@ -207,7 +210,7 @@ An expected result would look like: `gce_instance - compute.googleapis.com/insta
 
 ### Deep-link from Grafana panels to the Google Cloud Console Metrics Explorer
 
-{{< figure src="/static/img/docs/v71/cloudmonitoring_deep_linking.png" max-width="500px" class="docs-image--no-shadow" caption="Google Cloud Monitoring deep linking" >}}
+{{\< figure src="/static/img/docs/v71/cloudmonitoring\_deep\_linking.png" max-width="500px" class="docs-image--no-shadow" caption="Google Cloud Monitoring deep linking" \>}}
 
 You can click on a time series in the panel to access a context menu, which contains a link to **View in Metrics Explorer in Google Cloud Console**.
 The link points to the Google Cloud Console's Metrics Explorer and runs the Grafana panel's query there.
@@ -235,8 +238,8 @@ To understand basic MQL concepts, refer to [Introduction to Monitoring Query Lan
 **To create an MQL query:**
 
 1. Select the **Metrics** option in the **Query Type** dropdown.
-1. Select a project from the **Project** dropdown.
-1. Enter your MQL query in the text area.
+2. Select a project from the **Project** dropdown.
+3. Enter your MQL query in the text area.
 
 ### Set alias patterns for MQL queries
 
@@ -246,7 +249,7 @@ However, `{{metric.service}}` is not supported, and `{{metric.type}}` and `{{met
 
 ## Query Service Level Objectives
 
-{{< figure src="/static/img/docs/google-cloud-monitoring/slo-query-builder-8-0.png" max-width="400px" class="docs-image--no-shadow" caption="Service Level Objectives (SLO) query editor" >}}
+{{\< figure src="/static/img/docs/google-cloud-monitoring/slo-query-builder-8-0.png" max-width="400px" class="docs-image--no-shadow" caption="Service Level Objectives (SLO) query editor" \>}}
 
 The SLO query builder helps you visualize SLO data in time series format.
 To understand basic concepts in service monitoring, refer to the [Google Cloud Monitoring documentation](https://cloud.google.com/monitoring/service-monitoring).
@@ -256,10 +259,10 @@ To understand basic concepts in service monitoring, refer to the [Google Cloud M
 **To create an SLO query:**
 
 1. Select the **Service Level Objectives (SLO)** option in the **Query Type** dropdown.
-1. Select a project from the **Project** dropdown.
-1. Select an [SLO service](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/services) from the **Service** dropdown.
-1. Select an [SLO](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/services.serviceLevelObjectives) from the **SLO** dropdown.
-1. Select a [time series selector](https://cloud.google.com/stackdriver/docs/solutions/slo-monitoring/api/timeseries-selectors#ts-selector-list) from the **Selector** dropdown.
+2. Select a project from the **Project** dropdown.
+3. Select an [SLO service](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/services) from the **Service** dropdown.
+4. Select an [SLO](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/services.serviceLevelObjectives) from the **SLO** dropdown.
+5. Select a [time series selector](https://cloud.google.com/stackdriver/docs/solutions/slo-monitoring/api/timeseries-selectors#ts-selector-list) from the **Selector** dropdown.
 
 Grafana's time series selectors use descriptive names that map to system names that Google uses in the Service Monitoring documentation:
 
@@ -290,13 +293,13 @@ SLO queries use the same alignment period functionality as [metric queries](#def
 **To create an Prometheus query:**
 
 1. Select the **PromQL** option in the **Query Type** dropdown.
-1. Select a project from the **Project** dropdown.
-1. Enter your Prometheus query in the text area.
-1. Enter a Min Step interval. The **Min step** setting defines the lower bounds on the interval between data points. For example, set this to `1h` to hint that measurements are taken hourly. This setting supports the `$__interval` and `$__rate_interval` macros.
+2. Select a project from the **Project** dropdown.
+3. Enter your Prometheus query in the text area.
+4. Enter a Min Step interval. The **Min step** setting defines the lower bounds on the interval between data points. For example, set this to `1h` to hint that measurements are taken hourly. This setting supports the `$__interval` and `$__rate_interval` macros.
 
 ## Apply annotations
 
-{{< figure src="/static/img/docs/google-cloud-monitoring/annotations-8-0.png" max-width= "400px" class="docs-image--right" >}}
+{{\< figure src="/static/img/docs/google-cloud-monitoring/annotations-8-0.png" max-width= "400px" class="docs-image--right" \>}}
 
 [Annotations](ref:annotate-visualizations) overlay rich event information on top of graphs.
 You can add annotation queries in the Dashboard menu's Annotations view.

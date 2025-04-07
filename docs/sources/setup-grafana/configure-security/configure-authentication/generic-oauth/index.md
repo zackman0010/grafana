@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../../auth/generic-oauth/
-description: Configure Generic OAuth authentication
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - oauth
-labels:
+
+- ../../../auth/generic-oauth/
+  description: Configure Generic OAuth authentication
+  keywords:
+- grafana
+- configuration
+- documentation
+- oauth
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Generic OAuth
-title: Configure Generic OAuth authentication
-weight: 700
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Generic OAuth
+    title: Configure Generic OAuth authentication
+    weight: 700
+
+-----
 
 # Configure Generic OAuth authentication
 
-{{< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 Grafana provides OAuth2 integrations for the following auth providers:
 
@@ -53,7 +56,7 @@ If Users use the same email address in Azure AD that they use with other authent
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle.
 {{% /admonition %}}
 
-As a Grafana Admin, you can configure Generic OAuth client from within Grafana using the Generic OAuth UI. To do this, navigate to **Administration > Authentication > Generic OAuth** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
+As a Grafana Admin, you can configure Generic OAuth client from within Grafana using the Generic OAuth UI. To do this, navigate to **Administration \> Authentication \> Generic OAuth** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
 
 After you have filled in the form, click **Save** to save the configuration. If the save was successful, Grafana will apply the new configurations.
 
@@ -71,7 +74,7 @@ Refer to [configuration options](#configuration-options) for more information.
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle. Supported in the Terraform provider since v2.12.0.
 {{% /admonition %}}
 
-```terraform
+``` terraform
 resource "grafana_sso_settings" "generic_sso_settings" {
   provider_name = "generic_oauth"
   oauth2_settings {
@@ -101,35 +104,38 @@ Ensure that you have access to the [Grafana configuration file](../../../configu
 To integrate your OAuth2 provider with Grafana using our Generic OAuth authentication, follow these steps:
 
 1. Create an OAuth2 application in your chosen OAuth2 provider.
-1. Set the callback URL for your OAuth2 app to `http://<my_grafana_server_name_or_ip>:<grafana_server_port>/login/generic_oauth`.
 
+2. Set the callback URL for your OAuth2 app to `http://<my_grafana_server_name_or_ip>:<grafana_server_port>/login/generic_oauth`.
+   
    Ensure that the callback URL is the complete HTTP address that you use to access Grafana via your browser, but with the appended path of `/login/generic_oauth`.
-
+   
    For the callback URL to be correct, it might be necessary to set the `root_url` option in the `[server]`section of the Grafana configuration file. For example, if you are serving Grafana behind a proxy.
 
-1. Refer to the following table to update field values located in the `[auth.generic_oauth]` section of the Grafana configuration file:
-
+3. Refer to the following table to update field values located in the `[auth.generic_oauth]` section of the Grafana configuration file:
+   
    | Field                        | Description                                                                                                                                                                                       |
    | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
    | `client_id`, `client_secret` | These values must match the client ID and client secret from your OAuth2 app.                                                                                                                     |
    | `auth_url`                   | The authorization endpoint of your OAuth2 provider.                                                                                                                                               |
    | `api_url`                    | The user information endpoint of your OAuth2 provider. Information returned by this endpoint must be compatible with [OpenID UserInfo](https://connect2id.com/products/server/docs/api/userinfo). |
    | `enabled`                    | Enables Generic OAuth authentication. Set this value to `true`.                                                                                                                                   |
-
+   
    Review the list of other Generic OAuth [configuration options](#configuration-options) and complete them, as necessary.
 
-1. Optional: [Configure a refresh token](#configure-a-refresh-token):
-
+4. Optional: [Configure a refresh token](#configure-a-refresh-token):
+   
    a. Extend the `scopes` field of `[auth.generic_oauth]` section in Grafana configuration file with refresh token scope used by your OAuth2 provider.
-
+   
    b. Set `use_refresh_token` to `true` in `[auth.generic_oauth]` section in Grafana configuration file.
-
+   
    c. Enable the refresh token on the provider if required.
 
-1. [Configure role mapping](#configure-role-mapping).
-1. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/<GRAFANA_VERSION/setup-grafana/configure-security/configure-team-sync/).
-1. Restart Grafana.
+5. [Configure role mapping](#configure-role-mapping).
 
+6. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/\<GRAFANA_VERSION/setup-grafana/configure-security/configure-team-sync/).
+
+7. Restart Grafana.
+   
    You should now see a Generic OAuth login button on the login page and be able to log in or sign up with your OAuth2 provider.
 
 ### Configure login
@@ -188,11 +194,11 @@ Grafana uses a refresh token to obtain a new access token without requiring the 
 To configure Generic OAuth to use a refresh token, set `use_refresh_token` configuration option to `true` and perform one or both of the following steps, if required:
 
 1. Extend the `scopes` field of `[auth.generic_oauth]` section in Grafana configuration file with additional scopes.
-1. Enable the refresh token on the provider.
+2. Enable the refresh token on the provider.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The `accessTokenExpirationCheck` feature toggle has been removed in Grafana v10.3.0 and the `use_refresh_token` configuration value will be used instead for configuring refresh token fetching and access token expiration check.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Configure role mapping
 
@@ -219,7 +225,7 @@ In this example, the user has been granted the role of an `Editor`. The role ass
 
 Payload:
 
-```json
+``` json
 {
     ...
     "role": "Editor",
@@ -229,7 +235,7 @@ Payload:
 
 Config:
 
-```bash
+``` bash
 role_attribute_path = role
 ```
 
@@ -238,7 +244,7 @@ If the user was a member of the `editor` group, they would be granted the `Edito
 
 Payload:
 
-```json
+``` json
 {
     ...
     "groups": [
@@ -251,7 +257,7 @@ Payload:
 
 Config:
 
-```bash
+``` bash
 role_attribute_path = contains(groups[*], 'admin') && 'Admin' || contains(groups[*], 'editor') && 'Editor' || 'Viewer'
 ```
 
@@ -261,7 +267,7 @@ In the following example, the user is granted the Grafana server administrator r
 
 Payload:
 
-```json
+``` json
 {
     ...
     "roles": [
@@ -273,7 +279,7 @@ Payload:
 
 Config:
 
-```ini
+``` ini
 role_attribute_path = contains(roles[*], 'admin') && 'GrafanaAdmin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
 allow_assign_grafana_admin = true
 ```
@@ -284,7 +290,7 @@ In this example, all users will be assigned `Viewer` role regardless of the user
 
 Config:
 
-```ini
+``` ini
 role_attribute_path = "'Viewer'"
 skip_org_role_sync = false
 ```
@@ -297,7 +303,7 @@ If the user was a member of the `admin` group, they would be granted the Grafana
 
 Payload:
 
-```json
+``` json
 {
   "roles": ["org_foo", "org_bar", "another_org"]
 }
@@ -305,7 +311,7 @@ Payload:
 
 Config:
 
-```ini
+``` ini
 role_attribute_path = contains(roles[*], 'admin') && 'GrafanaAdmin' || 'None'
 allow_assign_grafana_admin = true
 org_attribute_path = roles
@@ -314,9 +320,9 @@ org_mapping = org_foo:org_foo:Viewer org_bar:org_bar:Editor *:org_baz:Editor
 
 ## Configure team synchronization
 
-{{< admonition type="note" >}}
-Available in [Grafana Enterprise](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+Available in [Grafana Enterprise](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
+{{\< /admonition \>}}
 
 By using Team Sync, you can link your OAuth2 groups to teams within Grafana. This will automatically assign users to the appropriate teams.
 Teams for each user are synchronized when the user logs in.
@@ -324,19 +330,19 @@ Teams for each user are synchronized when the user logs in.
 Generic OAuth groups can be referenced by group ID, such as `8bab1c86-8fba-33e5-2089-1d1c80ec267d` or `myteam`.
 For information on configuring OAuth2 groups with Grafana using the `groups_attribute_path` configuration option, refer to [configuration options](#configuration-options).
 
-To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
+To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
 
 ### Team synchronization example
 
 Configuration:
 
-```bash
+``` bash
 groups_attribute_path = groups
 ```
 
 Payload:
 
-```json
+``` json
 {
     ...
     "groups": [
@@ -351,9 +357,9 @@ Payload:
 
 The following table outlines the various Generic OAuth configuration options. You can apply these options as environment variables, similar to any other configuration within Grafana. For more information, refer to [Override configuration with environment variables](../../../configure-grafana/#override-configuration-with-environment-variables).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 If the configuration option requires a JMESPath expression that includes a colon, enclose the entire expression in quotes to prevent parsing errors. For example `role_attribute_path: "role:view"`
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 | Setting                      | Required | Supported on Cloud | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Default         |
 | ---------------------------- | -------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -388,7 +394,7 @@ If the configuration option requires a JMESPath expression that includes a colon
 | `team_ids`                   | No       | Yes                | String list of team IDs. If set, the user must be a member of one of the given teams to log in. If you configure `team_ids`, you must also configure `teams_url` and `team_ids_attribute_path`.                                                                                                                                                                                                                                                                                                                                                                                           |                 |
 | `team_ids_attribute_path`    | No       | Yes                | The [JMESPath](http://jmespath.org/examples.html) expression to use for Grafana team ID lookup within the results returned by the `teams_url` endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                   |                 |
 | `teams_url`                  | No       | Yes                | The URL used to query for team IDs. If not set, the default value is `/teams`. If you configure `teams_url`, you must also configure `team_ids_attribute_path`.                                                                                                                                                                                                                                                                                                                                                                                                                           |                 |
-| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. _You should only use this for testing_, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                    | `false`         |
+| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. *You should only use this for testing*, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                    | `false`         |
 | `tls_client_cert`            | No       | No                 | The path to the certificate.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                 |
 | `tls_client_key`             | No       | No                 | The path to the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |                 |
 | `tls_client_ca`              | No       | No                 | The path to the trusted certificate authority list.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                 |
@@ -406,17 +412,17 @@ To set up Generic OAuth authentication with Descope, follow these steps:
 
 1. Create a Descope Project [here](https://app.descope.com/gettingStarted), and go through the Getting Started Wizard to configure your authentication. You can skip step if you already have Descope project set up.
 
-1. If you wish to use a flow besides `Sign Up or In`, go to the **IdP Applications** menu in the console, and select your IdP application. Then alter the **Flow Hosting URL** query parameter `?flow=sign-up-or-in` to change which flow id you wish to use.
+2. If you wish to use a flow besides `Sign Up or In`, go to the **IdP Applications** menu in the console, and select your IdP application. Then alter the **Flow Hosting URL** query parameter `?flow=sign-up-or-in` to change which flow id you wish to use.
 
-1. Click **Save**.
+3. Click **Save**.
 
-1. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the **Settings** tab:
-
+4. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the **Settings** tab:
+   
    {{% admonition type="note" %}}
    You can get your Client ID (Descope Project ID) under [Project Settings](https://app.descope.com/settings/project). Your Client Secret (Descope Access Key) can be generated under [Access Keys](https://app.descope.com/accesskeys).
    {{% /admonition %}}
-
-   ```bash
+   
+   ``` bash
    [auth.generic_oauth]
    enabled = true
    allow_sign_up = true
@@ -436,24 +442,24 @@ To set up Generic OAuth authentication with Descope, follow these steps:
 
 ### Set up OAuth2 with Auth0
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Support for the Auth0 "audience" feature is not currently available in Grafana. For roles and permissions, the available options are described [here](../../../../administration/roles-and-permissions/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 To set up Generic OAuth authentication with Auth0, follow these steps:
 
 1. Create an Auth0 application using the following parameters:
-
+   
    - Name: Grafana
    - Type: Regular Web Application
 
-1. Go to the **Settings** tab of the application and set **Allowed Callback URLs** to `https://<grafana domain>/login/generic_oauth`.
+2. Go to the **Settings** tab of the application and set **Allowed Callback URLs** to `https://<grafana domain>/login/generic_oauth`.
 
-1. Click **Save Changes**.
+3. Click **Save Changes**.
 
-1. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the **Settings** tab:
-
-   ```bash
+4. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the **Settings** tab:
+   
+   ``` bash
    [auth.generic_oauth]
    enabled = true
    allow_sign_up = true
@@ -475,17 +481,17 @@ To set up Generic OAuth authentication with Auth0, follow these steps:
 
 To set up Generic OAuth authentication with Bitbucket, follow these steps:
 
-1. Navigate to **Settings > Workspace setting > OAuth consumers** in BitBucket.
+1. Navigate to **Settings \> Workspace setting \> OAuth consumers** in BitBucket.
 
-1. Create an application by selecting **Add consumer** and using the following parameters:
-
+2. Create an application by selecting **Add consumer** and using the following parameters:
+   
    - Allowed Callback URLs: `https://<grafana domain>/login/generic_oauth`
 
-1. Click **Save**.
+3. Click **Save**.
 
-1. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the `Key` and `Secret` from the consumer description:
-
-   ```bash
+4. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the values from the `Key` and `Secret` from the consumer description:
+   
+   ``` bash
    [auth.generic_oauth]
    name = BitBucket
    enabled = true
@@ -511,22 +517,22 @@ By default, a refresh token is included in the response for the **Authorization 
 To set up Generic OAuth authentication with OneLogin, follow these steps:
 
 1. Create a new Custom Connector in OneLogin with the following settings:
-
+   
    - Name: Grafana
    - Sign On Method: OpenID Connect
    - Redirect URI: `https://<grafana domain>/login/generic_oauth`
    - Signing Algorithm: RS256
    - Login URL: `https://<grafana domain>/login/generic_oauth`
 
-1. Add an app to the Grafana Connector:
-
+2. Add an app to the Grafana Connector:
+   
    - Display Name: Grafana
 
-1. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the client ID and client secret from the **SSO** tab of the app details page:
-
+3. Update the `[auth.generic_oauth]` section of the Grafana configuration file using the client ID and client secret from the **SSO** tab of the app details page:
+   
    Your OneLogin Domain will match the URL you use to access OneLogin.
-
-   ```bash
+   
+   ``` bash
    [auth.generic_oauth]
    name = OneLogin
    enabled = true
@@ -548,8 +554,8 @@ To set up Generic OAuth authentication with [Dex IdP](https://dexidp.io/), follo
 steps:
 
 1. Add Grafana as a client in the Dex config YAML file:
-
-   ```yaml
+   
+   ``` yaml
    staticClients:
      - id: <client id>
        name: Grafana
@@ -557,15 +563,15 @@ steps:
        redirectURIs:
          - 'https://<grafana domain>/login/generic_oauth'
    ```
-
+   
    {{% admonition type="note" %}}
    Unlike many other OAuth2 providers, Dex doesn't provide `<client secret>`.
    Instead, a secret can be generated with for example `openssl rand -hex 20`.
    {{% /admonition %}}
 
 2. Update the `[auth.generic_oauth]` section of the Grafana configuration:
-
-   ```bash
+   
+   ``` bash
    [auth.generic_oauth]
    name = Dex
    enabled = true
@@ -576,7 +582,7 @@ steps:
    token_url = https://<dex base uri>/token
    api_url = https://<dex base uri>/userinfo
    ```
-
-   `<dex base uri>` corresponds to the `issuer: ` configuration in Dex (e.g. the Dex
+   
+   `<dex base uri>` corresponds to the ` issuer:  ` configuration in Dex (e.g. the Dex
    domain possibly including a path such as e.g. `/dex`). The `offline_access` scope is
    needed when using [refresh tokens](#configure-a-refresh-token).

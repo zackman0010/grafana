@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../http_api/datasource_permissions/
-  - ../../http_api/datasourcepermissions/
-canonical: /docs/grafana/latest/developers/http_api/datasource_permissions/
-description: Data Source Permissions API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - datasource
-  - permission
-  - permissions
-  - acl
-  - enterprise
-labels:
+
+- ../../http\_api/datasource\_permissions/
+- ../../http\_api/datasourcepermissions/
+  canonical: /docs/grafana/latest/developers/http\_api/datasource\_permissions/
+  description: Data Source Permissions API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- datasource
+- permission
+- permissions
+- acl
+- enterprise
+  labels:
   products:
-    - enterprise
-    - oss
-title: Datasource Permissions HTTP API
----
+  - enterprise
+  - oss
+    title: Datasource Permissions HTTP API
+
+-----
 
 # Data Source Permissions API
 
@@ -43,13 +46,13 @@ See note in the [introduction](#data-source-permissions-api) for an explanation.
 
 | Action                       | Scope                                                                                      |
 | ---------------------------- | ------------------------------------------------------------------------------------------ |
-| datasources.permissions:read | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my_datasource (single data source) |
+| datasources.permissions:read | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```http
+``` http
 GET /api/access-control/datasources/my_datasource HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -58,7 +61,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 551
@@ -138,13 +141,13 @@ See note in the [introduction](#data-source-permissions-api) for an explanation.
 
 | Action                        | Scope                                                                                      |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my_datasource (single data source) |
+| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/users/1
 Accept: application/json
 Content-Type: application/json
@@ -157,7 +160,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35
@@ -167,7 +170,7 @@ Content-Length: 35
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/users/1
 Accept: application/json
 Content-Type: application/json
@@ -180,7 +183,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35
@@ -210,13 +213,13 @@ See note in the [introduction](#data-source-permissions-api) for an explanation.
 
 | Action                        | Scope                                                                                      |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my_datasource (single data source) |
+| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/teams/1
 Accept: application/json
 Content-Type: application/json
@@ -229,7 +232,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35
@@ -239,7 +242,7 @@ Content-Length: 35
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/teams/1
 Accept: application/json
 Content-Type: application/json
@@ -252,7 +255,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35
@@ -284,13 +287,13 @@ See note in the [introduction](#data-source-permissions-api) for an explanation.
 
 | Action                        | Scope                                                                                      |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my_datasource (single data source) |
+| datasources.permissions:write | datasources:\*<br>datasources:uid:\*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/builtInRoles/Admin
 Accept: application/json
 Content-Type: application/json
@@ -303,7 +306,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35
@@ -313,7 +316,7 @@ Content-Length: 35
 
 **Example request:**
 
-```http
+``` http
 POST /api/access-control/datasources/my_datasource/builtInRoles/Viewer
 Accept: application/json
 Content-Type: application/json
@@ -326,7 +329,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35

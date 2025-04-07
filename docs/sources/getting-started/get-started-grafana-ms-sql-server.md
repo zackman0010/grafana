@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../guides/getting_started/
-  - ../guides/gettingstarted/
-  - getting-started-sql/
-description: Learn how to build your first MS SQL Server dashboard in Grafana.
-labels:
+
+- ../guides/getting\_started/
+- ../guides/gettingstarted/
+- getting-started-sql/
+  description: Learn how to build your first MS SQL Server dashboard in Grafana.
+  labels:
   products:
-    - enterprise
-    - oss
-title: Get started with Grafana and MS SQL Server
-weight: 500
----
+  - enterprise
+  - oss
+    title: Get started with Grafana and MS SQL Server
+    weight: 500
+
+-----
 
 # Get started with Grafana and MS SQL Server
 
@@ -31,10 +34,10 @@ If you are on a Windows host but want to use Grafana and MS SQL data source on a
 There are several ways to authenticate in MSSQL. Start by:
 
 1. Click **Connections** in the left-side menu and filter by `mssql`.
-1. Select the **Microsoft SQL Server** option.
-1. Click **Create a Microsoft SQL Server data source** in the top right corner to open the configuration page.
-1. Select the desired authentication method and fill in the right information as detailed below.
-1. Click **Save & test**.
+2. Select the **Microsoft SQL Server** option.
+3. Click **Create a Microsoft SQL Server data source** in the top right corner to open the configuration page.
+4. Select the desired authentication method and fill in the right information as detailed below.
+5. Click **Save & test**.
 
 ##### General configuration
 
@@ -55,9 +58,9 @@ There are several ways to authenticate in MSSQL. Start by:
 
 Below are the four possible ways to authenticate via Windows Active Directory/Kerberos.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Windows Active Directory (Kerberos) authentication is not supported in Grafana Cloud at the moment.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 | Method                    | Description                                                                                                                                                  |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -66,7 +69,7 @@ Windows Active Directory (Kerberos) authentication is not supported in Grafana C
 | **Credential cache**      | Log in on the host via `kinit` and pass the path to the credential cache. The cache path can be found by running `klist` on the host in question.            |
 | **Credential cache file** | This option allows multiple valid configurations to be present and matching is performed on host, database, and user. See the example JSON below this table. |
 
-```json
+``` json
 [
   {
     "user": "grot@GF.LAB",

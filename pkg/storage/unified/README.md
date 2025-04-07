@@ -1,4 +1,3 @@
-
 # Unified Storage
 
 The unified storage projects aims to provide a simple and extensible backend to unify the way we store different objects within the Grafana app platform.
@@ -17,7 +16,7 @@ There are 2 main tables, the `resource` table stores a "current" view of the obj
 
 The minimum config settings required are:
 
-```ini
+``` ini
 ; need to specify target here for override to work later
 target = all
 
@@ -48,11 +47,11 @@ dualWriterMode = 0
 
 ### Folders: baseline configuration
 
-NOTE: allowing folders to be backed by Unified Storage is under development and so are these instructions. 
+NOTE: allowing folders to be backed by Unified Storage is under development and so are these instructions.
 
 The minimum config settings required are:
 
-```ini
+``` ini
 ; need to specify target here for override to work later
 target = all
 
@@ -75,22 +74,23 @@ dualWriterMode = 4
 storage_type = unified
 ```
 
-### Setting up a kubeconfig 
+### Setting up a kubeconfig
 
 With this configuration, you can run everything in-process. Run the Grafana backend with:
 
-```sh
+``` sh
 bra run
 ```
 
 or
 
-```sh
+``` sh
 make run
 ```
 
 The default kubeconfig sends requests directly to the apiserver, to authenticate as a grafana user, create `grafana.kubeconfig`:
-```yaml
+
+``` yaml
 apiVersion: v1
 clusters:
 - cluster:
@@ -112,8 +112,10 @@ users:
     username: <username>
     password: <password>
 ```
+
 Where `<username>` and `<password>` are credentials for basic auth against Grafana. For example, with the [default credentials](https://github.com/grafana/grafana/blob/HEAD/contribute/developer-guide.md#backend):
-```yaml
+
+``` yaml
     username: admin
     password: admin
 ```
@@ -121,17 +123,20 @@ Where `<username>` and `<password>` are credentials for basic auth against Grafa
 ### Playlists: interacting with the k8s API
 
 In this mode, you can interact with the k8s api. Make sure you are in the directory where you created `grafana.kubeconfig`. Then run:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig get playlist
 ```
 
 If this is your first time running the command, a successful response would be:
-```sh
+
+``` sh
 No resources found in default namespace.
 ```
 
 To create a playlist, create a file `playlist-generate.yaml`:
-```yaml
+
+``` yaml
 apiVersion: playlist.grafana.app/v0alpha1
 kind: Playlist
 metadata:
@@ -150,28 +155,35 @@ spec:
   - type: dashboard_by_uid
     value: vmie2cmWz # dashboard from devenv
 ```
+
 then run:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig create -f playlist-generate.yaml
 ```
 
 For example, a successful response would be:
-```sh
+
+``` sh
 playlist.playlist.grafana.app/u394j4d3-s63j-2d74-g8hf-958773jtybf2 created
 ```
 
 When running
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig get playlist
 ```
+
 you should now see something like:
-```sh
+
+``` sh
 NAME                                   TITLE                              INTERVAL   CREATED AT
 u394j4d3-s63j-2d74-g8hf-958773jtybf2   Playlist with auto generated UID   5m         2023-12-14T13:53:35Z 
 ```
 
 To update the playlist, update the `playlist-generate.yaml` file then run:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig patch playlist <NAME> --patch-file playlist-generate.yaml
 ```
 
@@ -180,17 +192,20 @@ In the example, `<NAME>` would be `u394j4d3-s63j-2d74-g8hf-958773jtybf2`.
 ### Folders: interacting with the k8s API
 
 Make sure you are in the directory where you created `grafana.kubeconfig`. Then run:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig get folder
 ```
 
 If this is your first time running the command, a successful response would be:
-```sh
+
+``` sh
 No resources found in default namespace.
 ```
 
 To create a folder, create a file `folder-generate.yaml`:
-```yaml
+
+``` yaml
 apiVersion: folder.grafana.app/v0alpha1
 kind: Folder
 metadata:
@@ -198,8 +213,10 @@ metadata:
 spec:
   title: Example folder
 ```
+
 then run:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig create -f folder-generate.yaml
 ```
 
@@ -208,14 +225,16 @@ kubectl --kubeconfig=./grafana.kubeconfig create -f folder-generate.yaml
 #### Start GRPC storage-server
 
 Make sure you have the gRPC address in the `[grafana-apiserver]` section of your config file:
-```ini
+
+``` ini
 [grafana-apiserver]
 ; your gRPC server address
 address = localhost:10000
 ```
 
 You also need the `[grpc_server_authentication]` section to authenticate incoming requests:
-```ini
+
+``` ini
 [grpc_server_authentication]
 ; http url to Grafana's signing keys to validate incoming id tokens
 signing_keys_url = http://localhost:3000/api/signing-keys/keys
@@ -225,7 +244,8 @@ mode = "on-prem"
 This currently only works with a separate database configuration (see previous section).
 
 Start the storage-server with:
-```sh
+
+``` sh
 GF_DEFAULT_TARGET=storage-server ./bin/grafana server target
 ```
 
@@ -234,12 +254,14 @@ The GRPC service will listen on port 10000
 #### Use GRPC server
 
 To run grafana against the storage-server, override the `storage_type` setting:
-```sh
+
+``` sh
 GF_GRAFANA_APISERVER_STORAGE_TYPE=unified-grpc ./bin/grafana server
 ```
 
 You can then list the previously-created playlists with:
-```sh
+
+``` sh
 kubectl --kubeconfig=./grafana.kubeconfig get playlist
 ```
 
@@ -247,15 +269,21 @@ kubectl --kubeconfig=./grafana.kubeconfig get playlist
 
 - install [protoc](https://grpc.io/docs/protoc-installation/)
 - install the protocol compiler plugin for Go
-```sh
+
+<!-- end list -->
+
+``` sh
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
+
 - make changes in `.proto` file
 - to compile all protobuf files in the repository run `make protobuf` at its top level
 
 ## Setting up search
+
 To enable it, add the following to your `custom.ini` under the `[feature_toggles]` section:
-```ini
+
+``` ini
 [feature_toggles]
 ; Used by the Grafana instance
 unifiedStorageSearchUI = true
@@ -270,7 +298,8 @@ unifiedStorageSearch = true
 ```
 
 The dashboard search page has been set up to search unified storage. Additionally, all legacy search calls (e.g. `/api/search`) will go to
-unified storage when the dual writer mode is set to 3 or greater. When <= 2, the legacy search api calls will go to legacy storage.
+unified storage when the dual writer mode is set to 3 or greater. When \<= 2, the legacy search api calls will go to legacy storage.
 
 ## Running load tests
+
 Load tests and instructions can be found [here](https://github.com/grafana/grafana-api-tests/tree/main/simulation/src/unified_storage).

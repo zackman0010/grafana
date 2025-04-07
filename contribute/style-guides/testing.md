@@ -14,9 +14,11 @@ We use the [user-event](https://testing-library.com/docs/user-event/intro) libra
 There are two important considerations when working with `userEvent`:
 
 1. All methods in `userEvent` are asynchronous, and thus require the use of `await` when called.
-1. Directly calling methods from `userEvent` may not be supported in future versions. As such, it's necessary to first call `userEvent.setup()` prior to the tests. This method returns a `userEvent` instance, complete with all its methods. This setup process can be simplified using a utility function:
+2. Directly calling methods from `userEvent` may not be supported in future versions. As such, it's necessary to first call `userEvent.setup()` prior to the tests. This method returns a `userEvent` instance, complete with all its methods. This setup process can be simplified using a utility function:
 
-```tsx
+<!-- end list -->
+
+``` tsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -45,7 +47,7 @@ There are a few utilities that can be useful for debugging tests:
 
 Here, the [OrgRolePicker](https://github.com/grafana/grafana/blob/38863844e7ac72c7756038a1097f89632f9985ff/public/app/features/admin/OrgRolePicker.tsx) component is used as an example. This component essentially serves as a wrapper for the `Select` component, complete with its own set of options.
 
-```tsx
+``` tsx
 import { OrgRole } from '@grafana/data';
 import { Select } from '@grafana/ui';
 
@@ -81,7 +83,7 @@ export function OrgRolePicker({ value, onChange, 'aria-label': ariaLabel, inputI
 
 It is a recommended practice to query `Select` components by using a label. Add a `label` element and provide the `htmlFor` prop with a matching `inputId`. Alternatively, you can specify `aria-label` on the `Select` statement.
 
-```tsx
+``` tsx
 describe('OrgRolePicker', () => {
   it('should render the picker', () => {
     setup(
@@ -99,7 +101,7 @@ describe('OrgRolePicker', () => {
 
 At times, it might be necessary to verify that the `Select` component is displaying the correct options. In such instances, the best solution is to click the `Select` component and match the desired option using the `*ByText` query.
 
-```tsx
+``` tsx
 it('should have an "Editor" option', async () => {
   const { user } = setup(
     <>
@@ -116,7 +118,7 @@ it('should have an "Editor" option', async () => {
 
 To simplify the process of selecting an option from a `Select` component, there is a `selectOptionInTest` utility function. This function is a wrapper over the [react-select-event](https://testing-library.com/docs/ecosystem-react-select-event/) package.
 
-```tsx
+``` tsx
 it('should select an option', async () => {
   const mockOnChange = jest.fn();
   setup(
@@ -136,7 +138,7 @@ it('should select an option', async () => {
 
 The recommended approach for mocking the `window` object is to use [Jest spies](https://jestjs.io/docs/jest-object). Jest's spy functions provide a built-in mechanism for restoring mocks. This feature eliminates the need to manually save a reference to the `window` object.
 
-```tsx
+``` tsx
 let windowSpy: jest.SpyInstance;
 
 beforeAll(() => {
@@ -159,7 +161,7 @@ it('should test with window', function () {
 
 Use the `getBackendSrv()` function to make HTTP requests to the Grafana backend. It is possible to mock this function using the `jest.mock` method.
 
-```tsx
+``` tsx
 jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual('@grafana/runtime'),
   getBackendSrv: () => ({
@@ -174,7 +176,7 @@ Use the `AsyncSelect` component to asynchronously load options. This component o
 
 Here's what the test looks like for this [OrgPicker](https://github.com/grafana/grafana/blob/38863844e7ac72c7756038a1097f89632f9985ff/public/app/core/components/Select/OrgPicker.tsx) component, which uses `AsyncSelect` under the hood:
 
-```tsx
+``` tsx
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

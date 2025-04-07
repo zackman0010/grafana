@@ -1,26 +1,29 @@
----
+-----
+
 description: Logs in Explore
 keywords:
-  - explore
-  - logs
-labels:
+
+- explore
+- logs
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Logs in Explore
-weight: 25
----
+  - cloud
+  - enterprise
+  - oss
+    title: Logs in Explore
+    weight: 25
+
+-----
 
 # Logs in Explore
 
 Explore is a powerful tool for logging and log analysis. It allows you to investigate logs from different data sources including:
 
-- [Loki](/docs/grafana/<GRAFANA_VERSION>/datasources/loki/)
-- [Elasticsearch](/docs/grafana/<GRAFANA_VERSION>/datasources/elasticsearch/)
-- [Cloudwatch](/docs/grafana/<GRAFANA_VERSION>/datasources/aws-cloudwatch/)
-- [InfluxDB](/docs/grafana/<GRAFANA_VERSION>/datasources/influxdb/)
-- [Azure Monitor](/docs/grafana/<GRAFANA_VERSION>/datasources/azure-monitor/)
+- [Loki](/docs/grafana/\<GRAFANA_VERSION\>/datasources/loki/)
+- [Elasticsearch](/docs/grafana/\<GRAFANA_VERSION\>/datasources/elasticsearch/)
+- [Cloudwatch](/docs/grafana/\<GRAFANA_VERSION\>/datasources/aws-cloudwatch/)
+- [InfluxDB](/docs/grafana/\<GRAFANA_VERSION\>/datasources/influxdb/)
+- [Azure Monitor](/docs/grafana/\<GRAFANA_VERSION\>/datasources/azure-monitor/)
 - [ClickHouse](https://github.com/grafana/clickhouse-datasource)
 
 With Explore, you can efficiently monitor, troubleshoot, and respond to incidents by analyzing your logs and identifying the root causes. It also helps you to correlate logs with other telemetry signals such as metrics, traces or profiles, by viewing them side-by-side.
@@ -31,9 +34,9 @@ The results of log queries display as individual log lines and as a graph showin
 
 When working with data sources that support a full range logs volume, Explore automatically displays a graph showing the log distribution for all submitted log queries. This feature is currently supported by the Elasticsearch and Loki data sources.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 In Loki, generating the full range log volume via a metric query can be resource-intensive, depending on the time range queried. This is especially challenging for smaller Loki installations. To mitigate this, we recommend that you use a proxy like [nginx](https://www.nginx.com/) in front of Loki with a timeout like 10ss. Log volume histogram queries can be identified by looking for queries with the HTTP header `X-Query-Tags` with value `Source=logvolhist`; these headers are added by Grafana to all log volume histogram queries.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If the data source doesn't support loading the full range logs volume, the logs model calculates a time series by counting log rows and organizing them into buckets based on an automatically calculated time interval. The timestamp of the first log row is used to anchor the start of the logs volume in the results. The end of the time series is anchored to the time picker's **To** range. This way, you can still analyze and visualize log data efficiently even when the data source doesn't offer full range support.
 
@@ -81,9 +84,9 @@ The following meta information displays above the retrieved log lines:
 - **Common labels -** Displays common labels.
 - **Total bytes processed -** Represents the cumulative size of the log data processed in bytes.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The availability of certain metadata may vary depending on the data source, so you might only see details related to those specific data sources.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Escaping newlines
 
@@ -102,9 +105,9 @@ For logs where a `level` label is specified, the value of this label is used to 
 If the log doesn't have a specified level label, Grafana attempts to determine if its content matches any of the supported expressions.
 Refer to the following table for more information. The log level is always determined by the first match. If Grafana isn't able to infer a log level field, it gets visualized as an unknown log level.
 
-{{< admonition type="tip" >}}
+{{\< admonition type="tip" \>}}
 When using the Loki data source, if `level` is part of your log line, you can use parsers such as `json`, `logfmt`, or `regex` to extract the level information into a level label. This label is used to determine the level value, allowing the histogram to display the various log levels as separate bars.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 **Log levels supported and mapping of log level abbreviation and expressions:**
 
@@ -122,9 +125,9 @@ When using the Loki data source, if `level` is part of your log line, you can us
 
 When your query includes specific words or expressions for keyword search, Explore highlights them in log lines to enhance visibility. This highlighting feature facilitates easier identification and focus on the relevant content within your logs.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The ability to highlight search words varies depending on data source. For some data sources, the highlighting of search words may not be available.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Log details view
 
@@ -145,7 +148,7 @@ Each field has a **stats icon**, which displays ad-hoc statistics in relation to
 
 Grafana provides data links or correlations, allowing you to convert any part of a log message into an internal or external link. These links enable you to navigate to related data or external resources, offering a seamless and convenient way to explore additional information.
 
-{{< figure src="/static/img/docs/explore/data-link-9-4.png" max-width="800px" caption="Data link in Explore" >}}
+{{\< figure src="/static/img/docs/explore/data-link-9-4.png" max-width="800px" caption="Data link in Explore" \>}}
 
 ### Log context
 
@@ -163,26 +166,26 @@ Click **Copy log line** to copy the content of a selected log line to the clipbo
 
 ### Copy link to log line
 
-Linking log lines in Grafana allows you to quickly navigate to specific log entries for detailed and precise analysis. Click **Copy shortlink** to generate and copy a [short URL](/docs/grafana/<GRAFANA_VERSION>/developers/http_api/short_url/) that provides direct access to the exact log entry within an absolute time range. When you open the link, Grafana automatically scrolls to the corresponding log line and highlights it in blue, making it easy to identify and focus on relevant information.
+Linking log lines in Grafana allows you to quickly navigate to specific log entries for detailed and precise analysis. Click **Copy shortlink** to generate and copy a [short URL](/docs/grafana/\<GRAFANA_VERSION\>/developers/http_api/short_url/) that provides direct access to the exact log entry within an absolute time range. When you open the link, Grafana automatically scrolls to the corresponding log line and highlights it in blue, making it easy to identify and focus on relevant information.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The short URL feature is currently only supported in Loki and other data sources that provide an `id` field.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Live tailing
 
 Use the **Live tail** feature to view real-time logs from data sources.
 
 1. Click **Live** in the Explore toolbar to switch to Live tail view.
-1. In **Live tail view**, new logs appear at the bottom of the screen, and have a contrasting background, allowing you to easily track what's new.
-1. Click **Pause** to pause live tailing and explore previous logs without interruptions. or simply scroll through the logs view.
-1. Click **Clear logs** to remove all displayed logs. This action resets the log view and provides a clean slate to continue your log analysis
-1. Click **Resume** to resume live tailing and continue viewing real-time logs.
-1. Click **Stop** to exit live tailing and return to the standard Explore view.
+2. In **Live tail view**, new logs appear at the bottom of the screen, and have a contrasting background, allowing you to easily track what's new.
+3. Click **Pause** to pause live tailing and explore previous logs without interruptions. or simply scroll through the logs view.
+4. Click **Clear logs** to remove all displayed logs. This action resets the log view and provides a clean slate to continue your log analysis
+5. Click **Resume** to resume live tailing and continue viewing real-time logs.
+6. Click **Stop** to exit live tailing and return to the standard Explore view.
 
 The **Live tailing feature** allows you to monitor the latest logs in real-time, making it easier to track events as they occur and promptly detect issues.
 
-{{< video-embed src="/static/img/docs/v95/explore_live_tailing.mp4" >}}
+{{\< video-embed src="/static/img/docs/v95/explore\_live\_tailing.mp4" \>}}
 
 ### Logs sample
 

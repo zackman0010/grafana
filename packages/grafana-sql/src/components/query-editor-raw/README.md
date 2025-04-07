@@ -5,7 +5,7 @@
 - `SuggestionKind` - a descriptive string representing a type of a suggestion, i.e. `SelectKeyword`, `Tables`, `LogicalOperators` etc.
 - `LinkedToken` - linked list element representing each individual token with a query. Allows traversing the query back and forth. Used by `StatementPositionResolver`(see below)
 - `StatementPosition` - a desctiptive string representing cursor/token position within the query. Each statement position is defined together with `StatementPositionResolver` that, given some position context, returns a boolean value indicating whether or not we are in a given `StatementPosition` position.
-  ```ts
+  ``` ts
   export type StatementPositionResolver = (
     currentToken: LinkedToken | null,
     previousKeyword: LinkedToken | null,
@@ -13,8 +13,8 @@
     previousIsSlash: Boolean // To be removed as it's CloudWatch specific
   ) => Boolean;
   ```
-- `SuggestionKind` and `StatementPosition` are glued together via suggestions kind registry (language specific!). This registry contains items of `SuggestionKindRegistyItem` type of the following interface:
-  ```ts
+- `SuggestionKind` and `StatementPosition` are glued together via suggestions kind registry (language specific\!). This registry contains items of `SuggestionKindRegistyItem` type of the following interface:
+  ``` ts
   export interface SuggestionKindRegistyItem extends RegistryItem {
     id: StatementPosition;
     kind: SuggestionKind[];
@@ -24,7 +24,7 @@
 - Registries. There are couple of different registries used that drive the autocomplete mechanism.
   - **Language specific**: functions registry, operators registry, suggestion kinds registries and statement position resolvers registires. Those registires contain SQL defaults as well as allow extension per language type.
   - **Instance specific**: Registry of `SuggestionsRegistyItem` items that glue particular `SuggestionKind` with an async function that provides completion items for it.
-    ```ts
+    ``` ts
     export interface SuggestionsRegistyItem extends RegistryItem {
       id: SuggestionKind;
       suggestions: (position: PositionContext, m: typeof monacoTypes) => Promise<CustomSuggestion[]>;
@@ -36,14 +36,14 @@
 
 Goals
 
-- [ ] Allow providing suggestions for standard-ish SQL syntax (THIS PR)
-- [ ] Allow providing custom SQL dialects and suggestions for them (TODO - CloudWatch implementation sets a good base for how to provide custom dialect definition)
+- \[ \] Allow providing suggestions for standard-ish SQL syntax (THIS PR)
+- \[ \] Allow providing custom SQL dialects and suggestions for them (TODO - CloudWatch implementation sets a good base for how to provide custom dialect definition)
 
 `SQLEditor` component builds on top of `CodeEditor` component, but we may want to base it on `ReactMonacoEditor` component instead to be less prone to `CodeEditor` API changes and have full control over the Monaco API. For now the `CodeEditor` is good enough for a simplification.
 
 `SQLEditor` API:
 
-```ts
+``` ts
 interface SQLEditorProps {
   query: string;
   onChange: (q: string) => void;
@@ -53,7 +53,7 @@ interface SQLEditorProps {
 
 The important part is the `LanguageDefinition` interface which provides way to customize the completion both on a language and instance level:
 
-```ts
+``` ts
 interface LanguageDefinition extends monacoTypes.languages.ILanguageExtensionPoint {
   // TODO: Will allow providing a custom language definition.
   loadLanguage?: (module: any) => Promise<void>;
@@ -68,7 +68,9 @@ The `completionProvider` function is the core of the autocomplete customization.
 - providing custom `StatementPositionResolvers` that are specific for a given dialect or not implemented yet for standard SQL
 - providing custom `SuggestionKind` and resolvers for this kind of suggestions.
 
-```ts
+<!-- end list -->
+
+``` ts
 export interface SQLCompletionItemProvider
   extends Omit<monacoTypes.languages.CompletionItemProvider, 'provideCompletionItems'> {
   /**

@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../manage-users/add-or-remove-user-from-team/
-  - ../manage-users/create-or-remove-team/
-  - ../manage-users/manage-teams/
-  - manage-users-and-permissions/manage-teams/
-description: This document introduces Grafana Teams and Teams concepts.
-labels:
+
+- ../manage-users/add-or-remove-user-from-team/
+- ../manage-users/create-or-remove-team/
+- ../manage-users/manage-teams/
+- manage-users-and-permissions/manage-teams/
+  description: This document introduces Grafana Teams and Teams concepts.
+  labels:
   products:
-    - enterprise
-    - oss
-    - cloud
-keywords:
-  - authorization
-  - microservices
-  - architecture
-menuTitle: Grafana Teams
-title: Grafana Teams
-weight: 100
----
+  - enterprise
+  - oss
+  - cloud
+    keywords:
+- authorization
+- microservices
+- architecture
+  menuTitle: Grafana Teams
+  title: Grafana Teams
+  weight: 100
+
+-----
 
 # Grafana Teams
 
@@ -40,9 +43,9 @@ A Team grants permissions to a wide variety of resources including:
 - annotations
 - playlists
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 All members of a Grafana Team have the same exact permissions. A single Team can't have members with different access levels to resources shared within that Team.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 A user can be a `Member` or an `Administrator` for a given Team. `Members` of a Team inherit permissions from the team, but they don't have team administrator privileges, and can't edit the team itself. Team `Administrators` can add members to a team and update its settings, such as the team name, team member’s team roles, UI preferences, and home dashboard.
 

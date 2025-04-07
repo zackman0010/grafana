@@ -1,93 +1,96 @@
----
+-----
+
 aliases:
-  - ../reference/search/
-  - dashboard-ui/
-  - dashboard-ui/dashboard-header/
-  - dashboard-ui/dashboard-row/
-  - search/
-  - shortcuts/
-  - time-range-controls/
-keywords:
-  - dashboard
-  - search
-  - shortcuts
-labels:
+
+- ../reference/search/
+- dashboard-ui/
+- dashboard-ui/dashboard-header/
+- dashboard-ui/dashboard-row/
+- search/
+- shortcuts/
+- time-range-controls/
+  keywords:
+- dashboard
+- search
+- shortcuts
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Use dashboards
-title: Use dashboards
-description: Learn about the features of a Grafana dashboard
-weight: 100
-refs:
-  dashboard-analytics:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/assess-dashboard-usage/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/assess-dashboard-usage/
-  generative-ai-features:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/manage-dashboards/#set-up-generative-ai-features-for-dashboards
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/#set-up-generative-ai-features-for-dashboards
-  dashboard-settings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/modify-dashboard-settings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/modify-dashboard-settings/
-  repeating-rows:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/#configure-repeating-rows
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/#configure-repeating-rows
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  dashboard-folders:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/manage-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/
-  sharing:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/
-  dashboard-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/
-  panel-overview:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/panel-overview/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/panel-overview/
-  export-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/#export-dashboards
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/#export-dashboards
-  add-ad-hoc-filters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-  shared-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/shared-dashboards/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Use dashboards
+    title: Use dashboards
+    description: Learn about the features of a Grafana dashboard
+    weight: 100
+    refs:
+    dashboard-analytics:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/assess-dashboard-usage/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/assess-dashboard-usage/
+    generative-ai-features:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/manage-dashboards/\#set-up-generative-ai-features-for-dashboards
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/\#set-up-generative-ai-features-for-dashboards
+    dashboard-settings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/modify-dashboard-settings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/modify-dashboard-settings/
+    repeating-rows:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/\#configure-repeating-rows
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/\#configure-repeating-rows
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    dashboard-folders:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/manage-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/manage-dashboards/
+    sharing:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/share-dashboards-panels/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/
+    dashboard-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/
+    panel-overview:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/panel-overview/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/panel-overview/
+    export-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/share-dashboards-panels/\#export-dashboards
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/\#export-dashboards
+    add-ad-hoc-filters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+    shared-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/shared-dashboards/
+
+-----
 
 # Use dashboards
 
 This topic provides an overview of dashboard features and shortcuts, and describes how to use dashboard search.
 
-{{< youtube id="vTiIkdDwT-0" >}}
+{{\< youtube id="vTiIkdDwT-0" \>}}
 
 ## Dashboard feature overview
 
@@ -98,28 +101,28 @@ The following image and descriptions highlight all dashboard features.
 ![An annotated image of a dashboard](/media/docs/grafana/dashboards/screenshot-dashboard-annotated-v11.3-2.png)
 
 1. **Dashboard folder** - When you click the dashboard folder name, you can search for other dashboards contained in the folder and perform other [folder management tasks](ref:dashboard-folders).
-1. **Dashboard title** - You can create your own dashboard titles or have Grafana create them for you using [generative AI features](ref:generative-ai-features).
-1. **Kiosk mode** - Click to display the dashboard on a large screen such as a TV or a kiosk. Kiosk mode hides the main menu, navbar, and dashboard controls. Learn more about kiosk mode in our [How to Create Kiosks to Display Dashboards on a TV blog post](https://grafana.com/blog/2019/05/02/grafana-tutorial-how-to-create-kiosks-to-display-dashboards-on-a-tv/). Press `Esc` to leave kiosk mode.
-1. **Mark as favorite** - Mark the dashboard as one of your favorites so it's included in your list of **Starred** dashboards in the main menu.
-1. **Public label** - When you [share a dashboard externally](ref:shared-dashboards), it's marked with the **Public** label.
-1. **Dashboard insights** - Click to view analytics about your dashboard including information about users, activity, query counts. Learn more about [dashboard analytics](ref:dashboard-analytics).
-1. **Edit** - Click to leave view-only mode and enter edit mode, where you can make changes directly to the dashboard and access dashboard settings, as well as several panel editing functions.
-1. **Export** - Access [dashboard exporting](ref:export-dashboards) options.
-1. **Share dashboard** - Access several [dashboard sharing](ref:sharing) options.
-1. **Variables** - Use [variables](ref:variables), including ad hoc filters, to create more interactive and dynamic dashboards.
-1. **Dashboard links** - Link to other dashboards, panels, and external websites. Learn more about [dashboard links](ref:dashboard-links).
-1. **Current dashboard time range and time picker** - Click to select [relative time range](#relative-time-range) options and set custom [absolute time ranges](#absolute-time-range).
-   - You can change the **Timezone** and **Fiscal year** settings from the time range controls by clicking the **Change time settings** button.
-   - Time settings are saved on a per-dashboard basis.
-1. **Time range zoom out** - Click to zoom out the time range. Learn more about how to use [common time range controls](#common-time-range-controls).
-1. **Refresh dashboard** - Click to immediately trigger queries and refresh dashboard data.
-1. **Auto refresh control** - Click to select a dashboard auto refresh time interval.
-1. **Dashboard row** - A dashboard row is a logical divider within a dashboard that groups panels together.
-   - Rows can be collapsed or expanded allowing you to hide parts of the dashboard.
-   - Panels inside a collapsed row do not issue queries.
-   - Use [repeating rows](ref:repeating-rows) to dynamically create rows based on a template variable.
-1. **Dashboard panel** - The [panel](ref:panel-overview) is the primary building block of a dashboard.
-1. **Panel legend** - Change series colors as well as y-axis and series visibility directly from the legend.
+2. **Dashboard title** - You can create your own dashboard titles or have Grafana create them for you using [generative AI features](ref:generative-ai-features).
+3. **Kiosk mode** - Click to display the dashboard on a large screen such as a TV or a kiosk. Kiosk mode hides the main menu, navbar, and dashboard controls. Learn more about kiosk mode in our [How to Create Kiosks to Display Dashboards on a TV blog post](https://grafana.com/blog/2019/05/02/grafana-tutorial-how-to-create-kiosks-to-display-dashboards-on-a-tv/). Press `Esc` to leave kiosk mode.
+4. **Mark as favorite** - Mark the dashboard as one of your favorites so it's included in your list of **Starred** dashboards in the main menu.
+5. **Public label** - When you [share a dashboard externally](ref:shared-dashboards), it's marked with the **Public** label.
+6. **Dashboard insights** - Click to view analytics about your dashboard including information about users, activity, query counts. Learn more about [dashboard analytics](ref:dashboard-analytics).
+7. **Edit** - Click to leave view-only mode and enter edit mode, where you can make changes directly to the dashboard and access dashboard settings, as well as several panel editing functions.
+8. **Export** - Access [dashboard exporting](ref:export-dashboards) options.
+9. **Share dashboard** - Access several [dashboard sharing](ref:sharing) options.
+10. **Variables** - Use [variables](ref:variables), including ad hoc filters, to create more interactive and dynamic dashboards.
+11. **Dashboard links** - Link to other dashboards, panels, and external websites. Learn more about [dashboard links](ref:dashboard-links).
+12. **Current dashboard time range and time picker** - Click to select [relative time range](#relative-time-range) options and set custom [absolute time ranges](#absolute-time-range).
+    - You can change the **Timezone** and **Fiscal year** settings from the time range controls by clicking the **Change time settings** button.
+    - Time settings are saved on a per-dashboard basis.
+13. **Time range zoom out** - Click to zoom out the time range. Learn more about how to use [common time range controls](#common-time-range-controls).
+14. **Refresh dashboard** - Click to immediately trigger queries and refresh dashboard data.
+15. **Auto refresh control** - Click to select a dashboard auto refresh time interval.
+16. **Dashboard row** - A dashboard row is a logical divider within a dashboard that groups panels together.
+    - Rows can be collapsed or expanded allowing you to hide parts of the dashboard.
+    - Panels inside a collapsed row do not issue queries.
+    - Use [repeating rows](ref:repeating-rows) to dynamically create rows based on a template variable.
+17. **Dashboard panel** - The [panel](ref:panel-overview) is the primary building block of a dashboard.
+18. **Panel legend** - Change series colors as well as y-axis and series visibility directly from the legend.
 
 ## Keyboard shortcuts
 
@@ -193,13 +196,13 @@ The following sections define common time range controls.
 
 #### Current time range
 
-The current time range, also called the _time picker_, shows the time range currently displayed in the dashboard or panel you are viewing.
+The current time range, also called the *time picker*, shows the time range currently displayed in the dashboard or panel you are viewing.
 
 Hover your cursor over the field to see the exact time stamps in the range and their source (such as the local browser).
 
 ![Time picker](/media/docs/grafana/dashboards/screenshot-time-picker-11.2.png)
 
-Click the current time range to change it. You can change the current time using a _relative time range_, such as the last 15 minutes, or an _absolute time range_, such as `2020-05-14 00:00:00 to 2020-05-15 23:59:59`.
+Click the current time range to change it. You can change the current time using a *relative time range*, such as the last 15 minutes, or an *absolute time range*, such as `2020-05-14 00:00:00 to 2020-05-15 23:59:59`.
 
 ![Current time range](/media/docs/grafana/dashboards/screenshot-current-time-range-11.2.png)
 
@@ -280,7 +283,7 @@ Selecting the **Auto** interval schedules a refresh based on the query time rang
 
 ### Control the time range using a URL
 
-{{< docs/shared lookup="dashboards/time-range-URLs.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="dashboards/time-range-URLs.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Filter dashboard data
 
@@ -290,12 +293,13 @@ These filters are applied to all metric queries that use the specified data sour
 To filter dashboard data, follow these steps:
 
 1. On the dashboard, click in the filter field.
-1. Select a label, operator, and value.
 
+2. Select a label, operator, and value.
+   
    To add multiple values for one label, choose one of the multi-select operators, **One of** (`=|`) or **Not one of** (`!=|`). These operators only appear if the filter data source supports it.
 
-1. Repeat this process as needed until you have all the filters you need.
-
+3. Repeat this process as needed until you have all the filters you need.
+   
    ![Ad hoc filters](/media/docs/grafana/dashboards/screenshot-adhoc-filters-v11.3.png)
 
 ### Edit or delete filters
@@ -303,11 +307,13 @@ To filter dashboard data, follow these steps:
 To edit or delete filters, follow these steps:
 
 1. On the dashboard, click anywhere on the filter you want to change.
-1. Do one of the following:
 
+2. Do one of the following:
+   
    - To edit the operator or value of a filter, click anywhere on the filter and update it.
-
+     
      ![Editing an ad hoc filter](/media/docs/grafana/dashboards/screenshot-edit-filters-v11.3.png)
-
+   
    - To change the filter label, you must delete the filter and create a new one.
+   
    - To delete a filter, click the **X** next to it.

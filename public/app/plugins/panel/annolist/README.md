@@ -8,4 +8,4 @@ The annotations panel can be used to show annotations present within the panels 
 
 Read more about annotations here:
 
-[https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/annotations/](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/annotations/)
+<https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/annotations/>

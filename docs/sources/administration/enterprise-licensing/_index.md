@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../enterprise/activate-license/
-  - ../enterprise/license-expiration/
-  - ../enterprise/license-restrictions/
-  - ../enterprise/license/
-  - ../enterprise/license/activate-license/
-  - ../enterprise/license/license-expiration/
-  - ../enterprise/license/license-restrictions/
-  - license-restrictions/
-description: Activate and manage a Grafana Enterprise license
-keywords:
-  - grafana
-  - licensing
-  - enterprise
-labels:
+
+- ../enterprise/activate-license/
+- ../enterprise/license-expiration/
+- ../enterprise/license-restrictions/
+- ../enterprise/license/
+- ../enterprise/license/activate-license/
+- ../enterprise/license/license-expiration/
+- ../enterprise/license/license-restrictions/
+- license-restrictions/
+  description: Activate and manage a Grafana Enterprise license
+  keywords:
+- grafana
+- licensing
+- enterprise
+  labels:
   products:
-    - enterprise
-    - oss
-title: Grafana Enterprise license
-weight: 500
----
+  - enterprise
+  - oss
+    title: Grafana Enterprise license
+    weight: 500
+
+-----
 
 # Grafana Enterprise license
 
@@ -29,7 +32,7 @@ To purchase a license directly from Grafana Labs, [Contact a Grafana Labs repres
 
 You can also purchase a Grafana Enterprise license through the AWS Marketplace. To learn more about activating a license purchased through AWS, refer to [Activate a Grafana Enterprise license purchased through AWS Marketplace](activate-aws-marketplace-license/).
 
-{{< section >}}
+{{\< section \>}}
 
 ## Activate an Enterprise license
 
@@ -40,8 +43,8 @@ Follow these steps to activate your Grafana Enterprise license:
 To download your Grafana Enterprise license:
 
 1. Sign in to your [Grafana Cloud](/) account.
-1. Go to **My Account** and select an organization from the drop-down menu at the top left of the page. On the Overview page for each organization, you can see a section for Grafana Enterprise licenses. Click **Details** next to a license.
-1. At the bottom of the license details page, select **Download token** to download the `license.jwt` file that contains your license.
+2. Go to **My Account** and select an organization from the drop-down menu at the top left of the page. On the Overview page for each organization, you can see a section for Grafana Enterprise licenses. Click **Details** next to a license.
+3. At the bottom of the license details page, select **Download token** to download the `license.jwt` file that contains your license.
 
 ### Step 2. Add your license to a Grafana instance
 
@@ -51,7 +54,7 @@ You must install a Grafana Enterprise build to use the enterprise features, whic
 
 If you already use Grafana OSS, you can replace it with the same version of Grafana Enterprise.
 Ensure that you back up the configuration and database before proceeding.
-For more information, refer to [Back up Grafana](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/back-up-grafana/).
+For more information, refer to [Back up Grafana](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/back-up-grafana/).
 
 {{% /admonition %}}
 
@@ -62,9 +65,9 @@ There is more than one way to add the license to a Grafana instance:
 This is the preferred option for single instance installations of Grafana Enterprise.
 
 1. Sign in as a Grafana server administrator.
-1. Click **Administration > General > Stats and license** in the side navigation menu.
-1. Click **Upload a new token**.
-1. Select your license file, and upload it.
+2. Click **Administration \> General \> Stats and license** in the side navigation menu.
+3. Click **Upload a new token**.
+4. Select your license file, and upload it.
 
 #### Put the `license.jwt` file into the data directory of Grafana
 
@@ -72,7 +75,7 @@ On Linux systems, the data directory is usually at `/var/lib/grafana`.
 
 You can also configure a custom location for the license file using the grafana.ini setting:
 
-```bash
+``` bash
 [enterprise]
 license_path = /company/secrets/license.jwt
 ```
@@ -84,7 +87,7 @@ This setting can also be set with an environment variable, which is useful if yo
 You can add a license by pasting the content of the `license.jwt`
 to the grafana.ini configuration file:
 
-```bash
+``` bash
 [enterprise]
 license_text = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aGlzIjoiaXMiLCJub3QiOiJhIiwidmFsaWQiOiJsaWNlbnNlIn0.bxDzxIoJlYMwiEYKYT_l2s42z0Y30tY-6KKoyz9RuLE
 ```
@@ -92,7 +95,7 @@ license_text = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aGlzIjoiaXMiLCJub3QiOiJh
 This option can be set using the `GF_ENTERPRISE_LICENSE_TEXT`
 environment variable.
 
-### Step 3. Ensure that the license file's root URL matches the root_url configuration option
+### Step 3. Ensure that the license file's root URL matches the root\_url configuration option
 
 Update the [`root_url`](../../setup-grafana/configure-grafana/#root_url) in your configuration. It should be the URL that users type in their browsers to access the frontend, not the node hostname(s).
 
@@ -100,16 +103,12 @@ This is important, because as part of the validation checks at startup, Grafana 
 
 In your configuration file:
 
-```
-[server]
-root_url = https://grafana.example.com/
-```
+    [server]
+    root_url = https://grafana.example.com/
 
 Or with an environment variable:
 
-```
-GF_SERVER_ROOT_URL=https://grafana.example.com/
-```
+    GF_SERVER_ROOT_URL=https://grafana.example.com/
 
 ### Step 4. Restart Grafana
 
@@ -124,17 +123,20 @@ If your license has expired, most of Grafana keeps working as normal. Some enter
 ### Update your license
 
 1. Locate your current `license.jwt` file. In a standard installation it is stored inside the Grafana data directory, which on a typical Linux installation is in `/var/lib/grafana/data`. This location might be overridden in the ini file [Configuration](../../setup-grafana/configure-grafana/).
-
-   ```ini
+   
+   ``` ini
    [enterprise]
    license_path = /path/to/your/license.jwt
    ```
-
+   
    The configuration file's location may also be overridden by the `GF_ENTERPRISE_LICENSE_PATH` environment variable.
 
 2. Log in to your [Grafana Cloud Account](/login) and make sure you're in the correct organization in the dropdown at the top of the page.
+
 3. Under the **Grafana Enterprise** section in the menu bar to the left, choose licenses and download the currently valid license with which you want to run Grafana. If you cannot see a valid license on Grafana.com, please contact your account manager at Grafana Labs to renew your subscription.
+
 4. Replace the current `license.jwt`-file with the one you've just downloaded.
+
 5. [Restart Grafana](../../setup-grafana/start-restart-grafana/).
 
 ### If your license expires
@@ -211,7 +213,7 @@ When you become a Grafana Enterprise customer, you receive a license that govern
 
 Your Grafana license includes a maximum number of active users.
 
-- An _active user_ is a user who has signed in to Grafana within the last 30 days. This is a rolling window that is updated daily.
+- An *active user* is a user who has signed in to Grafana within the last 30 days. This is a rolling window that is updated daily.
 - When you reach the maximum number of active users, only currently active users (users who have signed in over the past 30 days) can sign in. When a new user or a previously-inactive user tries to sign in, the user will see an error message indicating that Grafana has reached its license limit.
 - The user's role, number of dashboards that a user can view or edit, and the number of organizations that they can access does not affect the active user count.
 - A license limit banner appears to administrators when Grafana reaches its active user limit; editors and viewers do not see the banner.
@@ -222,19 +224,19 @@ To determine the number of active users:
 
 1. Sign in to Grafana Enterprise as a System Administrator.
 
-1. Click **Administration** in the side navigation menu.
+2. Click **Administration** in the side navigation menu.
 
-1. Click **General**.
+3. Click **General**.
 
-1. Click **Stats and license**.
+4. Click **Stats and license**.
 
-1. Review the utilization count on the **Utilization** panel.
+5. Review the utilization count on the **Utilization** panel.
 
 ### Tiered licensing (deprecated)
 
 A tiered license defines dashboard viewers, and dashboard editors and administrators, as two distinct user types that each have their own user limit.
 
-Grafana only counts and enforces the _total_ number of active users in your Grafana instance. For example, if you purchase 150 active users, you can have 20 admins, 70 editors, and 60 viewers, or you can have 150 admins. Grafana will enforce the total number of active users even if you use a license that grants a specific number of admins or editors and a certain number of viewers. This is a more permissive policy than before, which gives you the flexibility to change users' roles.
+Grafana only counts and enforces the *total* number of active users in your Grafana instance. For example, if you purchase 150 active users, you can have 20 admins, 70 editors, and 60 viewers, or you can have 150 admins. Grafana will enforce the total number of active users even if you use a license that grants a specific number of admins or editors and a certain number of viewers. This is a more permissive policy than before, which gives you the flexibility to change users' roles.
 
 If you are running a pre-9.0 version of Grafana Enterprise, please refer to the documentation for that version to learn more about license enforcement in your current version.
 
@@ -250,13 +252,13 @@ As the license expiration date approaches, you will see a banner in Grafana that
 
 A license token is a digital key that activates your license. By default, the license token is renewed every 24 hours by calling the Grafana API. Short-lived license tokens enable more frequent validation that licenses are compliant, and allow for more frequent license updates - for example, adding users or invalidating a compromised license.
 
-To view the details of your license token, sign in to Grafana Enterprise as a Server Administrator and visit **Administration** > **General** > **Statistics and licensing**. Token details are in the Token section under License Details.
+To view the details of your license token, sign in to Grafana Enterprise as a Server Administrator and visit **Administration** \> **General** \> **Statistics and licensing**. Token details are in the Token section under License Details.
 
 License token renewal requires internet access, and requires that the `auto_refresh_license` [configuration setting](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/enterprise-configuration/#auto_refresh_license) be set to `true`. If your Grafana Enterprise instance cannot connect to the internet, contact your Grafana Labs account team for additional options for token renewal and license audit.
 
 **Grafana License URL:** Your license does not work with an instance of Grafana with a different root URL.
 
-The License URL is the complete URL of your Grafana instance, for example `https://grafana.your-company.com/`. It is defined in the [root_url](../../setup-grafana/configure-grafana/#root_url) configuration setting.
+The License URL is the complete URL of your Grafana instance, for example `https://grafana.your-company.com/`. It is defined in the [root\_url](../../setup-grafana/configure-grafana/#root_url) configuration setting.
 
 **Concurrent sessions limit**: As of Grafana Enterprise 7.5, users can initiate up to three concurrent sessions of Grafana.
 

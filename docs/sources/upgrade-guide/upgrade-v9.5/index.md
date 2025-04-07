@@ -1,26 +1,29 @@
----
+-----
+
 description: Upgrade to Grafana v9.5
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Upgrade to v9.5
-title: Upgrade to Grafana v9.5
-weight: 1800
----
+  - enterprise
+  - oss
+    menuTitle: Upgrade to v9.5
+    title: Upgrade to Grafana v9.5
+    weight: 1800
+
+-----
 
 # Upgrade to Grafana v9.5
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 
@@ -36,4 +39,4 @@ We are deprecating the dashboard previews feature and will remove it in Grafana 
 
 ### Migrate your API keys to service accounts
 
-We are upgrading Grafana [API keys](/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/) to service accounts. Service accounts are a superset of API keys that include token rotation and compatibility with [Role-based access control](../../administration/roles-and-permissions/access-control/). In a future release, we'll automatically migrate all existing API keys to service accounts. All of your existing tokens will continue to work; they will simply be migrated to service accounts. You can preempt this change by migrating your existing API keys to service accounts using Grafana's UI or API. Learn how to do this in the [API keys documentation](/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/).
+We are upgrading Grafana [API keys](/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/) to service accounts. Service accounts are a superset of API keys that include token rotation and compatibility with [Role-based access control](../../administration/roles-and-permissions/access-control/). In a future release, we'll automatically migrate all existing API keys to service accounts. All of your existing tokens will continue to work; they will simply be migrated to service accounts. You can preempt this change by migrating your existing API keys to service accounts using Grafana's UI or API. Learn how to do this in the [API keys documentation](/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/).

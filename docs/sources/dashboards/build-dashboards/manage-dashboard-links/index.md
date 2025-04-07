@@ -1,45 +1,48 @@
----
+-----
+
 aliases:
-  - ../../features/navigation-links/
-  - ../../linking/
-  - ../../linking/dashboard-links/
-  - ../../linking/linking-overview/
-  - ../../panels/working-with-panels/add-link-to-panel/
-  - ../manage-dashboard-links/
-description: Add links to your Grafana dashboards to connect to other dashboards, panels, and websites
-keywords:
-  - link
-  - dashboard
-  - grafana
-  - linking
-  - create links
-  - link dashboards
-  - navigate
-labels:
+
+- ../../features/navigation-links/
+- ../../linking/
+- ../../linking/dashboard-links/
+- ../../linking/linking-overview/
+- ../../panels/working-with-panels/add-link-to-panel/
+- ../manage-dashboard-links/
+  description: Add links to your Grafana dashboards to connect to other dashboards, panels, and websites
+  keywords:
+- link
+- dashboard
+- grafana
+- linking
+- create links
+- link dashboards
+- navigate
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Manage dashboard links
-title: Manage dashboard links
-weight: 200
-refs:
-  data-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
-  data-link-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/#data-link-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/#data-link-variables
-  dashboard-url-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard-url-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard-url-variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Manage dashboard links
+    title: Manage dashboard links
+    weight: 200
+    refs:
+    data-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
+    data-link-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/\#data-link-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/\#data-link-variables
+    dashboard-url-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard-url-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard-url-variables/
+
+-----
 
 # Manage dashboard links
 
@@ -84,63 +87,77 @@ Once you've added a dashboard link, it appears in the upper right corner of your
 Add links to other dashboards at the top of your current dashboard.
 
 1. In the dashboard you want to link, click **Edit**.
-1. Click **Settings**.
-1. Go to the **Links** tab and then click **Add dashboard link**.
 
+2. Click **Settings**.
+
+3. Go to the **Links** tab and then click **Add dashboard link**.
+   
    The default link type is **Dashboards**.
 
-1. In the **With tags** drop-down, enter tags to limit the linked dashboards to only the ones with the tags you enter.
-
+4. In the **With tags** drop-down, enter tags to limit the linked dashboards to only the ones with the tags you enter.
+   
    If you don't add any tags, Grafana includes links to all other dashboards.
 
-1. Set link options:
-
+5. Set link options:
+   
    - **Show as dropdown** – If you are linking to lots of dashboards, then you probably want to select this option and add an optional title to the dropdown. Otherwise, Grafana displays the dashboard links side by side across the top of your dashboard.
-   - **Include current time range** – Select this option to include the dashboard time range in the link. When the user clicks the link, the linked dashboard opens with the indicated time range already set. **Example:** https://play.grafana.org/d/000000010/annotations?orgId=1&from=now-3h&to=now
+   - **Include current time range** – Select this option to include the dashboard time range in the link. When the user clicks the link, the linked dashboard opens with the indicated time range already set. **Example:** https://play.grafana.org/d/000000010/annotations?orgId=1\&from=now-3h\&to=now
    - **Include current template variable values** – Select this option to include template variables currently used as query parameters in the link. When the user clicks the link, any matching templates in the linked dashboard are set to the values from the link. For more information, see [Dashboard URL variables](ref:dashboard-url-variables).
    - **Open link in new tab** – Select this option if you want the dashboard link to open in a new tab or window.
 
-1. Click **Save dashboard** in the top-right corner.
-1. Click **Back to dashboard** and then **Exit edit**.
+6. Click **Save dashboard** in the top-right corner.
+
+7. Click **Back to dashboard** and then **Exit edit**.
 
 ### Add a URL link to a dashboard
 
 Add a link to a URL at the top of your current dashboard. You can link to any available URL, including dashboards, panels, or external sites. You can even control the time range to ensure the user is zoomed in on the right data in Grafana.
 
 1. In the dashboard you want to link, click **Edit**.
-1. Click **Settings**.
-1. Go to the **Links** tab and then click **Add dashboard link**.
-1. In the **Type** drop-down, select **Link**.
-1. In the **URL** field, enter the URL to which you want to link.
 
+2. Click **Settings**.
+
+3. Go to the **Links** tab and then click **Add dashboard link**.
+
+4. In the **Type** drop-down, select **Link**.
+
+5. In the **URL** field, enter the URL to which you want to link.
+   
    Depending on the target, you might want to include field values. **Example:** https://github.com/grafana/grafana/issues/new?title=Dashboard%3A%20HTTP%20Requests
 
-1. In the **Tooltip** field, enter the tooltip you want the link to display when the user hovers their mouse over it.
-1. In the **Icon** drop-down, choose the icon you want displayed with the link.
-1. Set link options; by default, these options are enabled for URL links:
+6. In the **Tooltip** field, enter the tooltip you want the link to display when the user hovers their mouse over it.
 
-   - **Include current time range** – Select this option to include the dashboard time range in the link. When the user clicks the link, the linked dashboard opens with the indicated time range already set. **Example:** https://play.grafana.org/d/000000010/annotations?orgId=1&from=now-3h&to=now
+7. In the **Icon** drop-down, choose the icon you want displayed with the link.
+
+8. Set link options; by default, these options are enabled for URL links:
+   
+   - **Include current time range** – Select this option to include the dashboard time range in the link. When the user clicks the link, the linked dashboard opens with the indicated time range already set. **Example:** https://play.grafana.org/d/000000010/annotations?orgId=1\&from=now-3h\&to=now
    - **Include current template variable values** – Select this option to include template variables currently used as query parameters in the link. When the user clicks the link, any matching templates in the linked dashboard are set to the values from the link.
    - **Open link in new tab** – Select this option if you want the dashboard link to open in a new tab or window.
 
-1. Click **Save dashboard** in the top-right corner.
-1. Click **Back to dashboard** and then **Exit edit**.
+9. Click **Save dashboard** in the top-right corner.
+
+10. Click **Back to dashboard** and then **Exit edit**.
 
 ### Update a dashboard link
 
 To edit, duplicate, or delete dashboard link, follow these steps:
 
 1. In the dashboard you want to link, click **Edit**.
-1. Click **Settings**.
-1. Go to the **Links** tab.
-1. Do one of the following:
 
+2. Click **Settings**.
+
+3. Go to the **Links** tab.
+
+4. Do one of the following:
+   
    - **Edit** - Click the name of the link and update the link settings.
    - **Duplicate** - Click the copy link icon next to the link that you want to duplicate.
    - **Delete** - Click the red **X** next to the link that you want to delete, and then **Delete**.
 
-1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
+5. Click **Save dashboard**.
+
+6. Click **Back to dashboard** and then **Exit edit**.
 
 ## Panel links
 
@@ -148,52 +165,73 @@ Each panel can have its own set of links that are shown in the upper left of the
 
 Click the icon next to the panel title to see available panel links.
 
-{{< figure src="/media/docs/grafana/dashboards/screenshot-panel-links-v11.3.png" max-width="550px" alt="List of panel links displayed" >}}
+{{\< figure src="/media/docs/grafana/dashboards/screenshot-panel-links-v11.3.png" max-width="550px" alt="List of panel links displayed" \>}}
 
 ### Add a panel link
 
 1. Hover over any part of the panel to which you want to add the link to display the actions menu on the top right corner.
-1. Click the menu and select **Edit**.
 
+2. Click the menu and select **Edit**.
+   
    To use a keyboard shortcut to open the panel, hover over the panel and press `e`.
 
-1. Expand the **Panel options** section, scroll down to **Panel links**.
-1. Click **Add link**.
-1. Enter a **Title**. **Title** is a human-readable label for the link that will be displayed in the UI.
-1. Enter the **URL** you want to link to.
+3. Expand the **Panel options** section, scroll down to **Panel links**.
+
+4. Click **Add link**.
+
+5. Enter a **Title**. **Title** is a human-readable label for the link that will be displayed in the UI.
+
+6. Enter the **URL** you want to link to.
    You can even add one of the template variables defined in the dashboard. Press Ctrl+Space or Cmd+Space and click in the **URL** field to see the available variables. By adding template variables to your panel link, the link sends the user to the right context, with the relevant variables already set. You can also use time variables:
+   
    - `from` - Defines the lower limit of the time range, specified in ms epoch.
    - `to` - Defines the upper limit of the time range, specified in ms epoch.
    - `time` and `time.window` - Define a time range from `time-time.window/2` to `time+time.window/2`. Both params should be specified in ms. For example `?time=1500000000000&time.window=10000` will result in 10s time range from 1499999995000 to 1500000005000.
-1. If you want the link to open in a new tab, then select **Open in new tab**.
-1. Click **Save** to save changes and close the dialog box.
-1. Click **Save dashboard** in the top-right corner.
-1. Click **Back to dashboard** and then **Exit edit**.
+
+7. If you want the link to open in a new tab, then select **Open in new tab**.
+
+8. Click **Save** to save changes and close the dialog box.
+
+9. Click **Save dashboard** in the top-right corner.
+
+10. Click **Back to dashboard** and then **Exit edit**.
 
 ### Update a panel link
 
 1. Hover over any part of the panel to display the actions menu on the top right corner.
-1. Click the menu and select **Edit**.
 
+2. Click the menu and select **Edit**.
+   
    To use a keyboard shortcut to open the panel, hover over the panel and press `e`.
 
-1. Expand the **Panel options** section, scroll down to Panel links.
-1. Find the link that you want to make changes to.
-1. Click the Edit (pencil) icon to open the Edit link window.
-1. Make any necessary changes.
-1. Click **Save** to save changes and close the dialog box.
-1. Click **Save dashboard** in the top-right corner.
-1. Click **Back to dashboard** and then **Exit edit**.
+3. Expand the **Panel options** section, scroll down to Panel links.
+
+4. Find the link that you want to make changes to.
+
+5. Click the Edit (pencil) icon to open the Edit link window.
+
+6. Make any necessary changes.
+
+7. Click **Save** to save changes and close the dialog box.
+
+8. Click **Save dashboard** in the top-right corner.
+
+9. Click **Back to dashboard** and then **Exit edit**.
 
 ### Delete a panel link
 
 1. Hover over any part of the panel to display the actions menu on the top right corner.
-1. Click the menu and select **Edit**.
 
+2. Click the menu and select **Edit**.
+   
    To use a keyboard shortcut to open the panel, hover over the panel and press `e`.
 
-1. Expand the **Panel options** section, scroll down to Panel links.
-1. Find the link that you want to delete.
-1. Click the **X** icon next to the link you want to delete.
-1. Click **Save dashboard** in the top-right corner.
-1. Click **Back to dashboard** and then **Exit edit**.
+3. Expand the **Panel options** section, scroll down to Panel links.
+
+4. Find the link that you want to delete.
+
+5. Click the **X** icon next to the link you want to delete.
+
+6. Click **Save dashboard** in the top-right corner.
+
+7. Click **Back to dashboard** and then **Exit edit**.

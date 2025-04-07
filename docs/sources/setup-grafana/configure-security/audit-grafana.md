@@ -1,19 +1,22 @@
----
+-----
+
 aliases:
-  - ../../enterprise/auditing/
-description: Auditing
-keywords:
-  - grafana
-  - auditing
-  - audit
-  - logs
-labels:
+
+- ../../enterprise/auditing/
+  description: Auditing
+  keywords:
+- grafana
+- auditing
+- audit
+- logs
+  labels:
   products:
-    - cloud
-    - enterprise
-title: Audit a Grafana instance
-weight: 800
----
+  - cloud
+  - enterprise
+    title: Audit a Grafana instance
+    weight: 800
+
+-----
 
 # Audit a Grafana instance
 
@@ -86,7 +89,7 @@ distinguished by the `action` and `resources[...].type` fields in the JSON recor
 
 For example, creating an API key produces an audit log like this:
 
-```json {hl_lines=4}
+``` json {hl_lines=4}
 {
   "action": "create",
   "resources": [
@@ -328,7 +331,7 @@ external group.
 
 #### Cloud migration management
 
-{{< docs/public-preview product="Cloud Migration Assistant" featureFlag="onPremToCloudMigrations" >}}
+{{\< docs/public-preview product="Cloud Migration Assistant" featureFlag="onPremToCloudMigrations" \>}}
 
 | Action                           | Distinguishing fields                                       |
 | -------------------------------- | ----------------------------------------------------------- |
@@ -365,7 +368,7 @@ Options are `file`, `loki`, and `logger`. Use spaces to separate multiple modes,
 
 By default, when a user creates or updates a dashboard, its content will not appear in the logs as it can significantly increase the size of your logs. If this is important information for you and you can handle the amount of data generated, then you can enable this option in the configuration.
 
-```ini
+``` ini
 [auditing]
 # Enable the auditing feature
 enabled = false
@@ -389,7 +392,7 @@ Each exporter has its own configuration fields.
 
 Audit logs are saved into files. You can configure the folder to use to save these files. Logs are rotated when the file size is exceeded and at the start of a new day.
 
-```ini
+``` ini
 [auditing.logs.file]
 # Path to logs folder
 path = data/log
@@ -407,7 +410,7 @@ Audit logs are sent to a [Loki](/oss/loki/) service, through HTTP or gRPC.
 The HTTP option for the Loki exporter is available only in Grafana Enterprise version 7.4 and later.
 {{% /admonition %}}
 
-```ini
+``` ini
 [auditing.logs.loki]
 # Set the communication protocol to use with Loki (can be grpc or http)
 type = grpc
@@ -423,12 +426,12 @@ tenant_id =
 If you have multiple Grafana instances sending logs to the same Loki service or if you are using Loki for non-audit logs, audit logs come with additional labels to help identifying them:
 
 - **host** - OS hostname on which the Grafana instance is running.
-- **grafana_instance** - Application URL.
+- **grafana\_instance** - Application URL.
 - **kind** - `auditing`
 
 When basic authentication is needed to ingest logs in your Loki instance, you can specify credentials in the URL field. For example:
 
-```ini
+``` ini
 # Set the communication protocol to use with Loki (can be grpc or http)
 type = http
 # Set the address for writing logs to Loki

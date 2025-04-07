@@ -4,7 +4,7 @@ Here's some notes about [OpenFGA authorization model](https://openfga.dev/docs/m
 
 ## GroupResource level permissions
 
-A relation to a group_resource object grants access to all objects of the GroupResource.
+A relation to a group\_resource object grants access to all objects of the GroupResource.
 They take the form of `{ “user”: “user:1”, relation: “read”, object:”group_resource:dashboard.grafana.app/dashboards” }`. This
 example would grant `user:1` access to all `dashboard.grafana.app/dashboards` in the namespace.
 
@@ -15,8 +15,7 @@ them. This is because we want to store the folder tree relations.
 
 To grant a user access to a specific folder we store `{ “user”: “user:1”, relation: “read”, object:”folder:<name>” }`
 
-To grant a user access to sub resources of a folder we store ``{ “user”: “user:1”, relation: “resource_read”, object:”folder:<uid>”}` with additional context.
-This context holds all GroupResources in a list e.g. `{ "subresources": ["dashboard.grafana.app/dashboards", "alerting.grafana.app/rules" ] }`.
+To grant a user access to sub resources of a folder we store \`\`{ “user”: “user:1”, relation: “resource\_read”, object:”folder:<uid>”}`with additional context. This context holds all GroupResources in a list e.g.`{ "subresources": \["dashboard.grafana.app/dashboards", "alerting.grafana.app/rules" \] }\`.
 
 ## Resource level permissions
 
@@ -35,10 +34,8 @@ It's also possible to grant user access to all subresources for specific resourc
 
 For the typed resources (like folders, users, teams, etc) subresources work in a little bit different way. Since typed resources only have ID in the name, subresources are added to the `subresource_filter`. For example, to grant user access to folder subresource, following tuple will be created:
 
-```
-{ “user”: “user:1”, relation: “resource_read”, object:”folder:<uid>” }
-context: { "subresource_filter": ["folder.grafana.app/folders/<subresource>"] }
-```
+    { “user”: “user:1”, relation: “resource_read”, object:”folder:<uid>” }
+    context: { "subresource_filter": ["folder.grafana.app/folders/<subresource>"] }
 
 Note that relation is translated from `read` to `resource_read`. This is required to distinguish access between resource and its subresources. When check request is performed, we check if request contains subresource. If so, context filter and translated relation are used.
 
@@ -46,13 +43,13 @@ Note that relation is translated from `read` to `resource_read`. This is require
 
 In the RBAC model managed permissions stored as a special "managed" role permissions. OpenFGA model allows to assign permissions directly to users, so it produces following tuples:
 
-```text
+``` text
 user:<user_uid> read folder:<folder_uid>
 ```
 
 It's also possible to assign permissions for team members using `#member` relation:
 
-```text
+``` text
 team:<team_uid>#member read folder:<folder_uid>
 ```
 
@@ -62,7 +59,7 @@ RBAC authorization model grants permissions to users through roles and role assi
 
 To understand how RBAC permissions linked to roles, let's take a look at the folder read permission as example:
 
-```text
+``` text
 type role
   relations
     define assignee: [user, team#member, role#assignee]

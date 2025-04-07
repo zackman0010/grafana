@@ -1,19 +1,22 @@
----
+-----
+
 aliases:
-  - administration/cli/
-description: Guide to using grafana cli
-keywords:
-  - grafana
-  - cli
-  - grafana cli
-  - command line interface
-labels:
+
+- administration/cli/
+  description: Guide to using grafana cli
+  keywords:
+- grafana
+- cli
+- grafana cli
+- command line interface
+  labels:
   products:
-    - enterprise
-    - oss
-title: Grafana CLI
-weight: 400
----
+  - enterprise
+  - oss
+    title: Grafana CLI
+    weight: 400
+
+-----
 
 # Grafana CLI
 
@@ -23,9 +26,7 @@ Grafana CLI has `plugins` and `admin` commands, as well as global options.
 
 To list all commands and options:
 
-```
-grafana cli -h
-```
+    grafana cli -h
 
 ## Run Grafana CLI
 
@@ -34,16 +35,16 @@ Alternately, if your current directory is the `bin` directory, run `./grafana cl
 Otherwise, you can specify full path to the binary.
 For example, on Linux `/usr/share/grafana/bin/grafana` and on Windows `C:\Program Files\GrafanaLabs\grafana\bin\grafana.exe`, and run it with `grafana cli`.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Some commands, such as installing or removing plugins, require `sudo` on Linux.
 If you're on Windows, run Windows PowerShell as Administrator.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Grafana CLI command syntax
 
 The general syntax for commands in Grafana CLI is:
 
-```bash
+``` bash
 grafana cli [global options] command [command options] [arguments...]
 ```
 
@@ -59,7 +60,7 @@ Each global option applies only to the command in which it is used. For example,
 
 **Example:**
 
-```bash
+``` bash
 grafana cli -h
 ```
 
@@ -69,17 +70,17 @@ grafana cli -h
 
 **Example:**
 
-```bash
+``` bash
 grafana cli -v
 ```
 
 ### Override default plugin directory
 
-`--pluginsDir value` overrides the path to where your local Grafana instance stores plugins. Use this option if you want to install, update, or remove a plugin somewhere other than the default directory ("/var/lib/grafana/plugins") [$GF_PLUGIN_DIR].
+`--pluginsDir value` overrides the path to where your local Grafana instance stores plugins. Use this option if you want to install, update, or remove a plugin somewhere other than the default directory ("/var/lib/grafana/plugins") \[$GF\_PLUGIN\_DIR\].
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --pluginsDir "/var/lib/grafana/devplugins" plugins install <plugin-id>
 ```
 
@@ -89,7 +90,7 @@ grafana cli --pluginsDir "/var/lib/grafana/devplugins" plugins install <plugin-i
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --repo "https://example.com/plugins" plugins install <plugin-id>
 ```
 
@@ -99,7 +100,7 @@ grafana cli --repo "https://example.com/plugins" plugins install <plugin-id>
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --pluginUrl https://company.com/grafana/plugins/<plugin-id>-<plugin-version>.zip plugins install <plugin-id>
 ```
 
@@ -111,7 +112,7 @@ grafana cli --pluginUrl https://company.com/grafana/plugins/<plugin-id>-<plugin-
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --insecure --pluginUrl https://company.com/grafana/plugins/<plugin-id>-<plugin-version>.zip plugins install <plugin-id>
 ```
 
@@ -121,7 +122,7 @@ grafana cli --insecure --pluginUrl https://company.com/grafana/plugins/<plugin-i
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --debug plugins install <plugin-id>
 ```
 
@@ -133,7 +134,7 @@ For example, you can use it to redirect logging to another file (maybe to log pl
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --configOverrides cfg:default.paths.log=/dev/null plugins install <plugin-id>
 ```
 
@@ -143,7 +144,7 @@ Sets the path for the Grafana install/home path, defaults to working directory. 
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --homepath "/usr/share/grafana" admin reset-admin-password <new password>
 ```
 
@@ -153,7 +154,7 @@ grafana cli --homepath "/usr/share/grafana" admin reset-admin-password <new pass
 
 **Example:**
 
-```bash
+``` bash
 grafana cli --config "/etc/configuration/" admin reset-admin-password mynewpassword
 ```
 
@@ -165,43 +166,43 @@ All listed commands apply to the Grafana default repositories and directories. Y
 
 ### List available plugins
 
-```bash
+``` bash
 grafana cli plugins list-remote
 ```
 
 ### Install the latest version of a plugin
 
-```bash
+``` bash
 grafana cli plugins install <plugin-id>
 ```
 
 ### Install a specific version of a plugin
 
-```bash
+``` bash
 grafana cli plugins install <plugin-id> <version>
 ```
 
 ### List installed plugins
 
-```bash
+``` bash
 grafana cli plugins ls
 ```
 
 ### Update all installed plugins
 
-```bash
+``` bash
 grafana cli plugins update-all
 ```
 
 ### Update one plugin
 
-```bash
+``` bash
 grafana cli plugins update <plugin-id>
 ```
 
 ### Remove one plugin
 
-```bash
+``` bash
 grafana cli plugins remove <plugin-id>
 ```
 
@@ -211,7 +212,7 @@ Admin commands are only available in Grafana 4.1 and later.
 
 ### Show all admin commands
 
-```bash
+``` bash
 grafana cli admin
 ```
 
@@ -225,11 +226,11 @@ If there are two flags being used to set the homepath and the config file path, 
 
 To correct this, use the `--homepath` global option to specify the Grafana default homepath for this command:
 
-```bash
+``` bash
 grafana cli --homepath "/usr/share/grafana" admin reset-admin-password <new password>
 ```
 
-If you have not lost the admin password, we recommend that you change the user password either in the User Preferences or in the Server Admin > User tab.
+If you have not lost the admin password, we recommend that you change the user password either in the User Preferences or in the Server Admin \> User tab.
 
 If you need to set the password in a script, then you can use the [Grafana User API](../developers/http_api/user/#change-password).
 
@@ -237,7 +238,7 @@ If you need to set the password in a script, then you can use the [Grafana User 
 
 If you installed Grafana using Homebrew, you can reset the admin password using the following command:
 
-```bash
+``` bash
 /opt/homebrew/opt/grafana/bin/grafana cli --config /opt/homebrew/etc/grafana/grafana.ini --homepath /opt/homebrew/opt/grafana/share/grafana --configOverrides cfg:default.paths.data=/opt/homebrew/var/lib/grafana admin reset-admin-password <new password>
 ```
 
@@ -245,10 +246,10 @@ If you installed Grafana using Homebrew, you can reset the admin password using 
 
 `data-migration` runs a script that migrates or cleans up data in your database.
 
-`encrypt-datasource-passwords` migrates passwords from unsecured fields to secure_json_data field. Returns `ok` unless there is an error. Safe to execute multiple times.
+`encrypt-datasource-passwords` migrates passwords from unsecured fields to secure\_json\_data field. Returns `ok` unless there is an error. Safe to execute multiple times.
 
 **Example:**
 
-```bash
+``` bash
 grafana cli admin data-migration encrypt-datasource-passwords
 ```

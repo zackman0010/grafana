@@ -1,115 +1,118 @@
----
+-----
+
 aliases:
-  - ../panels/configure-overrides/
-  - ../panels/field-overrides/
-  - ../panels/override-field-values/
-  - ../panels/override-field-values/about-field-overrides/
-  - ../panels/override-field-values/add-a-field-override/
-  - ../panels/override-field-values/delete-a-field-override/
-  - ../panels/override-field-values/edit-field-override/
-  - ../panels/override-field-values/view-field-override/
-labels:
+
+- ../panels/configure-overrides/
+- ../panels/field-overrides/
+- ../panels/override-field-values/
+- ../panels/override-field-values/about-field-overrides/
+- ../panels/override-field-values/add-a-field-override/
+- ../panels/override-field-values/delete-a-field-override/
+- ../panels/override-field-values/edit-field-override/
+- ../panels/override-field-values/view-field-override/
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure field overrides
-title: Configure field overrides
-description: Configure field overrides to customize visualization settings
-weight: 110
-refs:
-  state-timeline:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/state-timeline/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
-  gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
-  bar-gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
-  canvas:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/canvas/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
-  candlestick:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/candlestick/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
-  status-history:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/status-history/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
-  heatmap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/heatmap/
-  rename-by-regex-transformation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/#rename-by-regex
-    - pattern: /docs/grafana-cloud
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/#rename-by-regex
-  histogram:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
-  bar-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
-  pie-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/pie-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
-  time-series:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
-  geomap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/geomap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
-  xy-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/xy-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
-  trend:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/trend/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
-  stat:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/stat/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure field overrides
+    title: Configure field overrides
+    description: Configure field overrides to customize visualization settings
+    weight: 110
+    refs:
+    state-timeline:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/state-timeline/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
+    gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
+    bar-gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
+    canvas:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/canvas/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
+    candlestick:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/candlestick/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
+    status-history:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/status-history/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
+    heatmap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/heatmap/
+    rename-by-regex-transformation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/\#rename-by-regex
+  - pattern: /docs/grafana-cloud
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/\#rename-by-regex
+    histogram:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
+    bar-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
+    pie-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/pie-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
+    time-series:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+    geomap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/geomap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
+    xy-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/xy-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
+    trend:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/trend/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
+    stat:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/stat/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
+
+-----
 
 # Configure field overrides
 
 Overrides allow you to customize visualization settings for specific fields or series. When you add an override rule, it targets a particular set of fields and lets you define multiple options for how that field is displayed.
 
-For example, you can override the default unit measurement for all fields that include the text "bytes" by adding an override using the **Fields with name matching regex** matcher and then the **Standard options > Unit** setting to the override rule:
+For example, you can override the default unit measurement for all fields that include the text "bytes" by adding an override using the **Fields with name matching regex** matcher and then the **Standard options \> Unit** setting to the override rule:
 
 ![Field with unit override](/media/docs/grafana/panels-visualizations/screenshot-unit-override-v10.3.png)
 
@@ -121,7 +124,7 @@ After you've set them, your overrides appear in both the **All** and **Overrides
 
 You can configure field overrides for the following visualizations:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Bar chart](ref:bar-chart)
 - [Bar gauge](ref:bar-gauge)
@@ -140,7 +143,7 @@ You can configure field overrides for the following visualizations:
 - [Trend](ref:trend)
 - [XY chart](ref:xy-chart)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ## Override rules
 
@@ -184,8 +187,8 @@ You can apply field options to each field (column) of this structure to alter th
 
 - Rule: **Fields with type**
 - Field: temperature
-- Override property: **Standard options > Unit**
-  - Selection: **Temperature > Celsius**
+- Override property: **Standard options \> Unit**
+  - Selection: **Temperature \> Celsius**
 
 This results in the following table:
 
@@ -195,7 +198,7 @@ This results in the following table:
 | 2020-01-02 03:05:00 |   47.0 °C   |
 | 2020-01-02 03:06:00 |   48.0 °C   |
 
-In addition, the decimal place isn't required, so you can remove it by adding another override property that changes the **Standard options > Decimals** setting from **auto** to `0`. That results in the following table:
+In addition, the decimal place isn't required, so you can remove it by adding another override property that changes the **Standard options \> Decimals** setting from **auto** to `0`. That results in the following table:
 
 |        time         | temperature |
 | :-----------------: | :---------: |
@@ -217,10 +220,10 @@ Use the following override rule and properties to add the **Celsius** unit optio
 
 - Rule: **Fields with type**
 - Field: temperature
-- Override property: **Standard options > Unit**
-  - Selection: **Temperature > Celsius**
-- Override property: **Standard options > Decimals**
-  -Change setting from **auto** to `0`
+- Override property: **Standard options \> Unit**
+  - Selection: **Temperature \> Celsius**
+- Override property: **Standard options \> Decimals**
+  \-Change setting from **auto** to `0`
 
 This results in the following table:
 
@@ -230,7 +233,7 @@ This results in the following table:
 | 2020-01-02 03:05:00 | 47 °C     | 34 °C    | 68 °C    |
 | 2020-01-02 03:06:00 | 48 °C     | 31 °C    | 68 °C    |
 
-The temperature fields are displaying correctly, but the humidity has incorrect units. You can fix this by applying a **Misc > Percent (0-100)** override to the humidity field. This results in the following table:
+The temperature fields are displaying correctly, but the humidity has incorrect units. You can fix this by applying a **Misc \> Percent (0-100)** override to the humidity field. This results in the following table:
 
 | time                | high temp | low temp | humidity |
 | ------------------- | --------- | -------- | -------- |
@@ -243,36 +246,36 @@ The temperature fields are displaying correctly, but the humidity has incorrect 
 To add a field override, follow these steps:
 
 1. Navigate to the panel to which you want to add the data link.
-1. Hover over any part of the panel to display the menu icon in the upper-right corner.
-1. Click the menu icon and select **Edit** to open the panel editor.
-1. At the bottom of the panel editor pane, click **Add field override**.
-1. Select the fields to which the override will be applied:
+2. Hover over any part of the panel to display the menu icon in the upper-right corner.
+3. Click the menu icon and select **Edit** to open the panel editor.
+4. At the bottom of the panel editor pane, click **Add field override**.
+5. Select the fields to which the override will be applied:
    - **Fields with name**
    - **Fields with name matching regex**
    - **Fields with type**
    - **Fields returned by query**
    - **Fields with values**
-1. Click **Add override property**.
-1. Select the field option that you want to apply.
-1. Continue to add overrides to this field by clicking **Add override property**.
-1. Add as many overrides as you need.
-1. When you're finished, click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
+6. Click **Add override property**.
+7. Select the field option that you want to apply.
+8. Continue to add overrides to this field by clicking **Add override property**.
+9. Add as many overrides as you need.
+10. When you're finished, click **Save dashboard**.
+11. Click **Back to dashboard** and then **Exit edit**.
 
 ## Edit a field override
 
 To edit a field override, follow these steps:
 
 1. Navigate to the panel to which you want to add the data link.
-1. Hover over any part of the panel to display the menu icon in the upper-right corner.
-1. Click the menu icon and select **Edit** to open the panel editor.
-1. In the panel editor pane, click the **Overrides** tab.
-1. Locate the override you want to change.
-1. Perform any of the following tasks:
+2. Hover over any part of the panel to display the menu icon in the upper-right corner.
+3. Click the menu icon and select **Edit** to open the panel editor.
+4. In the panel editor pane, click the **Overrides** tab.
+5. Locate the override you want to change.
+6. Perform any of the following tasks:
    - Edit settings on existing overrides or field selection parameters.
    - Delete existing override properties by clicking the **X** next to the property.
    - Delete an override entirely by clicking the trash icon at the top-right corner.
-1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
+7. Click **Save dashboard**.
+8. Click **Back to dashboard** and then **Exit edit**.
 
 The changes you make take effect immediately.

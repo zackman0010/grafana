@@ -7,15 +7,15 @@ Grafana periodically updates the Docker image, [`docs-base`](https://hub.docker.
 
 ## Requirements
 
-- Docker >= 2.1.0.3
-- Yarn >= 1.22.4
+- Docker \>= 2.1.0.3
+- Yarn \>= 1.22.4
 
 ## Build the doc site
 
 First, make sure the Docker daemon is running on your machine. Then, follow these steps:
 
 1. On the command line, first change to the docs folder: `cd docs`.
-1. Run `make docs`. This launches a preview of the website with the current grafana docs at `http://localhost:3002/docs/grafana/latest/` which will refresh automatically when changes are made to content in the `sources` directory.
+2. Run `make docs`. This launches a preview of the website with the current grafana docs at `http://localhost:3002/docs/grafana/latest/` which will refresh automatically when changes are made to content in the `sources` directory.
 
 If you have the grafana/website repo checked out in the same directory as the grafana repo, then you can run `make docs-local-static` to use local assets (such as images).
 
@@ -24,7 +24,7 @@ If you have the grafana/website repo checked out in the same directory as the gr
 When you open a PR that changes files in the `docs/sources/` directory, CI builds a deploy preview.
 After the deploy preview has been built, the **Deploy pr preview** workflow comments a link to the preview URL and adds a commit status check .
 
----
+-----
 
 ## Content guidelines
 
@@ -68,7 +68,7 @@ To specify different menu text from the page title, use the front matter paramet
 
 Please see our help documentation on [Image, diagram, and screenshot guidelines](https://grafana.com/docs/writers-toolkit/writing-guide/image-guidelines/) for comprehensive information.
 
----
+-----
 
 ## Deploy changes to grafana.com
 

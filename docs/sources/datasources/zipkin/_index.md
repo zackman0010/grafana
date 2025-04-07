@@ -1,68 +1,71 @@
----
+-----
+
 aliases:
-  - ../data-sources/zipkin/
-  - ../data-sources/zipkin/query-editor/
-description: Guide for using Zipkin in Grafana
-keywords:
-  - grafana
-  - zipkin
-  - tracing
-  - querying
-labels:
+
+- ../data-sources/zipkin/
+- ../data-sources/zipkin/query-editor/
+  description: Guide for using Zipkin in Grafana
+  keywords:
+- grafana
+- zipkin
+- tracing
+- querying
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Zipkin
-title: Zipkin data source
-weight: 1600
-refs:
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  variable-syntax:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-  configure-grafana-feature-toggles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-  trace-integration:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/trace-integration/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/trace-integration/
-  node-graph:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/node-graph/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/node-graph/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Zipkin
+    title: Zipkin data source
+    weight: 1600
+    refs:
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    variable-syntax:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+    configure-grafana-feature-toggles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#feature\_toggles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#feature\_toggles
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+    trace-integration:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/trace-integration/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/trace-integration/
+    node-graph:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/node-graph/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/node-graph/
+
+-----
 
 # Zipkin data source
 
@@ -80,23 +83,26 @@ You can also [upload a JSON trace file](#upload-a-json-trace-file), [link to a t
 
 To configure basic settings for the data source, complete the following steps:
 
-1.  Click **Connections** in the left-side menu.
-1.  Under Your connections, click **Data sources**.
-1.  Enter `Zipkin` in the search bar.
-1.  Select **Zipkin**.
+1. Click **Connections** in the left-side menu.
 
-    The **Settings** tab of the data source is displayed.
+2. Under Your connections, click **Data sources**.
 
-1.  Set the data source's basic configuration options:
+3. Enter `Zipkin` in the search bar.
 
-    | Name           | Description                                                              |
-    | -------------- | ------------------------------------------------------------------------ |
-    | **Name**       | Sets the name you use to refer to the data source in panels and queries. |
-    | **Default**    | Defines whether this data source is pre-selected for new panels.         |
-    | **URL**        | Sets the URL of the Zipkin instance, such as `http://localhost:9411`.    |
-    | **Basic Auth** | Enables basic authentication for the Zipkin data source.                 |
-    | **User**       | Defines the user name for basic authentication.                          |
-    | **Password**   | Defines the password for basic authentication.                           |
+4. Select **Zipkin**.
+   
+   The **Settings** tab of the data source is displayed.
+
+5. Set the data source's basic configuration options:
+   
+   | Name           | Description                                                              |
+   | -------------- | ------------------------------------------------------------------------ |
+   | **Name**       | Sets the name you use to refer to the data source in panels and queries. |
+   | **Default**    | Defines whether this data source is pre-selected for new panels.         |
+   | **URL**        | Sets the URL of the Zipkin instance, such as `http://localhost:9411`.    |
+   | **Basic Auth** | Enables basic authentication for the Zipkin data source.                 |
+   | **User**       | Defines the user name for basic authentication.                          |
+   | **Password**   | Defines the password for basic authentication.                           |
 
 ### Trace to logs
 
@@ -116,24 +122,30 @@ There are two ways to configure the trace to logs feature:
 #### Use a simple configuration
 
 1. Select the target data source from the drop-down list.
-
+   
    You can also click **Open advanced data source picker** to see more options, including adding a data source.
 
-1. Set start and end time shift. As the logs timestamps may not exactly match the timestamps of the spans in trace it may be necessary to search in larger or shifted time range to find the desired logs.
-1. Select which tags to use in the logs query. The tags you configure must be present in the spans attributes or resources for a trace to logs span link to appear. You can optionally configure a new name for the tag. This is useful if the tag has dots in the name and the target data source does not allow using dots in labels. In that case, you can for example remap `http.status` to `http_status`.
-1. Optionally, switch on the **Filter by trace ID** and/or **Filter by span ID** setting to further filter the logs if your logs consistently contain trace or span IDs.
+2. Set start and end time shift. As the logs timestamps may not exactly match the timestamps of the spans in trace it may be necessary to search in larger or shifted time range to find the desired logs.
+
+3. Select which tags to use in the logs query. The tags you configure must be present in the spans attributes or resources for a trace to logs span link to appear. You can optionally configure a new name for the tag. This is useful if the tag has dots in the name and the target data source does not allow using dots in labels. In that case, you can for example remap `http.status` to `http_status`.
+
+4. Optionally, switch on the **Filter by trace ID** and/or **Filter by span ID** setting to further filter the logs if your logs consistently contain trace or span IDs.
 
 #### Configure a custom query
 
 1. Select the target data source from the drop-down list.
-
+   
    You can also click **Open advanced data source picker** to see more options, including adding a data source.
 
-1. Set start and end time shift. Since the logs timestamps may not exactly match the timestamps of the spans in the trace, you may need to widen or shift the time range to find the desired logs.
-1. Optionally, select tags to map. These tags can be used in the custom query with `${__tags}` variable. This variable will interpolate the mapped tags as list in an appropriate syntax for the data source and will only include the tags that were present in the span omitting those that weren't present. You can optionally configure a new name for the tag. This is useful when the tag has dots in the name and the target data source does not allow using dots in labels. For example, you can remap `http.status` to `http_status`. If you don't map any tags here, you can still use any tag in the query like this `method="${__span.tags.method}"`.
-1. Skip **Filter by trace ID** and **Filter by span ID** settings as these cannot be used with a custom query.
-1. Switch on **Use custom query**.
-1. Specify a custom query to be used to query the logs. You can use various variables to make that query relevant for current span. The link will only be shown only if all the variables are interpolated with non-empty values to prevent creating an invalid query.
+2. Set start and end time shift. Since the logs timestamps may not exactly match the timestamps of the spans in the trace, you may need to widen or shift the time range to find the desired logs.
+
+3. Optionally, select tags to map. These tags can be used in the custom query with `${__tags}` variable. This variable will interpolate the mapped tags as list in an appropriate syntax for the data source and will only include the tags that were present in the span omitting those that weren't present. You can optionally configure a new name for the tag. This is useful when the tag has dots in the name and the target data source does not allow using dots in labels. For example, you can remap `http.status` to `http_status`. If you don't map any tags here, you can still use any tag in the query like this `method="${__span.tags.method}"`.
+
+4. Skip **Filter by trace ID** and **Filter by span ID** settings as these cannot be used with a custom query.
+
+5. Switch on **Use custom query**.
+
+6. Specify a custom query to be used to query the logs. You can use various variables to make that query relevant for current span. The link will only be shown only if all the variables are interpolated with non-empty values to prevent creating an invalid query.
 
 #### Variables that can be used in a custom query
 
@@ -171,10 +183,10 @@ The **Trace to metrics** setting configures the [trace to metrics feature](/blog
 To configure trace to metrics:
 
 1. Select the target data source from the drop-down list.
-
+   
    You can also click **Open advanced data source picker** to see more options, including adding a data source.
 
-1. Create any desired linked queries.
+2. Create any desired linked queries.
 
 | Setting name    | Description                                                                                                                                                                                                                                                     |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -183,7 +195,7 @@ To configure trace to metrics:
 
 Each linked query consists of:
 
-- **Link Label:** _(Optional)_ Descriptive label for the linked query.
+- **Link Label:** *(Optional)* Descriptive label for the linked query.
 - **Query:** The query ran when navigating from a trace to the metrics data source.
   Interpolate tags using the `$__tags` keyword.
   For example, when you configure the query `requests_total{$__tags}`with the tags `k8s.pod=pod` and `cluster`, the result looks like `requests_total{pod="nginx-554b9", cluster="us-east-1"}`.
@@ -203,7 +215,7 @@ You can choose one of three options:
 | Name         | Description                                                                                                                      |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | **None**     | Adds nothing to the span bar row.                                                                                                |
-| **Duration** | _(Default)_ Displays the span duration on the span bar row.                                                                      |
+| **Duration** | *(Default)* Displays the span duration on the span bar row.                                                                      |
 | **Tag**      | Displays the span tag on the span bar row. You must also specify which tag key to use to get the tag value, such as `component`. |
 
 ### Provision the data source
@@ -213,7 +225,7 @@ For more information about provisioning and available configuration options, ref
 
 #### Provisioning example
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -270,9 +282,9 @@ For general documentation on querying data sources in Grafana, see [Query and tr
 To query a particular trace:
 
 1. Select the **TraceID** query type.
-1. Enter the trace's ID into the **Trace ID** field.
+2. Enter the trace's ID into the **Trace ID** field.
 
-{{< figure src="/static/img/docs/v70/zipkin-query-editor.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin query editor" >}}
+{{\< figure src="/static/img/docs/v70/zipkin-query-editor.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin query editor" \>}}
 
 ### Query by trace selector
 
@@ -283,7 +295,7 @@ The trace selector has three levels of nesting:
 - Particular operation, part of the selected service
 - Specific trace in which the selected operation occurred, represented by the root operation name and trace duration
 
-{{< figure src="/static/img/docs/v70/zipkin-query-editor-open.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin query editor with trace selector expanded" >}}
+{{\< figure src="/static/img/docs/v70/zipkin-query-editor-open.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin query editor with trace selector expanded" \>}}
 
 ## View data mapping in the trace UI
 
@@ -294,11 +306,11 @@ You can view Zipkin annotations in the trace view as logs with annotation value 
 You can upload a JSON file that contains a single trace and visualize it.
 If the file has multiple traces, Grafana visualizes its first trace.
 
-{{< figure src="/static/img/docs/explore/zipkin-upload-json.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin data source in explore with upload selected" >}}
+{{\< figure src="/static/img/docs/explore/zipkin-upload-json.png" class="docs-image--no-shadow" caption="Screenshot of the Zipkin data source in explore with upload selected" \>}}
 
 ### Trace JSON example
 
-```json
+``` json
 [
   {
     "traceId": "efe9cb8857f68c8f",

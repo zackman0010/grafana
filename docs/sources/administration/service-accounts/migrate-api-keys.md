@@ -1,42 +1,45 @@
----
+-----
+
 aliases:
-  - ../api-keys/ # /docs/grafana/<GRAFANA_VERSION>/administration/api-keys/
-  - ../about-api-keys/ # /docs/grafana/<GRAFANA_VERSION>/administration/about-api-keys/
-  - ../create-api-key/ # /docs/grafana/<GRAFANA_VERSION>/administration/create-api-key/
-description: Learn how to migrate legacy API keys to service account tokens.
-keywords:
-  - API keys
-  - Service accounts
-labels:
+
+- ../api-keys/ \# /docs/grafana/\<GRAFANA\_VERSION\>/administration/api-keys/
+- ../about-api-keys/ \# /docs/grafana/\<GRAFANA\_VERSION\>/administration/about-api-keys/
+- ../create-api-key/ \# /docs/grafana/\<GRAFANA\_VERSION\>/administration/create-api-key/
+  description: Learn how to migrate legacy API keys to service account tokens.
+  keywords:
+- API keys
+- Service accounts
+  labels:
   products:
-    - enterprise
-    - cloud
-    - oss
-menuTitle: Migrate API keys
-title: Migrate API keys to service account tokens
-weight: 700
-refs:
-  service-accounts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
-  service-accounts-benefits:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/#service-account-benefits
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/#service-account-benefits
-  roles-and-permissions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/cloud-roles/
-  api-service-account:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/developers/http_api/serviceaccount/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/serviceaccount/
----
+  - enterprise
+  - cloud
+  - oss
+    menuTitle: Migrate API keys
+    title: Migrate API keys to service account tokens
+    weight: 700
+    refs:
+    service-accounts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+    service-accounts-benefits:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/\#service-account-benefits
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/\#service-account-benefits
+    roles-and-permissions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/cloud-roles/
+    api-service-account:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/developers/http\_api/serviceaccount/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/serviceaccount/
+
+-----
 
 # Migrate API keys to service account tokens
 
@@ -50,7 +53,7 @@ Compared to API keys, service accounts have limited scopes that provide more sec
 
 When you migrate an API key to a service account, a service account is created with a service account token. Your existing API key—now migrated to a service account token—will continue working as before.
 
-To find the migrated API keys, click **Administration** in the left-side menu, then **Users and access -> Service Accounts**, select the service account, and locate the **Token**.
+To find the migrated API keys, click **Administration** in the left-side menu, then **Users and access -\> Service Accounts**, select the service account, and locate the **Token**.
 
 ## Migrate API keys using the Grafana user interface
 
@@ -71,17 +74,17 @@ For more information about permissions, refer to [Roles and permissions](ref:rol
 To migrate all API keys to service accounts, complete the following steps:
 
 1. Sign in to Grafana, point to **Administration**, **Users and access**, and click **API Keys**.
-1. In the top of the page, find the section which says **Switch from API keys to service accounts**
-1. Click **Migrate to service accounts now**.
-1. A confirmation window will appear, asking to confirm the migration. Click **Yes, migrate now** if you are willing to continue.
-1. Once migration is successful, you can choose to forever hide the API keys page. Click **Hide API keys page forever** if you want to do that.
+2. In the top of the page, find the section which says **Switch from API keys to service accounts**
+3. Click **Migrate to service accounts now**.
+4. A confirmation window will appear, asking to confirm the migration. Click **Yes, migrate now** if you are willing to continue.
+5. Once migration is successful, you can choose to forever hide the API keys page. Click **Hide API keys page forever** if you want to do that.
 
 To migrate a single API key to a service account, complete the following steps:
 
 1. Sign in to Grafana.
-1. Click **Administration** in the left-side menu, **Users and access**, and select **API Keys**.
-1. Find the API Key you want to migrate.
-1. Click **Migrate to service account**.
+2. Click **Administration** in the left-side menu, **Users and access**, and select **API Keys**.
+3. Find the API Key you want to migrate.
+4. Click **Migrate to service account**.
 
 ## Migrate API keys using the HTTP API
 
@@ -100,23 +103,26 @@ To follow these instructions, you need one of the following:
 Complete the following steps to migrate from API keys to service accounts for API:
 
 1. Call the `POST /api/serviceaccounts` endpoint and the `POST /api/serviceaccounts/<id>/tokens`.
-
+   
    This action generates a service account token.
 
-1. Store the ID and secret that the system returns to you.
-1. Pass the token in the `Authorization` header, prefixed with `Bearer`.
+2. Store the ID and secret that the system returns to you.
 
+3. Pass the token in the `Authorization` header, prefixed with `Bearer`.
+   
    This action authenticates API requests.
 
-1. SATs used for authentication
-1. Remove code that handles the old `/api/auth/keys` endpoint.
-1. Track the [API keys](http://localhost:3000/org/apikeys) in use and migrate them to SATs.
+4. SATs used for authentication
+
+5. Remove code that handles the old `/api/auth/keys` endpoint.
+
+6. Track the [API keys](http://localhost:3000/org/apikeys) in use and migrate them to SATs.
 
 #### Example
 
 Your current setup
 
-```sh
+``` sh
 curl -X POST -H "Content-Type: application/json" -d '{"name": "my-api-key", "role": "Viewer"}' http://admin:admin@localhost:3000/api/auth/keys
 
 # response from the api
@@ -125,7 +131,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "my-api-key", "rol
 
 New setup
 
-```sh
+``` sh
 # create a service account
 curl -X POST -H "Content-Type: application/json" -d '{"name": "my-service-account", "role": "Viewer"}' http://admin:admin@localhost:3000/api/serviceaccounts
 
@@ -147,15 +153,15 @@ curl --request GET --url http://localhost:3000/api/folders --header 'Authorizati
 
 ## Migrate API keys using Terraform
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The terraform resource `api_key` is removed from the Grafana Terraform Provider in v3.0.0.
 Before you migrate and remove the use of the resource, you should pin your terraform version to a version less-than or equal-to v2.19.0.
 For more information, refer to the [Grafana Terraform Provider release notes](https://github.com/grafana/terraform-provider-grafana/releases/tag/v3.0.0).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 To pin the Grafana Terraform Provider to v2.19.0:
 
-```hcl
+``` hcl
 terraform {
   required_providers {
     grafana = {
@@ -173,13 +179,13 @@ This section shows you how to migrate your Terraform configuration for API keys 
 Complete the following steps to migrate from API keys to service accounts using Terraform:
 
 1. Generate `grafana_service_account` and `grafana_service_account_token` resources.
-1. Specify the desired scopes and expiration date when creating the service account.
-1. Use the token returned from `grafana_service_account_token` to authenticate the API requests.
-1. Remove the terraform configuration for creating your `grafana_api_key` resources.
+2. Specify the desired scopes and expiration date when creating the service account.
+3. Use the token returned from `grafana_service_account_token` to authenticate the API requests.
+4. Remove the terraform configuration for creating your `grafana_api_key` resources.
 
 **Example: your current Terraform configuration**
 
-```tf
+``` tf
 terraform {
   required_providers {
     grafana = {
@@ -208,9 +214,9 @@ resource "grafana_api_key" "bar" {
 
 **Your new Terraform configuration**
 
-_Note:_ you can create multiple tokens using one service account.
+*Note:* you can create multiple tokens using one service account.
 
-```tf
+``` tf
 terraform {
   required_providers {
     grafana = {
@@ -261,13 +267,13 @@ This is only relevant for Grafana Cloud **Stack** API keys `grafana_cloud_stack_
 Complete the following steps to migrate from cloud stack API keys to cloud stack service accounts using Terraform:
 
 1. Generate `grafana_cloud_stack_service_account` and `grafana_cloud_stack_service_account_token` resources.
-1. Specify the desired scopes and expiration date when creating the service account.
-1. Use the token returned from `grafana_cloud_stack_service_account_token` to authenticate the API requests.
-1. Remove the Terraform configuration for creating your `grafana_cloud_stack_api_key` resources.
+2. Specify the desired scopes and expiration date when creating the service account.
+3. Use the token returned from `grafana_cloud_stack_service_account_token` to authenticate the API requests.
+4. Remove the Terraform configuration for creating your `grafana_cloud_stack_api_key` resources.
 
 **Example: Your current Terraform configuration**
 
-```tf
+``` tf
 terraform {
   required_providers {
     grafana = {
@@ -303,7 +309,7 @@ resource "grafana_cloud_stack_api_key" "management" {
 
 **Your new Terraform configuration**
 
-```tf
+``` tf
 terraform {
   required_providers {
     grafana = {

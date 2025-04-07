@@ -1,18 +1,21 @@
----
+-----
+
 aliases:
-  - ../panels/query-a-data-source/download-raw-query-results/
-  - ../panels/query-a-data-source/inspect-query-performance/
-  - ../panels/query-a-data-source/inspect-request-and-response-data/
-  - ../panels/working-with-panels/navigate-inspector-panel/
-labels:
+
+- ../panels/query-a-data-source/download-raw-query-results/
+- ../panels/query-a-data-source/inspect-query-performance/
+- ../panels/query-a-data-source/inspect-request-and-response-data/
+- ../panels/working-with-panels/navigate-inspector-panel/
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: The panel inspect view
-description: Inspect the raw data of your panels to understand and troubleshoot them
-weight: 30
----
+  - cloud
+  - enterprise
+  - oss
+    title: The panel inspect view
+    description: Inspect the raw data of your panels to understand and troubleshoot them
+    weight: 30
+
+-----
 
 # The panel inspect view
 
@@ -39,26 +42,30 @@ The panel inspector consists of the following options:
 Grafana generates a CSV file that contains your data, including any transformations to that data. You can choose to view the data before or after the panel applies field options or field option overrides.
 
 1. Edit the panel that contains the query data you want to download.
-1. In the query editor, click **Query Inspector**.
-1. Click **Data**.
 
+2. In the query editor, click **Query Inspector**.
+
+3. Click **Data**.
+   
    If your panel contains multiple queries or queries multiple nodes, then you have additional options.
-
+   
    - **Select result**: Choose which result set data you want to view.
    - **Transform data**
    - **Join by time**: View raw data from all your queries at once, one result set per column. Click a column heading to reorder the data.
 
-1. To see data before the system applies field overrides, click the **Formatted data** toggle.
-1. To download a CSV file specifically formatted for Excel, click the **Download for Excel** toggle .
-1. Click **Download CSV**.
+4. To see data before the system applies field overrides, click the **Formatted data** toggle.
+
+5. To download a CSV file specifically formatted for Excel, click the **Download for Excel** toggle .
+
+6. Click **Download CSV**.
 
 ## Inspect query performance
 
 The **Stats** tab displays statistics that tell you how long your query takes, how many queries you send, and the number of rows returned. This information can help you troubleshoot your queries, especially if any of the numbers are unexpectedly high or low.
 
 1. Edit the panel that contains the query with performance you want to inspect.
-1. In the query editor, click **Query Inspector**.
-1. Click **Stats**.
+2. In the query editor, click **Query Inspector**.
+3. Click **Stats**.
 
 Statistics are displayed in read-only format.
 
@@ -67,10 +74,13 @@ Statistics are displayed in read-only format.
 Inspect query request and response data when you want to troubleshoot a query that returns unexpected results, or fails to return expected results.
 
 1. Edit the panel that contains the query you want to export.
-1. In the query editor, click **Query Inspector**.
-1. Click **Refresh**.
 
+2. In the query editor, click **Query Inspector**.
+
+3. Click **Refresh**.
+   
    The panel populates with response data.
 
-1. Make adjustments, as necessary and re-run the query.
-1. To download the query request and response data, click the **Copy to clipboard** icon and paste the results into another application.
+4. Make adjustments, as necessary and re-run the query.
+
+5. To download the query request and response data, click the **Copy to clipboard** icon and paste the results into another application.

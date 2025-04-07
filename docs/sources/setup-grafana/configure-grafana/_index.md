@@ -1,34 +1,37 @@
----
+-----
+
 aliases:
-  - ../administration/configuration/ # /docs/grafana/latest/administration/configuration/
-  - ../installation/configuration/ # /docs/grafana/latest/installation/configuration/
-description: Learn how to configure Grafana and understand configuration options.
-labels:
+
+- ../administration/configuration/ \# /docs/grafana/latest/administration/configuration/
+- ../installation/configuration/ \# /docs/grafana/latest/installation/configuration/
+  description: Learn how to configure Grafana and understand configuration options.
+  labels:
   products:
-    - enterprise
-    - oss
-title: Configure Grafana
-toc:
-  endLevel: 4
-weight: 200
----
+  - enterprise
+  - oss
+    title: Configure Grafana
+    toc:
+    endLevel: 4
+    weight: 200
+
+-----
 
 # Configure Grafana
 
 Grafana has default and custom configuration files.
 You can customize your Grafana instance by modifying the custom configuration file or by using environment variables.
-To see the list of settings for a Grafana instance, refer to [View server settings](/docs/grafana/<GRAFANA_VERSION>/administration/stats-and-license#view-server-settings).
+To see the list of settings for a Grafana instance, refer to [View server settings](/docs/grafana/\<GRAFANA_VERSION\>/administration/stats-and-license#view-server-settings).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 After you add custom options, [uncomment](#remove-comments-in-the-ini-files) the relevant sections of the configuration file.
 
 Restart Grafana for your changes to take effect.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Configuration file location
 
 The default settings for a Grafana instance are stored in the `<WORKING DIRECTORY>/conf/defaults.ini` file.
-_Don't_ change this file.
+*Don't* change this file.
 
 Depending on your OS, your custom configuration file is either the `<WORKING DIRECTORY>/conf/custom.ini` file or the `/usr/local/etc/grafana/grafana.ini` file.
 You can use a custom configuration path with the `--config` option.
@@ -40,7 +43,7 @@ This path is specified in the Grafana init.d script using `--config` option.
 
 ### Docker
 
-Refer to [Configure a Grafana Docker image](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-docker/) for information about environmental variables, persistent storage, and building custom Docker images.
+Refer to [Configure a Grafana Docker image](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-docker/) for information about environmental variables, persistent storage, and building custom Docker images.
 
 ### Windows
 
@@ -63,26 +66,26 @@ Grafana ignores all configuration lines that begin with a semicolon.
 
 For example:
 
-```ini
+``` ini
 ;http_port = 3000
 ```
 
 ## Override configuration with environment variables
 
-Don't use environment variables to _add_ new configuration settings.
-Instead, use environmental variables to _override_ existing options.
+Don't use environment variables to *add* new configuration settings.
+Instead, use environmental variables to *override* existing options.
 
 To override an option:
 
-```bash
+``` bash
 GF_<SECTION NAME>_<KEY>
 ```
 
-Where _`<SECTION NAME>`_ is the text within the square brackets (`[` and `]`) in the configuration file.
+Where *`<SECTION NAME>`* is the text within the square brackets (`[` and `]`) in the configuration file.
 All letters must be uppercase, periods (`.`) and dashes (`-`) must replaced by underscores (`_`).
 For example, if you have these configuration settings:
 
-```ini
+``` ini
 # default section
 instance_name = ${HOSTNAME}
 
@@ -101,7 +104,7 @@ enable = newNavigation
 
 You can override variables on Linux machines with:
 
-```bash
+``` bash
 export GF_DEFAULT_INSTANCE_NAME=my-instance
 export GF_SECURITY_ADMIN_USER=owner
 export GF_AUTH_GOOGLE_CLIENT_SECRET=newS3cretKey
@@ -124,7 +127,7 @@ For environment variables you can also use the short-hand syntax `${PORT}`.
 
 The following example sets the log directory to the path in the `LOGDIR` environment variable:
 
-```ini
+``` ini
 [paths]
 logs = $__env{LOGDIR}/grafana
 ```
@@ -136,7 +139,7 @@ It trims whitespace from the beginning and the end of files.
 
 The following example sets the database password to the contents of the `/etc/secrets/gf_sql_password` file:
 
-```ini
+``` ini
 [database]
 password = $__file{/etc/secrets/gf_sql_password}
 ```
@@ -145,12 +148,12 @@ password = $__file{/etc/secrets/gf_sql_password}
 
 The `vault` provider lets manage your secrets with [Hashicorp Vault](https://www.hashicorp.com/products/vault).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The `vault` provider is only available in Grafana Enterprise.
 
-For more information, refer to [Integrate Grafana with Hashicorp Vault](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-database-encryption/integrate-with-hashicorp-vault).
+For more information, refer to [Integrate Grafana with Hashicorp Vault](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-database-encryption/integrate-with-hashicorp-vault).
 
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Configuration options
 
@@ -159,7 +162,7 @@ The following headings describe the sections and configuration options of the Gr
 ### `app_mode`
 
 Options are `production` and `development`.
-Default is `production`. _Don't_ change this option unless you are working on Grafana development.
+Default is `production`. *Don't* change this option unless you are working on Grafana development.
 
 ### `instance_name`
 
@@ -189,13 +192,13 @@ Path to where Grafana stores logs.
 This path is usually specified via command line in the init.d script or the systemd service file.
 You can override it in the configuration file or in the default environment variable file.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 When overriding the default log path in the configuration file or environment variable file, Grafana still logs to the default log path until it has fully started.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Override log path using the command line argument `cfg:default.paths.logs`:
 
-```bash
+``` bash
 ./grafana-server --config /custom/config.ini --homepath /custom/homepath cfg:default.paths.logs=/custom/path
 ```
 
@@ -237,13 +240,13 @@ In environments where network address translation (NAT) is used, ensure you use 
 
 The port to bind to, defaults to `3000`. To use port 80 you need to either give the Grafana binary permission for example:
 
-```bash
+``` bash
 sudo setcap 'cap_net_bind_service=+ep' /usr/sbin/grafana-server
 ```
 
 Or redirect port 80 to the Grafana port using:
 
-```bash
+``` bash
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
 ```
 
@@ -263,11 +266,11 @@ This is the full URL used to access Grafana from a web browser. This is
 important if you use Google or GitHub OAuth authentication (for the
 callback URL to be correct).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This setting is also important if you have a reverse proxy in front of Grafana that exposes it through a sub-path.
 
 In that case add the sub-path to the end of this URL setting.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### `serve_from_sub_path`
 
@@ -311,10 +314,10 @@ Controls whether `cert_key` and `cert_file` are periodically watched for changes
 Disabled, by default. When enabled, `cert_key` and `cert_file`
 are watched for changes. If there is change, the new certificates are loaded automatically.
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 After the new certificates are loaded, connections with old certificates don't work.
 You must reload the connections with old certificates for them to work.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### `socket_gid`
 
@@ -349,10 +352,8 @@ Sets the maximum time using a duration format (5s/5m/5ms) before timing out read
 
 This setting enables you to specify additional headers that the server adds to HTTP(S) responses.
 
-```
-exampleHeader1 = exampleValue1
-exampleHeader2 = exampleValue2
-```
+    exampleHeader1 = exampleValue1
+    exampleHeader2 = exampleValue2
 
 <hr />
 
@@ -575,7 +576,7 @@ Sets a custom value for the `User-Agent` header for outgoing data proxy requests
 
 #### `enabled`
 
-This option is also known as _usage analytics_. When `false`, this option disables the writers that write to the Grafana database and the associated features, such as dashboard and data source insights, presence indicators, and advanced dashboard search. The default value is `true`.
+This option is also known as *usage analytics*. When `false`, this option disables the writers that write to the Grafana database and the associated features, such as dashboard and data source insights, presence indicators, and advanced dashboard search. The default value is `true`.
 
 #### `reporting_enabled`
 
@@ -602,12 +603,12 @@ The check itself doesn't cause any automatic updates of any plugins, nor does it
 
 #### `google_analytics_ua_id`
 
-If you want to track Grafana usage with Google Analytics specify _your_ Universal Analytics ID here.
+If you want to track Grafana usage with Google Analytics specify *your* Universal Analytics ID here.
 By default this feature is disabled.
 
 #### `google_analytics_4_id`
 
-If you want to track Grafana usage with Google Analytics 4 specify _your_ GA4 ID here.
+If you want to track Grafana usage with Google Analytics 4 specify *your* GA4 ID here.
 By default this feature is disabled.
 
 #### `google_tag_manager_id`
@@ -616,7 +617,7 @@ Google Tag Manager ID, only enabled if you enter an ID here.
 
 #### `rudderstack_write_key`
 
-If you want to track Grafana usage via RudderStack specify _your_ RudderStack
+If you want to track Grafana usage via RudderStack specify *your* RudderStack
 Write Key here. The `rudderstack_data_plane_url` must also be provided for this
 feature to be enabled. By default this feature is disabled.
 
@@ -643,7 +644,7 @@ This setting is only valid for RudderStack version 1.1 and higher.
 
 #### `application_insights_connection_string`
 
-If you want to track Grafana usage via Azure Application Insights, then specify _your_ Application Insights connection string. Since the connection string contains semicolons, you need to wrap it in backticks (`). By default, tracking usage is disabled.
+If you want to track Grafana usage via Azure Application Insights, then specify *your* Application Insights connection string. Since the connection string contains semicolons, you need to wrap it in backticks (\`). By default, tracking usage is disabled.
 
 #### `application_insights_endpoint_url`
 
@@ -851,9 +852,9 @@ This also limits the refresh interval options in Explore.
 
 Path to the default home dashboard. If this value is empty, then Grafana uses StaticRootPath + "dashboards/home.json".
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 On Linux, Grafana uses `/usr/share/grafana/public/dashboards/home.json` as the default home dashboard location.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 <hr />
 
@@ -952,17 +953,17 @@ If you manage users externally you can replace the user invite button for organi
 
 #### `viewers_can_edit`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This option is deprecated - assign your viewers as editors, if you are using RBAC assign the data sources explorer role to your users.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Viewers can access and use [Explore](../../explore/) and perform temporary edits on panels in dashboards they have access to. They cannot save their changes. Default is `false`.
 
 #### `editors_can_admin`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This option is deprecated - assign your editors as admins, if you are using RBAC assign the team creator role to your users.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Editors can administrate dashboards, folders and teams they create.
 Default is `false`.
@@ -1028,15 +1029,15 @@ The URL the user is redirected to upon signing out. To support [OpenID Connect R
 
 Example:
 
-```ini
+``` ini
 signout_redirect_url = http://localhost:8087/realms/grafana/protocol/openid-connect/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin
 ```
 
 #### `oauth_auto_login`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This option is deprecated - use `auto_login` option for specific OAuth provider instead.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Set to `true` to attempt login with OAuth automatically, skipping the login screen.
 This setting is ignored if multiple OAuth providers are configured. Default is `false`.
@@ -1060,19 +1061,19 @@ If you experience issues with the OAuth token refresh mechanism, you can increas
 
 #### `oauth_skip_org_role_update_sync`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This option is removed from G11 in favor of OAuth provider specific `skip_org_role_sync` settings. The following sections explain settings for each provider.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If you want to change the `oauth_skip_org_role_update_sync` setting from `true` to `false`, then each provider you have set up, use the `skip_org_role_sync` setting to specify whether you want to skip the synchronization.
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Currently if no organization role mapping is found for a user, Grafana doesn't update the user's organization role.
 
 If `oauth_skip_org_role_update_sync` option is set to `false`, users with no mapping are reset to the default organization role on every login.
 
 For more information, refer to [`auto_assign_org_role` option](#auto_assign_org_role).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### `skip_org_role_sync`
 
@@ -1084,9 +1085,9 @@ With `skip_org_role_sync` set to `false`, the users' organization and role is re
 
 With `skip_org_role_sync` set to `true`, when a user logs in for the first time, Grafana sets the organization role based on the value specified in `auto_assign_org_role` and forces the organization to `auto_assign_org_id` when specified, otherwise it falls back to OrgID `1`.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Enabling `skip_org_role_sync` also disables the synchronization of Grafana Admins from the external provider, as such `allow_assign_grafana_admin` is ignored.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Use this setting when you want to manage the organization roles of your users from within Grafana and be able to manually assign them to multiple organizations, or to prevent synchronization conflicts when they can be synchronized from another provider.
 
@@ -1119,9 +1120,9 @@ The behavior of `oauth_skip_org_role_update_sync` and `skip_org_role_sync`, can 
 | false                             | true                 | User organization role is set to `auto_assign_org_role` and can be changed in Grafana. | true       |
 | true                              | true                 | User organization role is set to `auto_assign_org_role` and can be changed in Grafana. | true       |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 For GitLab, GitHub, Okta, Generic OAuth providers, Grafana synchronizes organization roles and sets Grafana Admins. The `allow_assign_grafana_admin` setting is also accounted for, to allow or not setting the Grafana Admin role from the external provider.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 `[auth.github]`
 
@@ -1166,9 +1167,9 @@ For GitLab, GitHub, Okta, Generic OAuth providers, Grafana synchronizes organiza
 | `oauth_skip_org_role_update_sync` | `skip_org_role_sync` | Resulting Org Role                                                                      | Example Scenario                                                                                                                                                                         |
 | --------------------------------- | -------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | false                             | false                | Synchronized with Google Auth organization roles                                        | A user logs in to Grafana using their Google account and their organization role is automatically set based on their role in Google.                                                     |
-| true                              | false                | Skipped synchronization of organization roles from all OAuth providers                  | A user logs in to Grafana using their Google account and their organization role is _not_ set based on their role. But Grafana Administrators can modify the role from the UI.           |
-| false                             | true                 | Skipped synchronization of organization roles Google                                    | A user logs in to Grafana using their Google account and their organization role is _not_ set based on their role in Google. But Grafana Administrators can modify the role from the UI. |
-| true                              | true                 | Skipped synchronization of organization roles from all OAuth providers including Google | A user logs in to Grafana using their Google account and their organization role is _not_ set based on their role in Google. But Grafana Administrators can modify the role from the UI. |
+| true                              | false                | Skipped synchronization of organization roles from all OAuth providers                  | A user logs in to Grafana using their Google account and their organization role is *not* set based on their role. But Grafana Administrators can modify the role from the UI.           |
+| false                             | true                 | Skipped synchronization of organization roles Google                                    | A user logs in to Grafana using their Google account and their organization role is *not* set based on their role in Google. But Grafana Administrators can modify the role from the UI. |
+| true                              | true                 | Skipped synchronization of organization roles from all OAuth providers including Google | A user logs in to Grafana using their Google account and their organization role is *not* set based on their role in Google. But Grafana Administrators can modify the role from the UI. |
 
 #### `api_key_max_seconds_to_live`
 
@@ -1190,11 +1191,11 @@ Set to `true` to enable verbose request signature logging when AWS Signature Ver
 
 Set to `true` to enable the use of managed service accounts for plugin authentication. Default is `false`.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature only supports single-organization deployments.
 The plugin's service account is automatically created in the default organization.
 This means the plugin can only access data and resources within that specific organization.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### `[auth.anonymous]`
 
@@ -1298,7 +1299,7 @@ Azure cloud environment where Grafana is hosted:
 
 | Azure Cloud                                      | Value                  |
 | ------------------------------------------------ | ---------------------- |
-| Microsoft Azure public cloud                     | AzureCloud (_default_) |
+| Microsoft Azure public cloud                     | AzureCloud (*default*) |
 | Microsoft Chinese national cloud                 | AzureChinaCloud        |
 | US Government cloud                              | AzureUSGovernment      |
 | Microsoft German national cloud ("Black Forest") | AzureGermanCloud       |
@@ -1309,7 +1310,7 @@ The JSON configuration defines a list of Azure clouds and their associated prope
 
 For example:
 
-```ini
+``` ini
 clouds_config = `[
 		{
 			"name":"CustomCloud1",
@@ -1445,7 +1446,7 @@ In case of SMTP auth, default is `empty`.
 
 #### `password`
 
-In case of SMTP auth, default is `empty`. If the password contains `#` or `;`, then you have to wrap it with triple quotes. Example: """#password;"""
+In case of SMTP auth, default is `empty`. If the password contains `#` or `;`, then you have to wrap it with triple quotes. Example: """\#password;"""
 
 #### `cert_file`
 
@@ -1530,10 +1531,8 @@ For example: `filters = sqlstore:debug,plugins:info`
 
 The equivalent for a `docker-compose.yaml` looks like this:
 
-```
-GF_LOG_FILTERS: sqlstore:debug,plugins:info
-GF_LOG_LEVEL: error
-```
+    GF_LOG_FILTERS: sqlstore:debug,plugins:info
+    GF_LOG_LEVEL: error
 
 #### `user_facing_default_error`
 
@@ -1756,9 +1755,9 @@ The interval string is a possibly signed sequence of decimal numbers, followed b
 
 The Redis server address that should be connected to.
 
-{{< admonition type="note" >}}
-For more information on Redis, refer to [Enable alerting high availability using Redis](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-high-availability/#enable-alerting-high-availability-using-redis).
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+For more information on Redis, refer to [Enable alerting high availability using Redis](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/configure-high-availability/#enable-alerting-high-availability-using-redis).
+{{\< /admonition \>}}
 
 #### `ha_redis_username`
 
@@ -1851,10 +1850,10 @@ Higher values can help with resource management as Grafana schedules fewer evalu
 
 The interval string is a possibly signed sequence of decimal numbers, followed by a unit suffix (ms, s, m, h, d), for example, 30s or 1m.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This setting has precedence over each individual rule frequency.
 If a rule frequency is lower than this value, then this value is enforced.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 <hr>
 
@@ -1899,7 +1898,7 @@ For example: `disabled_labels=grafana_folder`
 
 ### `[unified_alerting.state_history.annotations]`
 
-This section controls retention of annotations automatically created while evaluating alert rules when alerting state history backend is configured to be annotations (see setting [unified_alerting.state_history].backend)
+This section controls retention of annotations automatically created while evaluating alert rules when alerting state history backend is configured to be annotations (see setting \[unified\_alerting.state\_history\].backend)
 
 #### `max_age`
 
@@ -2020,9 +2019,9 @@ A setting above the maximum uses the value `365` instead.
 Setting `0` means the short links are cleaned up approximately every 10 minutes.
 A negative value such as `-1` disables expiry.
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 Short links without an expiration increase the size of the database and can't be deleted.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 <hr>
 
@@ -2056,10 +2055,8 @@ If both are set, then basic authentication is required to access the metrics end
 
 Adds dimensions to the `grafana_environment_info` metric, which can expose more information about the Grafana instance.
 
-```
-; exampleLabel1 = exampleValue1
-; exampleLabel2 = exampleValue2
-```
+    ; exampleLabel1 = exampleValue1
+    ; exampleLabel2 = exampleValue2
 
 ### `[metrics.graphite]`
 
@@ -2093,7 +2090,7 @@ The default authentication identity provider for Grafana Cloud.
 
 ### `[tracing.jaeger]`
 
-[Deprecated - use `tracing.opentelemetry.jaeger` or `tracing.opentelemetry.otlp` instead]
+\[Deprecated - use `tracing.opentelemetry.jaeger` or `tracing.opentelemetry.otlp` instead\]
 
 Configure a Jaeger client in Grafana for distributed tracing.
 
@@ -2119,11 +2116,11 @@ Default value is `const`.
 
 Specifies the type of sampler: `const`, `probabilistic`, `ratelimiting`, or `remote`.
 
-Refer to https://www.jaegertracing.io/docs/1.16/sampling/#client-sampling-configuration for details on the different tracing types.
+Refer to https://www.jaegertracing.io/docs/1.16/sampling/\#client-sampling-configuration for details on the different tracing types.
 
 Can be set with the environment variable `JAEGER_SAMPLER_TYPE`.
 
-_To override this setting, enter `sampler_type` in the `tracing.opentelemetry` section._
+*To override this setting, enter `sampler_type` in the `tracing.opentelemetry` section.*
 
 #### `sampler_param`
 
@@ -2257,9 +2254,9 @@ keep the default, just leave this empty. You must still provide a `region` value
 
 Set this to true to force path-style addressing in S3 requests, which uses `http://s3.amazonaws.com/<BUCKET>/<KEY>`, instead of the default, which is virtual hosted bucket addressing when possible (`http://<BUCKET>.s3.amazonaws.com/<KEY>`).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This option is specific to the Amazon S3 service.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### `bucket_url`
 
@@ -2275,7 +2272,7 @@ Bucket name for S3. For example, `grafana.snapshot`.
 
 #### `region`
 
-Region name for S3. For example, `us-east-1` or `cn-north-1.
+Region name for S3. For example, `us-east-1` or \`cn-north-1.
 
 #### `path`
 
@@ -2412,9 +2409,9 @@ Set to `true` if you want to test alpha panels that are not yet ready for genera
 
 #### `disable_sanitize_html`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This configuration is not available in Grafana Cloud instances.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If set to true Grafana allows script tags in text panels.
 Not recommended as it enables XSS vulnerabilities.
@@ -2430,7 +2427,7 @@ Set to `true` if you want to test alpha plugins that are not yet ready for gener
 
 Enter a comma-separated list of plugin identifiers to identify plugins to load even if they are unsigned. Plugins with modified signatures are never loaded.
 
-We do _not_ recommend using this option. For more information, refer to [Plugin signatures](../../administration/plugin-management/#plugin-signatures).
+We do *not* recommend using this option. For more information, refer to [Plugin signatures](../../administration/plugin-management/#plugin-signatures).
 
 #### `plugin_admin_enabled`
 
@@ -2475,7 +2472,7 @@ These plugins are hidden in the catalog.
 Enter a comma-separated list of plugin identifiers to install on startup, using the Grafana catalog as the source.
 Preinstalled plugins cannot be uninstalled from the Grafana user interface; they need to be removed from this list first.
 
-To pin plugins to a specific version, use the format `plugin_id@version`, for example,`grafana-piechart-panel@1.6.0`. If no version is specified, the latest version is installed. _The plugin is automatically updated_ to the latest version when a new version is available in the Grafana plugin catalog on startup (except for new major versions).
+To pin plugins to a specific version, use the format `plugin_id@version`, for example,`grafana-piechart-panel@1.6.0`. If no version is specified, the latest version is installed. *The plugin is automatically updated* to the latest version when a new version is available in the Grafana plugin catalog on startup (except for new major versions).
 
 To use a custom URL to download a plugin, use the format `plugin_id@version@url`, for example, `grafana-piechart-panel@1.6.0@https://example.com/grafana-piechart-panel-1.6.0.zip`.
 
@@ -2508,13 +2505,13 @@ Refer to [Grafana Live configuration documentation](../set-up-grafana-live/) if 
 
 The `allowed_origins` option is a comma-separated list of additional origins (`Origin` header of HTTP Upgrade request during WebSocket connection establishment) that is accepted by Grafana Live.
 
-If not set (default), then the origin is matched over [root_url](#root_url) which should be sufficient for most scenarios.
+If not set (default), then the origin is matched over [root\_url](#root_url) which should be sufficient for most scenarios.
 
 Origin patterns support wildcard symbol "\*".
 
 For example:
 
-```ini
+``` ini
 [live]
 allowed_origins = "https://*.example.com"
 ```
@@ -2533,7 +2530,7 @@ For more information, refer to the [Configure Grafana Live HA setup](../set-up-g
 
 Address string of selected the high availability (HA) Live engine. For Redis, it's a `host:port` string. Example:
 
-```ini
+``` ini
 [live]
 ha_engine = redis
 ha_engine_address = 127.0.0.1:6379
@@ -2549,9 +2546,9 @@ Properties described in this section are available for all plugins, but you must
 
 #### `tracing`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 [OpenTelemetry must be configured as well](#tracingopentelemetry).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If `true`, propagate the tracing context to the plugin backend and enable tracing (if the backend supports it).
 
@@ -2592,7 +2589,7 @@ Instruct headless browser instance whether to capture and log verbose informatio
 
 When enabled, debug messages are captured and logged as well.
 
-For the verbose information to be included in the Grafana server log you have to adjust the rendering log level to debug, configure [log].filter = rendering:debug.
+For the verbose information to be included in the Grafana server log you have to adjust the rendering log level to debug, configure \[log\].filter = rendering:debug.
 
 #### `rendering_dumpio`
 
@@ -2602,9 +2599,9 @@ It can be useful to set this to `true` when troubleshooting.
 
 #### `rendering_timing_metrics`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available from `grafana-image-renderer` v3.9.0+
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Instruct a headless browser instance on whether to record metrics for the duration of every rendering step. Default is `false`.
 
@@ -2618,7 +2615,7 @@ Additional arguments to pass to the headless browser instance. Defaults are `--n
 
 You can configure the plugin to use a different browser binary instead of the pre-packaged version of Chromium.
 
-Note that this is _not_ recommended.
+Note that this is *not* recommended.
 You might encounter problems if the installed version of Chrome or Chromium is not compatible with the plugin.
 
 #### `rendering_mode`
@@ -2642,9 +2639,9 @@ When `rendering_mode = clustered`, you can define the maximum number of browser 
 
 #### `rendering_clustering_timeout`
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in `grafana-image-renderer` v3.3.0 and later versions.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 When `rendering_mode = clustered`, you can specify the duration a rendering request can take before it times out. Default is `30` seconds.
 
@@ -2684,7 +2681,7 @@ Keys of features to enable, separated by space.
 
 #### `FEATURE_TOGGLE_NAME = false`
 
-Some feature toggles for stable features are on by default. Use this setting to disable an on-by-default feature toggle with the name FEATURE_TOGGLE_NAME, for example, `exploreMixedDatasource = false`.
+Some feature toggles for stable features are on by default. Use this setting to disable an on-by-default feature toggle with the name FEATURE\_TOGGLE\_NAME, for example, `exploreMixedDatasource = false`.
 
 <hr>
 
@@ -2702,9 +2699,9 @@ Lets you switch the feature toggle state in the feature management page. The def
 
 Set the URL of the controller that manages the feature toggle updates. If not set, feature toggles in the feature management page are read-only.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The API for feature toggle updates has not been defined yet.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### `hidden_toggles`
 
@@ -2733,14 +2730,12 @@ minutes between Y-axis tick labels then the `interval_minute` format is used.
 
 Defaults
 
-```
-interval_second = HH:mm:ss
-interval_minute = HH:mm
-interval_hour = MM/DD HH:mm
-interval_day = MM/DD
-interval_month = YYYY-MM
-interval_year = YYYY
-```
+    interval_second = HH:mm:ss
+    interval_minute = HH:mm
+    interval_hour = MM/DD HH:mm
+    interval_day = MM/DD
+    interval_month = YYYY-MM
+    interval_year = YYYY
 
 #### `use_browser_locale`
 
@@ -2773,7 +2768,7 @@ This section controls the defaults settings for **Geomap Plugin**.
 The JSON configuration used to define the default base map. Four base map options to choose from are `carto`, `esriXYZTiles`, `xyzTiles`, `standard`.
 For example, to set cartoDB light as the default base layer:
 
-```ini
+``` ini
 default_baselayer_config = `{
   "type": "xyz",
   "config": {
@@ -2802,7 +2797,7 @@ Format: `<pageUrl> = <sectionId> <sortWeight>`
 
 ### `[public_dashboards]`
 
-This section configures the [shared dashboards](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/) feature.
+This section configures the [shared dashboards](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/) feature.
 
 #### `enabled`
 

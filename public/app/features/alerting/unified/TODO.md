@@ -2,7 +2,7 @@
 
 ## Rationale
 
-_This is an experiment, if it doesn't work or is disruptive to our workflow we'll revise and adapt._
+*This is an experiment, if it doesn't work or is disruptive to our workflow we'll revise and adapt.*
 
 We often identify smaller items to work on while we refactor code or build a new feature. These items may be small enough not to deserve their own GitHub issue and might make a PR either confusing or too large.
 
@@ -25,4 +25,4 @@ If the item needs more rationale and you feel like a single sentence is inedequa
 
 ## Bug fixes
 
-_Preferably these should go to GitHub for discoverability, but not all bugs are equal, use your best judgment._
+*Preferably these should go to GitHub for discoverability, but not all bugs are equal, use your best judgment.*

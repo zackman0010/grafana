@@ -1,22 +1,25 @@
----
+-----
+
 description: Upgrade to Grafana v10.1
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-title: Upgrade to Grafana v10.1
-menuTitle: Upgrade to v10.1
-weight: 1600
----
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  title: Upgrade to Grafana v10.1
+  menuTitle: Upgrade to v10.1
+  weight: 1600
+
+-----
 
 # Upgrade to Grafana v10.1
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 
@@ -32,7 +35,7 @@ To avoid overriding manually set roles, enable the `skip_org_role_sync` option i
 
 Example for Generic OAuth2:
 
-```ini
+``` ini
 [auth.generic_oauth]
 ...
 skip_org_role_sync = true

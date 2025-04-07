@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../data-sources/elasticsearch/template-variables/
-description: Using template variables with Elasticsearch in Grafana
-keywords:
-  - grafana
-  - elasticsearch
-  - templates
-  - variables
-  - queries
-labels:
+
+- ../../data-sources/elasticsearch/template-variables/
+  description: Using template variables with Elasticsearch in Grafana
+  keywords:
+- grafana
+- elasticsearch
+- templates
+- variables
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Elasticsearch template variables
-weight: 400
-refs:
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  add-template-variables-multi-value-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#multi-value-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#multi-value-variables
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Elasticsearch template variables
+    weight: 400
+    refs:
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    add-template-variables-multi-value-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#multi-value-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#multi-value-variables
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+
+-----
 
 # Elasticsearch template variables
 
@@ -49,7 +52,7 @@ The Elasticsearch data source supports two variable syntaxes for use in the **Qu
 - `$varname`, such as `hostname:$hostname`, which is easy to read and write but doesn't let you use a variable in the middle of a word.
 - `[[varname]]`, such as `hostname:[[hostname]]`
 
-When the _Multi-value_ or _Include all value_ options are enabled, Grafana converts the labels from plain text to a Lucene-compatible condition.
+When the *Multi-value* or *Include all value* options are enabled, Grafana converts the labels from plain text to a Lucene-compatible condition.
 For details, see the [Multi-value variables](ref:add-template-variables-multi-value-variables) documentation.
 
 ## Use variables in queries
@@ -57,34 +60,30 @@ For details, see the [Multi-value variables](ref:add-template-variables-multi-va
 You can use other variables inside the query.
 This example is used to define a variable named `$host`:
 
-```
-{"find": "terms", "field": "hostname", "query": "source:$source"}
-```
+    {"find": "terms", "field": "hostname", "query": "source:$source"}
 
 This uses another variable named `$source` inside the query definition.
 Whenever you change the value of the `$source` variable via the dropdown, Grafana triggers an update of the `$host` variable to contain only hostnames filtered by, in this case, the `source` document property.
 
 These queries by default return results in term order (which can then be sorted alphabetically or numerically as for any variable).
-To produce a list of terms sorted by doc count (a top-N values list), add an `orderBy` property of "doc_count".
+To produce a list of terms sorted by doc count (a top-N values list), add an `orderBy` property of "doc\_count".
 This automatically selects a descending sort.
 
 {{% admonition type="note" %}}
-To use an ascending sort (`asc`) with doc_count (a bottom-N list), set `order: "asc"`. However, Elasticsearch [discourages this](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-order) because sorting by ascending doc count can return inaccurate results.
+To use an ascending sort (`asc`) with doc\_count (a bottom-N list), set `order: "asc"`. However, Elasticsearch [discourages this](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-order) because sorting by ascending doc count can return inaccurate results.
 {{% /admonition %}}
 
 To keep terms in the doc count order, set the variable's Sort dropdown to **Disabled**.
 You can alternatively use other sorting criteria, such as **Alphabetical**, to re-sort them.
 
-```
-{"find": "terms", "field": "hostname", "orderBy": "doc_count"}
-```
+    {"find": "terms", "field": "hostname", "orderBy": "doc_count"}
 
 ## Template variable examples
 
-{{< figure src="/static/img/docs/elasticsearch/elastic-templating-query-7-4.png" max-width="500px" class="docs-image--no-shadow" caption="Query with template variables" >}}
+{{\< figure src="/static/img/docs/elasticsearch/elastic-templating-query-7-4.png" max-width="500px" class="docs-image--no-shadow" caption="Query with template variables" \>}}
 
 In the above example, a Lucene query filters documents based on the `hostname` property using a variable named `$hostname`.
-The example also uses a variable in the _Terms_ group by field input box, which you can use to quickly change how data is grouped.
+The example also uses a variable in the *Terms* group by field input box, which you can use to quickly change how data is grouped.
 
 To view an example dashboard on Grafana Play, see the [Elasticsearch Templated Dashboard](https://play.grafana.org/d/z8OZC66nk/elasticsearch-8-2-0-sample-flight-data?orgId=1).
 

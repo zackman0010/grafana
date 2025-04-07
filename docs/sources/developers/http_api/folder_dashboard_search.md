@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../http_api/folder_dashboard_search/
-canonical: /docs/grafana/latest/developers/http_api/folder_dashboard_search/
-description: Grafana Folder/Dashboard Search HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - search
-  - folder
-  - dashboard
-labels:
+
+- ../../http\_api/folder\_dashboard\_search/
+  canonical: /docs/grafana/latest/developers/http\_api/folder\_dashboard\_search/
+  description: Grafana Folder/Dashboard Search HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- search
+- folder
+- dashboard
+  labels:
   products:
-    - enterprise
-    - oss
-title: Folder/Dashboard Search HTTP API
----
+  - enterprise
+  - oss
+    title: Folder/Dashboard Search HTTP API
+
+-----
 
 # Folder/Dashboard Search API
 
@@ -41,7 +44,7 @@ Query parameters:
 
 **Example request for retrieving folders and dashboards at the root level**:
 
-```http
+``` http
 GET /api/search?query=&starred=false HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -50,7 +53,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response for retrieving folders and dashboards at the root level**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -82,7 +85,7 @@ Content-Type: application/json
 
 **Example request searching for dashboards**:
 
-```http
+``` http
 GET /api/search?query=Production%20Overview&starred=true&tag=prod HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -91,7 +94,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response searching for dashboards**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

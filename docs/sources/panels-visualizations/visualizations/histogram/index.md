@@ -1,34 +1,37 @@
----
+-----
+
 aliases:
-  - ../../features/panels/histogram/
-  - ../../panels/visualizations/histogram/
-  - ../../visualizations/histogram/
-description: Configure options for Grafana's histogram visualization
-keywords:
-  - grafana
-  - docs
-  - bar chart
-  - panel
-  - barchart
-labels:
+
+- ../../features/panels/histogram/
+- ../../panels/visualizations/histogram/
+- ../../visualizations/histogram/
+  description: Configure options for Grafana's histogram visualization
+  keywords:
+- grafana
+- docs
+- bar chart
+- panel
+- barchart
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Histogram
-weight: 100
-refs:
-  standard-calculations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
-  color-scheme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
----
+  - cloud
+  - enterprise
+  - oss
+    title: Histogram
+    weight: 100
+    refs:
+    standard-calculations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+    color-scheme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+
+-----
 
 # Histogram
 
@@ -36,7 +39,7 @@ Histograms calculate the distribution of values and present them as a bar chart.
 
 For example, if you want to understand the distribution of people's heights, you can use a histogram visualization to identify patterns or insights in the data distribution:
 
-{{< figure src="/static/img/docs/histogram-panel/histogram-example-v8-0.png" max-width="1025px" alt="A histogram visualization showing the distribution of people's heights" >}}
+{{\< figure src="/static/img/docs/histogram-panel/histogram-example-v8-0.png" max-width="1025px" alt="A histogram visualization showing the distribution of people's heights" \>}}
 
 You can use a histogram visualization if you need to:
 
@@ -46,11 +49,11 @@ You can use a histogram visualization if you need to:
 
 ## Configure a histogram visualization
 
-After you've created a [dashboard](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/), the following video shows you how to configure a histogram visualization:
+After you've created a [dashboard](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/build-dashboards/create-dashboard/), the following video shows you how to configure a histogram visualization:
 
-{{< youtube id="QfJ480j9-KM" >}}
+{{\< youtube id="QfJ480j9-KM" \>}}
 
-{{< docs/play title="Histogram Examples" url="https://play.grafana.org/d/histogram_tests/" >}}
+{{\< docs/play title="Histogram Examples" url="https://play.grafana.org/d/histogram\_tests/" \>}}
 
 ## Supported data formats
 
@@ -74,7 +77,7 @@ The following tables are examples of the type of data you need for a histogram v
 
 The data is converted as follows:
 
-{{< figure src="/static/img/docs/histogram-panel/histogram-example-time-series.png" max-width="1025px" alt="A histogram visualization showing the random walk distribution." >}}
+{{\< figure src="/static/img/docs/histogram-panel/histogram-example-time-series.png" max-width="1025px" alt="A histogram visualization showing the random walk distribution." \>}}
 
 #### Basic numerical table
 
@@ -90,15 +93,15 @@ The data is converted as follows:
 
 The data is converted as follows:
 
-{{< figure src="/static/img/docs/histogram-panel/histogram-example-height-weight.png" max-width="1025px" alt="A histogram visualization showing the male height and weight distribution" >}}
+{{\< figure src="/static/img/docs/histogram-panel/histogram-example-height-weight.png" max-width="1025px" alt="A histogram visualization showing the male height and weight distribution" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Histogram options
 
@@ -142,28 +145,28 @@ Choose from the following:
 
 ### Tooltip options
 
-{{< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

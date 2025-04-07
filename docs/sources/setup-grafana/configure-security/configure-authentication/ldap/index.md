@@ -1,17 +1,20 @@
----
+-----
+
 aliases:
-  - ../../../auth/ldap/
-  - ../../../installation/ldap/
-description: Grafana LDAP Authentication Guide
-labels:
+
+- ../../../auth/ldap/
+- ../../../installation/ldap/
+  description: Grafana LDAP Authentication Guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: LDAP
-title: Configure LDAP authentication
-weight: 300
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: LDAP
+    title: Configure LDAP authentication
+    weight: 300
+
+-----
 
 # Configure LDAP authentication
 
@@ -37,7 +40,7 @@ specific configuration file (default: `/etc/grafana/ldap.toml`).
 
 After enabling LDAP, the default behavior is for Grafana users to be created automatically upon successful LDAP authentication. If you prefer for only existing Grafana users to be able to sign in, you can change `allow_sign_up` to `false` in the `[auth.ldap]` section.
 
-```ini
+``` ini
 [auth.ldap]
 # Set to `true` to enable LDAP integration (default: `false`)
 enabled = true
@@ -55,7 +58,7 @@ allow_sign_up = true
 If you use LDAP to authenticate users but don't use role mapping, and prefer to manually assign organizations
 and roles, you can use the `skip_org_role_sync` configuration option.
 
-```ini
+``` ini
 [auth.ldap]
 # Set to `true` to enable LDAP integration (default: `false`)
 enabled = true
@@ -78,7 +81,7 @@ See [configuration examples](#configuration-examples) for more information.
 
 **LDAP specific configuration file (ldap.toml) example:**
 
-```bash
+``` bash
 [[servers]]
 # Ldap server host (specify multiple hosts space separated)
 host = "ldap.my_secure_remote_server.org"
@@ -138,7 +141,7 @@ Whenever you modify the ldap.toml file, you must restart Grafana in order for th
 
 You can interpolate variables in the TOML configuration from environment variables. For instance, you could externalize your `bind_password` that way:
 
-```bash
+``` bash
 bind_password = "${LDAP_ADMIN_PASSWORD}"
 ```
 
@@ -148,28 +151,28 @@ Grafana has an LDAP debug view built-in which allows you to test your LDAP confi
 
 Within this view, you'll be able to see which LDAP servers are currently reachable and test your current configuration.
 
-{{< figure src="/static/img/docs/ldap_debug.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP testing" >}}
+{{\< figure src="/static/img/docs/ldap\_debug.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP testing" \>}}
 
 To use the debug view, complete the following steps:
 
-1.  Type the username of a user that exists within any of your LDAP server(s)
-1.  Then, press "Run"
-1.  If the user is found within any of your LDAP instances, the mapping information is displayed.
+1. Type the username of a user that exists within any of your LDAP server(s)
+2. Then, press "Run"
+3. If the user is found within any of your LDAP instances, the mapping information is displayed.
 
 Note that this does not work if you are using the single bind configuration outlined below.
 
-{{< figure src="/static/img/docs/ldap_debug_mapping_testing.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP mapping displayed" >}}
+{{\< figure src="/static/img/docs/ldap\_debug\_mapping\_testing.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP mapping displayed" \>}}
 
 [Grafana Enterprise](../../../../introduction/grafana-enterprise/) users with [enhanced LDAP integration](../enhanced-ldap/) enabled can also see sync status in the debug view. This requires the `ldap.status:read` permission.
 
-{{< figure src="/static/img/docs/ldap_sync_debug.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP sync status" >}}
+{{\< figure src="/static/img/docs/ldap\_sync\_debug.png" class="docs-image--no-shadow" max-width="600px" alt="LDAP sync status" \>}}
 
 ### Bind and bind password
 
 By default the configuration expects you to specify a bind DN and bind password. This should be a read only user that can perform LDAP searches.
 When the user DN is found a second bind is performed with the user provided username and password (in the normal Grafana login form).
 
-```bash
+``` bash
 bind_dn = "cn=admin,dc=grafana,dc=org"
 bind_password = "grafana"
 ```
@@ -177,9 +180,9 @@ bind_password = "grafana"
 #### Single bind example
 
 If you can provide a single bind expression that matches all possible users, you can skip the second bind and bind against the user DN directly.
-This allows you to not specify a bind_password in the configuration file.
+This allows you to not specify a bind\_password in the configuration file.
 
-```bash
+``` bash
 bind_dn = "cn=%s,o=users,dc=grafana,dc=org"
 ```
 
@@ -190,7 +193,7 @@ The search filter and search bases settings are still needed to perform the LDAP
 
 If your LDAP server does not support the `memberOf` attribute, add the following options:
 
-```bash
+``` bash
 ## Group search filter, to retrieve the groups of which the user is a member (only set if memberOf attribute is not available)
 group_search_filter = "(&(objectClass=posixGroup)(memberUid=%s))"
 ## An array of the base DNs to search through for groups. Typically uses ou=groups
@@ -207,7 +210,7 @@ The first group mapping that an LDAP user is matched to will be used for the syn
 
 **LDAP specific configuration file (ldap.toml) example:**
 
-```bash
+``` bash
 [[servers]]
 # other settings omitted for clarity
 
@@ -233,7 +236,7 @@ org_role = "Viewer"
 | --------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | `group_dn`      | Yes      | LDAP distinguished name (DN) of LDAP group. If you want to match all (or no LDAP groups) then you can use wildcard (`"*"`)                            |
 | `org_role`      | Yes      | Assign users of `group_dn` the organization role `Admin`, `Editor`, or `Viewer`. The organization role name is case sensitive.                        |
-| `org_id`        | No       | The Grafana organization database id. Setting this allows for multiple group_dn's to be assigned to the same `org_role` provided the `org_id` differs | `1` (default org id) |
+| `org_id`        | No       | The Grafana organization database id. Setting this allows for multiple group\_dn's to be assigned to the same `org_role` provided the `org_id` differs | `1` (default org id) |
 | `grafana_admin` | No       | When `true` makes user of `group_dn` Grafana server admin. A Grafana server admin has admin access over all organizations and users.                  | `false`              |
 
 {{% admonition type="note" %}}
@@ -243,7 +246,7 @@ said group or it will fail validation as an empty mapping.
 
 Example:
 
-```bash
+``` bash
 [[servers]]
 # other settings omitted for clarity
 
@@ -276,13 +279,13 @@ To configure `group_search_filter`:
 Active Directory groups store the Distinguished Names (DNs) of members, so your filter will need to know the DN for the user based only on the submitted username.
 Multiple DN templates are searched by combining filters with the LDAP OR-operator. Two examples:
 
-```bash
+``` bash
 group_search_filter = "(member:1.2.840.113556.1.4.1941:=%s)"
 group_search_base_dns = ["DC=mycorp,DC=mytld"]
 group_search_filter_user_attribute = "dn"
 ```
 
-```bash
+``` bash
 group_search_filter = "(member:1.2.840.113556.1.4.1941:=CN=%s,[user container/OU])"
 group_search_filter = "(|(member:1.2.840.113556.1.4.1941:=CN=%s,[user container/OU])(member:1.2.840.113556.1.4.1941:=CN=%s,[another user container/OU]))"
 group_search_filter_user_attribute = "cn"
@@ -302,7 +305,7 @@ The following examples describe different LDAP configuration options.
 
 **LDAP specific configuration file (ldap.toml):**
 
-```bash
+``` bash
 [[servers]]
 host = "127.0.0.1"
 port = 389
@@ -327,7 +330,7 @@ Grafana does support receiving information from multiple LDAP servers.
 
 **LDAP specific configuration file (ldap.toml):**
 
-```bash
+``` bash
 # --- First LDAP Server ---
 
 [[servers]]
@@ -379,7 +382,7 @@ org_role = "Viewer"
 
 ### Active Directory
 
-[Active Directory](<https://technet.microsoft.com/en-us/library/hh831484(v=ws.11).aspx>) is a directory service which is commonly used in Windows environments.
+[Active Directory](https://technet.microsoft.com/en-us/library/hh831484\(v=ws.11\).aspx) is a directory service which is commonly used in Windows environments.
 
 Assuming the following Active Directory server setup:
 
@@ -389,7 +392,7 @@ Assuming the following Active Directory server setup:
 
 **LDAP specific configuration file (ldap.toml):**
 
-```bash
+``` bash
 [[servers]]
 host = "10.0.0.1"
 port = 3269
@@ -410,13 +413,13 @@ email =  "mail"
 #### Port requirements
 
 In above example SSL is enabled and an encrypted port have been configured. If your Active Directory don't support SSL please change `enable_ssl = false` and `port = 389`.
-Please inspect your Active Directory configuration and documentation to find the correct settings. For more information about Active Directory and port requirements see [link](<https://technet.microsoft.com/en-us/library/dd772723(v=ws.10)>).
+Please inspect your Active Directory configuration and documentation to find the correct settings. For more information about Active Directory and port requirements see [link](https://technet.microsoft.com/en-us/library/dd772723\(v=ws.10\)).
 
 ## Troubleshooting
 
 To troubleshoot and get more log info enable LDAP debug logging in the [main config file](../../../configure-grafana/).
 
-```bash
+``` bash
 [log]
 filters = ldap:debug
 ```

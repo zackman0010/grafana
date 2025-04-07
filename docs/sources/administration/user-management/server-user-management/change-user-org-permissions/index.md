@@ -1,13 +1,16 @@
----
+-----
+
 aliases:
-  - ../../manage-users-and-permissions/manage-server-users/change-user-org-permissions/
-labels:
+
+- ../../manage-users-and-permissions/manage-server-users/change-user-org-permissions/
+  labels:
   products:
-    - enterprise
-    - oss
-title: Change a user's organization permissions
-weight: 50
----
+  - enterprise
+  - oss
+    title: Change a user's organization permissions
+    weight: 50
+
+-----
 
 # Change a user's organization permissions
 
@@ -21,8 +24,8 @@ Update organization permissions when you want to enhance or restrict a user's ac
 **To change a user's organization permissions**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
-1. In the Organizations section, click **Change role** for the role you want to change
-1. Select another role.
-1. Click **Save**.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click a user.
+4. In the Organizations section, click **Change role** for the role you want to change
+5. Select another role.
+6. Click **Save**.

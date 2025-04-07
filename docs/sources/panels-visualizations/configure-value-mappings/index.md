@@ -1,95 +1,98 @@
----
+-----
+
 aliases:
-  - ../panels/configure-value-mappings/
-  - ../panels/format-data/
-  - ../panels/format-data/about-value-mapping/
-  - ../panels/format-data/edit-value-mapping/
-  - ../panels/format-data/map-a-range/
-  - ../panels/format-data/map-a-regular-expression/
-  - ../panels/format-data/map-a-special-value/
-  - ../panels/format-data/map-a-value/
-  - ../panels/value-mappings/
-labels:
+
+- ../panels/configure-value-mappings/
+- ../panels/format-data/
+- ../panels/format-data/about-value-mapping/
+- ../panels/format-data/edit-value-mapping/
+- ../panels/format-data/map-a-range/
+- ../panels/format-data/map-a-regular-expression/
+- ../panels/format-data/map-a-special-value/
+- ../panels/format-data/map-a-value/
+- ../panels/value-mappings/
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure value mappings
-title: Configure value mappings
-description: Configure value mappings to change how data appears in your visualizations
-weight: 90
-refs:
-  status-history:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/status-history/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
-  bar-gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
-  candlestick:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/candlestick/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
-  canvas:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/canvas/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
-  gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
-  state-timeline:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/state-timeline/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
-  trend:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/trend/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
-  geomap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/geomap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
-  stat:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/stat/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
-  time-series:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
-  histogram:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
-  pie-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/pie-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
-  bar-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure value mappings
+    title: Configure value mappings
+    description: Configure value mappings to change how data appears in your visualizations
+    weight: 90
+    refs:
+    status-history:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/status-history/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
+    bar-gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
+    candlestick:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/candlestick/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
+    canvas:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/canvas/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
+    gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
+    state-timeline:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/state-timeline/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
+    trend:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/trend/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
+    geomap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/geomap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
+    stat:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/stat/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
+    time-series:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
+    histogram:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
+    pie-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/pie-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
+    bar-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
+
+-----
 
 # Configure value mappings
 
@@ -105,7 +108,7 @@ Value mappings bypass unit formatting set in the **Standard options** section of
 
 You can configure value mappings for the following visualizations:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Bar chart](ref:bar-chart)
 - [Bar gauge](ref:bar-gauge)
@@ -122,7 +125,7 @@ You can configure value mappings for the following visualizations:
 - [Time series](ref:time-series)
 - [Trend](ref:trend)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ## Types of value mappings
 
@@ -130,8 +133,8 @@ Grafana supports the following value mapping types:
 
 ### Value
 
-A **Value** mapping maps specific values to text and a color. For example, you can configure a mapping so that all instances of the value `10` appear as **Perfection!** rather than the number. Use **Value** mapping when you want to format a single value.
-![The value 10 mapped to the text Perfection!](/media/docs/grafana/panels-visualizations/screenshot-map-value-v10.4.png)
+A **Value** mapping maps specific values to text and a color. For example, you can configure a mapping so that all instances of the value `10` appear as **Perfection\!** rather than the number. Use **Value** mapping when you want to format a single value.
+![The value 10 mapped to the text Perfection\!](/media/docs/grafana/panels-visualizations/screenshot-map-value-v10.4.png)
 
 ### Range
 
@@ -179,23 +182,31 @@ The following image shows a table visualization with value mappings. If you want
 ## Add a value mapping
 
 1. Navigate to the panel you want to update.
-1. Hover over any part of the panel you want to work on to display the menu on the top right corner.
-1. Click the menu and select **Edit**.
-1. Scroll to the **Value mappings** section and expand it.
-1. Click **Add value mappings**.
-1. Click **Add a new mapping** and then select one of the following:
 
+2. Hover over any part of the panel you want to work on to display the menu on the top right corner.
+
+3. Click the menu and select **Edit**.
+
+4. Scroll to the **Value mappings** section and expand it.
+
+5. Click **Add value mappings**.
+
+6. Click **Add a new mapping** and then select one of the following:
+   
    - **Value** - Enter a single value to match.
    - **Range** - Enter the beginning and ending values of a range to match.
    - **Regex** - Enter a regular expression pattern to match.
    - **Special** - Select a special value to match.
 
-1. (Optional) Enter display text.
-1. (Optional) Set the color.
-1. (Optional) Set an icon (canvas visualizations only).
-1. Click **Update** to save the value mapping.
+7. (Optional) Enter display text.
+
+8. (Optional) Set the color.
+
+9. (Optional) Set an icon (canvas visualizations only).
+
+10. Click **Update** to save the value mapping.
 
 After you've added a mapping, the **Edit value mappings** button replaces the **Add value mappings** button. Click the edit button to add or update mappings.
 
 1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
+2. Click **Back to dashboard** and then **Exit edit**.

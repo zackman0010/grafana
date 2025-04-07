@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/short_url/
-canonical: /docs/grafana/latest/developers/http_api/short_url/
-description: Grafana Short URL HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - shortUrl
-labels:
+
+- ../../http\_api/short\_url/
+  canonical: /docs/grafana/latest/developers/http\_api/short\_url/
+  description: Grafana Short URL HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- shortUrl
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Short URL HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Short URL HTTP API '
+
+-----
 
 # Short URL API
 
@@ -28,7 +31,7 @@ Creates a short URL.
 
 **Example request:**
 
-```http
+``` http
 POST /api/short-urls HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -41,11 +44,11 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 JSON body schema:
 
-- **path** – The path to shorten, relative to the Grafana [root_url](/docs/grafana/latest/setup-grafana/configure-grafana/#root_url).
+- **path** – The path to shorten, relative to the Grafana [root\_url](/docs/grafana/latest/setup-grafana/configure-grafana/#root_url).
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

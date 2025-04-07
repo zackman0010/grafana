@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../../http_api/create-api-tokens-for-org/ # /docs/grafana/<GRAFANA_VERSION>/http_api/create-api-tokens-for-org/
-  - ../../../tutorials/api_org_token_howto/ # /docs/grafana/<GRAFANA_VERSION>/tutorials/api_org_token_howto/
-canonical: /docs/grafana/latest/developers/http_api/examples/create-api-tokens-for-org/
-keywords:
-  - grafana
-  - tutorials
-  - API
-  - Token
-  - Org
-  - Organization
-labels:
+
+- ../../../http\_api/create-api-tokens-for-org/ \# /docs/grafana/\<GRAFANA\_VERSION\>/http\_api/create-api-tokens-for-org/
+- ../../../tutorials/api\_org\_token\_howto/ \# /docs/grafana/\<GRAFANA\_VERSION\>/tutorials/api\_org\_token\_howto/
+  canonical: /docs/grafana/latest/developers/http\_api/examples/create-api-tokens-for-org/
+  keywords:
+- grafana
+- tutorials
+- API
+- Token
+- Org
+- Organization
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'API Tutorial: Create Service Account tokens and dashboards for an organization'
----
+  - enterprise
+  - oss
+    title: 'API Tutorial: Create Service Account tokens and dashboards for an organization'
+
+-----
 
 # Create Service Account tokens and dashboards for an organization
 
@@ -32,60 +35,62 @@ There are two authentication methods to access the API:
 
 The task is to create a new organization and then add a Token that can be used by other users. In the examples below which use basic auth, the user is `admin` and the password is `admin`.
 
-1. [Create the org](/docs/grafana/<GRAFANA_VERSION>/http_api/org/#create-organization). Here is an example using curl:
-
-   ```bash
+1. [Create the org](/docs/grafana/\<GRAFANA_VERSION\>/http_api/org/#create-organization). Here is an example using curl:
+   
+   ``` bash
    curl -X POST -H "Content-Type: application/json" -d '{"name":"apiorg"}' http://admin:admin@localhost:3000/api/orgs
    ```
-
+   
    This should return a response: `{"message":"Organization created","orgId":6}`. Use the orgId for the next steps.
 
-1. Optional step. If the org was created previously and/or step 3 fails then first [add your Admin user to the org](/docs/grafana/<GRAFANA_VERSION>/http_api/org/#add-user-in-organization):
-
-   ```bash
+2. Optional step. If the org was created previously and/or step 3 fails then first [add your Admin user to the org](/docs/grafana/\<GRAFANA_VERSION\>/http_api/org/#add-user-in-organization):
+   
+   ``` bash
    curl -X POST -H "Content-Type: application/json" -d '{"loginOrEmail":"admin", "role": "Admin"}' http://admin:admin@localhost:3000/api/orgs/<org id of new org>/users
    ```
 
-1. [Switch the org context for the Admin user to the new org](/docs/grafana/<GRAFANA_VERSION>/http_api/user/#switch-user-context-for-signed-in-user):
-
-   ```bash
+3. [Switch the org context for the Admin user to the new org](/docs/grafana/\<GRAFANA_VERSION\>/http_api/user/#switch-user-context-for-signed-in-user):
+   
+   ``` bash
    curl -X POST http://admin:admin@localhost:3000/api/user/using/<id of new org>
    ```
 
-1. [Create a Service Account](../../serviceaccount/#create-service-account):
-
-   ```bash
+4. [Create a Service Account](../../serviceaccount/#create-service-account):
+   
+   ``` bash
    curl -X POST -H "Content-Type: application/json" -d '{"name":"test", "role": "Admin"}' http://admin:admin@localhost:3000/api/serviceaccounts
    ```
 
-1. [Create a Service Account token](../../serviceaccount/#create-service-account-tokens) for the service account created in the previous step:
-
-   ```bash
+5. [Create a Service Account token](../../serviceaccount/#create-service-account-tokens) for the service account created in the previous step:
+   
+   ``` bash
    curl -X POST -H "Content-Type: application/json" -d '{"name":"test-token"}' http://admin:admin@localhost:3000/api/serviceaccounts/<service account id>/tokens
    ```
-
+   
    This should return a response:
-
-   ```http
+   
+   ``` http
    HTTP/1.1 200
    Content-Type: application/json
-
+   
    {
      "id": 7,
      "name": "test-token",
      "key": "eyJrIjoiVjFxTHZ6dGdPSjg5Um92MjN1RlhjMkNqYkZUbm9jYkwiLCJuIjoiZ3JhZmFuYSIsImlkIjoxfQ=="
    }
    ```
-
+   
    Save the key returned here in your password manager as it is not possible to fetch again it in the future.
 
 ## How to add a dashboard
 
 Using the Token that was created in the previous step, you can create a dashboard or carry out other actions without having to switch organizations.
 
-1. [Add a dashboard](/docs/grafana/<GRAFANA_VERSION>/http_api/dashboard/#create-update-dashboard) using the key (or bearer token as it is also called):
+1. [Add a dashboard](/docs/grafana/\<GRAFANA_VERSION\>/http_api/dashboard/#create-update-dashboard) using the key (or bearer token as it is also called):
 
-```bash
+<!-- end list -->
+
+``` bash
 curl -X POST --insecure -H "Authorization: Bearer eyJrIjoiR0ZXZmt1UFc0OEpIOGN5RWdUalBJTllUTk83VlhtVGwiLCJuIjoiYXBpa2V5Y3VybCIsImlkIjo2fQ==" -H "Content-Type: application/json" -d '{
   "dashboard": {
     "id": null,
@@ -103,4 +108,4 @@ curl -X POST --insecure -H "Authorization: Bearer eyJrIjoiR0ZXZmt1UFc0OEpIOGN5RW
 }' http://localhost:3000/api/dashboards/db
 ```
 
-> **Note:** If you export a dashboard for sharing externally using the Share > Export menu in the Grafana UI, you cannot import that dashboard. Instead, click **View JSON** and save it to a file or fetch the JSON output through the API.
+> **Note:** If you export a dashboard for sharing externally using the Share \> Export menu in the Grafana UI, you cannot import that dashboard. Instead, click **View JSON** and save it to a file or fetch the JSON output through the API.

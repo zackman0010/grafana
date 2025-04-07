@@ -1,55 +1,58 @@
----
+-----
+
 aliases:
-  - ../data-sources/mssql/
-  - ../features/datasources/mssql/
-description: Guide for using Microsoft SQL Server in Grafana
-keywords:
-  - grafana
-  - MSSQL
-  - Microsoft
-  - SQL
-  - guide
-  - Azure SQL Database
-labels:
+
+- ../data-sources/mssql/
+- ../features/datasources/mssql/
+  description: Guide for using Microsoft SQL Server in Grafana
+  keywords:
+- grafana
+- MSSQL
+- Microsoft
+- SQL
+- guide
+- Azure SQL Database
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Microsoft SQL Server
-title: Microsoft SQL Server data source
-weight: 900
-refs:
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-  add-template-variables-interval-ms:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval_ms
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval_ms
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-  add-template-variables-interval:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Microsoft SQL Server
+    title: Microsoft SQL Server data source
+    weight: 900
+    refs:
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+    add-template-variables-interval-ms:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+    add-template-variables-interval:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+
+-----
 
 # Microsoft SQL Server data source
 
@@ -69,13 +72,16 @@ Once you've added the Microsoft SQL Server data source, you can [configure it](#
 To configure basic settings for the data source, complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Under Your connections, click **Data sources**.
-1. Enter `Microsoft SQL Server` in the search bar.
-1. Select **Microsoft SQL Server**.
 
+2. Under Your connections, click **Data sources**.
+
+3. Enter `Microsoft SQL Server` in the search bar.
+
+4. Select **Microsoft SQL Server**.
+   
    The **Settings** tab of the data source is displayed.
 
-1. Set the data source's basic configuration options:
+5. Set the data source's basic configuration options:
 
 | Name                | Description                                                                                                                                                                                                                                                                                                                                                        |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -96,9 +102,9 @@ You can also configure settings specific to the Microsoft SQL Server data source
 
 ### Min time interval
 
-The **Min time interval** setting defines a lower limit for the [`$__interval`](ref:add-template-variables-interval) and [`$__interval_ms`][add-template-variables-interval_ms] variables.
+The **Min time interval** setting defines a lower limit for the [`$__interval`](ref:add-template-variables-interval) and \[`$__interval_ms`\]\[add-template-variables-interval\_ms\] variables.
 
-This value _must_ be formatted as a number followed by a valid time identifier:
+This value *must* be formatted as a number followed by a valid time identifier:
 
 | Identifier | Description |
 | ---------- | ----------- |
@@ -141,7 +147,7 @@ To protect against this, we strongly recommend that you create a specific MS SQL
 
 Grant only `SELECT` permissions on the specified database and tables that you want to query to the database user you specified when you added the data source:
 
-```sql
+``` sql
 CREATE USER grafanareader WITH PASSWORD 'password'
 GRANT SELECT ON dbo.YourTable3 TO grafanareader
 ```
@@ -161,7 +167,7 @@ For more information about provisioning, and for available configuration options
 
 #### Provisioning example
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

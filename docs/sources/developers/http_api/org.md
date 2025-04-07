@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../http_api/org/
-  - ../../http_api/organization/
-canonical: /docs/grafana/latest/developers/http_api/org/
-description: Grafana Organization HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - organization
-labels:
+
+- ../../http\_api/org/
+- ../../http\_api/organization/
+  canonical: /docs/grafana/latest/developers/http\_api/org/
+  description: Grafana Organization HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- organization
+  labels:
   products:
-    - enterprise
-    - oss
-title: Organization HTTP API
----
+  - enterprise
+  - oss
+    title: Organization HTTP API
+
+-----
 
 # Organization API
 
@@ -41,7 +44,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/org/ HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -50,7 +53,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -77,7 +80,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/org/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -86,7 +89,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -123,7 +126,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/org/users/lookup HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -132,7 +135,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -159,7 +162,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/org/users/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -172,7 +175,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -193,7 +196,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/org/users/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -202,7 +205,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -223,7 +226,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/org HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -236,7 +239,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -259,7 +262,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/org/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -273,7 +276,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -282,15 +285,15 @@ Content-Type: application/json
 
 ## Admin Organizations API
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 You can't authenticate to the Admin Organizations HTTP API with service account tokens.
 Service accounts are limited to an organization and an organization role.
-They can't be granted [Grafana server administrator permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators).
+They can't be granted [Grafana server administrator permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators).
 
 To use these API endpoints you have to use Basic authentication and the Grafana user must have the Grafana server administrator permission.
 
 The `admin` user that Grafana is provisioned with by default has permissions to use these API endpoints.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Get Organization by Id
 
@@ -308,7 +311,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/orgs/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -316,7 +319,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -350,7 +353,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/orgs/name/Main%20Org%2E HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -358,7 +361,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -392,7 +395,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/orgs HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -404,12 +407,12 @@ Content-Type: application/json
 
 Note: The api will work in the following two ways
 
-1. Need to set GF_USERS_ALLOW_ORG_CREATE=true
-2. Set the config value users.allow_org_create to true in ini file
+1. Need to set GF\_USERS\_ALLOW\_ORG\_CREATE=true
+2. Set the config value users.allow\_org\_create to true in ini file
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -435,7 +438,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/orgs HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -448,7 +451,7 @@ Default value for the `perpage` parameter is `1000` and for the `page` parameter
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -464,7 +467,7 @@ Content-Type: application/json
 
 `PUT /api/orgs/:orgId`
 
-Update Organization, fields _Address 1_, _Address 2_, _City_ are not implemented yet.
+Update Organization, fields *Address 1*, *Address 2*, *City* are not implemented yet.
 Only works with Basic Authentication (username and password), see [introduction](#admin-organizations-api).
 
 **Required permissions**
@@ -477,7 +480,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/orgs/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -489,7 +492,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -512,14 +515,14 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/orgs/1 HTTP/1.1
 Accept: application/json
 ```
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -542,7 +545,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/orgs/1/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -553,7 +556,7 @@ to the request HTTP URL, like http://admin:admin@localhost:3000/api/orgs/1/users
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 [
@@ -583,7 +586,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/orgs/1/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -596,7 +599,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -619,7 +622,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/orgs/1/users/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -631,7 +634,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -654,7 +657,7 @@ See note in the [introduction](#organization-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/orgs/1/users/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -662,7 +665,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

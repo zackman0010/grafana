@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - ../../../auth/jwt/
-description: Grafana JWT Authentication
-labels:
+
+- ../../../auth/jwt/
+  description: Grafana JWT Authentication
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: JWT
-title: Configure JWT authentication
-weight: 1600
----
+  - enterprise
+  - oss
+    menuTitle: JWT
+    title: Configure JWT authentication
+    weight: 1600
+
+-----
 
 # Configure JWT authentication
 
@@ -32,9 +35,11 @@ Grafana does not currently support refresh tokens.
 To use JWT authentication:
 
 1. Enable JWT in the [main config file](../../../configure-grafana/).
-1. Specify the header name that contains a token.
+2. Specify the header name that contains a token.
 
-```ini
+<!-- end list -->
+
+``` ini
 [auth.jwt]
 # By default, auth.jwt is disabled.
 enabled = true
@@ -49,7 +54,7 @@ To identify the user, some of the claims needs to be selected as a login info. T
 
 Typically, the subject claim called `"sub"` would be used as a login but it might also be set to some application specific claim.
 
-```ini
+``` ini
 # [auth.jwt]
 # ...
 
@@ -69,7 +74,7 @@ Additionally, if the login username or the email claims are nested inside the JW
 
 JWT structure example.
 
-```json
+``` json
 {
   "user": {
     "UID": "1234567890",
@@ -80,7 +85,7 @@ JWT structure example.
 }
 ```
 
-```ini
+``` ini
 # [auth.jwt]
 # ...
 
@@ -98,7 +103,7 @@ you can use JWT authentication to authenticate the iframe.
 
 {{% admonition type="note" %}}
 For Grafana Cloud, or scenarios where verifying viewer identity is not required,
-embed [shared dashboards](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/).
+embed [shared dashboards](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/).
 {{% /admonition %}}
 
 In this scenario, you will need to configure Grafana to accept a JWT
@@ -124,7 +129,7 @@ this can lead to JWTs being exposed in logs and possible session hijacking if th
 using HTTP over TLS.
 {{% /admonition %}}
 
-```ini
+``` ini
 # [auth.jwt]
 # ...
 url_login = true # enable JWT authentication in the URL
@@ -132,9 +137,7 @@ url_login = true # enable JWT authentication in the URL
 
 An example of an URL for accessing grafana with JWT URL authentication is:
 
-```
-http://env.grafana.local/d/RciOKLR4z/board-identifier?orgId=1&kiosk&auth_token=eyJhbxxxxxxxxxxxxx
-```
+    http://env.grafana.local/d/RciOKLR4z/board-identifier?orgId=1&kiosk&auth_token=eyJhbxxxxxxxxxxxxx
 
 A sample repository using this authentication method is available
 at [grafana-iframe-oauth-sample](https://github.com/grafana/grafana-iframe-oauth-sample).
@@ -149,7 +152,7 @@ You have a variety of options on how to specify where the keys are located.
 
 For more information on JWKS endpoints, refer to [Auth0 docs](https://auth0.com/docs/tokens/json-web-tokens/json-web-key-sets).
 
-```ini
+``` ini
 # [auth.jwt]
 # ...
 
@@ -159,27 +162,27 @@ jwk_set_url = https://your-auth-provider.example.com/.well-known/jwks.json
 cache_ttl = 60m
 ```
 
-> **Note**: If the JWKS endpoint includes cache control headers and the value is less than the configured `cache_ttl`, then the cache control header value is used instead. If the cache_ttl is not set, no caching is performed. `no-store` and `no-cache` cache control headers are ignored.
+> **Note**: If the JWKS endpoint includes cache control headers and the value is less than the configured `cache_ttl`, then the cache control header value is used instead. If the cache\_ttl is not set, no caching is performed. `no-store` and `no-cache` cache control headers are ignored.
 
 ### Verify token using a JSON Web Key Set loaded from JSON file
 
 Key set in the same format as in JWKS endpoint but located on disk.
 
-```ini
+``` ini
 jwk_set_file = /path/to/jwks.json
 ```
 
 ### Verify token using a single key loaded from PEM-encoded file
 
-PEM-encoded key file in PKIX, PKCS #1, PKCS #8 or SEC 1 format.
+PEM-encoded key file in PKIX, PKCS \#1, PKCS \#8 or SEC 1 format.
 
-```ini
+``` ini
 key_file = /path/to/key.pem
 ```
 
 If the JWT token's header specifies a `kid` (Key ID), then the Key ID must be set using the `key_id` configuration option.
 
-```ini
+``` ini
 key_id = my-key-id
 ```
 
@@ -190,7 +193,7 @@ By default, only `"exp"`, `"nbf"` and `"iat"` claims are validated.
 Consider validating that other claims match your expectations by using the `expect_claims` configuration option.
 Token claims must match exactly the values set here.
 
-```ini
+``` ini
 # This can be seen as a required "subset" of a JWT Claims Set.
 expect_claims = {"iss": "https://your-token-issuer", "your-custom-claim": "foo"}
 ```
@@ -222,7 +225,7 @@ In the following example user will get `Editor` as role when authenticating. The
 
 Payload:
 
-```json
+``` json
 {
     ...
     "role": "Editor",
@@ -232,7 +235,7 @@ Payload:
 
 Configuration:
 
-```ini
+``` ini
 role_attribute_path = role
 ```
 
@@ -242,7 +245,7 @@ In the following example user will get `Admin` as role when authenticating since
 
 Payload:
 
-```json
+``` json
 {
     ...
     "info": {
@@ -259,7 +262,7 @@ Payload:
 
 Configuration:
 
-```ini
+``` ini
 role_attribute_path = contains(info.roles[*], 'admin') && 'Admin' || contains(info.roles[*], 'editor') && 'Editor' || 'Viewer'
 ```
 
@@ -269,7 +272,7 @@ In the following example, the , the user has been granted the role of a `Viewer`
 
 Payload:
 
-```json
+``` json
 {
     ...
     "info": {
@@ -286,7 +289,7 @@ Payload:
 
 Configuration:
 
-```ini
+``` ini
 org_attribute_path = info.orgs
 org_mapping = engineer:org_foo:Viewer admin:org_bar:Editor *:org_baz:Editor
 ```
@@ -299,7 +302,7 @@ If the `role_attribute_path` property returns a `GrafanaAdmin` role, Grafana Adm
 
 To skip the assignment of roles and permissions upon login via JWT and handle them via other mechanisms like the user interface, we can skip the organization role synchronization with the following configuration.
 
-```ini
+``` ini
 [auth.jwt]
 # ...
 

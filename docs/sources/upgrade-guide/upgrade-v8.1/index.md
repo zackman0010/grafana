@@ -1,26 +1,29 @@
----
+-----
+
 description: Upgrade to Grafana v8.1
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-menutitle: Upgrade to v8.1
-title: Upgrade to Grafana v8.1
-weight: 2800
----
+  - enterprise
+  - oss
+    menutitle: Upgrade to v8.1
+    title: Upgrade to Grafana v8.1
+    weight: 2800
+
+-----
 
 # Upgrade to Grafana v8.1
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 

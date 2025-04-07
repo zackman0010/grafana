@@ -1,14 +1,17 @@
----
+-----
+
 keywords:
-  - correlations
-  - Explore
-labels:
+
+- correlations
+- Explore
+  labels:
   products:
-    - enterprise
-    - oss
-title: Correlations
-weight: 900
----
+  - enterprise
+  - oss
+    title: Correlations
+    weight: 900
+
+-----
 
 # Correlations
 
@@ -30,12 +33,12 @@ Explore visualizations that currently support showing links based on correlation
 - [Logs Panel](use-correlations-in-visualizations/#correlations-in-logs-panel)
 - [Table](use-correlations-in-visualizations/#correlations-in-table)
 
-You can configure correlations using [provisioning](../provisioning/), the **Administration > Plugins and data > Correlations** page in Grafana or directly in [Explore](../../explore/correlations-editor-in-explore/).
+You can configure correlations using [provisioning](../provisioning/), the **Administration \> Plugins and data \> Correlations** page in Grafana or directly in [Explore](../../explore/correlations-editor-in-explore/).
 
 ## Example of how links work in Explore once set up
 
-{{< figure src="/static/img/docs/correlations/correlations-in-explore-10-0.gif" alt="Demonstration of following a correlation link in Grafana Explore" caption="Correlations links in Explore" >}}
+{{\< figure src="/static/img/docs/correlations/correlations-in-explore-10-0.gif" alt="Demonstration of following a correlation link in Grafana Explore" caption="Correlations links in Explore" \>}}
 
 See also:
 
-{{< section >}}
+{{\< section \>}}

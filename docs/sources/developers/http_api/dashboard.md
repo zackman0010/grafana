@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/dashboard/
-canonical: /docs/grafana/latest/developers/http_api/dashboard/
-description: Grafana Dashboard HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - dashboard
-labels:
+
+- ../../http\_api/dashboard/
+  canonical: /docs/grafana/latest/developers/http\_api/dashboard/
+  description: Grafana Dashboard HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- dashboard
+  labels:
   products:
-    - enterprise
-    - oss
-title: Dashboard HTTP API
----
+  - enterprise
+  - oss
+    title: Dashboard HTTP API
+
+-----
 
 # Dashboard API
 
@@ -44,16 +47,18 @@ Creates a new dashboard or updates an existing dashboard. When updating existing
 See note in the [introduction](#dashboard-api) for an explanation.
 
 <!-- prettier-ignore-start -->
+
 | Action              | Scope                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------- |
 | `dashboards:create` | <ul><li>`folders:*`</li><li>`folders:uid:*`</li></ul>                                                   |
 | `dashboards:write`  | <ul><li>`dashboards:*`</li><li>`dashboards:uid:*`</li><li>`folders:*`</li><li>`folders:uid:*`</li></ul> |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 **Example Request for new dashboard**:
 
-```http
+``` http
 POST /api/dashboards/db HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -88,7 +93,7 @@ JSON Body schema:
 
 **Example Request for updating a dashboard**:
 
-```http
+``` http
 POST /api/dashboards/db HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -112,7 +117,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 78
@@ -144,7 +149,7 @@ There can be different reasons for this:
 
 The response body will have the following properties:
 
-```http
+``` http
 HTTP/1.1 412 Precondition Failed
 Content-Type: application/json; charset=UTF-8
 Content-Length: 97
@@ -166,15 +171,17 @@ Will return the dashboard given the dashboard unique identifier (uid). Informati
 See note in the [introduction](#dashboard-api) for an explanation.
 
 <!-- prettier-ignore-start -->
+
 | Action            | Scope                                                                                                   |
 | ----------------- | ------------------------------------------------------------------------------------------------------- |
 | `dashboards:read` | <ul><li>`dashboards:*`</li><li>`dashboards:uid:*`</li><li>`folders:*`</li><li>`folders:uid:*`</li></ul> |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboards/uid/cIBgcSjkk HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -183,7 +190,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -225,15 +232,17 @@ Will delete the dashboard given the specified unique identifier (uid).
 See note in the [introduction](#dashboard-api) for an explanation.
 
 <!-- prettier-ignore-start -->
+
 | Action              | Scope                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------- |
 | `dashboards:delete` | <ul><li>`dashboards:*`</li><li>`dashboards:uid:*`</li><li>`folders:*`</li><li>`folders:uid:*`</li></ul> |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/dashboards/uid/cIBgcSjkk HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -242,7 +251,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -268,7 +277,7 @@ Will return the home dashboard.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboards/home HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -277,7 +286,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -322,7 +331,7 @@ Get all tags of dashboards
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboards/tags HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -331,7 +340,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

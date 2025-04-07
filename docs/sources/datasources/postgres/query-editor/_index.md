@@ -1,59 +1,62 @@
----
+-----
+
 description: This document describes the PostgreSQL query editor in Grafana.
 keywords:
-  - grafana
-  - postgresql
-  - guide
-labels:
+
+- grafana
+- postgresql
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: PostgreSQL query editor
-title: PostgreSQL query editor
-weight: 20
-refs:
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  add-template-variables-interval:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
-  query-editor:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/#query-editors
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/#query-editors
-  alert-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/
-  template-annotations-and-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
-  templates:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/#templates
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/#templates
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: PostgreSQL query editor
+    title: PostgreSQL query editor
+    weight: 20
+    refs:
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    add-template-variables-interval:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
+    query-editor:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/\#query-editors
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/\#query-editors
+    alert-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/
+    template-annotations-and-labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
+    templates:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/\#templates
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/\#templates
+
+-----
 
 # PostgreSQL query editor
 
@@ -65,7 +68,7 @@ For general information on querying data sources in Grafana, refer to [Query and
 
 The PostgreSQL query editor is located on the [Explore page](ref:explore). You can also access the PostgreSQL query editor from a dashboard panel. Click the ellipsis in the upper right of the panel and select **Edit**.
 
-{{< figure src="/static/img/docs/screenshot-postgres-query-editor.png" class="docs-image--no-shadow" caption="PostgreSQL query builder" >}}
+{{\< figure src="/static/img/docs/screenshot-postgres-query-editor.png" class="docs-image--no-shadow" caption="PostgreSQL query builder" \>}}
 
 ## PostgreSQL query editor components
 
@@ -79,11 +82,11 @@ The following components will help you build a PostgreSQL query:
 
 - **Format** - Select a format response from the drop-down for the PostgreSQL query. The default is **Table**. If you use the **Time series** format option, one of the columns must be `time`. Refer to [Time series queries](#time-series-queries) for more information.
 - **Table** - Select a table from the drop-down. Tables correspond to the chosen database.
-- **Data operations** - _Optional_ Select an aggregation from the drop-down. You can add multiple data operations by clicking the **+ sign**. Click the **garbage can icon** to remove data operations.
+- **Data operations** - *Optional* Select an aggregation from the drop-down. You can add multiple data operations by clicking the **+ sign**. Click the **garbage can icon** to remove data operations.
 - **Column** - Select a column on which to run the aggregation.
-- **Alias** - _Optional_ Add an alias from the drop-down. You can also add your own alias by typing it in the box and clicking **Enter**. Remove an alias by clicking the **X**.
+- **Alias** - *Optional* Add an alias from the drop-down. You can also add your own alias by typing it in the box and clicking **Enter**. Remove an alias by clicking the **X**.
 - **Filter** - Toggle to add filters.
-- **Filter by column value** - _Optional_ If you toggle **Filter** you can add a column to filter by from the drop-down. To filter on more columns, click the **+ sign** to the right of the condition drop-down. You can choose a variety of operators from the drop-down next to the condition. When multiple filters are added you can add an `AND` operator to display all true conditions or an `OR` operator to display any true conditions. Use the second drop-down to choose a filter. To remove a filter, click the `X` button next to that filter's drop-down. After selecting a date type column, you can choose **Macros** from the operators list and select `timeFilter` which will add the `$\_\_timeFilter` macro to the query with the selected date column.
+- **Filter by column value** - *Optional* If you toggle **Filter** you can add a column to filter by from the drop-down. To filter on more columns, click the **+ sign** to the right of the condition drop-down. You can choose a variety of operators from the drop-down next to the condition. When multiple filters are added you can add an `AND` operator to display all true conditions or an `OR` operator to display any true conditions. Use the second drop-down to choose a filter. To remove a filter, click the `X` button next to that filter's drop-down. After selecting a date type column, you can choose **Macros** from the operators list and select `timeFilter` which will add the `$\_\_timeFilter` macro to the query with the selected date column.
 - **Group** - Toggle to add **Group by column**.
 - **Group by column** - Select a column to filter by from the drop-down. Click the **+sign** to filter by multiple columns. Click the **X** to remove a filter.
 - **Order** - Toggle to add an `ORDER BY` statement.
@@ -95,13 +98,13 @@ The following components will help you build a PostgreSQL query:
 
 To create advanced queries, switch to **Code mode** by clicking **Code** in the upper right of the editor window. Code mode supports the auto-completion of tables, columns, SQL keywords, standard SQL functions, Grafana template variables, and Grafana macros. Columns cannot be completed before a table has been specified.
 
-{{< figure src="/static/img/docs/v92/sql_code_editor.png" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v92/sql\_code\_editor.png" class="docs-image--no-shadow" \>}}
 
 Select **Table** or **Time Series** as the format. Click the **{}** in the bottom right to format the query. Click the **downward caret** to expand the Code mode editor. **CTRL/CMD + Return** serves as a keyboard shortcut to execute the query.
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Changes made to a query in Code mode will not transfer to Builder mode and will be discarded. You will be prompted to copy your code to the clipboard to save any changes.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Macros
 
@@ -116,8 +119,8 @@ You can add macros to your queries to simplify the syntax and enable dynamic ele
 | `$__timeTo()`                                         | Replaces the value with the end of the currently active time selection. Example: `FROM_UNIXTIME(1494410983)`                                                                                                              |
 | `$__timeGroup(dateColumn,'5m')`                       | Replaces the value with an expression suitable for use in a `GROUP BY` clause. Example: `cast(cast(UNIX_TIMESTAMP(dateColumn)/(300) AS signed)*300 AS signed)`                                                            |
 | `$__timeGroup(dateColumn,'5m', 0)`                    | Same as the `$__timeGroup(dateColumn,'5m')` macro, but includes a fill parameter to ensure missing points in the series are added by Grafana, using 0 as the default value. **This applies only to time series queries.** |
-| `$__timeGroup(dateColumn,'5m', NULL)`                 | Same as the `$__timeGroup(dateColumn,'5m', 0)` but `NULL` is used as the value for missing points. _This applies only to time series queries._                                                                            |
-| `$__timeGroup(dateColumn,'5m', previous)`             | Same as the `$__timeGroup(dateColumn,'5m', previous)` macro, but uses the previous value in the series as the fill value. If no previous value exists, it uses `NULL`. _This applies only to time series queries._        |
+| `$__timeGroup(dateColumn,'5m', NULL)`                 | Same as the `$__timeGroup(dateColumn,'5m', 0)` but `NULL` is used as the value for missing points. *This applies only to time series queries.*                                                                            |
+| `$__timeGroup(dateColumn,'5m', previous)`             | Same as the `$__timeGroup(dateColumn,'5m', previous)` macro, but uses the previous value in the series as the fill value. If no previous value exists, it uses `NULL`. *This applies only to time series queries.*        |
 | `$__timeGroupAlias(dateColumn,'5m')`                  | Replaces the value identical to `$__timeGroup` but with an added column alias.                                                                                                                                            |
 | `$__unixEpochFilter(dateColumn)`                      | Replaces the value by a time range filter using the specified column name with times represented as a UNIX timestamp. Example: `dateColumn > 1494410783 AND dateColumn < 1494497183`                                      |
 | `$__unixEpochFrom()`                                  | Replaces the value with the start of the currently active time selection as a UNIX timestamp. Example: `1494410783`                                                                                                       |
@@ -136,7 +139,7 @@ If the **Format** option is set to **Table**, you can execute virtually any type
 
 You can change or customize the name of a Table panel column by using the SQL keyword `AS` syntax.
 
-```sql
+``` sql
 SELECT
   title as "Title",
   "user".login as "Created By",
@@ -150,13 +153,13 @@ WHERE $__timeFilter(dashboard.created)
 
 Set the **Format** option to **Time series** to create and run time series queries.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 To run a time series query you must include a column named `time` that returns either a SQL `datetime` value or a numeric datatype representing the UNIX epoch time in seconds. Additionally, the query results must be sorted by the `time` column for proper visualization in panels.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 The examples in this section refer to the data in the following table:
 
-```text
+``` text
 +---------------------+--------------+---------------------+----------+
 | time_date_time      | value_double | CreatedAt           | hostname |
 +---------------------+--------------+---------------------+----------+
@@ -170,13 +173,13 @@ The examples in this section refer to the data in the following table:
 
 Time series query results are returned in [wide data frame format](https://grafana.com/developers/plugin-tools/key-concepts/data-frames#wide-format). In the data frame query result, any column, except for time or string-type columns, transforms into value fields. String columns, on the other hand, become field labels.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 For backward compatibility, an exception to this rule applies to queries that return three columns, one of which is a string column named `metric`. Instead of converting the metric column into field labels, it is used as the field name, while the series name is set to its value. See the following example for reference.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 **Example with `metric` column:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias("time_date_time",'5m'),
   min("value_double"),
@@ -189,7 +192,7 @@ ORDER BY time
 
 Data frame result:
 
-```text
+``` text
 +---------------------+-----------------+
 | Name: time          | Name: min       |
 | Labels:             | Labels:         |
@@ -206,7 +209,7 @@ Following are time series query examples.
 
 **Example using the fill parameter in the $\_\_timeGroupAlias macro to convert null values to be zero instead:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias("createdAt",'5m',0),
   sum(value) as value,
@@ -218,11 +221,11 @@ GROUP BY time, hostname
 ORDER BY time
 ```
 
-Based on the data frame result in the following example, the time series panel will generate two series named _value 10.0.1.1_ and _value 10.0.1.2_. To display the series names as _10.0.1.1_ and _10.0.1.2_, use the [Standard options definitions](ref:configure-standard-options-display-name) display value `${__field.labels.hostname}`.
+Based on the data frame result in the following example, the time series panel will generate two series named *value 10.0.1.1* and *value 10.0.1.2*. To display the series names as *10.0.1.1* and *10.0.1.2*, use the [Standard options definitions](ref:configure-standard-options-display-name) display value `${__field.labels.hostname}`.
 
 Data frame result:
 
-```text
+``` text
 +---------------------+---------------------------+---------------------------+
 | Name: time          | Name: value               | Name: value               |
 | Labels:             | Labels: hostname=10.0.1.1 | Labels: hostname=10.0.1.2 |
@@ -235,7 +238,7 @@ Data frame result:
 
 **Example with multiple columns:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias("time_date_time",'5m'),
   min("value_double") as "min_value",
@@ -248,7 +251,7 @@ ORDER BY time
 
 Data frame result:
 
-```text
+``` text
 +---------------------+-----------------+-----------------+
 | Name: time          | Name: min_value | Name: max_value |
 | Labels:             | Labels:         | Labels:         |
@@ -269,33 +272,33 @@ Refer to [Templates](ref:templates) for an introduction to creating template var
 
 If you add a `Query` template variable you can write a PostgreSQL query to retrieve items such as measurement names, key names, or key values, which will be displayed in the drop-down menu.
 
-For example, you can use a variable to retrieve all the values from the `hostname` column in a table by creating the following query in the templating variable _Query_ setting.
+For example, you can use a variable to retrieve all the values from the `hostname` column in a table by creating the following query in the templating variable *Query* setting.
 
-```sql
+``` sql
 SELECT hostname FROM host
 ```
 
 A query can return multiple columns, and Grafana will automatically generate a list based on the query results. For example, the following query returns a list with values from `hostname` and `hostname2`.
 
-```sql
+``` sql
 SELECT host.hostname, other_host.hostname2 FROM host JOIN other_host ON host.city = other_host.city
 ```
 
-To use time range dependent macros like `$__timeFilter(column)` in your query, you must set the template variable's refresh mode to _On Time Range Change_.
+To use time range dependent macros like `$__timeFilter(column)` in your query, you must set the template variable's refresh mode to *On Time Range Change*.
 
-```sql
+``` sql
 SELECT event_name FROM event_log WHERE $__timeFilter(time_column)
 ```
 
 Another option is a query that can create a key/value variable. The query should return two columns that are named `__text` and `__value`. The `__text` column must contain unique values (if not, only the first value is used). This allows the drop-down options to display a text-friendly name as the text while using an ID as the value. For example, a query could use `hostname` as the text and `id` as the value:
 
-```sql
+``` sql
 SELECT hostname AS __text, id AS __value FROM host
 ```
 
 You can also create nested variables. For example, if you have a variable named `region`, you can configure the `hosts` variable to display only the hosts within the currently selected region as shown in the following example. If `region` is a multi-value variable, use the `IN` operator instead of `=` to match multiple values.
 
-```sql
+``` sql
 SELECT hostname FROM host WHERE region IN($region)
 ```
 
@@ -307,7 +310,7 @@ Note that you must enclose the `__searchFilter` expression in quotes as Grafana 
 
 The following example demonstrates how to use `__searchFilter` in the query field to enable real-time searching for `hostname` as the user type in the drop-down selection box.
 
-```sql
+``` sql
 SELECT hostname FROM my_host WHERE hostname LIKE '$__searchFilter'
 ```
 
@@ -321,7 +324,7 @@ You can use two different syntaxes:
 
 `$<varname>` Example with a template variable named `hostname`:
 
-```sql
+``` sql
 SELECT
   atimestamp as time,
   aint as value
@@ -332,7 +335,7 @@ ORDER BY atimestamp ASC
 
 `[[varname]]` Example with a template variable named `hostname`:
 
-```sql
+``` sql
 SELECT
   atimestamp as time,
   aint as value
@@ -351,11 +354,11 @@ Read more about variable formatting options in the [Variables](ref:variable-synt
 
 ## Annotations
 
-[Annotations](ref:annotate-visualizations) allow you to overlay rich event information on top of graphs. Add annotation queries via the **Dashboard settings > Annotations view**.
+[Annotations](ref:annotate-visualizations) allow you to overlay rich event information on top of graphs. Add annotation queries via the **Dashboard settings \> Annotations view**.
 
 **Example query using a `time` column with epoch values:**
 
-```sql
+``` sql
 SELECT
   epoch_time as time,
   metric1 as text,
@@ -368,7 +371,7 @@ WHERE
 
 **Example region query using `time` and `timeend` columns with epoch values:**
 
-```sql
+``` sql
 SELECT
   epoch_time as time,
   epoch_time_end as timeend,
@@ -382,7 +385,7 @@ WHERE
 
 **Example query using a `time` column with a native SQL date/time data type:**
 
-```sql
+``` sql
 SELECT
   native_date_time as time,
   metric1 as text,

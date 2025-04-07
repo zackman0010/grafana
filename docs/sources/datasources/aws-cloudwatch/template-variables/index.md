@@ -1,39 +1,42 @@
----
+-----
+
 aliases:
-  - ../../data-sources/aws-cloudwatch/template-variables/
-  - template-queries-cloudwatch/
-description: Guide on using template variables in CloudWatch queries
-keywords:
-  - grafana
-  - aws
-  - cloudwatch
-  - templates
-  - variables
-labels:
+
+- ../../data-sources/aws-cloudwatch/template-variables/
+- template-queries-cloudwatch/
+  description: Guide on using template variables in CloudWatch queries
+  keywords:
+- grafana
+- aws
+- cloudwatch
+- templates
+- variables
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: CloudWatch template variables
-weight: 400
-refs:
-  variable-syntax:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: CloudWatch template variables
+    weight: 400
+    refs:
+    variable-syntax:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+
+-----
 
 # CloudWatch template variables
 
@@ -70,7 +73,7 @@ For details about the metrics CloudWatch provides, refer to the [CloudWatch docu
 Use Grafana's variable syntax to include variables in queries.
 For details, refer to the [variable syntax documentation](ref:variable-syntax).
 
-## Use ec2_instance_attribute
+## Use ec2\_instance\_attribute
 
 ### Filters
 

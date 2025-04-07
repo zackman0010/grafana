@@ -1,17 +1,20 @@
----
+-----
+
 aliases:
-  - ../../auth/
-  - ../../auth/overview/
-description: Learn about all the ways in which you can configure Grafana to authenticate
+
+- ../../auth/
+- ../../auth/overview/
+  description: Learn about all the ways in which you can configure Grafana to authenticate
   users.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Configure authentication
-weight: 200
----
+  - cloud
+  - enterprise
+  - oss
+    title: Configure authentication
+    weight: 200
+
+-----
 
 # Configure authentication
 
@@ -117,7 +120,7 @@ When using SSO (Single Sign-On) authentication methods, Grafana handles sessions
 
 Example:
 
-```bash
+``` bash
 [auth]
 
 # Login cookie name
@@ -153,7 +156,7 @@ In certain cases, however, enabling user lookups by email can be a feasible opti
 **Important note**: While it is possible to configure Grafana to allow email-based user lookups, we strongly recommend against this approach in most cases due to potential security risks.
 If you still choose to proceed, the following configuration can be applied to enable email lookup.
 
-```bash
+``` bash
 [auth]
 oauth_allow_insecure_email_lookup = true
 ```
@@ -164,15 +167,13 @@ You can also enable email lookup using the API:
 Available in [Grafana Enterprise](../../../introduction/grafana-enterprise/) and [Grafana Cloud](../../../introduction/grafana-cloud/) since Grafana v10.4.
 {{% /admonition %}}
 
-```
-curl --request PUT \
-  --url http://{slug}.grafana.com/api/admin/settings \
-  --header 'Authorization: Bearer glsa_yourserviceaccounttoken' \
-  --header 'Content-Type: application/json' \
-  --data '{ "updates": { "auth": { "oauth_allow_insecure_email_lookup": "true" }}}'
-```
+    curl --request PUT \
+      --url http://{slug}.grafana.com/api/admin/settings \
+      --header 'Authorization: Bearer glsa_yourserviceaccounttoken' \
+      --header 'Content-Type: application/json' \
+      --data '{ "updates": { "auth": { "oauth_allow_insecure_email_lookup": "true" }}}'
 
-Finally, you can also enable it using the UI by going to **Administration -> Authentication -> Auth settings**.
+Finally, you can also enable it using the UI by going to **Administration -\> Authentication -\> Auth settings**.
 
 ### Automatic OAuth login
 
@@ -180,7 +181,7 @@ Set to true to attempt login with specific OAuth provider automatically, skippin
 This setting is ignored if multiple auth providers are configured to use auto login.
 Defaults to `false`.
 
-```bash
+``` bash
 [auth.generic_oauth]
 auto_login = true
 ```
@@ -194,8 +195,8 @@ This feature is especially helpful when you need to access the login screen to t
 
 1. Add `disableAutoLogin=true` as a query parameter to your Grafana URL.
    - Example: `grafana.example.net/login?disableAutoLogin=true` or `grafana.example.net/login?disableAutoLogin`
-1. This will redirect you to the standard login screen, bypassing the automatic login mechanism.
-1. Fix any configuration issues and test your login setup.
+2. This will redirect you to the standard login screen, bypassing the automatic login mechanism.
+3. Fix any configuration issues and test your login setup.
 
 This feature is available for both for OAuth and SAML. Ensure that after fixing the issue, you remove the parameter or revert the configuration to re-enable the automatic login feature, if desired.
 
@@ -203,7 +204,7 @@ This feature is available for both for OAuth and SAML. Ensure that after fixing 
 
 Set the option detailed below to true to hide sign-out menu link. Useful if you use an auth proxy or JWT authentication.
 
-```bash
+``` bash
 [auth]
 disable_signout_menu = true
 ```
@@ -214,7 +215,7 @@ URL to redirect the user to after signing out from Grafana. This can for example
 
 Example for Generic OAuth:
 
-```bash
+``` bash
 [auth.generic_oauth]
 signout_redirect_url =
 ```
@@ -234,7 +235,7 @@ By default, after you configure an authorization provider, Grafana will adopt ex
 
 You can disable this user adoption for certain roles using the `protected_roles` property:
 
-```bash
+``` bash
 [auth.security]
 protected_roles = server_admins org_admins
 ```

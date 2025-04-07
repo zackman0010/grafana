@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/folder/
-canonical: /docs/grafana/latest/developers/http_api/folder/
-description: Grafana Folder HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - folder
-labels:
+
+- ../../http\_api/folder/
+  canonical: /docs/grafana/latest/developers/http\_api/folder/
+  description: Grafana Folder HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- folder
+  labels:
   products:
-    - enterprise
-    - oss
-title: Folder HTTP API
----
+  - enterprise
+  - oss
+    title: Folder HTTP API
+
+-----
 
 # Folder API
 
@@ -48,7 +51,7 @@ See note in the [introduction](#folder-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/folders?limit=10 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -57,7 +60,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -91,7 +94,7 @@ See note in the [introduction](#folder-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/folders/nErXDvCkzzh HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -100,7 +103,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -152,7 +155,7 @@ See note in the [introduction](#folder-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/folders HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -173,7 +176,7 @@ JSON Body schema:
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -223,7 +226,7 @@ See note in the [introduction](#folder-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/folders/nErXDvCkzz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -243,7 +246,7 @@ JSON Body schema:
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -285,7 +288,7 @@ There can be different reasons for this:
 
 The response body will have the following properties:
 
-```http
+``` http
 HTTP/1.1 412 Precondition Failed
 Content-Type: application/json; charset=UTF-8
 Content-Length: 97
@@ -314,7 +317,7 @@ See note in the [introduction](#folder-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/folders/nErXDvCkzz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -324,7 +327,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -371,7 +374,7 @@ JSON body schema:
 
 **Example Request**:
 
-```http
+``` http
 POST /api/folders/a5393ec3-5568-4e88-8809-b866968ae8a6/move HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -384,7 +387,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

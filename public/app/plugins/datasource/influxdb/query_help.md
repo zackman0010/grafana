@@ -4,8 +4,8 @@
 - $measurement = replaced with measurement name
 - $1 - $9 = replaced with part of measurement name (if you separate your measurement name with dots)
 - $col = replaced with column name
-- $tag_exampletag = replaced with the value of the <i>exampletag</i> tag
-- You can also use [[tag_exampletag]] pattern replacement syntax
+- $tag\_exampletag = replaced with the value of the <i>exampletag</i> tag
+- You can also use \[\[tag\_exampletag\]\] pattern replacement syntax
 
 #### Stacking and fill
 

@@ -13,7 +13,7 @@ File [search.grammar](search.grammar) describes the search grammar.
 After making changes in the `search.grammar` file, a new version of the parser needs to be generated.
 To do that, the following command needs to be run in the `public/app/features/alerting/unified/search` directory
 
-```sh
+``` sh
 yarn dlx @lezer/generator search.grammar -o search.js
 ```
 

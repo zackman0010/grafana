@@ -1,6 +1,6 @@
 # InfluxDB data source
 
-Grafana ships with built-in support for InfluxDB releases >0.9.x.
+Grafana ships with built-in support for InfluxDB releases \>0.9.x.
 
 There are separate data sources for InfluxDB in Grafana: the latest InfluxDB release and [InfluxDB 0.8.x](https://grafana.com/plugins/grafana-influxdb-08-datasource) that Grafana maintains support for as a convenience for its existing users. InfluxDB no longer maintains release 0.8.
 

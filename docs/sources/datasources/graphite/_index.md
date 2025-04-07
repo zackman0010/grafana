@@ -1,52 +1,55 @@
----
+-----
+
 aliases:
-  - ../data-sources/graphite/
-  - ../features/datasources/graphite/
-description: Guide for using Graphite in Grafana
-keywords:
-  - grafana
-  - graphite
-  - guide
-labels:
+
+- ../data-sources/graphite/
+- ../features/datasources/graphite/
+  description: Guide for using Graphite in Grafana
+  keywords:
+- grafana
+- graphite
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Graphite
-title: Graphite data source
-weight: 600
-refs:
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  internal-grafana-metrics:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/set-up-grafana-monitoring/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/set-up-grafana-monitoring/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-  configure-authentication:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-authentication/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-authentication/
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Graphite
+    title: Graphite data source
+    weight: 600
+    refs:
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    internal-grafana-metrics:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/set-up-grafana-monitoring/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/set-up-grafana-monitoring/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+    configure-authentication:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-security/configure-authentication/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-security/configure-authentication/
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+
+-----
 
 # Graphite data source
 
@@ -58,21 +61,24 @@ Only users with the organization administrator role can add data sources.
 
 Once you've added the Graphite data source, you can [configure it](#configure-the-data-source) so that your Grafana instance's users can create queries in its [query editor](query-editor/) when they [build dashboards](ref:build-dashboards) and use [Explore](ref:explore).
 
-{{< docs/play title="Graphite: Sample Website Dashboard" url="https://play.grafana.org/d/000000003/" >}}
+{{\< docs/play title="Graphite: Sample Website Dashboard" url="https://play.grafana.org/d/000000003/" \>}}
 
 ## Configure the data source
 
 To configure basic settings for the data source, complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Under Your connections, click **Data sources**.
-1. Enter `Graphite` in the search bar.
-1. Click **Graphite**.
 
+2. Under Your connections, click **Data sources**.
+
+3. Enter `Graphite` in the search bar.
+
+4. Click **Graphite**.
+   
    The **Settings** tab of the data source is displayed.
 
-1. Set the data source's basic configuration options:
-
+5. Set the data source's basic configuration options:
+   
    | Name                    | Description                                                                                                             |
    | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- |
    | **Name**                | Sets the name you use to refer to the data source in panels and queries.                                                |
@@ -106,7 +112,7 @@ For more information about provisioning, and for lists of common configuration o
 
 #### Provisioning example
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

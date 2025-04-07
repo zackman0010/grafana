@@ -1,26 +1,29 @@
----
+-----
+
 description: Upgrade to Grafana v8.0
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-menutitle: Upgrade to v8.0
-title: Upgrade to Grafana v8.0
-weight: 2900
----
+  - enterprise
+  - oss
+    menutitle: Upgrade to v8.0
+    title: Upgrade to Grafana v8.0
+    weight: 2900
+
+-----
 
 # Upgrade to Grafana v8.0
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 
@@ -42,16 +45,16 @@ Refer to [Grafana Live configuration](../../setup-grafana/set-up-grafana-live/) 
 
 ### Postgres, MySQL, Microsoft SQL Server data sources
 
-Grafana v8.0 changes the underlying data structure to [data frames](https://grafana.com/developers/plugin-tools/key-concepts/data-frames) for the Postgres, MySQL, Microsoft SQL Server data sources. As a result, a _Time series_ query result gets returned in a [wide format](https://grafana.com/developers/plugin-tools/key-concepts/data-frames#wide-format). To make the visualizations work as they did before, you might have to do some manual migrations.
+Grafana v8.0 changes the underlying data structure to [data frames](https://grafana.com/developers/plugin-tools/key-concepts/data-frames) for the Postgres, MySQL, Microsoft SQL Server data sources. As a result, a *Time series* query result gets returned in a [wide format](https://grafana.com/developers/plugin-tools/key-concepts/data-frames#wide-format). To make the visualizations work as they did before, you might have to do some manual migrations.
 
-For any existing panels/visualizations using a _Time series_ query, where the time column is only needed for filtering the time range, for example, using the bar gauge or pie chart panel, we recommend that you use a _Table query_ instead and exclude the time column as a field in the response.
+For any existing panels/visualizations using a *Time series* query, where the time column is only needed for filtering the time range, for example, using the bar gauge or pie chart panel, we recommend that you use a *Table query* instead and exclude the time column as a field in the response.
 Refer to this [issue comment](https://github.com/grafana/grafana/issues/35534#issuecomment-861519658) for detailed instructions and workarounds.
 
 #### Prefix added to series names
 
-When you have a query where there's a time value and a numeric value selected together with a string value that's not named _metric_, the graph panel renders series names as `value <hostname>` rather than just `<hostname>` which was the case before Grafana 8.
+When you have a query where there's a time value and a numeric value selected together with a string value that's not named *metric*, the graph panel renders series names as `value <hostname>` rather than just `<hostname>` which was the case before Grafana 8.
 
-```sql
+``` sql
 SELECT
   $__timeGroup("createdAt",'10m'),
   avg(value) as "value",

@@ -1,13 +1,16 @@
----
+-----
+
 description: Migrate from Grafana OSS/Enterprise to Grafana Cloud using the Grafana Cloud Migration Assistant
 keywords:
-  - Grafana Cloud
-  - Grafana Enterprise
-  - Grafana OSS
-menuTitle: Migrate to Grafana Cloud using the Grafana Cloud Migration Assistant
-title: Migrate from Grafana OSS/Enterprise to Grafana Cloud using the Grafana Cloud Migration Assistant
-weight: 400
----
+
+- Grafana Cloud
+- Grafana Enterprise
+- Grafana OSS
+  menuTitle: Migrate to Grafana Cloud using the Grafana Cloud Migration Assistant
+  title: Migrate from Grafana OSS/Enterprise to Grafana Cloud using the Grafana Cloud Migration Assistant
+  weight: 400
+
+-----
 
 # Grafana Cloud Migration Assistant
 
@@ -58,21 +61,25 @@ In Grafana Enterprise, the server administrator has access to the migration assi
 
 ### Grant access in Grafana Enterprise
 
-{{< admonition type="important">}}
+{{\< admonition type="important"\>}}
 You must [configure RBAC](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/configure-rbac/) before you can grant other administrators access to the Grafana Migration Assistant.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 To grant other Admins access to the migration assistant in Grafana Enterprise:
 
 1. Sign in to Grafana as a server administrator.
-1. Navigate to **Home** > **Administration** > **Users and access** > **Users** in the Grafana sidebar.
-1. Click an Admin.
-1. In the **Organizations** section, click **Change role**.
-1. Select **Organization resource migrator** from the role selector menu under **Migration Assistant**.
 
+2. Navigate to **Home** \> **Administration** \> **Users and access** \> **Users** in the Grafana sidebar.
+
+3. Click an Admin.
+
+4. In the **Organizations** section, click **Change role**.
+
+5. Select **Organization resource migrator** from the role selector menu under **Migration Assistant**.
+   
    ![The Organization resource migrator role in the role picker](/media/docs/grafana-cloud/account-management/screenshot-grant-migration-assistant-access.png)
 
-1. Click **Apply**.
+6. Click **Apply**.
 
 ## Use the migration assistant
 
@@ -80,23 +87,24 @@ You can use the migration assistant to generate a migration token on your Grafan
 
 ### Generate a migration token on the destination cloud instance:
 
-1. Navigate to **Home** > **Administration** > **General** > **Migrate to Grafana Cloud** in the cloud instance where you intend to migrate your resources.
-1. Click on the **Generate a migration token** button.
+1. Navigate to **Home** \> **Administration** \> **General** \> **Migrate to Grafana Cloud** in the cloud instance where you intend to migrate your resources.
 
+2. Click on the **Generate a migration token** button.
+   
    ![The Generate a migration token button in the Migrate to Grafana Cloud page in the intended Grafana Cloud Stack](/media/docs/grafana-cloud/account-management/screenshot-generate-migration-token.png)
 
-1. Make a copy of the migration token by copying to clipboard. The token is required to authenticate your self-managed instance with the Grafana Cloud Stack.
+3. Make a copy of the migration token by copying to clipboard. The token is required to authenticate your self-managed instance with the Grafana Cloud Stack.
 
 ### Connect your self-managed Grafana instance to the Grafana Cloud Stack
 
-1. On your self-managed Grafana instance, navigate to **Home** > **Administration** > **General** > **Migrate to Grafana Cloud**.
+1. On your self-managed Grafana instance, navigate to **Home** \> **Administration** \> **General** \> **Migrate to Grafana Cloud**.
 
-1. Click the **Migrate this instance to Cloud** button.
-
+2. Click the **Migrate this instance to Cloud** button.
+   
    ![The Migrate this instance to Cloud button in the Migrate to Grafana Cloud page on a self-managed Grafana instance](/media/docs/grafana-cloud/account-management/screenshot-migrate-to-cloud.png)
 
-1. Enter your token and click **Connect to this Stack**.
-
+3. Enter your token and click **Connect to this Stack**.
+   
    ![The Migration token field and Connect to this stack button in the Connect to a cloud stack page in a self-managed Grafana instance](/media/docs/grafana-cloud/account-management/screenshot-connect-to-a-stack.png)
 
 ### Build a snapshot
@@ -104,7 +112,7 @@ You can use the migration assistant to generate a migration token on your Grafan
 After connecting to the cloud stack, this is the empty state of the migration assistant. You need to create a snapshot of the self-managed Grafana instance to upload it to the cloud stack.
 
 - Click **Build snapshot**
-
+  
   ![The Build snapshot button on the Migrate to Grafana Cloud page in a self-managed Grafana instance](/media/docs/grafana-cloud/account-management/screenshot-build-a-snapshot.png)
 
 ### Upload resources to the cloud
@@ -114,14 +122,14 @@ After a snapshot is created, a list of resources appears with resource Type and 
 ![A list of resources with snapshots built but not yet uploaded to Grafana Cloud](/media/docs/grafana-cloud/account-management/screenshot-upload-snapshot.png)
 
 1. Click on **Upload snapshot** to copy the resources to the Grafana Cloud instance. This also updates statuses for the list of resources. The status changes to 'Uploaded to cloud' for resources successfully copied to the cloud.
-
+   
    The Snapshot information also updates to inform the user of total resources, errors, and total number of successfully migrated resources.
-
+   
    ![An updates list of resources with snapshots built after attempting to upload them to Grafana Cloud](/media/docs/grafana-cloud/account-management/screenshot-updated-snapshot-page.png)
 
-1. Use the assistant's real-time progress tracking to monitor the migration.
+2. Use the assistant's real-time progress tracking to monitor the migration.
 
-1. Review error details for any issues that need manual resolution.
+3. Review error details for any issues that need manual resolution.
 
 ## Snapshots created by the migration assistant
 
@@ -149,9 +157,9 @@ The migration assistant supports any plugins found in the plugins catalog. As lo
 
 Upgrade any plugins you intend to migrate before using the migration assistant as any migrated plugins will be configured on the Grafana Cloud instance as the latest version of that plugin.
 
-{{< admonition type="caution">}}
+{{\< admonition type="caution"\>}}
 If you want to migrate Enterprise plugins, check what type of plan your Grafana Cloud instance is on and whether or not this plan requires an Enterprise plugin add-on.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Grafana Alerting resources
 

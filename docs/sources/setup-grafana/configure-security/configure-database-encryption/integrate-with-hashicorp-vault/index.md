@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/vault/
-description: Learn how to integrate Grafana with Hashicorp Vault so that you can use
+
+- ../../../enterprise/vault/
+  description: Learn how to integrate Grafana with Hashicorp Vault so that you can use
   secrets for configuration and provisioning.
-labels:
+  labels:
   products:
-    - enterprise
-    - oss
-title: Integrate Grafana with Hashicorp Vault
-weight: 500
----
+  - enterprise
+  - oss
+    title: Integrate Grafana with Hashicorp Vault
+    weight: 500
+
+-----
 
 # Integrate Grafana with Hashicorp Vault
 
@@ -32,7 +35,7 @@ set up with a limited lifetime.
 
 If you're using short-lived leases, then you can also configure how often Grafana should renew the lease and for how long. We recommend keeping the defaults unless you run into problems.
 
-```ini
+``` ini
 [keystore.vault]
 # Location of the Vault server
 ;url =
@@ -53,7 +56,7 @@ If you're using short-lived leases, then you can also configure how often Grafan
 
 Example for `vault server -dev`:
 
-```ini
+``` ini
 [keystore.vault]
 url = http://127.0.0.1:8200 # HTTP should only be used for local testing
 auth_method = token
@@ -72,8 +75,8 @@ The argument to Vault consists of three parts separated by a colon:
 - The second part specifies which secret should be accessed.
 - The third part specifies which field of that secret should be used.
 
-For example, if you place a Key/Value secret for the Grafana admin user in _secret/grafana/admin_defaults_
-the syntax for accessing its _password_ field would be `$__vault{kv:secret/grafana/admin_defaults:password}`.
+For example, if you place a Key/Value secret for the Grafana admin user in *secret/grafana/admin\_defaults*
+the syntax for accessing its *password* field would be `$__vault{kv:secret/grafana/admin_defaults:password}`.
 
 ### Secrets engines
 
@@ -85,7 +88,7 @@ authorized user. Grafana supports a subset of these which are most likely to be 
 Grafana supports Vault's [K/V version 2](https://www.vaultproject.io/docs/secrets/kv/kv-v2) storage engine which
 is used to store and retrieve arbitrary secrets as `kv`.
 
-```ini
+``` ini
 $__vault{kv:secret/grafana/smtp:username}
 ```
 
@@ -95,7 +98,7 @@ The Vault [databases secrets engines](https://www.vaultproject.io/docs/secrets/d
 secret engines which shares a similar syntax and grants the user dynamic access to a database.
 You can use this both for setting up Grafana's own database access and for provisioning data sources.
 
-```ini
+``` ini
 $__vault{database:database/creds/grafana:username}
 ```
 
@@ -108,7 +111,7 @@ The following examples show you how to set your [configuration](../../../configu
 The following is a partial example for using Vault to set up a Grafana configuration file's email and database credentials.
 Refer to [Configuration](../../../configure-grafana/) for more information.
 
-```ini
+``` ini
 [smtp]
 enabled = true
 host = $__vault{kv:secret/grafana/smtp:hostname}:587
@@ -131,7 +134,7 @@ Refer to [Provisioning](../../../../administration/provisioning/) for more infor
 
 **provisioning/custom.yaml**
 
-```ini
+``` ini
 apiVersion: 1
 
 datasources:

@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v8-0/
-description: Learn about new and updated features in Grafana v8.0
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '8.0'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v8-0/
+  description: Learn about new and updated features in Grafana v8.0
+  keywords:
+- grafana
+- new
+- documentation
+- '8.0'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v8.0
-weight: -33
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v8.0
+    weight: -33
+
+-----
 
 # What's new in Grafana v8.0
 
@@ -59,7 +62,7 @@ The Prometheus metrics browser allows you to quickly find metrics and select rel
 
 The Bar chart panel is a new visualization that supports categorical data. It only supports one data frame and it needs to have at least one string field that will be used as the category for an X or Y axis and one or more numerical fields.
 
-{{< figure src="/static/img/docs/bar-chart-panel/bar-chart-example-v8-0.png" max-width="1025px" caption="Bar chart example" >}}
+{{\< figure src="/static/img/docs/bar-chart-panel/bar-chart-example-v8-0.png" max-width="1025px" caption="Bar chart example" \>}}
 
 To use it with time series you first have to add a **Reduce** transform.
 
@@ -72,10 +75,10 @@ The State timeline visualization shows discrete state changes over time. Each fi
 This panel also takes advantage of the new value mapping features that allow you to color string and boolean values.
 
 Example with string values:
-{{< figure src="/static/img/docs/v8/state_timeline_strings.png" max-width="800px" caption="state timeline with string states" >}}
+{{\< figure src="/static/img/docs/v8/state\_timeline\_strings.png" max-width="800px" caption="state timeline with string states" \>}}
 
 With time series data and thresholds:
-{{< figure src="/static/img/docs/v8/state_timeline_time_series.png" max-width="800px" caption="state timeline with time series" >}}
+{{\< figure src="/static/img/docs/v8/state\_timeline\_time\_series.png" max-width="800px" caption="state timeline with time series" \>}}
 
 For more information, refer to [State timeline visualization](../../panels-visualizations/visualizations/state-timeline/).
 
@@ -90,13 +93,13 @@ schemes.
 
 This hidden feature of the old Graph panel is now a standalone visualization. It combines a histogram transformation and bar chart visualization into a single, integrated, easy-to-use panel. There is also a new standalone histogram transformation that can be paired with any visualization.
 
-{{< figure src="/static/img/docs/histogram/histogram-8-0.png" max-width="1025px" caption="Histogram example" >}}
+{{\< figure src="/static/img/docs/histogram/histogram-8-0.png" max-width="1025px" caption="Histogram example" \>}}
 
 For more information, refer to [Histogram](../../panels-visualizations/visualizations/histogram/)
 
 ### Time series visualization updates
 
-The Time series is out of beta! We are removing the `Beta` tag and graduating the Time series visualization to a stable state.
+The Time series is out of beta\! We are removing the `Beta` tag and graduating the Time series visualization to a stable state.
 
 - **Time series** is now the default visualization option, replacing the **Graph (old)**.
 - The Time series panel now supports stacking. For more information, refer to [Graph stacked time series](../../panels-visualizations/visualizations/time-series/#stack-series).
@@ -117,7 +120,7 @@ We also added a grid view and the ability to explore hidden nodes.
 
 ### Pie chart visualization updates
 
-The Pie chart is out of beta! We are removing the `beta` tag and graduating the Pie chart visualization to a stable state.
+The Pie chart is out of beta\! We are removing the `beta` tag and graduating the Pie chart visualization to a stable state.
 
 ### Panel editor updates
 
@@ -132,7 +135,7 @@ The [Panels](../../panels-visualizations/) section has been updated to reflect t
 
 ### Look and feel update
 
-Grafana 8 comes with a refreshed look and feel, including themes changed to be more accessible. The improved Grafana UI brings a number of adjustments and tweaks that make the application even more fun to use. Enjoy the new home dashboard design!
+Grafana 8 comes with a refreshed look and feel, including themes changed to be more accessible. The improved Grafana UI brings a number of adjustments and tweaks that make the application even more fun to use. Enjoy the new home dashboard design\!
 
 Under the hood, the new theme architecture enables us to bring more sophisticated themes control in the future.
 
@@ -229,7 +232,7 @@ Response values were always interpreted as strings in Elasticsearch responses, w
 
 #### Google Cloud Monitoring data source
 
-In a prior release, Cloud Monitoring added _preprocessing_ support in their query editor. This capability has been added to the Cloud Monitoring data source in Grafana.
+In a prior release, Cloud Monitoring added *preprocessing* support in their query editor. This capability has been added to the Cloud Monitoring data source in Grafana.
 
 Whenever a metric is selected in the query editor, a suitable preprocessing option is automatically selected for you. To avoid breaking changes, preprocessing is not enabled by default on existing queries. If you want to use preprocessing for existing queries, you have to manually select one in the query editor.
 
@@ -277,7 +280,7 @@ You can now configure Grafana to accept a JWT token provided in the HTTP header.
 
 You can now configure generic OAuth with empty scopes. This allows OAuth Identity Providers that don't use or support scopes to work with Grafana authentication.
 
-##### Added OAuth support for strict parsing of role_attribute_path
+##### Added OAuth support for strict parsing of role\_attribute\_path
 
 You can now configure generic OAuth with strict parsing of the `role_attribute_path`. By default, if the `role_attribute_path` property does not return a role, then the user is assigned the `Viewer` role. You can disable the role assignment by setting `role_attribute_strict = true`. It denies user access if no role or an invalid role is returned.
 
@@ -341,4 +344,4 @@ For multi-search requests, we now use the correct application/x-ndjson content t
 
 ### Prometheus: Update default HTTP method to POST for existing data sources
 
-The default HTTP method for Prometheus data source is now POST, previously it was GET. The POST APIs are there since January 2018 (Prometheus 2.1.0) and they have fewer limitations than the GET APIs. Users with Prometheus instance with version < 2.1.0 that use the default HTTP method should update their HTTP method to GET.
+The default HTTP method for Prometheus data source is now POST, previously it was GET. The POST APIs are there since January 2018 (Prometheus 2.1.0) and they have fewer limitations than the GET APIs. Users with Prometheus instance with version \< 2.1.0 that use the default HTTP method should update their HTTP method to GET.

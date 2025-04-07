@@ -1,67 +1,70 @@
----
+-----
+
 aliases:
-  - ../fundamentals/data-source-alerting/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/data-source-alerting/
-  - ../fundamentals/alert-rules/alert-instances/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/alert-instances/
-  - ../fundamentals/alert-rules/organising-alerts/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/organising-alerts/
-  - ../fundamentals/alert-rules/alert-rule-types/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/alert-rule-types/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/
-description: Learn about alert rules
-keywords:
-  - grafana
-  - alerting
-  - rules
-labels:
+
+- ../fundamentals/data-source-alerting/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/data-source-alerting/
+- ../fundamentals/alert-rules/alert-instances/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/alert-instances/
+- ../fundamentals/alert-rules/organising-alerts/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/organising-alerts/
+- ../fundamentals/alert-rules/alert-rule-types/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/alert-rule-types/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/
+  description: Learn about alert rules
+  keywords:
+- grafana
+- alerting
+- rules
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Alert rules
-weight: 100
-refs:
-  shared-configure-prometheus-data-source-alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/prometheus/configure-prometheus-data-source/#alerting
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/prometheus/configure-prometheus-data-source/#alerting
-  queries-and-conditions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/queries-conditions/#data-source-queries
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/#data-source-queries
-  alert-condition:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/queries-conditions/#alert-condition
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/#alert-condition
-  recorded-queries:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/recorded-queries/
-  notification-images:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/images-in-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/images-in-notifications/
-  notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/
-  create-recording-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-recording-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
-  expression-queries:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/queries-conditions/#advanced-options-expressions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/#advanced-options-expressions
-  alert-rule-evaluation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/rule-evaluation/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/rule-evaluation/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Alert rules
+    weight: 100
+    refs:
+    shared-configure-prometheus-data-source-alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/prometheus/configure-prometheus-data-source/\#alerting
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/prometheus/configure-prometheus-data-source/\#alerting
+    queries-and-conditions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/queries-conditions/\#data-source-queries
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/\#data-source-queries
+    alert-condition:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/queries-conditions/\#alert-condition
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/\#alert-condition
+    recorded-queries:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/recorded-queries/
+    notification-images:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/images-in-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/images-in-notifications/
+    notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/
+    create-recording-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-recording-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
+    expression-queries:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/queries-conditions/\#advanced-options-expressions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/queries-conditions/\#advanced-options-expressions
+    alert-rule-evaluation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/rule-evaluation/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/rule-evaluation/
+
+-----
 
 # Alert rules
 
@@ -78,12 +81,12 @@ Grafana supports two different alert rule types: Grafana-managed alert rules and
 
 Grafana-managed alert rules are the most flexible alert rule type. They allow you to create alert rules that can act on data from any of the [supported data sources](#supported-data-sources), and use multiple data sources in a single alert rule.
 
-{{< figure src="/media/docs/alerting/grafana-managed-alerting-architecture.png" max-width="750px" caption="How Grafana-managed alerting works by default" >}}
+{{\< figure src="/media/docs/alerting/grafana-managed-alerting-architecture.png" max-width="750px" caption="How Grafana-managed alerting works by default" \>}}
 
 1. Alert rules are created and stored within Grafana.
-1. Alert rules can query one or more supported data sources.
-1. Alert rules are evaluated by the Alert Rule Evaluation Engine within Grafana.
-1. Firing and resolved alert instances are forwarded to [handle their notifications](ref:notifications).
+2. Alert rules can query one or more supported data sources.
+3. Alert rules are evaluated by the Alert Rule Evaluation Engine within Grafana.
+4. Firing and resolved alert instances are forwarded to [handle their notifications](ref:notifications).
 
 ### Supported data sources
 
@@ -95,14 +98,14 @@ Find the public data sources supporting Alerting in the [Grafana Plugins directo
 
 Data source-managed alert rules can only be created using Grafana Mimir or Grafana Loki data sources. Both data source backends can provide high availability and fault tolerance, enabling you to scale your alerting setup.
 
-{{< figure src="/media/docs/alerting/mimir-managed-alerting-architecture-v2.png" max-width="750px" caption="Mimir-managed alerting architecture" >}}
+{{\< figure src="/media/docs/alerting/mimir-managed-alerting-architecture-v2.png" max-width="750px" caption="Mimir-managed alerting architecture" \>}}
 
 1. Alert rules are stored within the Mimir or Loki data source.
-1. Alert rules can query only their specific data source.
-1. Alert rules are evaluated by the Alert Rule Evaluation Engine within the data source.
-1. Firing and resolved alert instances are forwarded to [handle their notifications](ref:notifications).
+2. Alert rules can query only their specific data source.
+3. Alert rules are evaluated by the Alert Rule Evaluation Engine within the data source.
+4. Firing and resolved alert instances are forwarded to [handle their notifications](ref:notifications).
 
-{{< docs/shared lookup="alerts/note-prometheus-ds-rules.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/note-prometheus-ds-rules.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Comparison between alert rule types
 

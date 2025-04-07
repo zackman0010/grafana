@@ -1,42 +1,45 @@
----
+-----
+
 aliases:
-  - ../../features/panels/singlestat/
-  - ../../features/panels/stat/
-  - ../../panels/visualizations/stat-panel/
-  - ../../reference/singlestat/
-  - ../../visualizations/stat-panel/
-description: Configure options for Grafana's stat visualization
-keywords:
-  - grafana
-  - docs
-  - stat panel
-labels:
+
+- ../../features/panels/singlestat/
+- ../../features/panels/stat/
+- ../../panels/visualizations/stat-panel/
+- ../../reference/singlestat/
+- ../../visualizations/stat-panel/
+  description: Configure options for Grafana's stat visualization
+  keywords:
+- grafana
+- docs
+- stat panel
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Stat
-weight: 100
-refs:
-  calculation-types:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
-  create-dashboard:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Stat
+    weight: 100
+    refs:
+    calculation-types:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+    create-dashboard:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
+
+-----
 
 # Stat
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This visualization replaces the Singlestat visualization, which was deprecated in Grafana 7.0 and removed in Grafana 8.0.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-A stat visualization displays your data in single values of interest&mdash;such as the latest or current value of a series&mdash;with an optional graph sparkline. A graph sparkline, which is only available in stat visualizations, is a small time-series graph shown in the background of each value in the visualization.
+A stat visualization displays your data in single values of interest—such as the latest or current value of a series—with an optional graph sparkline. A graph sparkline, which is only available in stat visualizations, is a small time-series graph shown in the background of each value in the visualization.
 
 For example, if you're monitoring the utilization of various services, you can use a stat visualization to show their latest usage:
 
@@ -48,13 +51,13 @@ Use a stat visualization when you need to:
 - Display aggregated data, such as the average response time of your services.
 - Highlight values above your normal thresholds to quickly identify if any metrics are outside your expected range.
 
-{{< docs/play title="Stat Visualizations in Grafana" url="https://play.grafana.org/d/Zb3f4veGk/" >}}
+{{\< docs/play title="Stat Visualizations in Grafana" url="https://play.grafana.org/d/Zb3f4veGk/" \>}}
 
 ## Configure a stat visualization
 
 Once you've [created a dashboard](ref:create-dashboard), the following video shows you how to configure a stat visualization:
 
-{{< youtube id="yNRnLyVntUw" start="1048" >}}
+{{\< youtube id="yNRnLyVntUw" start="1048" \>}}
 
 Alternatively, refer to this blog post on [how to easily retrieve values from a range in Grafana using a stat visualization](https://grafana.com/blog/2023/10/18/how-to-easily-retrieve-values-from-a-range-in-grafana-using-a-stat-panel/).
 
@@ -105,17 +108,18 @@ You can use the [**Text mode**](#text-mode) to control how the text is displayed
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value options
 
 Use the following options to refine how your visualization displays its values:
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Show | Display a single value per column or series, or show values for each row. Choose from: <ul><li>**Calculate** - Display a calculated value based on all rows.</li><li>**All values** - Show a separate stat for every row. If you select this option, then you can also limit the number of rows to display.</li> |
@@ -130,6 +134,7 @@ Use the following options to refine how your visualization displays its values:
 The stat visualization automatically adjusts the layout depending on available width and height in the dashboard, but you can also use the following options to further style the visualization.
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Orientation | Select a stacking direction. Choose from: <ul><li>**Auto** - Grafana selects the ideal orientation.</li><li>**Horizontal** - Bars stretch horizontally, left to right.</li><li>**Vertical** - Bars stretch vertically, top to bottom.</li></ul> |
@@ -140,6 +145,7 @@ The stat visualization automatically adjusts the layout depending on available w
 | Text alignment | Select an alignment mode. Choose from: <ul><li>**Auto** - If only a single value is shown (no repeat), then the value is centered. If multiple series or rows are shown, then the value is left-aligned.</li><li>**Center** - Stat value is centered.</li></ul> |
 | Show percent change | Set whether percent change is displayed or not. Disabled by default. This option is applicable when the **Show** setting, under **Value options**, is set to **Calculate**. |
 | Percent change color mode | This option is only displayed when **Show percent change** is enabled. Choose from: <ul><li>**Standard** - Green if the percent change is positive, red if the percent change is negative.</li><li>**Inverted** - Red if the percent change is positive, green if the percent change is negative.</li><li>**Same as Value** - Use the same color as the value.</li></ul> |
+
 <!-- prettier-ignore-end -->
 
 #### Text mode
@@ -170,20 +176,20 @@ Adjust the sizes of the gauge text.
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

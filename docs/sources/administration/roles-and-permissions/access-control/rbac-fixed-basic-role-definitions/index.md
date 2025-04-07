@@ -1,53 +1,56 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/fine-grained-access-control-references/
-  - ../../../enterprise/access-control/rbac-fixed-basic-role-definitions/
-description: This topic includes a table that lists permission associated with Grafana
+
+- ../../../enterprise/access-control/fine-grained-access-control-references/
+- ../../../enterprise/access-control/rbac-fixed-basic-role-definitions/
+  description: This topic includes a table that lists permission associated with Grafana
   fixed and basic roles.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: RBAC role definitions
-title: Grafana RBAC role definitions
-weight: 70
-refs:
-  rbac-basic-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/#basic-roles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/#basic-roles
-  rbac-terraform-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-terraform-provisioning/
-  rbac-manage-rbac-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/manage-rbac-roles/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/
-  plan-rbac-rollout-strategy-create-a-custom-role-to-access-alerts-in-a-folder:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/plan-rbac-rollout-strategy/#create-a-custom-role-to-access-alerts-in-a-folder
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/plan-rbac-rollout-strategy/#create-a-custom-role-to-access-alerts-in-a-folder
-  oncall:
-    - pattern: /docs/grafana/
-      destination: /docs/oncall/<GRAFANA_VERSION>/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/oncall/
-  available-grafana-oncall-rbac-roles--granted-actions:
-    - pattern: /docs/grafana/
-      destination: /docs/oncall/<GRAFANA_VERSION>/user-and-team-management/#available-grafana-oncall-rbac-roles--granted-actions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/oncall/user-and-team-management/#available-grafana-oncall-rbac-roles--granted-actions
----
+  - cloud
+  - enterprise
+    menuTitle: RBAC role definitions
+    title: Grafana RBAC role definitions
+    weight: 70
+    refs:
+    rbac-basic-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/\#basic-roles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/\#basic-roles
+    rbac-terraform-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-terraform-provisioning/
+    rbac-manage-rbac-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/manage-rbac-roles/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/
+    plan-rbac-rollout-strategy-create-a-custom-role-to-access-alerts-in-a-folder:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/plan-rbac-rollout-strategy/\#create-a-custom-role-to-access-alerts-in-a-folder
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/plan-rbac-rollout-strategy/\#create-a-custom-role-to-access-alerts-in-a-folder
+    oncall:
+  - pattern: /docs/grafana/
+    destination: /docs/oncall/\<GRAFANA\_VERSION\>/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/oncall/
+    available-grafana-oncall-rbac-roles--granted-actions:
+  - pattern: /docs/grafana/
+    destination: /docs/oncall/\<GRAFANA\_VERSION\>/user-and-team-management/\#available-grafana-oncall-rbac-roles--granted-actions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/oncall/user-and-team-management/\#available-grafana-oncall-rbac-roles--granted-actions
+
+-----
 
 # RBAC role definitions
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
 The following tables list permissions associated with basic and fixed roles. This does not include basic role assignments added by plugins or apps.
@@ -56,7 +59,7 @@ The following tables list permissions associated with basic and fixed roles. Thi
 
 | Basic role    | UID                   | Associated fixed roles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Description                                                                                                                                              |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Grafana Admin | `basic_grafana_admin` | `fixed:roles:reader`<br>`fixed:roles:writer`<br>`fixed:users:reader`<br>`fixed:users:writer`<br>`fixed:org.users:reader`<br>`fixed:org.users:writer`<br>`fixed:ldap:reader`<br>`fixed:ldap:writer`<br>`fixed:stats:reader`<br>`fixed:settings:reader`<br>`fixed:settings:writer`<br>`fixed:provisioning:writer`<br>`fixed:organization:reader`<br>`fixed:organization:maintainer`<br>`fixed:licensing:reader`<br>`fixed:licensing:writer`<br>`fixed:datasources.caching:reader`<br>`fixed:datasources.caching:writer`<br>`fixed:dashboards.insights:reader`<br>`fixed:datasources.insights:reader`<br>`fixed:plugins:maintainer`<br>`fixed:authentication.config:writer`<br>`fixed:library.panels:creator`<br>`fixed:library.panels:reader`<br>`fixed:library.panels:general.reader`<br>`fixed:library.panels:writer`<br>`fixed:library.panels:general.writer`<br>`fixed:migrationassistant:migrator`                                                                                                                                                                                                                                                                  | Default [Grafana server administrator](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators) assignments. |
+| Grafana Admin | `basic_grafana_admin` | `fixed:roles:reader`<br>`fixed:roles:writer`<br>`fixed:users:reader`<br>`fixed:users:writer`<br>`fixed:org.users:reader`<br>`fixed:org.users:writer`<br>`fixed:ldap:reader`<br>`fixed:ldap:writer`<br>`fixed:stats:reader`<br>`fixed:settings:reader`<br>`fixed:settings:writer`<br>`fixed:provisioning:writer`<br>`fixed:organization:reader`<br>`fixed:organization:maintainer`<br>`fixed:licensing:reader`<br>`fixed:licensing:writer`<br>`fixed:datasources.caching:reader`<br>`fixed:datasources.caching:writer`<br>`fixed:dashboards.insights:reader`<br>`fixed:datasources.insights:reader`<br>`fixed:plugins:maintainer`<br>`fixed:authentication.config:writer`<br>`fixed:library.panels:creator`<br>`fixed:library.panels:reader`<br>`fixed:library.panels:general.reader`<br>`fixed:library.panels:writer`<br>`fixed:library.panels:general.writer`<br>`fixed:migrationassistant:migrator`                                                                                                                                                                                                                                                                  | Default [Grafana server administrator](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators) assignments. |
 | Admin         | `basic_admin`         | `fixed:reports:reader`<br>`fixed:reports:writer`<br>`fixed:datasources:reader`<br>`fixed:datasources:writer`<br>`fixed:organization:writer`<br>`fixed:datasources.permissions:reader`<br>`fixed:datasources.permissions:writer`<br>`fixed:teams:writer`<br>`fixed:dashboards:reader`<br>`fixed:dashboards:writer`<br>`fixed:dashboards.permissions:reader`<br>`fixed:dashboards.permissions:writer`<br>`fixed:dashboards.public:writer`<br>`fixed:folders:reader`<br>`fixed:folders:writer`<br>`fixed:folders.permissions:reader`<br>`fixed:folders.permissions:writer`<br>`fixed:alerting:writer`<br>`fixed:apikeys:reader`<br>`fixed:apikeys:writer`<br>`fixed:alerting.provisioning.secrets:reader`<br>`fixed:alerting.provisioning:writer`<br>`fixed:datasources.caching:reader`<br>`fixed:datasources.caching:writer`<br>`fixed:dashboards.insights:reader`<br>`fixed:datasources.insights:reader`<br>`fixed:plugins:writer`<br>`fixed:library.panels:creator`<br>`fixed:library.panels:reader`<br>`fixed:library.panels:general.reader`<br>`fixed:library.panels:writer`<br>`fixed:library.panels:general.writer`<br>`fixed:alerting.provisioning.status:writer` | Default [Grafana organization administrator](ref:rbac-basic-roles) assignments.                                                                          |
 | Editor        | `basic_editor`        | `fixed:datasources:explorer`<br>`fixed:dashboards:creator`<br>`fixed:folders:creator`<br>`fixed:annotations:writer`<br>`fixed:alerting:writer`<br>`fixed:dashboards.insights:reader`<br>`fixed:datasources.insights:reader`<br>`fixed:library.panels:creator`<br>`fixed:library.panels:general.reader`<br>`fixed:library.panels:general.writer`<br>`fixed:alerting.provisioning.status:writer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Default [Editor](ref:rbac-basic-roles) assignments.                                                                                                      |
 | Viewer        | `basic_viewer`        | `fixed:datasources.id:reader`<br>`fixed:organization:reader`<br>`fixed:annotations:reader`<br>`fixed:annotations.dashboard:writer`<br>`fixed:alerting:reader`<br>`fixed:plugins.app:reader`<br>`fixed:dashboards.insights:reader`<br>`fixed:datasources.insights:reader`<br>`fixed:library.panels:general.reader`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Default [Viewer](ref:rbac-basic-roles) assignments.                                                                                                      |
@@ -67,11 +70,11 @@ The following tables list permissions associated with basic and fixed roles. Thi
 The following table has the existing built-in fixed role definitions. Other fixed roles might be added by plugins installed in Grafana.
 The UUID presented here can be used as an identifier for [Terraform provisioning](ref:rbac-terraform-provisioning).
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 These UUIDs won't be available if your instance was created before Grafana v10.2.0.
 
 To learn how to use the roles API to determine the role UUIDs, refer to [Manage RBAC roles](ref:rbac-manage-rbac-roles).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 | Fixed role                                   | UUID                                | Permissions                                                                                                                                                                                                                                                                 | Description                                                                                                                                                                                                                                                                           |
 | -------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -147,8 +150,7 @@ To learn how to use the roles API to determine the role UUIDs, refer to [Manage 
 | `fixed:teams:creator`                        | `fixed_nzVQoNSDSn0fg1MDgO6XnZX2RZI` | `teams:create`<br>`org.users:read`                                                                                                                                                                                                                                          | Create a team and list organization users (required to manage the created team).                                                                                                                                                                                                      |
 | `fixed:teams:read`                           | `fixed_Z8pB0GQlrqRt8IZBCJQxPWvJPgQ` | `teams:read`                                                                                                                                                                                                                                                                | List all teams.                                                                                                                                                                                                                                                                       |
 | `fixed:teams:writer`                         | `fixed_xw1T0579h620MOYi4L96GUs7fZY` | `teams:create`<br>`teams:delete`<br>`teams:read`<br>`teams:write`<br>`teams.permissions:read`<br>`teams.permissions:write`                                                                                                                                                  | Create, read, update and delete teams and manage team memberships.                                                                                                                                                                                                                    |
-| `fixed:users:reader`                         | `fixed_buZastUG3reWyQpPemcWjGqPAd0` | `users:read`<br>`users.quotas:read`<br>`users.authtoken:read`<br>`                                                                                                                                                                                                          | Read all users and their information, such as team memberships, authentication tokens, and quotas.                                                                                                                                                                                    |
-| `fixed:users:writer`                         | `fixed_wjzgHHo_Ux25DJuELn_oiAdB_yM` | All permissions from `fixed:users:reader` and <br>`users:write`<br>`users:create`<br>`users:delete`<br>`users:enable`<br>`users:disable`<br>`users.password:write`<br>`users.permissions:write`<br>`users:logout`<br>`users.authtoken:write`<br>`users.quotas:write`        | Read and update all attributes and settings for all users in Grafana: update user information, read user information, create or enable or disable a user, make a user a Grafana administrator, sign out a user, update a user’s authentication token, or update quotas for all users. |
+| `fixed:users:reader`                         | `fixed_buZastUG3reWyQpPemcWjGqPAd0` | `users:read`<br>`users.quotas:read`<br>`users.authtoken:read`<br>`                                                                                                                                                                                                          | Read all users and their information, such as team memberships, authentication tokens, and quotas.                                                                                                                                                                                    | | `fixed:users:writer`                         | `fixed\_wjzgHHo\_Ux25DJuELn\_oiAdB\_yM`| All permissions from`fixed:users:reader`  and <br> `users:write`<br>`users:create`<br>`users:delete`<br>`users:enable`<br>`users:disable`<br>`users.password:write`<br>`users.permissions:write`<br>`users:logout`<br>`users.authtoken:write`<br>`users.quotas:write\`        | Read and update all attributes and settings for all users in Grafana: update user information, read user information, create or enable or disable a user, make a user a Grafana administrator, sign out a user, update a user’s authentication token, or update quotas for all users. |
 
 ### Alerting roles
 
@@ -172,7 +174,7 @@ The following table lists the default RBAC OnCall role assignments to the basic 
 
 | Basic role    | Associated fixed roles              | Description                                                                                                                                              |
 | ------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Grafana Admin | `plugins:grafana-oncall-app:admin`  | Default [Grafana server administrator](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators) assignments. |
+| Grafana Admin | `plugins:grafana-oncall-app:admin`  | Default [Grafana server administrator](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators) assignments. |
 | Admin         | `plugins:grafana-oncall-app:admin`  | Default [Grafana organization administrator](ref:rbac-basic-roles) assignments.                                                                          |
 | Editor        | `plugins:grafana-oncall-app:editor` | Default [Editor](ref:rbac-basic-roles) assignments.                                                                                                      |
 | Viewer        | `plugins:grafana-oncall-app:reader` | Default [Viewer](ref:rbac-basic-roles) assignments.                                                                                                      |

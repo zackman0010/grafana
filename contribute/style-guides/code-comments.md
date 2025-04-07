@@ -28,7 +28,7 @@ To indicate the main stability of APIs:
 
 **Do:**
 
-````typescript
+```` typescript
 /**
  * Helps to create DataFrame objects and handle
  * the heavy lifting of creating a complex object.
@@ -47,7 +47,7 @@ export class DataFrameFactory {
 
 **Don't:**
 
-````typescript
+```` typescript
 /**
  * Helps to create DataFrame objects and handle
  * the heavy lifting of creating a complex object.
@@ -68,11 +68,11 @@ export class DataFrameFactory {
 To indicate the partial stability of APIs:
 
 1. Add the main stability of the API at the top according to [Main stability of API](#indicate-main-stability-of-apis).
-1. Override the non-stable parts of the API with the proper release tag. This tag should also be placed at the bottom of the comment block.
+2. Override the non-stable parts of the API with the proper release tag. This tag should also be placed at the bottom of the comment block.
 
 **Do:**
 
-````typescript
+```` typescript
 /**
  * Helps to create DataFrame objects and handle
  * the heavy lifting of creating a complex object.
@@ -96,7 +96,7 @@ export class DataFrameFactory {
 
 **Don't:**
 
-````typescript
+```` typescript
 /**
  * Helps to create DataFrame objects and handle
  * the heavy lifting of creating a complex object.
@@ -133,7 +133,7 @@ This attribute can be skipped if the type provided by `typescript` and the funct
 
 **Do:**
 
-```typescript
+``` typescript
 /**
  * Helps to create a resource resolver depending
  * on the current execution context.
@@ -152,7 +152,7 @@ export const factory = (context: Context): IResolver => {
 
 **Don't**
 
-```typescript
+``` typescript
 /**
  * Compares two numbers to see if they are equal to each other.
  *
@@ -173,7 +173,7 @@ You can skip this attribute if the type provided by `typescript` and the functio
 
 **Do:**
 
-```typescript
+``` typescript
 /**
  * Helps to create a resource resolver depending
  * on the current execution context.
@@ -192,7 +192,7 @@ export const factory = (context: Context): IResolver => {
 
 **Don't:**
 
-```typescript
+``` typescript
 /**
  * Compares two numbers to see if they are equal to each other.
  *

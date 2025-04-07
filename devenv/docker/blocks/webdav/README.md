@@ -10,7 +10,7 @@ Dufs has a web UI that can be accessed at http://localhost:5000 to easily see wh
 
 An example config for external image storage with webdav enabled:
 
-```ini
+``` ini
 [external_image_storage]
 provider = webdav
 

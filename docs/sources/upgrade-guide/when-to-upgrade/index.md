@@ -1,14 +1,17 @@
----
+-----
+
 description: Strategies for upgrading your self-managed Grafana instance
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-title: Strategies for upgrading your self-managed Grafana instance
-menuTitle: Upgrade strategies
-weight: 1
----
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  title: Strategies for upgrading your self-managed Grafana instance
+  menuTitle: Upgrade strategies
+  weight: 1
+
+-----
 
 # Strategies for upgrading your self-managed Grafana instance
 
@@ -18,9 +21,9 @@ We no longer wait for the yearly major release to give you access to the next bi
 
 Having a dependable release process provides users like you with the best Grafana experience possible, and it provides the flexibility to upgrade in a manner that works best for you and your organization.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Grafana Cloud follows a different release cadence than Grafana OSS and Enterprise. In Cloud, Grafana uses Rolling release channels. To learn more about release channels, refer to [Rolling release channels for Grafana Cloud](https://grafana.com/docs/rolling-release/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## What to expect from each release type
 
@@ -69,9 +72,9 @@ We've enhanced our naming convention for security release versions to make it ea
 
 In the past, critical vulnerabilities triggered unscheduled releases that incremented the patch version (e.g., 10.3.0 to 10.3.1). However, we found that the naming convention for these releases didn't clearly communicate the nature of the update. For example, if there was a version change from 11.3.0 to 11.3.1, there was no indication whether it was a security fix, a bug fix, or a minor feature update. This lack of clarity led to confusion about the urgency and nature of the update. <br>
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Docker does not allow the plus sign (`+`) in image tag names. A plus sign (`+`) will be a rendered as a dash (`-`) in the docker tag.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Our new approach directly addresses this issue. Going forward, security releases will be appended with "+security" to indicate that the release is the indicated version PLUS the security fix.
 
@@ -161,6 +164,6 @@ Always read the [upgrade guide](https://grafana.com/docs/grafana/latest/upgrade-
 
 ### Plugin incompatibility
 
-**Grafana core** ships as a single binary and consists of Dashboards, Alerts, Explore, Authentication and Authorization, Reporting, some core data sources, and other components. However, almost everyone who uses Grafana also uses **plugins**: panels, data sources, and applications that are released independently of Grafana. Every plugin version lists its Grafana version dependencies (you can see them at [https://grafana.com/grafana/plugins/](https://grafana.com/grafana/plugins/)) but different versions of different plugins can also interact with each other - for example you might visualize data from a data source in a panel in Grafana, all three of which are versioned independently of each other. That can create issues that are hard to catch in testing.
+**Grafana core** ships as a single binary and consists of Dashboards, Alerts, Explore, Authentication and Authorization, Reporting, some core data sources, and other components. However, almost everyone who uses Grafana also uses **plugins**: panels, data sources, and applications that are released independently of Grafana. Every plugin version lists its Grafana version dependencies (you can see them at <https://grafana.com/grafana/plugins/>) but different versions of different plugins can also interact with each other - for example you might visualize data from a data source in a panel in Grafana, all three of which are versioned independently of each other. That can create issues that are hard to catch in testing.
 
 To minimize the likelihood of plugin incompatibility issues, run the latest available version of plugins and update them regularly. Always [update plugins](https://grafana.com/docs/grafana/latest/administration/plugin-management/#update-a-plugin) before updating Grafana. Plugins also follow Semver patterns, so review the plugin’s changelog for breaking changes before upgrading to a new major version of that plugin.

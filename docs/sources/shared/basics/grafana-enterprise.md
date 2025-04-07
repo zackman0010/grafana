@@ -1,10 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Grafana Enterprise
----
+-----
+
+## labels: products: - enterprise - oss title: Grafana Enterprise
 
 ## Grafana Enterprise
 

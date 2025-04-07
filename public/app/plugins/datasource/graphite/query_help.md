@@ -7,10 +7,10 @@
 #### Series as parameter
 
 - Some graphite functions allow you to have many series arguments
-- Use #[A-Z] to use a graphite query as parameter to a function
+- Use \#\[A-Z\] to use a graphite query as parameter to a function
 - Examples:
-  - asPercent(#A, #B)
-  - divideSeries(#A, #B)
+  - asPercent(\#A, \#B)
+  - divideSeries(\#A, \#B)
 
 If a query is added only to be used as a parameter, hide it from the graph with the eye icon
 

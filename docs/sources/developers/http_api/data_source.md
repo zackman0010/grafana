@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../http_api/data_source/
-  - ../../http_api/datasource/
-canonical: /docs/grafana/latest/developers/http_api/data_source/
-description: Grafana Data source HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - data source
-labels:
+
+- ../../http\_api/data\_source/
+- ../../http\_api/datasource/
+  canonical: /docs/grafana/latest/developers/http\_api/data\_source/
+  description: Grafana Data source HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- data source
+  labels:
   products:
-    - enterprise
-    - oss
-title: Data source HTTP API
----
+  - enterprise
+  - oss
+    title: Data source HTTP API
+
+-----
 
 # Data source API
 
@@ -41,7 +44,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/datasources HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -50,7 +53,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -100,7 +103,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/datasources/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -109,7 +112,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -156,7 +159,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 GET /api/datasources/uid/kLtEtcRGk HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -165,7 +168,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -206,13 +209,13 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 | Action           | Scope                                                                                          |
 | ---------------- | ---------------------------------------------------------------------------------------------- |
-| datasources:read | datasources:\*<br>datasources:name:\*<br>datasources:name:test_datasource (single data source) |
+| datasources:read | datasources:\*<br>datasources:name:\*<br>datasources:name:test\_datasource (single data source) |
 
 ### Examples
 
 **Example Request**:
 
-```http
+``` http
 GET /api/datasources/name/test_datasource HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -221,7 +224,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -262,13 +265,13 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 | Action              | Scope                                                                                          |
 | ------------------- | ---------------------------------------------------------------------------------------------- |
-| datasources.id:read | datasources:\*<br>datasources:name:\*<br>datasources:name:test_datasource (single data source) |
+| datasources.id:read | datasources:\*<br>datasources:name:\*<br>datasources:name:test\_datasource (single data source) |
 
 ### Examples
 
 **Example Request**:
 
-```http
+``` http
 GET /api/datasources/id/test_datasource HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -277,7 +280,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -302,7 +305,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Graphite Request**:
 
-```http
+``` http
 POST /api/datasources HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -319,7 +322,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Graphite Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -357,7 +360,7 @@ By defining `password` and `basicAuthPassword` under `secureJsonData` Grafana en
 
 **Example Graphite Request with basic auth enabled**:
 
-```http
+``` http
 POST /api/datasources HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -378,7 +381,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response with basic auth enabled**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -414,7 +417,7 @@ Content-Type: application/json
 
 **Example CloudWatch Request**:
 
-```http
+``` http
 POST /api/datasources HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -456,7 +459,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/datasources/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -484,7 +487,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -539,7 +542,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/datasources/uid/kLtEtcRGk HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -568,7 +571,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -627,7 +630,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/datasources/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -636,7 +639,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -659,7 +662,7 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 DELETE /api/datasources/uid/kLtEtcRGk HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -668,7 +671,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -688,13 +691,13 @@ See note in the [introduction](#data-source-api) for an explanation.
 
 | Action             | Scope                                                                                          |
 | ------------------ | ---------------------------------------------------------------------------------------------- |
-| datasources:delete | datasources:\*<br>datasources:name:\*<br>datasources:name:test_datasource (single data source) |
+| datasources:delete | datasources:\*<br>datasources:name:\*<br>datasources:name:test\_datasource (single data source) |
 
 ### Examples
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/datasources/name/test_datasource HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -703,7 +706,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -741,7 +744,7 @@ Makes a call to the health endpoint of data source identified by the given `data
 
 **Example Request**:
 
-```http
+``` http
 GET api/datasources/112/health HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -750,7 +753,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -770,7 +773,7 @@ Makes a call to the health endpoint of data source identified by the given `uid`
 
 **Example Request**:
 
-```http
+``` http
 GET api/datasources/uid/P8045C56BDA891CB2/health HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -779,7 +782,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -803,7 +806,7 @@ Makes a call to the resources endpoint of data source identified by the given `d
 
 **Example Request**:
 
-```http
+``` http
 GET api/datasources/112/resources/dimension-keys?region=us-east-2&namespace=AWS%2FEC2&dimensionFilters=%7B%7D&metricName=CPUUtilization HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -812,7 +815,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -850,7 +853,7 @@ Makes a call to the resources endpoint of data source identified by the given `u
 
 **Example Request**:
 
-```http
+``` http
 GET api/datasources/uid/P8045C56BDA891CB2/resources/dimension-keys?region=us-east-2&namespace=AWS%2FEC2&dimensionFilters=%7B%7D&metricName=CPUUtilization HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -859,7 +862,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -899,7 +902,7 @@ Grafana's built-in data sources usually have a backend implementation.
 
 **Example request for the Test data source**:
 
-```http
+``` http
 POST /api/ds/query HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -937,7 +940,7 @@ In addition, specific properties of each data source should be added in a reques
 
 **Example Test data source time series query response:**
 
-```json
+``` json
 {
   "results": {
     "A": {

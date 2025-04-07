@@ -1,31 +1,34 @@
----
+-----
+
 aliases:
-  - ../../panels/visualizations/node-graph/
-  - ../../visualizations/node-graph/
-keywords:
-  - grafana
-  - dashboard
-  - documentation
-  - panels
-  - node graph
-  - directed graph
-labels:
+
+- ../../panels/visualizations/node-graph/
+- ../../visualizations/node-graph/
+  keywords:
+- grafana
+- dashboard
+- documentation
+- panels
+- node graph
+- directed graph
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-description: Configure options for Grafana's node graph visualization
-title: Node graph
-weight: 100
----
+  - cloud
+  - enterprise
+  - oss
+    description: Configure options for Grafana's node graph visualization
+    title: Node graph
+    weight: 100
+
+-----
 
 # Node graph
 
-Node graphs are useful when you need to visualize elements that are related to each other. This is done by displaying circles&mdash;or _nodes_&mdash;for each element you want to visualize, connected by lines&mdash;or _edges_. The visualization uses a directed force layout that positions the nodes into a network of connected circles.
+Node graphs are useful when you need to visualize elements that are related to each other. This is done by displaying circles—or *nodes*—for each element you want to visualize, connected by lines—or *edges*. The visualization uses a directed force layout that positions the nodes into a network of connected circles.
 
 Node graphs display useful information about each node, as well as the relationships between them, allowing you to visualize complex infrastructure maps, hierarchies, or execution diagrams.
 
-![Node graph visualization](/media/docs/grafana/panels-visualizations/screenshot-node-graph-v11.3.png 'Node graph')
+![Node graph visualization](/media/docs/grafana/panels-visualizations/screenshot-node-graph-v11.3.png "Node graph")
 
 The appearance of nodes and edges can also be customized in several ways including color, borders, and line style.
 
@@ -43,9 +46,9 @@ You can use a node graph visualization if you need to show:
 
 The following video provides beginner steps for creating node panel visualizations. You'll learn the data requirements and caveats, special customizations, and much more:
 
-{{< youtube id="VrvsMkRwoKw" >}}
+{{\< youtube id="VrvsMkRwoKw" \>}}
 
-{{< docs/play title="Node graph panel" url="https://play.grafana.org/d/bdodfbi3d57uoe/" >}}
+{{\< docs/play title="Node graph panel" url="https://play.grafana.org/d/bdodfbi3d57uoe/" \>}}
 
 ## Supported data formats
 
@@ -83,10 +86,10 @@ If a node lacks edge connections, it’s displayed on its own outside of the net
 
 A node graph requires a specific shape of the data to be able to display its nodes and edges. This means not every data source or query can be visualized with this graph. If you want to use this as a data source developer see the section about data API.
 
-A node graph consists of _nodes_ and _edges_.
+A node graph consists of *nodes* and *edges*.
 
-- A _node_ is displayed as a circle. A node might represent an application, a service, or anything else that is relevant from an application perspective.
-- An _edge_ is displayed as a line that connects two nodes. The connection might be a request, an execution, or some other relationship between the two nodes.
+- A *node* is displayed as a circle. A node might represent an application, a service, or anything else that is relevant from an application perspective.
+- An *edge* is displayed as a line that connects two nodes. The connection might be a request, an execution, or some other relationship between the two nodes.
 
 Both nodes and edges can have associated metadata or statistics. The data source defines what information and values is shown, so different data sources can show different type of values or not show some values.
 
@@ -102,7 +105,7 @@ For example, you can have the percentage of errors represented by a red portion 
 Additional details can be displayed in a context menu which is displayed when you click on the node.
 There also can be additional links in the context menu that can target either other parts of Grafana or any external link.
 
-![Node context menu](/media/docs/grafana/panels-visualizations/screenshot-node-links-v11.3.png 'Node context menu')
+![Node context menu](/media/docs/grafana/panels-visualizations/screenshot-node-links-v11.3.png "Node context menu")
 
 #### Edges
 
@@ -126,29 +129,29 @@ Use the buttons in the lower right corner to zoom in or out. You can also use th
 
 The number of nodes shown at a given time is limited to maintain a reasonable visualization performance. Nodes that are not currently visible are hidden behind clickable markers that show an approximate number of hidden nodes that are connected by a particular edge. You can click on the marker to expand the graph around that node.
 
-![Node graph exploration](/media/docs/grafana/panels-visualizations/node-graph-exploration-8.0-2.png 'Node graph exploration')
+![Node graph exploration](/media/docs/grafana/panels-visualizations/node-graph-exploration-8.0-2.png "Node graph exploration")
 
 ### Grid view
 
 You can switch to the grid view to have a better overview of the most interesting nodes in the graph. Grid view shows nodes in a grid without edges and can be sorted by stats shown inside the node or by stats represented by the a colored border of the nodes.
 
-![Node graph grid](/media/docs/grafana/panels-visualizations/screenshot-node-graph-grid-v11.3.png 'Node graph grid')
+![Node graph grid](/media/docs/grafana/panels-visualizations/screenshot-node-graph-grid-v11.3.png "Node graph grid")
 
 To sort the nodes, click on the stats inside the legend. The marker next to the stat name shows which stat is currently used for sorting and sorting direction.
 
-![Node graph legend](/media/docs/grafana/panels-visualizations/screenshot-node-graph-legend-v11.3.png 'Node graph legend')
+![Node graph legend](/media/docs/grafana/panels-visualizations/screenshot-node-graph-legend-v11.3.png "Node graph legend")
 
 Click on the node and select "Show in Graph layout" option to switch back to graph layout and focus on the selected node, to show it in context of the full graph.
 
-![Node graph grid to default](/media/docs/grafana/panels-visualizations/screenshot-node-graph-view-v11.3.png 'Node graph grid to default')
+![Node graph grid to default](/media/docs/grafana/panels-visualizations/screenshot-node-graph-view-v11.3.png "Node graph grid to default")
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Node graph options
 
@@ -164,9 +167,9 @@ The **Nodes** options section provides configurations for node behaviors.
 - **Secondary stat unit** - Choose which unit the secondary stat displays in the graph's nodes.
 - **Arc sections** - Configure which fields define the size of the colored circle around the node and select a color for each. You can add multiple fields.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Defining arc sections overrides the automatic detection of `arc__*` and `color` fields described in the **Optional fields** section of [Nodes data frame structure](#nodes-data-frame-structure).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Edges options
 
@@ -177,13 +180,13 @@ The **Edges** options section provides configurations for node edges behaviors.
 
 ### Data links
 
-{{< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 In node graphs, some data fields may have pre-configured data links. To add a different data link in those cases, use a [field override](#field-overrides).
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Data API
 
@@ -213,11 +216,11 @@ Optional fields:
 | color           | string        | Sets the default color of the edge. It can be an acceptable HTML color string. Default: `#999`                                                                                                                                                                            |
 | strokeDasharray | string        | Sets the pattern of dashes and gaps used to render the edge. If unset, a solid line is used as edge. For more information and examples, refer to the [`stroke-dasharray` MDN documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray). |
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 Starting with 10.5, `highlighted` is deprecated.
 It will be removed in a future release.
 Use `color` to indicate a highlighted edge state instead.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Nodes data frame structure
 

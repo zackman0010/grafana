@@ -1,14 +1,11 @@
 # Wire Tutorial
 
-Let's learn to use Wire by example. The [Wire guide][guide] provides thorough
+Let's learn to use Wire by example. The [Wire guide](https://github.com/google/wire/blob/master/docs/guide.md) provides thorough
 documentation of the tool's usage. For readers eager to see Wire applied to a
-larger server, the [guestbook sample in Go Cloud][guestbook] uses Wire to
+larger server, the [guestbook sample in Go Cloud](https://github.com/google/go-cloud/tree/master/samples/guestbook) uses Wire to
 initialize its components. Here we are going to build a small greeter program to
 understand how to use Wire. The finished product may be found in the same
 directory as this README.
-
-[guestbook]: https://github.com/google/go-cloud/tree/master/samples/guestbook
-[guide]:     https://github.com/google/wire/blob/master/docs/guide.md
 
 ## A First Pass of Building the Greeter Program
 
@@ -105,12 +102,10 @@ First we create a message, then we create a greeter with that message, and
 finally we create an event with that greeter. With all the initialization done,
 we're ready to start our event.
 
-We are using the [dependency injection][di] design principle. In practice, that
+We are using the [dependency injection](https://stackoverflow.com/questions/130794/what-is-dependency-injection) design principle. In practice, that
 means we pass in whatever each component needs. This style of design lends
 itself to writing easily tested code and makes it easy to swap out one
 dependency with another.
-
-[di]: https://stackoverflow.com/questions/130794/what-is-dependency-injection
 
 ## Using Wire to Generate Code
 
@@ -155,7 +150,7 @@ the file:
 
 ```
 
-Note, a [build constraint][constraint] requires a blank, trailing line.
+Note, a [build constraint](https://godoc.org/go/build#hdr-Build_Constraints) requires a blank, trailing line.
 
 In Wire parlance, `InitializeEvent` is an "injector." Now that we have our
 injector complete, we are ready to use the `wire` command line tool.
@@ -184,12 +179,10 @@ func InitializeEvent() Event {
 }
 ```
 
-It looks just like what we wrote above! Now this is a simple example with just
+It looks just like what we wrote above\! Now this is a simple example with just
 three components, so writing the initializer by hand isn't too painful. Imagine
 how useful Wire is for components that are much more complex. When working with
 Wire, we will commit both `wire.go` and `wire_gen.go` to source control.
-
-[constraint]: https://godoc.org/go/build#hdr-Build_Constraints
 
 ## Making Changes with Wire
 
@@ -308,7 +301,7 @@ func NewMessage(phrase string) Message {
 
 After we run `wire` again, we will see that the tool has generated an
 initializer which passes the `phrase` value as a `Message` into `Greeter`.
-Neat!
+Neat\!
 
 ``` go
 // wire_gen.go
@@ -407,13 +400,7 @@ initialize) a component, we may add that component anywhere in the dependency
 graph and Wire will handle the rest.
 
 In closing, it is worth mentioning that Wire supports a number of additional
-features not discussed here. Providers may be grouped in [provider sets][sets].
-There is support for [binding interfaces][interfaces], [binding
-values][values], as well as support for [cleanup functions][cleanup]. See the
-[Advanced Features][advanced] section for more.
-
-[advanced]:   https://github.com/google/wire/blob/master/docs/guide.md#advanced-features
-[cleanup]:    https://github.com/google/wire/blob/master/docs/guide.md#cleanup-functions
-[interfaces]: https://github.com/google/wire/blob/master/docs/guide.md#binding-interfaces
-[sets]:       https://github.com/google/wire/blob/master/docs/guide.md#defining-providers
-[values]:     https://github.com/google/wire/blob/master/docs/guide.md#binding-values
+features not discussed here. Providers may be grouped in [provider sets](https://github.com/google/wire/blob/master/docs/guide.md#defining-providers).
+There is support for [binding interfaces](https://github.com/google/wire/blob/master/docs/guide.md#binding-interfaces), [binding
+values](https://github.com/google/wire/blob/master/docs/guide.md#binding-values), as well as support for [cleanup functions](https://github.com/google/wire/blob/master/docs/guide.md#cleanup-functions). See the
+[Advanced Features](https://github.com/google/wire/blob/master/docs/guide.md#advanced-features) section for more.

@@ -1,35 +1,38 @@
----
+-----
+
 aliases:
-  - ../../http_api/licensing/
-canonical: /docs/grafana/latest/developers/http_api/licensing/
-description: Enterprise Licensing HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - licensing
-  - enterprise
-labels:
+
+- ../../http\_api/licensing/
+  canonical: /docs/grafana/latest/developers/http\_api/licensing/
+  description: Enterprise Licensing HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- licensing
+- enterprise
+  labels:
   products:
-    - enterprise
-    - oss
-title: Licensing HTTP API
----
+  - enterprise
+  - oss
+    title: Licensing HTTP API
+
+-----
 
 # Enterprise License API
 
 Licensing is only available in Grafana Enterprise. Read more about [Grafana Enterprise](/docs/grafana/latest/introduction/grafana-enterprise/).
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 You can't authenticate to the Licensing HTTP API with service account tokens.
 Service accounts are limited to an organization and an organization role.
-They can't be granted [Grafana server administrator permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators).
+They can't be granted [Grafana server administrator permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators).
 
 To use these API endpoints you have to use Basic authentication and the Grafana user must have the Grafana server administrator permission.
 
 The `admin` user that Grafana is provisioned with by default has permissions to use these API endpoints.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 > If you are running Grafana Enterprise, for some endpoints you'll need to have specific permissions. Refer to [Role-based access control permissions](/docs/grafana/latest/administration/roles-and-permissions/access-control/custom-role-actions-scopes/) for more information.
 
@@ -53,7 +56,7 @@ See note in the [introduction](#enterprise-license-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 GET /api/licensing/check
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -61,7 +64,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 4
@@ -95,7 +98,7 @@ See note in the [introduction](#enterprise-license-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 POST /licensing/token
 Accept: application/json
 Content-Type: application/json
@@ -106,7 +109,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 357
@@ -157,7 +160,7 @@ See note in the [introduction](#enterprise-license-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 POST /api/licensing/token/renew
 Accept: application/json
 Content-Type: application/json
@@ -168,7 +171,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 357
@@ -218,7 +221,7 @@ See note in the [introduction](#enterprise-license-api) for an explanation.
 
 **Example request:**
 
-```http
+``` http
 DELETE /api/licensing/token
 Accept: application/json
 Content-Type: application/json
@@ -233,7 +236,7 @@ JSON Body schema:
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 202 Accepted
 Content-Type: application/json
 Content-Length: 2

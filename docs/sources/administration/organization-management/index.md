@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../manage-users/server-admin/
-  - ../manage-users/server-admin/server-admin-manage-orgs/
-  - manage-organizations/
-description: Describes how to use organizations to isolate dashboard to users and
+
+- ../manage-users/server-admin/
+- ../manage-users/server-admin/server-admin-manage-orgs/
+- manage-organizations/
+  description: Describes how to use organizations to isolate dashboard to users and
   teams.
-keywords:
-  - organizations
-  - dashboards
-labels:
+  keywords:
+- organizations
+- dashboards
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Manage organizations
-title: Manage organizations
-weight: 200
----
+  - enterprise
+  - oss
+    menuTitle: Manage organizations
+    title: Manage organizations
+    weight: 200
+
+-----
 
 # Manage organizations
 
@@ -59,7 +62,7 @@ Complete this task when you want to view a list of existing organizations.
 **To view a list of organizations:**
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
+2. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
 
 ## Create an organization
 
@@ -72,14 +75,17 @@ Create an organization when you want to isolate dashboards and other resources f
 **To create an organization:**
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
-1. Click **+ New org**.
-1. Enter the name of the new organization and click **Create**.
 
+2. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
+
+3. Click **+ New org**.
+
+4. Enter the name of the new organization and click **Create**.
+   
    Grafana creates the organization, adds you as the organization administrator, and opens the Default preferences page.
 
-1. In the Preferences section, select a home dashboard, time zone, and week start.
-
+5. In the Preferences section, select a home dashboard, time zone, and week start.
+   
    For more information about preferences, refer to [Preferences](../organization-preferences/).
 
 For more information about adding users to an organization, refer to [Add a user to an organization](../user-management/server-user-management/add-remove-user-to-org/).
@@ -100,9 +106,9 @@ Deleting the organization also deletes all teams and dashboards associated the o
 **To delete an organization:**
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
-1. Click the red **X** next to the organization that you want to delete.
-1. Click **Delete**.
+2. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
+3. Click the red **X** next to the organization that you want to delete.
+4. Click **Delete**.
 
 ## Edit an organization
 
@@ -115,6 +121,6 @@ Edit an organization when you want to change its name.
 **To edit an organization:**
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
-1. Click the organization you want to edit.
-1. Update the organization name and click **Update**.
+2. Click **Administration** in the left-side menu, **General**, and then **Organizations**.
+3. Click the organization you want to edit.
+4. Update the organization name and click **Update**.

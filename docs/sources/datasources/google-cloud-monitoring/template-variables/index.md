@@ -1,41 +1,44 @@
----
+-----
+
 aliases:
-  - ../../data-sources/google-cloud-monitoring/template-variables/
-description: Guide for using template variables when querying the Google Cloud Monitoring
+
+- ../../data-sources/google-cloud-monitoring/template-variables/
+  description: Guide for using template variables when querying the Google Cloud Monitoring
   data source
-keywords:
-  - grafana
-  - google
-  - cloud
-  - monitoring
-  - queries
-  - template
-  - variable
-labels:
+  keywords:
+- grafana
+- google
+- cloud
+- monitoring
+- queries
+- template
+- variable
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Google Cloud Monitoring template variables
-weight: 300
-refs:
-  variable-syntax:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Google Cloud Monitoring template variables
+    weight: 300
+    refs:
+    variable-syntax:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+
+-----
 
 # Google Cloud Monitoring template variables
 
@@ -47,7 +50,7 @@ For an introduction to templating and template variables, refer to the [Templati
 
 ## Use query variables
 
-Variables of the type _Query_ help you query Google Cloud Monitoring for various types of data.
+Variables of the type *Query* help you query Google Cloud Monitoring for various types of data.
 The Google Cloud Monitoring data source plugin provides the following **Query Types**:
 
 | Name                               | List returned                                                         |

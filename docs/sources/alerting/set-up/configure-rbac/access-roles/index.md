@@ -1,20 +1,23 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-rbac/access-roles
 description: Manage access using roles
 keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - RBAC
-  - role access
-labels:
+
+- grafana
+- alerting
+- set up
+- configure
+- RBAC
+- role access
+  labels:
   products:
-    - enterprise
-    - cloud
-title: Manage access using roles
-weight: 100
----
+  - enterprise
+  - cloud
+    title: Manage access using roles
+    weight: 100
+
+-----
 
 # Manage access using roles
 
@@ -77,9 +80,9 @@ Create custom roles of your own to manage permissions. Custom roles contain uniq
 
 For more information on creating custom roles, refer to [Create custom roles](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/manage-rbac-roles/#create-custom-roles).
 
-{{< admonition type="note" >}}
-It is not recommended to create custom roles that include `alerting.notifications.receiver` actions with a scope other than `receivers:*`. The UID used in the scope is not stable and changes whenever a contact point is renamed.  
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+It is not recommended to create custom roles that include `alerting.notifications.receiver` actions with a scope other than `receivers:*`. The UID used in the scope is not stable and changes whenever a contact point is renamed.\
+{{\< /admonition \>}}
 
 ### Examples
 
@@ -88,71 +91,71 @@ The following examples give you an idea of how you can combine permissions for G
 A custom role for read access to alert rules in folder F:
 
 <!-- prettier-ignore-start -->
-```
-PUT access-control/roles
-{
-	"name": "custom:alert_rules_reader",
-	"displayName": "Alert rule reader in folder F",
-	"description": "Read access to rules in folder F that use DS1 and DS2",
-	"permissions": [
-    	{
-        	"action": "alert.rules:read",
-        	"scope": "folders:uid:UID_F"
-    	},
-    	{
-        	"action": "folders:read",
-        	"scope": "folders:uid:UID_F"
-    	}
-	]
-}
-```
+
+    PUT access-control/roles
+    {
+    	"name": "custom:alert_rules_reader",
+    	"displayName": "Alert rule reader in folder F",
+    	"description": "Read access to rules in folder F that use DS1 and DS2",
+    	"permissions": [
+        	{
+            	"action": "alert.rules:read",
+            	"scope": "folders:uid:UID_F"
+        	},
+        	{
+            	"action": "folders:read",
+            	"scope": "folders:uid:UID_F"
+        	}
+    	]
+    }
+
 <!-- prettier-ignore-end -->
 
 A custom role for write access to alert rules that uses simplified routing:
 
 <!-- prettier-ignore-start -->
-```
-PUT access-control/roles
-{
-	"name": "custom:alert_rules_updater",
-	"displayName": "Alert rules editor in folder F",
-	"description": "Edit access to rules in folder F that use DS1 and DS2",
-	"permissions": [
-    	{
-        	"action": "alert.rules:read",
-        	"scope": "folders:uid:UID_F"
-    	},
-    	{
-        	"action": "alert.rules:read",
-        	"scope": "folders:uid:UID_F"
-    	},
-    	{
-        	"action": "alert.rules:write",
-        	"scope": "folders:uid:UID_F"
-    	},
-    	{
-        	"action": "alert.rules:create",
-        	"scope": "folders:uid:UID_F"
-    	},
-    	{
-        	"action": "alert.notifications.receivers:list",
-    	},
-{
-        	"action": "alert.notifications.time-intervals:read",
-    	},
-	]
-}
-```
+
+    PUT access-control/roles
+    {
+    	"name": "custom:alert_rules_updater",
+    	"displayName": "Alert rules editor in folder F",
+    	"description": "Edit access to rules in folder F that use DS1 and DS2",
+    	"permissions": [
+        	{
+            	"action": "alert.rules:read",
+            	"scope": "folders:uid:UID_F"
+        	},
+        	{
+            	"action": "alert.rules:read",
+            	"scope": "folders:uid:UID_F"
+        	},
+        	{
+            	"action": "alert.rules:write",
+            	"scope": "folders:uid:UID_F"
+        	},
+        	{
+            	"action": "alert.rules:create",
+            	"scope": "folders:uid:UID_F"
+        	},
+        	{
+            	"action": "alert.notifications.receivers:list",
+        	},
+    {
+            	"action": "alert.notifications.time-intervals:read",
+        	},
+    	]
+    }
+
 <!-- prettier-ignore-end -->
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Delete the last two permissions if you aren’t using simplified notification routing.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Assign roles
 
 To assign roles, complete the following steps.
 
-1. Navigate to Administration > Users and access > Users, Teams, or Service Accounts.
-1. Search for the user, team or service account you want to add a role for.
-1. Select the role you want to assign.
+1. Navigate to Administration \> Users and access \> Users, Teams, or Service Accounts.
+2. Search for the user, team or service account you want to add a role for.
+3. Select the role you want to assign.

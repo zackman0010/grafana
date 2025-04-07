@@ -1,39 +1,42 @@
----
+-----
+
 Feedback Link: https://github.com/grafana/tutorials/issues/new
 categories:
-  - alerting
-description: Learn how to group alert notifications effectively to reduce noise and streamline communication in Grafana Alerting — Part 3.
-labels:
+
+- alerting
+  description: Learn how to group alert notifications effectively to reduce noise and streamline communication in Grafana Alerting — Part 3.
+  labels:
   products:
-    - enterprise
-    - oss
-    - cloud
-tags:
-  - intermediate
-title: Get started with Grafana Alerting - Part 3
-weight: 60
-killercoda:
+  - enterprise
+  - oss
+  - cloud
+    tags:
+- intermediate
+  title: Get started with Grafana Alerting - Part 3
+  weight: 60
+  killercoda:
   title: Get started with Grafana Alerting - Part 3
   description: Learn how to group alert notifications effectively to reduce noise and streamline communication in Grafana Alerting — Part 3.
   backend:
-    imageid: ubuntu
-refs:
+  imageid: ubuntu
+  refs:
   alert-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
-  notification-policies:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/notification-policies/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
-  alert-grouping:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
----
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
+    notification-policies:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/notification-policies/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
+    alert-grouping:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
+
+-----
 
 <!-- INTERACTIVE page intro.md START -->
 
@@ -55,35 +58,37 @@ In this tutorial, you will:
 - Receive and review grouped alert notifications.
 
 <!-- INTERACTIVE page intro.md END -->
+
 <!-- INTERACTIVE page step1.md START -->
 
 <!-- INTERACTIVE ignore START -->
 
-{{< docs/ignore >}}
+{{\< docs/ignore \>}}
 
 ## Set up the Grafana stack
 
-{{< /docs/ignore >}}
+{{\< /docs/ignore \>}}
 
 ## Before you begin
 
 There are different ways you can follow along with this tutorial.
 
 - **Grafana Cloud**
-
+  
   - As a Grafana Cloud user, you don't have to install anything. [Create your free account](http://www.grafana.com/auth/sign-up/create-user).
-
+  
   Continue to [How alert rule grouping works](#how-alert-rule-grouping-works).
 
 - **Interactive learning environment**
-
+  
   - Alternatively, you can try out this example in our interactive learning environment: [Get started with Grafana Alerting - Part 3](https://killercoda.com/grafana-labs/course/grafana/alerting-get-started-pt3/). It's a fully configured environment with all the dependencies already installed.
 
 - **Grafana OSS**
-
+  
   - If you opt to run a Grafana stack locally, ensure you have the following applications installed:
-
+  
   - [Docker Compose](https://docs.docker.com/get-docker/) (included in Docker for Desktop for macOS and Windows)
+  
   - [Git](https://git-scm.com/)
 
 ### Set up the Grafana stack (OSS users)
@@ -93,66 +98,61 @@ There are different ways you can follow along with this tutorial.
 To demonstrate the observation of data using the Grafana stack, download and run the following files.
 
 1. Clone the [tutorial environment repository](https://www.github.com/grafana/tutorial-environment).
-
+   
    <!-- INTERACTIVE exec START -->
 
-   ```
-   git clone https://github.com/grafana/tutorial-environment.git
-   ```
+       git clone https://github.com/grafana/tutorial-environment.git
 
    <!-- INTERACTIVE exec END -->
 
-1. Change to the directory where you cloned the repository:
-
+2. Change to the directory where you cloned the repository:
+   
    <!-- INTERACTIVE exec START -->
 
-   ```
-   cd tutorial-environment
-   ```
+       cd tutorial-environment
 
    <!-- INTERACTIVE exec END -->
 
-1. Run the Grafana stack:
-
+3. Run the Grafana stack:
+   
    <!-- INTERACTIVE ignore START -->
 
-   ```
-   docker compose up -d
-   ```
+       docker compose up -d
 
    <!-- INTERACTIVE ignore END -->
 
-   {{< docs/ignore >}}
-
+   {{\< docs/ignore \>}}
+   
    <!-- INTERACTIVE exec START -->
 
-   ```bash
+   ``` bash
    docker-compose up -d
    ```
-
+   
    <!-- INTERACTIVE exec END -->
 
-   {{< /docs/ignore >}}
-
+   {{\< /docs/ignore \>}}
+   
    The first time you run `docker compose up -d`, Docker downloads all the necessary resources for the tutorial. This might take a few minutes, depending on your internet connection.
-
+   
    <!-- INTERACTIVE ignore START -->
 
-   {{< admonition type="note" >}}
+   {{\< admonition type="note" \>}}
    If you already have Grafana, Loki, or Prometheus running on your system, you might see errors, because the Docker image is trying to use ports that your local installations are already using. If this is the case, stop the services, then run the command again.
-   {{< /admonition >}}
-
+   {{\< /admonition \>}}
+   
    <!-- INTERACTIVE ignore END -->
 
-   {{< docs/ignore >}}
-
+   {{\< docs/ignore \>}}
+   
    NOTE:
-
+   
    If you already have Grafana, Loki, or Prometheus running on your system, you might see errors, because the Docker image is trying to use ports that your local installations are already using. If this is the case, stop the services, then run the command again.
-
-   {{< /docs/ignore >}}
+   
+   {{\< /docs/ignore \>}}
 
 <!-- INTERACTIVE page step1.md END -->
+
 <!-- INTERACTIVE page step2.md START -->
 
 ## How alert rule grouping works
@@ -162,7 +162,7 @@ Alert notification grouping is configured with **labels** and **timing options**
 - **Labels** map the alert rule with the notification policy and define the grouping.
 - **Timing options** control when and how often notifications are sent.
 
-{{< figure src="/media/docs/alerting/alerting-notification-policy-diagram-with-labels-v3.png" max-width="750px" alt="A diagram about the components of a notification policy, including labels and groups" >}}
+{{\< figure src="/media/docs/alerting/alerting-notification-policy-diagram-with-labels-v3.png" max-width="750px" alt="A diagram about the components of a notification policy, including labels and groups" \>}}
 
 ### Types of Labels
 
@@ -195,6 +195,7 @@ For more details, see:
 - [Alert Labels](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/annotation-label/#label-types)
 
 <!-- INTERACTIVE page step2.md END -->
+
 <!-- INTERACTIVE page step3.md START -->
 
 ## A real-world example of alert grouping in action
@@ -208,16 +209,17 @@ You’re monitoring metrics like CPU usage, memory utilization, and network late
 To group alert rule notifications:
 
 1. **Define labels**: Use `region`, `metric`, or `instance` labels to categorize alerts.
-1. **Configure Notification policies**:
+2. **Configure Notification policies**:
    - Group alerts by the **query label** "region".
    - Example:
      - Alert notifications for `region: us-west` go to the West Coast team.
      - Alert notifications for `region: us-east` go to the East Coast team.
-1. Specify the **timing options** for sending notifications to control their frequency.
+3. Specify the **timing options** for sending notifications to control their frequency.
    - Example:
      - **Group interval**: setting determines how often updates for the same alert group are sent. By default, this interval is set to 5 minutes, but you can customize it to be shorter or longer based on your needs.
 
 <!-- INTERACTIVE page step3.md END -->
+
 <!-- INTERACTIVE page step4.md START -->
 
 ## Setting up alert rule grouping
@@ -229,116 +231,126 @@ Following the above example, [notification policies](ref:notification-policies) 
 <!-- INTERACTIVE ignore START -->
 
 1. Sign in to Grafana:
-
+   
    - **Grafana Cloud** users: Log in via Grafana Cloud.
-   - **OSS users**: Go to [http://localhost:3000](http://localhost:3000).
+   - **OSS users**: Go to <http://localhost:3000>.
 
-1. Navigate to **Notification Policies**:
+2. Navigate to **Notification Policies**:
+   
+   - Go to **Alerts & IRM \> Alerting \> Notification Policies**.
 
-   - Go to **Alerts & IRM > Alerting > Notification Policies**.
-
-1. Add a child policy:
-
+3. Add a child policy:
+   
    - In the Default policy, click **+ New child policy**.
+   
    - **Label**: `region`
+   
    - **Operator**: `=`
+   
    - **Value**: `us-west`
-
+     
      This label matches alert rules where the region label is us-west.
 
-1. Choose a **Contact point**:
-
+4. Choose a **Contact point**:
+   
    - Select **Webhook**.
-
+   
    If you don’t have any contact points, add a [Contact point](https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/#add-a-contact-point).
 
-1. Enable Continue matching:
-
+5. Enable Continue matching:
+   
    - Turn on **Continue matching subsequent sibling nodes** so the evaluation continues even after one or more labels (i.e. region label) match.
 
-1. Override grouping settings:
-
+6. Override grouping settings:
+   
    - Toggle **Override grouping**.
+   
    - **Group by**: Add `region` as label. Remove any existing labels.
-
+     
      **Group by** consolidates alerts that share the same grouping label into a single notification. For example, all alerts with `region=us-west` will be combined into one notification, making it easier to manage and reducing alert fatigue.
 
-1. Set custom timing:
-
+7. Set custom timing:
+   
    - Toggle **Override general timings**.
+   
    - **Group interval**: `2m`. This ensures follow-up notifications for the same alert group will be sent at intervals of 2 minutes. While the default is 5 minutes, we chose 2 minutes here to provide faster feedback for demonstration purposes.
-
+     
      **Timing options** control how often notifications are sent and can help balance timely alerting with minimizing noise.
 
-1. Save and repeat:
-
+8. Save and repeat:
+   
    - Repeat the steps above for `region = us-east` but without overriding grouping and timing options. Use a different webhook endpoint as the contact point.
-
-   {{< figure src="/media/docs/alerting/notificaiton-policies-region.png" max-width="750px" alt="Two nested notification policies to route and group alert notifications" >}}
-
+   
+   {{\< figure src="/media/docs/alerting/notificaiton-policies-region.png" max-width="750px" alt="Two nested notification policies to route and group alert notifications" \>}}
+   
    These nested policies should route alert instances where the region label is either us-west or us-east. Only the us-west region team should receive grouped alert notifications.
-
-   {{< admonition type="note" >}}
+   
+   {{\< admonition type="note" \>}}
    In Grafana, each label within a notification policy must have a unique key. If you attempt to add the same label key (e.g., region) with different values (us-west and us-east), only the last entry is saved, and the previous one is discarded. This is because labels are stored as associative arrays (maps), where each key must be unique.
-   For identical label keys use regex matchers (e.g., _region=~"us-west|us-east"_).
-   {{</ admonition >}}
+   For identical label keys use regex matchers (e.g., *region=~"us-west|us-east"*).
+   {{\</ admonition \>}}
 
 <!-- INTERACTIVE ignore END -->
 
-{{< docs/ignore >}}
+{{\< docs/ignore \>}}
 
-1. Visit [http://localhost:3000](http://localhost:3000), where Grafana should be running
-1. Navigate to **Alerts & IRM > Alerting > Notification policies**.
-1. In the Default policy, click **+ New child policy**.
+1. Visit <http://localhost:3000>, where Grafana should be running
 
+2. Navigate to **Alerts & IRM \> Alerting \> Notification policies**.
+
+3. In the Default policy, click **+ New child policy**.
+   
    - In the Default policy, click **+ New child policy**.
    - **Label**: `region`
    - **Operator**: `=`
    - **Value**: `us-west`
-
+   
    This label matches alert rules where the region label is us-west
 
-1. Choose a **Contact point**:
-
+4. Choose a **Contact point**:
+   
    - Select **Webhook**.
-
+   
    If you don’t have any contact points, add a Contact point.
 
-1. Enable Continue matching:
-
+5. Enable Continue matching:
+   
    - Turn on **Continue matching subsequent sibling nodes** so the evaluation continues even after one or more labels (i.e. region label) match.
 
-1. Override grouping settings:
-
+6. Override grouping settings:
+   
    - Toggle **Override grouping**.
+   
    - **Group by**: `region`.
-
+     
      **Group by** consolidates alerts that share the same grouping label into a single notification. For example, all alerts with `region=us-west` will be combined into one notification, making it easier to manage and reducing alert fatigue.
 
-1. Set custom timing:
-
+7. Set custom timing:
+   
    - Toggle **Override general timings**.
+   
    - **Group interval**: `2m`. This ensures follow-up notifications for the same alert group will be sent at intervals of 2 minutes. While the default is 5 minutes, we chose 2 minutes here to provide faster feedback for demonstration purposes.
-
+     
      **Timing options** control how often notifications are sent and can help balance timely alerting with minimizing noise.
 
-1. Save and repeat:
-
+8. Save and repeat:
+   
    - Repeat for `region = us-east` with a different webhook or a different contact point.
-
+     
      **Note**: In Grafana, each label within a notification policy must have a unique key. If you attempt to add the same label key (e.g., region) with different values (us-west and us-east), only the last entry is saved, and the previous one is discarded. This is because labels are stored as associative arrays (maps), where each key must be unique.
-     For identical label keys use regex matchers (e.g., _region=~"us-west|us-east"_).
+     For identical label keys use regex matchers (e.g., *region=~"us-west|us-east"*).
 
-{{< /docs/ignore >}}
+{{\< /docs/ignore \>}}
 
 <!-- INTERACTIVE page step4.md END -->
+
 <!-- INTERACTIVE page step5.md START -->
 
 ## Create an alert rule
 
 In this section we configure an alert rule based on our application monitoring example.
 
-1. Navigate to **Alerts & IRM > Alerting > Alert rules**.
+1. Navigate to **Alerts & IRM \> Alerting \> Alert rules**.
 2. Click **New alert rule**.
 
 ### Enter an alert rule name
@@ -352,14 +364,18 @@ In this section, we use the default options for Grafana-managed alert rule creat
 Grafana includes a [test data source](https://grafana.com/docs/grafana/latest/datasources/testdata/) that creates simulated time series data. This data source is included in the demo environment for this tutorial. If you're working in Grafana Cloud or your own local Grafana instance, you can add the data source through the **Connections** menu.
 
 1. From the drop-down menu, select **TestData** data source.
-1. From **Scenario** select **CSV Content**.
-1. Copy in the following CSV data:
 
+2. From **Scenario** select **CSV Content**.
+
+3. Copy in the following CSV data:
+   
    - Select **TestData** as the data source.
+   
    - Set **Scenario** to **CSV Content**.
+   
    - Use the following CSV data:
-
-     ```csv
+     
+     ``` csv
      region,cpu-usage,service,instance
      us-west,35,web-server-1,server-01
      us-west,81,web-server-1,server-02
@@ -370,18 +386,18 @@ Grafana includes a [test data source](https://grafana.com/docs/grafana/latest/da
      us-west,82,db-server-1,server-07
      us-east,93,db-server-2,server-08
      ```
-
+   
    The returned data simulates a data source returning multiple time series, each leading to the creation of an alert instance for that specific time series.
 
-1. In the **Alert condition** section:
-
+4. In the **Alert condition** section:
+   
    - Keep `Last` as the value for the reducer function (`WHEN`), and `75` as the threshold value. This is the value above which the alert rule should trigger.
 
-1. Click **Preview alert rule condition** to run the queries.
-
+5. Click **Preview alert rule condition** to run the queries.
+   
    It should return 5 series in Firing state, two firing instances from the us-west region, and three from the us-east region.
-
-   {{< figure src="/media/docs/alerting/regions-alert-instance-preview.png" max-width="750px" alt="Preview of a query returning alert instances." >}}
+   
+   {{\< figure src="/media/docs/alerting/regions-alert-instance-preview.png" max-width="750px" alt="Preview of a query returning alert instances." \>}}
 
 ### Add folders and labels
 
@@ -392,45 +408,47 @@ Grafana includes a [test data source](https://grafana.com/docs/grafana/latest/da
 Every alert rule is assigned to an evaluation group. You can assign the alert rule to an existing evaluation group or create a new one.
 
 1. In the **Evaluation group and interval**, repeat the above step to create a new evaluation group. Name it `Multi-region group`.
-1. Choose an **Evaluation interval** (how often the alert are evaluated). Choose `1m`.
-1. Set the **pending period** to `0s` (zero seconds), so the alert rule fires the moment the condition is met (this minimizes the waiting time for the demonstration).
+2. Choose an **Evaluation interval** (how often the alert are evaluated). Choose `1m`.
+3. Set the **pending period** to `0s` (zero seconds), so the alert rule fires the moment the condition is met (this minimizes the waiting time for the demonstration).
 
 ### Configure notifications
 
 Select who should receive a notification when an alert rule fires.
 
 1. Select **Use notification policy**.
-1. Click **Preview routing** to ensure correct matching.
 
-   {{< figure src="/media/docs/alerting/region-notification-policy-routing-preview.png" max-width="750px" alt="Preview of alert instance routing with the region label matcher" >}}
-
+2. Click **Preview routing** to ensure correct matching.
+   
+   {{\< figure src="/media/docs/alerting/region-notification-policy-routing-preview.png" max-width="750px" alt="Preview of alert instance routing with the region label matcher" \>}}
+   
    The preview should show that the region label from our data source is successfully matching the notification policies that we created earlier thanks to the label matcher that we configured.
 
-1. Click **Save rule and exit**.
+3. Click **Save rule and exit**.
 
 ### Create a second alert rule
 
 Repeat the steps above to create a second alert rule that alerts on high memory usage.
 
-1. Duplicate the alert rule by clicking on **More > Duplicate**.
-1. Name it `High Memory usage - Multi-region`.
-1. Use the below CSV data to simulate a data source returning memory usage.
+1. Duplicate the alert rule by clicking on **More \> Duplicate**.
 
-   ```
-   region,memory-usage,service,instance
-   us-west,42,cache-server-1,server-09
-   us-west,88,cache-server-1,server-10
-   us-east,74,api-server-1,server-11
-   us-east,90,api-server-1,server-12
-   us-west,53,analytics-server-1,server-13
-   us-east,81,analytics-server-2,server-14
-   us-west,77,analytics-server-1,server-15
-   us-east,94,analytics-server-2,server-16
-   ```
+2. Name it `High Memory usage - Multi-region`.
 
-1. Click Save rule and exit.
+3. Use the below CSV data to simulate a data source returning memory usage.
+   
+       region,memory-usage,service,instance
+       us-west,42,cache-server-1,server-09
+       us-west,88,cache-server-1,server-10
+       us-east,74,api-server-1,server-11
+       us-east,90,api-server-1,server-12
+       us-west,53,analytics-server-1,server-13
+       us-east,81,analytics-server-2,server-14
+       us-west,77,analytics-server-1,server-15
+       us-east,94,analytics-server-2,server-16
+
+4. Click Save rule and exit.
 
 <!-- INTERACTIVE page step5.md END -->
+
 <!-- INTERACTIVE page step6.md START -->
 
 ## Receiving grouped alert notifications
@@ -443,7 +461,7 @@ As a result, our notification policies should route three notifications: one gro
 
 Grouped notifications example:
 
-```json
+``` json
 {
   "receiver": "US-West-Alerts",
   "status": "firing",
@@ -466,9 +484,9 @@ Grouped notifications example:
 ...}
 ```
 
-_Detail of CPU and memory alert instances grouped into a single notification for us-west contact point._
+*Detail of CPU and memory alert instances grouped into a single notification for us-west contact point.*
 
-```json
+``` json
 {
   "receiver": "US-East-Alerts",
   "status": "firing",
@@ -484,9 +502,9 @@ _Detail of CPU and memory alert instances grouped into a single notification for
 ...}}}
 ```
 
-_Detail of CPU alert instances grouped into a separate notification for us-east contact point._
+*Detail of CPU alert instances grouped into a separate notification for us-east contact point.*
 
-```json
+``` json
 {
   "receiver": "US-East-Alerts",
   "status": "firing",
@@ -501,7 +519,7 @@ _Detail of CPU alert instances grouped into a separate notification for us-east 
 ...}}}
 ```
 
-_Detail of memory alert instances grouped into a separate notification for us-east contact point._
+*Detail of memory alert instances grouped into a separate notification for us-east contact point.*
 
 <!-- INTERACTIVE page step6.md END -->
 
@@ -509,25 +527,25 @@ _Detail of memory alert instances grouped into a separate notification for us-ea
 
 ## Conclusion
 
-By configuring **notification policies** and using **labels** (such as _region_), you can group alert notifications based on specific criteria and route them to the appropriate teams. Fine-tuning **timing options**—including group wait, group interval, and repeat interval—further can reduce noise and ensures notifications remain actionable without overwhelming on-call engineers.
+By configuring **notification policies** and using **labels** (such as *region*), you can group alert notifications based on specific criteria and route them to the appropriate teams. Fine-tuning **timing options**—including group wait, group interval, and repeat interval—further can reduce noise and ensures notifications remain actionable without overwhelming on-call engineers.
 
 ## Learn more in [Grafana Alerting Part 4](http://www.grafana.com/tutorials/alerting-get-started-pt4/)
 
 <!-- INTERACTIVE ignore START -->
 
-{{< admonition type="tip" >}}
+{{\< admonition type="tip" \>}}
 
 In [Get started with Grafana Alerting - Part 4](http://www.grafana.com/tutorials/alerting-get-started-pt4/) you learn how to use templates to create customized and concise notifications.
 
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 <!-- INTERACTIVE ignore END -->
 
-{{< docs/ignore >}}
+{{\< docs/ignore \>}}
 
 In [Get started with Grafana Alerting - Part 4](http://www.grafana.com/tutorials/alerting-get-started-pt4/) you learn how to use templates to create customized and concise notifications.
 
-{{< /docs/ignore >}}
+{{\< /docs/ignore \>}}
 
 <!-- INTERACTIVE page finish.md END -->
 

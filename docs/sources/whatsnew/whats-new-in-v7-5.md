@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v7-5/
-description: Learn about new and updated features in Grafana v7.5
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '7.5'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v7-5/
+  description: Learn about new and updated features in Grafana v7.5
+  keywords:
+- grafana
+- new
+- documentation
+- '7.5'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v7.5
-weight: -32
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v7.5
+    weight: -32
+
+-----
 
 # What's new in Grafana v7.5
 
@@ -89,11 +92,14 @@ For more information, refer to [Deprecating Application Insights and Insights An
 
 ### Cloudwatch data source enhancements
 
-- Support for region eu-south-1 has been added to the CloudWatch data source. New metrics have also been added to the namespaces AWS/Timestream, AWS/RDS (RDS Proxy metrics), AWS/NetworkFirewall, AWS/GroundStation, and AWS/DDoSProtection. Many thanks to [relvira](https://github.com/relvira), [ilyastoli](https://github.com/ilyastoli), and [rubycut](https://github.com/rubycut) for contributing!
-- Added a page limit to the List Metrics API call to improve speed and reduce memory consumption. You can change this limit by entering a higher value in [list_metrics_page_limit](../../setup-grafana/configure-grafana/#list-metrics-page-limit) in the Grafana configuration file.
-- You can now enable or disable authentication providers and assume a role other than default by changing the [allowed_auth_providers](../../setup-grafana/configure-grafana/#allowed_auth_providers) and [assume_role_enabled](../../setup-grafana/configure-grafana/#assume_role_enabled) options in the Grafana configuration file. By default, the allowed authentication providers are _AWS SDK Default_, _Access and secret key_, and _Credentials File_, and role is _Assume role (ARN)_.
-- You can now specify a custom endpoint in the CloudWatch data source configuration page. This field is optional, and if it is left empty, then the default endpoint for CloudWatch is used. By specifying a regional endpoint, you can reduce request latency.
+- Support for region eu-south-1 has been added to the CloudWatch data source. New metrics have also been added to the namespaces AWS/Timestream, AWS/RDS (RDS Proxy metrics), AWS/NetworkFirewall, AWS/GroundStation, and AWS/DDoSProtection. Many thanks to [relvira](https://github.com/relvira), [ilyastoli](https://github.com/ilyastoli), and [rubycut](https://github.com/rubycut) for contributing\!
 
+- Added a page limit to the List Metrics API call to improve speed and reduce memory consumption. You can change this limit by entering a higher value in [list\_metrics\_page\_limit](../../setup-grafana/configure-grafana/#list-metrics-page-limit) in the Grafana configuration file.
+
+- You can now enable or disable authentication providers and assume a role other than default by changing the [allowed\_auth\_providers](../../setup-grafana/configure-grafana/#allowed_auth_providers) and [assume\_role\_enabled](../../setup-grafana/configure-grafana/#assume_role_enabled) options in the Grafana configuration file. By default, the allowed authentication providers are *AWS SDK Default*, *Access and secret key*, and *Credentials File*, and role is *Assume role (ARN)*.
+
+- You can now specify a custom endpoint in the CloudWatch data source configuration page. This field is optional, and if it is left empty, then the default endpoint for CloudWatch is used. By specifying a regional endpoint, you can reduce request latency.
+  
   [AWS Cloudwatch data source](../../datasources/aws-cloudwatch/) was updated as a result of this change.
 
 ### Increased API limit for CloudMonitoring Services
@@ -104,7 +110,7 @@ In previous versions, when querying metrics for Service Level Objectives (SLOs) 
 
 We have converted Tempo to a backend data source and dropped support for tempo-query's (Jaeger) response. To configure it, you can now point to the port that is set in the Tempo configuration file.
 
-```yaml
+``` yaml
 server:
   http_listen_port: 3101
 ```
@@ -165,10 +171,8 @@ There are no known breaking changes in this release.
 
 ## Updated configuration
 
-```
-[server]
-read_timeout = 0
-```
+    [server]
+    read_timeout = 0
 
 Sets the maximum time using a duration format (5s/5m/5ms) before timing out read of an incoming request and closing idle connections.
 `0` means there is no timeout for reading the request.

@@ -1,13 +1,7 @@
----
-description: Grafana tutorials
-labels:
-  products:
-    - enterprise
-    - oss
-menuTitle: Tutorials
-title: Tutorials
----
+-----
+
+## description: Grafana tutorials labels: products: - enterprise - oss menuTitle: Tutorials title: Tutorials
 
 # Tutorials
 
-{{< section >}}
+{{\< section \>}}

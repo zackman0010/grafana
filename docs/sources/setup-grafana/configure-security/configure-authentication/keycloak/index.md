@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../../auth/keycloak/
-description: Grafana Keycloak Guide
-keywords:
-  - grafana
-  - keycloak
-  - configuration
-  - documentation
-  - oauth
-labels:
+
+- ../../../auth/keycloak/
+  description: Grafana Keycloak Guide
+  keywords:
+- grafana
+- keycloak
+- configuration
+- documentation
+- oauth
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Keycloak OAuth2
-title: Configure Keycloak OAuth2 authentication
-weight: 1300
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Keycloak OAuth2
+    title: Configure Keycloak OAuth2 authentication
+    weight: 1300
+
+-----
 
 # Configure Keycloak OAuth2 authentication
 
@@ -33,7 +36,7 @@ correct. For example in case you are serving Grafana behind a proxy.
 
 Example config:
 
-```ini
+``` ini
 [auth.generic_oauth]
 enabled = true
 name = Keycloak-OAuth
@@ -55,18 +58,20 @@ and `<REALM_NAME>` can be `grafana`.
 
 To configure the `kc_idp_hint` parameter for Keycloak, you need to change the `auth_url` configuration to include the `kc_idp_hint` parameter. For example if you want to hint the Google identity provider:
 
-```ini
+``` ini
 auth_url = https://<PROVIDER_DOMAIN>/realms/<REALM_NAME>/protocol/openid-connect/auth?kc_idp_hint=google
 ```
 
 {{% admonition type="note" %}}
-api_url is not required if the id_token contains all the necessary user information and can add latency to the login process.
+api\_url is not required if the id\_token contains all the necessary user information and can add latency to the login process.
 It is useful as a fallback or if the user has more than 150 group memberships.
 {{% /admonition %}}
 
 ## Keycloak configuration
 
 1. Create a client in Keycloak with the following settings:
+
+<!-- end list -->
 
 - Client ID: `grafana-oauth`
 - Enabled: `ON`
@@ -84,14 +89,14 @@ It is useful as a fallback or if the user has more than 150 group memberships.
 As an example, `<grafana_root_url>` can be `https://play.grafana.org`.
 Non-listed configuration options can be left at their default values.
 
-2. In the client scopes configuration, _Assigned Default Client Scopes_ should match:
+2. In the client scopes configuration, *Assigned Default Client Scopes* should match:
 
-```
-email
-offline_access
-profile
-roles
-```
+<!-- end list -->
+
+    email
+    offline_access
+    profile
+    roles
 
 {{% admonition type="warning" %}}
 These scopes do not add group claims to the `id_token`. Without group claims, teamsync will not work. Teamsync is covered further down in this document.
@@ -100,24 +105,26 @@ These scopes do not add group claims to the `id_token`. Without group claims, te
 3. For role mapping to work with the example configuration above,
    you need to create the following roles and assign them to users:
 
-```
-admin
-editor
-viewer
-```
+<!-- end list -->
+
+    admin
+    editor
+    viewer
 
 ## Teamsync
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
+Available in [Grafana Enterprise](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
 {{% /admonition %}}
 
-[Teamsync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/) is a feature that allows you to map groups from your identity provider to Grafana teams. This is useful if you want to give your users access to specific dashboards or folders based on their group membership.
+[Teamsync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/) is a feature that allows you to map groups from your identity provider to Grafana teams. This is useful if you want to give your users access to specific dashboards or folders based on their group membership.
 
 To enable teamsync, you need to add a `groups` mapper to the client configuration in Keycloak.
-This will add the `groups` claim to the id_token. You can then use the `groups` claim to map groups to teams in Grafana.
+This will add the `groups` claim to the id\_token. You can then use the `groups` claim to map groups to teams in Grafana.
 
 1. In the client configuration, head to `Mappers` and create a mapper with the following settings:
+
+<!-- end list -->
 
 - Name: `Group Mapper`
 - Mapper Type: `Group Membership`
@@ -127,16 +134,20 @@ This will add the `groups` claim to the id_token. You can then use the `groups` 
 - Add to access token: `OFF`
 - Add to userinfo: `ON`
 
+<!-- end list -->
+
 2. In Grafana's configuration add the following option:
 
-```ini
+<!-- end list -->
+
+``` ini
 [auth.generic_oauth]
 groups_attribute_path = groups
 ```
 
 If you use nested groups containing special characters such as quotes or colons, the JMESPath parser can perform a harmless reverse function so Grafana can properly evaluate nested groups. The following example shows a parent group named `Global` with nested group `department` that contains a list of groups:
 
-```ini
+``` ini
 [auth.generic_oauth]
 groups_attribute_path = reverse("Global:department")
 ```
@@ -145,7 +156,7 @@ groups_attribute_path = reverse("Global:department")
 
 To enable Single Logout, you need to add the following option to the configuration of Grafana:
 
-```ini
+``` ini
 [auth.generic_oauth]
 signout_redirect_url = https://<PROVIDER_DOMAIN>/auth/realms/<REALM_NAME>/protocol/openid-connect/logout?post_logout_redirect_uri=https%3A%2F%2F<GRAFANA_DOMAIN>%2Flogin
 ```
@@ -164,7 +175,7 @@ If the application role received by Grafana is `GrafanaAdmin` , Grafana grants t
 This is useful if you want to grant server administrator privileges to a subset of users.
 Grafana also assigns the user the `Admin` role of the default organization.
 
-```ini
+``` ini
 role_attribute_path = contains(roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
 allow_assign_grafana_admin = true
 ```
@@ -179,4 +190,4 @@ To enable a refresh token for Keycloak, do the following:
 
 1. Extend the `scopes` in `[auth.generic_oauth]` with `offline_access`.
 
-1. Add `use_refresh_token = true` to `[auth.generic_oauth]` configuration.
+2. Add `use_refresh_token = true` to `[auth.generic_oauth]` configuration.

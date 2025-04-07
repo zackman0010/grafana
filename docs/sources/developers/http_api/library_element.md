@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/library_element/
-canonical: /docs/grafana/latest/developers/http_api/library_element/
-description: Grafana Library Element HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - library-element
-labels:
+
+- ../../http\_api/library\_element/
+  canonical: /docs/grafana/latest/developers/http\_api/library\_element/
+  description: Grafana Library Element HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- library-element
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Library Element HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Library Element HTTP API '
+
+-----
 
 # Library Element API
 
@@ -45,7 +48,7 @@ Query parameters:
 
 **Example Request**:
 
-```http
+``` http
 GET /api/library-elements?perPage=10 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -54,7 +57,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -113,7 +116,7 @@ Returns a library element with the given UID.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/library-elements/V--OrYHnz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -122,7 +125,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -173,7 +176,7 @@ Returns a library element with the given name
 
 **Example Request**:
 
-```http
+``` http
 GET /api/library-elements/name/API docs Example HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -182,7 +185,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -235,7 +238,7 @@ Returns a list of connections for a library element based on the UID specified.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/library-elements/V--OrYHnz/connections HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -244,7 +247,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -290,7 +293,7 @@ JSON Body schema:
 
 **Example Request**:
 
-```http
+``` http
 POST /api/library-elements HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -307,7 +310,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -370,7 +373,7 @@ JSON Body schema:
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/library-elements/nErXDvCkzz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -385,7 +388,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -447,7 +450,7 @@ You cannot delete a library element that is connected. This operation cannot be 
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/library-elements/nErXDvCkzz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -457,7 +460,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

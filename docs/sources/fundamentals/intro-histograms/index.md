@@ -1,34 +1,37 @@
----
+-----
+
 aliases:
-  - ../basics/intro-histograms/
-  - ../getting-started/intro-histograms/
-description: An introduction to histograms and heatmaps
-keywords:
-  - grafana
-  - heatmap
-  - panel
-  - documentation
-  - histogram
-labels:
+
+- ../basics/intro-histograms/
+- ../getting-started/intro-histograms/
+  description: An introduction to histograms and heatmaps
+  keywords:
+- grafana
+- heatmap
+- panel
+- documentation
+- histogram
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Histograms and heatmaps
-title: Introduction to histograms and heatmaps
-weight: 650
-refs:
-  heatmap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-  histogram:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Histograms and heatmaps
+    title: Introduction to histograms and heatmaps
+    weight: 650
+    refs:
+    heatmap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+    histogram:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+
+-----
 
 # Introduction to histograms and heatmaps
 
@@ -40,22 +43,22 @@ and the bar height represents the frequency (such as count) of values that fell 
 
 ## Histogram example
 
-This _histogram_ shows the value distribution of a couple of time series. You can easily see that
+This *histogram* shows the value distribution of a couple of time series. You can easily see that
 most values land between 240-300 with a peak between 260-280.
 
 ![Histogram example](/static/img/docs/v43/heatmap_histogram.png)
 
 Here is an example showing height distribution of people.
 
-{{< figure src="/static/img/docs/histogram-panel/histogram-example-v8-0.png" max-width="625px" caption="Bar chart example" >}}
+{{\< figure src="/static/img/docs/histogram-panel/histogram-example-v8-0.png" max-width="625px" caption="Bar chart example" \>}}
 
 For more information about histogram visualization options, refer to [Histogram](ref:histogram).
 
-Histograms only look at _value distributions_ over a specific time range. The problem with histograms is that you cannot see any trends or changes in the distribution over time. This is where heatmaps become useful.
+Histograms only look at *value distributions* over a specific time range. The problem with histograms is that you cannot see any trends or changes in the distribution over time. This is where heatmaps become useful.
 
 ## Heatmaps
 
-A _heatmap_ is like a histogram, but over time, where each time slice represents its own histogram. Instead of using bar height as a representation of frequency, it uses cells, and colors the cell proportional to the number of values in the bucket.
+A *heatmap* is like a histogram, but over time, where each time slice represents its own histogram. Instead of using bar height as a representation of frequency, it uses cells, and colors the cell proportional to the number of values in the bucket.
 
 In this example, you can clearly see what values are more common and how they trend over time.
 
@@ -67,7 +70,7 @@ For more information about heatmap visualization options, refer to [Heatmap](ref
 
 There are a number of data sources supporting histogram over time, like Elasticsearch (by using a Histogram bucket
 aggregation) or Prometheus (with [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram) metric type
-and _Format as_ option set to Heatmap). But generally, any data source could be used as long as it meets the requirement
+and *Format as* option set to Heatmap). But generally, any data source could be used as long as it meets the requirement
 that it either returns series with names representing bucket bounds, or that it returns series sorted by the bounds
 in ascending order.
 

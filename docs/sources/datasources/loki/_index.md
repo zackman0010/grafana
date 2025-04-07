@@ -1,48 +1,51 @@
----
+-----
+
 aliases:
-  - ../data-sources/loki/
-  - ../features/datasources/loki/
-description: Guide for using Loki in Grafana
-keywords:
-  - grafana
-  - loki
-  - logging
-  - guide
-labels:
+
+- ../data-sources/loki/
+- ../features/datasources/loki/
+  description: Guide for using Loki in Grafana
+  keywords:
+- grafana
+- loki
+- logging
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Loki
-title: Configure the Loki data source
-weight: 800
-refs:
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  logs-integration-labels-and-detected-fields:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#labels-and-detected-fields
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#labels-and-detected-fields
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Loki
+    title: Configure the Loki data source
+    weight: 800
+    refs:
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    logs-integration-labels-and-detected-fields:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#labels-and-detected-fields
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#labels-and-detected-fields
+
+-----
 
 # Loki data source
 
@@ -83,7 +86,7 @@ For more information about provisioning, and for available configuration options
 
 ### Provisioning examples
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -100,7 +103,7 @@ datasources:
 
 You must escape the dollar (`$`) character in YAML values because it can be used to interpolate environment variables:
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -135,15 +138,13 @@ datasources:
 
 In this example, the Jaeger data source's `uid` value should match the Loki data source's `datasourceUid` value.
 
-```
-datasources:
-    - name: Jaeger
-      type: jaeger
-      url: http://jaeger-tracing-query:16686/
-      access: proxy
-      # UID should match the datasourceUid in derivedFields.
-      uid: my_jaeger_uid
-```
+    datasources:
+        - name: Jaeger
+          type: jaeger
+          url: http://jaeger-tracing-query:16686/
+          access: proxy
+          # UID should match the datasourceUid in derivedFields.
+          uid: my_jaeger_uid
 
 ## Query the data source
 

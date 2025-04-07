@@ -1,18 +1,21 @@
----
+-----
+
 description: Learn how to administer Grafana Teams.
 labels:
-  products:
-    - enterprise
-    - oss
-    - cloud
+products:
+\- enterprise
+\- oss
+\- cloud
 keywords:
-  - authorization
-  - microservices
-  - architecture
-menuTitle: Administer Grafana Teams
-title: Administer Grafana Teams
-weight: 300
----
+
+- authorization
+- microservices
+- architecture
+  menuTitle: Administer Grafana Teams
+  title: Administer Grafana Teams
+  weight: 300
+
+-----
 
 # Administer Grafana Teams
 
@@ -25,7 +28,7 @@ See the complete list of teams in your Grafana organization.
 To view a list of teams:
 
 1. Sign in to Grafana as an organization administrator or a team administrator.
-1. Click the arrow next to **Administration** in the left-side menu, click **Users and access**, and select **Teams**.
+2. Click the arrow next to **Administration** in the left-side menu, click **Users and access**, and select **Teams**.
 
 The role you use to sign in to Grafana determines how you see Teams lists.
 

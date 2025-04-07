@@ -1,26 +1,29 @@
----
+-----
+
 description: Upgrade to Grafana v10.0
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-menutitle: Upgrade to v10.0
-title: Upgrade to Grafana v10.0
-weight: 1700
----
+  - enterprise
+  - oss
+    menutitle: Upgrade to v10.0
+    title: Upgrade to Grafana v10.0
+    weight: 1700
+
+-----
 
 # Upgrade to Grafana v10.0
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 
@@ -41,7 +44,9 @@ To prevent that from happening, before you upgrade Grafana back again, please ta
 1. Stop Grafana.
 2. In your database, run the following SQL queries:
 
-```sql
+<!-- end list -->
+
+``` sql
 DELETE
 FROM builtin_role
 where role_id IN (SELECT id

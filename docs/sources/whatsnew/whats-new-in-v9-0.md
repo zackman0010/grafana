@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v9-0/
-description: Learn about new and updated features in Grafana v9.0
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '9.0'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v9-0/
+  description: Learn about new and updated features in Grafana v9.0
+  keywords:
+- grafana
+- new
+- documentation
+- '9.0'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v9.0
-weight: -33
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v9.0
+    weight: -33
+
+-----
 
 # What's new in Grafana v9.0
 
@@ -33,7 +36,7 @@ We’ve summarized what’s new in the release here. If you’d like all the det
 
 Prometheus queries are not the easiest to write or understand. The PromQL query language is very complex and advanced. Even relatively simple queries are hard to compose and read for new users. This is why we are introducing a new UI query builder that allows anyone to compose and learn how Prometheus queries work.
 
-{{< figure src="/static/img/docs/prometheus/prom_query_builder_light.png" max-width="750px" caption="Prometheus query builder" >}}
+{{\< figure src="/static/img/docs/prometheus/prom\_query\_builder\_light.png" max-width="750px" caption="Prometheus query builder" \>}}
 
 ### Metric and label filters
 
@@ -59,11 +62,11 @@ You can switch between the text edit mode (Code) and the UI builder mode while h
 
 Loki also has complex and powerful query language in LogQL. In many ways it’s more complex and has more syntax to remember than PromQL. Luckily the new query builder we are introducing in Grafana v 9.0 will help you write and understand Loki queries without knowing any of the syntax. Take a look at this example log query.
 
-{{< figure src="/static/img/docs/loki/loki_query_builder_log_query_light_theme.png" max-width="750px" caption="Loki query builder" >}}
+{{\< figure src="/static/img/docs/loki/loki\_query\_builder\_log\_query\_light\_theme.png" max-width="750px" caption="Loki query builder" \>}}
 
 In the query builder you can add and edit label filters, line filters, parsers and functions. The image above shows a log query but you can also do metric queries.
 
-{{< figure src="/static/img/docs/loki/loki_query_builder_log_query_light_theme.png" max-width="750px" caption="Loki query builder" >}}
+{{\< figure src="/static/img/docs/loki/loki\_query\_builder\_log\_query\_light\_theme.png" max-width="750px" caption="Loki query builder" \>}}
 
 The Loki query builder supports all the features listed for the prometheus query builder above, including support for nested binary operations, explain mode and switching between text editor and builder while preserving changes.
 
@@ -71,7 +74,7 @@ The Loki query builder supports all the features listed for the prometheus query
 
 We are replacing the old heatmap panel with a new modern panel that is using the new panel option architecture.
 
-{{< figure src="/static/img/docs/heatmap-panel/heatmap_panel.png" max-width="500px" caption="New heatmap panel" >}}
+{{\< figure src="/static/img/docs/heatmap-panel/heatmap\_panel.png" max-width="500px" caption="New heatmap panel" \>}}
 
 New new heatmap panel has a number enhancements compared to the old version.
 
@@ -84,13 +87,13 @@ New new heatmap panel has a number enhancements compared to the old version.
 
 The new heatmap by default assumes that the data is pre-bucketed. So if your query returns time series each series is seen as separate bucket (y axis tick). The panel is so much faster than the old one so it can render many time series with thousands of data points each without issue.
 
-{{< figure src="/static/img/docs/heatmap-panel/heatmap_with_time_series_light_theme.png" max-width="500px" caption="Heatmap panel with time series" >}}
+{{\< figure src="/static/img/docs/heatmap-panel/heatmap\_with\_time\_series\_light\_theme.png" max-width="500px" caption="Heatmap panel with time series" \>}}
 
 ## Grafana Alerting is the default in Grafana 9
 
 Grafana Alerting is now on by default if you upgrade from an earlier version of Grafana. If you have been using legacy alerting in an earlier version of Grafana and you upgrade to Grafana 9 your alert rules will be automatically migrated and the legacy alerting interface will be replaced by the Grafana Alerting interface.
 
-Grafana Alerting, called unified alerting in Grafana 8, has been available since June, 2021 now provides feature parity with legacy alerting and many additional benefits. To find out more on the process to revert back to legacy alerts if needed, click [here](https://grafana.com/docs/grafana/v10.2/alerting/set-up/migrating-alerts/#opt-out). Note that if you do revert back (by setting the Grafana config flag GF_UNIFIED_ALERTING_ENABLED to false), that we expect to remove legacy alerting in the next major Grafana release, Grafana 10.
+Grafana Alerting, called unified alerting in Grafana 8, has been available since June, 2021 now provides feature parity with legacy alerting and many additional benefits. To find out more on the process to revert back to legacy alerts if needed, click [here](https://grafana.com/docs/grafana/v10.2/alerting/set-up/migrating-alerts/#opt-out). Note that if you do revert back (by setting the Grafana config flag GF\_UNIFIED\_ALERTING\_ENABLED to false), that we expect to remove legacy alerting in the next major Grafana release, Grafana 10.
 
 ### Alert state history for Grafana managed alerts
 
@@ -104,13 +107,13 @@ Grafana Alerting now provides the ability to capture an image for Grafana manage
 
 Grafana now uses envelope encryption to encrypt secrets in the database. Envelope encryption adds a layer of indirection to the encryption process. Instead of encrypting all secrets in the database with a single key, Grafana uses a set of keys called data encryption keys (DEKs) to encrypt them. These data encryption keys are themselves encrypted with a single key encryption key (KEK). This allows you to rotate your KEK and quickly re-encrypt your DEKs in case a key is compromised. In Grafana Enterprise, you can also store your KEK in an external key management service (KMS) like AWS KMS or Azure Key Vault, for extra security. Learn more about envelope encryption in the [database encryption documentation](../../setup-grafana/configure-security/configure-database-encryption/#envelope-encryption).
 
-{{< figure src="/static/img/docs/enterprise/dashboards/envelope-encryption.png" max-width="750px" caption="Envelope encryption" >}}
+{{\< figure src="/static/img/docs/enterprise/dashboards/envelope-encryption.png" max-width="750px" caption="Envelope encryption" \>}}
 
 ## Dashboard previews (opt-in beta)
 
 The dashboard previews initially came to life during our internal [Grafana Labs Hackathon](/blog/2022/01/14/all-about-the-grafana-labs-hackathon-2.0/?), and are now ready for an opt-in beta release. The previews provide an overview of all available dashboards and help you quickly find the right dashboard when the dashboard names aren’t enough.
 
-{{< figure src="/static/img/docs/dashboards/dashboard-previews.png" max-width="750px" caption="Dashboard previews" >}}
+{{\< figure src="/static/img/docs/dashboards/dashboard-previews.png" max-width="750px" caption="Dashboard previews" \>}}
 
 ## Panel title search (opt-in beta)
 
@@ -120,19 +123,19 @@ Grafana 9 has a feature toggle `panelTitleSearch`. When enabled, it tells Grafan
 
 You can expand the navigation bar for a better overview of Grafana’s features and installed integrations. This is the first improvement to Grafana’s navigation, with more to come in future releases.
 
-{{< figure src="/static/img/docs/expanding-nav-bar-9-0.png" max-width="750px" caption="Expanding nav bar" >}}
+{{\< figure src="/static/img/docs/expanding-nav-bar-9-0.png" max-width="750px" caption="Expanding nav bar" \>}}
 
 ## Starred dashboards in the navigation bar
 
 As part of the upcoming improvements to Grafana’s navigation, you can now directly access your starred dashboards from the navigation bar. This is currently an opt-in feature that can be accessed by enabling the savedItems feature flag.
 
-{{< figure src="/static/img/docs/dashboards/starred-dashboards-nav-bar.png" max-width="750px" caption="Starred dashboards" >}}
+{{\< figure src="/static/img/docs/dashboards/starred-dashboards-nav-bar.png" max-width="750px" caption="Starred dashboards" \>}}
 
 ## Explore to Dashboard
 
 It is now possible to create panels and/or dashboards directly from Explore. When clicking on the “Add to dashboard” button in the Explore toolbar users can now create a panel in a new dashboard or in an existing one. The generated panel contains all the pane’s queries and a default visualization automatically picked from the current results shown in Explore. Dashboards are not automatically saved so that users can go through the current save flow. Optionally, dashboards can be opened in a new tab to preserve Explore’s state.
 
-{{< figure src="/static/img/docs/dashboards/explore-to-dashboard-9-0.png" max-width="500px" caption="Explore to dashboard" >}}
+{{\< figure src="/static/img/docs/dashboards/explore-to-dashboard-9-0.png" max-width="500px" caption="Explore to dashboard" \>}}
 
 ## Command palette
 
@@ -145,13 +148,13 @@ In order to support debugging issues in Grafana, error alerts that appear in Gra
 - `tracing` - enables the tracing id in error messages
 - `persistNotifications` - enables the alerts page under Profile
 
-{{< figure src="/static/img/docs/dashboards/errors-with-trace-ids.png" max-width="500px" caption="Errors with trace IDs" >}}
+{{\< figure src="/static/img/docs/dashboards/errors-with-trace-ids.png" max-width="500px" caption="Errors with trace IDs" \>}}
 
 ## Query History migration
 
-Query history is a panel that keeps track of all queries that are run in Explore. So far the history was saved in browser local storage causing some problems, for example running out of storage space or not being able to use the same query history in different browsers. Not anymore! We’re migrating all entries from browser local storage to the database. Migration will happen behind the senses when query history panel is opened. This feature can be disabled using config entry query_history in custom.ini.
+Query history is a panel that keeps track of all queries that are run in Explore. So far the history was saved in browser local storage causing some problems, for example running out of storage space or not being able to use the same query history in different browsers. Not anymore\! We’re migrating all entries from browser local storage to the database. Migration will happen behind the senses when query history panel is opened. This feature can be disabled using config entry query\_history in custom.ini.
 
-{{< figure src="/static/img/docs/panels/query-history-9-0.png" max-width="900px" caption="Query history" >}}
+{{\< figure src="/static/img/docs/panels/query-history-9-0.png" max-width="900px" caption="Query history" \>}}
 
 ## Enterprise
 
@@ -161,7 +164,7 @@ Query history is a panel that keeps track of all queries that are run in Explore
 
 Fine-grained access control is now called role-based access control, or RBAC. It is now enabled by default in Grafana Enterprise and Grafana Cloud, so you can create and define custom roles like Annotations Writer, Users Viewer, and Dashboard Permissions Writer for users, teams, or service accounts. Learn more about RBAC in the [docs](/docs/grafana/next/enterprise/access-control/).
 
-{{< figure src="/static/img/docs/enterprise/rbac-ga.png" max-width="755px" caption="RBAC is GA" >}}
+{{\< figure src="/static/img/docs/enterprise/rbac-ga.png" max-width="755px" caption="RBAC is GA" \>}}
 
 ## Reporting
 
@@ -173,7 +176,7 @@ If you have information spread across several dashboards that you’d like to se
 
 Reporting is all about convenience - getting info to eyeballs as quickly as possible. Now you can embed an image of a dashboard directly within a report email, so your recipients can see it right when they open the message instead of opening an attached PDF. This is especially handy for SLOs, financial results, or other at-a-glance data. Learn more about Reporting in the [Reporting docs](/docs/grafana/latest/enterprise/reporting/#reporting).
 
-{{< figure src="/static/img/docs/dashboards/report-embedded-image.png" max-width="750px" caption="Embed report" >}}
+{{\< figure src="/static/img/docs/dashboards/report-embedded-image.png" max-width="750px" caption="Embed report" \>}}
 
 ## Breaking changes
 
@@ -184,7 +187,7 @@ This is a partial list of notable breaking changes. For the complete list, see o
 Fine-grained access control is now called "Role-based access control". As part of the Grafana 9.0 release, the service is generally available, and there are several breaking changes:
 
 - Built-in roles are now called basic roles. They now consist of permissions, not roles.
-- The Terraform builtin_role_assignment resource is going away.
+- The Terraform builtin\_role\_assignment resource is going away.
 - Grafana provisioning has a new schema. Please refer to the documentation for more information.
 - Basic roles no longer support permission inheritance. Previously, when permissions of a Viewer basic role were modified, it was propagated to the Editor and Admin basic roles. With the Grafana 9.0 release, this is not the case anymore.
 - Several role-based access control actions have been renamed. All the database entries that use legacy action names will be migrated to use the new names, but provisioning files and scripts will have to be updated by the user. This change also means that if Grafana is downgraded from 9.0 to a lower version, some role-based access control permissions will not be resolved correctly.
@@ -216,7 +219,7 @@ In the InfluxDB data source, browser access mode was deprecated in grafana 8.0.0
 
 ### Transformations: Allow more complex regex expressions in rename by regex
 
-The rename by regex transformation has been improved to allow global patterns of the form `/<stringToReplace>/g`. Depending on the regex match used, this may cause some transformations to behave slightly differently. You can guarantee the same behavior as before by wrapping the match string in forward slashes (`/`), for example, `(.*)` would become `/(.*)/`. ([Github Issue #48179](https://github.com/grafana/grafana/pull/48179))
+The rename by regex transformation has been improved to allow global patterns of the form `/<stringToReplace>/g`. Depending on the regex match used, this may cause some transformations to behave slightly differently. You can guarantee the same behavior as before by wrapping the match string in forward slashes (`/`), for example, `(.*)` would become `/(.*)/`. ([Github Issue \#48179](https://github.com/grafana/grafana/pull/48179))
 
 ### Clock Panel
 
@@ -228,11 +231,11 @@ We have updated [polystat panel](/grafana/plugins/grafana-polystat-panel/) to ve
 
 ### Plugins: Most relevant breaking changes
 
-- `getColorForTheme` was removed, use `theme.visualization.getColorByName` instead [PR #49519](https://github.com/grafana/grafana/pull/49519)
-- `TextDisplayOptions` was removed, use `VizTextDisplayOptions` instead [PR #49705](https://github.com/grafana/grafana/pull/49705)
-- We have changed the internals of `backendSrv.fetch()` to throw an error when the response is an incorrect JSON. Make sure to handle possible errors on the callsite where using `backendSrv.fetch()` (or any other `backendSrv` methods) [PR #47493](https://github.com/grafana/grafana/pull/47493)
-- We have removed the deprecated `getFormStyles` function from [grafana-ui](https://www.npmjs.com/package/@grafana/ui). Use `GrafanaTheme2` and the `useStyles2` hook instead [PR #49945](https://github.com/grafana/grafana/pull/49945)
-- We have removed the deprecated `/api/tsdb/query` metrics endpoint. Use `/api/ds/query` instead [PR #49916](https://github.com/grafana/grafana/pull/49916)
+- `getColorForTheme` was removed, use `theme.visualization.getColorByName` instead [PR \#49519](https://github.com/grafana/grafana/pull/49519)
+- `TextDisplayOptions` was removed, use `VizTextDisplayOptions` instead [PR \#49705](https://github.com/grafana/grafana/pull/49705)
+- We have changed the internals of `backendSrv.fetch()` to throw an error when the response is an incorrect JSON. Make sure to handle possible errors on the callsite where using `backendSrv.fetch()` (or any other `backendSrv` methods) [PR \#47493](https://github.com/grafana/grafana/pull/47493)
+- We have removed the deprecated `getFormStyles` function from [grafana-ui](https://www.npmjs.com/package/@grafana/ui). Use `GrafanaTheme2` and the `useStyles2` hook instead [PR \#49945](https://github.com/grafana/grafana/pull/49945)
+- We have removed the deprecated `/api/tsdb/query` metrics endpoint. Use `/api/ds/query` instead [PR \#49916](https://github.com/grafana/grafana/pull/49916)
 
 You can find the complete list of breaking changes in the links below. Please check them out for more details and see if there is anything affecting your plugin
 
@@ -257,11 +260,11 @@ For more details, and workarounds for potential issues, refer to the [documentat
 
 When we release Grafana 9.0 on June 14th, Grafana will no longer enforce viewers and editor-admins differently. That means that regardless of whether your Grafana Enterprise license is tiered or combined, instead of seeing this on the Stats & Licensing page:
 
-{{< figure src="/static/img/docs/enterprise/separate-licenses.png" max-width="500px" caption="Separate license" >}}
+{{\< figure src="/static/img/docs/enterprise/separate-licenses.png" max-width="500px" caption="Separate license" \>}}
 
 You will see this:
 
-{{< figure src="/static/img/docs/enterprise/combined-licenses.png" max-width="500px" caption="Combined license" >}}
+{{\< figure src="/static/img/docs/enterprise/combined-licenses.png" max-width="500px" caption="Combined license" \>}}
 
 It also means that Grafana will count all users the same, regardless of their role, including org roles (Viewer, Editor, Admin) and fine-grained roles (Dashboard Editor, Reports Editor, etc.). You won’t see a separate warning banner or see users locked out if you hit your limit of viewers or editor-admins, only your total combined limit of active users.
 

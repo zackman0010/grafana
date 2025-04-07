@@ -9,4 +9,4 @@ Grafana ships with a built-in PostgreSQL data source plugin that allows you to q
 3. Click the + Add data source button in the top header.
 4. Select PostgreSQL from the Type dropdown.
 
-[http://docs.grafana.org/features/datasources/postgres/](http://docs.grafana.org/features/datasources/postgres/)
+<http://docs.grafana.org/features/datasources/postgres/>

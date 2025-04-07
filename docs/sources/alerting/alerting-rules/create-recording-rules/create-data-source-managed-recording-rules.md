@@ -1,27 +1,30 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-recording-rules/create-data-source-managed-recording-rules/
 description: Recording rules allow you to pre-compute expensive queries in advance and save the results as a new set of time series. Data source-managed recording rules can create a recording rule for Prometheus-based data sources like Mimir or Loki.
 keywords:
-  - grafana
-  - alerting
-  - guide
-  - rules
-  - recording rules
-  - configure
-labels:
+
+- grafana
+- alerting
+- guide
+- rules
+- recording rules
+- configure
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Create data source-managed recording rules
-weight: 402
-refs:
-  create-recording-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-recording-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Create data source-managed recording rules
+    weight: 402
+    refs:
+    create-recording-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-recording-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
+
+-----
 
 # Create data source-managed recording rules
 
@@ -38,17 +41,17 @@ Note that in data source-managed groups, the alert rules and recording rules wit
 - Verify that you have write permission to the Prometheus or Loki data source. Otherwise, you will not be able to create or update Grafana Mimir managed alerting rules.
 
 - For Grafana Mimir and Loki data sources, enable the ruler API by configuring their respective services.
-
+  
   - **Loki** - The `local` rule storage type, default for the Loki data source, supports only viewing of rules. To edit rules, configure one of the other rule storage types.
-
+  
   - **Mimir** - use the `/prometheus` prefix. The Prometheus data source supports both Grafana Mimir and Prometheus, and Grafana expects that both the [Query API](/docs/mimir/latest/operators-guide/reference-http-api/#querier--query-frontend) and [Ruler API](/docs/mimir/latest/operators-guide/reference-http-api/#ruler) are under the same URL. You cannot provide a separate URL for the Ruler API.
 
 ## Add new recording rule
 
 To create a new data source-managed recording rule:
 
-1. Click **Alerts & IRM** -> **Alerting** -> **Alert rules**.
-1. Scroll to the **Data source-managed section** and click **+New recording rule**.
+1. Click **Alerts & IRM** -\> **Alerting** -\> **Alert rules**.
+2. Scroll to the **Data source-managed section** and click **+New recording rule**.
 
 ## Enter recording rule name
 
@@ -61,13 +64,13 @@ Select your data source and enter a query. The queries used in data source-manag
 ## Add namespace and group
 
 1. From the **Namespace** dropdown, select an existing rule namespace or add a new one.
-
+   
    Namespaces can contain one or more rule groups and only have an organizational purpose.
 
-1. From the **Group** dropdown, select an existing group within the selected namespace or add a new one.
-
+2. From the **Group** dropdown, select an existing group within the selected namespace or add a new one.
+   
    Rules within a group are run sequentially at a regular interval, with the same evaluation time.
-
+   
    Newly created rules are appended to the end of the group, and you can reorder them from the **Alert rules** page.
 
 ## Add labels

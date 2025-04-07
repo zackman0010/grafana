@@ -1,17 +1,20 @@
----
+-----
+
 description: Learn about proxy datasource connections through a secure socks proxy.
 keywords:
-  - proxy
-  - guide
-  - Grafana
-labels:
+
+- proxy
+- guide
+- Grafana
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Configure data source proxy
-title: Configure a data source SOCKS5 connection proxy
-weight: 1110
----
+  - enterprise
+  - oss
+    menuTitle: Configure data source proxy
+    title: Configure a data source SOCKS5 connection proxy
+    weight: 1110
+
+-----
 
 # Configure a data source SOCKS5 connection proxy
 
@@ -31,7 +34,7 @@ To complete this task, you must first deploy a socks proxy server that supports 
 ## Steps
 
 1. For Grafana to send data source connections to the socks5 server, use the following table to configure the `secure_socks_datasource_proxy` section of the `config.ini`:
-
+   
    | Key              | Description                                | Example                         |
    | ---------------- | ------------------------------------------ | ------------------------------- |
    | `enabled`        | Enable this feature in Grafana             | true                            |
@@ -42,8 +45,8 @@ To complete this task, you must first deploy a socks proxy server that supports 
    | `proxy_address`  | The address of the proxy                   | localhost:9090                  |
    | `allow_insecure` | Disable TLS in the socks proxy             | false                           |
 
-1. Set up a data source and configure it to send data source connections through the proxy.
-
+2. Set up a data source and configure it to send data source connections through the proxy.
+   
    To configure your data sources to send connections through the proxy, `enableSecureSocksProxy=true` must be specified in the data source json. You can do this in the [API](../../../developers/http_api/data_source/) or use [file based provisioning](../../../administration/provisioning/#data-sources).
-
+   
    Additionally, you can set the socks5 username and password by adding `secureSocksProxyUsername` in the data source json and `secureSocksProxyPassword` in the secure data source json.

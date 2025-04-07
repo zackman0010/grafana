@@ -1,24 +1,27 @@
----
+-----
+
 aliases:
-  - ../../http_api/dashboard_permissions/
-  - ../../http_api/dashboardpermissions/
-canonical: /docs/grafana/latest/developers/http_api/dashboard_permissions/
-description: Grafana Dashboard Permissions HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - dashboard
-  - permission
-  - permissions
-  - acl
-labels:
+
+- ../../http\_api/dashboard\_permissions/
+- ../../http\_api/dashboardpermissions/
+  canonical: /docs/grafana/latest/developers/http\_api/dashboard\_permissions/
+  description: Grafana Dashboard Permissions HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- dashboard
+- permission
+- permissions
+- acl
+  labels:
   products:
-    - enterprise
-    - oss
-title: Dashboard Permissions HTTP API
----
+  - enterprise
+  - oss
+    title: Dashboard Permissions HTTP API
+
+-----
 
 # Dashboard Permissions API
 
@@ -45,15 +48,17 @@ Gets all existing permissions for the dashboard with the given `uid`.
 See note in the [introduction](#dashboard-permission-api) for an explanation.
 
 <!-- prettier-ignore-start -->
+
 | Action                        | Scope                                                                                                   |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `dashboards.permissions:read` | <ul><li>`dashboards:*`</li><li>`dashboards:uid:*`</li><li>`folders:*`</li><li>`folders:uid:*`</li></ul> |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 **Example request**:
 
-```http
+``` http
 GET /api/dashboards/uid/dHEquNzGz/permissions HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -62,7 +67,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 551
@@ -127,15 +132,17 @@ Updates permissions for a dashboard. This operation will remove existing permiss
 See note in the [introduction](#dashboard-permission-api) for an explanation.
 
 <!-- prettier-ignore-start -->
+
 | Action                         | Scope                                                                                                   |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | `dashboards.permissions:write` | <ul><li>`dashboards:*`</li><li>`dashboards:uid:*`</li><li>`folders:*`</li><li>`folders:uid:*`</li></ul> |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 **Example request**:
 
-```http
+``` http
 POST /api/dashboards/uid/dHEquNzGz/permissions
 Accept: application/json
 Content-Type: application/json
@@ -169,7 +176,7 @@ JSON body schema:
 
 **Example response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35

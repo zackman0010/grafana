@@ -1,33 +1,36 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/custom-role-actions-scopes/
-  - ../../../enterprise/access-control/permissions/
-description: Learn about Grafana RBAC permissions, actions, and scopes.
-labels:
+
+- ../../../enterprise/access-control/custom-role-actions-scopes/
+- ../../../enterprise/access-control/permissions/
+  description: Learn about Grafana RBAC permissions, actions, and scopes.
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: RBAC permissions, actions, and scopes
-title: Grafana RBAC permissions, actions, and scopes
-weight: 80
-refs:
-  rbac-grafana-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-grafana-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-grafana-provisioning/
-  rbac-fixed-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/#fixed-roles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/#fixed-roles
----
+  - cloud
+  - enterprise
+    menuTitle: RBAC permissions, actions, and scopes
+    title: Grafana RBAC permissions, actions, and scopes
+    weight: 80
+    refs:
+    rbac-grafana-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-grafana-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-grafana-provisioning/
+    rbac-fixed-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/\#fixed-roles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/\#fixed-roles
+
+-----
 
 # RBAC permissions, actions, and scopes
 
-{{< admonition type="note" >}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
+{{\< /admonition \>}}
 
 A permission is comprised of an action and a scope. When creating a custom role, consider the actions the user can perform and the resources on which they can perform those actions.
 
@@ -41,6 +44,7 @@ To learn more about the Grafana resources to which you can apply RBAC, refer to 
 The following list contains role-based access control actions.
 
 <!-- prettier-ignore-start -->
+
 | Action                                | Applicable scopes                                                                                                   | Description                                                                                                                                                                                                               |
 |---------------------------------------| ------------------------------------------------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `alert.instances.external:read`       | <ul><li>`datasources:*`</li><li>`datasources:uid:*`</li></ul>                                                       | Read alerts and silences in data sources that support alerting.                                                                                                                                                           |
@@ -148,8 +152,8 @@ The following list contains role-based access control actions.
 | `serviceaccounts:read`                | <ul><li>`serviceaccounts:*`</li><li>`serviceaccounts:id:*`</li></ul>                                                | Read Grafana service accounts.                                                                                                                                                                                            |
 | `serviceaccounts.permissions:write`   | <ul><li>`serviceaccounts:*`</li><li>`serviceaccounts:id:*`</li></ul>                                                | Update Grafana service account permissions to control who can do what with the service account.                                                                                                                           |
 | `serviceaccounts.permissions:read`    | <ul><li>`serviceaccounts:*`</li><li>`serviceaccounts:id:*`</li></ul>                                                | Read Grafana service account permissions to see who can do what with the service account.                                                                                                                                 |
-| `settings:read`                       | <ul><li>`settings:*`</li><li>`settings:auth.saml:*`</li><li>`settings:auth.saml:enabled`</li></ul> (property level) | Read the [Grafana configuration settings](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/)                                                                                                               |
-| `settings:write`                      | <ul><li>`settings:*`</li><li>`settings:auth.saml:*`</li><li>`settings:auth.saml:enabled`</li></ul> (property level) | Update any Grafana configuration settings that can be [updated at runtime](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/settings-updates-at-runtime/).                                                 |
+| `settings:read`                       | <ul><li>`settings:*`</li><li>`settings:auth.saml:*`</li><li>`settings:auth.saml:enabled`</li></ul> (property level) | Read the [Grafana configuration settings](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/)                                                                                                               |
+| `settings:write`                      | <ul><li>`settings:*`</li><li>`settings:auth.saml:*`</li><li>`settings:auth.saml:enabled`</li></ul> (property level) | Update any Grafana configuration settings that can be [updated at runtime](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/settings-updates-at-runtime/).                                                 |
 | `support.bundles:create`              | None                                                                                                                | Create support bundles.                                                                                                                                                                                                   |
 | `support.bundles:delete`              | None                                                                                                                | Delete support bundles.                                                                                                                                                                                                   |
 | `support.bundles:read`                | None                                                                                                                | List and download support bundles.                                                                                                                                                                                        |
@@ -184,6 +188,7 @@ The following list contains role-based access control actions.
 | `users:read`                          | <ul><li>`global.users:*`</li><ul>                                                                                   | Read or search user profiles.                                                                                                                                                                                             |
 | `users:write`                         | <ul><li>`global.users:*`</li><li>`global.users:id:*`</li></ul>                                                      | Update a user’s profile.                                                                                                                                                                                                  |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->
 
 ### Grafana Adaptive Metrics action definitions
@@ -211,9 +216,9 @@ The following list contains role-based access control actions used by Cloud Acce
 | ------------------------ | ----------------- | ------------------------------------------------------------------- |
 | `grafana-auth-app:write` | None              | Create, read, update, and delete access policies for Grafana Cloud. |
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Granting the `grafana-auth-app:write` permission is equivalent to assigning the Admin role to a user in Grafana, as it allows them to manage all stack service accounts. This provides significant privileges and should be assigned with caution.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 For more information on Cloud Access Policies and how to use them, see [Access policies](https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/).
 
@@ -245,6 +250,7 @@ To use these permissions, enable the `alertingApiServer` feature toggle.
 The following list contains role-based access control scopes.
 
 <!-- prettier-ignore-start -->
+
 | Scopes                                                               | Descriptions                                                                                                                                                                                                                                       |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <ul><li>`annotations:*`</li><li>`annotations:type:*`</li></ul>       | Restrict an action to a set of annotations. For example, `annotations:*` matches any annotation, `annotations:type:dashboard` matches annotations associated with dashboards and `annotations:type:organization` matches organization annotations. |
@@ -268,4 +274,5 @@ The following list contains role-based access control scopes.
 | <ul><li>`users:*`</li><li>`users:id:*`</li></ul>                     | Restrict an action to a set of users from an organization. For example, `users:*` matches any user and `users:id:1` matches the user whose ID is `1`.                                                                                              |
 | <ul><li>None</li><ul>                                                | If an action has "None" specified for the scope, then the action doesn't require a scope. For example, the `teams:create` action doesn't require a scope and allows users to create teams.                                                         |
 { .no-spacing-list }
+
 <!-- prettier-ignore-end -->

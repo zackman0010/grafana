@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../../auth/gitlab/
-description: Grafana GitLab OAuth Guide
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - oauth
-labels:
+
+- ../../../auth/gitlab/
+  description: Grafana GitLab OAuth Guide
+  keywords:
+- grafana
+- configuration
+- documentation
+- oauth
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: GitLab OAuth
-title: Configure GitLab OAuth authentication
-weight: 1000
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: GitLab OAuth
+    title: Configure GitLab OAuth authentication
+    weight: 1000
+
+-----
 
 # Configure GitLab OAuth authentication
 
-{{< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 This topic describes how to configure GitLab OAuth authentication.
 
@@ -33,13 +36,13 @@ Ensure you know how to create a GitLab OAuth application. Consult GitLab's docum
 
 ### Create a GitLab OAuth Application
 
-1. Log in to your GitLab account and go to **Profile > Preferences > Applications**.
-1. Click **Add new application**.
-1. Fill out the fields.
+1. Log in to your GitLab account and go to **Profile \> Preferences \> Applications**.
+2. Click **Add new application**.
+3. Fill out the fields.
    - In the **Redirect URI** field, enter the following: `https://<YOUR-GRAFANA-URL>/login/gitlab` and check `openid`, `email`, `profile` in the **Scopes** list.
    - Leave the **Confidential** checkbox checked.
-1. Click **Save application**.
-1. Note your **Application ID** (this is the `Client Id`) and **Secret** (this is the `Client Secret`).
+4. Click **Save application**.
+5. Note your **Application ID** (this is the `Client Id`) and **Secret** (this is the `Client Secret`).
 
 ## Configure GitLab authentication client using the Grafana UI
 
@@ -47,7 +50,7 @@ Ensure you know how to create a GitLab OAuth application. Consult GitLab's docum
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle.
 {{% /admonition %}}
 
-As a Grafana Admin, you can configure GitLab OAuth client from within Grafana using the GitLab UI. To do this, navigate to **Administration > Authentication > GitLab** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
+As a Grafana Admin, you can configure GitLab OAuth client from within Grafana using the GitLab UI. To do this, navigate to **Administration \> Authentication \> GitLab** page and fill in the form. If you have a current configuration in the Grafana configuration file then the form will be pre-populated with those values otherwise the form will contain default values.
 
 After you have filled in the form, click **Save** to save the configuration. If the save was successful, Grafana will apply the new configurations.
 
@@ -65,7 +68,7 @@ Refer to [configuration options](#configuration-options) for more information.
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle. Supported in the Terraform provider since v2.12.0.
 {{% /admonition %}}
 
-```terraform
+``` terraform
 resource "grafana_sso_settings" "gitlab_sso_settings" {
   provider_name = "gitlab"
   oauth2_settings {
@@ -96,32 +99,34 @@ Ensure that you have access to the [Grafana configuration file](../../../configu
 To configure GitLab authentication with Grafana, follow these steps:
 
 1. Create an OAuth application in GitLab.
-
+   
    1. Set the redirect URI to `http://<my_grafana_server_name_or_ip>:<grafana_server_port>/login/gitlab`.
-
+      
       Ensure that the Redirect URI is the complete HTTP address that you use to access Grafana via your browser, but with the appended path of `/login/gitlab`.
-
+      
       For the Redirect URI to be correct, it might be necessary to set the `root_url` option in the `[server]`section of the Grafana configuration file. For example, if you are serving Grafana behind a proxy.
+   
+   2. Set the OAuth2 scopes to `openid`, `email` and `profile`.
 
-   1. Set the OAuth2 scopes to `openid`, `email` and `profile`.
-
-1. Refer to the following table to update field values located in the `[auth.gitlab]` section of the Grafana configuration file:
-
+2. Refer to the following table to update field values located in the `[auth.gitlab]` section of the Grafana configuration file:
+   
    | Field                        | Description                                                                                   |
    | ---------------------------- | --------------------------------------------------------------------------------------------- |
    | `client_id`, `client_secret` | These values must match the `Application ID` and `Secret` from your GitLab OAuth application. |
    | `enabled`                    | Enables GitLab authentication. Set this value to `true`.                                      |
-
+   
    Review the list of other GitLab [configuration options](#configuration-options) and complete them, as necessary.
 
-1. Optional: [Configure a refresh token](#configure-a-refresh-token):
-
+3. Optional: [Configure a refresh token](#configure-a-refresh-token):
+   
    a. Set `use_refresh_token` to `true` in `[auth.gitlab]` section in Grafana configuration file.
 
-1. [Configure role mapping](#configure-role-mapping).
-1. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
-1. Restart Grafana.
+4. [Configure role mapping](#configure-role-mapping).
 
+5. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
+
+6. Restart Grafana.
+   
    You should now see a GitLab login button on the login page and be able to log in or sign up with your GitLab accounts.
 
 ### Configure a refresh token
@@ -177,7 +182,7 @@ The external user is part of the following GitLab groups: `groupd-1` and `group-
 
 Config:
 
-```ini
+``` ini
 org_mapping = group-1:org_foo:Viewer groupd-1:org_bar:Editor *:org_baz:Editor
 ```
 
@@ -186,7 +191,7 @@ org_mapping = group-1:org_foo:Viewer groupd-1:org_bar:Editor *:org_baz:Editor
 In this example, the user with email `admin@company.com` has been granted the `Admin` role.
 All other users are granted the `Viewer` role.
 
-```ini
+``` ini
 role_attribute_path = email=='admin@company.com' && 'Admin' || 'Viewer'
 ```
 
@@ -195,7 +200,7 @@ role_attribute_path = email=='admin@company.com' && 'Admin' || 'Viewer'
 In this example, the user from GitLab group 'example-group' have been granted the `Editor` role.
 All other users are granted the `Viewer` role.
 
-```ini
+``` ini
 role_attribute_path = contains(groups[*], 'example-group') && 'Editor' || 'Viewer'
 ```
 
@@ -204,7 +209,7 @@ role_attribute_path = contains(groups[*], 'example-group') && 'Editor' || 'Viewe
 In this example, the user with email `admin@company.com` has been granted the `Admin` organization role as well as the Grafana server admin role.
 All other users are granted the `Viewer` role.
 
-```bash
+``` bash
 role_attribute_path = email=='admin@company.com' && 'GrafanaAdmin' || 'Viewer'
 ```
 
@@ -212,7 +217,7 @@ role_attribute_path = email=='admin@company.com' && 'GrafanaAdmin' || 'Viewer'
 
 In this example, all users will be assigned `Viewer` role regardless of the user information received from the identity provider.
 
-```ini
+``` ini
 role_attribute_path = "'Viewer'"
 skip_org_role_sync = false
 ```
@@ -221,7 +226,7 @@ skip_org_role_sync = false
 
 This section includes an example of GitLab configuration in the Grafana configuration file.
 
-```bash
+``` bash
 [auth.gitlab]
 enabled = true
 allow_sign_up = true
@@ -245,7 +250,7 @@ use_refresh_token = true
 ## Configure team synchronization
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
+Available in [Grafana Enterprise](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud/).
 {{% /admonition %}}
 
 By using Team Sync, you can map GitLab groups to teams within Grafana. This will automatically assign users to the appropriate teams.
@@ -255,15 +260,15 @@ GitLab groups are referenced by the group name. For example, `developers`. To re
 Note that in GitLab, the group or subgroup name does not always match its display name, especially if the display name contains spaces or special characters.
 Make sure you always use the group or subgroup name as it appears in the URL of the group or subgroup.
 
-To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
+To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
 
 ## Configuration options
 
 The table below describes all GitLab OAuth configuration options. You can apply these options as environment variables, similar to any other configuration within Grafana. For more information, refer to [Override configuration with environment variables](../../../configure-grafana/#override-configuration-with-environment-variables).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 If the configuration option requires a JMESPath expression that includes a colon, enclose the entire expression in quotes to prevent parsing errors. For example `role_attribute_path: "role:view"`
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 | Setting                      | Required | Supported on Cloud | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Default                              |
 | ---------------------------- | -------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
@@ -285,7 +290,7 @@ If the configuration option requires a JMESPath expression that includes a colon
 | `allow_assign_grafana_admin` | No       | No                 | Set to `true` to enable automatic sync of the Grafana server administrator role. If this option is set to `true` and the result of evaluating `role_attribute_path` for a user is `GrafanaAdmin`, Grafana grants the user the server administrator privileges and organization administrator role. If this option is set to `false` and the result of evaluating `role_attribute_path` for a user is `GrafanaAdmin`, Grafana grants the user only organization administrator role. For more information on user role mapping, refer to [Configure role mapping](#configure-role-mapping).                                                                                                                                                                                                | `false`                              |
 | `allowed_domains`            | No       | Yes                | List of comma or space-separated domains. User must belong to at least one domain to log in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                      |
 | `allowed_groups`             | No       | Yes                | List of comma or space-separated groups. The user should be a member of at least one group to log in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |                                      |
-| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. _You should only use this for testing_, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `false`                              |
+| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. *You should only use this for testing*, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `false`                              |
 | `tls_client_cert`            | No       | No                 | The path to the certificate.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                      |
 | `tls_client_key`             | No       | No                 | The path to the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                      |
 | `tls_client_ca`              | No       | No                 | The path to the trusted certificate authority list.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |                                      |

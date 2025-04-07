@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../data-sources/azure-monitor/query-editor/
-description: Guide for using the Azure Monitor data source's query editor
-keywords:
-  - grafana
-  - microsoft
-  - azure
-  - monitor
-  - metrics
-  - logs
-  - resources
-  - queries
-  - traces
-  - application insights
-labels:
+
+- ../../data-sources/azure-monitor/query-editor/
+  description: Guide for using the Azure Monitor data source's query editor
+  keywords:
+- grafana
+- microsoft
+- azure
+- monitor
+- metrics
+- logs
+- resources
+- queries
+- traces
+- application insights
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Azure Monitor query editor
-weight: 300
-refs:
-  query-transform-data-query-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/#query-options
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/#query-options
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Azure Monitor query editor
+    weight: 300
+    refs:
+    query-transform-data-query-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/\#query-options
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/\#query-options
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+
+-----
 
 # Azure Monitor query editor
 
@@ -55,33 +58,36 @@ Azure Monitor Metrics collects numeric data from [supported resources](https://d
 Monitor Metrics use a lightweight format that stores only numeric data in a specific structure and supports near real-time scenarios, making it useful for fast detection of issues.
 In contrast, Azure Monitor Logs can store a variety of data types, each with their own structure.
 
-{{< figure src="/static/img/docs/azure-monitor/query-editor-metrics.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Logs Metrics sample query visualizing CPU percentage over time" >}}
+{{\< figure src="/static/img/docs/azure-monitor/query-editor-metrics.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Logs Metrics sample query visualizing CPU percentage over time" \>}}
 
 ### Create a Metrics query
 
 **To create a Metrics query:**
 
 1. In a Grafana panel, select the **Azure Monitor** data source.
-1. Select the **Metrics** service.
-1. Select a resource from which to query metrics by using the subscription, resource group, resource type, and resource fields. Multiple resources can also be selected as long as they belong to the same subscription, region and resource type. Note that only a limited amount of resource types support this feature.
-1. To select a different namespace than the default—for instance, to select resources like storage accounts that are organized under multiple namespaces—use the **Namespace** option.
 
+2. Select the **Metrics** service.
+
+3. Select a resource from which to query metrics by using the subscription, resource group, resource type, and resource fields. Multiple resources can also be selected as long as they belong to the same subscription, region and resource type. Note that only a limited amount of resource types support this feature.
+
+4. To select a different namespace than the default—for instance, to select resources like storage accounts that are organized under multiple namespaces—use the **Namespace** option.
+   
    {{% admonition type="note" %}}
    Not all metrics returned by the Azure Monitor Metrics API have values.
    {{% /admonition %}}
-
+   
    > The data source retrieves lists of supported metrics for each subscription and ignores metrics that never have values.
 
-1. Select a metric from the **Metric** field.
+5. Select a metric from the **Metric** field.
 
 Optionally, you can apply further aggregations or filter by dimensions.
 
 1. Change the aggregation from the default average to show minimum, maximum, or total values.
-1. Specify a custom time grain. By default, Grafana selects a time grain interval for you based on your selected time range.
-1. For metrics with multiple dimensions, you can split and filter the returned metrics.
+2. Specify a custom time grain. By default, Grafana selects a time grain interval for you based on your selected time range.
+3. For metrics with multiple dimensions, you can split and filter the returned metrics.
    For example, the Application Insights dependency calls metric supports returning multiple time series for successful and unsuccessful calls.
 
-{{< figure src="/static/img/docs/azure-monitor/query-editor-metrics-dimensions.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Monitor Metrics screenshot showing Dimensions" >}}
+{{\< figure src="/static/img/docs/azure-monitor/query-editor-metrics-dimensions.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Monitor Metrics screenshot showing Dimensions" \>}}
 
 The available options change depending on what is relevant to the selected metric.
 
@@ -105,9 +111,9 @@ For example:
 | `{{ namespace }}`              | Replaced with the resource type or namespace, such as `Microsoft.Compute/virtualMachines`.             |
 | `{{ resourcename }}`           | Replaced with the resource name.                                                                       |
 | `{{ metric }}`                 | Replaced with the metric name, such as "Percentage CPU".                                               |
-| _`{{ arbitraryDimensionID }}`_ | Replaced with the value of the specified dimension. For example, `{{ blobtype }}` becomes `BlockBlob`. |
-| `{{ dimensionname }}`          | _(Legacy for backward compatibility)_ Replaced with the name of the first dimension.                   |
-| `{{ dimensionvalue }}`         | _(Legacy for backward compatibility)_ Replaced with the value of the first dimension.                  |
+| *`{{ arbitraryDimensionID }}`* | Replaced with the value of the specified dimension. For example, `{{ blobtype }}` becomes `BlockBlob`. |
+| `{{ dimensionname }}`          | *(Legacy for backward compatibility)* Replaced with the name of the first dimension.                   |
+| `{{ dimensionvalue }}`         | *(Legacy for backward compatibility)* Replaced with the value of the first dimension.                  |
 
 ### Filter using dimensions
 
@@ -128,40 +134,42 @@ You can also perform complex analysis of Logs data by using KQL.
 
 The Azure Monitor data source also supports querying of [Basic Logs](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/basic-logs-query?tabs=portal-1) tables (if they exist in your Log Analytics workspace). This feature must be enabled in the data source configuration.
 
-{{< figure src="/static/img/docs/azure-monitor/query-editor-logs.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Monitor Logs sample query comparing successful requests to failed requests" >}}
+{{\< figure src="/static/img/docs/azure-monitor/query-editor-logs.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Monitor Logs sample query comparing successful requests to failed requests" \>}}
 
 ### Create a Logs query
 
 **To create a Logs query:**
 
 1. In a Grafana panel, select the **Azure Monitor** data source.
-1. Select the **Logs** service.
-1. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
 
+2. Select the **Logs** service.
+
+3. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
+   
    Alternatively, you can dynamically query all resources under a single resource group or subscription.
    {{% admonition type="note" %}}
    If a timespan is specified in the query, the overlap of the timespan between the query and the dashboard will be used as the query timespan. See the [API documentation for
    details.](https://learn.microsoft.com/en-us/rest/api/loganalytics/dataaccess/query/get?tabs=HTTP#uri-parameters)
    {{% /admonition %}}
 
-1. Enter your KQL query.
+4. Enter your KQL query.
 
 You can also augment queries by using [template variables](../template-variables/).
 
 **To create a Basic Logs query:**
 
 1. Ensure that the data source has the `Enable Basic Logs` toggle enabled.
-1. In a Grafana panel, select the **Azure Monitor** data source.
-1. Select the **Logs** service.
-1. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
-1. Switch the `Logs` toggle from `Analytics` to `Basic`. A modal will display to notify users of potential additional costs.
+2. In a Grafana panel, select the **Azure Monitor** data source.
+3. Select the **Logs** service.
+4. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
+5. Switch the `Logs` toggle from `Analytics` to `Basic`. A modal will display to notify users of potential additional costs.
    {{% admonition type="note" %}}
    Basic Logs queries do not support time-ranges specified in the query. The time-range will be hardcoded to the dashboard time-range. There are also other query limitations. See the
    [documentation for details.](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/basic-logs-query?tabs=portal-1#limitations)
    {{% /admonition %}}
-1. Enter your KQL query.
+6. Enter your KQL query.
 
-You can also augment queries by using [template variables](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/datasources/azure-monitor/template-variables/).
+You can also augment queries by using [template variables](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/datasources/azure-monitor/template-variables/).
 
 ### Logs query examples
 
@@ -182,7 +190,7 @@ The Azure documentation includes resources to help you learn KQL:
 
 This example query returns a virtual machine's CPU performance, averaged over 5ms time grains:
 
-```kusto
+``` kusto
 Perf
 # $__timeFilter is a special Grafana macro that filters the results to the time span of the dashboard
 | where $__timeFilter(TimeGenerated)
@@ -200,7 +208,7 @@ Azure Monitor considers those columns to be dimensions, and they become labels i
 
 For example, this query returns the aggregated count grouped by hour, Computer, and the CounterName:
 
-```kusto
+``` kusto
 Perf
 | where $__timeFilter(TimeGenerated)
 | summarize count() by bin(TimeGenerated, 1h), Computer, CounterName
@@ -210,7 +218,7 @@ Perf
 You can also select additional number value columns, with or without multiple dimensions.
 For example, this query returns a count and average value by hour, Computer, CounterName, and InstanceName:
 
-```kusto
+``` kusto
 Perf
 | where $__timeFilter(TimeGenerated)
 | summarize Samples=count(), ["Avg Value"]=avg(CounterValue)
@@ -221,7 +229,7 @@ Perf
 Use table queries with the Table panel to produce a list of columns and rows.
 This query returns rows with the six specified columns:
 
-```kusto
+``` kusto
 AzureActivity
 | where $__timeFilter()
 | project TimeGenerated, ResourceGroup, Category, OperationName, ActivityStatus, Caller
@@ -248,7 +256,7 @@ Additionally, Grafana has the built-in [`$__interval` macro](ref:query-transform
 Azure Resource Graph (ARG) is an Azure service designed to extend Azure Resource Management with efficient resource exploration and the ability to query at scale across a set of subscriptions, so that you can more effectively govern an environment.
 By querying ARG, you can query resources with complex filtering, iteratively explore resources based on governance requirements, and assess the impact of applying policies in a vast cloud environment.
 
-{{< figure src="/static/img/docs/azure-monitor/query-editor-arg.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Resource Graph sample query listing virtual machines on an account" >}}
+{{\< figure src="/static/img/docs/azure-monitor/query-editor-arg.png" max-width="800px" class="docs-image--no-shadow" caption="Azure Resource Graph sample query listing virtual machines on an account" \>}}
 
 ### Create a Resource Graph query
 
@@ -265,7 +273,7 @@ The Azure documentation also includes [sample queries](https://docs.microsoft.co
 
 This query returns all resources in the selected subscriptions, but only the name, type, and location properties:
 
-```kusto
+``` kusto
 Resources
 | project name, type, location
 | order by name asc
@@ -282,7 +290,7 @@ You can filter for Azure resources with a tag name and value.
 
 For example, this query returns a list of resources with an `environment` tag value of `Internal`:
 
-```kusto
+``` kusto
 Resources
 | where tags.environment=~'internal'
 | project name
@@ -297,7 +305,7 @@ You can use `summarize` and `count` to define how to group and aggregate valu
 
 For example, this query returns counts of healthy, unhealthy, and not applicable resources per recommendation:
 
-```kusto
+``` kusto
 securityresources
 | where type == 'microsoft.security/assessments'
 | extend resourceId=id,
@@ -345,9 +353,11 @@ Application Insights stores trace data in an underlying Log Analytics workspace 
 **To create a Traces query:**
 
 1. In a Grafana panel, select the **Azure Monitor** data source.
-1. Select the **Traces** service.
-1. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
 
+2. Select the **Traces** service.
+
+3. Select a resource to query. Multiple resources can be selected as long as they are of the same type.
+   
    {{% admonition type="note" %}}
    This query type only supports Application Insights resources.
    {{% /admonition %}}
@@ -361,8 +371,8 @@ Selecting the trace format will filter events with the `trace` type.
 {{% /admonition %}}
 
 1. Specify an Operation ID value.
-1. Specify event types to filter by.
-1. Specify event properties to filter by.
+2. Specify event types to filter by.
+3. Specify event properties to filter by.
 
 You can also augment queries by using [template variables](../template-variables/).
 

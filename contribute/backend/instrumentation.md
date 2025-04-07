@@ -10,7 +10,7 @@ Logs are files that record events, warnings and errors as they occur within a so
 
 Use the [pkg/infra/log](/pkg/infra/log/) package to create a named, structured logger. Example:
 
-```go
+``` go
 import (
   "fmt"
 
@@ -26,7 +26,7 @@ logger.Error("Error msg", "error", fmt.Errorf("BOOM"))
 
 ### Naming conventions
 
-Name the logger using lowercase characters, for example, `log.New("my-logger")` using snake_case or kebab-case styling.
+Name the logger using lowercase characters, for example, `log.New("my-logger")` using snake\_case or kebab-case styling.
 
 Prefix the logger name with an area name when using different loggers across a feature or related packages; for example, `log.New("plugin.loader")` and `log.New("plugin.client")`.
 
@@ -59,7 +59,7 @@ You must [Enable tracing in Grafana](#enable-tracing-in-grafana) to get a `trace
 
 For example:
 
-```go
+``` go
 import (
   "context"
   "fmt"
@@ -80,11 +80,11 @@ func doSomething(ctx context.Context) {
 
 ### Enable certain log levels for certain loggers
 
-You can enable certain log levels during development to make logging easier. For example, you can enable `debug` to allow certain loggers to minimize the generated log output and makes it easier to find things. Refer to [[log.filters]](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#filters) for information on how to to set different levels for specific loggers.
+You can enable certain log levels during development to make logging easier. For example, you can enable `debug` to allow certain loggers to minimize the generated log output and makes it easier to find things. Refer to [\[log.filters\]](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#filters) for information on how to to set different levels for specific loggers.
 
 You can also configure multiple loggers. For example:
 
-```ini
+``` ini
 [log]
 filters = rendering:debug \
           ; alerting.notifier:debug \
@@ -116,9 +116,9 @@ There are many possible types of metrics that can be tracked. One popular method
 
 Use the namespace `grafana` to prefix any defined metric names with `grafana_`. This prefix makes it clear for operators that any metric named `grafana_*` belongs to Grafana.
 
-Use snake_case style when naming metrics; for example, `http_request_duration_seconds` instead of `httpRequestDurationSeconds`.
+Use snake\_case style when naming metrics; for example, `http_request_duration_seconds` instead of `httpRequestDurationSeconds`.
 
-Use snake_case style when naming labels; for example, `status_code` instead of `statusCode`.
+Use snake\_case style when naming labels; for example, `status_code` instead of `statusCode`.
 
 If a metric type is a counter, name it with a `_total` suffix; for example, `http_requests_total`.
 
@@ -141,14 +141,16 @@ To guarantee the existence of metrics before any observations have happened, you
 ### How to collect and visualize metrics locally
 
 1. Ensure you have Docker installed and running on your machine.
-1. Start Prometheus.
 
-   ```bash
+2. Start Prometheus.
+   
+   ``` bash
    make devenv sources=prometheus
    ```
 
-1. Run Grafana, and then create a Prometheus data source if you do not have one yet. Set the server URL to `http://localhost:9090`, enable basic authentication, and enter the same authentication you have for local Grafana.
-1. Use Grafana Explore or dashboards to query any exported Grafana metrics. You can also view them at `http://localhost:3000/metrics`.
+3. Run Grafana, and then create a Prometheus data source if you do not have one yet. Set the server URL to `http://localhost:9090`, enable basic authentication, and enter the same authentication you have for local Grafana.
+
+4. Use Grafana Explore or dashboards to query any exported Grafana metrics. You can also view them at `http://localhost:3000/metrics`.
 
 ## Traces
 
@@ -160,7 +162,7 @@ Grafana uses [OpenTelemetry](https://opentelemetry.io/) for distributed tracing.
 
 For example:
 
-```go
+``` go
 import (
    "fmt"
 
@@ -251,7 +253,7 @@ Consider using `attributes.<Type>("<key>", <value>)` instead of `attributes.Key(
 
 For example:
 
-```go
+``` go
 attribute.String("datasource_name", proxy.ds.Name)
 // vs
 attribute.Key("datasource_name").String(proxy.ds.Name)
@@ -264,28 +266,28 @@ attribute.Key("org_id").Int64(proxy.ctx.SignedInUser.OrgID)
 ### How to collect, visualize and query traces (and correlate logs with traces) locally
 
 1. Start Jaeger
-
-   ```bash
+   
+   ``` bash
    make devenv sources=jaeger
    ```
 
-1. Enable tracing in Grafana<a name="enable-tracing-in-grafana"></a>
-
+2. Enable tracing in Grafana<a name="enable-tracing-in-grafana"></a>
+   
    To enable tracing in Grafana, you must set the address in your `config.ini` file:
-
-   ```ini
+   
+   ``` ini
    [tracing.opentelemetry.jaeger]
    address = http://localhost:14268/api/traces
    ```
 
-1. Search/browse collected logs and traces in Grafana Explore
-
+3. Search/browse collected logs and traces in Grafana Explore
+   
    You need provisioned `gdev-jaeger` and `gdev-loki` data sources. Refer to [developer dashboard and data sources](https://github.com/grafana/grafana/tree/main/devenv#developer-dashboards-and-data-sources) for set up instructions.
-
+   
    Open Grafana explore and select the `gdev-loki` data source and use the query `{filename="/var/log/grafana/grafana.log"} | logfmt`.
-
+   
    You can then inspect any log message that includes a `traceID` and from there click `gdev-jaeger` to split the view and inspect the trace in question.
 
-1. Search or browse collected traces in Jaeger UI
-
+4. Search or browse collected traces in Jaeger UI
+   
    You can open `http://localhost:16686` to use the Jaeger UI for browsing and searching traces.

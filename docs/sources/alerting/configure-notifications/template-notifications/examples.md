@@ -1,61 +1,64 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/templates/examples/
 description: Examples of notification templates
 keywords:
-  - grafana
-  - alerting
-  - templating
-  - notification templates
-labels:
+
+- grafana
+- alerting
+- templating
+- notification templates
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Notification template examples
-menuTitle: Examples
-weight: 103
-refs:
-  template-annotations-and-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
-  template-notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
-  manage-notification-templates:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/manage-notification-templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/manage-notification-templates/
-  reference:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/reference/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/
-  reference-notification-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/reference/#notification-data
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/#notification-data
-  reference-alert:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/reference/#alert
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/#alert
-  language:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/language/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/
-  group-alert-notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Notification template examples
+    menuTitle: Examples
+    weight: 103
+    refs:
+    template-annotations-and-labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
+    template-notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
+    manage-notification-templates:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/manage-notification-templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/manage-notification-templates/
+    reference:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/reference/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/
+    reference-notification-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/reference/\#notification-data
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/\#notification-data
+    reference-alert:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/reference/\#alert
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/\#alert
+    language:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/language/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/
+    group-alert-notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
+
+-----
 
 # Notification template examples
 
@@ -81,7 +84,7 @@ Notification templates can access the [notification data](ref:reference-notifica
 
 For instance, to check if there are common labels (`.CommonLabels`) for all alerts in the notification, use `if`:
 
-```go
+``` go
 {{ define "custom_message" -}}
 {{ if .CommonLabels }}
 Alerts have common labels
@@ -93,7 +96,7 @@ There are no common labels
 
 To iterate on the alerts in the notification and print a specific label, use `range` and `index`:
 
-```go
+``` go
 {{ define "custom_message" -}}
 {{ range .Alerts }}
 The name of the alert is {{ index .Labels "alertname" }}
@@ -103,7 +106,7 @@ The name of the alert is {{ index .Labels "alertname" }}
 
 Alternatively, you can use the `.` notation to print the value of the key.
 
-```go
+``` go
 {{ define "custom_message" -}}
 {{ range .Alerts }}
 The name of the alert is {{ .Labels.alertname }}
@@ -113,11 +116,11 @@ The name of the alert is {{ .Labels.alertname }}
 
 You can then use the template by passing the [notification data (dot `.`)](ref:reference-notification-data):
 
-```go
+``` go
 {{ template "custom_message" . }}
 ```
 
-```template_output
+``` template_output
 The name of the alert is InstanceDown
 
 The name of the alert is CpuOverload
@@ -127,7 +130,7 @@ The name of the alert is CpuOverload
 
 Here's an example that displays the summary and description annotations for each alert in the notification.
 
-```go
+``` go
 {{ define "custom.alerts" -}}
 {{ len .Alerts }} alert(s)
 {{ range .Alerts -}}
@@ -148,11 +151,11 @@ In this example:
 
 Execute the template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "custom.alerts" . }}
 ```
 
-```template_output
+``` template_output
 2 alert(s)
 
   Summary: The database server db1 has exceeded 75% of available disk space.
@@ -168,7 +171,7 @@ Execute the template by passing the dot (`.`):
 
 The following example is similar to the previous one, but it separates firing and resolved alerts.
 
-```go
+``` go
 {{ define "custom.firing_and_resolved_alerts" -}}
 {{ len .Alerts.Resolved }} resolved alert(s)
 {{ range .Alerts.Resolved -}}
@@ -190,11 +193,11 @@ Instead of `.Alerts`, the template accesses `.Alerts.Firing` and `.Alerts.Resolv
 
 Run the template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "custom.firing_and_resolved_alerts" . }}
 ```
 
-```template_output
+``` template_output
 1 resolved alert(s)
 
   Summary: The database server db1 has exceeded 75% of available disk space.
@@ -212,7 +215,7 @@ Run the template by passing the dot (`.`):
 
 This example displays only the labels and annotations that are common to all alerts in the notification.
 
-```go
+``` go
 {{ define "custom.common_labels_and_annotations" -}}
 {{ len .Alerts.Resolved }} resolved alert(s)
 {{ len .Alerts.Firing }} firing alert(s)
@@ -231,11 +234,11 @@ Note that `.CommonAnnotations` and `.CommonLabels` are part of [notification dat
 
 Execute the template by passing the dot (`.`) as argument:
 
-```go
+``` go
 {{ template "custom.common_labels_and_annotations" . }}
 ```
 
-```template_output
+``` template_output
 1 resolved alert(s)
 1 firing alert(s)
 Common labels: 2
@@ -249,7 +252,7 @@ Common annotations: 0
 
 This example displays all labels and annotations for each [alert](ref:reference-alert) in the notification.
 
-```go
+``` go
 {{ define "custom.alert_labels_and_annotations" -}}
 {{ len .Alerts.Resolved }} resolved alert(s)
 {{ range .Alerts.Resolved -}}
@@ -279,11 +282,11 @@ In this example:
 
 Run the template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "custom.alert_labels_and_annotations" . }}
 ```
 
-```template_output
+``` template_output
 1 resolved alert(s)
 
 Alert labels: 4
@@ -313,7 +316,7 @@ Alert annotations: 2
 
 Note that the following example works only for Grafana-managed alerts. It displays some [alert data](ref:reference-alert) such as `DashboardURL`, `PanelURL`, and `SilenceURL`, which are exclusive to Grafana-managed alerts.
 
-```go
+``` go
 {{ define "custom.alert_additional_details" -}}
 {{ len .Alerts.Resolved }} resolved alert(s)
 {{ range .Alerts.Resolved -}}
@@ -335,11 +338,11 @@ Note that the following example works only for Grafana-managed alerts. It displa
 
 Pass the dot (`.`) to execute the template:
 
-```go
+``` go
 {{ template "custom.alert_additional_details" . }}
 ```
 
-```template_output
+``` template_output
 1 resolved alert(s)
 
 - Dashboard: https://example.com/d/
@@ -363,7 +366,7 @@ A title or subject provides a one-line summary of the notification content.
 
 Here’s a basic example that displays the number of firing and resolved alerts in the notification.
 
-```go
+``` go
 {{ define "custom_title" -}}
 {{ if gt (.Alerts.Firing | len) 0 }}🚨 {{ .Alerts.Firing | len }} firing alerts. {{ end }}{{ if gt (.Alerts.Resolved | len) 0 }}✅ {{ .Alerts.Resolved | len }} resolved alerts.{{ end }}
 {{ end -}}
@@ -371,17 +374,17 @@ Here’s a basic example that displays the number of firing and resolved alerts 
 
 Execute the template by passing the dot (`.`) as argument:
 
-```go
+``` go
 {{ template "custom_title" . }}
 ```
 
-```template_output
+``` template_output
 🚨 1 firing alerts. ✅ 1 resolved alerts.
 ```
 
 The next example is a copy of the default title/subject template used in Grafana.
 
-```go
+``` go
 {{ define "copy_of_default_title" -}}
 [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ if gt (.Alerts.Resolved | len) 0 }}, RESOLVED:{{ .Alerts.Resolved | len }}{{ end }}{{ end }}] {{ .GroupLabels.SortedPairs.Values | join " " }} {{ if gt (len .CommonLabels) (len .GroupLabels) }}({{ with .CommonLabels.Remove .GroupLabels.Names }}{{ .Values | join " " }}{{ end }}){{ end }}
 {{ end }}
@@ -395,10 +398,10 @@ This is a more advanced example:
 
 Execute the template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "copy_of_default_title" . }}
 ```
 
-```template_output
+``` template_output
 [FIRING:1, RESOLVED:1] api warning (sql_db)
 ```

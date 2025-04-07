@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../change-your-password/
-  - ../manage-user-preferences/
-description: Learn how to update your user preferences and switch organizations
-keywords:
-  - password
-  - change
-  - organization
-  - change
-labels:
+
+- ../change-your-password/
+- ../manage-user-preferences/
+  description: Learn how to update your user preferences and switch organizations
+  keywords:
+- password
+- change
+- organization
+- change
+  labels:
   products:
-    - enterprise
-    - oss
-title: Manage user preferences
-weight: 400
----
+  - enterprise
+  - oss
+    title: Manage user preferences
+    weight: 400
+
+-----
 
 # Manage user preferences
 
@@ -33,10 +36,10 @@ If your Grafana instance uses an external authentication provider, then you migh
 **To change your password**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Change Password**.
-1. Enter your old password and a new password.
-1. Confirm your new password.
-1. Click **Change Password**.
+2. Click the user icon in the top right corner of the page and select **Change Password**.
+3. Enter your old password and a new password.
+4. Confirm your new password.
+5. Click **Change Password**.
 
 ## Edit your profile
 
@@ -45,8 +48,8 @@ Your profile includes your name, user name, and email address, which you can upd
 **To edit your profile**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. In the **Profile** section, update your details and click **Save**.
+2. Click the user icon in the top right corner of the page and select **Profile**.
+3. In the **Profile** section, update your details and click **Save**.
 
 ## Edit your preferences
 
@@ -61,22 +64,22 @@ You can choose the way you would like data to appear in Grafana, including the u
 **To edit your preferences**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. Update any of the values in the Preferences section.
-1. Click **Save** at the bottom of the section.
+2. Click the user icon in the top right corner of the page and select **Profile**.
+3. Update any of the values in the Preferences section.
+4. Click **Save** at the bottom of the section.
 
 ### View and change themes
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The **Change theme** drawer is an experimental feature. Engineering and on-call support is not available. Documentation is either limited or not provided outside of code comments. No SLA is provided. Enable the `grafanaconThemes` feature toggle in Grafana to use this feature. This feature is automatically enabled in Grafana Cloud.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 The **Change theme** drawer allows you to see the color scheme of a theme without having to select it first.
 It also lets you quickly change a color scheme from anywhere in Grafana without first going to your profile.
 
 To access the **Change theme** drawer, click the user icon in the top-right corner of the page and select **Change theme**.
 
-{{< figure src="/media/docs/grafana/screenshot-themes-drawer-v11.6.png" max-width="650px" alt="The Change theme drawer opened" >}}
+{{\< figure src="/media/docs/grafana/screenshot-themes-drawer-v11.6.png" max-width="650px" alt="The Change theme drawer opened" \>}}
 
 ## Switch organizations
 
@@ -85,8 +88,8 @@ When you sign in to Grafana, the system signs you in to a default organization. 
 **To switch organizations**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Switch organization**.
-1. Next to the organization that you want to sign in to, click **Switch to**.
+2. Click the user icon in the top right corner of the page and select **Switch organization**.
+3. Next to the organization that you want to sign in to, click **Switch to**.
 
 ## View your assigned organizations
 
@@ -95,11 +98,11 @@ Every user is a member of at least one organization. You can have different role
 **To view your assigned organizations**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. Scroll down to the Organizations section and review the following information:
+2. Click the user icon in the top right corner of the page and select **Profile**.
+3. Scroll down to the Organizations section and review the following information:
    - **Name**: The name of the organizations of which you are a member.
    - **Role**: The role to which you are assigned in the organization. For more information about roles and permissions, refer to [Organization users and permissions](../../roles-and-permissions/#organization-users-and-permissions).
-   - **Current**: Grafana indicates the organization that you are currently signed into as _Current_. If you are a member of multiple organizations, you can click **Select** to switch to that organization.
+   - **Current**: Grafana indicates the organization that you are currently signed into as *Current*. If you are a member of multiple organizations, you can click **Select** to switch to that organization.
 
 ## View your Grafana sessions
 
@@ -108,8 +111,8 @@ Grafana logs your sessions in each Grafana instance. You can review this section
 **To view your Grafana sessions**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. Scroll down to the **Sessions** section.
+2. Click the user icon in the top right corner of the page and select **Profile**.
+3. Scroll down to the **Sessions** section.
 
 ## Sign out a user session
 
@@ -118,6 +121,6 @@ You can sign out other sessions using your account in order to prevent other peo
 **To sign out one of your Grafana sessions**:
 
 1. Sign in to Grafana.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. Scroll down to the **Sessions** section.
-1. Click the red "sign out" icon next to the session you would like to sign out.
+2. Click the user icon in the top right corner of the page and select **Profile**.
+3. Scroll down to the **Sessions** section.
+4. Click the red "sign out" icon next to the session you would like to sign out.

@@ -1,20 +1,23 @@
----
+-----
+
 description: Use the command palette to search all of Grafana and initiate key actions
 keywords:
-  - search
-  - dashboards
-  - alerts
-  - preferences
-  - sift
-labels:
+
+- search
+- dashboards
+- alerts
+- preferences
+- sift
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menutitle: Search
-title: Search
-weight: 80
----
+  - cloud
+  - enterprise
+  - oss
+    menutitle: Search
+    title: Search
+    weight: 80
+
+-----
 
 # Grafana search
 
@@ -34,6 +37,6 @@ The command palette allows you to:
 
 To open the command palette, press `cmd+K` in macOS or `ctrl+k` in Linux/Windows. You can also click on the input located in the navigation bar.
 
-{{< admonition type="note">}}
+{{\< admonition type="note"\>}}
 To go to the previous step, press `backspace` with the command palette input empty.
-{{< /admonition >}}
+{{\< /admonition \>}}

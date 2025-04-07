@@ -1,32 +1,35 @@
----
+-----
+
 aliases:
-  - ../../fundamentals/contact-points/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/contact-points/
-  - ../../fundamentals/contact-points/contact-point-types/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/contact-points/contact-point-types/
-  - ../../contact-points/ # /docs/grafana/<GRAFANA_VERSION>/alerting/contact-points/
-  - ../../unified-alerting/contact-points/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/contact-points/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/contact-points/
-description: Learn about contact points and the supported contact point integrations
-keywords:
-  - grafana
-  - alerting
-  - guide
-  - contact point
-  - notification channel
-  - create
-labels:
+
+- ../../fundamentals/contact-points/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/contact-points/
+- ../../fundamentals/contact-points/contact-point-types/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/contact-points/contact-point-types/
+- ../../contact-points/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/contact-points/
+- ../../unified-alerting/contact-points/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/contact-points/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/contact-points/
+  description: Learn about contact points and the supported contact point integrations
+  keywords:
+- grafana
+- alerting
+- guide
+- contact point
+- notification channel
+- create
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Contact points
-weight: 112
-refs:
-  configure-contact-points:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/manage-contact-points
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points
----
+  - cloud
+  - enterprise
+  - oss
+    title: Contact points
+    weight: 112
+    refs:
+    configure-contact-points:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/manage-contact-points
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points
+
+-----
 
 # Contact points
 
@@ -34,7 +37,7 @@ Contact points contain the configuration for sending alert notifications. You ca
 
 A contact point includes one or more contact point integrations for sending alert notifications, such as:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - Alertmanager
 - Amazon SNS
@@ -60,7 +63,7 @@ A contact point includes one or more contact point integrations for sending aler
 - Webhook
 - WeCom
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 For example, a contact point could contain a Pagerduty integration; an email and Slack integration; or a Pagerduty integration, a Slack integration, and two email integrations. You can also configure a contact point with no integrations; in which case no notifications are sent.
 

@@ -12,7 +12,7 @@ The `grpcserver` package provides the implementation of the gRPC server for hand
 
 ## Usage
 
-Enable the gRPC server in Grafana by setting the `grpcServer` feature toggle to `true` in your `custom.ini` configuration file. 
+Enable the gRPC server in Grafana by setting the `grpcServer` feature toggle to `true` in your `custom.ini` configuration file.
 
 ``` ini
 [feature_toggles]
@@ -38,4 +38,4 @@ max_send_msg_size =
 
 ## Example Services
 
-View [health.go] and [reflection.go] for examples of how to implement gRPC services in Grafana. These services are currently initialized by the [background service registry](../../registry/backgroundsvcs/background_services.go).
+View \[health.go\] and \[reflection.go\] for examples of how to implement gRPC services in Grafana. These services are currently initialized by the [background service registry](../../registry/backgroundsvcs/background_services.go).

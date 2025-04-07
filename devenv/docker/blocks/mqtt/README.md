@@ -5,7 +5,7 @@ Starts a [NanoMQ MQTT broker](https://nanomq.io/docs/en/latest/).
 ## Authentication
 
 The broker is configured to use a simple username/password authentication.
-See [./nanomq_pwd.conf](./nanomq_pwd.conf) for the default credentials. 
+See [./nanomq\_pwd.conf](./nanomq_pwd.conf) for the default credentials.
 
 ## TLS Certificates
 

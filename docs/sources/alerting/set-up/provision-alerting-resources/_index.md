@@ -1,47 +1,50 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/
 description: Provision alerting resources
 keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - provisioning
-labels:
+
+- grafana
+- alerting
+- set up
+- configure
+- provisioning
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Provision Alerting resources
-weight: 300
-refs:
-  alerting_export_http:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/export-alerting-resources/#export-api-endpoints
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/#export-api-endpoints
-  alerting_file_provisioning:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/file-provisioning/
-  alerting_http_provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-  alerting_export:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/export-alerting-resources/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/
-  alerting_tf_provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/terraform-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/
-  provisioning:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Provision Alerting resources
+    weight: 300
+    refs:
+    alerting\_export\_http:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/export-alerting-resources/\#export-api-endpoints
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/\#export-api-endpoints
+    alerting\_file\_provisioning:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/file-provisioning/
+    alerting\_http\_provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+    alerting\_export:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/export-alerting-resources/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/
+    alerting\_tf\_provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/terraform-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/
+    provisioning:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/
+
+-----
 
 # Provision Alerting resources
 
@@ -56,27 +59,27 @@ You cannot edit imported alerting resources in the Grafana UI in the same way as
 Choose from the options below to import (or provision) your Grafana Alerting resources.
 
 1. [Use configuration files to provision your alerting resources](ref:alerting_file_provisioning), such as alert rules and contact points, through files on disk.
-
-   {{< admonition type="note" >}}
-
+   
+   {{\< admonition type="note" \>}}
+   
    - You cannot edit provisioned resources from files in the Grafana UI.
    - Provisioning with configuration files is not available in Grafana Cloud.
-     {{< /admonition >}}
+     {{\< /admonition \>}}
 
-1. Use [Terraform to provision alerting resources](ref:alerting_tf_provisioning).
+2. Use [Terraform to provision alerting resources](ref:alerting_tf_provisioning).
 
-1. Use the [Alerting provisioning HTTP API](ref:alerting_http_provisioning) to manage alerting resources.
-
-   {{< admonition type="note" >}}
-
+3. Use the [Alerting provisioning HTTP API](ref:alerting_http_provisioning) to manage alerting resources.
+   
+   {{\< admonition type="note" \>}}
+   
    The Alerting provisioning HTTP API can be used to create, modify, and delete resources for Grafana-managed alerts.
-
+   
    To manage resources related to data source-managed alerts, including recording rules, use the Mimir or Cortex tool.
-
+   
    The JSON output from the majority of Alerting HTTP endpoints isn't compatible for provisioning via configuration files.
-
-   If you need the alerting resources for file provisioning, use [Export Alerting endpoints](/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/export-alerting-resources#export-api-endpoints) to return or download them in provisioning format.
-   {{< /admonition >}}
+   
+   If you need the alerting resources for file provisioning, use [Export Alerting endpoints](/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/provision-alerting-resources/export-alerting-resources#export-api-endpoints) to return or download them in provisioning format.
+   {{\< /admonition \>}}
 
 ## Export alerting resources
 
@@ -89,7 +92,7 @@ For detailed instructions on the various export options, refer to [Export alerti
 To view your provisioned resources in Grafana, complete the following steps.
 
 1. Open your Grafana instance.
-1. Navigate to Alerting.
-1. Click an alerting resource folder, for example, Alert rules.
+2. Navigate to Alerting.
+3. Click an alerting resource folder, for example, Alert rules.
 
 Provisioned resources are labeled **Provisioned**, so that it is clear that they were not created manually.

@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../variables/url-variables/
-  - ../../variables/variable-types/url-variables/
-keywords:
-  - grafana
-  - url variables
-  - documentation
-  - variables
-  - dashboards
-labels:
+
+- ../../variables/url-variables/
+- ../../variables/variable-types/url-variables/
+  keywords:
+- grafana
+- url variables
+- documentation
+- variables
+- dashboards
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Dashboard URL variables
-description: Use variables in dashboard URLs to add more context to your links
-weight: 250
-refs:
-  ad-hoc-filters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-  manage-dashboard-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Dashboard URL variables
+    description: Use variables in dashboard URLs to add more context to your links
+    weight: 250
+    refs:
+    ad-hoc-filters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+    manage-dashboard-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+
+-----
 
 # Dashboard URL variables
 
@@ -40,17 +43,13 @@ Dashboard URL [variables](ref:variables) allow you to provide more context when 
 
 For example, you could share a basic URL to your dashboard that looks like this:
 
-```
-https://${your-domain}/path/to/your/dashboard
-```
+    https://${your-domain}/path/to/your/dashboard
 
 This allows someone to navigate to the dashboard, but doesn't provide any helpful context that might be available.
 
 Instead, you can add dashboard variables, passed as query parameters in the dashboard URL, to provide a URL like this:
 
-```
-https://${your-domain}/path/to/your/dashboard?var-example=value
-```
+    https://${your-domain}/path/to/your/dashboard?var-example=value
 
 This allows you to provide added context to the dashboard when someone navigates to it.
 
@@ -60,9 +59,7 @@ Grafana interprets query string parameters prefixed with `var-` as variables in 
 
 For example:
 
-```
-https://${your-domain}/path/to/your/dashboard?var-example=value
-```
+    https://${your-domain}/path/to/your/dashboard?var-example=value
 
 In this URL, the query parameter `var-example=value` represents the dashboard variable `example` with a value of `value`.
 
@@ -70,9 +67,7 @@ In this URL, the query parameter `var-example=value` represents the dashboard va
 
 To pass multiple values, repeat the variable parameter once for each value:
 
-```
-https://${your-domain}/path/to/your/dashboard?var-example=value1&var-example=value2
-```
+    https://${your-domain}/path/to/your/dashboard?var-example=value1&var-example=value2
 
 Grafana interprets `var-example=value1&var-example=value2` as the dashboard variable `example` with two values: `value1` and `value2`.
 
@@ -88,15 +83,13 @@ To pass an ad hoc filter as a query parameter, use the variable syntax to pass t
 
 For example:
 
-```
-https://${your-domain}/path/to/your/dashboard?var-adhoc=example_key|=|example_value
-```
+    https://${your-domain}/path/to/your/dashboard?var-adhoc=example_key|=|example_value
 
 In this URL, the query parameter `var-adhoc=key|=|value` applies the ad hoc filter configured as the `adhoc` dashboard variable using the `example_key` key, the `=` operator, and the `example_value` value.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 When sharing URLs with ad hoc filters, remember to encode the URL. In the preceding example, replace the pipes (`|`) with `%7C` and the equality operator (`=`) with `%3D`.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Example
 
@@ -104,12 +97,12 @@ When sharing URLs with ad hoc filters, remember to encode the URL. In the preced
 
 ## Time range control using the URL
 
-{{< docs/shared lookup="dashboards/time-range-URLs.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="dashboards/time-range-URLs.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Variables in dashboard links
 
 When you create dashboard links the dashboard settings, you can have current dashboard variables included in the link by selecting that option:
 
-{{< figure src="/media/docs/grafana/dashboards/screenshot-dashboard-link-variables-11.1.png" max-width="500px" alt="Dashboard link page with variables option selected" >}}
+{{\< figure src="/media/docs/grafana/dashboards/screenshot-dashboard-link-variables-11.1.png" max-width="500px" alt="Dashboard link page with variables option selected" \>}}
 
 For steps to add variables to dashboard links, refer to [Manage dashboard links](ref:manage-dashboard-links).

@@ -1,11 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Permissions
-weight: 20
----
+-----
+
+## labels: products: - enterprise - oss title: Permissions weight: 20
 
 # Permissions
 

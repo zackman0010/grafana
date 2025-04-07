@@ -1,43 +1,46 @@
----
+-----
+
 aliases:
-  - ../../configure-alertmanager/ # /docs/grafana/<GRAFANA_VERSION>/configure-alertmanager/
-  - ../unified-alerting/fundamentals/alertmanager/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/fundamentals/alertmanager/
-  - ../manage-notifications/alertmanager/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/alertmanager/
-  - ../fundamentals/alertmanager/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alertmanager/
-  - ../fundamentals/notifications/alertmanager/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/alertmanager
-canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-alertmanager/
-description: Learn about Alertmanagers and set up Alerting to use an external Alertmanager
-keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - external Alertmanager
-labels:
+
+- ../../configure-alertmanager/ \# /docs/grafana/\<GRAFANA\_VERSION\>/configure-alertmanager/
+- ../unified-alerting/fundamentals/alertmanager/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/fundamentals/alertmanager/
+- ../manage-notifications/alertmanager/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/alertmanager/
+- ../fundamentals/alertmanager/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alertmanager/
+- ../fundamentals/notifications/alertmanager/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/alertmanager
+  canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-alertmanager/
+  description: Learn about Alertmanagers and set up Alerting to use an external Alertmanager
+  keywords:
+- grafana
+- alerting
+- set up
+- configure
+- external Alertmanager
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Configure Alertmanagers
-weight: 200
-refs:
-  alertmanager-data-source:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/alertmanager/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/alertmanager/
-  notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Configure Alertmanagers
+    weight: 200
+    refs:
+    alertmanager-data-source:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/alertmanager/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/alertmanager/
+    notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/
+
+-----
 
 # Configure Alertmanagers
 
 Grafana Alerting is based on the architecture of the Prometheus alerting system. Grafana sends firing and resolved alerts to an Alertmanager, which is responsible for [handling notifications](ref:notifications). This architecture decouples alert rule evaluation from notification handling, improving scalability.
 
-{{< figure src="/media/docs/alerting/alerting-alertmanager-architecture.png" max-width="750px" alt="A diagram with the alert generator and alert manager architecture" >}}
+{{\< figure src="/media/docs/alerting/alerting-alertmanager-architecture.png" max-width="750px" alt="A diagram with the alert generator and alert manager architecture" \>}}
 
 Grafana can enable one or more Alertmanagers to receive Grafana-managed alerts for notification handling. It’s important to note that each Alertmanager manages its own independent alerting resources, such as:
 
@@ -48,7 +51,7 @@ Grafana can enable one or more Alertmanagers to receive Grafana-managed alerts f
 
 Use the `Choose Alertmanager` dropdown on these pages to switch between Alertmanagers and view or manage their resources.
 
-{{< figure src="/media/docs/alerting/alerting-choose-alertmanager.png" max-width="750px" alt="A screenshot choosing an Alertmanager in the notification policies UI" >}}
+{{\< figure src="/media/docs/alerting/alerting-choose-alertmanager.png" max-width="750px" alt="A screenshot choosing an Alertmanager in the notification policies UI" \>}}
 
 ## Types of Alertmanagers in Grafana
 
@@ -57,9 +60,9 @@ Grafana can be configured to handle alert notifications using various Alertmanag
 - **Grafana Alertmanager**: Grafana includes a built-in Alertmanager that extends the [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/). This is the default Alertmanager and is referred to as "Grafana" in the user interface. It can only handle Grafana-managed alerts.
 
 - **Cloud Alertmanager**: Each Grafana Cloud instance comes preconfigured with an additional Alertmanager (`grafanacloud-STACK_NAME-ngalertmanager`) from the Mimir (Prometheus) instance running in the Grafana Cloud Stack.
-
+  
   The Cloud Alertmanager is available exclusively in Grafana Cloud and can handle both Grafana-managed and data source-managed alerts.
-
+  
   Some Grafana Cloud services, such as **Kubernetes Monitoring** and **Synthetic Monitoring** use the Cloud Alertmanager to create and manage alerts.
 
 - **Other Alertmanagers**: Grafana Alerting also supports sending alerts to other Alertmanagers, such as the [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/), which can handle both Grafana-managed and data source-managed alerts.
@@ -72,7 +75,7 @@ For example, if you already have an Alertmanager running in your on-premises or 
 
 Alertmanagers should be configured as data sources using Grafana Configuration from the main Grafana navigation menu. To add an Alertmanager, complete the following steps.
 
-{{< docs/shared lookup="alerts/add-alertmanager-ds.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/add-alertmanager-ds.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 For provisioning instructions, refer to the [Alertmanager data source documentation](ref:alertmanager-data-source).
 
@@ -89,10 +92,10 @@ When using multiple Alertmanagers, use the `Choose Alertmanager` dropdown to swi
 After enabling **Receive Grafana Alerts** in the Data Source Settings, you must also configure the Alertmanager in the Alerting Settings page. Grafana supports enabling one or multiple Alertmanagers to receive all generated Grafana-managed alerts.
 
 1. In the left-side menu, click **Alerts & IRM** and then **Alerting**.
-1. Click **Settings** to view the list of configured Alertmanagers.
-1. For the selected Alertmanager, click the **Enable/Disable** button to toggle receiving Grafana-managed alerts. When activated, the Alertmanager displays `Receiving Grafana-managed alerts`.
+2. Click **Settings** to view the list of configured Alertmanagers.
+3. For the selected Alertmanager, click the **Enable/Disable** button to toggle receiving Grafana-managed alerts. When activated, the Alertmanager displays `Receiving Grafana-managed alerts`.
 
-{{< figure src="/media/docs/alerting/grafana-alerting-settings.png" max-width="750px" alt="Grafana Alerting Settings page" >}}
+{{\< figure src="/media/docs/alerting/grafana-alerting-settings.png" max-width="750px" alt="Grafana Alerting Settings page" \>}}
 
 All Grafana-managed alerts are forwarded to Alertmanagers marked as `Receiving Grafana-managed alerts`.
 

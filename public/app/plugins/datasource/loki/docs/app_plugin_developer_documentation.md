@@ -1,6 +1,6 @@
 # Loki data source documentation for app plugins developers
 
-Welcome to the developer documentation for the Loki data source! The purpose of this document is to assist app plugin developers in leveraging the power of the Loki data source and Grafana. The Loki data source provides a set of methods to simplify common tasks, making it easier to create engaging app plugins.
+Welcome to the developer documentation for the Loki data source\! The purpose of this document is to assist app plugin developers in leveraging the power of the Loki data source and Grafana. The Loki data source provides a set of methods to simplify common tasks, making it easier to create engaging app plugins.
 
 ## Introduction
 
@@ -17,13 +17,14 @@ We strongly advise using these recommended methods instead of direct API calls b
 - Proper authentication handling: The recommended methods correctly handle custom authentication data source options, ensuring seamless authentication when making requests. This enhances both security and data access control.
 
 - Improved instrumentation: By opting for these recommended methods, you gain access to advanced instrumentation features. These features provide better monitoring and analysis capabilities, offering deeper insights into your data source interactions.
+  
   > Note: To leverage the enhanced instrumentation, you as an app developer need to have access to server logs, metrics, and traces.
 
 ### Fetching Loki label names
 
 `datasource.languageProvider.fetchLabels()` can be used to fetch label names from the connected Loki data source. Labels are essential for selecting and filtering log data. You can use this method to retrieve labels, providing a foundation for various data manipulation tasks within your app plugin.
 
-```ts
+``` ts
 /**
  * Fetch label keys using the best applicable endpoint.
  *
@@ -54,7 +55,7 @@ try {
 
 The `datasource.languageProvider.fetchLabelValues()` method is designed for fetching label values. This API enables you to retrieve the values associated with a particular label.
 
-```ts
+``` ts
 /**
  * Fetch label values
  *
@@ -103,7 +104,7 @@ try {
 
 `datasource.languageProvider.fetchSeriesLabels` can be used to fetch available labels for a given stream selector.
 
-```ts
+``` ts
 /**
  * Fetch series labels for a selector
  *
@@ -137,7 +138,7 @@ try {
 
 `datasource.languageProvider.getParserAndLabelKeys` receives a stream selector and returns the parsers and label keys that the query would generate. This is achieved by executing a sample query to Loki with the specified stream and extracting relevant information from the received log lines.
 
-```ts
+``` ts
 /**
  * Get parser and label keys for a selector
  *
@@ -181,7 +182,7 @@ try {
 }
 ```
 
-If you find that there are methods missing or have ideas for new features, please don't hesitate to inform us. You can submit your suggestions and feature requests through the [Grafana repository](https://github.com/grafana/grafana/issues/new?assignees=&labels=type%2Ffeature-request&projects=&template=1-feature_requests.md). Your feedback is essential to help us improve and enhance the Loki data source and Grafana as a whole. We appreciate your contributions and look forward to hearing your ideas!
+If you find that there are methods missing or have ideas for new features, please don't hesitate to inform us. You can submit your suggestions and feature requests through the [Grafana repository](https://github.com/grafana/grafana/issues/new?assignees=&labels=type%2Ffeature-request&projects=&template=1-feature_requests.md). Your feedback is essential to help us improve and enhance the Loki data source and Grafana as a whole. We appreciate your contributions and look forward to hearing your ideas\!
 
 ## Recommended components
 

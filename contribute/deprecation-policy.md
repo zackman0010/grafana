@@ -1,6 +1,6 @@
 # Deprecation policy
 
-We do our best to limit breaking changes and the deprecation of features to major releases. We always do our best _not_ to introduce breaking changes in order to make upgrading Grafana as easy and reliable as possible. However, at times we have to introduce a breaking change by changing behavior or by removing a feature.
+We do our best to limit breaking changes and the deprecation of features to major releases. We always do our best *not* to introduce breaking changes in order to make upgrading Grafana as easy and reliable as possible. However, at times we have to introduce a breaking change by changing behavior or by removing a feature.
 
 To minimize the negative effects of removing a feature, we require a deprecation plan. A typical deprecation plan includes these features:
 
@@ -24,7 +24,7 @@ Additionally, the size of the feature requires different notice times between de
 | ------ | ---------- | ---------------------------------------------------------------- |
 | Large  | 1-2 years  | Classic alerting, scripted dashboards, AngularJS                 |
 | Medium | 6 months   | Supported database for Grafana's backend                         |
-| Small  | 1-3 months | Refresh OAuth access_token automatically using the refresh_token |
+| Small  | 1-3 months | Refresh OAuth access\_token automatically using the refresh\_token |
 
 ## Announced deprecations
 

@@ -1,27 +1,30 @@
----
+-----
+
 keywords:
-  - grafana
-  - reporting
-  - settings
-labels:
+
+- grafana
+- reporting
+- settings
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Settings
-title: Reporting settings
-description: Manage organizational Reporting settings
-weight: 700
-refs:
-  change-ui-theme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/organization-preferences/#change-grafana-ui-theme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/organization-preferences/#change-grafana-ui-theme
----
+  - cloud
+  - enterprise
+    menuTitle: Settings
+    title: Reporting settings
+    description: Manage organizational Reporting settings
+    weight: 700
+    refs:
+    change-ui-theme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/organization-preferences/\#change-grafana-ui-theme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/organization-preferences/\#change-grafana-ui-theme
+
+-----
 
 # Reporting settings
 
-You can configure organization-wide report settings and branding options in **Dashboards > Reporting > Settings**.
+You can configure organization-wide report settings and branding options in **Dashboards \> Reporting \> Settings**.
 Settings are applied to all the reports for the current organization.
 
 ## Attachment settings
@@ -37,7 +40,7 @@ The options in this section control the branding and theming of the report attac
 
 - **Theme** - Theme of the PDF attached to the report.
   The selected theme is also applied to the PDFs generated when you click **Preview PDF** during report creation or select the **Export as PDF** option on a dashboard.
-
+  
   If **Current** is selected, the PDF in the report is in the instance theme of the report creator, but the preview and exported PDFs are in the user's instance theme.
   Defaults to **Light**.
 

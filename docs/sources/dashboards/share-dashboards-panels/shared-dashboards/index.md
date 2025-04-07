@@ -1,61 +1,64 @@
----
+-----
+
 aliases:
-  - ../dashboard-public/ # /docs/grafana/latest/dashboards/dashboard-public/
-labels:
+
+- ../dashboard-public/ \# /docs/grafana/latest/dashboards/dashboard-public/
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Externally shared dashboards
-menuTitle: Shared dashboards
-description: Make your Grafana dashboards externally shared and share them with anyone
-weight: 8
-refs:
-  dashboard-sharing:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/
-  custom-branding:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/configure-custom-branding/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/configure-custom-branding/
-  dashboard-insights-documentation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/assess-dashboard-usage/#dashboard-insights
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/assess-dashboard-usage/
-  caching:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/#query-and-resource-caching
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/#query-and-resource-caching
-  grafana-enterprise:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Externally shared dashboards
+    menuTitle: Shared dashboards
+    description: Make your Grafana dashboards externally shared and share them with anyone
+    weight: 8
+    refs:
+    dashboard-sharing:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/share-dashboards-panels/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/share-dashboards-panels/
+    custom-branding:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/configure-custom-branding/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/configure-custom-branding/
+    dashboard-insights-documentation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/assess-dashboard-usage/\#dashboard-insights
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/assess-dashboard-usage/
+    caching:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/\#query-and-resource-caching
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/\#query-and-resource-caching
+    grafana-enterprise:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/introduction/grafana-enterprise/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/introduction/grafana-enterprise/
+
+-----
 
 # Externally shared dashboards
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature was previously called **Public dashboards**.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Externally shared dashboards allow you to share your Grafana dashboard with anyone. This is useful when you want to make your dashboard available to the world without requiring access to your Grafana organization.
 
 If you change a dashboard, ensure that you save the changes before sharing.
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 Sharing your dashboard externally could result in a large number of queries to the data sources used by your dashboard.
 This can be mitigated by using the Enterprise [caching](ref:caching) and/or rate limiting features.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Shared dashboards list
 
-You can see a list of all your externally shared dashboards in one place by navigating to **Dashboards > Shared dashboards**. For each dashboard in the list, the page displays:
+You can see a list of all your externally shared dashboards in one place by navigating to **Dashboards \> Shared dashboards**. For each dashboard in the list, the page displays:
 
 - Link to view the externally shared version of the dashboard
 - Link to the shared dashboard configuration
@@ -71,19 +74,19 @@ You can also click the name of the dashboard to navigate to the dashboard intern
 
 ## Share externally with specific people
 
-{{< admonition type="note">}}
+{{\< admonition type="note"\>}}
 This feature was previously called **email sharing**.
 
 Available in [Grafana Enterprise](ref:grafana-enterprise) and [Grafana Cloud](/docs/grafana-cloud).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 <!-- {{< docs/private-preview product="Sharing externally with specific people" >}}-->
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Sharing externally with specific people is currently in [private preview](https://grafana.com/docs/release-life-cycle/#private-preview). Please contact support to have this feature enabled.
 
 This feature will incur a cost once it is promoted to general availability.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 To share a dashboard with specific external users, you can send them a link by email. Use this option when you only want to share your dashboard with specific people. When you share dashboards by email, recipients receive a one-time use link that's valid for **one hour**. Once the link is used, the viewer has access to the shared dashboard for **30 days**.
 
@@ -92,23 +95,31 @@ To share a dashboard with specific external users, you can send them a link by e
 To share a dashboard with specific people, follow these steps:
 
 1. Click **Dashboards** in the main menu.
-1. Click the dashboard you want to share.
-1. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
 
+2. Click the dashboard you want to share.
+
+3. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
+   
    The **Share externally** drawer opens.
 
-1. In the **Link access** drop-down list, select **Only specific people**.
-1. Click the checkbox confirming that you understand payment is required to add users.
-1. Click **Accept**.
-1. In the **Invite** field, enter the email address of the person you want to invite and click **Invite** and repeat this process for all the people you want to invite.
+4. In the **Link access** drop-down list, select **Only specific people**.
 
+5. Click the checkbox confirming that you understand payment is required to add users.
+
+6. Click **Accept**.
+
+7. In the **Invite** field, enter the email address of the person you want to invite and click **Invite** and repeat this process for all the people you want to invite.
+   
    You can only invite one person at a time.
 
-1. (Optional) Set the following options:
+8. (Optional) Set the following options:
+   
    - **Enable time range** - Allow people accessing the link to change the time range. This configuration screen shows the default time range of the dashboard.
    - **Display annotations** - Allow people accessing the link to view the dashboard annotations.
-1. (Optional) Click **Copy external link** and send the copied URL to any external user.
-1. Click the **X** at the top-right corner to close the share drawer.
+
+9. (Optional) Click **Copy external link** and send the copied URL to any external user.
+
+10. Click the **X** at the top-right corner to close the share drawer.
 
 Once you've shared a dashboard externally, a **Public** label is displayed in the header of the dashboard.
 
@@ -123,11 +134,11 @@ You can revoke access to the entire dashboard using the steps in [Update access 
 To revoke access for a viewer, follow these steps:
 
 1. Click **Dashboards** in the main menu.
-1. Click the dashboard you want to share.
-1. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
-1. In the **Share externally** drawer that opens, click the menu icon (three dots) next to the email address of the viewer for whom you'd like to revoke access.
-1. Click **Revoke access**.
-1. Click the **X** at the top-right corner to close the share drawer.
+2. Click the dashboard you want to share.
+3. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
+4. In the **Share externally** drawer that opens, click the menu icon (three dots) next to the email address of the viewer for whom you'd like to revoke access.
+5. Click **Revoke access**.
+6. Click the **X** at the top-right corner to close the share drawer.
 
 The viewer immediately no longer has access to the dashboard, nor can they use any existing one-time use links they may have.
 
@@ -136,11 +147,11 @@ The viewer immediately no longer has access to the dashboard, nor can they use a
 To re-invite a viewer, follow these steps:
 
 1. Click **Dashboards** in the main menu.
-1. Click the dashboard you want to share.
-1. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
-1. In the **Share externally** drawer that opens, click the menu icon (three dots) next to the email address of the viewer you'd like to invite again.
-1. Click **Resend invite**.
-1. Click the **X** at the top-right corner to close the share drawer.
+2. Click the dashboard you want to share.
+3. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
+4. In the **Share externally** drawer that opens, click the menu icon (three dots) next to the email address of the viewer you'd like to invite again.
+5. Click **Resend invite**.
+6. Click the **X** at the top-right corner to close the share drawer.
 
 The viewer receives an email with a new one-time use link. This invalidates all previously issued links for that viewer.
 
@@ -149,8 +160,8 @@ The viewer receives an email with a new one-time use link. This invalidates all 
 To see a list of users who have accessed your externally shared dashboard by way of an emailed link, follow these steps:
 
 1. Click **Administration** in in the main menu.
-1. Select **Users and access** > **Users**.
-1. On the **Users** page, click the **Shared dashboard users** tab.
+2. Select **Users and access** \> **Users**.
+3. On the **Users** page, click the **Shared dashboard users** tab.
 
 On this screen, you can see:
 
@@ -174,18 +185,25 @@ If a Grafana user has read access to the parent dashboard, they can view the ext
 To share your dashboard so that anyone with the link can access it, follow these steps:
 
 1. Click **Dashboards** in the main menu.
-1. Click the dashboard you want to share.
-1. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
 
+2. Click the dashboard you want to share.
+
+3. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
+   
    The **Share externally** drawer opens.
 
-1. In the **Link access** drop-down list, select **Anyone with the link**.
-1. Click the checkbox confirming that you understand the entire dashboard will be public.
-1. Click **Accept**.
-1. (Optional) Set the following options:
+4. In the **Link access** drop-down list, select **Anyone with the link**.
+
+5. Click the checkbox confirming that you understand the entire dashboard will be public.
+
+6. Click **Accept**.
+
+7. (Optional) Set the following options:
+   
    - **Enable time range** - Allow people accessing the link to change the time range. This configuration screen shows the default time range of the dashboard.
    - **Display annotations** - Allow people accessing the link to view the dashboard annotations.
-1. Click the **X** at the top-right corner to close the share drawer.
+
+8. Click the **X** at the top-right corner to close the share drawer.
 
 Now anyone with the link can access the dashboard until you pause or revoke access to it.
 
@@ -196,19 +214,19 @@ Once you've shared a dashboard externally, a **Public** label is displayed in th
 You can update the access to externally shared dashboard links by following these steps:
 
 1. Click **Dashboards** in the main menu.
-1. Click the dashboard you want to share.
-1. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
-1. In the **Share externally** drawer that opens, do one of the following:
+2. Click the dashboard you want to share.
+3. Click the **Share** drop-down list in the top-right corner and select **Share externally**.
+4. In the **Share externally** drawer that opens, do one of the following:
    - Click **Pause access** so that people can't access the dashboard, but the link is maintained.
    - Click **Resume access** so that people can access the dashboard again.
    - Click **Revoke access** so that people can't access the dashboard unless a new external link is generated. Confirm that you want to revoke the link.
-1. Click the **X** at the top-right corner to close the share drawer.
+5. Click the **X** at the top-right corner to close the share drawer.
 
 ## Assess shared dashboard usage
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in [Grafana Enterprise](ref:grafana-enterprise) and [Grafana Cloud](/docs/grafana-cloud).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 You can check usage analytics about your externally shared dashboard by clicking the insights icon in the dashboard header:
 
@@ -218,12 +236,12 @@ Learn more about the kind of information provided in the [dashboard insights doc
 
 ## Supported data sources
 
-Externally shared dashboards _should_ work with any data source that has the properties `backend` and `alerting` both set to true in its `plugin.json`. However, this can't always be
+Externally shared dashboards *should* work with any data source that has the properties `backend` and `alerting` both set to true in its `plugin.json`. However, this can't always be
 guaranteed because plugin developers can override this functionality. The following lists include data sources confirmed to work with externally shared dashboards and data sources that should work, but have not been confirmed as compatible.
 
 ### Confirmed
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - ClickHouse
 - CloudWatch
@@ -240,7 +258,7 @@ guaranteed because plugin developers can override this functionality. The follow
 - Redis
 - SQLite
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ### Unsupported
 
@@ -251,7 +269,7 @@ guaranteed because plugin developers can override this functionality. The follow
 
 ### Unconfirmed
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - Altinity plugin for ClickHouse
 - Amazon Athena
@@ -295,7 +313,7 @@ guaranteed because plugin developers can override this functionality. The follow
 - kdb+
 - simple grpc data source
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ## Limitations
 

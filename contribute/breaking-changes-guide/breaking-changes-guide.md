@@ -12,7 +12,7 @@ Follow this guide to identify and communicate breaking changes introduced to our
   - [Communicate](#communicate)
 - [Who can help with other questions?](#who-can-help-with-other-questions)
 
----
+-----
 
 ## What are our public APIs?
 
@@ -30,7 +30,7 @@ Any change that causes dependent software to behave differently is considered to
 
 [`@grafana/levitate`](https://github.com/grafana/levitate) is a tool created by Grafana that can show breaking changes between two versions of a TypeScript package or a source file.
 
-Levitate can list exported members of an NPM package or imports used by an NPM package, _but it is most commonly used for comparing different versions of the same package to see changes in the exported members._
+Levitate can list exported members of an NPM package or imports used by an NPM package, *but it is most commonly used for comparing different versions of the same package to see changes in the exported members.*
 
 A GitHub workflow runs against every pull request and comments a hint if there are possible breaking changes.
 It also adds the `breaking change` label to the pull request.
@@ -59,7 +59,7 @@ This means that a member was changed in a way that can break dependent plugins.
 ![A table from the console bot showing how a changed number affects the Property, Location, and Diff of the breaking changes.](./breaking-changes-console-screenshot-2.png)
 
 **No breaking changes** (console view):<br />
-Seeing this suggests that while changes were made, most probably none of them were breaking. You are good to go! 👏
+Seeing this suggests that while changes were made, most probably none of them were breaking. You are good to go\! 👏
 
 ![A table from the console bot showing that there were no breaking changes.](./breaking-changes-console-screenshot-3.png)
 
@@ -74,7 +74,7 @@ from using your code and most likely it is going to cause them problems if we ar
 It can also happen that Levitate marks changing an interface as a possible breaking change.
 Introducing a new property will break the code of anyone who implements that interface. While this is correctly marked as a breaking change maybe it is an interface that is never implemented by other developers. If this is the case, then you can choose to ignore Levitate's message.
 
-These notifications are only warnings though, and _in the end it's up to the author of the PR to make a decision that makes the most sense._
+These notifications are only warnings though, and *in the end it's up to the author of the PR to make a decision that makes the most sense.*
 
 ## I know it's a breaking change, what's next?
 
@@ -86,7 +86,7 @@ We can make breaking changes less painful if they are only happening between maj
 
 Whenever possible try to deprecate first what you are about to remove or change. For example:
 
-```javascript
+``` javascript
 import { deprecationWarning } from '@grafana/data';
 
 /**
@@ -99,8 +99,8 @@ myOldFunction(name: string) {
 ```
 
 1. Add a deprecation comment `// @deprecated`.
-2. Add info in the comment about _when it is going to be removed_.
-3. Add info in the comment about _what should be used instead_.
+2. Add info in the comment about *when it is going to be removed*.
+3. Add info in the comment about *what should be used instead*.
 4. If it's a function or a method, use `deprecationWarning(<FILENAME>, <OLD NAME>, <NEW NAME>)` to raise attention during runtime.
 5. Update the [migration guide](https://grafana.com/developers/plugin-tools/migration-guides/) with your instructions.
 
@@ -108,7 +108,7 @@ myOldFunction(name: string) {
 
 Reach out to `@grafana/plugins-platform-frontend` to help find which plugins are using the code that is just about to change, so we try making it smoother by communicating it to the developers.
 
----
+-----
 
 ## Who can help with other questions?
 

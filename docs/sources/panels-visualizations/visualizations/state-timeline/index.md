@@ -1,36 +1,39 @@
----
+-----
+
 aliases:
-  - ../../panels/visualizations/state-timeline/
-  - ../../visualizations/state-timeline/
-description: Configure options for Grafana's state timeline visualization
-keywords:
-  - grafana
-  - docs
-  - state timeline
-  - panel
-labels:
+
+- ../../panels/visualizations/state-timeline/
+- ../../visualizations/state-timeline/
+  description: Configure options for Grafana's state timeline visualization
+  keywords:
+- grafana
+- docs
+- state timeline
+- panel
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: State timeline
-weight: 100
-refs:
-  color-scheme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
-  value-mappings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-value-mappings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-value-mappings/
----
+  - cloud
+  - enterprise
+  - oss
+    title: State timeline
+    weight: 100
+    refs:
+    color-scheme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+    value-mappings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-value-mappings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-value-mappings/
+
+-----
 
 # State timeline
 
-A state timeline visualization displays data in a way that shows state changes over time. In a state timeline, the data is presented as a series of bars or bands called _state regions_. State regions can be rendered with or without values, and the region length indicates the duration or frequency of a state within a given time range.
+A state timeline visualization displays data in a way that shows state changes over time. In a state timeline, the data is presented as a series of bars or bands called *state regions*. State regions can be rendered with or without values, and the region length indicates the duration or frequency of a state within a given time range.
 
 For example, if you're monitoring the CPU usage of a server, you can use a state timeline to visualize the different states, such as “LOW,” “NORMAL,” “HIGH,” or “CRITICAL,” over time. Each state is represented by a different color and the lengths represent the duration of time that the server remained in that state:
 
@@ -44,9 +47,9 @@ The state timeline visualization is useful when you need to monitor and analyze 
 
 ## Configure a state timeline
 
-{{< youtube id="a9wZHM0mdxo" >}}
+{{\< youtube id="a9wZHM0mdxo" \>}}
 
-{{< docs/play title="Grafana State Timeline & Status History" url="https://play.grafana.org/d/qD-rVv6Mz/6-state-timeline-and-status-history?orgId=1s" >}}
+{{\< docs/play title="Grafana State Timeline & Status History" url="https://play.grafana.org/d/qD-rVv6Mz/6-state-timeline-and-status-history?orgId=1s" \>}}
 
 ## Supported data formats
 
@@ -76,7 +79,7 @@ The following example has a single time column and includes null values:
 
 The data is converted as follows, with the [null and empty values visualized as gaps](#connect-null-values) in the state timeline:
 
-{{< figure src="/static/img/docs/state-timeline-panel/state-timeline-with-null-values.png" max-width="1025px" alt="A state timeline visualization with null values showing the status of two servers" >}}
+{{\< figure src="/static/img/docs/state-timeline-panel/state-timeline-with-null-values.png" max-width="1025px" alt="A state timeline visualization with null values showing the status of two servers" \>}}
 
 ### Example 2
 
@@ -93,7 +96,7 @@ The following example has two time columns and doesn't include any null values:
 
 The data is converted as follows:
 
-{{< figure src="/static/img/docs/state-timeline-panel/state-timeline-with-two-timestamps.png" max-width="1025px" alt="A state timeline visualization with two time columns showing the status of two servers" >}}
+{{\< figure src="/static/img/docs/state-timeline-panel/state-timeline-with-two-timestamps.png" max-width="1025px" alt="A state timeline visualization with two time columns showing the status of two servers" \>}}
 
 If your query results aren't in a table format like the preceding examples, especially for time-series data, you can apply specific [transformations](https://stackoverflow.com/questions/68887416/grafana-state-timeline-panel-with-values-states-supplied-by-label) to achieve this.
 
@@ -105,11 +108,11 @@ You can also create a state timeline visualization using time series data. To do
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### State timeline options
 
@@ -135,40 +138,40 @@ Use these options to refine the visualization.
 
 The **Page size** option lets you paginate the state timeline visualization to limit how many series are visible at once. This is useful when you have many series. With paginated results, the visualization displays a subset of all series on each page:
 
-{{< video-embed src="/media/docs/grafana/panels-visualizations/screen-recording-grafana-11-2-state-timeline-pagination-dark.mp4" >}}
+{{\< video-embed src="/media/docs/grafana/panels-visualizations/screen-recording-grafana-11-2-state-timeline-pagination-dark.mp4" \>}}
 
-{{< docs/shared lookup="visualizations/connect-null-values.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/connect-null-values.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="visualizations/disconnect-values.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/disconnect-values.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-2.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/legend-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Tooltip options
 
-{{< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Axis options
 
-{{< docs/shared lookup="visualizations/axis-options-3.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/axis-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

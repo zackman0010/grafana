@@ -16,7 +16,7 @@ Use the Fluent API framework to simplify the testing of reducers.
 
 Example of `reducerTester` in use:
 
-```typescript
+``` typescript
 reducerTester()
   .givenReducer(someReducer, initialState)
   .whenActionIsDispatched(someAction('reducer tests'))
@@ -25,11 +25,11 @@ reducerTester()
 
 #### Complex usage
 
-Sometimes you encounter a _resulting state_ that contains properties that are hard to compare, such as `Dates`, but you still want to evaluate whether other props in state are correct.
+Sometimes you encounter a *resulting state* that contains properties that are hard to compare, such as `Dates`, but you still want to evaluate whether other props in state are correct.
 
 In these cases, you can evaluate individual properties by using `thenStatePredicateShouldEqual` function on `reducerTester` that will return the resulting state. For example:
 
-```typescript
+``` typescript
 reducerTester()
   .givenReducer(someReducer, initialState)
   .whenActionIsDispatched(someAction('reducer tests'))
@@ -47,7 +47,7 @@ Here's a Fluent API function that simplifies the testing of thunks.
 
 Example of `thunkTester` in use:
 
-```typescript
+``` typescript
 const dispatchedActions = await thunkTester(initialState).givenThunk(someThunk).whenThunkIsDispatched(arg1, arg2, arg3);
 
 expect(dispatchedActions).toEqual([someAction('reducer tests')]);
@@ -57,7 +57,7 @@ expect(dispatchedActions).toEqual([someAction('reducer tests')]);
 
 It is possible to infer connected props automatically from `mapStateToProps` and `mapDispatchToProps` using a helper type `ConnectedProps` from Redux. For this to work properly, split the `connect` call into two parts like so:
 
-```typescript
+``` typescript
 import { connect, ConnectedProps } from 'react-redux';
 
 const mapStateToProps = (state: StoreState) => {

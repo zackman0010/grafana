@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../administration/image_rendering/
-  - ../image-rendering/
-description: Image rendering
-keywords:
-  - grafana
-  - image
-  - rendering
-  - plugin
-labels:
+
+- ../administration/image\_rendering/
+- ../image-rendering/
+  description: Image rendering
+  keywords:
+- grafana
+- image
+- rendering
+- plugin
+  labels:
   products:
-    - enterprise
-    - oss
-title: Set up image rendering
-weight: 1000
----
+  - enterprise
+  - oss
+    title: Set up image rendering
+    weight: 1000
+
+-----
 
 # Set up image rendering
 
@@ -22,13 +25,13 @@ Grafana supports automatic rendering of panels as PNG images. This allows Grafan
 
 While an image is being rendered, the PNG image is temporarily written to the file system. When the image is rendered, the PNG image is temporarily written to the `png` folder in the Grafana `data` folder.
 
-A background job runs every 10 minutes and removes temporary images. You can configure how long an image should be stored before being removed by configuring the [temp_data_lifetime](../configure-grafana/#temp_data_lifetime) setting.
+A background job runs every 10 minutes and removes temporary images. You can configure how long an image should be stored before being removed by configuring the [temp\_data\_lifetime](../configure-grafana/#temp_data_lifetime) setting.
 
-You can also render a PNG by hovering over the panel to display the actions menu in the top-right corner, and then clicking **Share > Share link**. The **Render image** option is displayed in the link settings.
+You can also render a PNG by hovering over the panel to display the actions menu in the top-right corner, and then clicking **Share \> Share link**. The **Render image** option is displayed in the link settings.
 
 ## Alerting and render limits
 
-Alert notifications can include images, but rendering many images at the same time can overload the server where the renderer is running. For instructions of how to configure this, see [max_concurrent_screenshots](../configure-grafana/#max_concurrent_screenshots).
+Alert notifications can include images, but rendering many images at the same time can overload the server where the renderer is running. For instructions of how to configure this, see [max\_concurrent\_screenshots](../configure-grafana/#max_concurrent_screenshots).
 
 ## Install Grafana Image Renderer plugin
 
@@ -58,7 +61,7 @@ You can update your settings by using a configuration file, see [default.json](h
 
 You can volume mount your custom configuration file when starting the docker container:
 
-```bash
+``` bash
 docker run -d --name=renderer --network=host -v /some/path/config.json:/usr/src/app/config.json grafana/grafana-image-renderer:latest
 ```
 
@@ -80,11 +83,13 @@ Renderer versions v3.6.1 or later require a Grafana version with this feature. T
 - Grafana v8.4.11 or later patch releases
 - Grafana v8.3.11 or later patch releases
 
-```bash
+<!-- end list -->
+
+``` bash
 AUTH_TOKEN=-
 ```
 
-```json
+``` json
 {
   "service": {
     "security": {
@@ -108,11 +113,11 @@ Default mode will create a new browser instance on each request. When handling m
 When using the `default` mode, it's recommended to not remove the default Chromium flag `--disable-gpu`. When receiving a lot of concurrent requests, not using this flag can cause Puppeteer `newPage` function to freeze, causing request timeouts and leaving browsers open.
 {{% /admonition %}}
 
-```bash
+``` bash
 RENDERING_MODE=default
 ```
 
-```json
+``` json
 {
   "rendering": {
     "mode": "default"
@@ -126,14 +131,14 @@ With the `clustered` mode, you can configure how many browser instances or incog
 
 Using a cluster of incognito pages is more performant and consumes less CPU and memory than a cluster of browsers. However, if one page crashes it can bring down the entire browser with it (making all the rendering requests happening at the same time fail). Also, each page isn't guaranteed to be totally clean (cookies and storage might bleed-through as seen [here](https://bugs.chromium.org/p/chromium/issues/detail?id=754576)).
 
-```bash
+``` bash
 RENDERING_MODE=clustered
 RENDERING_CLUSTERING_MODE=browser
 RENDERING_CLUSTERING_MAX_CONCURRENCY=5
 RENDERING_CLUSTERING_TIMEOUT=30
 ```
 
-```json
+``` json
 {
   "rendering": {
     "mode": "clustered",
@@ -150,11 +155,11 @@ RENDERING_CLUSTERING_TIMEOUT=30
 
 When using the rendering mode `reusable`, one browser instance will be created and reused. A new incognito page will be opened for each request. This mode is experimental since, if the browser instance crashes, it will not automatically be restarted. You can achieve a similar behavior using `clustered` mode with a high `maxConcurrency` setting.
 
-```bash
+``` bash
 RENDERING_MODE=reusable
 ```
 
-```json
+``` json
 {
   "rendering": {
     "mode": "reusable"
@@ -185,11 +190,11 @@ Please note that not all settings are available using environment variables. If 
 
 Change the listening host of the HTTP server. Default is unset and will use the local host.
 
-```bash
+``` bash
 HTTP_HOST=localhost
 ```
 
-```json
+``` json
 {
   "service": {
     "host": "localhost"
@@ -201,11 +206,11 @@ HTTP_HOST=localhost
 
 Change the listening port of the HTTP server. Default is `8081`. Setting `0` will automatically assign a port not in use.
 
-```bash
+``` bash
 HTTP_PORT=0
 ```
 
-```json
+``` json
 {
   "service": {
     "port": 0
@@ -221,11 +226,11 @@ HTTPS protocol is supported in the image renderer v3.11.0 and later.
 
 Change the protocol of the server, it can be `http` or `https`. Default is `http`.
 
-```bash
+``` bash
 HTTP_PROTOCOL=https
 ```
 
-```json
+``` json
 {
   "service": {
     "protocol": "https"
@@ -237,12 +242,12 @@ HTTP_PROTOCOL=https
 
 Path to the image renderer certificate and key file used to start an HTTPS server.
 
-```bash
+``` bash
 HTTP_CERT_FILE=./path/to/cert
 HTTP_CERT_KEY=./path/to/key
 ```
 
-```json
+``` json
 {
   "service": {
     "certFile": "./path/to/cert",
@@ -255,11 +260,11 @@ HTTP_CERT_KEY=./path/to/key
 
 Minimum TLS version allowed. Accepted values are: `TLSv1.2`, `TLSv1.3`. Default is `TLSv1.2`.
 
-```bash
+``` bash
 HTTP_MIN_TLS_VERSION=TLSv1.2
 ```
 
-```json
+``` json
 {
   "service": {
     "minTLSVersion": "TLSv1.2"
@@ -273,11 +278,11 @@ You can enable [Prometheus](https://prometheus.io/) metrics endpoint `/metrics` 
 
 Default is `false`.
 
-```bash
+``` bash
 ENABLE_METRICS=true
 ```
 
-```json
+``` json
 {
   "service": {
     "metrics": {
@@ -295,12 +300,12 @@ With the [Prometheus metrics enabled](#enable-prometheus-metrics), you can also 
 
 Default is `false`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_TIMING_METRICS=true
 ```
 
-```json
+``` json
 {
   "rendering": {
     "timingMetrics": true
@@ -312,11 +317,11 @@ RENDERING_TIMING_METRICS=true
 
 Change the log level. Default is `info` and will include log messages with level `error`, `warning` and `info`.
 
-```bash
+``` bash
 LOG_LEVEL=debug
 ```
 
-```json
+``` json
 {
   "service": {
     "logging": {
@@ -336,11 +341,11 @@ Instruct headless browser instance whether to capture and log verbose informatio
 
 Note that you need to change log level to `debug`, see above, for the verbose information to be included in the logs.
 
-```bash
+``` bash
 RENDERING_VERBOSE_LOGGING=true
 ```
 
-```json
+``` json
 {
   "rendering": {
     "verboseLogging": true
@@ -353,11 +358,11 @@ RENDERING_VERBOSE_LOGGING=true
 Instruct headless browser instance whether to output its debug and error messages into running process of remote rendering service. Default is `false`.
 This can be useful to enable (`true`) when troubleshooting.
 
-```bash
+``` bash
 RENDERING_DUMPIO=true
 ```
 
-```json
+``` json
 {
   "rendering": {
     "dumpio": true
@@ -376,11 +381,11 @@ Please note that this is not recommended, since you may encounter problems if th
 
 You need to make sure that the Chrome/Chromium executable is available for the Grafana/image rendering service process.
 
-```bash
+``` bash
 CHROME_BIN="/usr/bin/chromium-browser"
 ```
 
-```json
+``` json
 {
   "rendering": {
     "chromeBin": "/usr/bin/chromium-browser"
@@ -392,11 +397,11 @@ CHROME_BIN="/usr/bin/chromium-browser"
 
 Additional arguments to pass to the headless browser instance. Defaults are `--no-sandbox,--disable-gpu`. The list of Chromium flags can be found [here](https://peter.sh/experiments/chromium-command-line-switches/) and the list of flags used as defaults by Puppeteer can be found [there](https://cri.dev/posts/2020-04-04-Full-list-of-Chromium-Puppeteer-flags/). Multiple arguments is separated with comma-character.
 
-```bash
+``` bash
 RENDERING_ARGS=--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--disable-accelerated-2d-canvas,--disable-gpu,--window-size=1280x758
 ```
 
-```json
+``` json
 {
   "rendering": {
     "args": [
@@ -416,11 +421,11 @@ RENDERING_ARGS=--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--d
 Instruct headless browser instance whether to ignore HTTPS errors during navigation. Per default HTTPS errors are not ignored.
 Due to the security risk it's not recommended to ignore HTTPS errors.
 
-```bash
+``` bash
 IGNORE_HTTPS_ERRORS=true
 ```
 
-```json
+``` json
 {
   "rendering": {
     "ignoresHttpsErrors": true
@@ -432,11 +437,11 @@ IGNORE_HTTPS_ERRORS=true
 
 Instruct headless browser instance to use a default timezone when not provided by Grafana, .e.g. when rendering panel image of alert. See [ICU’s metaZones.txt](https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1) for a list of supported timezone IDs. Fallbacks to `TZ` environment variable if not set.
 
-```bash
+``` bash
 BROWSER_TZ=Europe/Stockholm
 ```
 
-```json
+``` json
 {
   "rendering": {
     "timezone": "Europe/Stockholm"
@@ -449,12 +454,12 @@ BROWSER_TZ=Europe/Stockholm
 Instruct headless browser instance to use a default language when not provided by Grafana, e.g. when rendering panel image of alert.
 Refer to the HTTP header Accept-Language to understand how to format this value.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_LANGUAGE="fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
 ```
 
-```json
+``` json
 {
   "rendering": {
     "acceptLanguage": "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
@@ -466,12 +471,12 @@ RENDERING_LANGUAGE="fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
 
 Default viewport width when width is not specified in the rendering request. Default is `1000`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_WIDTH=1000
 ```
 
-```json
+``` json
 {
   "rendering": {
     "width": 1000
@@ -483,12 +488,12 @@ RENDERING_VIEWPORT_WIDTH=1000
 
 Default viewport height when height is not specified in the rendering request. Default is `500`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_HEIGHT=500
 ```
 
-```json
+``` json
 {
   "rendering": {
     "height": 500
@@ -500,12 +505,12 @@ RENDERING_VIEWPORT_HEIGHT=500
 
 Limit the maximum viewport width that can be requested. Default is `3000`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_MAX_WIDTH=1000
 ```
 
-```json
+``` json
 {
   "rendering": {
     "maxWidth": 1000
@@ -517,12 +522,12 @@ RENDERING_VIEWPORT_MAX_WIDTH=1000
 
 Limit the maximum viewport height that can be requested. Default is `3000`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_MAX_HEIGHT=500
 ```
 
-```json
+``` json
 {
   "rendering": {
     "maxHeight": 500
@@ -535,12 +540,12 @@ RENDERING_VIEWPORT_MAX_HEIGHT=500
 Specify default device scale factor for rendering images. `2` is enough for monitor resolutions, `4` would be better for printed material. Setting a higher value affects performance and memory. Default is `1`.
 This can be overridden in the rendering request.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_DEVICE_SCALE_FACTOR=2
 ```
 
-```json
+``` json
 {
   "rendering": {
     "deviceScaleFactor": 2
@@ -552,12 +557,12 @@ RENDERING_VIEWPORT_DEVICE_SCALE_FACTOR=2
 
 Limit the maximum device scale factor that can be requested. Default is `4`.
 
-```bash
+``` bash
 # Available from v3.9.0+
 RENDERING_VIEWPORT_MAX_DEVICE_SCALE_FACTOR=4
 ```
 
-```json
+``` json
 {
   "rendering": {
     "maxDeviceScaleFactor": 4
@@ -569,11 +574,11 @@ RENDERING_VIEWPORT_MAX_DEVICE_SCALE_FACTOR=4
 
 The following command sets a page zoom level. The default value is `1`. A value of `1.5` equals 150% zoom.
 
-```bash
+``` bash
 RENDERING_VIEWPORT_PAGE_ZOOM_LEVEL=1
 ```
 
-```json
+``` json
 {
   "rendering": {
     "pageZoomLevel": 1
@@ -585,11 +590,11 @@ RENDERING_VIEWPORT_PAGE_ZOOM_LEVEL=1
 
 Enable OpenTelemetry Tracing by setting the tracing URL. Default is empty (disabled).
 
-```bash
+``` bash
 RENDERING_TRACING_URL="http://localhost:4318/v1/traces"
 ```
 
-```json
+``` json
 {
   "rendering": {
     "tracing": {

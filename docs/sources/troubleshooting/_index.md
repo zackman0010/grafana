@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - troubleshoot-dashboards/
-description: Guide to troubleshooting Grafana problems
-keywords:
-  - grafana
-  - troubleshooting
-  - documentation
-  - guide
-labels:
+
+- troubleshoot-dashboards/
+  description: Guide to troubleshooting Grafana problems
+  keywords:
+- grafana
+- troubleshooting
+- documentation
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Troubleshooting
-weight: 180
----
+  - cloud
+  - enterprise
+  - oss
+    title: Troubleshooting
+    weight: 180
+
+-----
 
 # Troubleshooting
 
@@ -50,7 +53,7 @@ Server-side image (png) rendering is a feature that is optional but very useful 
 
 If the image is missing text, then make sure you have font packages installed.
 
-```bash
+``` bash
 sudo yum install fontconfig
 sudo yum install freetype*
 sudo yum install urw-fonts

@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../../manage-users-and-permissions/manage-server-users/add-remove-user-to-org/
-  - ../../manage-users-and-permissions/manage-server-users/add-user-to-org/
-description: Describes how a Grafana server administrator can add or remove users
+
+- ../../manage-users-and-permissions/manage-server-users/add-remove-user-to-org/
+- ../../manage-users-and-permissions/manage-server-users/add-user-to-org/
+  description: Describes how a Grafana server administrator can add or remove users
   in an organization
-labels:
+  labels:
   products:
-    - enterprise
-    - oss
-title: Add or remove a user in an organization
-weight: 30
----
+  - enterprise
+  - oss
+    title: Add or remove a user in an organization
+    weight: 30
+
+-----
 
 # Add or remove a user in an organization
 
@@ -31,19 +34,23 @@ You are required to specify an Admin role for each organization. The first user 
 **To add a user to an organization**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
-1. In the Organizations section, click **Add user to organization**.
-1. Select an organization and a role.
 
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+
+3. Click a user.
+
+4. In the Organizations section, click **Add user to organization**.
+
+5. Select an organization and a role.
+   
    For more information about user permissions, refer to [Organization roles](../../../roles-and-permissions/#organization-roles).
 
-1. Click **Add to organization**.
+6. Click **Add to organization**.
 
 The next time the user signs in, they will be able to navigate to their new organization using the Switch Organizations option in the user profile menu.
 
 {{% admonition type="note" %}}
-If you have [organization administrator](../../../roles-and-permissions/#organization-roles) permissions and _not_ [server administrator](../../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [invite a user to join an organization](../../manage-org-users/#invite-a-user-to-join-an-organization).
+If you have [organization administrator](../../../roles-and-permissions/#organization-roles) permissions and *not* [server administrator](../../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [invite a user to join an organization](../../manage-org-users/#invite-a-user-to-join-an-organization).
 {{% /admonition %}}
 
 ## Remove a user from an organization
@@ -57,9 +64,9 @@ Remove a user from an organization when they no longer require access to the das
 **To remove a user from an organization**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
-1. In the Organization section, click **Remove from organization** next to the organization from which you want to remove the user.
-1. Click **Confirm removal**.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click a user.
+4. In the Organization section, click **Remove from organization** next to the organization from which you want to remove the user.
+5. Click **Confirm removal**.
 
-> **Note:** If you have [organization administrator](../../../roles-and-permissions/#organization-roles) permissions and _not_ [server administrator](../../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [remove a user from an organization](../../manage-org-users/#remove-a-user-from-an-organization) in the Users section of organization configuration.
+> **Note:** If you have [organization administrator](../../../roles-and-permissions/#organization-roles) permissions and *not* [server administrator](../../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [remove a user from an organization](../../manage-org-users/#remove-a-user-from-an-organization) in the Users section of organization configuration.

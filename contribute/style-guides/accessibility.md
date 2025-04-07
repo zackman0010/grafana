@@ -16,7 +16,7 @@ The form components from `grafana/ui` provide an easier way to achieve that. The
 
 For example:
 
-```tsx
+``` tsx
 <Field label="Name">
   <Input id="name" placeholder="Enter a name" />
 </Field>
@@ -24,7 +24,7 @@ For example:
 
 In the previous example, the code is rendered as:
 
-```html
+``` html
 <div>
   <label for="name"> Name </label>
   <input name="name" type="text" id="name" placeholder="Enter a name" value="" />
@@ -45,7 +45,7 @@ mind, `*ByRole` queries are sufficient in most cases. However, there are excepti
 
 For example:
 
-```tsx
+``` tsx
 <Field label="Username">
   <Input id="username" placeholder="Enter a name" value={'Test'} />
 </Field>
@@ -53,7 +53,7 @@ For example:
 
 In the previous example, the test case is the following code:
 
-```tsx
+``` tsx
 it('has username set', () => {
   expect(screen.getByRole('textbox', { name: 'Username' })).toHaveValue('Test');
 });

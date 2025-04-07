@@ -7,8 +7,8 @@ Grafana ships with a built-in Microsoft SQL Server (MSSQL) data source plugin th
 1. Open the side menu by clicking the Grafana icon in the top header.
 2. In the side menu under the `Configuration` link you should find a link named `Data Sources`.
 3. Click the `+ Add data source` button in the top header.
-4. Select _Microsoft SQL Server_ from the _Type_ dropdown.
+4. Select *Microsoft SQL Server* from the *Type* dropdown.
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/datasources/mssql/](https://grafana.com/docs/grafana/latest/datasources/mssql/)
+<https://grafana.com/docs/grafana/latest/datasources/mssql/>

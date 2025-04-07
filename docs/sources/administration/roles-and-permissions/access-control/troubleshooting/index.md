@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/troubleshooting/
-description: RBAC troubleshooting guide.
-labels:
+
+- ../../../enterprise/access-control/troubleshooting/
+  description: RBAC troubleshooting guide.
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Troubleshooting RBAC
-title: Troubleshooting RBAC
-weight: 100
----
+  - cloud
+  - enterprise
+    menuTitle: Troubleshooting RBAC
+    title: Troubleshooting RBAC
+    weight: 100
+
+-----
 
 # Troubleshooting RBAC
 
@@ -19,7 +22,7 @@ In this section, youâ€™ll learn about logs that are available for RBAC and youâ€
 
 You can enable debug log messages for RBAC in the Grafana configuration file. Debug logs are added to the Grafana server logs.
 
-```bash
+``` bash
 [log]
 filters = accesscontrol:debug accesscontrol.evaluator:debug dashboard.permissions:debug
 ```
@@ -27,22 +30,22 @@ filters = accesscontrol:debug accesscontrol.evaluator:debug dashboard.permission
 ## Enable audit logging
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
 You can enable auditing in the Grafana configuration file.
 
-```bash
+``` bash
 [auditing]
 enabled = true
 ```
 
 All permission and role updates, and role assignments are added to audit logs.
-Learn more about [access control audit logs](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/audit-grafana/#access-control).
+Learn more about [access control audit logs](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/audit-grafana/#access-control).
 
 ## Missing dashboard, folder or data source permissions
 
-[Dashboard and folder permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#dashboard-permissions) and [data source permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#data-source-permissions) can go out of sync if a Grafana instance version is upgraded, downgraded and then upgraded again.
+[Dashboard and folder permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#dashboard-permissions) and [data source permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#data-source-permissions) can go out of sync if a Grafana instance version is upgraded, downgraded and then upgraded again.
 This happens when an instance is downgraded from a version that uses RBAC to a version that uses the legacy access control, and dashboard, folder or data source permissions are updated.
 These permission updates will not be applied to RBAC, so permissions will be out of sync when the instance is next upgraded to a version with RBAC.
 
@@ -54,8 +57,8 @@ If you have made dashboard, folder or data source permission updates with RBAC e
 To resynchronize the permissions:
 
 1. make a backup of your database
-1. run the following SQL queries
-   ```sql
+2. run the following SQL queries
+   ``` sql
    DELETE
    FROM builtin_role
    where role_id IN (SELECT id
@@ -90,4 +93,4 @@ To resynchronize the permissions:
                           'managed folder permissions alert actions repeated migration',
                           'managed permissions migration enterprise');
    ```
-1. restart your Grafana instance
+3. restart your Grafana instance

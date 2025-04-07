@@ -1,23 +1,26 @@
----
+-----
+
 Feedback Link: https://github.com/grafana/tutorials/issues/new
 aliases:
-  - /docs/grafana/latest/tutorials/iis/
-authors:
-  - grafana_labs
-categories:
-  - administration
-description: Learn how to set up Grafana behind IIS with URL Rewrite.
-id: iis
-labels:
+
+- /docs/grafana/latest/tutorials/iis/
+  authors:
+- grafana\_labs
+  categories:
+- administration
+  description: Learn how to set up Grafana behind IIS with URL Rewrite.
+  id: iis
+  labels:
   products:
-    - enterprise
-    - oss
-status: Published
-summary: Learn how to set up Grafana behind IIS with URL Rewrite.
-tags:
-  - advanced
-title: Use IIS with URL Rewrite as a reverse proxy
----
+  - enterprise
+  - oss
+    status: Published
+    summary: Learn how to set up Grafana behind IIS with URL Rewrite.
+    tags:
+- advanced
+  title: Use IIS with URL Rewrite as a reverse proxy
+
+-----
 
 # Use IIS with URL Rewrite as a reverse proxy
 
@@ -47,11 +50,11 @@ You will also need the Application Request Routing (ARR) module for IIS for prox
 
 ## Grafana Config
 
-The Grafana config can be set by creating a file named/editing the existing file named `custom.ini` in the `conf` subdirectory of your Grafana installation. See the [installation instructions](/docs/grafana/<GRAFANA_VERSION>/installation/windows/#configure) for more details.
+The Grafana config can be set by creating a file named/editing the existing file named `custom.ini` in the `conf` subdirectory of your Grafana installation. See the [installation instructions](/docs/grafana/\<GRAFANA_VERSION\>/installation/windows/#configure) for more details.
 
 Using the example from above, if the subpath is `grafana` (you can set this to whatever is required) and the parent site is `yourdomain.com:8080`, then you would add this to the `custom.ini` config file:
 
-```bash
+``` bash
 [server]
 domain = yourdomain.com:8080
 root_url = %(protocol)s://%(domain)s/grafana/
@@ -61,13 +64,15 @@ Restart the Grafana server after changing the config file.
 
 Configured address to serve Grafana: http://yourdomain.com:8080/grafana
 
----
+-----
 
 If you already have a subpath on your domain, configure it as follows:
 
 - Your Parent Site Address: http://yourdomain.com/existingsubpath
 
-```bash
+<!-- end list -->
+
+``` bash
 [server]
 domain = yourdomain.com/existingsubpath
 root_url = %(protocol)s://%(domain)s/grafana/
@@ -94,14 +99,16 @@ Configured address to serve Grafana: http://yourdomain.com/existingsubpath/grafa
 1. In the IIS Manager, click on the website that grafana will run under. For example, select the website that is bound to the http://yourdomain.com domain.
 2. In the admin console for this website, double click on the URL Rewrite option:
 
-{{< figure src="/static/img/docs/tutorials/IIS_admin_console.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/IIS\_admin\_console.png"  max-width="800px" \>}}
 
 3. Click on the `Add Rule(s)...` action
 4. Choose the Blank Rule template for an Inbound Rule
 
-{{< figure src="/static/img/docs/tutorials/IIS_add_inbound_rule.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/IIS\_add\_inbound\_rule.png"  max-width="800px" \>}}
 
 5. Create an Inbound Rule for the website with the following settings:
+
+<!-- end list -->
 
 - pattern: `grafana(/)?(.*)` (if you have customised the subpath that will be used, use that instead of `grafana`)
 - check the `Ignore case` checkbox
@@ -109,9 +116,11 @@ Configured address to serve Grafana: http://yourdomain.com/existingsubpath/grafa
 - check the `Append query string` checkbox
 - check the `Stop processing of subsequent rules` checkbox
 
-{{< figure src="/static/img/docs/tutorials/IIS_url_rewrite.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/IIS\_url\_rewrite.png"  max-width="800px" \>}}
 
 6. If your version of Grafana is greater than 8.3.5, you also need to configure the reverse proxy to preserve host headers.
+
+<!-- end list -->
 
 - This can be achieved by configuring the IIS config file by running this in a cmd prompt
   `%windir%\system32\inetsrv\appcmd.exe set config -section:system.webServer/proxy -preserveHostHeader:true /commit:apphost`
@@ -130,22 +139,22 @@ When navigating to the Grafana URL (`http://yourdomain.com:8080/grafana`) and a 
 
 ### Grafana Website only shows text with no images or css
 
-{{< figure src="/static/img/docs/tutorials/IIS_proxy_error.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/IIS\_proxy\_error.png"  max-width="800px" \>}}
 
-1. The `root_url` setting in the Grafana config file does not match the parent URL with subpath. This could happen if the root_url is commented out by mistake (`;` is used for commenting out a line in .ini files):
-
+1. The `root_url` setting in the Grafana config file does not match the parent URL with subpath. This could happen if the root\_url is commented out by mistake (`;` is used for commenting out a line in .ini files):
+   
    `; root_url = %(protocol)s://%(domain)s/grafana/`
 
 2. or if the subpath in the `root_url` setting does not match the subpath used in the pattern in the Inbound Rule in IIS:
-
+   
    `root_url = %(protocol)s://%(domain)s/grafana/`
-
+   
    pattern in Inbound Rule: `wrongsubpath(/)?(.*)`
 
 3. or if the Rewrite URL in the Inbound Rule is incorrect.
-
+   
    The Rewrite URL should not include the subpath.
-
+   
    The Rewrite URL should contain the capture group from the pattern matching that returns the part of the URL after the subpath. The pattern used above returns three capture groups and the third one {R:2} returns the part of the URL after `http://yourdomain.com:8080/grafana/`.
 
 ### You see an 'Error updating options: origin not allowed' error

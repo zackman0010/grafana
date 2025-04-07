@@ -1,39 +1,43 @@
----
+-----
+
 aliases:
-  - ../../../fundamentals/contact-points/notifiers/webhook-notifier/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/contact-points/notifiers/webhook-notifier/
-  - ../../../fundamentals/contact-points/webhook-notifier/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/contact-points/webhook-notifier/
-  - ../../../manage-notifications/manage-contact-points/webhook-notifier/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/manage-contact-points/webhook-notifier/
-  - alerting/manage-notifications/manage-contact-points/webhook-notifier/
-  - ../../../alerting-rules/manage-contact-points/integrations/webhook-notifier/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/manage-contact-points/integrations/webhook-notifier/
+
+- ../../../fundamentals/contact-points/notifiers/webhook-notifier/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/contact-points/notifiers/webhook-notifier/
+- ../../../fundamentals/contact-points/webhook-notifier/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/contact-points/webhook-notifier/
+- ../../../manage-notifications/manage-contact-points/webhook-notifier/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/manage-contact-points/webhook-notifier/
+- alerting/manage-notifications/manage-contact-points/webhook-notifier/
+- ../../../alerting-rules/manage-contact-points/integrations/webhook-notifier/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/manage-contact-points/integrations/webhook-notifier/
 
 canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/integrations/webhook-notifier/
 description: Configure the webhook notifier integration for Alerting
 keywords:
-  - grafana
-  - alerting
-  - guide
-  - contact point
-  - templating
-labels:
+
+- grafana
+- alerting
+- guide
+- contact point
+- templating
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Webhook
-title: Configure the webhook notifier for Alerting
-weight: 165
-refs:
-  notification-templates:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
-  configure-contact-points:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/manage-contact-points/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Webhook
+    title: Configure the webhook notifier for Alerting
+    weight: 165
+    refs:
+    notification-templates:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
+    configure-contact-points:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/manage-contact-points/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
+
+-----
 
 # Configure webhook notifications
 
@@ -45,13 +49,13 @@ The webhook integration is a flexible way to integrate alerts into your system. 
 
 To create a contact point with webhook integration, complete the following steps.
 
-1. Navigate to **Alerts & IRM** -> **Alerting** -> **Contact points**.
-1. Click **+ Add contact point**.
-1. Enter a name for the contact point.
-1. From the **Integration** list, select **Webhook**.
-1. In the **URL** field, copy in your Webhook URL.
-1. (Optional) Configure [additional settings](#webhook-settings).
-1. Click **Save contact point**.
+1. Navigate to **Alerts & IRM** -\> **Alerting** -\> **Contact points**.
+2. Click **+ Add contact point**.
+3. Enter a name for the contact point.
+4. From the **Integration** list, select **Webhook**.
+5. In the **URL** field, copy in your Webhook URL.
+6. (Optional) Configure [additional settings](#webhook-settings).
+7. Click **Save contact point**.
 
 For more details on contact points, including how to test them and enable notifications, refer to [Configure contact points](ref:configure-contact-points).
 
@@ -74,11 +78,11 @@ For more details on contact points, including how to test them and enable notifi
 | TLS                               | TLS configuration options, including CA certificate, client certificate, and client key.                                |
 | HMAC Signature                    | HMAC signature configuration options.                                                                                   |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 
 You can configure either HTTP Basic Authentication or the Authorization request header, but not both.
 
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### HMAC signature
 
@@ -92,9 +96,7 @@ You can secure your webhook notifications using HMAC signatures to verify the au
 
 When HMAC signing is configured, Grafana generates a signature using HMAC-SHA256 with your secret key. If a timestamp header is specified, a Unix timestamp is included in the signature calculation. The signature is calculated as:
 
-```
-HMAC(timestamp + ":" + body)
-```
+    HMAC(timestamp + ":" + body)
 
 The timestamp is sent in the specified header. If no timestamp header is specified, the signature is calculated just from the request body. The signature is sent as a hex-encoded string in the specified signature header.
 
@@ -120,13 +122,13 @@ Use the following settings to include custom data within the [JSON payload](#bod
 | Title   | Sends the value as a string in the `title` field of the [JSON payload](#body). Supports [notification templates](ref:notification-templates).   |
 | Message | Sends the value as a string in the `message` field of the [JSON payload](#body). Supports [notification templates](ref:notification-templates). |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 You can customize the `title` and `message` options to include custom messages and notification data using notification templates. These fields are always sent as strings in the JSON payload.
 
 However, you cannot customize the webhook data structure, such as adding or changing other JSON fields and HTTP headers, or sending data in a different format like XML.
 
 If you need to format these fields as JSON or modify other webhook request options, consider sending webhook notifications to a proxy server that adjusts the webhook request before forwarding it to the final destination.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### Optional notification settings
 
@@ -138,7 +140,7 @@ If you need to format these fields as JSON or modify other webhook request optio
 
 The following example shows the payload of a webhook notification containing information about two firing alerts:
 
-```json
+``` json
 {
   "receiver": "My Super Webhook",
   "status": "firing",

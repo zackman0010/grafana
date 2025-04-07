@@ -1,50 +1,53 @@
----
+-----
+
 aliases:
-  - ../basics/timeseries-dimensions/
-  - ../getting-started/timeseries-dimensions/
-  - ../guides/timeseries-dimensions/
-  - /docs/grafana-cloud/introduction/timeseries-dimensions/
-description: time series dimensions
-keywords:
-  - grafana
-  - intro
-  - guide
-  - concepts
-  - timeseries
-  - labels
-labels:
+
+- ../basics/timeseries-dimensions/
+- ../getting-started/timeseries-dimensions/
+- ../guides/timeseries-dimensions/
+- /docs/grafana-cloud/introduction/timeseries-dimensions/
+  description: time series dimensions
+  keywords:
+- grafana
+- intro
+- guide
+- concepts
+- timeseries
+- labels
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Time series dimensions
-weight: 500
-refs:
-  create-grafana-managed-rule:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/#single-and-multi-dimensional-rule
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/#single-and-multi-dimensional-rule
-  time-series-databases:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries/#time-series-databases
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries/#time-series-databases
----
+  - cloud
+  - enterprise
+  - oss
+    title: Time series dimensions
+    weight: 500
+    refs:
+    create-grafana-managed-rule:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/\#single-and-multi-dimensional-rule
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/\#single-and-multi-dimensional-rule
+    time-series-databases:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries/\#time-series-databases
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries/\#time-series-databases
+
+-----
 
 # Time series dimensions
 
-In [Introduction to time series](ref:time-series-databases), the concept of _labels_, also called _tags_, is introduced:
+In [Introduction to time series](ref:time-series-databases), the concept of *labels*, also called *tags*, is introduced:
 
-> Another feature of a TSDB is the ability to filter measurements using _tags_. Each data point is labeled with a tag that adds context information, such as where the measurement was taken.
+> Another feature of a TSDB is the ability to filter measurements using *tags*. Each data point is labeled with a tag that adds context information, such as where the measurement was taken.
 
 With time series data, the data often contain more than a single series, and is a set of multiple time series. Many Grafana data sources support this type of data.
 
-{{< figure src="/static/img/docs/example_graph_multi_dim.png" class="docs-image--no-shadow" max-width="850px" alt="Temperature by location" >}}
+{{\< figure src="/static/img/docs/example\_graph\_multi\_dim.png" class="docs-image--no-shadow" max-width="850px" alt="Temperature by location" \>}}
 
 The common case is issuing a single query for a measurement with one or more additional properties as dimensions. For example, querying a temperature measurement along with a location property. In this case, multiple series are returned back from that single query and each series has unique location as a dimension.
 
-To identify unique series within a set of time series, Grafana stores dimensions in _labels_.
+To identify unique series within a set of time series, Grafana stores dimensions in *labels*.
 
 ## Labels
 
@@ -52,7 +55,7 @@ Each time series in Grafana optionally has labels. Labels are a set of key/value
 
 Different sources of time series data have dimensions stored natively, or common storage patterns that allow the data to be extracted into dimensions.
 
-Time series databases (TSDBs) usually natively support dimensionality. Prometheus also stores dimensions in _labels_. In TSDBs such as Graphite or OpenTSDB the term _tags_ is used instead.
+Time series databases (TSDBs) usually natively support dimensionality. Prometheus also stores dimensions in *labels*. In TSDBs such as Graphite or OpenTSDB the term *tags* is used instead.
 
 In table databases such SQL, these dimensions are generally the `GROUP BY` parameters of a query.
 
@@ -64,7 +67,7 @@ In SQL or SQL-like databases that return table responses, additional dimensions 
 
 For example, consider a query like:
 
-```sql
+``` sql
 SELECT BUCKET(StartTime, 1h), AVG(Temperature) AS Temp, Location FROM T
   GROUP BY BUCKET(StartTime, 1h), Location
   ORDER BY time asc
@@ -79,7 +82,7 @@ This query would return a table with three columns with data types time, number,
 | 10:00     | 26   | LGA      |
 | 10:00     | 22   | BOS      |
 
-The table format is a _long_ formatted time series, also called _tall_. It has repeated time stamps, and repeated values in Location. In this case, we have two time series in the set that would be identified as `Temp {Location=LGA}` and `Temp {Location=BOS}`.
+The table format is a *long* formatted time series, also called *tall*. It has repeated time stamps, and repeated values in Location. In this case, we have two time series in the set that would be identified as `Temp {Location=LGA}` and `Temp {Location=BOS}`.
 
 Individual time series from the set are extracted by using the time typed column `StartTime` as the time index of the time series, the numeric typed column `Temp` as the series name, and the name and values of the string typed `Location` column to build the labels, such as Location=LGA.
 

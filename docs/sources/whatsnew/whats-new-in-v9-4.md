@@ -1,23 +1,26 @@
----
+-----
+
 description: Learn about new and updated features in Grafana v9.4
 keywords:
-  - grafana
-  - new
-  - documentation
-  - '9.4'
-  - release notes
-labels:
+
+- grafana
+- new
+- documentation
+- '9.4'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v9.4
-weight: -35
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v9.4
+    weight: -35
+
+-----
 
 # What's new in Grafana v9.4
 
-Welcome to Grafana 9.4! Read on to learn about changes to search and navigation, dashboards and visualizations, and authentication and security. For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md).
+Welcome to Grafana 9.4\! Read on to learn about changes to search and navigation, dashboards and visualizations, and authentication and security. For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md).
 
 ## Search and navigation
 
@@ -25,7 +28,7 @@ We've made the following changes to search and navigation.
 
 ### Command palette enhancements
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 The command palette has been updated to provide a more efficient way to navigate Grafana. You can now search and access all pages and recent dashboards, making it easier to perform tasks without taking your hands off the keyboard.
 
@@ -33,11 +36,11 @@ To launch the command palette, use the keyboard shortcut `cmd + K` on Mac or `ct
 
 To learn more about the command palette, refer to [Search](../../search/).
 
-{{< figure src="/media/docs/grafana/screenshot-grafana-94-command-palette.png" max-width="750px" caption="Grafana command palette" >}}
+{{\< figure src="/media/docs/grafana/screenshot-grafana-94-command-palette.png" max-width="750px" caption="Grafana command palette" \>}}
 
 ### New navigation
 
-_Generally available on Grafana Cloud, and available to preview using the `topnav` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles) in all editions of Grafana._
+*Generally available on Grafana Cloud, and available to preview using the `topnav` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles) in all editions of Grafana.*
 
 The navigation in Grafana has been updated with a new design and an improved structure to make it easier for you to access the data you need. With this update, you'll be able to quickly navigate between features, giving you full visibility into the health of your systems.
 
@@ -47,7 +50,7 @@ The new navigation is gradually rolling out to all users on Grafana Cloud. If yo
 
 > **Note:** Plugin developers should refer to [the migration guide](/developers/plugin-tools/migration-guides/update-from-grafana-versions/migrate-9_3_x-to-9_4_x#new-navigation-layout-is-supported) to upgrade their plugins to work seamlessly with the new navigation layout.
 
-{{< figure src="/media/docs/grafana/navigation-9-4.png" max-width="750px" caption="Grafana new navigation" >}}
+{{\< figure src="/media/docs/grafana/navigation-9-4.png" max-width="750px" caption="Grafana new navigation" \>}}
 
 ## Dashboards and visualizations
 
@@ -55,7 +58,7 @@ We've made the following changes to dashboards and visualizations. Learn more ab
 
 ### Dashboard panel redesign
 
-_Available to preview using the `newPanelChromeUI` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles) in all editions of Grafana_.
+*Available to preview using the `newPanelChromeUI` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles) in all editions of Grafana*.
 
 Dashboard panels contain a lot of information, some of which is difficult to discover or access from the dashboard. With our redesigned panels, we've improved accessibility and made it easier to understand the status of a panel by adding and moving key elements.
 
@@ -63,61 +66,61 @@ We’ve rethought the panel information architecture, added additional interacti
 
 Grafana’s new panel is available only for React-based panels; no Angular-based panels are redesigned. For example, Angular-based panel will still have the old Graph and Table visualizations.
 
-{{< video-embed src="/media/docs/grafana/screen-recording-panel-header-redesign-whats-new-9-4.mp4" max-width="750px" caption="Panel header redesign" >}}
+{{\< video-embed src="/media/docs/grafana/screen-recording-panel-header-redesign-whats-new-9-4.mp4" max-width="750px" caption="Panel header redesign" \>}}
 
 However, we have more planned: we’re going to make even more improvements to the accessibility of panels and improvements to panels without a header.
 
 ### New data source connection page in Dashboards and Explore
 
-_Available to preview using the `datasourceOnboarding` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles)._
+*Available to preview using the `datasourceOnboarding` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles).*
 
 When you start your journey to create a dashboard or explore your data, but you don't have a data source connected yet, you’ll be shown a page that guides you to set up a first connection.
 
 Administrators can choose between selecting one of the most popular data sources or viewing the entire list. Editors are guided to contact their administrator to configure data sources. In both cases, there's also an option to continue without setting up a data source and to use sample data instead.
 
-{{< figure src="/media/docs/grafana/screenshot-datasource-connection-onboarding-whats-new-9-4.png" max-width="750px" caption="Admin view of data source connection page on dashboard creation" >}}
+{{\< figure src="/media/docs/grafana/screenshot-datasource-connection-onboarding-whats-new-9-4.png" max-width="750px" caption="Admin view of data source connection page on dashboard creation" \>}}
 
 ### Log details redesign
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 We've updated the **Details** section of a log line. Previously some of the interactions, such as filtering, showing statistics, or toggling the visibility were split across **Labels** and **Detected fields**. With the recent changes those two sections are combined and the interactions are available for all fields.
 
-{{< figure src="/static/img/logs/log-details-whats-new-9-4.png" max-width="750px" caption="Log details redesign with interactions" >}}
+{{\< figure src="/static/img/logs/log-details-whats-new-9-4.png" max-width="750px" caption="Log details redesign with interactions" \>}}
 
 Learn more about viewing logs in our [Logs panel documentation](../../panels-visualizations/visualizations/logs/).
 
 ### Loki datasource query validation
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 We added support to validate queries and visually display errors as a query is being written, without having to execute it to receive this feedback. This feature supports single and multi-line queries, with and without variables.
 
-{{< figure src="/media/docs/grafana/logs-loki-query-validation-whats-new-9-4.png" max-width="750px" caption="Loki query validation" >}}
+{{\< figure src="/media/docs/grafana/logs-loki-query-validation-whats-new-9-4.png" max-width="750px" caption="Loki query validation" \>}}
 
 Learn more about viewing logs in our [Logs panel documentation](../../panels-visualizations/visualizations/logs/).
 
 ### Loki logs sample in Explore
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 For Loki metric queries in Explore, you can now see the sample of log lines that contributed to the displayed results. To see these logs, click on the collapsed **Logs sample** panel under your graph or table panel. If you want to interact with your log lines or modify the log query, click on the "Open logs in split view" button and the log query will be executed in the split view.
 
-{{< figure src="/media/docs/grafana/logs-sample-whats-new-9-4.png" max-width="750px" caption="Logs sample in Explore" >}}
+{{\< figure src="/media/docs/grafana/logs-sample-whats-new-9-4.png" max-width="750px" caption="Logs sample in Explore" \>}}
 
 ## Canvas panel
 
-_Available in **beta** in all editions of Grafana_
+*Available in **beta** in all editions of Grafana*
 
 Canvas is a new panel that combines the power of Grafana with the flexibility of custom elements. Canvas visualizations are extensible form-built panels that allow you to explicitly place elements within static and dynamic layouts. This empowers you to design custom visualizations and overlay data in ways that aren’t possible with standard Grafana panels, all within Grafana’s UI. If you’ve used popular UI and web design tools, then designing Canvas panels will feel very familiar.
 
 In Grafana v9.4, we have added the ability to create connections (arrows). Connections enable you to connect elements together to create more complex visualizations. We also added support for data links and a brand new server element. To learn more about the Canvas panel, refer to [Canvas](../../panels-visualizations/visualizations/canvas/).
 
-{{< video-embed src="/media/docs/grafana/canvas-connections-9-4-0.mp4" max-width="750px" caption="Canvas panel connections" >}}
+{{\< video-embed src="/media/docs/grafana/canvas-connections-9-4-0.mp4" max-width="750px" caption="Canvas panel connections" \>}}
 
 ## Auth and security
 
-_All auth updates are generally available in all editions of Grafana._
+*All auth updates are generally available in all editions of Grafana.*
 
 We've made the following changes to authentication and security.
 
@@ -158,20 +161,20 @@ Learn more about SAML setup in our [SAML configuration guide](../../setup-grafan
 
 ## Auditing and Usage Insights: Support for Loki multi-tenancy
 
-_This feature is available for Enterprise customers_
+*This feature is available for Enterprise customers*
 
 This feature adds support to push analytics events and auditing logs to Loki with multi-tenancy mode, by specifying a tenant id. Learn more about [auditing](../../setup-grafana/configure-security/audit-grafana/) and [usage insights](../../setup-grafana/configure-security/export-logs/) in our docs.
 
 ## Reporting: Zoom in and out on your dashboard in a report PDF
 
-_This feature is available for Enterprise customers_
+*This feature is available for Enterprise customers*
 
 Zoom is a new feature for reports that allows you to change the dimension of the panels of the PDF document. It enables you to zoom out to show more columns in a table, or zoom in to enlarge panels.
 You can modify the scale factor for each report in the report editor when you share the PDF directly from the dashboard page.
 
-{{< figure src="/media/docs/grafana/FormatReportScheduler9.4.png" max-width="750px" caption="Scale factor feature in Report format page" >}}
+{{\< figure src="/media/docs/grafana/FormatReportScheduler9.4.png" max-width="750px" caption="Scale factor feature in Report format page" \>}}
 
-{{< figure src="/media/docs/grafana/FormatReportShare9.4.png" max-width="750px" caption="Scale factor feature in Share functionality" >}}
+{{\< figure src="/media/docs/grafana/FormatReportShare9.4.png" max-width="750px" caption="Scale factor feature in Share functionality" \>}}
 
 Learn more about reporting in our [documentation](../../dashboards/create-reports/)
 
@@ -187,43 +190,43 @@ We've made the following changes to alert rules.
 
 Declare an incident from a firing alert, streamlining the alert to incident workflow.
 
-{{< figure src="/media/docs/alerting/declare-incident.png" max-width="500px" caption="Declare incidents from firing alerts" >}}
+{{\< figure src="/media/docs/alerting/declare-incident.png" max-width="500px" caption="Declare incidents from firing alerts" \>}}
 
 #### Copy alert rules and notification templates
 
 To help you reuse existing alert rules or templates, make copies of alert rules from the Alert rule list view and templates from the Contact points page.
 
-{{< figure src="/media/docs/alerting/copy-alert-rules.png" max-width="750px" caption="Copy alert rules and notification templates" >}}
+{{\< figure src="/media/docs/alerting/copy-alert-rules.png" max-width="750px" caption="Copy alert rules and notification templates" \>}}
 
 #### View query definitions for provisioned alerts
 
 View read-only query definitions for provisioned alerts from the Alert rule details page. Check quickly if your alert rule queries are correct, without diving into your "as-code" repository for rule definitions.
 
-{{< figure src="/media/docs/alerting/view-query-definitions.png" max-width="750px" caption="View query definitions for provisioned alerts" >}}
+{{\< figure src="/media/docs/alerting/view-query-definitions.png" max-width="750px" caption="View query definitions for provisioned alerts" \>}}
 
 #### Export alert rules to use in the provisioning API or files
 
 Create and tune an alert rule in the UI, then export to YAML or JSON, and use it in the provisioning API or files. You can also export an entire rule group to review or use. This is supported in both the UI and provisioning API.
 
-{{< figure src="/media/docs/alerting/export-alert-rules.png" max-width="750px" caption="Export alert rules" >}}
+{{\< figure src="/media/docs/alerting/export-alert-rules.png" max-width="750px" caption="Export alert rules" \>}}
 
 #### Pause alert rule evaluation
 
 Pause alert rule evaluation to prevent noisy alerting while tuning your alerts. Pausing stops alert rule evaluation and does not create any alert instances. This is different to mute timings, which stop notifications from being delivered, but still allow for alert rule evaluation and the creation of alert instances.
 
-{{< figure src="/media/docs/alerting/pause-alerts.png" max-width="750px" caption="Pause alert rule evaluations" >}}
+{{\< figure src="/media/docs/alerting/pause-alerts.png" max-width="750px" caption="Pause alert rule evaluations" \>}}
 
 #### View an alert's evaluation interval in Alert Group view
 
 View the evaluation interval more easily from the grouped view on the Alert list page. The view now also always displays recording and normal alert rules and highlights alert rule status in different colors.
 
-{{< figure src="/media/docs/alerting/view-evaluation-interval.png" max-width="750px" caption="View evaluation interval on the Group view" >}}
+{{\< figure src="/media/docs/alerting/view-evaluation-interval.png" max-width="750px" caption="View evaluation interval on the Group view" \>}}
 
 #### Improved search for your alert rules
 
 When managing large volumes of alerts, use extended alert rule search capabilities to filter folders, evaluation groups, and rules. Additionally, you can filter alert rules by their properties like labels, state, type, and health.
 
-{{< figure src="/media/docs/alerting/search-improvements.png" max-width="750px" caption="Improved search for your alert rules" >}}
+{{\< figure src="/media/docs/alerting/search-improvements.png" max-width="750px" caption="Improved search for your alert rules" \>}}
 
 #### Adjust the amount and resolution of data used in your alerting queries
 
@@ -241,19 +244,19 @@ We've made the following changes to alert contact points.
 
 Connecting your OnCall workflows just got easier. OnCall has been added as a contact point to simplify the integration between alert notifications and your OnCall implementation.
 
-{{< figure src="/media/docs/alerting/on-call-contact-point.png" max-width="750px" caption="View Grafana OnCall contact point" >}}
+{{\< figure src="/media/docs/alerting/on-call-contact-point.png" max-width="750px" caption="View Grafana OnCall contact point" \>}}
 
 ### Alert email templating
 
 We've improved the design and functionality of email templates to make template creation much easier and more customizable. The email template framework utilizes MJML to define and compile the final email HTML output. Sprig functions in the email templates provide more customizable template functions.
 
-{{< figure src="/static/img/docs/alerting/alert-templates-whats-new-v9.3.png" max-width="750px" caption="Email template redesign" >}}
+{{\< figure src="/static/img/docs/alerting/alert-templates-whats-new-v9.3.png" max-width="750px" caption="Email template redesign" \>}}
 
 #### Add support for Discord as a contact point receiver
 
 We've added Discord as a contact point receiver for Grafana Cloud alert rules.
 
-{{< figure src="/media/docs/alerting/support-discord.png" max-width="750px" caption="Add support for Discord" >}}
+{{\< figure src="/media/docs/alerting/support-discord.png" max-width="750px" caption="Add support for Discord" \>}}
 
 ### Alerting: administration
 
@@ -263,7 +266,7 @@ We've made the following changes to alert administration.
 
 Introduces a new landing page that helps you get started quickly with Alerting. It also provides you with at a glance information on how Alerting works and a video to introduce you to key concepts.
 
-{{< figure src="/media/docs/alerting/landing-page.png" max-width="750px" caption="Alerting landing page" >}}
+{{\< figure src="/media/docs/alerting/landing-page.png" max-width="750px" caption="Alerting landing page" \>}}
 
 #### Compatibility with AWS Aurora
 

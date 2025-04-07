@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../fundamentals/evaluate-grafana-alerts/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/evaluate-grafana-alerts/
-  - ../../unified-alerting/fundamentals/evaluate-grafana-alerts/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/fundamentals/evaluate-grafana-alerts/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/queries-conditions/
-description: Define queries to get the data you want to measure and conditions that need to be met before an alert rule fires
-keywords:
-  - grafana
-  - alerting
-  - queries
-  - conditions
-labels:
+
+- ../../fundamentals/evaluate-grafana-alerts/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/evaluate-grafana-alerts/
+- ../../unified-alerting/fundamentals/evaluate-grafana-alerts/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/fundamentals/evaluate-grafana-alerts/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/queries-conditions/
+  description: Define queries to get the data you want to measure and conditions that need to be met before an alert rule fires
+  keywords:
+- grafana
+- alerting
+- queries
+- conditions
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Queries and conditions
-weight: 104
-refs:
-  data-source-alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/#supported-data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/#supported-data-sources
-  state-and-health:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/state-and-health/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/state-and-health/
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Queries and conditions
+    weight: 104
+    refs:
+    data-source-alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/\#supported-data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/\#supported-data-sources
+    state-and-health:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/state-and-health/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/state-and-health/
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
+
+-----
 
 # Queries and conditions
 
@@ -54,7 +57,7 @@ Queries in Grafana can be applied in various ways, depending on the data source 
 
 For more details about queries in Grafana, refer to [Query and transform data](ref:query-transform-data).
 
-{{< figure src="/media/docs/alerting/alerting-query-conditions-default-options.png" max-width="750px" caption="Define alert query and alert condition" >}}
+{{\< figure src="/media/docs/alerting/alerting-query-conditions-default-options.png" max-width="750px" caption="Define alert query and alert condition" \>}}
 
 ## Alert condition
 
@@ -74,7 +77,7 @@ In Grafana, expressions allow you to perform calculations, transformations, or a
 
 With expression queries, you can perform tasks such as calculating the percentage change between two values, applying functions like logarithmic or trigonometric functions, aggregating data over specific time ranges or dimensions, and implementing conditional logic to handle different scenarios.
 
-{{< figure src="/media/docs/alerting/alert-rule-expressions.png" max-width="750px" caption="Alert rule expressions" >}}
+{{\< figure src="/media/docs/alerting/alert-rule-expressions.png" max-width="750px" caption="Alert rule expressions" \>}}
 
 The following expressions are available:
 
@@ -130,26 +133,26 @@ Flapping alerts occur when a metric hovers around the alert threshold condition 
 
 The value of a flapping metric can continually go above and below a threshold, resulting in a series of firing-resolved-firing notifications and a noisy alert state history.
 
-For example, if you have an alert for latency with a threshold of 1000ms and the number fluctuates around 1000 (say 980 -> 1010 -> 990 -> 1020, and so on), then each of those might trigger a notification:
+For example, if you have an alert for latency with a threshold of 1000ms and the number fluctuates around 1000 (say 980 -\> 1010 -\> 990 -\> 1020, and so on), then each of those might trigger a notification:
 
-- 980 -> 1010 triggers a firing alert.
-- 1010 -> 990 triggers a resolving alert.
-- 990 -> 1020 triggers a firing alert again.
+- 980 -\> 1010 triggers a firing alert.
+- 1010 -\> 990 triggers a resolving alert.
+- 990 -\> 1020 triggers a firing alert again.
 
 To prevent this, you can set a recovery threshold to define two thresholds instead of one:
 
 1. An alert is triggered when the first threshold is crossed.
-1. An alert is resolved only when the second (recovery) threshold is crossed.
+2. An alert is resolved only when the second (recovery) threshold is crossed.
 
 In the previous example, setting the recovery threshold to 900ms means the alert only resolves when the latency falls below 900ms:
 
-- 980 -> 1010 triggers a firing alert.
-- 1010 -> 990 does not resolve the alert, keeping it in the firing state.
-- 990 -> 1020 keeps the alert in the firing state.
+- 980 -\> 1010 triggers a firing alert.
+- 1010 -\> 990 does not resolve the alert, keeping it in the firing state.
+- 990 -\> 1020 keeps the alert in the firing state.
 
 The recovery threshold mitigates unnecessary alert state changes and reduces alert noise.
 
-{{< collapse title="Classic condition (legacy)" >}}
+{{\< collapse title="Classic condition (legacy)" \>}}
 
 #### Classic condition (legacy)
 
@@ -180,7 +183,7 @@ The following aggregation functions are also available to further refine your qu
 | `percent_diff_abs` | Displays the absolute value of `percent_diff`                                   |
 | `count_non_null`   | Displays a count of values in the result set that aren't `null`                 |
 
-{{< /collapse >}}
+{{\< /collapse \>}}
 
 ## Alert on numeric data
 
@@ -213,7 +216,7 @@ For a MySQL table called "DiskSpace":
 
 You can query the data filtering on time, but without returning the time series to Grafana. For example, an alert that would trigger per Host, Disk when there is less than 5% free space:
 
-```sql
+``` sql
 SELECT Host, Disk, CASE WHEN PercentFree < 5.0 THEN PercentFree ELSE 0 END FROM (
   SELECT
       Host,

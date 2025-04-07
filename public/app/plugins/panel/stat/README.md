@@ -15,4 +15,4 @@ The Stat panel is a replacement for the Singlestat panel, which was deprecated i
 
 Read more about Stat panel on the docs page:
 
-[https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/stat/](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/stat/)
+<https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/stat/>

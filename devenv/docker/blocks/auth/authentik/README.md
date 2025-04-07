@@ -6,15 +6,15 @@ Useful for testing a second implementation
 
 ## Currently configured in DB and instructions
 
-- [x] LDAP
-- [x] SAML
-- [x] OAuth
+- \[x\] LDAP
+- \[x\] SAML
+- \[x\] OAuth
 
 ## Deployment
 
 First build and deploy the `openldap` container.
 
-```bash
+``` bash
 make devenv sources=auth/authentik
 ```
 
@@ -24,12 +24,11 @@ The container will expose port `3389` and `6636` as LDAP and LDAPS.
 
 The container will expose port `9000` for API and Admin interface.
 
-
 ## LDAP Setup
 
 The following changes are needed at Grafana's configuration file.
 
-```ini
+``` ini
 [auth.ldap]
 enabled = true
 config_file = devenv/docker/blocks/auth/authentik/ldap_authentik.toml
@@ -54,7 +53,7 @@ Grafana expects the idP to retrieve the client's public key from the metadata.
 Authentik does not seem to support this and therefore client signature verification is set
 as optional.
 
-```ini
+``` ini
 [auth.saml]
 enabled = true
 certificate_path = devenv/docker/blocks/auth/authentik/cert.crt
@@ -74,7 +73,7 @@ org_mapping = admin:1:Admin, editor:1:Editor, viewer:1:Viewer
 
 # OAuth Setup
 
-```ini
+``` ini
 [auth.generic_oauth]
 name = authentik
 enabled = true
@@ -90,7 +89,7 @@ signout_redirect_url = http://localhost:9000/application/o/grafana-oidc/end-sess
 
 ## Available users and groups
 
-*authentik admin*: 
+*authentik admin*:
 
 - username: akadmin
 - email: admin@localhost
@@ -99,19 +98,22 @@ signout_redirect_url = http://localhost:9000/application/o/grafana-oidc/end-sess
 *grafana logins*:
 
 - username: authentik-admin
+
 - password: grafana
 
 - username: authentik-editor
+
 - password: grafana
 
 - username: authentik-viewer
+
 - password: grafana
 
 ## Backing up DB
 
 In case you want to make changes to the devenv setup, you can dump keycloak's DB:
 
-```bash
+``` bash
 cd devenv;
 docker-compose exec -T authentikdb bash -c "pg_dump -U authentik authentik" > docker/blocks/auth/authentik/cloak.sql
 ```

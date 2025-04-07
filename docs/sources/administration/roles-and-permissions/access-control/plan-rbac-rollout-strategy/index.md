@@ -1,51 +1,54 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/plan-rbac-rollout-strategy/
-  - ../../../enterprise/access-control/usage-scenarios/
-description: Plan your RBAC rollout strategy before you begin assigning roles to users
+
+- ../../../enterprise/access-control/plan-rbac-rollout-strategy/
+- ../../../enterprise/access-control/usage-scenarios/
+  description: Plan your RBAC rollout strategy before you begin assigning roles to users
   and teams.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Plan your RBAC rollout strategy
-title: Plan your Grafana RBAC rollout strategy
-weight: 20
-refs:
-  api-rbac-update-a-role:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/developers/http_api/access_control/#update-a-role
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access_control/#update-a-role
-  rbac-fixed-basic-role-definitions-basic-role-assignments:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/#basic-role-assignments
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-fixed-basic-role-definitions/#basic-role-assignments
-  rbac-fixed-basic-role-definitions-fixed-role-definitions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/#fixed-role-definitions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-fixed-basic-role-definitions/#fixed-role-definitions
-  manage-rbac-roles-update-basic-role-permissions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/manage-rbac-roles/#update-basic-role-permissions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/#update-basic-role-permissions
-  service-accounts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
----
+  - cloud
+  - enterprise
+    menuTitle: Plan your RBAC rollout strategy
+    title: Plan your Grafana RBAC rollout strategy
+    weight: 20
+    refs:
+    api-rbac-update-a-role:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/developers/http\_api/access\_control/\#update-a-role
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access\_control/\#update-a-role
+    rbac-fixed-basic-role-definitions-basic-role-assignments:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/\#basic-role-assignments
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-fixed-basic-role-definitions/\#basic-role-assignments
+    rbac-fixed-basic-role-definitions-fixed-role-definitions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/\#fixed-role-definitions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-fixed-basic-role-definitions/\#fixed-role-definitions
+    manage-rbac-roles-update-basic-role-permissions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/manage-rbac-roles/\#update-basic-role-permissions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/\#update-basic-role-permissions
+    service-accounts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+
+-----
 
 # Plan your RBAC rollout strategy
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
-An RBAC rollout strategy helps you determine _how_ you want to implement RBAC prior to assigning RBAC roles to users and teams.
+An RBAC rollout strategy helps you determine *how* you want to implement RBAC prior to assigning RBAC roles to users and teams.
 
 Your rollout strategy should help you answer the following questions:
 
@@ -71,7 +74,7 @@ RBAC is a flexible and powerful feature with many possible permissions assignmen
 - **Assign roles to users** when you have a one-off scenario where a small number of users require access to a resource or when you want to assign temporary access. If you have a large number of users, this approach can be difficult to manage as you scale your use of Grafana. For example, a member of your IT department might need the `fixed:licensing:reader` and `fixed:licensing:writer` roles so that they can manage your Grafana Enterprise license.
 
 - **Assign roles to teams** when you have a subset of users that align to your organizational structure, and you want all members of the team to have the same level of access. For example, all members of a particular engineering team might need the `fixed:reports:reader` and `fixed:reports:writer` roles to be able to manage reports.
-
+  
   When you assign additional users to a team, the system automatically assigns permissions to those users.
 
 ### Authentication provider considerations
@@ -82,7 +85,7 @@ For example:
 
 1. Map SAML, LDAP, or Oauth roles to Grafana basic roles (viewer, editor, or admin).
 
-2. Use the Grafana Enterprise team sync feature to synchronize teams from your SAML, LDAP, or Oauth provider to Grafana. For more information about team sync, refer to [Team sync](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
+2. Use the Grafana Enterprise team sync feature to synchronize teams from your SAML, LDAP, or Oauth provider to Grafana. For more information about team sync, refer to [Team sync](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
 
 3. Within Grafana, assign RBAC permissions to users and teams.
 
@@ -91,11 +94,11 @@ For example:
 Consider the following guidelines when you determine if you should modify basic roles or create custom roles.
 
 - **Modify basic roles** when Grafana's definitions of what viewers, editors, and admins can do does not match your definition of these roles. You can add or remove permissions from any basic role.
-
+  
   {{% admonition type="note" %}}
-  Changes that you make to basic roles impact the role definition for all [organizations](/docs/grafana/<GRAFANA_VERSION>/administration/organization-management/) in the Grafana instance. For example, when you add the `fixed:users:writer` role's permissions to the viewer basic role, all viewers in any org in the Grafana instance can create users within that org.
+  Changes that you make to basic roles impact the role definition for all [organizations](/docs/grafana/\<GRAFANA_VERSION\>/administration/organization-management/) in the Grafana instance. For example, when you add the `fixed:users:writer` role's permissions to the viewer basic role, all viewers in any org in the Grafana instance can create users within that org.
   {{% /admonition %}}
-
+  
   {{% admonition type="note" %}}
   You cannot modify the `No Basic Role` permissions.
   {{% /admonition %}}
@@ -116,37 +119,37 @@ Use any of the following methods to assign RBAC roles to users and teams.
 We've compiled the following permissions rollout scenarios based on current Grafana implementations.
 
 {{% admonition type="note" %}}
-If you have a use case that you'd like to share, feel free to contribute to this docs page. We'd love to hear from you!
+If you have a use case that you'd like to share, feel free to contribute to this docs page. We'd love to hear from you\!
 {{% /admonition %}}
 
 ### Provide internal viewer employees with the ability to use Explore, but prevent external viewer contractors from using Explore
 
 1. In Grafana, create a team with the name `Internal employees`.
-1. Assign the `fixed:datasources:explorer` role to the `Internal employees` team.
-1. Add internal employees to the `Internal employees` team, or map them from a SAML, LDAP, or Oauth team using [Team Sync](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
-1. Assign the viewer role to both internal employees and contractors.
+2. Assign the `fixed:datasources:explorer` role to the `Internal employees` team.
+3. Add internal employees to the `Internal employees` team, or map them from a SAML, LDAP, or Oauth team using [Team Sync](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
+4. Assign the viewer role to both internal employees and contractors.
 
 ### Limit viewer, editor, or admin permissions
 
 1. Review the list of permissions associated with the basic role.
-1. [Change the permissions of the basic role](ref:manage-rbac-roles-update-basic-role-permissions).
+2. [Change the permissions of the basic role](ref:manage-rbac-roles-update-basic-role-permissions).
 
 ### Allow only members of one team to manage Alerts
 
 1. Create an `Alert Managers` team, and assign that team all applicable Alerting fixed roles.
-1. Add users to the `Alert Managers` team.
-1. Remove all permissions with actions prefixed with `alert.` from the Viewer, Editor, and Admin basic roles.
+2. Add users to the `Alert Managers` team.
+3. Remove all permissions with actions prefixed with `alert.` from the Viewer, Editor, and Admin basic roles.
 
 ### Provide dashboards to users in two or more geographies
 
 1. Create a folder for each geography, for example, create a `US` folder and an `EU` folder.
-1. Add dashboards to each folder.
-1. Use folder permissions to add US-based users as Editors to the `US` folder and assign EU-based users as Editors to the `EU` folder.
+2. Add dashboards to each folder.
+3. Use folder permissions to add US-based users as Editors to the `US` folder and assign EU-based users as Editors to the `EU` folder.
 
 ### Assign a user specific set of roles
 
 1. Create a user with the `No Basic Role` selected under organization roles.
-1. Assign the user a set of fixed roles that meet your requirements.
+2. Assign the user a set of fixed roles that meet your requirements.
 
 ### Create a custom role to access alerts in a specific folder
 
@@ -160,69 +163,67 @@ The API command in this example is based on the following:
 
 The following request creates a custom role that includes permissions to access the alert rule:
 
-```
-curl --location --request POST '<grafana_url>/api/access-control/roles/' \
---header 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "version": 1,
-    "name": "custom:alerts.reader.in.folder.123",
-    "displayName": "Read-only access to alerts in folder Test-Folder",
-    "description": "Let user query DS1 and DS2, and read alerts in folder Test-Folders",
-    "group":"Custom",
-    "global": false,
-    "permissions": [
-        {
-            "action": "folders:read",
-            "scope": "folders:uid:YEcBGYU22"
-        },
-        {
-            "action": "alert.rules:read",
-            "scope": "folders:uid:YEcBGYU22"
-        },
-        {
-            "action": "datasources:query",
-            "scope": "datasources:uid:_oAfGYUnk"
-        },
-        {
-            "action": "datasources:query",
-            "scope": "datasources:uid:YYcBGYUnk"
-        }
-    ]
-}'
-```
+    curl --location --request POST '<grafana_url>/api/access-control/roles/' \
+    --header 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "version": 1,
+        "name": "custom:alerts.reader.in.folder.123",
+        "displayName": "Read-only access to alerts in folder Test-Folder",
+        "description": "Let user query DS1 and DS2, and read alerts in folder Test-Folders",
+        "group":"Custom",
+        "global": false,
+        "permissions": [
+            {
+                "action": "folders:read",
+                "scope": "folders:uid:YEcBGYU22"
+            },
+            {
+                "action": "alert.rules:read",
+                "scope": "folders:uid:YEcBGYU22"
+            },
+            {
+                "action": "datasources:query",
+                "scope": "datasources:uid:_oAfGYUnk"
+            },
+            {
+                "action": "datasources:query",
+                "scope": "datasources:uid:YYcBGYUnk"
+            }
+        ]
+    }'
 
 ### Enable an editor to create custom roles
 
 By default, only a Grafana Server Admin can create and manage custom roles. If you want your `Editors` to do the same, [update the `Editor` basic role permissions](ref:manage-rbac-roles-update-basic-role-permissions). There are two ways to achieve this:
 
 - Add the following permissions to the `basic:editor` role, using provisioning or the [RBAC HTTP API](ref:api-rbac-update-a-role):
-
+  
   | action         | scope                       |
   | -------------- | --------------------------- |
   | `roles:read`   | `roles:*`                   |
   | `roles:write`  | `permissions:type:delegate` |
   | `roles:delete` | `permissions:type:delegate` |
-
+  
   As an example, here is a small bash script that fetches the role, modifies it using `jq` and updates it:
-
-  ```bash
+  
+  ``` bash
   # Fetch the role, modify it to add the desired permissions and increment its version
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
     -X GET '<grafana_url>/api/access-control/roles/basic_editor' | \
     jq 'del(.created)| del(.updated) | del(.permissions[].created) | del(.permissions[].updated) | .version += 1' | \
     jq '.permissions += [{"action": "roles:read", "scope": "roles:*"}, {"action": "roles:write", "scope": "permissions:type:delegate"}, {"action": "roles:delete", "scope": "permissions:type:delegate"}]' > /tmp/basic_editor.json
-
+  
   # Update the role
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' -H 'Content-Type: application/json' \
     -X PUT-d @/tmp/basic_editor.json '<grafana_url>/api/access-control/roles/basic_editor'
   ```
 
 - Or add the `fixed:roles:writer` role permissions to the `basic:editor` role using the `role > from` list of your provisioning file:
-
-  ```yaml
+  
+  ``` yaml
   apiVersion: 2
-
+  
   roles:
     - name: 'basic:editor'
       global: true
@@ -241,33 +242,33 @@ By default, only a Grafana Server Admin can create and manage custom roles. If y
 If you want your `Viewers` to create reports, [update the `Viewer` basic role permissions](ref:manage-rbac-roles-update-basic-role-permissions). There are two ways to achieve this:
 
 - Add the following permissions to the `basic:viewer` role, using provisioning or the [RBAC HTTP API](ref:api-rbac-update-a-role):
-
+  
   | Action           | Scope                           |
   | ---------------- | ------------------------------- |
   | `reports:create` | n/a                             |
   | `reports:write`  | `reports:*` <br> `reports:id:*` |
   | `reports:read`   | `reports:*`                     |
   | `reports:send`   | `reports:*`                     |
-
+  
   As an example, here is a small bash script that fetches the role, modifies it using `jq` and updates it:
-
-  ```bash
+  
+  ``` bash
   # Fetch the role, modify it to add the desired permissions and increment its version
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
     -X GET '<grafana_url>/api/access-control/roles/basic_viewer' | \
     jq 'del(.created)| del(.updated) | del(.permissions[].created) | del(.permissions[].updated) | .version += 1' | \
     jq '.permissions += [{"action": "reports:create"}, {"action": "reports:read", "scope": "reports:*"}, {"action": "reports:write", "scope": "reports:*"}, {"action": "reports:send", "scope": "reports:*"}]' > /tmp/basic_viewer.json
-
+  
   # Update the role
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' -H 'Content-Type: application/json' \
     -X PUT-d @/tmp/basic_viewer.json '<grafana_url>/api/access-control/roles/basic_viewer'
   ```
 
 - Or add the `fixed:reports:writer` role permissions to the `basic:viewer` role using the `role > from` list of your provisioning file:
-
-  ```yaml
+  
+  ``` yaml
   apiVersion: 2
-
+  
   roles:
     - name: 'basic:viewer'
       global: true
@@ -294,26 +295,26 @@ The permissions to remove are:
 There are two ways to achieve this:
 
 - Use [RBAC HTTP API](ref:api-rbac-update-a-role).
-
+  
   As an example, here is a small bash script that fetches the role, modifies it using `jq` and updates it:
-
-  ```bash
+  
+  ``` bash
   # Fetch the role, modify it to remove the undesired permissions and increment its version
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
     -X GET '<grafana_url>/api/access-control/roles/basic_grafana_admin' | \
     jq 'del(.created)| del(.updated) | del(.permissions[].created) | del(.permissions[].updated) | .version += 1' | \
     jq 'del(.permissions[] | select (.action == "users:create")) | del(.permissions[] | select (.action == "org.users:add" and .scope == "users:*"))' > /tmp/basic_grafana_admin.json
-
+  
   # Update the role
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' -H 'Content-Type: application/json' \
     -X PUT-d @/tmp/basic_grafana_admin.json '<grafana_url>/api/access-control/roles/basic_grafana_admin'
   ```
 
 - Or use the `role > from` list and `permission > state` option of your provisioning file:
-
-  ```yaml
+  
+  ``` yaml
   apiVersion: 2
-
+  
   roles:
     - name: 'basic:grafana_admin'
       global: true
@@ -348,7 +349,7 @@ If you want to revoke their access to the On Call App plugin, you need to:
    | Action | Scope |
    |----------------------|-------------|
    | `plugins.app:access` | `plugins:*` |
-1. Grant the permission to access the Kentik Connect Pro App plugin only:
+2. Grant the permission to access the Kentik Connect Pro App plugin only:
    | Action | Scope |
    |----------------------|---------------------------------|
    | `plugins.app:access` | `plugins:id:kentik-connect-app` |
@@ -356,30 +357,30 @@ If you want to revoke their access to the On Call App plugin, you need to:
 Here are two ways to achieve this:
 
 - Use [RBAC HTTP API](ref:api-rbac-update-a-role).
-
+  
   As an example, here is a small bash script that fetches the role, modifies it using `jq` and updates it:
-
-  ```bash
+  
+  ``` bash
   # Fetch the role, modify it to remove the undesired permissions, add the new permission and increment its version
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
     -X GET '<grafana_url>/api/access-control/roles/basic_viewer' | \
     jq 'del(.created)| del(.updated) | del(.permissions[].created) | del(.permissions[].updated) | .version += 1' | \
     jq 'del(.permissions[] | select (.action == "plugins.app:access" and .scope == "plugins:*"))' | \
     jq '.permissions += [{"action": "plugins.app:access", "scope": "plugins:id:kentik-connect-app"}]' > /tmp/basic_viewer.json
-
+  
   # Update the role
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' -H 'Content-Type: application/json' \
     -X PUT -d @/tmp/basic_viewer.json '<grafana_url>/api/access-control/roles/basic_viewer'
   ```
-
+  
   The token that is used in this request is the [service account token](ref:service-accounts).
 
 - Or use the `role > from` list and `permission > state` option of your provisioning file:
-
-  ```yaml
+  
+  ``` yaml
   ---
   apiVersion: 2
-
+  
   roles:
     - name: 'basic:viewer'
       version: 8
@@ -395,16 +396,16 @@ Here are two ways to achieve this:
           scope: 'plugins:id:kentik-connect-app'
           state: 'present'
   ```
-
+  
   If your goal is to remove an access to an app you should remove it from the role and update it. For example:
-
-  ```bash
+  
+  ``` bash
   # Fetch the role, modify it to remove permissions to kentik-connect-app and increment role version
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' \
     -X GET '<grafana_url>/api/access-control/roles/basic_viewer' | \
     jq 'del(.created)| del(.updated) | del(.permissions[].created) | del(.permissions[].updated) | .version += 1' | \
     jq 'del(.permissions[] | select (.action == "plugins.app:access" and .scope == "plugins:id:kentik-connect-app"))'
-
+  
   # Update the role
   curl -H 'Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt' -H 'Content-Type: application/json' \
     -X PUT -d @/tmp/basic_viewer.json '<grafana_url>/api/access-control/roles/basic_viewer'
@@ -415,23 +416,24 @@ Here are two ways to achieve this:
 In the scenario where you want users to grant access by the team they belong to, we recommend to set users role to `No Basic Role` and let the team assignment assign the role instead.
 
 1. In Grafana, ensure the following configuration settings are enabled.
+   
+       [users]
+       # Set to true to automatically assign new users to the default organization (id 1)
+       auto_assign_org = true
+       
+       # Set this value to automatically add new users to the provided organization (if auto_assign_org above is set to true)
+       auto_assign_org_id = <org_id>
+       
+       # Default role new users will be automatically assigned (if auto_assign_org above is set to true)
+       auto_assign_org_role = None
 
-   ```
-   [users]
-   # Set to true to automatically assign new users to the default organization (id 1)
-   auto_assign_org = true
+2. Restart the Grafana instance.
 
-   # Set this value to automatically add new users to the provided organization (if auto_assign_org above is set to true)
-   auto_assign_org_id = <org_id>
+3. Create a team with the desired name.
 
-   # Default role new users will be automatically assigned (if auto_assign_org above is set to true)
-   auto_assign_org_role = None
-   ```
+4. Assign fixed roles to the team.
 
-1. Restart the Grafana instance.
-1. Create a team with the desired name.
-1. Assign fixed roles to the team.
-1. Add users to the team.
+5. Add users to the team.
 
 A user will be added to the default organization automatically but won't have any permissions until assigned to a team.
 
@@ -440,7 +442,7 @@ A user will be added to the default organization automatically but won't have an
 Using Service Accounts is an efficient way to facilitate M2M communications. However, they can pose a security threat if not scoped appropriately. To limit the scope of a service account, you can begin by creating a Service Account with `No Basic Role` and then assign the necessary permissions for the account.
 
 1. Refer to [Service Accounts](ref:service-accounts) and add a new Service Account.
-1. Set the basic role to `No Basic Role`.
-1. Set the fixed roles needed for the Service Account.
+2. Set the basic role to `No Basic Role`.
+3. Set the fixed roles needed for the Service Account.
 
 This will reduce the required permissions for the Service Account and minimize the risk of compromise.

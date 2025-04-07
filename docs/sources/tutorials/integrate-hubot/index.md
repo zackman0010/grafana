@@ -1,23 +1,26 @@
----
+-----
+
 Feedback Link: https://github.com/grafana/tutorials/issues/new
 aliases:
-  - /docs/grafana/latest/tutorials/hubot_howto/
-authors:
-  - grafana_labs
-categories:
-  - administration
-description: Learn how to integrate Hubot with Grafana
-id: integrate-hubot
-labels:
+
+- /docs/grafana/latest/tutorials/hubot\_howto/
+  authors:
+- grafana\_labs
+  categories:
+- administration
+  description: Learn how to integrate Hubot with Grafana
+  id: integrate-hubot
+  labels:
   products:
-    - enterprise
-    - oss
-status: Published
-summary: Learn how to integrate Hubot with Grafana
-tags:
-  - advanced
-title: Integrate Hubot with Grafana
----
+  - enterprise
+  - oss
+    status: Published
+    summary: Learn how to integrate Hubot with Grafana
+    tags:
+- advanced
+  title: Integrate Hubot with Grafana
+
+-----
 
 # Integrate Hubot with Grafana
 
@@ -27,7 +30,7 @@ No matter what data source you are using, the PNG image of the Graph will look t
 
 This guide shows you how to install and configure the [Hubot-Grafana](https://github.com/stephenyeargin/hubot-grafana) plugin. This plugin allows you to tell Hubot to render any dashboard or graph right from a channel in Slack, Basecamp, or any other supported Hubot adapter. The bot will respond with an image of the graph and a link that will take you to the graph.
 
-{{< figure src="/static/img/docs/tutorials/hubot_grafana.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/hubot\_grafana.png"  max-width="800px" \>}}
 
 ## What is Hubot?
 
@@ -41,13 +44,13 @@ Hubot is very easy to install and host. If you do not already have a bot up and 
 
 In your Hubot project repo install the Grafana plugin using `npm`:
 
-```bash
+``` bash
 npm install hubot-grafana --save
 ```
 
 Edit the file external-scripts.json, and add hubot-grafana to the list of plugins.
 
-```json
+``` json
 ["hubot-pugme", "hubot-shipit", "hubot-grafana"]
 ```
 
@@ -55,7 +58,7 @@ Edit the file external-scripts.json, and add hubot-grafana to the list of plugin
 
 The Hubot-Grafana plugin requires two environment variables to be set in order to work properly.
 
-```bash
+``` bash
 export HUBOT_GRAFANA_HOST=https://play.grafana.org
 export HUBOT_GRAFANA_API_KEY=abcd01234deadbeef01234
 ```
@@ -70,7 +73,7 @@ To verify that this feature works try the `Direct link to rendered image` link i
 
 ### Grafana API Key
 
-{{< figure src="/static/img/docs/v2/orgdropdown_api_keys.png" max-width="150px" class="docs-image--right">}}
+{{\< figure src="/static/img/docs/v2/orgdropdown\_api\_keys.png" max-width="150px" class="docs-image--right"\>}}
 
 You need to set the environment variable `HUBOT_GRAFANA_API_KEY` to a Grafana API Key. You can add these from the API Keys page which you find in the Organization dropdown.
 
@@ -103,7 +106,7 @@ Some of the hubot commands above can lengthy and you might have to remember the 
 
 Install it:
 
-```bash
+``` bash
 npm i --save hubot-alias
 ```
 
@@ -113,8 +116,8 @@ Now you can add an alias like this:
 
 - `hubot alias graf-lb=graf db loadbalancers:2 now-20m`
 
-{{< figure src="/static/img/docs/tutorials/hubot_grafana2.png"  max-width="800px" >}}
+{{\< figure src="/static/img/docs/tutorials/hubot\_grafana2.png"  max-width="800px" \>}}
 
 ## Summary
 
-Grafana is going to ship with integrated Slack and Hipchat features some day but you do not have to wait for that. Grafana 2 shipped with a very clever server side rendering feature that can render any panel to a png using phantomjs. The hubot plugin for Grafana is something you can install and use today!
+Grafana is going to ship with integrated Slack and Hipchat features some day but you do not have to wait for that. Grafana 2 shipped with a very clever server side rendering feature that can render any panel to a png using phantomjs. The hubot plugin for Grafana is something you can install and use today\!

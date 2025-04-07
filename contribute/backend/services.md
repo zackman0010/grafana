@@ -1,10 +1,10 @@
 # Services
 
-A Grafana _service_ encapsulates and exposes application logic to the rest of the application through a set of related operations.
+A Grafana *service* encapsulates and exposes application logic to the rest of the application through a set of related operations.
 
 Grafana uses [Wire](https://github.com/google/wire), which is a code generation tool that automates connecting components using [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection). Wire represents dependencies between components as function parameters, which encourages explicit initialization instead of global variables.
 
-Even though the services in Grafana do different things, they share a number of patterns. To better understand how a service works, let's build one from scratch!
+Even though the services in Grafana do different things, they share a number of patterns. To better understand how a service works, let's build one from scratch\!
 
 Before a service can start communicating with the rest of Grafana, it needs to be registered with Wire. Refer to the `ProvideService` factory method in the following service example and note how it's being referenced in the `wire.go` example.
 
@@ -12,7 +12,7 @@ When you run Wire, it inspects the parameters of `ProvideService` and makes sure
 
 **Service example:**
 
-```go
+``` go
 package example
 
 // Service service is the service responsible for X, Y and Z.
@@ -68,7 +68,7 @@ func (s *Service) Run(ctx context.Context) error {
 
 [wire.go](/pkg/server/wire.go)
 
-```go
+``` go
 // +build wireinject
 
 package server

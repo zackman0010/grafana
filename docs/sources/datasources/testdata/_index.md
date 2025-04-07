@@ -1,34 +1,37 @@
----
+-----
+
 aliases:
-  - ../data-sources/testdata/
-  - ../features/datasources/testdata/
-keywords:
-  - grafana
-  - dashboard
-  - documentation
-  - troubleshooting
-  - panels
-  - testdata
-labels:
+
+- ../data-sources/testdata/
+- ../features/datasources/testdata/
+  keywords:
+- grafana
+- dashboard
+- documentation
+- troubleshooting
+- panels
+- testdata
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: TestData
-title: TestData data source
-weight: 1500
-refs:
-  panels-visualizations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: TestData
+    title: TestData data source
+    weight: 1500
+    refs:
+    panels-visualizations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+
+-----
 
 # TestData data source
 
@@ -42,21 +45,24 @@ Only users with the organization administrator role can add data sources.
 
 To configure basic settings for the data source, complete the following steps:
 
-1.  Click **Connections** in the left-side menu.
-1.  Under Your connections, click **Data sources**.
-1.  Enter `TestData` in the search bar.
-1.  Select **TestData**.
+1. Click **Connections** in the left-side menu.
 
-    The **Settings** tab of the data source is displayed. The data source doesn't provide any settings beyond the most basic options common to all data sources:
+2. Under Your connections, click **Data sources**.
 
-    | Name        | Description                                                              |
-    | ----------- | ------------------------------------------------------------------------ |
-    | **Name**    | Sets the name you use to refer to the data source in panels and queries. |
-    | **Default** | Defines whether this data source is pre-selected for new panels.         |
+3. Enter `TestData` in the search bar.
+
+4. Select **TestData**.
+   
+   The **Settings** tab of the data source is displayed. The data source doesn't provide any settings beyond the most basic options common to all data sources:
+   
+   | Name        | Description                                                              |
+   | ----------- | ------------------------------------------------------------------------ |
+   | **Name**    | Sets the name you use to refer to the data source in panels and queries. |
+   | **Default** | Defines whether this data source is pre-selected for new panels.         |
 
 ## Create mock data
 
-{{< figure src="/media/docs/grafana/data-sources/screenshot-testdata-add-10.0.png" class="docs-image--no-shadow" caption="Adding test data" >}}
+{{\< figure src="/media/docs/grafana/data-sources/screenshot-testdata-add-10.0.png" class="docs-image--no-shadow" caption="Adding test data" \>}}
 
 Once you've added the TestData data source, your Grafana instance's users can use it as a data source in any metric panel.
 
@@ -66,7 +72,7 @@ Instead of providing a query editor, the TestData data source helps you select a
 
 You can assign an **Alias** to each scenario, and many have their own options that appear when selected.
 
-{{< figure src="/media/docs/grafana/data-sources/screenshot-testdata-csv-example-10.0.png" class="docs-image--no-shadow" caption="Using CSV Metric Values" >}}
+{{\< figure src="/media/docs/grafana/data-sources/screenshot-testdata-csv-example-10.0.png" class="docs-image--no-shadow" caption="Using CSV Metric Values" \>}}
 
 **Available scenarios:**
 
@@ -105,8 +111,8 @@ TestData also provides an example dashboard.
 **To import the example dashboard:**
 
 1. Navigate to the data source's [configuration page](#configure-the-data-source).
-1. Select the **Dashboards** tab.
-1. Select **Import** for the **Simple Streaming Example** dashboard.
+2. Select the **Dashboards** tab.
+3. Select **Import** for the **Simple Streaming Example** dashboard.
 
 **To customize an imported dashboard:**
 
@@ -127,17 +133,18 @@ This feature is experimental and requires Grafana version 10.3.0 or later.
 If you want to use a version of TestData different from the one shipped with Grafana, follow these steps:
 
 1. Enable the [feature toggle](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/feature-toggles/) `externalCorePlugins`.
-1. Set the configuration field `as_external` for the plugin to `true`. An example configuration would be:
 
-   ```ini
+2. Set the configuration field `as_external` for the plugin to `true`. An example configuration would be:
+   
+   ``` ini
    [feature_toggles]
    externalCorePlugins = true
-
+   
    [plugin.grafana-testdata-datasource]
    as_external = true
    ```
 
-1. Restart Grafana.
+3. Restart Grafana.
 
 These settings, if enabled, allow you to to install TestData as an external plugin and manage its lifecycle independently of Grafana.
 

@@ -16,7 +16,7 @@ Follow these guidelines when naming elements of your code.
 
 Use PascalCase. For example:
 
-```typescript
+``` typescript
 // bad
 class dataLink {
   //...
@@ -32,7 +32,7 @@ class DataLink {
 
 Use ALL CAPS for constants. For example:
 
-```typescript
+``` typescript
 // bad
 const constantValue = "This string won't change";
 // bad
@@ -46,7 +46,7 @@ const CONSTANT_VALUE = "This string won't change";
 
 Use camelCase. For example:
 
-```typescript
+``` typescript
 const getStyles = (theme: GrafanaTheme2) => ({
   // bad
   ElementWrapper: css`...`,
@@ -67,17 +67,15 @@ Use hook useStyles2(getStyles) to memoize the styles generation and try to avoid
 
 Use PascalCase. For example:
 
-```
-// bad
-enum buttonVariant {
- //...
-}
-
-// good
-enum ButtonVariant {
- //...
-}
-```
+    // bad
+    enum buttonVariant {
+     //...
+    }
+    
+    // good
+    enum ButtonVariant {
+     //...
+    }
 
 ### Files and directories
 
@@ -101,7 +99,7 @@ For directory names, use dash-case (sometimes called kebab-case).
 
 Use camelCase. For example:
 
-```typescript
+``` typescript
 // bad
 const CalculatePercentage = () => { ... }
 // bad
@@ -115,39 +113,37 @@ const calculatePercentage = () => { ... }
 
 Use PascalCase. For example:
 
-```
-// bad
-interface buttonProps {
-  //...
-}
-// bad
-interface button_props {
-  //...
-}
-// bad
-interface IButtonProps {
-  //...
-}
-
-// good
-interface ButtonProps {
-  //...
-}
-
-// bad
-type requestInfo = ...
-// bad
-type request_info = ...
-
-// good
-type RequestInfo = ...
-```
+    // bad
+    interface buttonProps {
+      //...
+    }
+    // bad
+    interface button_props {
+      //...
+    }
+    // bad
+    interface IButtonProps {
+      //...
+    }
+    
+    // good
+    interface ButtonProps {
+      //...
+    }
+    
+    // bad
+    type requestInfo = ...
+    // bad
+    type request_info = ...
+    
+    // good
+    type RequestInfo = ...
 
 ### Methods
 
 Use camelCase. For example:
 
-```typescript
+``` typescript
 class DateCalculator {
   // bad
   CalculateTimeRange () {...}
@@ -169,9 +165,9 @@ Follow these guidelines for naming React components.
 
 #### React callback props and handlers
 
-Name callback props and handlers with an _on_ prefix. For example:
+Name callback props and handlers with an *on* prefix. For example:
 
-```tsx
+``` tsx
 // bad
 handleChange = () => {
 
@@ -200,7 +196,7 @@ render() {
 
 Use the following convention when implementing these React components:
 
-```typescript
+``` typescript
 // bad
 constructor(props) {...}
 
@@ -212,7 +208,7 @@ constructor(props: Props) {...}
 
 Use the following convention when implementing these React components:
 
-```typescript
+``` typescript
 // bad
 static defaultProps = { ... }
 
@@ -224,7 +220,7 @@ static defaultProps: Partial<Props> = { ... }
 
 Use the following convention when implementing these React components:
 
-```jsx
+``` jsx
 // bad
 export class YourClass extends PureComponent { ... }
 
@@ -236,7 +232,7 @@ export class YourClass extends PureComponent<{},{}> { ... }
 
 Use camelCase. For example:
 
-```typescript
+``` typescript
 interface ModalState {
   // bad
   IsActive: boolean;
@@ -258,7 +254,7 @@ In general, you should let TypeScript infer the types so that there's no need to
 
 There are some exceptions to this:
 
-```typescript
+``` typescript
 // TypeScript needs to know the type of arrays or objects; otherwise, it infers type as an array of any
 
 // bad
@@ -272,7 +268,7 @@ Specify function return types explicitly in new code. This improves readability 
 
 > **Note:** Linting is not enabled for this issue because there is old code that needs to be fixed first.
 
-```typescript
+``` typescript
 // bad
 function transform(value?: string) {
   if (!value) {
@@ -294,7 +290,7 @@ function transform(value?: string): TransformedValue | undefined {
 
 Use camelCase. For example:
 
-```typescript
+``` typescript
 // bad
 const QueryTargets = [];
 // bad
@@ -344,7 +340,7 @@ Linting is performed using [@grafana/eslint-config](https://github.com/grafana/e
 
 Use function declarations instead of function expressions when creating a new React functional component. For example:
 
-```typescript
+``` typescript
 // bad
 export const Component = (props: Props) => { ... }
 

@@ -1,49 +1,52 @@
----
+-----
+
 aliases:
-  - rules/ # /docs/grafana/<GRAFANA_VERSION>/alerting/rules/
-  - unified-alerting/alerting-rules/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/alerting-rules/
-  - ./create-alerts/ # /docs/grafana/<GRAFANA_VERSION>/alerting/create-alerts/
-canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/
-description: Configure alert rules
-labels:
+
+- rules/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/rules/
+- unified-alerting/alerting-rules/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/alerting-rules/
+- ./create-alerts/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/create-alerts/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/
+  description: Configure alert rules
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Configure alert rules
-weight: 120
-refs:
-  alert-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/
-  configure-grafana-alerts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-grafana-managed-rule/
-  configure-ds-alerts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-data-source-managed-rule/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-data-source-managed-rule/
-  recording-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-recording-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
-  alert-types-comparison-table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/#comparison-between-alert-rule-types
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/#comparison-between-alert-rule-types
-  templating-labels-annotations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/templates/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Configure alert rules
+    weight: 120
+    refs:
+    alert-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/
+    configure-grafana-alerts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-grafana-managed-rule/
+    configure-ds-alerts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-data-source-managed-rule/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-data-source-managed-rule/
+    recording-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-recording-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/create-recording-rules/
+    alert-types-comparison-table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/\#comparison-between-alert-rule-types
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/\#comparison-between-alert-rule-types
+    templating-labels-annotations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/templates/
+
+-----
 
 # Configure alert rules
 
@@ -55,7 +58,7 @@ Grafana supports two types of alert rules:
 
 1. Grafana-managed alert rules: These can query multiple data sources.
 
-1. Data source-managed alert rules: These can only query Prometheus-based data sources and support horizontal scaling.
+2. Data source-managed alert rules: These can only query Prometheus-based data sources and support horizontal scaling.
 
 We recommend using Grafana-managed alert rules whenever possible, and opting for data source-managed alert rules when horizontal scaling is required. Refer to the [comparison table of alert rule types](ref:alert-types-comparison-table) for a more detailed overview.
 

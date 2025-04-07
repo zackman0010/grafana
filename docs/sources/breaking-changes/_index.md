@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - guides/
-description: Learn about breaking changes in Grafana
-labels:
+
+- guides/
+  description: Learn about breaking changes in Grafana
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Breaking changes
-weight: 2
----
+  - cloud
+  - enterprise
+  - oss
+    title: Breaking changes
+    weight: 2
+
+-----
 
 # Breaking changes in Grafana
 
@@ -31,4 +34,4 @@ To learn what's available in a Grafana release, refer to the [What's new ](../wh
 
 Refer to any of the following breaking changes guides:
 
-{{< section menuTitle="true">}}
+{{\< section menuTitle="true"\>}}

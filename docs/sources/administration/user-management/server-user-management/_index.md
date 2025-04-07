@@ -1,30 +1,33 @@
----
+-----
+
 aliases:
-  - ../../manage-users/server-admin/
-  - ../../manage-users/server-admin/server-admin-manage-users/
-  - ../manage-users-and-permissions/manage-server-users/
-  - ../manage-users-and-permissions/manage-server-users/add-user/
-  - ../manage-users-and-permissions/manage-server-users/force-user-logout/
-  - ../manage-users-and-permissions/manage-server-users/view-edit-user-account/
-  - ../manage-users-and-permissions/manage-server-users/view-list-users/
-  - ../manage-users-and-permissions/manage-server-users/view-user-account-details/
-labels:
+
+- ../../manage-users/server-admin/
+- ../../manage-users/server-admin/server-admin-manage-users/
+- ../manage-users-and-permissions/manage-server-users/
+- ../manage-users-and-permissions/manage-server-users/add-user/
+- ../manage-users-and-permissions/manage-server-users/force-user-logout/
+- ../manage-users-and-permissions/manage-server-users/view-edit-user-account/
+- ../manage-users-and-permissions/manage-server-users/view-list-users/
+- ../manage-users-and-permissions/manage-server-users/view-user-account-details/
+  labels:
   products:
-    - enterprise
-    - oss
-title: Server user management
-weight: 100
----
+  - enterprise
+  - oss
+    title: Server user management
+    weight: 100
+
+-----
 
 # Server user management
 
-A _user_ is defined as any individual who can log in to Grafana. Each user is associated with a _role_ that includes _permissions_. Permissions determine the tasks a user can perform in the system.
+A *user* is defined as any individual who can log in to Grafana. Each user is associated with a *role* that includes *permissions*. Permissions determine the tasks a user can perform in the system.
 
 If you have [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions in Grafana, you can manage all users for a Grafana instance in the Server Admin section:
 
-{{< section >}}
+{{\< section \>}}
 
-If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and _not_ [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, refer to [Manage users in a organization](../manage-org-users/).
+If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and *not* [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, refer to [Manage users in a organization](../manage-org-users/).
 
 For more information about user roles and permissions, refer to [Roles and permissions](../../roles-and-permissions/). For more information about managing users in general, see [User management](../).
 
@@ -39,10 +42,10 @@ You can see a list of users with accounts on your Grafana server. This action mi
 **To view a list of users**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
 
 {{% admonition type="note" %}}
-If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and _not_ [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [view of list of users in a given organization](../manage-org-users/#view-a-list-of-organization-users).
+If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and *not* [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, you can still [view of list of users in a given organization](../manage-org-users/#view-a-list-of-organization-users).
 {{% /admonition %}}
 
 ## View user details
@@ -56,8 +59,8 @@ View user details when you want to see login, and organizations and permissions 
 **To view user details**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click a user.
 
 A user account contains the following sections.
 
@@ -88,9 +91,9 @@ Edit a user account when you want to modify user login credentials, or delete, d
 **To edit a user account**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
-1. Complete any of the following actions, as necessary.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click a user.
+4. Complete any of the following actions, as necessary.
 
 | Action                          | Description                                                                                                                                                     |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -115,14 +118,14 @@ When you configure advanced authentication using Oauth, SAML, LDAP, or the Auth 
 **To add a user**:
 
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click **New user**.
-1. Complete the fields and click **Create user**.
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click **New user**.
+4. Complete the fields and click **Create user**.
 
 When you create a user, the system assigns the user viewer permissions in a default organization, which you can change. You can now [add a user to a second organization](add-remove-user-to-org/).
 
 {{% admonition type="note" %}}
-If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and _not_ [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, you can still add users by [inviting a user to join an organization](../manage-org-users/#invite-a-user-to-join-an-organization).
+If you have [organization administrator](../../roles-and-permissions/#organization-roles) permissions and *not* [server administrator](../../roles-and-permissions/#grafana-server-administrators) permissions, you can still add users by [inviting a user to join an organization](../manage-org-users/#invite-a-user-to-join-an-organization).
 {{% /admonition %}}
 
 ## Force a user to log out of Grafana
@@ -135,11 +138,13 @@ The force logout action can apply to one device that is logged in to Grafana, or
 
 - Ensure you have Grafana server administrator privileges
 
+<!-- end list -->
+
 1. Sign in to Grafana as a server administrator.
-1. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
-1. Click a user.
-1. Scroll down to the Sessions section.
-1. Perform one of the following actions:
+2. Click **Administration** in the left-side menu, **Users and access**, and then **Users**.
+3. Click a user.
+4. Scroll down to the Sessions section.
+5. Perform one of the following actions:
    - Click **Force logout** next to the session entry that you want logged out of Grafana.
    - Click **Force logout from all devices**.
-1. Confirm the logout.
+6. Confirm the logout.

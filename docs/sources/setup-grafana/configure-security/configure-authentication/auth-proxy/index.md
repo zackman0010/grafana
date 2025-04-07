@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../../auth/auth-proxy/
-  - ../../../tutorials/authproxy/
-description: Grafana Auth Proxy Guide
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - proxy
-labels:
+
+- ../../../auth/auth-proxy/
+- ../../../tutorials/authproxy/
+  description: Grafana Auth Proxy Guide
+  keywords:
+- grafana
+- configuration
+- documentation
+- proxy
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Auth proxy
-title: Configure auth proxy authentication
-weight: 1500
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Auth proxy
+    title: Configure auth proxy authentication
+    weight: 1500
+
+-----
 
 # Configure auth proxy authentication
 
@@ -24,7 +27,7 @@ You can configure Grafana to let a HTTP reverse proxy handle authentication. Pop
 extensive list of pluggable authentication modules, and any of them can be used with the AuthProxy feature.
 Below we detail the configuration options for auth proxy.
 
-```bash
+``` bash
 [auth.proxy]
 # Defaults to false, but set to true to enable this feature
 enabled = true
@@ -53,7 +56,7 @@ enable_login_token = false
 
 ## Interacting with Grafana’s AuthProxy via curl
 
-```bash
+``` bash
 curl -H "X-WEBAUTH-USER: admin"  http://localhost:3000/api/users
 [
     {
@@ -68,7 +71,7 @@ curl -H "X-WEBAUTH-USER: admin"  http://localhost:3000/api/users
 
 We can then send a second request to the `/api/user` method which will return the details of the logged in user. We will use this request to show how Grafana automatically adds the new user we specify to the system. Here we create a new user called “anthony”.
 
-```bash
+``` bash
 curl -H "X-WEBAUTH-USER: anthony" http://localhost:3000/api/user
 {
     "email":"anthony",
@@ -90,7 +93,7 @@ In this example we use Apache as a reverse proxy in front of Grafana. Apache han
 
 #### Apache configuration
 
-```bash
+``` bash
     <VirtualHost *:80>
         ServerAdmin webmaster@authproxy
         ServerName authproxy
@@ -119,13 +122,13 @@ In this example we use Apache as a reverse proxy in front of Grafana. Apache han
 
 - The first four lines of the virtualhost configuration are standard, so we won’t go into detail on what they do.
 
-- We use a **\<proxy>** configuration block for applying our authentication rules to every proxied request. These rules include requiring basic authentication where user:password credentials are stored in the **/etc/apache2/grafana_htpasswd** file. This file can be created with the `htpasswd` command.
-
+- We use a **\<proxy\>** configuration block for applying our authentication rules to every proxied request. These rules include requiring basic authentication where user:password credentials are stored in the **/etc/apache2/grafana\_htpasswd** file. This file can be created with the `htpasswd` command.
+  
   - The next part of the configuration is the tricky part. We use Apache’s rewrite engine to create our **X-WEBAUTH-USER header**, populated with the authenticated user.
-
-    - **RewriteRule .\* - [E=PROXY_USER:%{LA-U:REMOTE_USER}, NS]**: This line is a little bit of magic. What it does, is for every request use the rewriteEngines look-ahead (LA-U) feature to determine what the REMOTE_USER variable would be set to after processing the request. Then assign the result to the variable PROXY_USER. This is necessary as the REMOTE_USER variable is not available to the RequestHeader function.
-
-    - **RequestHeader set X-WEBAUTH-USER “%{PROXY_USER}e”**: With the authenticated username now stored in the PROXY_USER variable, we create a new HTTP request header that will be sent to our backend Grafana containing the username.
+    
+    - **RewriteRule .\* - \[E=PROXY\_USER:%{LA-U:REMOTE\_USER}, NS\]**: This line is a little bit of magic. What it does, is for every request use the rewriteEngines look-ahead (LA-U) feature to determine what the REMOTE\_USER variable would be set to after processing the request. Then assign the result to the variable PROXY\_USER. This is necessary as the REMOTE\_USER variable is not available to the RequestHeader function.
+    
+    - **RequestHeader set X-WEBAUTH-USER “%{PROXY\_USER}e”**: With the authenticated username now stored in the PROXY\_USER variable, we create a new HTTP request header that will be sent to our backend Grafana containing the username.
 
 - The **RequestHeader unset Authorization** removes the Authorization header from the HTTP request before it is forwarded to Grafana. This ensures that Grafana does not try to authenticate the user using these credentials (BasicAuth is a supported authentication handler in Grafana).
 
@@ -137,7 +140,9 @@ For this example, we use the official Grafana Docker image available at [Docker 
 
 - Create a file `grafana.ini` with the following contents
 
-```bash
+<!-- end list -->
+
+``` bash
 [users]
 allow_sign_up = false
 auto_assign_org = true
@@ -153,7 +158,7 @@ auto_sign_up = true
 Launch the Grafana container, using our custom grafana.ini to replace `/etc/grafana/grafana.ini`. We don't expose
 any ports for this container as it will only be connected to by our Apache container.
 
-```bash
+``` bash
 docker run -i -v $(pwd)/grafana.ini:/etc/grafana/grafana.ini --name grafana grafana/grafana
 ```
 
@@ -163,7 +168,9 @@ For this example we use the official Apache docker image available at [Docker Hu
 
 - Create a file `httpd.conf` with the following contents
 
-```bash
+<!-- end list -->
+
+``` bash
 ServerRoot "/usr/local/apache2"
 Listen 80
 LoadModule mpm_event_module modules/mod_mpm_event.so
@@ -217,14 +224,14 @@ ProxyPassReverse / http://grafana:3000/
 ```
 
 - Create a htpasswd file. We create a new user **anthony** with the password **password**
-
-  ```bash
+  
+  ``` bash
   htpasswd -bc htpasswd anthony password
   ```
 
 - Launch the httpd container using our custom httpd.conf and our htpasswd file. The container will listen on port 80, and we create a link to the **grafana** container so that this container can resolve the hostname **grafana** to the Grafana container’s IP address.
-
-  ```bash
+  
+  ``` bash
   docker run -i -p 80:80 --link grafana:grafana -v $(pwd)/httpd.conf:/usr/local/apache2/conf/httpd.conf -v $(pwd)/htpasswd:/tmp/htpasswd httpd:2.4
   ```
 
@@ -244,7 +251,7 @@ With Team Sync, it's possible to set up synchronization between teams in your au
 
 To support the feature, auth proxy allows optional headers to map additional user attributes. The specific attribute to support team sync is `Groups`.
 
-```bash
+``` bash
 # Optionally define more headers to sync other user attributes
 headers = "Groups:X-WEBAUTH-GROUPS"
 ```
@@ -255,7 +262,7 @@ First, we need to set up the mapping between your authentication provider and Gr
 
 Once that's done. You can verify your mappings by querying the API.
 
-```bash
+``` bash
 # First, inspect your teams and obtain the corresponding ID of the team we want to inspect the groups for.
 curl -H "X-WEBAUTH-USER: admin" -H "X-WEBAUTH-GROUPS: lokiteamOnExternalSystem" http://localhost:3000/api/teams/search
 {
@@ -297,7 +304,7 @@ curl -H "X-WEBAUTH-USER: admin" -H "X-WEBAUTH-GROUPS: lokiteamOnExternalSystem" 
 
 Finally, whenever Grafana receives a request with a header of `X-WEBAUTH-GROUPS: lokiTeamOnExternalSystem`, the user under authentication will be placed into the specified team. Placement in multiple teams is supported by using comma-separated values e.g. `lokiTeamOnExternalSystem,CoreTeamOnExternalSystem`.
 
-```bash
+``` bash
 curl -H "X-WEBAUTH-USER: leonard" -H "X-WEBAUTH-GROUPS: lokiteamOnExternalSystem" http://localhost:3000/dashboards/home
 {
   "meta": {

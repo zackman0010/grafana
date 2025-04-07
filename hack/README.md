@@ -6,17 +6,15 @@ The workflow is a WIP, however we are trying to leverage as many off-the-shelf p
 
 For these scripts to work, your local GOROOT/src/grafana/grafana must point to this git checkout. For my setup this is:
 
-```
-❯ pwd
-/Users/ryan/go/src/github.com/grafana
-❯ ls -l
-total 0
-lrwxr-xr-x  1 ryan  staff  37 Oct  5 09:34 grafana -> /Users/ryan/workspace/grafana/grafana
-```
+    ❯ pwd
+    /Users/ryan/go/src/github.com/grafana
+    ❯ ls -l
+    total 0
+    lrwxr-xr-x  1 ryan  staff  37 Oct  5 09:34 grafana -> /Users/ryan/workspace/grafana/grafana
 
 The current workflow is to run the following:
 
-```shell
+``` shell
 # ensure k8s.io/code-generator pkg is up to date
 go mod download
 

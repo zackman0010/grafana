@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../http_api/
-  - ../overview/
-canonical: /docs/grafana/latest/developers/http_api/
-description: Grafana HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - overview
-labels:
+
+- ../http\_api/
+- ../overview/
+  canonical: /docs/grafana/latest/developers/http\_api/
+  description: Grafana HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- overview
+  labels:
   products:
-    - enterprise
-    - oss
-title: HTTP API
-weight: 100
----
+  - enterprise
+  - oss
+    title: HTTP API
+    weight: 100
+
+-----
 
 # HTTP API reference
 
@@ -31,7 +34,7 @@ Users can browser and try out both via the Swagger UI editor (served by the Graf
 
 ## Authenticate API requests
 
-{{< docs/shared lookup="developers/authentication.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="developers/authentication.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## X-Grafana-Org-Id Header
 
@@ -39,7 +42,7 @@ Users can browser and try out both via the Swagger UI editor (served by the Graf
 
 **Example Request**:
 
-```http
+``` http
 GET /api/org/ HTTP/1.1
 Accept: application/json
 Content-Type: application/json

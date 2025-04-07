@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../../auth/azuread/
-description: Grafana Azure AD OAuth Guide
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - oauth
-labels:
+
+- ../../../auth/azuread/
+  description: Grafana Azure AD OAuth Guide
+  keywords:
+- grafana
+- configuration
+- documentation
+- oauth
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Azure AD/Entra ID OAuth
-title: Configure Azure AD/Entra ID OAuth authentication
-weight: 800
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Azure AD/Entra ID OAuth
+    title: Configure Azure AD/Entra ID OAuth authentication
+    weight: 800
+
+-----
 
 # Configure Azure AD/Entra ID OAuth authentication
 
@@ -31,68 +34,69 @@ To enable the Azure AD/Entra ID OAuth, register your application with Entra ID.
 
 1. Log in to [Azure Portal](https://portal.azure.com), then click **Microsoft Entra ID** in the side menu.
 
-1. If you have access to more than one tenant, select your account in the upper right. Set your session to the Entra ID tenant you wish to use.
+2. If you have access to more than one tenant, select your account in the upper right. Set your session to the Entra ID tenant you wish to use.
 
-1. Under **Manage** in the side menu, click **App Registrations** > **New Registration**. Enter a descriptive name.
+3. Under **Manage** in the side menu, click **App Registrations** \> **New Registration**. Enter a descriptive name.
 
-1. Under **Redirect URI**, select the app type **Web**.
+4. Under **Redirect URI**, select the app type **Web**.
 
-1. Add the following redirect URLs `https://<grafana domain>/login/azuread` and `https://<grafana domain>` then click **Register**. The app's **Overview** page opens.
+5. Add the following redirect URLs `https://<grafana domain>/login/azuread` and `https://<grafana domain>` then click **Register**. The app's **Overview** page opens.
 
-1. Note the **Application ID**. This is the OAuth client ID.
+6. Note the **Application ID**. This is the OAuth client ID.
 
-1. Click **Endpoints** from the top menu.
-
+7. Click **Endpoints** from the top menu.
+   
    - Note the **OAuth 2.0 authorization endpoint (v2)** URL. This is the authorization URL.
    - Note the **OAuth 2.0 token endpoint (v2)**. This is the token URL.
 
-1. Click **Certificates & secrets** in the side menu, then add a new entry under the supported client authentication option you want to use. The following are the supported client authentication options with their respective configuration steps.
-
+8. Click **Certificates & secrets** in the side menu, then add a new entry under the supported client authentication option you want to use. The following are the supported client authentication options with their respective configuration steps.
+   
    - **Client secrets**
-
+     
      1. Add a new entry under **Client secrets** with the following configuration.
-
+        
         - Description: Grafana OAuth 2.0
         - Expires: Select an expiration period
-
-     1. Click **Add** then copy the key **Value**. This is the OAuth 2.0 client secret.
-
-     {{< admonition type="note" >}}
+     
+     2. Click **Add** then copy the key **Value**. This is the OAuth 2.0 client secret.
+     
+     {{\< admonition type="note" \>}}
      Make sure that you copy the string in the **Value** field, rather than the one in the **Secret ID** field.
-     {{< /admonition >}}
-
+     {{\< /admonition \>}}
+     
      1. You must have set `client_authentication` under `[auth.azuread]` to `client_secret_post` in the Grafana server configuration for this to work.
-
+   
    - **Federated credentials**
-
+     
      1. Refer to [Configure an application to trust a managed identity (preview)](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-config-app-trust-managed-identity?tabs=microsoft-entra-admin-center) for a complete guide on setting up a managed identity as a federated credential.
         Add a new entry under Federated credentials with the following configuration.
-
+        
         - Federated credential scenario: Select **Other issuer**.
         - Issuer: The OAuth 2.0 / OIDC issuer URL of the Microsoft Entra ID authority. For example: `https://login.microsoftonline.com/{tenantID}/v2.0`.
         - Subject identifier: The Object (Principal) ID GUID of the Managed Identity.
         - Name: A unique descriptive name for the credential.
         - Description: Grafana OAuth.
         - Audience: The audience value that must appear in the external token. For Public cloud, it would be `api://AzureADTokenExchange`. See mentioned documentation for the full list of available audiences.
-
-     1. Click **Add**, and then copy the Managed Identity Client ID and the federated credential Audience values. This is your OAuth 2.0 federated credential.
-
-     1. You must have set `client_authentication` under `[auth.azuread]` to `managed_identity` in the Grafana server configuration for this to work.
-
-     {{< admonition type="note" >}}
+     
+     2. Click **Add**, and then copy the Managed Identity Client ID and the federated credential Audience values. This is your OAuth 2.0 federated credential.
+     
+     3. You must have set `client_authentication` under `[auth.azuread]` to `managed_identity` in the Grafana server configuration for this to work.
+     
+     {{\< admonition type="note" \>}}
      Managed identities as federated credentials are only applicable to workloads hosted in Azure.
-
+     
      You can only add user-assigned managed identities as federated credentials on Entra ID applications.
-     {{< /admonition >}}
+     {{\< /admonition \>}}
 
-1. Define the required application roles for Grafana [using the Azure Portal](#configure-application-roles-for-grafana-in-the-azure-portal) or [using the manifest file](#configure-application-roles-for-grafana-in-the-manifest-file).
+9. Define the required application roles for Grafana [using the Azure Portal](#configure-application-roles-for-grafana-in-the-azure-portal) or [using the manifest file](#configure-application-roles-for-grafana-in-the-manifest-file).
 
-1. Go to **Microsoft Entra ID** and then to **Enterprise Applications**, under **Manage**.
+10. Go to **Microsoft Entra ID** and then to **Enterprise Applications**, under **Manage**.
 
-1. Search for your application and click it.
+11. Search for your application and click it.
 
-1. Click **Users and Groups**.
-1. Click **Add user/group** to add a user or group to the Grafana roles.
+12. Click **Users and Groups**.
+
+13. Click **Add user/group** to add a user or group to the Grafana roles.
 
 {{% admonition type="note" %}}
 When assigning a group to a Grafana role, ensure that users are direct members of the group. Users in nested groups will not have access to Grafana due to limitations within Azure AD/Entra ID side. For more information, see [Microsoft Entra service limits and restrictions](https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions).
@@ -104,19 +108,19 @@ This section describes setting up basic application roles for Grafana within the
 
 1. Go to **App Registrations**, search for your application, and click it.
 
-1. Click **App roles** and then **Create app role**.
+2. Click **App roles** and then **Create app role**.
 
-1. Define a role corresponding to each Grafana role: Viewer, Editor, and Admin.
-
+3. Define a role corresponding to each Grafana role: Viewer, Editor, and Admin.
+   
    1. Choose a **Display name** for the role. For example, "Grafana Editor".
-
-   1. Set the **Allowed member types** to **Users/Groups**.
-
-   1. Ensure that the **Value** field matches the Grafana role name. For example, "Editor".
-
-   1. Choose a **Description** for the role. For example, "Grafana Editor Users".
-
-   1. Click **Apply**.
+   
+   2. Set the **Allowed member types** to **Users/Groups**.
+   
+   3. Ensure that the **Value** field matches the Grafana role name. For example, "Editor".
+   
+   4. Choose a **Description** for the role. For example, "Grafana Editor Users".
+   
+   5. Click **Apply**.
 
 ### Configure application roles for Grafana in the manifest file
 
@@ -124,17 +128,17 @@ If you prefer to configure the application roles for Grafana in the manifest fil
 
 1. Go to **App Registrations**, search for your application, and click it.
 
-1. Click **Manifest**.
+2. Click **Manifest**.
 
-1. Add a Universally Unique Identifier to each role.
+3. Add a Universally Unique Identifier to each role.
 
 {{% admonition type="note" %}}
 Every role requires a [Universally Unique Identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier) which you can generate on Linux with `uuidgen`, and on Windows through Microsoft PowerShell with `New-Guid`.
 {{% /admonition %}}
 
-1. Replace each "SOME_UNIQUE_ID" with the generated ID in the manifest file:
-
-   ```json
+1. Replace each "SOME\_UNIQUE\_ID" with the generated ID in the manifest file:
+   
+   ``` json
    	"appRoles": [
    			{
    				"allowedMemberTypes": [
@@ -175,7 +179,7 @@ Every role requires a [Universally Unique Identifier](https://en.wikipedia.org/w
    		],
    ```
 
-1. Click **Save**.
+2. Click **Save**.
 
 ### Assign server administrator privileges
 
@@ -186,7 +190,7 @@ Grafana also assigns the user the `Admin` role of the default organization.
 The setting `allow_assign_grafana_admin` under `[auth.azuread]` must be set to `true` for this to work.
 If the setting is set to `false`, the user is assigned the role of `Admin` of the default organization, but not server administrator privileges.
 
-```json
+``` json
 {
   "allowedMemberTypes": ["User"],
   "description": "Grafana server admin Users",
@@ -209,7 +213,7 @@ Ensure that you have followed the steps in [Create the Microsoft Entra ID applic
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle.
 {{% /admonition %}}
 
-As a Grafana Admin, you can configure your Azure AD/Entra ID OAuth client from within Grafana using the Grafana UI. To do this, navigate to the **Administration > Authentication > Azure AD** page and fill in the form. If you have a current configuration in the Grafana configuration file, the form will be pre-populated with those values. Otherwise the form will contain default values.
+As a Grafana Admin, you can configure your Azure AD/Entra ID OAuth client from within Grafana using the Grafana UI. To do this, navigate to the **Administration \> Authentication \> Azure AD** page and fill in the form. If you have a current configuration in the Grafana configuration file, the form will be pre-populated with those values. Otherwise the form will contain default values.
 
 After you have filled in the form, click **Save** to save the configuration. If the save was successful, Grafana will apply the new configurations.
 
@@ -225,7 +229,7 @@ If you run Grafana in high availability mode, configuration changes may not get 
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle. Supported in the Terraform provider since v2.12.0.
 {{% /admonition %}}
 
-```terraform
+``` terraform
 resource "grafana_sso_settings" "azuread_sso_settings" {
   provider_name = "azuread"
   oauth2_settings {
@@ -259,41 +263,37 @@ Ensure that you have access to the [Grafana configuration file](../../../configu
 
 Add the following to the [Grafana configuration file](../../../configure-grafana/#configuration-file-location):
 
-```
-[auth.azuread]
-name = Azure AD
-enabled = true
-allow_sign_up = true
-auto_login = false
-client_authentication = CLIENT_AUTHENTICATION_OPTION
-client_id = APPLICATION_ID
-client_secret = CLIENT_SECRET
-managed_identity_client_id = MANAGED_IDENTITY_CLIENT_ID
-federated_credential_audience = FEDERATED_CREDENTIAL_AUDIENCE
-scopes = openid email profile
-auth_url = https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/authorize
-token_url = https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/token
-allowed_domains =
-allowed_groups =
-allowed_organizations = TENANT_ID
-role_attribute_strict = false
-allow_assign_grafana_admin = false
-skip_org_role_sync = false
-use_pkce = true
-```
+    [auth.azuread]
+    name = Azure AD
+    enabled = true
+    allow_sign_up = true
+    auto_login = false
+    client_authentication = CLIENT_AUTHENTICATION_OPTION
+    client_id = APPLICATION_ID
+    client_secret = CLIENT_SECRET
+    managed_identity_client_id = MANAGED_IDENTITY_CLIENT_ID
+    federated_credential_audience = FEDERATED_CREDENTIAL_AUDIENCE
+    scopes = openid email profile
+    auth_url = https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/authorize
+    token_url = https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/token
+    allowed_domains =
+    allowed_groups =
+    allowed_organizations = TENANT_ID
+    role_attribute_strict = false
+    allow_assign_grafana_admin = false
+    skip_org_role_sync = false
+    use_pkce = true
 
 You can also use these environment variables to configure `client_authentication`, `client_id`, `client_secret`, `managed_identity_client_id`, and `federated_credential_audience`:
 
-```
-GF_AUTH_AZUREAD_CLIENT_AUTHENTICATION
-GF_AUTH_AZUREAD_CLIENT_ID
-GF_AUTH_AZUREAD_CLIENT_SECRET
-GF_AUTH_AZUREAD_MANAGED_IDENTITY_CLIENT_ID
-GF_AUTH_AZUREAD_FEDERATED_CREDENTIAL_AUDIENCE
-```
+    GF_AUTH_AZUREAD_CLIENT_AUTHENTICATION
+    GF_AUTH_AZUREAD_CLIENT_ID
+    GF_AUTH_AZUREAD_CLIENT_SECRET
+    GF_AUTH_AZUREAD_MANAGED_IDENTITY_CLIENT_ID
+    GF_AUTH_AZUREAD_FEDERATED_CREDENTIAL_AUDIENCE
 
 {{% admonition type="note" %}}
-Verify that the Grafana [root_url](../../../configure-grafana/#root_url) is set in your Azure Application Redirect URLs.
+Verify that the Grafana [root\_url](../../../configure-grafana/#root_url) is set in your Azure Application Redirect URLs.
 {{% /admonition %}}
 
 ### Configure refresh token
@@ -309,15 +309,13 @@ Refresh token fetching and access token expiration check is enabled by default f
 ### Configure allowed tenants
 
 To limit access to authenticated users who are members of one or more tenants, set `allowed_organizations`
-to a comma- or space-separated list of tenant IDs. You can find tenant IDs on the Azure portal under **Microsoft Entra ID -> Overview**.
+to a comma- or space-separated list of tenant IDs. You can find tenant IDs on the Azure portal under **Microsoft Entra ID -\> Overview**.
 
 Make sure to include the tenant IDs of all the federated Users' root directory if your Entra ID contains external identities.
 
 For example, if you want to only give access to members of the tenant `example` with an ID of `8bab1c86-8fba-33e5-2089-1d1c80ec267d`, then set the following:
 
-```
-allowed_organizations = 8bab1c86-8fba-33e5-2089-1d1c80ec267d
-```
+    allowed_organizations = 8bab1c86-8fba-33e5-2089-1d1c80ec267d
 
 ### Configure allowed groups
 
@@ -326,15 +324,15 @@ Microsoft Entra ID groups can be used to limit user access to Grafana. For more 
 To limit access to authenticated users who are members of one or more Entra ID groups, set `allowed_groups`
 to a **comma-** or **space-separated** list of group object IDs.
 
-1. To find object IDs for a specific group on the Azure portal, go to **Microsoft Entra ID > Manage > Groups**.
-
+1. To find object IDs for a specific group on the Azure portal, go to **Microsoft Entra ID \> Manage \> Groups**.
+   
    You can find the Object Id of a group by clicking on the group and then clicking on **Properties**. The object ID is listed under **Object ID**. If you want to only give access to members of the group `example` with an Object Id of `8bab1c86-8fba-33e5-2089-1d1c80ec267d`, then set the following:
-
+   
    ```
      allowed_groups = 8bab1c86-8fba-33e5-2089-1d1c80ec267d
    ```
 
-1. You must enable adding the [group attribute](https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims#configure-groups-optional-claims) to the tokens in your Entra ID App registration either [from the Azure Portal](#configure-group-membership-claims-on-the-azure-portal) or [from the manifest file](#configure-group-membership-claim-in-the-manifest-file).
+2. You must enable adding the [group attribute](https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims#configure-groups-optional-claims) to the tokens in your Entra ID App registration either [from the Azure Portal](#configure-group-membership-claims-on-the-azure-portal) or [from the manifest file](#configure-group-membership-claim-in-the-manifest-file).
 
 #### Configure group membership claims on the Azure Portal
 
@@ -343,8 +341,8 @@ To ensure that the `groups` claim is included in the token, add the `groups` cla
 To configure group membership claims from the Azure Portal UI, complete the following steps:
 
 1. Navigate to the **App Registrations** page and select your application.
-1. Under **Manage** in the side menu, select **Token configuration**.
-1. Click **Add groups claim** and select the relevant option for your use case (for example, **Security groups** and **Groups assigned to the application**).
+2. Under **Manage** in the side menu, select **Token configuration**.
+3. Click **Add groups claim** and select the relevant option for your use case (for example, **Security groups** and **Groups assigned to the application**).
 
 For more information, see [Configure groups optional claims](https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims#configure-groups-optional-claims).
 
@@ -356,21 +354,17 @@ If the user is a member of more than 200 groups, Entra ID does not emit the grou
 
 1. Go to **App Registrations**, search for your application, and click it.
 
-1. Click **Manifest**.
+2. Click **Manifest**.
 
-1. Add the following to the root of the manifest file:
-
-   ```
-   "groupMembershipClaims": "ApplicationGroup, SecurityGroup"
-   ```
+3. Add the following to the root of the manifest file:
+   
+       "groupMembershipClaims": "ApplicationGroup, SecurityGroup"
 
 ### Configure allowed domains
 
 The `allowed_domains` option limits access to users who belong to specific domains. Separate domains with space or comma. For example,
 
-```
-allowed_domains = mycompany.com mycompany.org
-```
+    allowed_domains = mycompany.com mycompany.org
 
 ### PKCE
 
@@ -383,12 +377,10 @@ interception attacks. PKCE will be required in [OAuth 2.1](https://datatracker.i
 
 ### Configure automatic login
 
-To bypass the login screen and log in automatically, enable the "auto_login" feature.
+To bypass the login screen and log in automatically, enable the "auto\_login" feature.
 This setting is ignored if multiple auth providers are configured to use auto login.
 
-```
-auto_login = true
-```
+    auto_login = true
 
 ### Team Sync (Enterprise only)
 
@@ -397,7 +389,7 @@ the correct teams.
 
 You can reference Entra ID groups by group object ID, like `8bab1c86-8fba-33e5-2089-1d1c80ec267d`.
 
-To learn more, refer to the [Team Sync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync) documentation.
+To learn more, refer to the [Team Sync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync) documentation.
 
 ## Common troubleshooting
 
@@ -422,7 +414,7 @@ The Entra ID `App registration` must include the following API permissions for g
 | `GroupMember.Read.All` | Delegated | Yes                    | Granted |
 | `User.Read`            | Delegated | No                     | Granted |
 
-Admin consent is required for the `GroupMember.Read.All` permission. To grant admin consent, navigate to **API permissions** in the **App registration** and select **Grant admin consent for [your-organization]**.
+Admin consent is required for the `GroupMember.Read.All` permission. To grant admin consent, navigate to **API permissions** in the **App registration** and select **Grant admin consent for \[your-organization\]**.
 
 {{% admonition type="note" %}}
 You can make Grafana always get group information from the Microsoft Graph API by turning on the [`force_use_graph_api`](./#force-fetching-groups-from-microsoft-graph-api) setting in the configuration.
@@ -430,16 +422,16 @@ You can make Grafana always get group information from the Microsoft Graph API b
 
 #### Configure the required Graph API permissions
 
-1. Navigate to **Microsoft Entra ID > Manage > App registrations** and select your application.
-1. Select **API permissions** and then click on **Add a permission**.
-1. Select **Microsoft Graph** from the list of APIs.
-1. Select **Delegated permissions**.
-1. Under the **GroupMember** section, select **GroupMember.Read.All**.
-1. Click **Add permissions**.
-1. Select **Microsoft Graph** from the list of APIs.
-1. Select **Delegated permissions**..
-1. In the **Select permissions** pane, under the **User** section, select **User.Read**.
-1. Click the **Add permissions** button at the bottom of the page.
+1. Navigate to **Microsoft Entra ID \> Manage \> App registrations** and select your application.
+2. Select **API permissions** and then click on **Add a permission**.
+3. Select **Microsoft Graph** from the list of APIs.
+4. Select **Delegated permissions**.
+5. Under the **GroupMember** section, select **GroupMember.Read.All**.
+6. Click **Add permissions**.
+7. Select **Microsoft Graph** from the list of APIs.
+8. Select **Delegated permissions**..
+9. In the **Select permissions** pane, under the **User** section, select **User.Read**.
+10. Click the **Add permissions** button at the bottom of the page.
 
 {{% admonition type="note" %}}
 Admin consent may be required for this permission.
@@ -449,9 +441,7 @@ Admin consent may be required for this permission.
 
 To force fetching groups from Microsoft Graph API instead of the `id_token`. You can use the `force_use_graph_api` config option.
 
-```
-force_use_graph_api = true
-```
+    force_use_graph_api = true
 
 ### Map roles
 
@@ -476,7 +466,7 @@ The external user is part of the following Entra ID groups: `032cb8e0-240f-4347-
 
 Config:
 
-```ini
+``` ini
 org_mapping = ["032cb8e0-240f-4347-9120-6f33013e817a:org_foo:Viewer", "bce1c492-0679-4989-941b-8de5e6789cb9:org_bar:Editor", "*:org_baz:Editor"]
 ```
 
@@ -485,7 +475,7 @@ org_mapping = ["032cb8e0-240f-4347-9120-6f33013e817a:org_foo:Viewer", "bce1c492-
 If Azure AD authentication is not intended to sync user roles and organization membership and prevent the sync of org roles from Entra ID, set `skip_org_role_sync` to `true`. This is useful if you want to manage the organization roles for your users from within Grafana or that your organization roles are synced from another provider.
 See [Configure Grafana](../../../configure-grafana/#authazuread) for more details.
 
-```ini
+``` ini
 [auth.azuread]
 # ..
 # prevents the sync of org roles from AzureAD
@@ -517,7 +507,7 @@ The following table outlines the various Azure AD/Entra ID configuration options
 | `allowed_groups`             | No       | Yes                | List of comma- or space-separated groups. The user should be a member of at least one group to log in. If you configure `allowed_groups`, you must also configure Azure AD/Entra ID to include the `groups` claim following [Configure group membership claims on the Azure Portal](#configure-group-membership-claims-on-the-azure-portal).                                                                                                                                                    |                        |
 | `allowed_organizations`      | No       | Yes                | List of comma- or space-separated Azure tenant identifiers. The user should be a member of at least one tenant to log in.                                                                                                                                                                                                                                                                                                                                                                       |                        |
 | `allowed_domains`            | No       | Yes                | List of comma- or space-separated domains. The user should belong to at least one domain to log in.                                                                                                                                                                                                                                                                                                                                                                                             |                        |
-| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. _You should only use this for testing_, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                          | `false`                |
+| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. *You should only use this for testing*, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                          | `false`                |
 | `tls_client_cert`            | No       | No                 | The path to the certificate.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |                        |
 | `tls_client_key`             | No       | No                 | The path to the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                        |
 | `tls_client_ca`              | No       | No                 | The path to the trusted certificate authority list.                                                                                                                                                                                                                                                                                                                                                                                                                                             |                        |

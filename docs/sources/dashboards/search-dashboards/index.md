@@ -1,34 +1,37 @@
----
+-----
+
 description: Learn how to search for Grafana dashboards and folders
 keywords:
-  - search
-  - dashboard
-  - folder
-labels:
+
+- search
+- dashboard
+- folder
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menutitle: Search dashboards
-title: Search dashboards and folders
-weight: 400
-refs:
-  service-accounts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
-  config-file:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#configuration-file-location
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#configuration-file-location
-  feature-toggles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles
----
+  - cloud
+  - enterprise
+  - oss
+    menutitle: Search dashboards
+    title: Search dashboards and folders
+    weight: 400
+    refs:
+    service-accounts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+    config-file:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#configuration-file-location
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#configuration-file-location
+    feature-toggles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#feature\_toggles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#feature\_toggles
+
+-----
 
 # Search dashboards and folders
 
@@ -43,8 +46,8 @@ Begin typing any part of the dashboard or folder name in the search bar. The sea
 The search is:
 
 - Real-time
-- _Not_ case sensitive
-- Functional across stored _and_ file based dashboards and folders.
+- *Not* case sensitive
+- Functional across stored *and* file based dashboards and folders.
 
 {{% admonition type="note" %}}
 You can use your keyboard arrow keys to navigate the results and press `Enter` to open the selected dashboard or folder.
@@ -54,15 +57,15 @@ The following images show:
 
 Searching by dashboard name from the **Dashboards** page.
 
-{{< figure src="/media/docs/grafana/dashboards/search-for-dashboard.png" width="700px" >}}
+{{\< figure src="/media/docs/grafana/dashboards/search-for-dashboard.png" width="700px" \>}}
 
 Searching by folder name from the **Dashboards** page.
 
-{{< figure src="/media/docs/grafana/dashboards/search-folder.png" width="700px" >}}
+{{\< figure src="/media/docs/grafana/dashboards/search-folder.png" width="700px" \>}}
 
 Searching by dashboard name inside a folder.
 
-{{< figure src="/media/docs/grafana/dashboards/search-in-folder.png" width="700px" >}}
+{{\< figure src="/media/docs/grafana/dashboards/search-in-folder.png" width="700px" \>}}
 
 {{% admonition type="note" %}}
 When you search within a folder, its subfolders are not part of the results returned. You need to be on the **Dashboards** page (or the root level) to search for subfolders by name.
@@ -78,7 +81,7 @@ For more information about enabling panel title search, refer to [Enable the pan
 
 The following image shows the search results when you search using panel title.
 
-{{< figure src="/static/img/docs/v91/dashboard-features/search-by-panel-title.png" width="700px" >}}
+{{\< figure src="/static/img/docs/v91/dashboard-features/search-by-panel-title.png" width="700px" \>}}
 
 ### Enable the panelTitleSearch feature toggle
 
@@ -92,17 +95,15 @@ Complete the following steps to enable the `panelTitleSearch` feature toggle.
 
 1. Open the Grafana [configuration file](ref:config-file).
 
-1. Locate the [feature_toggles](ref:feature-toggles) section.
+2. Locate the [feature\_toggles](ref:feature-toggles) section.
 
-1. Add the following parameter to the `feature_toggles` section:
+3. Add the following parameter to the `feature_toggles` section:
+   
+       [feature_toggles]
+       # enable features, separated by spaces
+       enable = panelTitleSearch
 
-   ```
-   [feature_toggles]
-   # enable features, separated by spaces
-   enable = panelTitleSearch
-   ```
-
-1. Save your changes and restart the Grafana server.
+4. Save your changes and restart the Grafana server.
 
 ## Filter dashboard search results by tag(s)
 
@@ -113,11 +114,11 @@ When you select multiple tags, Grafana shows dashboards that include all selecte
 To filter dashboard search result by a tag, complete one of the following steps:
 
 - To filter dashboard search results by tag, click a tag that appears in the right column of the search results.
-
+  
   You can continue filtering by clicking additional tags.
 
 - To see a list of all available tags, click the **Filter by tags** dropdown menu and select a tag.
-
+  
   All tags will be shown, and when you select a tag, the dashboard search will be instantly filtered.
 
 {{% admonition type="note" %}}

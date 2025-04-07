@@ -3,13 +3,14 @@
 ## Devenv setup oauth
 
 To launch the block, use the oauth source. Ex:
-```bash
+
+``` bash
 make devenv sources="auth/oauth"
 ```
 
 Here is the conf you need to add to your configuration file (conf/custom.ini):
 
-```ini
+``` ini
 [auth.generic_oauth]
 enabled = true
 name = Keycloak-OAuth
@@ -32,13 +33,13 @@ signout_redirect_url = http://localhost:8087/realms/grafana/protocol/openid-conn
 
 To launch the block, use the oauth source. Ex:
 
-```bash
+``` bash
 make devenv sources="auth/oauth"
 ```
 
 Here is the conf you need to add to your configuration file (conf/custom.ini):
 
-```ini
+``` ini
 [auth.jwt]
 enabled = true
 header_name = X-JWT-Assertion
@@ -55,7 +56,7 @@ allow_assign_grafana_admin = true
 
 You can obtain a jwt token by using the following command for oauth-admin:
 
-```sh
+``` sh
 curl --request POST \
   --url http://localhost:8087/realms/grafana/protocol/openid-connect/token \
   --header 'Content-Type: application/x-www-form-urlencoded' \
@@ -67,29 +68,28 @@ curl --request POST \
   --data password=grafana
 ```
 
-
 Grafana call example:
 
-```sh
+``` sh
 curl --request GET \
   --url http://127.0.0.1:3000/api/folders \
   --header 'Accept: application/json' \
   --header 'X-JWT-Assertion: eyJ......'
 ```
 
-### Alternative devenv setup jwk_set_url
+### Alternative devenv setup jwk\_set\_url
 
-Run a reverse proxy pointing to the jwk_set_url (only an https-uri can be used as jwk_set_url).
+Run a reverse proxy pointing to the jwk\_set\_url (only an https-uri can be used as jwk\_set\_url).
 
 Ex (using localtunnel):
 
-```sh
+``` sh
 npx localtunnel --port 8087
 ```
 
 And using the following conf:
 
-```ini
+``` ini
 [auth.jwt]
 enabled = true
 header_name = X-JWT-Assertion
@@ -105,7 +105,7 @@ auto_sign_up = true
 
 In case you want to make changes to the devenv setup, you can dump keycloak's DB:
 
-```bash
+``` bash
 cd devenv;
 docker-compose exec -T oauthkeycloakdb bash -c "pg_dump -U keycloak keycloak" > docker/blocks/auth/oauth/cloak.sql
 ```

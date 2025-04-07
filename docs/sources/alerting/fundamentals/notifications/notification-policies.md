@@ -1,59 +1,62 @@
----
+-----
+
 aliases:
-  - ../notification-policies/notifications/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notification-policies/notifications/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/notification-policies/
-description: Learn about how notification policies work and are structured
-keywords:
-  - grafana
-  - alerting
-  - alertmanager
-  - notification policies
-  - contact points
-  - silences
-labels:
+
+- ../notification-policies/notifications/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notification-policies/notifications/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/notification-policies/
+  description: Learn about how notification policies work and are structured
+  keywords:
+- grafana
+- alerting
+- alertmanager
+- notification policies
+- contact points
+- silences
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Notification policies
-weight: 113
-refs:
-  shared-alert-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
-  shared-notification-policies:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/notification-policies/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
-  shared-silences:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/create-silence/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
-  contact-points:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/contact-points/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/contact-points/
-  notification-timings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/#timing-options
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/#timing-options
-  mute-timings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/mute-timings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
-  group-alert-notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Notification policies
+    weight: 113
+    refs:
+    shared-alert-labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
+    shared-notification-policies:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/notification-policies/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
+    shared-silences:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/create-silence/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
+    contact-points:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/contact-points/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/contact-points/
+    notification-timings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/\#timing-options
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/\#timing-options
+    mute-timings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/mute-timings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
+    group-alert-notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
+
+-----
 
 # Notification policies
 
@@ -61,9 +64,9 @@ Notification policies provide you with a flexible way of designing how to handle
 
 Using label matchers, alert instances are [routed to notification policies](#routing). The notification policy can then [group multiple alert instances into a single notification](ref:group-alert-notifications) and deliver it to the contact point.
 
-{{< figure src="/media/docs/alerting/how-alerting-works.png" max-width="750px" alt="How Alerting works" >}}
+{{\< figure src="/media/docs/alerting/how-alerting-works.png" max-width="750px" alt="How Alerting works" \>}}
 
-Notification policies are _not_ a list, but rather are structured according to a [tree structure](https://en.wikipedia.org/wiki/Tree_structure):
+Notification policies are *not* a list, but rather are structured according to a [tree structure](https://en.wikipedia.org/wiki/Tree_structure):
 
 - The root of the notification policy tree is the **Default notification policy**.
 - Each policy can have child policies.
@@ -71,13 +74,13 @@ Notification policies are _not_ a list, but rather are structured according to a
 
 Each policy consists of a set of label matchers (0 or more) that specify which alerts they are or aren't interested in handling. A matching policy refers to a notification policy with label matchers that match the alert instance’s labels.
 
-{{< docs/shared lookup="alerts/how_label_matching_works.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/how\_label\_matching\_works.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
-{{< figure src="/media/docs/alerting/notification-routing.png" max-width="750px" caption="Matching alert instances with notification policies" alt="Example of a notification policy tree" >}}
+{{\< figure src="/media/docs/alerting/notification-routing.png" max-width="750px" caption="Matching alert instances with notification policies" alt="Example of a notification policy tree" \>}}
 
-{{< admonition type="tip" >}}
+{{\< admonition type="tip" \>}}
 For a practical example of routing with notification policies, refer to our [Getting Started with Alert Instances and Notification Routing tutorial](https://grafana.com/tutorials/alerting-get-started-pt2/).
-{{< /admonition  >}}
+{{\< /admonition  \>}}
 
 ## Routing
 
@@ -95,7 +98,7 @@ If alerts use multiple labels, these labels must also be present in a notificati
 
 {{% /admonition %}}
 
-{{< collapse title="Routing example" >}}
+{{\< collapse title="Routing example" \>}}
 
 Here's a breakdown of the previous example:
 
@@ -111,7 +114,7 @@ When an alert matches both a parent policy and a child policy (like it does in t
 
 **Unauthorized log entry** has a `team` label but does not match the first policy (`team=operations`) since the values are not the same, so it will continue searching and match the `team=security` policy. It does not have any child policies, so the additional `severity=high` label is ignored.
 
-{{< /collapse >}}
+{{\< /collapse \>}}
 
 This routing and tree structure makes it convenient to organize and handle alerts for dedicated teams, while also narrowing down specific cases within the team by applying additional labels.
 
@@ -131,6 +134,6 @@ The inheritance of notification properties, together with the routing process, i
 
 **Inheritance example**
 
-{{< figure src="/media/docs/alerting/notification-inheritance.png" max-width="750px" alt="Simple example inhering notification settings" >}}
+{{\< figure src="/media/docs/alerting/notification-inheritance.png" max-width="750px" alt="Simple example inhering notification settings" \>}}
 
 This example shows how the notification policy tree from the previous example allows the child policies of the `team=operations` to inherit its contact point. In this way, you can avoid specifying the same contact point multiple times for each child policy.

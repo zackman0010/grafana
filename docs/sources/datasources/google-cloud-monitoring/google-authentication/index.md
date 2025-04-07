@@ -1,19 +1,22 @@
----
+-----
+
 aliases:
-  - /docs/grafana/next/datasources/cloudmonitoring/
-description: Google authentication
-keywords:
-  - grafana
-  - google
-  - authentication
-labels:
+
+- /docs/grafana/next/datasources/cloudmonitoring/
+  description: Google authentication
+  keywords:
+- grafana
+- google
+- authentication
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Authentication
-weight: 5
----
+  - cloud
+  - enterprise
+  - oss
+    title: Authentication
+    weight: 5
+
+-----
 
 # Configure Google authentication
 
@@ -35,14 +38,14 @@ To visualize data from multiple GCP Projects, create one data source per GCP Pro
 ### Create a GCP Service Account and key file
 
 1. Navigate to the [APIs and Services Credentials page](https://console.cloud.google.com/apis/credentials).
-1. Click on the **Create credentials** dropdown and select the **Service account** option.
-1. In **Service account name**, enter a name for the account.
-1. From the **Role** dropdown, choose the roles required by the specific plugin.
-1. Click **Done**.
-1. Use the newly created account to [create a service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console).
+2. Click on the **Create credentials** dropdown and select the **Service account** option.
+3. In **Service account name**, enter a name for the account.
+4. From the **Role** dropdown, choose the roles required by the specific plugin.
+5. Click **Done**.
+6. Use the newly created account to [create a service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console).
    A JSON key file is created and downloaded to your computer.
-1. Store the key file in a secure place, because it grants access to your Google data.
-1. In the Grafana data source configuration page, upload the key file.
+7. Store the key file in a secure place, because it grants access to your Google data.
+8. In the Grafana data source configuration page, upload the key file.
    The file's contents are encrypted and saved in the Grafana database.
    Remember to save the file after uploading.
 
@@ -51,11 +54,11 @@ To visualize data from multiple GCP Projects, create one data source per GCP Pro
 You can create a service account and key file that can be used to access multiple projects. Follow steps 1-5 above, then:
 
 1. Note the email address of the service account, it will look a little strange like `foobar-478@main-boardwalk-90210.iam.gserviceaccount.com`.
-1. Navigate to the other project(s) you want to access.
-1. Add the service account email address to the IAM page of each project, and grant it the required roles.
-1. Navigate back to the original project's service account and create a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console). A JSON key file is created and downloaded to your computer
-1. Store the key file in a secure place, because it grants access to your Google data.
-1. In the Grafana data source configuration page, upload the key file.
+2. Navigate to the other project(s) you want to access.
+3. Add the service account email address to the IAM page of each project, and grant it the required roles.
+4. Navigate back to the original project's service account and create a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-console). A JSON key file is created and downloaded to your computer
+5. Store the key file in a secure place, because it grants access to your Google data.
+6. In the Grafana data source configuration page, upload the key file.
    The file's contents are encrypted and saved in the Grafana database.
    Remember to save the file after uploading.
 

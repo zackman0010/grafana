@@ -9,24 +9,20 @@ Make sure you have the following dependencies installed before setting up your d
 - [Git](https://git-scm.com/)
 - [Go](https://golang.org/dl/) (see [go.mod](../go.mod#L3) for minimum required version)
 - [Node.js (Long Term Support)](https://nodejs.org), with [corepack enabled](https://nodejs.org/api/corepack.html#enabling-the-feature). See [.nvmrc](../.nvmrc) for supported version. We recommend that you use a version manager such as [nvm](https://github.com/nvm-sh/nvm), [fnm](https://github.com/Schniz/fnm), or similar.
-- [GCC](https://gcc.gnu.org/) (required for Cgo] dependencies)
+- [GCC](https://gcc.gnu.org/) (required for Cgo\] dependencies)
 
 ### macOS
 
 We recommend using [Homebrew](https://brew.sh/) for installing any missing dependencies:
 
-```
-brew install git
-brew install go
-brew install node@22
-```
+    brew install git
+    brew install go
+    brew install node@22
 
 In the repository enable and install yarn via corepack
 
-```
-corepack enable
-corepack install
-```
+    corepack enable
+    corepack install
 
 ### Windows
 
@@ -37,7 +33,7 @@ If you are running Grafana on Windows 10, we recommend installing the Windows Su
 We recommend using the Git command-line interface to download the source code for the Grafana project:
 
 1. Open a terminal and run `git clone https://github.com/grafana/grafana.git`. This command downloads Grafana to a new `grafana` directory in your current directory.
-1. Open the `grafana` directory in your favorite code editor.
+2. Open the `grafana` directory in your favorite code editor.
 
 For alternative ways of cloning the Grafana repository, refer to [GitHub's documentation](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
 
@@ -49,13 +45,13 @@ We use pre-commit hooks (via [lefthook](https://github.com/evilmartians/lefthook
 
 To install the precommit hooks:
 
-```sh
+``` sh
 make lefthook-install
 ```
 
 To remove precommit hooks:
 
-```sh
+``` sh
 make lefthook-uninstall
 ```
 
@@ -65,24 +61,20 @@ make lefthook-uninstall
 
 When building Grafana, be aware that it consists of two components:
 
-- The _frontend_, and
-- The _backend_.
+- The *frontend*, and
+- The *backend*.
 
 ### Frontend
 
 Before you can build the frontend assets, you need to install the related dependencies:
 
-```
-yarn install --immutable
-```
+    yarn install --immutable
 
 > If you get the error `The remote archive doesn't match the expected checksum` for a dependency pulled from a link (for example, `"tether-drop": "https://github.com/torkelo/drop"`): this is a temporary mismatch. To work around the error (while someone corrects the issue), you can prefix your `yarn install --immutable` command with [`YARN_CHECKSUM_BEHAVIOR=update`](https://yarnpkg.com/advanced/error-codes#yn0018---cache_checksum_mismatch).
 
 After the command has finished, you can start building the source code:
 
-```
-yarn start
-```
+    yarn start
 
 This command generates SASS theme files, builds all external plugins, and then builds the frontend assets.
 
@@ -107,15 +99,11 @@ If you want to contribute to any of the plugins listed below (that are found wit
 
 To build and watch all these plugins you can run the following command. Note this can be quite resource intensive as it will start separate build processes for each plugin.
 
-```
-yarn plugin:build:dev
-```
+    yarn plugin:build:dev
 
 If, instead, you would like to build and watch a specific plugin you can run the following command. Make sure to substitute `<name_of_plugin>` with the plugins name field found in its package.json. e.g. `@grafana-plugins/tempo`.
 
-```
-yarn workspace <name_of_plugin> dev
-```
+    yarn workspace <name_of_plugin> dev
 
 Next, we'll explain how to build and run the web server that serves these frontend assets.
 
@@ -144,16 +132,16 @@ You can build the back-end as follows:
 1. Follow the [instructions](https://github.com/google/wire#installing) to install the Wire tool.
 2. Generate code using Wire. For example:
 
-```
-# Default Wire tool install path: $GOPATH/bin/wire.exe
-<Wire tool install path> gen -tags oss ./pkg/server ./pkg/cmd/grafana-cli/runner
-```
+<!-- end list -->
+
+    # Default Wire tool install path: $GOPATH/bin/wire.exe
+    <Wire tool install path> gen -tags oss ./pkg/server ./pkg/cmd/grafana-cli/runner
 
 3. Build the Grafana binaries:
 
-```
-go run build.go build
-```
+<!-- end list -->
+
+    go run build.go build
 
 The Grafana binaries will be installed in `bin\\windows-amd64`.
 
@@ -161,37 +149,31 @@ Alternatively, if you are on Windows and want to use the `make` command, install
 
 ## Test Grafana
 
-The test suite consists of three types of tests: _Frontend tests_, _backend tests_, and _end-to-end tests_.
+The test suite consists of three types of tests: *Frontend tests*, *backend tests*, and *end-to-end tests*.
 
 ### Run frontend tests
 
 We use [Jest](https://jestjs.io/) for our frontend tests. Run them using Yarn:
 
-```
-yarn test
-```
+    yarn test
 
 ### Run backend tests
 
 If you're developing for the backend, run the tests with the standard Go tool:
 
-```
-go test -v ./pkg/...
-```
+    go test -v ./pkg/...
 
 #### On Windows
 
 Running the backend tests on Windows currently needs some tweaking, so use the `build.go` script:
 
-```
-go run build.go test
-```
+    go run build.go test
 
 ### Run SQLite, PostgreSQL and MySQL integration tests
 
 By default, grafana runs SQLite. To run test with SQLite:
 
-```bash
+``` bash
 go test -covermode=atomic -tags=integration ./pkg/...
 ```
 
@@ -199,13 +181,13 @@ To run PostgreSQL and MySQL integration tests locally, start the Docker blocks f
 
 When your test data sources are running, you can execute integration tests by running for MySQL:
 
-```bash
+``` bash
 make test-go-integration-mysql
 ```
 
 For PostgreSQL, you could run:
 
-```bash
+``` bash
 make test-go-integration-postgres
 ```
 
@@ -217,27 +199,19 @@ Grafana uses [Cypress](https://www.cypress.io/) to end-to-end test core features
 
 To run all tests in a headless Chromium browser.
 
-```
-yarn e2e
-```
+    yarn e2e
 
 By default, the end-to-end tests start a Grafana instance listening on `localhost:3001`. To use a different URL, set the `BASE_URL` environment variable:
 
-```
-BASE_URL=http://localhost:3333 yarn e2e
-```
+    BASE_URL=http://localhost:3333 yarn e2e
 
 To follow all tests in the browser while they're running, use `yarn e2e:debug`
 
-```
-yarn e2e:debug
-```
+    yarn e2e:debug
 
 To choose a single test to follow in the browser as it runs, use `yarn e2e:dev`
 
-```
-yarn e2e:dev
-```
+    yarn e2e:dev
 
 #### To run the Playwright tests:
 
@@ -245,21 +219,15 @@ yarn e2e:dev
 
 Each version of Playwright needs specific versions of browser binaries to operate. You need to use the Playwright CLI to install these browsers.
 
-```
-yarn playwright install chromium
-```
+    yarn playwright install chromium
 
 To run all tests in a headless Chromium browser and display results in the terminal. This assumes you have Grafana running on port 3000.
 
-```
-yarn e2e:playwright
-```
+    yarn e2e:playwright
 
 The following script starts a Grafana [development server](https://github.com/grafana/grafana/blob/main/scripts/grafana-server/start-server) (same server that is being used when running e2e tests in Drone CI) on port 3001 and runs the Playwright tests. The development server is provisioned with the [devenv](https://github.com/grafana/grafana/blob/main/contribute/developer-guide.md#add-data-sources) dashboards, data sources and apps.
 
-```
-yarn e2e:playwright:server
-```
+    yarn e2e:playwright:server
 
 ## Configure Grafana for development
 
@@ -269,9 +237,7 @@ To override the default configuration, create a `custom.ini` file in the `conf` 
 
 Enable the development mode by adding the following line in your `custom.ini`:
 
-```
-app_mode = development
-```
+    app_mode = development
 
 ### Add data sources
 
@@ -279,9 +245,7 @@ By now, you should be able to build and test a change you've made to the Grafana
 
 To set up data sources for your development environment, go to the [devenv](/devenv) directory in the Grafana repository:
 
-```
-cd devenv
-```
+    cd devenv
 
 Run the `setup.sh` script to set up a set of data sources and dashboards in your local Grafana instance. The script creates a set of data sources called **gdev-\<type\>**, and a set of dashboards located in a folder called **gdev dashboards**.
 
@@ -291,9 +255,7 @@ Installing and configuring databases can be a tricky business. Grafana uses [Doc
 
 In the root directory of your Grafana repository, run the following command:
 
-```
-make devenv sources=influxdb,loki
-```
+    make devenv sources=influxdb,loki
 
 The script generates a Docker Compose file with the databases you specify as `sources`, and runs them in the background.
 
@@ -303,13 +265,11 @@ See the repository for all the [available data sources](/devenv/docker/blocks). 
 
 To build a Docker image, run:
 
-```
-make build-docker-full
-```
+    make build-docker-full
 
 The resulting image will be tagged as `grafana/grafana:dev`.
 
-> **Note:** If you use Docker for macOS, be sure to set the memory limit to be larger than 2 GiB. Otherwise, `grunt build` may fail. The memory limit settings are available under **Docker Desktop** -> **Preferences** -> **Advanced**.
+> **Note:** If you use Docker for macOS, be sure to set the memory limit to be larger than 2 GiB. Otherwise, `grunt build` may fail. The memory limit settings are available under **Docker Desktop** -\> **Preferences** -\> **Advanced**.
 
 ## Troubleshooting
 
@@ -327,42 +287,32 @@ Depending on your environment, you may need to increase the maximum number of op
 
 To see how many open files are allowed, run:
 
-```
-ulimit -a
-```
+    ulimit -a
 
 To change the number of open files allowed, run:
 
-```
-ulimit -S -n 4096
-```
+    ulimit -S -n 4096
 
 The number of files needed may be different on your environment. To determine the number of open files needed by `make run`, run:
 
-```
-find ./conf ./pkg ./public/views | wc -l
-```
+    find ./conf ./pkg ./public/views | wc -l
 
 Another alternative is to limit the files being watched. The directories that are watched for changes are listed in the `.bra.toml` file in the root directory.
 
 You can retain your `ulimit` configuration, that is, save it so it will be remembered for future sessions. To do this, commit it to your command line shell initialization file. Which file this is depends on the shell you are using. For example:
 
-- zsh -> ~/.zshrc
-- bash -> ~/.bashrc
+- zsh -\> ~/.zshrc
+- bash -\> ~/.bashrc
 
-Commit your ulimit configuration to your shell initialization file as follows ($LIMIT being your chosen limit and $INIT_FILE being the initialization file for your shell):
+Commit your ulimit configuration to your shell initialization file as follows ($LIMIT being your chosen limit and $INIT\_FILE being the initialization file for your shell):
 
-```
-echo ulimit -S -n $LIMIT >> $INIT_FILE
-```
+    echo ulimit -S -n $LIMIT >> $INIT_FILE
 
 Your command shell should read the initialization file in question every time it gets started, and apply your `ulimit` command.
 
 For some people, typically using the bash shell, ulimit fails with an error similar to the following:
 
-```
-ulimit: open files: cannot modify limit: Operation not permitted
-```
+    ulimit: open files: cannot modify limit: Operation not permitted
 
 If that happens to you, chances are you've already set a lower limit and your shell won't let you set a higher one. Try looking in your shell initialization files (`~/.bashrc`, typically), to see if there's already an `ulimit` command that you can tweak.
 
@@ -374,13 +324,13 @@ Edit the system config file to insert the new value for file watchers limit:
 
 On Linux:
 
-```bash
+``` bash
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
 On macOS:
 
-```bash
+``` bash
 sudo sysctl -w kern.maxfiles=524288
 ```
 
@@ -388,13 +338,13 @@ Check if the new value was applied. It must output `524288`:
 
 On Linux:
 
-```bash
+``` bash
 cat /proc/sys/fs/inotify/max_user_watches
 ```
 
 On macOS:
 
-```bash
+``` bash
 sysctl kern.maxfiles
 ```
 
@@ -402,21 +352,19 @@ sysctl kern.maxfiles
 
 Running `yarn start` requires a substantial amount of memory space. You may check the currently allocated heap space to `node` by running the command:
 
-```bash
+``` bash
 node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
 ```
 
 Increase the default heap memory to something greater than the currently allocated memory. Make sure the value is a multiple of `1024`.
 
-```bash
+``` bash
 export NODE_OPTIONS="--max-old-space-size=8192"
 ```
 
 Or on Windows:
 
-```
-Set NODE_OPTIONS="--max-old-space-size=8192"
-```
+    Set NODE_OPTIONS="--max-old-space-size=8192"
 
 ### Getting `AggregateError` when building frontend tests
 

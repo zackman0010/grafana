@@ -1,9 +1,6 @@
----
-labels:
-  products:
-    - oss
-title: 'Mute timings vs silences'
----
+-----
+
+## labels: products: - oss title: 'Mute timings vs silences'
 
 ## Mute timings vs silences
 

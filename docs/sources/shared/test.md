@@ -1,10 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Shared Content
----
+-----
+
+## labels: products: - enterprise - oss title: Shared Content
 
 Intro text
 

@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../live/
-  - ../live/configure-grafana-live/
-  - ../live/live-channel/
-  - ../live/live-feature-overview/
-  - ../live/live-ha-setup/
-  - ../live/set-up-grafana-live/
-description: Grafana Live is a real-time messaging engine that pushes event data to
+
+- ../live/
+- ../live/configure-grafana-live/
+- ../live/live-channel/
+- ../live/live-feature-overview/
+- ../live/live-ha-setup/
+- ../live/set-up-grafana-live/
+  description: Grafana Live is a real-time messaging engine that pushes event data to
   a frontend when an event occurs.
-labels:
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Set up Grafana Live
-title: Set up Grafana Live
-weight: 1100
----
+  - enterprise
+  - oss
+    menuTitle: Set up Grafana Live
+    title: Set up Grafana Live
+    weight: 1100
+
+-----
 
 # Set up Grafana Live
 
@@ -99,7 +102,7 @@ Grafana Live uses persistent connections (WebSocket at the moment) to deliver re
 
 WebSocket is a persistent connection that starts with an HTTP Upgrade request (using the same HTTP port as the rest of Grafana) and then switches to a TCP mode where WebSocket frames can travel in both directions between a client and a server. Each logged-in user opens a WebSocket connection – one per browser tab.
 
-The number of maximum WebSocket connections users can establish with Grafana is limited to 100 by default. See [max_connections](../configure-grafana/#max_connections) option.
+The number of maximum WebSocket connections users can establish with Grafana is limited to 100 by default. See [max\_connections](../configure-grafana/#max_connections) option.
 
 In case you want to increase this limit, ensure that your server and infrastructure allow handling more connections. The following sections discuss several common problems which could happen when managing persistent connections, in particular WebSocket connections.
 
@@ -107,9 +110,9 @@ In case you want to increase this limit, ensure that your server and infrastruct
 
 To avoid hijacking of WebSocket connection Grafana Live checks the Origin request header sent by a client in an HTTP Upgrade request. Requests without Origin header pass through without any origin check.
 
-By default, Live accepts connections with Origin header that matches configured [root_url](../configure-grafana/#root_url) (which is a public Grafana URL).
+By default, Live accepts connections with Origin header that matches configured [root\_url](../configure-grafana/#root_url) (which is a public Grafana URL).
 
-It is possible to provide a list of additional origin patterns to allow WebSocket connections from. This can be achieved using the [allowed_origins](../configure-grafana/#allowed_origins) option of Grafana Live configuration.
+It is possible to provide a list of additional origin patterns to allow WebSocket connections from. This can be achieved using the [allowed\_origins](../configure-grafana/#allowed_origins) option of Grafana Live configuration.
 
 #### Resource usage
 
@@ -123,15 +126,11 @@ Each WebSocket connection costs a file descriptor on a server machine where Graf
 
 To look at the current limit on Unix run:
 
-```
-ulimit -n
-```
+    ulimit -n
 
 On a Linux system, you can also check out the current limits for a running process with:
 
-```
-cat /proc/<PROCESS_PID>/limits
-```
+    cat /proc/<PROCESS_PID>/limits
 
 The open files limit shows approximately how many user connections your server can currently handle.
 
@@ -143,11 +142,9 @@ Ephemeral port exhaustion problem can happen between your load balancer (or reve
 
 The problem arises because each TCP connection uniquely identified in the OS by the 4-part-tuple:
 
-```
-source ip | source port | destination ip | destination port
-```
+    source ip | source port | destination ip | destination port
 
-By default, on load balancer/server boundary you are limited to 65535 possible variants. But actually, due to some OS limits (for example on Unix available ports defined in `ip_local_port_range` sysctl parameter) and sockets in TIME_WAIT state, the number is even less.
+By default, on load balancer/server boundary you are limited to 65535 possible variants. But actually, due to some OS limits (for example on Unix available ports defined in `ip_local_port_range` sysctl parameter) and sockets in TIME\_WAIT state, the number is even less.
 
 In order to eliminate a problem you can:
 
@@ -160,30 +157,28 @@ In order to eliminate a problem you can:
 
 Not all proxies can transparently proxy WebSocket connections by default. For example, if you are using Nginx before Grafana you need to configure WebSocket proxy like this:
 
-```
-http {
-    map $http_upgrade $connection_upgrade {
-        default upgrade;
-        '' close;
-    }
-
-    upstream grafana {
-        server 127.0.0.1:3000;
-    }
-
-    server {
-        listen 8000;
-
-        location / {
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_set_header Host $http_host;
-            proxy_pass http://grafana;
+    http {
+        map $http_upgrade $connection_upgrade {
+            default upgrade;
+            '' close;
+        }
+    
+        upstream grafana {
+            server 127.0.0.1:3000;
+        }
+    
+        server {
+            listen 8000;
+    
+            location / {
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+                proxy_set_header Host $http_host;
+                proxy_pass http://grafana;
+            }
         }
     }
-}
-```
 
 See the [Nginx blog on their website](https://www.nginx.com/blog/websocket-nginx/) for more information. Also, refer to your load balancer/reverse proxy documentation to find out more information on dealing with WebSocket connections.
 
@@ -209,13 +204,11 @@ When the Redis engine is configured, Grafana Live keeps its state in Redis and u
 
 Here is an example configuration:
 
-```
-[live]
-ha_engine = redis
-ha_engine_address = 127.0.0.1:6379
-```
+    [live]
+    ha_engine = redis
+    ha_engine_address = 127.0.0.1:6379
 
-For additional information, refer to the [ha_engine](../configure-grafana/#ha_engine) and [ha_engine_address](../configure-grafana/#ha_engine_address) options.
+For additional information, refer to the [ha\_engine](../configure-grafana/#ha_engine) and [ha\_engine\_address](../configure-grafana/#ha_engine_address) options.
 
 After running:
 
@@ -226,23 +219,21 @@ After running:
 At the moment we only support single Redis node.
 
 > **Note:** It's possible to use Redis Sentinel and Haproxy to achieve a highly available Redis setup. Redis nodes should be managed by [Redis Sentinel](https://redis.io/topics/sentinel) to achieve automatic failover. Haproxy configuration example:
->
-> ```
-> listen redis
->   server redis-01 127.0.0.1:6380 check port 6380 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 on-marked-down shutdown-sessions on-marked-up shutdown-backup-sessions
->   server redis-02 127.0.0.1:6381 check port 6381 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 backup
->   bind *:6379
->   mode tcp
->   option tcpka
->   option tcplog
->   option tcp-check
->   tcp-check send PING\r\n
->   tcp-check expect string +PONG
->   tcp-check send info\ replication\r\n
->   tcp-check expect string role:master
->   tcp-check send QUIT\r\n
->   tcp-check expect string +OK
->   balance roundrobin
-> ```
->
+> 
+>     listen redis
+>       server redis-01 127.0.0.1:6380 check port 6380 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 on-marked-down shutdown-sessions on-marked-up shutdown-backup-sessions
+>       server redis-02 127.0.0.1:6381 check port 6381 check inter 2s weight 1 inter 2s downinter 5s rise 10 fall 2 backup
+>       bind *:6379
+>       mode tcp
+>       option tcpka
+>       option tcplog
+>       option tcp-check
+>       tcp-check send PING\r\n
+>       tcp-check expect string +PONG
+>       tcp-check send info\ replication\r\n
+>       tcp-check expect string role:master
+>       tcp-check send QUIT\r\n
+>       tcp-check expect string +OK
+>       balance roundrobin
+
 > Next, point Grafana Live to Haproxy address:port.

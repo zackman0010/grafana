@@ -1,15 +1,18 @@
----
+-----
+
 description: Learn how to create LBAC for data sources rules for a supported data source.
 keywords:
-  - loki
-  - lbac
-  - team
-labels:
+
+- loki
+- lbac
+- team
+  labels:
   products:
-    - cloud
-title: Create LBAC for data sources rules for a supported data source
-weight: 250
----
+  - cloud
+    title: Create LBAC for data sources rules for a supported data source
+    weight: 250
+
+-----
 
 # Create LBAC for data source rule
 
@@ -24,11 +27,11 @@ LBAC for data sources is available for LBAC-supported data sources created with 
 ### Create a LBAC for data sources rule for a team
 
 1. Navigate to your data source
-1. Navigate to the permissions tab
+2. Navigate to the permissions tab
    - Here, you'll find the LBAC for data sources rules section.
-1. Add a LBAC for data sources Rule
+3. Add a LBAC for data sources Rule
    - Add a new rule for the team in the LBAC for data sources rules section.
-1. Define a label selector for the rule
+4. Define a label selector for the rule
    - Add a label selector to the rule. Refer to documentation for guidance on the types of log selections you can specify.
 
 ### LBAC rule
@@ -109,7 +112,7 @@ A user in Team A will have access to logs that match `namespace="dev"`.
 
 A user in Team B will have access to logs that match `namespace!="dev"`.
 
-> _NOTE:_ A user that is part of Team A and Team B will have access to all logs that match `namespace="dev"` `OR` `namespace!="dev"`.
+> *NOTE:* A user that is part of Team A and Team B will have access to all logs that match `namespace="dev"` `OR` `namespace!="dev"`.
 
 ### Task 5: Single rule setup for a team
 
@@ -130,6 +133,7 @@ A user that is not part of Team A and part of Team B, that is `Editor` or `Viewe
 We have team B, user A is part of Team B and has an `Admin` basic role.
 
 - Team B has no roles assigned
+
 - Team B has Query permissions to data source
 
 - Team B has a rule `{ project_id="project-dev" }`

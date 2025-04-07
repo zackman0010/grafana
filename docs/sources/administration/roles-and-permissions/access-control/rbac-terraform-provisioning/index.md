@@ -1,52 +1,55 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/rbac-provisioning/rbac-terraform-provisioning/
-description: Learn about RBAC Terraform provisioning and view an example of provisioning
+
+- ../../../enterprise/access-control/rbac-provisioning/rbac-terraform-provisioning/
+  description: Learn about RBAC Terraform provisioning and view an example of provisioning
   configuration for Grafana roles and role assignments.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Provisioning RBAC with Terraform
-title: Provisioning RBAC with Terraform
-weight: 60
-refs:
-  api-rbac-create-and-manage-custom-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/developers/http_api/access_control/#create-and-manage-custom-roles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access_control/#create-and-manage-custom-roles
-  rbac-grafana-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-grafana-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-grafana-provisioning/
-  service-accounts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
-  service-accounts-create-a-service-account-in-grafana:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/#create-a-service-account-in-grafana
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/#create-a-service-account-in-grafana
-  service-accounts-assign-roles-to-a-service-account-in-grafana:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/#assign-roles-to-a-service-account-in-grafana
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/#assign-roles-to-a-service-account-in-grafana
-  service-accounts-to-add-a-token-to-a-service-account:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/#to-add-a-token-to-a-service-account
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/#to-add-a-token-to-a-service-account
----
+  - cloud
+  - enterprise
+    menuTitle: Provisioning RBAC with Terraform
+    title: Provisioning RBAC with Terraform
+    weight: 60
+    refs:
+    api-rbac-create-and-manage-custom-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/developers/http\_api/access\_control/\#create-and-manage-custom-roles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access\_control/\#create-and-manage-custom-roles
+    rbac-grafana-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-grafana-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-grafana-provisioning/
+    service-accounts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+    service-accounts-create-a-service-account-in-grafana:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/\#create-a-service-account-in-grafana
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/\#create-a-service-account-in-grafana
+    service-accounts-assign-roles-to-a-service-account-in-grafana:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/\#assign-roles-to-a-service-account-in-grafana
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/\#assign-roles-to-a-service-account-in-grafana
+    service-accounts-to-add-a-token-to-a-service-account:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/\#to-add-a-token-to-a-service-account
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/\#to-add-a-token-to-a-service-account
+
+-----
 
 # Provisioning RBAC with Terraform
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
 You can create, change or remove [Custom roles](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/role) and create or remove [basic and custom role assignments](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/role_assignment), by using [Terraform's Grafana provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs).
@@ -64,10 +67,10 @@ We recommend using service account tokens for provisioning. [Service accounts](r
 To create a service account token for provisioning, complete the following steps.
 
 1. [Create a new service account](ref:service-accounts-create-a-service-account-in-grafana) for your CI pipeline.
-1. [Assign permissions to service account](ref:service-accounts-assign-roles-to-a-service-account-in-grafana):
+2. [Assign permissions to service account](ref:service-accounts-assign-roles-to-a-service-account-in-grafana):
    - You will need roles “Role reader”, "Role writer" and roles including any permissions that will be provisioned. For example, to create or assign a role that allows creating users, a service account needs permissions to create users.
    - Alternatively, you can assign "Admin" basic role to the service account.
-1. [Create a new service account token](ref:service-accounts-to-add-a-token-to-a-service-account) for use in Terraform.
+3. [Create a new service account token](ref:service-accounts-to-add-a-token-to-a-service-account) for use in Terraform.
 
 Alternatively, you can use basic authentication. To view all the supported authentication formats, see [here](https://registry.terraform.io/providers/grafana/grafana/latest/docs#authentication).
 
@@ -77,7 +80,7 @@ RBAC support is included as part of the [Grafana Terraform provider](https://reg
 
 The following is an example you can use to configure the Terraform provider.
 
-```terraform
+``` terraform
 terraform {
     required_providers {
         grafana = {
@@ -107,7 +110,7 @@ The following example shows how to assign basic roles to users, teams, and servi
 
 You can use any of the basic role UIDs from the table above in your role assignments. For example, to assign the "None" role, use `basic_none` as the `role_uid`.
 
-```terraform
+``` terraform
 resource "grafana_team" "viewer_team" {
   name = "terraform_viewer_team"
 }
@@ -143,7 +146,7 @@ resource "grafana_role_assignment" "admin_role_assignment" {
 
 ### Provision basic role to multiple users
 
-```terraform
+``` terraform
 resource "grafana_user" "editor_user_2" {
   email    = "terraform_editor_2@example.com"
   login    = "terraform_editor_2_user"
@@ -168,7 +171,9 @@ The following example shows how to provision a custom role with some permissions
 
 1. Copy this code block into a .tf file on your local machine.
 
-```terraform
+<!-- end list -->
+
+``` terraform
 resource "grafana_role" "my_new_role" {
   name  = "my_new_role"
   description = "My test role"
@@ -213,7 +218,9 @@ In this example a team, user and service account are provisioned, and the custom
 
 1. Extend the configuration file from the [previous example](#provision-custom-roles) with the following:
 
-```terraform
+<!-- end list -->
+
+``` terraform
 resource "grafana_team" "test_team" {
 	name = "terraform_test_team"
 }
@@ -239,9 +246,9 @@ resource "grafana_role_assignment" "my_new_role_assignment" {
 
 1. Substitute `<TEST_PASSWORD>` with a test password for your test user.
 
-1. Run the command `terraform apply`.
+2. Run the command `terraform apply`.
 
-1. Go to Grafana's UI and check that a user, team and service account have been created, and that the role has been assigned to them:
+3. Go to Grafana's UI and check that a user, team and service account have been created, and that the role has been assigned to them:
    ![User Role Assignment](/static/img/docs/enterprise/tf_user_role_assignment.png)
    ![Team Role Assignment](/static/img/docs/enterprise/tf_team_role_assignment.png)
    ![Service Account Role Assignment](/static/img/docs/enterprise/tf_service_account_role_assignment.png)

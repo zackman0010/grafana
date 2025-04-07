@@ -1,51 +1,54 @@
----
+-----
+
 aliases:
-  - ../../features/panels/geomap/
-  - ../../features/panels/geomap/arcgis/
-  - ../../features/panels/geomap/carto/
-  - ../../features/panels/geomap/controls/
-  - ../../features/panels/geomap/daynight/
-  - ../../features/panels/geomap/geojson/
-  - ../../features/panels/geomap/heatmap/
-  - ../../features/panels/geomap/markers/
-  - ../../features/panels/geomap/osm/
-  - ../../features/panels/geomap/zyx/
-  - ../../panels/visualizations/geomap/
-  - ../../panels/visualizations/geomap/arcgis/
-  - ../../panels/visualizations/geomap/carto/
-  - ../../panels/visualizations/geomap/controls/
-  - ../../panels/visualizations/geomap/daynight/
-  - ../../panels/visualizations/geomap/geojson/
-  - ../../panels/visualizations/geomap/heatmap/
-  - ../../panels/visualizations/geomap/markers/
-  - ../../panels/visualizations/geomap/osm/
-  - ../../panels/visualizations/geomap/zyx/
-  - ../../visualizations/geomap/
-description: Configure options for Grafana's geomap visualization
-keywords:
-  - grafana
-  - Geomap
-  - panel
-  - documentation
-labels:
+
+- ../../features/panels/geomap/
+- ../../features/panels/geomap/arcgis/
+- ../../features/panels/geomap/carto/
+- ../../features/panels/geomap/controls/
+- ../../features/panels/geomap/daynight/
+- ../../features/panels/geomap/geojson/
+- ../../features/panels/geomap/heatmap/
+- ../../features/panels/geomap/markers/
+- ../../features/panels/geomap/osm/
+- ../../features/panels/geomap/zyx/
+- ../../panels/visualizations/geomap/
+- ../../panels/visualizations/geomap/arcgis/
+- ../../panels/visualizations/geomap/carto/
+- ../../panels/visualizations/geomap/controls/
+- ../../panels/visualizations/geomap/daynight/
+- ../../panels/visualizations/geomap/geojson/
+- ../../panels/visualizations/geomap/heatmap/
+- ../../panels/visualizations/geomap/markers/
+- ../../panels/visualizations/geomap/osm/
+- ../../panels/visualizations/geomap/zyx/
+- ../../visualizations/geomap/
+  description: Configure options for Grafana's geomap visualization
+  keywords:
+- grafana
+- Geomap
+- panel
+- documentation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Geomap
-weight: 100
-refs:
-  data-format:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/node-graph/#data-api
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/node-graph/#data-api
-  provisioning-docs-page:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Geomap
+    weight: 100
+    refs:
+    data-format:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/node-graph/\#data-api
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/node-graph/\#data-api
+    provisioning-docs-page:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/
+
+-----
 
 # Geomap
 
@@ -53,7 +56,7 @@ Geomaps allow you to view and customize the world map using geospatial data. It'
 
 You can configure and overlay [map layers](#layer-type), like heatmaps and networks, and blend included basemaps or your own custom maps. This helps you to easily focus on the important location-based characteristics of the data.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-example-8-1-0.png" max-width="1200px" alt="Geomap visualization" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-example-8-1-0.png" max-width="1200px" alt="Geomap visualization" \>}}
 
 When a geomap is in focus, in addition to typical mouse controls, you can pan around using the arrow keys or zoom in and out using the plus (`+`) and minus (`-`) keys or icons.
 
@@ -66,17 +69,17 @@ You can use a geomap visualization if you need to:
 - Display geographic trends in a heatmap
 - Visualize the relationship of your locations' HVAC consumption or solar production with the sun's location
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 We'd love your feedback on the geomap visualization. Please check out the [open Github issues](https://github.com/grafana/grafana/issues?page=1&q=is%3Aopen+is%3Aissue+label%3Aarea%2Fpanel%2Fgeomap) and [submit a new feature request](https://github.com/grafana/grafana/issues/new?assignees=&labels=type%2Ffeature-request,area%2Fpanel%2Fgeomap&title=Geomap:&projects=grafana-dataviz&template=1-feature_requests.md) as needed.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Configure a geomap visualization
 
 The following video provides beginner steps for creating geomap visualizations. You'll learn the data requirements and caveats, special customizations, preconfigured displays and much more:
 
-{{< youtube id="HwM8AFQ7EUs" >}}
+{{\< youtube id="HwM8AFQ7EUs" \>}}
 
-{{< docs/play title="Geomap Examples" url="https://play.grafana.org/d/panel-geomap/" >}}
+{{\< docs/play title="Geomap Examples" url="https://play.grafana.org/d/panel-geomap/" \>}}
 
 ## Supported data formats
 
@@ -137,7 +140,7 @@ If the field is named `lookup`, the visualization automatically detects it and d
 | 2016 | BRA    | 80921527  |
 | 2016 | CAN    | 79699762  |
 
-The other location types&mdash; airport codes or US state codes&mdash;aren't automatically detected.
+The other location types— airport codes or US state codes—aren't automatically detected.
 
 If you want to use other codes or give the field a custom name, you can follow the steps in the [Location mode](#location-mode) section.
 
@@ -145,7 +148,7 @@ If you want to use other codes or give the field a custom name, you can follow t
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Map view options
 
@@ -160,29 +163,33 @@ The initial view configures how the geomap renders when the panel is first loade
 - **Use current map settings** - Use the settings of the current map to set the center.
 
 <!-- prettier-ignore-start -->
+
 | View selection | Description |
 |---|---|
 | Fit to data | fits the map view based on the data extents of Map layers and updates when data changes.<ul><li>**Data** - option allows selection of extent based on data from "All layers", a single "Layer", or the "Last value" from a selected layer.</li><li>**Layer** - can be selected if fitting data from a single "Layer" or the "Last value" of a layer.</li><li>**Padding** - sets padding in relative percent beyond data extent (not available when looking at "Last value" only).</li><li>**Max zoom** - sets the maximum zoom level when fitting data.</li> |
 | (0°, 0°) |  |
 | Coordinates | sets the map view based on: **Latitude** and **Longitude**. |
+
 <!-- prettier-ignore-end -->
 
 Default Views are also available including:
 
 <!-- prettier-ignore-start -->
+
 |               |               |        |        |           |
 | ------------- | ------------- | ------ | ------ | --------- |
 | North America | South America | Europe | Africa | West Asia |
 | South Asia | South-East Asia | East Asia | Australia | Oceania |
+
 <!-- prettier-ignore-end -->
 
 #### Share view
 
 The **Share view** option allows you to link the movement and zoom actions of multiple map visualizations within the same dashboard. The map visualizations that have this option enabled act in tandem when one of them is moved or zoomed, leaving the other ones independent.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 You might need to reload the dashboard for this feature to work.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Map layers options
 
@@ -232,16 +239,12 @@ There are also two experimental (or alpha) layer types.
 
 To enable experimental layers. Set `enable_alpha` to `true` in your configuration file:
 
-```
-[panels]
-enable_alpha = true
-```
+    [panels]
+    enable_alpha = true
 
 To enable the experimental layers using Docker, run the following command:
 
-```
-docker run -p 3000:3000 -e "GF_PANELS_ENABLE_ALPHA=true" grafana/grafana:<VERSION>
-```
+    docker run -p 3000:3000 -e "GF_PANELS_ENABLE_ALPHA=true" grafana/grafana:<VERSION>
 
 #### Data
 
@@ -267,6 +270,7 @@ The markers layer allows you to display data points as different marker shapes s
 ![Markers Layer](/static/img/docs/geomap-panel/geomap-markers-8-1-0.png)
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | Configure the data settings for the layer. For more information, refer to [Data](#data). |
@@ -281,6 +285,7 @@ The markers layer allows you to display data points as different marker shapes s
 | Text label | Configures a text label for each marker. |
 | Show legend | Allows you to toggle the legend for the layer. |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 #### Heatmap layer
@@ -295,6 +300,7 @@ Similar to `Markers`, you are prompted with various options to determine which d
 ![Heatmap Layer](/static/img/docs/geomap-panel/geomap-heatmap-8-1-0.png)
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | Configure the data settings for the layer. For more information, refer to [Data](#data). |
@@ -304,6 +310,7 @@ Similar to `Markers`, you are prompted with various options to determine which d
 | Blur | Configures the amount of blur on each cluster. |
 | Opacity | Configures the opacity of each cluster. |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 #### GeoJSON layer
@@ -311,12 +318,14 @@ Similar to `Markers`, you are prompted with various options to determine which d
 The GeoJSON layer allows you to select and load a static GeoJSON file from the filesystem.
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | GeoJSON URL | Provides a choice of GeoJSON files that ship with Grafana. |
 | Default Style | Controls which styles to apply when no rules above match.<ul><li>**Color** - configures the color of the default style</li><li>**Opacity** - configures the default opacity</li></ul> |
-| Style Rules | Apply styles based on feature properties <ul><li>**Rule** - allows you to select a _feature_, _condition_, and _value_ from the GeoJSON file in order to define a rule. The trash bin icon can be used to delete the current rule.</li><li>**Color** - configures the color of the style for the current rule</li><li>**Opacity** - configures the transparency level for the current rule</li> |
+| Style Rules | Apply styles based on feature properties <ul><li>**Rule** - allows you to select a *feature*, *condition*, and *value* from the GeoJSON file in order to define a rule. The trash bin icon can be used to delete the current rule.</li><li>**Color** - configures the color of the style for the current rule</li><li>**Opacity** - configures the transparency level for the current rule</li> |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 Styles can be set within the "properties" object of the GeoJSON with support for the following geometries:
@@ -341,9 +350,10 @@ Styles can be set within the "properties" object of the GeoJSON with support for
 
 The Night / Day layer displays night and day regions based on the current time range.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-day-night-9-1-0.png" max-width="1200px" alt="Geomap panel Night / Day" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-day-night-9-1-0.png" max-width="1200px" alt="Geomap panel Night / Day" \>}}
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | Configures the data set for the layer. For more information, refer to [Data](#data). |
@@ -352,6 +362,7 @@ The Night / Day layer displays night and day regions based on the current time r
 | Display sun | Toggles the sun icon. |
 | Opacity | Set the opacity from `0` (transparent) to `1` (opaque). |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 [Extensions for OpenLayers - DayNight](https://viglino.github.io/ol-ext/examples/layer/map.daynight.html)
@@ -364,13 +375,14 @@ The Route layer is currently in [public preview](/docs/release-life-cycle/). Gra
 
 The Route layer renders data points as a route.
 
-{{< figure src="/media/docs/grafana/geomap-route-layer-basic-9-4-0.png" max-width="1200px" alt="Geomap panel Route" >}}
+{{\< figure src="/media/docs/grafana/geomap-route-layer-basic-9-4-0.png" max-width="1200px" alt="Geomap panel Route" \>}}
 
 The layer can also render a route with arrows.
 
-{{< figure src="/media/docs/grafana/geomap-route-layer-arrow-size-9-4-0.png" max-width="1200px" alt="Geomap panel Route arrows with size" >}}
+{{\< figure src="/media/docs/grafana/geomap-route-layer-arrow-size-9-4-0.png" max-width="1200px" alt="Geomap panel Route arrows with size" \>}}
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | configure the data settings for the layer. For more information, refer to [Data](#data). |
@@ -381,6 +393,7 @@ The layer can also render a route with arrows.
 | Text label | configures a text label for each route. |
 | Arrow | sets the arrow styling to display along route, in order of data. Choose from: **None**, **Forward**, and **Reverse** |
 | Display tooltip | allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 [Extensions for OpenLayers - Flow Line Style](http://viglino.github.io/ol-ext/examples/style/map.style.gpxline.html)
@@ -393,9 +406,10 @@ The Photos layer is currently in [public preview](/docs/release-life-cycle/). Gr
 
 The Photos layer renders a photo at each data point.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-photos-9-3-0.png" max-width="1200px" alt="Geomap panel Photos" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-photos-9-3-0.png" max-width="1200px" alt="Geomap panel Photos" \>}}
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | Configure the data settings for the layer. For more information, refer to [Data](#data). |
@@ -408,6 +422,7 @@ The Photos layer renders a photo at each data point.
 | Border color | Sets the border color around images. |
 | Radius | Sets the overall size of images in pixels. |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 [Extensions for OpenLayers - Image Photo Style](http://viglino.github.io/ol-ext/examples/style/map.style.photo.html)
@@ -420,12 +435,13 @@ The Network layer is currently in [public preview](/docs/release-life-cycle/). G
 
 The Network layer renders a network graph. This layer supports the same [data format supported by the node graph visualization](ref:data-format) with the addition of [geospatial data](#location-mode) included in the nodes data. The geospatial data is used to locate and render the nodes on the map.
 
-{{< figure src="/media/docs/grafana/screenshot-grafana-10-1-geomap-network-layer-v2.png" max-width="750px" alt="Geomap network layer" >}}
+{{\< figure src="/media/docs/grafana/screenshot-grafana-10-1-geomap-network-layer-v2.png" max-width="750px" alt="Geomap network layer" \>}}
 
 You can convert node graph data to a network layer:
-{{< video-embed src="/media/docs/grafana/screen-recording-10-1-geomap-network-layer-from-node-graph.mp4" max-width="750px" alt="Node graph to Geomap network layer" >}}
+{{\< video-embed src="/media/docs/grafana/screen-recording-10-1-geomap-network-layer-from-node-graph.mp4" max-width="750px" alt="Node graph to Geomap network layer" \>}}
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Data | Configure the data settings for the layer. For more information, refer to [Data](#data). |
@@ -433,11 +449,13 @@ You can convert node graph data to a network layer:
 | Arrow | Sets the arrow direction to display for each edge, with forward meaning source to target. Choose from: **None**, **Forward**, **Reverse** and **Both**. |
 | Show legend | Allows you to toggle the legend for the layer. **Note:** The legend currently only supports node data. |
 | Display tooltip | Allows you to toggle tooltips for the layer. |
+
 <!-- prettier-ignore-end -->
 
 ##### Node styles options
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Size | Configures the size of the nodes. The default is `Fixed size`, which makes all node sizes the same regardless of the data; however, there is also an option to size the nodes based on data corresponding to a selected field. `Min` and `Max` node sizes have to be set such that the nodes can scale within this range. |
@@ -446,24 +464,27 @@ You can convert node graph data to a network layer:
 | Fill opacity | Configures the transparency of each node. |
 | Rotation angle | Configures the rotation angle of each node. The default is `Fixed value`, which makes all nodes rotate to the same angle regardless of the data; however, there is also an option to set the rotation of the nodes based on data corresponding to a selected field. |
 | Text label | Configures a text label for each node. |
+
 <!-- prettier-ignore-end -->
 
 ##### Edge styles options
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | Size | Configures the line width of the edges. The default is `Fixed size`, which makes all edge line widths the same regardless of the data; however, there is also an option to size the edges based on data corresponding to a selected field. `Min` and `Max` eges sizes have to be set such that the edges can scale within this range. |
 | Color | Configures the color of the edges. The default `Fixed color` sets all edges to a specific color. There is also an option to have conditional colors depending on the selected field data point values and the color scheme set in the `Standard options` section. |
 | Fill opacity | Configures the transparency of each edge. |
 | Text label | Configures a text label for each edge. |
+
 <!-- prettier-ignore-end -->
 
 #### Open Street Map layer
 
 A map from a collaborative free geographic world database.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-osm-9-1-0.png" max-width="1200px" alt="Geomap panel Open Street Map" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-osm-9-1-0.png" max-width="1200px" alt="Geomap panel Open Street Map" \>}}
 
 - **Opacity** from 0 (transparent) to 1 (opaque)
 - **Display tooltip** - allows you to toggle tooltips for the layer.
@@ -477,9 +498,9 @@ A CARTO layer is from CARTO Raster basemaps.
 - **Theme**
   - Auto
   - Light
-    {{< figure src="/static/img/docs/geomap-panel/geomap-carto-light-9-1-0.png" max-width="1200px" alt="Geomap panel CARTO light example" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-carto-light-9-1-0.png" max-width="1200px" alt="Geomap panel CARTO light example" \>}}
   - Dark
-    {{< figure src="/static/img/docs/geomap-panel/geomap-carto-dark-9-1-0.png" max-width="1200px" alt="Geomap panel CARTO dark example" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-carto-dark-9-1-0.png" max-width="1200px" alt="Geomap panel CARTO dark example" \>}}
 - **Show labels** shows the Country details on top of the map.
 - **Opacity** from 0 (transparent) to 1 (opaque)
 - **Display tooltip** - allows you to toggle tooltips for the layer.
@@ -492,17 +513,17 @@ An ArcGIS layer is a layer from an ESRI ArcGIS MapServer.
 
 - **Server Instance** to select the map type.
   - World Street Map
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wsm-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Street Map" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wsm-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Street Map" \>}}
   - World Imagery
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wi-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Imagery" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wi-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Imagery" \>}}
   - World Physical
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wp-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Physical" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-wp-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Physical" \>}}
   - Topographic
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-topographic-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS Topographic" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-topographic-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS Topographic" \>}}
   - USA Topographic
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-usa-topographic-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS USA Topographic" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-usa-topographic-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS USA Topographic" \>}}
   - World Ocean
-    {{< figure src="/static/img/docs/geomap-panel/geomap-arcgis-ocean-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Ocean" >}}
+    {{\< figure src="/static/img/docs/geomap-panel/geomap-arcgis-ocean-9-1-0.png" max-width="1200px" alt="Geomap panel ArcGIS World Ocean" \>}}
   - Custom MapServer (see [XYZ](#xyz-tile-layer) for formatting)
     - URL template
     - Attribution
@@ -518,7 +539,7 @@ An ArcGIS layer is a layer from an ESRI ArcGIS MapServer.
 
 The XYZ Tile layer is a map from a generic tile layer.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-xyz-9-1-0.png" max-width="1200px" alt="Geomap panel xyz example" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-xyz-9-1-0.png" max-width="1200px" alt="Geomap panel xyz example" \>}}
 
 - **URL template** - Set a valid tile server url, with {z}/{x}/{y} for example: https://tile.openstreetmap.org/{z}/{x}/{y}.png
 - **Attribution** sets the reference string for the layer if displayed in [map controls](#show-attribution)
@@ -555,7 +576,9 @@ Use the JSON configuration option `default_baselayer_config` to define the defau
 
 - **carto** loads the CartoDB tile server. You can choose from `auto`, `dark`, and `light` theme for the base map and can be set as shown below. The `showLabels` tag determines whether or not Grafana shows the Country details on top of the map. Here is an example:
 
-```ini
+<!-- end list -->
+
+``` ini
 geomap_default_baselayer = `{
   "type": "carto",
   "config": {
@@ -567,10 +590,10 @@ geomap_default_baselayer = `{
 
 - **esri-xyz** loads the ESRI tile server. There are already multiple server instances implemented to show the various map styles: `world-imagery`, `world-physical`, `topo`, `usa-topo`, and `ocean`. The `custom` server option allows you to configure your own ArcGIS map server. Here are some examples:
 
-{{< tabs >}}
-{{< tab-content name="World imagery" >}}
+{{\< tabs \>}}
+{{\< tab-content name="World imagery" \>}}
 
-```ini
+``` ini
 geomap_default_baselayer = `{
   "type": "esri-xyz",
   "config": {
@@ -579,10 +602,10 @@ geomap_default_baselayer = `{
 }`
 ```
 
-{{< /tab-content >}}
-{{< tab-content name="Custom" >}}
+{{\< /tab-content \>}}
+{{\< tab-content name="Custom" \>}}
 
-```ini
+``` ini
 geomap_default_baselayer = `{
   "type": "esri-xyz",
   "config": {
@@ -593,12 +616,14 @@ geomap_default_baselayer = `{
 }`
 ```
 
-{{< /tab-content >}}
-{{< /tabs >}}
+{{\< /tab-content \>}}
+{{\< /tabs \>}}
 
 - **osm-standard** loads the OpenStreetMap tile server. There are no additional configurations needed and the `config` fields can be left blank. Here is an example:
 
-```ini
+<!-- end list -->
+
+``` ini
 default_baselayer_config = `{
   "type": "osm-standard",
   "config": {}
@@ -607,7 +632,9 @@ default_baselayer_config = `{
 
 - **xyz** loads a custom tile server defined by the user. Set a valid tile server `url`, with {z}/{x}/{y} for this option in order to properly load a default base map. Here is an example:
 
-```ini
+<!-- end list -->
+
+``` ini
 default_baselayer_config = `{
   "type": "xyz",
   "config": {
@@ -624,6 +651,7 @@ default_baselayer_config = `{
 The map controls section contains various options for map information and tool overlays.
 
 <!-- prettier-ignore-start -->
+
 | Option | Description |
 | ------ | ----------- |
 | [Show zoom control](#show-zoom-control) | Displays zoom controls in the upper left corner. |
@@ -633,13 +661,14 @@ The map controls section contains various options for map information and tool o
 | [Show measure tools](#show-measure-tools) | Displays measure tools in the upper right corner. This includes the [Length](#length) and [Area](#area) options. |
 | [Show debug](#show-debug) | Displays debug information in the upper right corner. |
 | [Tooltip](#tooltip) | Controls display of tooltips. |
+
 <!-- prettier-ignore-end -->
 
 #### Show zoom control
 
 Displays zoom controls in the upper left corner. This control can be useful when using systems that don't have a mouse.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-zoom-9-1-0.png" max-width="1200px" alt="Geomap panel zoom" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-zoom-9-1-0.png" max-width="1200px" alt="Geomap panel zoom" \>}}
 
 #### Mouse wheel zoom
 
@@ -649,19 +678,19 @@ Enables the mouse wheel to be used for zooming in or out.
 
 Displays attribution for basemap layers.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-attribution-9-1-0.png" max-width="1200px" alt="Geomap panel attribution" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-attribution-9-1-0.png" max-width="1200px" alt="Geomap panel attribution" \>}}
 
 #### Show scale
 
 Displays scale information in the bottom left corner in meters (m) or kilometers (km).
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-scale-9-1-0.png" max-width="1200px" alt="Geomap panel scale" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-scale-9-1-0.png" max-width="1200px" alt="Geomap panel scale" \>}}
 
 #### Show measure tools
 
 Displays measure tools in the upper right corner. Measurements appear only when this control is open.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-9-1-0.png" max-width="1200px" alt="Geomap panel measure" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-9-1-0.png" max-width="1200px" alt="Geomap panel measure" \>}}
 
 - **Click** to start measuring
 - **Continue clicking** to continue measurement
@@ -678,7 +707,7 @@ Get the spherical length of a geometry. This length is the sum of the great circ
 - **Miles (mi)**
 - **Nautical miles (nmi)**
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-length-9-1-0.png" max-width="1200px" alt="Geomap panel measure length" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-length-9-1-0.png" max-width="1200px" alt="Geomap panel measure length" \>}}
 
 ##### Area
 
@@ -691,7 +720,7 @@ Get the spherical area of a geometry. This area is calculated assuming that poly
 - **Acres (acre)**
 - **Hectare (ha)**
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-area-9-1-0.png" max-width="1200px" alt="Geomap panel measure area" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-area-9-1-0.png" max-width="1200px" alt="Geomap panel measure area" \>}}
 
 #### Show debug
 
@@ -700,7 +729,7 @@ Displays debug information in the upper right corner. This can be useful for deb
 - **Zoom** displays current zoom level of the map.
 - **Center** displays the current **longitude**, **latitude** of the map center.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-debug-9-1-0.png" max-width="1200px" alt="Geomap panel debug" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-debug-9-1-0.png" max-width="1200px" alt="Geomap panel debug" \>}}
 
 #### Tooltip
 
@@ -709,20 +738,20 @@ Displays debug information in the upper right corner. This can be useful for deb
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

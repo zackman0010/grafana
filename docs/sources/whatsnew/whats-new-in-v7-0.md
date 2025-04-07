@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v7-0/
-description: Learn about new and updated features in Grafana v7
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '7.0'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v7-0/
+  description: Learn about new and updated features in Grafana v7
+  keywords:
+- grafana
+- new
+- documentation
+- '7.0'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v7.0
-weight: -27
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v7.0
+    weight: -27
+
+-----
 
 # What's new in Grafana v7.0
 
@@ -27,7 +30,7 @@ This major release of Grafana is the next step in our Observability story. It in
 
 The Grafana 7.0 stable release is scheduled for the 18th of May. In the meantime, if you want to know more about what we've been up to and what is coming, sign up for our online GrafanaCon conference.
 
-[{{< figure src="/assets/img/blog/GrafanaCONline.jpg" max-width="800px" lightbox="false" caption="GrafanaCONline May 13-29" >}}](/about/events/grafanacon/2020/?source=blog)
+[{{\< figure src="/assets/img/blog/GrafanaCONline.jpg" max-width="800px" lightbox="false" caption="GrafanaCONline May 13-29" \>}}](/about/events/grafanacon/2020/?source=blog)
 
 The main highlights are:
 
@@ -63,7 +66,7 @@ You can use the new trace view in Explore either directly to search for a partic
 
 In the future we will add more workflows and integrations so that correlating between metrics, logs and traces is even easier.
 
-{{< figure src="/static/img/docs/v70/tracing_ui.png" max-width="1024px" caption="Tracing UI" >}}
+{{\< figure src="/static/img/docs/v70/tracing\_ui.png" max-width="1024px" caption="Tracing UI" \>}}
 
 ## Transformations
 
@@ -86,7 +89,7 @@ We are also introducing a new shared data model for both time series and table d
 - **Filter data by query** Filter data by query. This is useful if you are sharing the results from a different panel that has many queries and you want to only visualize a subset of that in this panel.
 - **Organize fields:** Allows the user to re-order, hide, or rename fields / columns. Useful when data source doesn't allow overrides for visualizing data.
 - **Labels to fields:** Groups series by time and returns labels or tags as fields. Useful for showing time series with labels in a table where each label key becomes a separate column.
-- **Outer join:** Joins many time series/tables by a field. This can be used to outer join multiple time series on the _time_ field to show many time series in one table.
+- **Outer join:** Joins many time series/tables by a field. This can be used to outer join multiple time series on the *time* field to show many time series in one table.
 - **Add field from calculation:** This is a powerful transformation that allows you perform many different types of math operations and add the result as a new field. Can be used to calculate the difference between two series or fields and add the result to a new field. Or multiply one field with another and add the result to a new field.
 
 Learn more about this feature in [Transformations](../../panels-visualizations/query-transform-data/transform-data/#transformation-functions).
@@ -103,7 +106,7 @@ Learn more about this feature in [Field overrides](../../panels-visualizations/c
 
 ## Inspect panels and export data to CSV
 
-{{< figure src="/static/img/docs/v70/panel_edit_export_raw_data.png" max-width="800px" class="docs-image--right" caption="Panel Edit - Export raw data to CSV" >}}
+{{\< figure src="/static/img/docs/v70/panel\_edit\_export\_raw\_data.png" max-width="800px" class="docs-image--right" caption="Panel Edit - Export raw data to CSV" \>}}
 
 Another new feature of Grafana 7.0 is the panel inspector. Inspect allows you to view the raw data for any Grafana panel as well as export that data to a CSV file. With Panel inspect you will also be able to perform simple raw data transformations like join, view query stats or detailed execution data.
 
@@ -115,14 +118,14 @@ Learn more about this feature in [Panel Inspector](../../panels-visualizations/p
 
 Grafana 7.0 comes with a new table panel (and deprecates the old one). This new table panel supports horizontal scrolling and column resize. Paired with the new `Organize fields` transformation detailed above you can reorder, hide & rename columns. This new panel also supports new cell display modes, like showing a bar gauge inside a cell.
 
-{{< youtube J29wILRh3QQ >}}
+{{\< youtube J29wILRh3QQ \>}}
 <br />
 
 ## Auto grid mode for Stat panel and Gauge
 
 This new 7.0 feature is for the gauge and stat panels. Before, stat and gauge only supported horizontal or vertical stacking: The auto layout mode just selected vertical or horizontal stacking based on the panel dimensions (whatever was highest). But in 7.0 the auto layout for these two panels will allow dynamic grid layouts where Grafana will try to optimize the usage of space and lay out each sub-visualization in a grid.
 
-{{< youtube noq1rLGvsrU >}}
+{{\< youtube noq1rLGvsrU \>}}
 <br />
 
 ## Cloudwatch Logs
@@ -166,7 +169,7 @@ To help you get started with Grafana, we’ve launched a brand new tutorials pla
 
 ## Rollup indicator for Metrictank queries
 
-{{< figure src="/static/img/docs/v70/metrictank_rollup_metadata.png" max-width="800px" class="docs-image--right" caption="Metrictank rollup metadata" >}}
+{{\< figure src="/static/img/docs/v70/metrictank\_rollup\_metadata.png" max-width="800px" class="docs-image--right" caption="Metrictank rollup metadata" \>}}
 
 Depending on the cardinality of the data and the time range MetricTank may return rolled up (aggregated) data. This can be as subtle as potentially only 1 or 2 graphs out of nine being rolled up. The new rollup indicator is visible in the panel title and you can also inspect extensive metadata and stats about the Metrictank query result and its rollups.
 
@@ -215,13 +218,13 @@ This includes problems like:
 - How to identify dashboards that are not being used
 - Who created or last viewed this dashboard?
 
-{{< figure src="/static/img/docs/v70/dashboard_insights_users.png" max-width="1024px" caption="Dashboard Insights Users" >}}
+{{\< figure src="/static/img/docs/v70/dashboard\_insights\_users.png" max-width="1024px" caption="Dashboard Insights Users" \>}}
 
 ### Usage insights and Presence indicator
 
 This release includes a series of features that build on our new usage analytics engine. This “Grafana about Grafana” feature will help our large customers get better insight into the behavior and utilization of their users, dashboards, and data sources. The improved [dashboard search](../../dashboards/assess-dashboard-usage/#sort-dashboards-by-using-insights-data) allows you to sort dashboards by usage and errors. When a user opens a dashboard, they will see a [presence indicator](../../dashboards/assess-dashboard-usage/#presence-indicator) of who else is viewing the same dashboard. And finally [Dashboard insights](../../dashboards/assess-dashboard-usage/#dashboard-insights) allows you to view recent dashboard usage.
 
-{{< figure src="/static/img/docs/v70/presence_indicator.jpg" max-width="1024px" caption="Grafana Enterprise - Presence indicator" >}}
+{{\< figure src="/static/img/docs/v70/presence\_indicator.jpg" max-width="1024px" caption="Grafana Enterprise - Presence indicator" \>}}
 
 ### SAML Role and Team Sync
 

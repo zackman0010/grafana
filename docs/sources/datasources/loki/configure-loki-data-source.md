@@ -1,24 +1,27 @@
----
+-----
+
 aliases:
-  - ../data-sources/loki/
-  - ../features/datasources/loki/
-description: Configure the Loki data source
-keywords:
-  - grafana
-  - loki
-  - logging
-  - guide
-  - data source
-menuTitle: Configure Loki
-title: Configure the Loki data source
-weight: 200
-refs:
+
+- ../data-sources/loki/
+- ../features/datasources/loki/
+  description: Configure the Loki data source
+  keywords:
+- grafana
+- loki
+- logging
+- guide
+- data source
+  menuTitle: Configure Loki
+  title: Configure the Loki data source
+  weight: 200
+  refs:
   log-details:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#labels-and-detected-fields
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#labels-and-detected-fields
----
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#labels-and-detected-fields
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#labels-and-detected-fields
+
+-----
 
 # Loki data source
 
@@ -32,10 +35,10 @@ Grafana ships with built-in support for [Loki](/docs/loki/latest/), an open-sour
 To add the Loki data source, complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Under **Connections**, click **Add new connection**.
-1. Enter `Loki` in the search bar.
-1. Select **Loki data source**.
-1. Click **Create a Loki data source** in the upper right.
+2. Under **Connections**, click **Add new connection**.
+3. Enter `Loki` in the search bar.
+4. Select **Loki data source**.
+5. Click **Create a Loki data source** in the upper right.
 
 You will be taken to the **Settings** tab where you will set up your Loki configuration.
 
@@ -45,7 +48,7 @@ The following is a list of configuration options for Loki.
 
 The first option to configure is the name of your connection:
 
-- **Name** - The data source name. This is how you refer to the data source in panels and queries. Examples: loki-1, loki_logs.
+- **Name** - The data source name. This is how you refer to the data source in panels and queries. Examples: loki-1, loki\_logs.
 
 - **Default** - Toggle to select as the default name in dashboard panels. When you go to a dashboard panel this will be the default selected data source.
 
@@ -139,8 +142,8 @@ Click **Save & test** to test your connection.
 You can use a debug section to see what your fields extract and how the URL is interpolated.
 Select **Show example log message** to display a text area where you can enter a log message.
 
-{{< figure src="/static/img/docs/v75/loki_derived_fields_settings.png" class="docs-image--no-shadow" max-width="800px" caption="Screenshot of the derived fields debugging" >}}
+{{\< figure src="/static/img/docs/v75/loki\_derived\_fields\_settings.png" class="docs-image--no-shadow" max-width="800px" caption="Screenshot of the derived fields debugging" \>}}
 
 The new field with the link shown in log details:
 
-{{< figure src="/static/img/docs/explore/data-link-9-4.png" max-width="800px" caption="Data link in Explore" >}}
+{{\< figure src="/static/img/docs/explore/data-link-9-4.png" max-width="800px" caption="Data link in Explore" \>}}

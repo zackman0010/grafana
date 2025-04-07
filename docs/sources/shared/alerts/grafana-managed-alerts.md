@@ -1,10 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Grafana managed alerts
----
+-----
+
+## labels: products: - enterprise - oss title: Grafana managed alerts
 
 ## Clustering
 
@@ -22,7 +18,7 @@ Alerting rules can only query backend data sources with alerting enabled:
 
 ## Metrics from the alerting engine
 
-The alerting engine publishes some internal metrics about itself. You can read more about how Grafana publishes [internal metrics](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/set-up-grafana-monitoring/). See also, [View alert rules and their current state](/docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/state-and-health/).
+The alerting engine publishes some internal metrics about itself. You can read more about how Grafana publishes [internal metrics](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/set-up-grafana-monitoring/). See also, [View alert rules and their current state](/docs/grafana/\<GRAFANA_VERSION\>/alerting/fundamentals/state-and-health/).
 
 | Metric Name                                         | Type      | Description                                                                              |
 | --------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------- |

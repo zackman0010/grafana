@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/query_history/
-canonical: /docs/grafana/latest/developers/http_api/query_history/
-description: Grafana Query History HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - queryHistory
-labels:
+
+- ../../http\_api/query\_history/
+  canonical: /docs/grafana/latest/developers/http\_api/query\_history/
+  description: Grafana Query History HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- queryHistory
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Query History HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Query History HTTP API '
+
+-----
 
 # Query history API
 
@@ -28,7 +31,7 @@ Adds query to query history.
 
 **Example request:**
 
-```http
+``` http
 POST /api/query-history HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -56,7 +59,7 @@ JSON body schema:
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -107,7 +110,7 @@ Query parameters:
 
 **Example request for query history search**:
 
-```http
+``` http
 GET /api/query-history?datasourceUid="PE1C5CBDA0504A6A3"&datasourceUid="FG1C1CBDA0504A6EL"&searchString="ALERTS"&sort="time-asc" HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -116,7 +119,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response for query history search**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -160,7 +163,7 @@ Deletes the query in query history that matches the specified uid. It requires t
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/query-history/P8zM2I1nz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -169,7 +172,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -197,7 +200,7 @@ Query parameters:
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/query-history/P8zM2I1nz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -209,7 +212,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -250,7 +253,7 @@ Stars query in query history.
 
 **Example request:**
 
-```http
+``` http
 POST /api/query-history/star/P8zM2I1nz HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -259,7 +262,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -299,7 +302,7 @@ Removes stars from query in query history.
 
 **Example request:**
 
-```http
+``` http
 DELETE /api/query-history/star/P8zM2I1nz  HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -308,7 +311,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {

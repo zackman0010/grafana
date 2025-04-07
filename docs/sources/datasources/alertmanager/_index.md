@@ -1,39 +1,42 @@
----
+-----
+
 aliases:
-  - ../data-sources/alertmanager/
-  - ../features/datasources/alertmanager/
-description: Guide for using Alertmanager as a data source in Grafana
-keywords:
-  - grafana
-  - prometheus
-  - alertmanager
-  - guide
-  - queries
-labels:
+
+- ../data-sources/alertmanager/
+- ../features/datasources/alertmanager/
+  description: Guide for using Alertmanager as a data source in Grafana
+  keywords:
+- grafana
+- prometheus
+- alertmanager
+- guide
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Alertmanager
-title: Alertmanager data source
-weight: 150
-refs:
-  alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/
-  configure-alertmanager:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-alertmanager/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
-  data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Alertmanager
+    title: Alertmanager data source
+    weight: 150
+    refs:
+    alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/
+    configure-alertmanager:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/configure-alertmanager/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
+    data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+
+-----
 
 # Alertmanager data source
 
@@ -53,7 +56,7 @@ When using Prometheus, you can manage silences in the Grafana Alerting UI. Howev
 
 To configure basic settings for the data source, complete the following steps:
 
-{{< docs/shared lookup="alerts/add-alertmanager-ds.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/add-alertmanager-ds.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Provision the Alertmanager data source
 
@@ -62,7 +65,7 @@ For more information on provisioning, and common settings available, refer to th
 
 Here is an example for provisioning the Alertmanager data source:
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

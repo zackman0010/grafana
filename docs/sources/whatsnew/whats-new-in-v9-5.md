@@ -1,23 +1,26 @@
----
+-----
+
 description: Learn about new and updated features in Grafana v9.5
 keywords:
-  - grafana
-  - new
-  - documentation
-  - '9.5'
-  - release notes
-labels:
+
+- grafana
+- new
+- documentation
+- '9.5'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v9.5
-weight: -36
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v9.5
+    weight: -36
+
+-----
 
 # What's new in Grafana v9.5
 
-Welcome to Grafana 9.5! We're excited to share some major updates to Grafana's navigation, tons of usability improvements to Alerting, and some promising experiments to help you query your Prometheus metrics. Also, read on to learn about our continued migration from API keys to service accounts, as well as deprecation of plugins that use Angular and a field in the InfluxDB data source.
+Welcome to Grafana 9.5\! We're excited to share some major updates to Grafana's navigation, tons of usability improvements to Alerting, and some promising experiments to help you query your Prometheus metrics. Also, read on to learn about our continued migration from API keys to service accounts, as well as deprecation of plugins that use Angular and a field in the InfluxDB data source.
 
 For more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md). For the specific steps we recommend when you upgrade to v9.5, check out our [Upgrade Guide](../../upgrade-guide/upgrade-v9.5/).
 
@@ -32,7 +35,7 @@ Description. Include an overview of the feature and problem it solves, and where
 
 ## Grafana's new navigation is generally available
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 The navigation in Grafana has been updated with a new design and an improved structure to make it easier for you to access the data you need. With this update, you can quickly navigate between pages, giving you full visibility into the health of your systems.
 
@@ -45,23 +48,23 @@ As Grafana evolved from a visualization platform to a comprehensive observabilit
 
 Join the [discussion on GitHub](https://github.com/grafana/grafana/discussions/58910) and share your feedback.
 
-{{< figure src="/media/docs/grafana/navigation-9-4.png" max-width="750px" caption="Grafana new navigation" >}}
+{{\< figure src="/media/docs/grafana/navigation-9-4.png" max-width="750px" caption="Grafana new navigation" \>}}
 
 ## Dashboards and visualizations
 
 ### Redesigned empty dashboard state
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 Dashboards have been updated so that it’s easier to begin building from scratch. The options displayed when you add a new dashboard—adding a visualization, a row, or importing panels—each include brief explanations of what those steps will do, so you can begin building with confidence.
 
 Also, a text **Add** dropdown with these options has replaced the previous "+" icon at the top of the dashboard. This makes it clearer that this element allows you not only to add new panels, but to take all the actions associated with building a new dashboard.
 
-{{< figure src="/media/docs/grafana/screenshot-empty-dashboard-whats-new-9-5.png" max-width="750px" caption="Dashboard without any visualizations added" >}}
+{{\< figure src="/media/docs/grafana/screenshot-empty-dashboard-whats-new-9-5.png" max-width="750px" caption="Dashboard without any visualizations added" \>}}
 
 ### Redesigned dashboard panel is generally available
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 Dashboard panels contain a lot of information, some of which is difficult to discover or access from the dashboard. With our redesigned panels, we've improved accessibility and made it easier to understand the status of a panel by adding and moving key elements.
 
@@ -69,15 +72,15 @@ We’ve improved panels without titles, made panel descriptions and errors more 
 
 Grafana’s new panel design is available only for React-based panels. No Angular-based panels, like the legacy Graph and Worldmap panels, are redesigned. As a reminder, Angular is deprecated in Grafana and will be removed in a future release. See our [deprecation docs](../../developers/angular_deprecation/) for more information.
 
-{{< figure src="/media/docs/grafana/panel-redesign-whats-new-9.5.png" max-width="750px" caption="Panel header with open menu" >}}
+{{\< figure src="/media/docs/grafana/panel-redesign-whats-new-9.5.png" max-width="750px" caption="Panel header with open menu" \>}}
 
 ## Prometheus performance and usability improvements
 
 ### Prometheus metric encyclopedia
 
-_Experimental in all editions of Grafana._
+*Experimental in all editions of Grafana.*
 
-When you have thousands (or millions) of Prometheus metrics, it can be hard to find the exact one you're looking for. Enable feature toggle `prometheusMetricEncyclopedia` to replace the basic metric select dropdown in the Prometheus query builder with a paginated and searchable metric _encyclopedia_.
+When you have thousands (or millions) of Prometheus metrics, it can be hard to find the exact one you're looking for. Enable feature toggle `prometheusMetricEncyclopedia` to replace the basic metric select dropdown in the Prometheus query builder with a paginated and searchable metric *encyclopedia*.
 
 Here's what you can do with the metric encyclopedia:
 
@@ -85,11 +88,11 @@ Here's what you can do with the metric encyclopedia:
 - Filter metrics by Prometheus types (gauge, counter, histogram, summary)
 - Display metrics in a paginated list, sort the results, and choose a number of results per page, so that you don't wait a long time for search results
 - View metric details, like type and description
-- [Expert feature] Search metric names by regex using the backend only
+- \[Expert feature\] Search metric names by regex using the backend only
 
 ### Prometheus browser cache
 
-_Experimental in all editions of Grafana._
+*Experimental in all editions of Grafana.*
 
 New feature toggle `prometheusResourceBrowserCache` provides the ability to cache Prometheus editor API calls in the Prometheus data source configuration.
 This improves Prometheus query editor performance, with the biggest performance improvements seen by users with high cardinality Prometheus instances.
@@ -102,17 +105,17 @@ Learn more about the deprecation strategy for API keys and how to manage them in
 
 ## Resolve Grafana issues faster with support bundles
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 Support bundles provide a simple way to collect information about your Grafana instance through Grafana's user interface. In a few clicks, you can create a support bundle containing data about migrations, plugins, settings, and more. Once you've created a support bundle, you can either examine it yourself, or share it with your colleagues or Grafana engineers to aid in troubleshooting of your Grafana instance.
 
 Learn more about support bundles and how to configure them in our [support bundle documentation](../../troubleshooting/support-bundles/).
 
-{{< figure src="/static/img/docs/troubleshooting/support-bundle.png" max-width="750px" caption="Create a support bundle to resolve issues faster" >}}
+{{\< figure src="/static/img/docs/troubleshooting/support-bundle.png" max-width="750px" caption="Create a support bundle to resolve issues faster" \>}}
 
 ## Alerting
 
-_All Alerting improvements are generally available in all editions of Grafana._
+*All Alerting improvements are generally available in all editions of Grafana.*
 
 ### Search for alert rules from multiple data sources
 
@@ -126,19 +129,19 @@ Search for namespaces or folders, evaluation groups, and alert rule names on the
 
 Navigate to an alert rule directly from a dashboard or a panel to easily access the alert rule details.
 
-{{< figure src="/media/docs/alerting/alert-rule-dashboard.png" max-width="750px" caption="Access an alert rule from a dashboard or a panel" >}}
+{{\< figure src="/media/docs/alerting/alert-rule-dashboard.png" max-width="750px" caption="Access an alert rule from a dashboard or a panel" \>}}
 
 ### Access a dashboard or panel from an alert rule
 
 Navigate from an alert rule straight to a dashboard or a panel associated with the alert rule to visualize your alerting data.
 
-{{< figure src="/media/docs/alerting/dashboard-alert-rule-2.png" max-width="750px" caption="Access a dashboard or panel from an alert rule" >}}
+{{\< figure src="/media/docs/alerting/dashboard-alert-rule-2.png" max-width="750px" caption="Access a dashboard or panel from an alert rule" \>}}
 
 ### Preview queries for recording rules
 
 Visualize queries when creating or editing recording rules, so you can see the results of your query before saving your recording rule.
 
-{{< figure src="/media/docs/alerting/preview-queries-recording-rule.png" max-width="750px" caption="Preview queries for recording rules" >}}
+{{\< figure src="/media/docs/alerting/preview-queries-recording-rule.png" max-width="750px" caption="Preview queries for recording rules" \>}}
 
 ### Updated alert behavior when an evaluation returns no data
 
@@ -155,7 +158,7 @@ Updates to the Notification policies view make it easier to use and manage in th
 - View inherited properties on nested policies
 - Search for label matchers and for contact points to see which notifications are going where
 
-{{< figure src="/media/docs/alerting/notification-policies-view.png" max-width="750px" caption="Improved Notification policies view" >}}
+{{\< figure src="/media/docs/alerting/notification-policies-view.png" max-width="750px" caption="Improved Notification policies view" \>}}
 
 ### Guidance for configuring your Alertmanager
 
@@ -170,7 +173,7 @@ For more information and examples please refer to the [InfluxDB Provisioning doc
 
 ## Auth: Lock organization roles synced from auth providers
 
-_Generally available in all editions of Grafana._
+*Generally available in all editions of Grafana.*
 
 Grafana v9.4 provided the ability to configure synchronization of organization roles for each OAuth provider. With synchronization on, the organization role was applied to the user from the OAuth provider upon signing in. However, after the user signed in, you could still change the user’s organization role during the session.
 
@@ -180,19 +183,19 @@ This feature should be used if you want to enforce strict role synchronization f
 
 To use this feature, enable the `onlyExternalOrgRoleSync` feature toggle. If you’re using Grafana Cloud and would like to enable this feature, please contact customer support. We'll also be automatically enabling this feature for Grafana Cloud instances over the upcoming weeks.
 
-You can also _prevent_ the synchronization of organization roles from a given authentication provider. Learn more in our [skip org role sync](../../setup-grafana/configure-grafana/#authgrafana_com-skip_org_role_sync/)! documentation.
+You can also *prevent* the synchronization of organization roles from a given authentication provider. Learn more in our [skip org role sync](../../setup-grafana/configure-grafana/#authgrafana_com-skip_org_role_sync/)\! documentation.
 
 ## Reporting UI adapted to match the new navigation style
 
-_Generally available in Grafana Enterprise, Cloud Pro, and Cloud Advanced._
+*Generally available in Grafana Enterprise, Cloud Pro, and Cloud Advanced.*
 
 We updated the reporting UI to better fit the new navigation style, adding a horizontal slider and moving the **Preview** and **Send** buttons to the Action section in the page. We also fixed the alignment of the different sections.
 
-{{< figure src="/media/docs/grafana/Screenshot-newUI-report.png" max-width="750px" caption="New Grafana report UI" >}}
+{{\< figure src="/media/docs/grafana/Screenshot-newUI-report.png" max-width="750px" caption="New Grafana report UI" \>}}
 
 ## Experimental support for using JWTs as auth method
 
-_Experimental in Grafana Open Source and Enterprise._
+*Experimental in Grafana Open Source and Enterprise.*
 
 This feature adds support for using JWT tokens to store rendering keys instead of relying on “remote caching”. It covers most rendering use cases, though some still rely on the remote cache as a store. You can enable this by enabling the feature flag `renderAuthJWT` in the `custom.ini` configuration file.
 

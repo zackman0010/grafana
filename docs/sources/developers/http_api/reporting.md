@@ -1,19 +1,22 @@
----
+-----
+
 aliases:
-  - ../../http_api/reporting/
-canonical: /docs/grafana/latest/developers/http_api/reporting/
-description: Grafana Enterprise APIs
-keywords:
-  - grafana
-  - enterprise
-  - api
-  - reporting
-labels:
+
+- ../../http\_api/reporting/
+  canonical: /docs/grafana/latest/developers/http\_api/reporting/
+  description: Grafana Enterprise APIs
+  keywords:
+- grafana
+- enterprise
+- api
+- reporting
+  labels:
   products:
-    - enterprise
-    - oss
-title: Reporting API
----
+  - enterprise
+  - oss
+    title: Reporting API
+
+-----
 
 # Reporting API
 
@@ -39,7 +42,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 GET /api/reports HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -48,7 +51,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 1840
@@ -120,7 +123,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 GET /api/reports/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -129,7 +132,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 940
@@ -206,7 +209,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 POST /api/reports HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -270,8 +273,8 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 | orientation        | string    | Can be `portrait` or `landscape`.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | layout             | string    | Can be `grid` or `simple`.                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | enableDashboardUrl | bool      | Adds a dashboard url to the bottom of the report email.                                                                                                                                                                                                                                                                                                                                                                                           |
-| formats            | []string  | Specified what kind of attachment to generate for the report - `csv`, `pdf`, `image`.<br/>`pdf` is the default one.<br/>`csv` attaches a CSV file for each table panel.<br/>`image` embeds an image of a dashboard into the email's body.                                                                                                                                                                                                         |
-| dashboards         | []object  | Dashboards to generate a report for.<br/> See "Report Dashboard Schema" section below.                                                                                                                                                                                                                                                                                                                                                            |
+| formats            | \[\]string  | Specified what kind of attachment to generate for the report - `csv`, `pdf`, `image`.<br/>`pdf` is the default one.<br/>`csv` attaches a CSV file for each table panel.<br/>`image` embeds an image of a dashboard into the email's body.                                                                                                                                                                                                         |
+| dashboards         | \[\]object  | Dashboards to generate a report for.<br/> See "Report Dashboard Schema" section below.                                                                                                                                                                                                                                                                                                                                                            |
 
 #### Report Dashboard Schema
 
@@ -284,7 +287,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 35
@@ -318,7 +321,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 See [JSON body schema](#config-json-body-schema) for fields description.
 
-```http
+``` http
 GET /api/reports HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -367,7 +370,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 28
@@ -400,7 +403,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 GET /api/reports/6 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -409,7 +412,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 39
@@ -443,7 +446,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 POST /api/reports/email HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -465,7 +468,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 29
@@ -498,7 +501,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 GET /api/reports/settings HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -507,7 +510,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 181
@@ -548,7 +551,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 ### Example request
 
-```http
+``` http
 POST /api/reports/settings HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -577,7 +580,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 35
@@ -612,7 +615,7 @@ See note in the [introduction](#reporting-api) for an explanation.
 
 See [JSON body schema](#config-json-body-schema) for fields description.
 
-```http
+``` http
 POST /api/reports/test-email HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -660,7 +663,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 ### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 29

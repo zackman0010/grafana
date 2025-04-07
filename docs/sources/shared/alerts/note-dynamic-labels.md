@@ -1,9 +1,6 @@
----
-labels:
-  products:
-    - oss
-title: 'Note Dynamic labels'
----
+-----
+
+## labels: products: - oss title: 'Note Dynamic labels'
 
 {{% admonition type="note" %}}
 

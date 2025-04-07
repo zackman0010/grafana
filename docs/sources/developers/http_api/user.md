@@ -1,40 +1,43 @@
----
+-----
+
 aliases:
-  - ../../http_api/user/
-canonical: /docs/grafana/latest/developers/http_api/user/
-description: Grafana User HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - user
-labels:
+
+- ../../http\_api/user/
+  canonical: /docs/grafana/latest/developers/http\_api/user/
+  description: Grafana User HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- user
+  labels:
   products:
-    - enterprise
-    - oss
-title: User HTTP API
-refs:
-  role-based-access-control-permissions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
----
+  - enterprise
+  - oss
+    title: User HTTP API
+    refs:
+    role-based-access-control-permissions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
+
+-----
 
 # User API
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 You can't authenticate to the User HTTP API with service account tokens.
 Service accounts are limited to an organization and an organization role.
-They can't be granted [Grafana server administrator permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators).
+They can't be granted [Grafana server administrator permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators).
 
-Alternatively, you can use the [Organization HTTP API](/docs/grafana/<GRAFANA_VERSION>/developers/http_api/org/#current-organization-api) with service account tokens to manage users in a specific organization
+Alternatively, you can use the [Organization HTTP API](/docs/grafana/\<GRAFANA_VERSION\>/developers/http_api/org/#current-organization-api) with service account tokens to manage users in a specific organization
 
 To use these API endpoints you have to use Basic authentication and the Grafana user must have the Grafana server administrator permission.
 
 The `admin` user that Grafana is provisioned with by default has permissions to use these API endpoints.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 For Grafana Cloud customers, refer to [Organization HTTP API](/docs/grafana/latest/developers/http_api/org/) for finding users with the org Admin role.
 
@@ -54,7 +57,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -67,7 +70,7 @@ The `sort` param is an optional comma separated list of options to order the sea
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -111,7 +114,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/users/search?perpage=10&page=1&query=mygraf HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -126,7 +129,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -174,7 +177,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/users/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -185,7 +188,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -220,7 +223,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request using the email as option**:
 
-```http
+``` http
 GET /api/users/lookup?loginOrEmail=user@mygraf.com HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -229,7 +232,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Request using the username as option**:
 
-```http
+``` http
 GET /api/users/lookup?loginOrEmail=admin HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -240,7 +243,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -275,7 +278,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/users/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -293,7 +296,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -314,7 +317,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/users/1/orgs HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -325,7 +328,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -353,7 +356,7 @@ See note in the [introduction](#user-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/users/1/teams HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -364,7 +367,7 @@ Requires basic authentication and that the authenticated user is a Grafana Admin
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -388,7 +391,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 GET /api/user HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -399,7 +402,7 @@ Requires basic authentication.
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -428,7 +431,7 @@ Changes the password for the user. Requires basic authentication.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/user/password HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -442,7 +445,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -453,7 +456,7 @@ Content-Type: application/json
 
 If you need to change a password with a script, here is an example of changing the Admin password using curl with basic auth:
 
-```bash
+``` bash
 curl -X PUT -H "Content-Type: application/json" -d '{
   "oldPassword": "oldpass",
   "newPassword": "newpass",
@@ -469,14 +472,14 @@ Switch user context to the given organization. Requires basic authentication and
 
 **Example Request**:
 
-```http
+``` http
 POST /api/users/7/using/2 HTTP/1.1
 Authorization: Basic YWRtaW46YWRtaW4=
 ```
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -491,7 +494,7 @@ Switch user context to the given organization.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/user/using/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -500,7 +503,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -515,7 +518,7 @@ Return a list of all organizations of the current user. Requires basic authentic
 
 **Example Request**:
 
-```http
+``` http
 GET /api/user/orgs HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -524,7 +527,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -545,7 +548,7 @@ Return a list of all teams that the current user is member of.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/user/teams HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -554,7 +557,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -578,7 +581,7 @@ Stars the given Dashboard for the actual user.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/user/stars/dashboard/uid/BqokFhx7z HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -587,7 +590,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -602,7 +605,7 @@ Deletes the starring of the given Dashboard for the actual user.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/user/stars/dashboard/uid/BqokFhx7z HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -611,7 +614,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -626,7 +629,7 @@ Return a list of all auth tokens (devices) that the actual user currently have l
 
 **Example Request**:
 
-```http
+``` http
 GET /api/user/auth-tokens HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -635,7 +638,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -676,7 +679,7 @@ and will be required to authenticate again upon next activity.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/user/revoke-auth-token HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -689,7 +692,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

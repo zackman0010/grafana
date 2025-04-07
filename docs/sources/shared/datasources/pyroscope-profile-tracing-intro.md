@@ -1,19 +1,6 @@
----
-headless: true
-labels:
-  products:
-    - enterprise
-    - oss
----
+-----
 
-[//]: # 'This file documents the introductory material for traces to profiling for the Pyroscope data source.'
-[//]: # 'This shared file is included in these locations:'
-[//]: # '/grafana/docs/sources/datasources/pyroscope/profiling-and-tracing.md'
-[//]: # '/website/docs/grafana-cloud/data-configuration/traces/traces-query-editor.md'
-[//]: # '/docs/sources/view-and-analyze-profile-data/profile-tracing/_index.md'
-[//]: #
-[//]: # 'If you make changes to this file, verify that the meaning and content are not changed in any place where the file is included.'
-[//]: # 'Any links should be fully qualified and not relative: /docs/grafana/ instead of ../grafana/.'
+## headless: true labels: products: - enterprise - oss
 
 <!-- Profiling and tracing integration -->
 

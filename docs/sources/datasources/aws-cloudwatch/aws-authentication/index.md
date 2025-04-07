@@ -1,33 +1,36 @@
----
+-----
+
 aliases:
-  - ../../data-sources/aws-cloudwatch/aws-authentication/
-  - ../../data-sources/elasticsearch/aws-authentication/
-  - ../cloudwatch/
-description: Guide to configuring AWS authentication in Grafana
-keywords:
-  - grafana
-  - aws
-  - authentication
-labels:
+
+- ../../data-sources/aws-cloudwatch/aws-authentication/
+- ../../data-sources/elasticsearch/aws-authentication/
+- ../cloudwatch/
+  description: Guide to configuring AWS authentication in Grafana
+  keywords:
+- grafana
+- aws
+- authentication
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: AWS authentication
-title: Configure AWS authentication
-weight: 200
-refs:
-  configure-grafana-assume-role-enabled:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#assume_role_enabled
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#assume_role_enabled
-  configure-grafana-allowed-auth-providers:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#allowed_auth_providers
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#allowed_auth_providers
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: AWS authentication
+    title: Configure AWS authentication
+    weight: 200
+    refs:
+    configure-grafana-assume-role-enabled:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#assume\_role\_enabled
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#assume\_role\_enabled
+    configure-grafana-allowed-auth-providers:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#allowed\_auth\_providers
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#allowed\_auth\_providers
+
+-----
 
 # Configure AWS authentication
 
@@ -97,25 +100,23 @@ For more information, refer to the [AWS documentation on external ID](https://do
 
 When Grafana Assume Role is the selected authentication provider, Grafana is responsible for supplying and calling the external ID. It's displayed on the data source configuration page and is unique to your account. It's very important when creating an IAM role for `Grafana Assume Role` that you set a conditional that Grafana's AWS account can only assume your IAM role when a particular external ID is specified:
 
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": {Grafana's AWS Account}
-            },
-            "Action": "sts:AssumeRole",
-            "Condition": {
-                "StringEquals": {
-                    "sts:ExternalId": {External ID unique to your account}
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "AWS": {Grafana's AWS Account}
+                },
+                "Action": "sts:AssumeRole",
+                "Condition": {
+                    "StringEquals": {
+                        "sts:ExternalId": {External ID unique to your account}
+                    }
                 }
             }
-        }
-    ]
-}
-```
+        ]
+    }
 
 ## Use a custom endpoint
 
@@ -134,7 +135,7 @@ If you think you have the credentials file in the right location, but it's not w
 
 ### Credentials file example
 
-```bash
+``` bash
 [default]
 aws_access_key_id = asdsadasdasdasd
 aws_secret_access_key = dasdasdsadasdasdasdsa
@@ -150,7 +151,7 @@ To grant user 472 permission to access the credentials, and avoid falling back t
 
 ### Security context example
 
-```yaml
+``` yaml
 securityContext:
   fsGroup: 472
   runAsUser: 472
@@ -183,22 +184,20 @@ To use the Grafana Assume Role:
 
 Sample Trust Relationship for an IAM role:
 
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": {Grafana's AWS Account}
-            },
-            "Action": "sts:AssumeRole",
-            "Condition": {
-                "StringEquals": {
-                    "sts:ExternalId": {External ID unique to your account}
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "AWS": {Grafana's AWS Account}
+                },
+                "Action": "sts:AssumeRole",
+                "Condition": {
+                    "StringEquals": {
+                        "sts:ExternalId": {External ID unique to your account}
+                    }
                 }
             }
-        }
-    ]
-}
-```
+        ]
+    }

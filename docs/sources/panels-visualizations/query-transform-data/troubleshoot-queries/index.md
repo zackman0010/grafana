@@ -1,27 +1,30 @@
----
+-----
+
 aliases:
-  - ../../troubleshooting/troubleshoot-queries/
-description: Troubleshoot Grafana queries
-keywords:
-  - grafana
-  - troubleshooting
-  - documentation
-  - guide
-  - queries
-labels:
+
+- ../../troubleshooting/troubleshoot-queries/
+  description: Troubleshoot Grafana queries
+  keywords:
+- grafana
+- troubleshooting
+- documentation
+- guide
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Troubleshoot queries
-weight: 200
-refs:
-  inspect:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/panel-inspector/#inspect-query-request-and-response-data
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/panel-inspector/#inspect-query-request-and-response-data
----
+  - cloud
+  - enterprise
+  - oss
+    title: Troubleshoot queries
+    weight: 200
+    refs:
+    inspect:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/panel-inspector/\#inspect-query-request-and-response-data
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/panel-inspector/\#inspect-query-request-and-response-data
+
+-----
 
 # Troubleshoot queries
 

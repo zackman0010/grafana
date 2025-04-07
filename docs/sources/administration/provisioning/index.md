@@ -1,17 +1,20 @@
----
+-----
+
 aliases:
-  - ../installation/provisioning/
-description: Describes provisioning settings for Grafana using configuration files.
-keywords:
-  - grafana
-  - provisioning
-labels:
+
+- ../installation/provisioning/
+  description: Describes provisioning settings for Grafana using configuration files.
+  keywords:
+- grafana
+- provisioning
+  labels:
   products:
-    - enterprise
-    - oss
-title: Provision Grafana
-weight: 600
----
+  - enterprise
+  - oss
+    title: Provision Grafana
+    weight: 600
+
+-----
 
 # Provision Grafana
 
@@ -28,10 +31,10 @@ Grafana reads its default configuration from `<WORKING DIRECTORY>/conf/defaults.
 By default, Grafana reads custom configuration from `<WORKING DIRECTORY>/conf/custom.ini`.
 You can override the custom configuration path with the `--config` option.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The Deb and RPM packages install the configuration file at `/etc/grafana/grafana.ini`.
 The Grafana init.d script sets the `--config` option to that path.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Use environment variables
 
@@ -44,7 +47,7 @@ You can use environment variables in dashboard provisioning configuration but no
 
 The following example looks up the data source URL port, user, and password using environment variables:
 
-```yaml
+``` yaml
 datasources:
   - name: Graphite
     url: http://localhost:$PORT
@@ -75,7 +78,7 @@ Each configuration file contains a list of data sources, under the `datasources`
 If the data source already exists, Grafana reconfigures it to match the provisioned configuration file.
 
 You can also list data sources to automatically delete, using the key `deleteDatasources`.
-Grafana deletes the data sources listed in `deleteDatasources` _before_ adding or updating those in the `datasources` list.
+Grafana deletes the data sources listed in `deleteDatasources` *before* adding or updating those in the `datasources` list.
 
 You can configure Grafana to automatically delete provisioned data sources when they're removed from the provisioning file.
 To do so, add `prune: true` to the root of your data source provisioning file.
@@ -91,7 +94,7 @@ This prevents old configurations from overwriting newer ones if you have differe
 
 This example provisions a [Graphite data source](../../datasources/graphite/):
 
-```yaml
+``` yaml
 # Configuration file version
 apiVersion: 1
 
@@ -180,11 +183,11 @@ Common settings in the [built-in core data sources](../../datasources/#built-in-
 
 | Name                            | Type    | Data source                                                      | Description                                                                                                                                                                                                                                                                                   |
 | ------------------------------- | ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tlsAuth`                       | boolean | _HTTP\*_, MySQL                                                  | Enable TLS authentication using client cert configured in secure JSON data                                                                                                                                                                                                                    |
-| `tlsAuthWithCACert`             | boolean | _HTTP\*_, MySQL, PostgreSQL                                      | Enable TLS authentication using CA cert                                                                                                                                                                                                                                                       |
-| `tlsSkipVerify`                 | boolean | _HTTP\*_, MySQL, PostgreSQL, MSSQL                               | Controls whether a client verifies the server's certificate chain and host name.                                                                                                                                                                                                              |
-| `serverName`                    | string  | _HTTP\*_, MSSQL                                                  | Optional. Controls the server name used for certificate common name/subject alternative name verification. Defaults to using the data source URL.                                                                                                                                             |
-| `timeout`                       | string  | _HTTP\*_                                                         | Request timeout in seconds. Overrides `dataproxy.timeout` option                                                                                                                                                                                                                              |
+| `tlsAuth`                       | boolean | *HTTP\**, MySQL                                                  | Enable TLS authentication using client cert configured in secure JSON data                                                                                                                                                                                                                    |
+| `tlsAuthWithCACert`             | boolean | *HTTP\**, MySQL, PostgreSQL                                      | Enable TLS authentication using CA cert                                                                                                                                                                                                                                                       |
+| `tlsSkipVerify`                 | boolean | *HTTP\**, MySQL, PostgreSQL, MSSQL                               | Controls whether a client verifies the server's certificate chain and host name.                                                                                                                                                                                                              |
+| `serverName`                    | string  | *HTTP\**, MSSQL                                                  | Optional. Controls the server name used for certificate common name/subject alternative name verification. Defaults to using the data source URL.                                                                                                                                             |
+| `timeout`                       | string  | *HTTP\**                                                         | Request timeout in seconds. Overrides `dataproxy.timeout` option                                                                                                                                                                                                                              |
 | `graphiteVersion`               | string  | Graphite                                                         | Graphite version                                                                                                                                                                                                                                                                              |
 | `timeInterval`                  | string  | Prometheus, Elasticsearch, InfluxDB, MySQL, PostgreSQL and MSSQL | Lowest interval/step value that should be used for this data source.                                                                                                                                                                                                                          |
 | `httpMode`                      | string  | InfluxDB                                                         | HTTP Method. 'GET', 'POST', defaults to GET                                                                                                                                                                                                                                                   |
@@ -216,14 +219,14 @@ Common settings in the [built-in core data sources](../../datasources/#built-in-
 | `tlsConfigurationMethod`        | string  | PostgreSQL                                                       | SSL certificate configuration, either by 'file-path' or 'file-content'                                                                                                                                                                                                                        |
 | `sslRootCertFile`               | string  | PostgreSQL, MSSQL                                                | SSL server root certificate file, must be readable by the Grafana user                                                                                                                                                                                                                        |
 | `sslCertFile`                   | string  | PostgreSQL                                                       | SSL client certificate file, must be readable by the Grafana user                                                                                                                                                                                                                             |
-| `sslKeyFile`                    | string  | PostgreSQL                                                       | SSL client key file, must be readable by _only_ the Grafana user                                                                                                                                                                                                                              |
+| `sslKeyFile`                    | string  | PostgreSQL                                                       | SSL client key file, must be readable by *only* the Grafana user                                                                                                                                                                                                                              |
 | `encrypt`                       | string  | MSSQL                                                            | Determines SSL encryption handling. Options include: `disable` - data sent between client and server is not encrypted; `false` - data sent between client and server is not encrypted beyond the login packet; `true` - data sent between client and server is encrypted. Default is `false`. |
 | `postgresVersion`               | number  | PostgreSQL                                                       | Postgres version as a number (903/904/905/906/1000) meaning v9.3, v9.4, ..., v10                                                                                                                                                                                                              |
 | `timescaledb`                   | boolean | PostgreSQL                                                       | Enable usage of TimescaleDB extension                                                                                                                                                                                                                                                         |
 | `maxOpenConns`                  | number  | MySQL, PostgreSQL and MSSQL                                      | Maximum number of open connections to the database (Grafana v5.4+)                                                                                                                                                                                                                            |
 | `maxIdleConns`                  | number  | MySQL, PostgreSQL and MSSQL                                      | Maximum number of connections in the idle connection pool (Grafana v5.4+)                                                                                                                                                                                                                     |
 | `connMaxLifetime`               | number  | MySQL, PostgreSQL and MSSQL                                      | Maximum amount of time in seconds a connection may be reused (Grafana v5.4+)                                                                                                                                                                                                                  |
-| `keepCookies`                   | array   | _HTTP\*_                                                         | Cookies that needs to be passed along while communicating with data sources                                                                                                                                                                                                                   |
+| `keepCookies`                   | array   | *HTTP\**                                                         | Cookies that needs to be passed along while communicating with data sources                                                                                                                                                                                                                   |
 | `prometheusVersion`             | string  | Prometheus                                                       | The version of the Prometheus data source, such as `2.37.0`, `2.24.0`                                                                                                                                                                                                                         |
 | `prometheusType`                | string  | Prometheus                                                       | Prometheus database type. Options are `Prometheus`, `Cortex`, `Mimir` or`Thanos`.                                                                                                                                                                                                             |
 | `cacheLevel`                    | string  | Prometheus                                                       | Determines the duration of the browser cache. Valid values include: `Low`, `Medium`, `High`, and `None`.                                                                                                                                                                                      |
@@ -233,9 +236,9 @@ Common settings in the [built-in core data sources](../../datasources/#built-in-
 | `implementation`                | string  | Alertmanager                                                     | The implementation of the Alertmanager data source, such as `prometheus`, `cortex` or `mimir`                                                                                                                                                                                                 |
 | `handleGrafanaManagedAlerts`    | boolean | Alertmanager                                                     | When enabled, Grafana-managed alerts are sent to this Alertmanager                                                                                                                                                                                                                            |
 
-{{< admonition type="note" >}}
-Data sources tagged with _HTTP\*_ communicate using the HTTP protocol, which includes all core data source plugins except MySQL, PostgreSQL, and MSSQL.
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+Data sources tagged with *HTTP\** communicate using the HTTP protocol, which includes all core data source plugins except MySQL, PostgreSQL, and MSSQL.
+{{\< /admonition \>}}
 
 For examples of specific data sources' JSON data, refer to that [data source's documentation](../../datasources/).
 
@@ -248,19 +251,19 @@ All of these settings are optional.
 
 | Name                | Type   | Data source                        | Description                                              |
 | ------------------- | ------ | ---------------------------------- | -------------------------------------------------------- |
-| `tlsCACert`         | string | _HTTP\*_, MySQL, PostgreSQL        | CA cert for out going requests                           |
-| `tlsClientCert`     | string | _HTTP\*_, MySQL, PostgreSQL        | TLS Client cert for outgoing requests                    |
-| `tlsClientKey`      | string | _HTTP\*_, MySQL, PostgreSQL        | TLS Client key for outgoing requests                     |
-| `password`          | string | _HTTP\*_, MySQL, PostgreSQL, MSSQL | password                                                 |
-| `basicAuthPassword` | string | _HTTP\*_                           | password for basic authentication                        |
+| `tlsCACert`         | string | *HTTP\**, MySQL, PostgreSQL        | CA cert for out going requests                           |
+| `tlsClientCert`     | string | *HTTP\**, MySQL, PostgreSQL        | TLS Client cert for outgoing requests                    |
+| `tlsClientKey`      | string | *HTTP\**, MySQL, PostgreSQL        | TLS Client key for outgoing requests                     |
+| `password`          | string | *HTTP\**, MySQL, PostgreSQL, MSSQL | password                                                 |
+| `basicAuthPassword` | string | *HTTP\**                           | password for basic authentication                        |
 | `accessKey`         | string | Amazon CloudWatch                  | Access key for connecting to Amazon CloudWatch           |
 | `secretKey`         | string | Amazon CloudWatch                  | Secret key for connecting to Amazon CloudWatch           |
 | `sigV4AccessKey`    | string | Elasticsearch and Prometheus       | SigV4 access key. Required when using keys auth provider |
 | `sigV4SecretKey`    | string | Elasticsearch and Prometheus       | SigV4 secret key. Required when using keys auth provider |
 
-{{< admonition type="note" >}}
-The _HTTP\*_ tag denotes data sources that communicate using the HTTP protocol, including all core data source plugins except MySQL, PostgreSQL, and MSSQL.
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+The *HTTP\** tag denotes data sources that communicate using the HTTP protocol, including all core data source plugins except MySQL, PostgreSQL, and MSSQL.
+{{\< /admonition \>}}
 
 #### Custom HTTP headers for data sources
 
@@ -268,7 +271,7 @@ You can add HTTP headers to all requests sent to data sources managed by Grafana
 Configure the header name in the `jsonData` field and the header value in `secureJsonData`.
 The following example sets the `HeaderName` header to have the value `HeaderValue` and the `Authorization` header to have the value `Bearer XXXXXXXXX`:
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -287,14 +290,14 @@ You can manage plugin applications in Grafana by adding one or more YAML configu
 Each configuration file contains a list of `apps` that Grafana configures during start up.
 Grafana configures each app to use the configuration in the file.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature enables you to provision plugin configurations, not the plugins themselves.
 You must have already installed the plugin to use plugin configuration provisioning.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Example plugin configuration file
 
-```yaml
+``` yaml
 apiVersion: 1
 
 apps:
@@ -323,7 +326,7 @@ Each configuration file contains a list of `providers` that Grafana uses to load
 
 ### Example dashboard configuration file
 
-```yaml
+``` yaml
 apiVersion: 1
 
 providers:
@@ -353,26 +356,26 @@ providers:
 When Grafana starts, it updates or creates all dashboards found in the configured path.
 It later polls that path every `updateIntervalSeconds` for updates to the dashboard files and updates its database.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Grafana installs dashboards at the root level if you don't set the `folder` field.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 #### Make changes to a provisioned dashboard
 
 You can make changes to a provisioned dashboard in the Grafana UI but its not possible to automatically save the changes back to the provisioning source.
 If `allowUiUpdates` is set to `true` and you make changes to a provisioned dashboard, when you save the dashboard, Grafana persists the changes to its database.
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 If you save a provisioned dashboard in the UI and then later update the provisioning source, Grafana always overwrites the database dashboard with the one from the provisioning file.
 Grafana ignores the `version` property in the JSON file, even if it's lower than the dashboard in the database.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 If you save a provisioned dashboard in the UI and remove the provisioning source, Grafana deletes the dashboard in the database unless you have set the option `disableDeletion` to `true`.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If you set `allowUiUpdates` to `false`, you can't save changes to a provisioned dashboard.
-When you try to save changes to a provisioned dashboard, Grafana brings up a _Cannot save provisioned dashboard_ dialog box.
+When you try to save changes to a provisioned dashboard, Grafana brings up a *Cannot save provisioned dashboard* dialog box.
 
 Grafana offers options to export the JSON definition of a dashboard.
 Use either **Copy JSON to Clipboard** or **Save JSON to file** to sync your dashboard changes back to the provisioning source.
@@ -380,7 +383,7 @@ Grafana removes the `id` field from the dashboard JSON to help the provisioning 
 
 The following screenshot illustrates this behavior.
 
-{{< figure src="/static/img/docs/v51/provisioning_cannot_save_dashboard.png" max-width="500px" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v51/provisioning\_cannot\_save\_dashboard.png" max-width="500px" class="docs-image--no-shadow" \>}}
 
 ### Reusable dashboard URLs
 
@@ -388,11 +391,11 @@ If the dashboard in the JSON file contains an [UID](../../dashboards/build-dashb
 This lets you migrate dashboards between Grafana instances and keep consistent dashboard URLs.
 When Grafana starts, it creates or updates all dashboards available in the configured folders.
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 You can overwrite existing dashboards with provisioning.
 
 Be careful not to reuse the same `title` multiple times within a folder or `uid` within the same Grafana instance to avoid inconsistent behavior.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Provision folders structure from filesystem to Grafana
 
@@ -400,19 +403,17 @@ If you already store your dashboards using folders in a Git repository or on a f
 
 For example, to replicate the following dashboards structure from the filesystem to Grafana:
 
-```
-/etc/dashboards
-├── /server
-│   ├── /common_dashboard.json
-│   └── /network_dashboard.json
-└── /application
-    ├── /requests_dashboard.json
-    └── /resources_dashboard.json
-```
+    /etc/dashboards
+    ├── /server
+    │   ├── /common_dashboard.json
+    │   └── /network_dashboard.json
+    └── /application
+        ├── /requests_dashboard.json
+        └── /resources_dashboard.json
 
 use the following provisioning configuration file:
 
-```yaml
+``` yaml
 apiVersion: 1
 
 providers:
@@ -430,9 +431,9 @@ To use `foldersFromFilesStructure`, you must unset the `folder` and `folderUid` 
 
 To provision dashboards to the root level, store them in the root of your `path`.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature doesn't let you create nested folder structures, where you have folders within folders.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Alerting
 

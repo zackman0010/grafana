@@ -1,23 +1,26 @@
----
+-----
+
 keywords:
-  - explore
-  - loki
-  - logs
-labels:
+
+- explore
+- loki
+- logs
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Query management in Explore
-weight: 10
----
+  - cloud
+  - enterprise
+  - oss
+    title: Query management in Explore
+    weight: 10
+
+-----
 
 # Query management in Explore
 
 Grafana Explore provides a variety of tools to help manage your queries.
 
 {{% admonition type="note" %}}
-For help with debugging queries, Explore allows you to investigate query requests and responses, as well as query statistics, via the Query inspector. Refer to [Query inspector in Explore](/docs/grafana/<GRAFANA_VERSION>/explore/explore-inspector/) for more information.
+For help with debugging queries, Explore allows you to investigate query requests and responses, as well as query statistics, via the Query inspector. Refer to [Query inspector in Explore](/docs/grafana/\<GRAFANA_VERSION\>/explore/explore-inspector/) for more information.
 {{% /admonition %}}
 
 ## Query history
@@ -31,7 +34,7 @@ Starred queries aren't subject to the two-week retention period and aren't delet
 To view your query history:
 
 1. Go to the Explore page.
-1. Click **Query history**.
+2. Click **Query history**.
 
 The Query history pane opens at the bottom of the page, and contains the following tabs:
 
@@ -63,7 +66,7 @@ You also have the option to switch the data source and run a starred query.
 Filter query history in both the **Query history** and **Starred** tabs by data source name:
 
 1. Click the **Filter queries for specific data source(s)** field.
-1. Select the data source in the dropdown by which you want to filter your history. You can select multiple data sources.
+2. Select the data source in the dropdown by which you want to filter your history. You can select multiple data sources.
 
 {{% admonition type="note" %}}
 Queries with the **Mixed** data source appear only when filtering for "Mixed" and not when filtering by individual data source.
@@ -79,7 +82,7 @@ You can also filter queries by date using the vertical slider:
 Use **Search queries** in both the **Query history** and **Starred** tabs to search your query history and comments using keywords.
 
 1. Click in the **Search queries** field.
-1. Type the keyword(s) or term you are want to search for in search field.
+2. Type the keyword(s) or term you are want to search for in search field.
 
 ### Query history Settings tab
 

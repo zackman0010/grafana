@@ -1,23 +1,10 @@
----
-headless: true
-labels:
-  products:
-    - enterprise
-    - oss
----
+-----
 
-[//]: # 'This file documents the Search query type for the Tempo data source.'
-[//]: # 'This shared file is included in these locations:'
-[//]: # '/grafana/docs/sources/datasources/tempo/query-editor/index.md'
-[//]: # '/website/docs/grafana-cloud/data-configuration/traces/traces-query-editor.md'
-[//]: # '/tempo/docs/sources/tempo/traceql/query_editor.md'
-[//]: #
-[//]: # 'If you make changes to this file, verify that the meaning and content are not changed in any place where the file is included.'
-[//]: # 'Any links should be fully qualified and not relative: /docs/grafana/ instead of ../grafana/.'
+## headless: true labels: products: - enterprise - oss
 
 # Write TraceQL queries using Search
 
-The **Search** query builder, located on the **Explore** > **Query type** > **Search** in Grafana, provides drop-down lists and text fields to help you write a query.
+The **Search** query builder, located on the **Explore** \> **Query type** \> **Search** in Grafana, provides drop-down lists and text fields to help you write a query.
 The selections you make automatically generate a [TraceQL query](/docs/tempo/latest/traceql).
 
 ![The Search query builder](/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-query-search-v11.png)
@@ -26,12 +13,12 @@ The builder lets you run the most common queries in as few clicks as possible. Y
 
 The builder supports a subset of TraceQL capabilities, including some structural operators (`>>`, `>`, `=~`, `!=`).
 
-To access **Search**, select your Tempo data source, and then choose **Explore** and select **Query type** > **Search**.
+To access **Search**, select your Tempo data source, and then choose **Explore** and select **Query type** \> **Search**.
 You can use the query builder to search trace data by resource service name, span name, duration, one or more tags. The examples on this page use the default filters.
 
 In addition, you can add query builder blocks, view the query history, and use the **Inspector** to see details.
 
-{{< figure src="/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-query-builder-v11.png" class="docs-image--no-shadow" max-width="750px" caption="Screenshot of the Tempo Search query type" >}}
+{{\< figure src="/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-query-builder-v11.png" class="docs-image--no-shadow" max-width="750px" caption="Screenshot of the Tempo Search query type" \>}}
 
 ## Perform a search
 
@@ -57,8 +44,8 @@ Read the [dashboard time range](/docs/grafana/latest/dashboards/use-dashboards/#
 To access the **Search** query builder, use the following steps:
 
 1. Sign into Grafana.
-1. Select your Tempo data source.
-1. From the menu, choose **Explore** and select **Query type > Search**.
+2. Select your Tempo data source.
+3. From the menu, choose **Explore** and select **Query type \> Search**.
 
 ## Define filters
 
@@ -82,9 +69,9 @@ The resulting query is updated with this:
 To define filters, follow these steps:
 
 1. Choose one of the filters.
-1. Select a comparison operator from the drop-down.
-1. **Service Name**, **Span Name**, and **Status** only: Select one or more values from the drop-down.
-1. **Duration** only: Enter values and units for the range and choose comparison operators for the drop-downs. Units can be nanoseconds (`ns`), milliseconds (`ms`), seconds (`s`), minutes (`m`), and hours (`h`).
+2. Select a comparison operator from the drop-down.
+3. **Service Name**, **Span Name**, and **Status** only: Select one or more values from the drop-down.
+4. **Duration** only: Enter values and units for the range and choose comparison operators for the drop-downs. Units can be nanoseconds (`ns`), milliseconds (`ms`), seconds (`s`), minutes (`m`), and hours (`h`).
 
 You can either select **Run query** to execute the query or define tags and then run the query.
 
@@ -97,10 +84,10 @@ If you select unscoped, then all tags are searched for matches.
 To add a tag, follow these steps:
 
 1. Select span, resource, or unscoped.
-1. Select a tag from the **Select tag** drop-down.
-1. Select a comparison operator.
-1. Select a value from the **Select value** drop-down. This field is populated based upon the tag.
-1. Optional: Select **+** to add another tag.
+2. Select a tag from the **Select tag** drop-down.
+3. Select a comparison operator.
+4. Select a value from the **Select value** drop-down. This field is populated based upon the tag.
+5. Optional: Select **+** to add another tag.
 
 ### Optional: Use Aggregate by
 
@@ -116,7 +103,7 @@ For additional information, refer to [Traces to metrics: Ad-hoc RED metrics in G
 
 <!--Impromptu RED metrics with Aggregate by -->
 
-{{< youtube id="xOolCpm2F8c" >}}
+{{\< youtube id="xOolCpm2F8c" \>}}
 
 **Aggregate by** is disabled by default.
 [Enable the `metricsSummary` feature toggle](/docs/grafana/latest/setup-grafana/configure-grafana/feature-toggles/) in Grafana to use this feature.
@@ -130,28 +117,28 @@ When you use **Aggregate by**, the selections you make determine how the informa
 Every combination that matches selections in your data is listed in the table.
 Each aggregate value, for example `intrinsic`:`name`, has a corresponding column in the results table.
 
-For example, **names** matching `GET /:endpoint` with a **span.http.user_agent** of `k6/0.46` appeared in 31,466 spans. Instead of being listed by traces and associated spans, the query results are grouped by the selections in **Aggregate by**.
+For example, **names** matching `GET /:endpoint` with a **span.http.user\_agent** of `k6/0.46` appeared in 31,466 spans. Instead of being listed by traces and associated spans, the query results are grouped by the selections in **Aggregate by**.
 
 The RED metrics are calculated for every name and user agent combination found in your data.
 
 The screenshot shows all of the successful HTTP `status_code` API calls against the `mystical-server` service.
 The results are shown in the same order used in **Aggregate by**.
 For example, **Aggregate by** lists `intrinsic.name` followed by `span.http.user_agent`.
-The first column in the results Table shows **name** and then **span.http.user_agent**.
+The first column in the results Table shows **name** and then **span.http.user\_agent**.
 
 ![Use Aggregate by to calculate RED metrics for spans and group by attributes](/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-query-build-aggregate-v11-a.png)
 
 To use this capability:
 
 1. In the **Aggregate by** row, select a scope from the first drop-down box. For example, `span`.
-1. Select an attribute from the second drop-down.
-1. Optional: Select **+** to add an **Aggregate by** row.
-1. Optional: Select a **Time range** to expand or narrow the data set for an hour's range.
-1. Select **Run query**.
+2. Select an attribute from the second drop-down.
+3. Optional: Select **+** to add an **Aggregate by** row.
+4. Optional: Select a **Time range** to expand or narrow the data set for an hour's range.
+5. Select **Run query**.
 
 <!-- Explanation of how to use feature -->
 
-{{< youtube id="g97CjKOZqT4" >}}
+{{\< youtube id="g97CjKOZqT4" \>}}
 
 ### Optional: Add query and service graph blocks
 
@@ -160,7 +147,7 @@ For example, query A runs and then query B.
 You can reorder the queries by dragging and dropping them above or below other queries.
 Select **+ Add query** to add another query block.
 
-For more information, refer to [Use query types together](/docs/grafana/<GRAFANA_VERSION>/datasources/tempo/query-editor/).
+For more information, refer to [Use query types together](/docs/grafana/\<GRAFANA_VERSION\>/datasources/tempo/query-editor/).
 
 ## Run queries and view results
 
@@ -178,12 +165,12 @@ The Tempo data source supports streaming responses to TraceQL queries so you can
 
 When active, all configured Tempo data sources attempt to use streaming.
 You can activate and control which Tempo data sources do and don't attempt to stream results at the per-data source level using the **Streaming** section of the Tempo data source configuration.
-For more information, refer to the [Tempo data source](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/datasources/tempo/configure-tempo-data-source/#streaming) documentation.
+For more information, refer to the [Tempo data source](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/datasources/tempo/configure-tempo-data-source/#streaming) documentation.
 
 Streaming is available for both the **Search** and **TraceQL** query types.
 You'll get immediate visibility of incoming traces on the results table.
 
-{{< video-embed src="/media/docs/grafana/data-sources/tempo-streaming-v2.mp4" >}}
+{{\< video-embed src="/media/docs/grafana/data-sources/tempo-streaming-v2.mp4" \>}}
 
 ### Use filters and tags on spans
 

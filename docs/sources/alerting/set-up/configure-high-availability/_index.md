@@ -1,41 +1,44 @@
----
+-----
+
 aliases:
-  - ../unified-alerting/high-availability/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/high-availability
-  - ../high-availability/enable-alerting-ha/ # /docs/grafana/<GRAFANA_VERSION>/alerting/high-availability/enable-alerting-ha/
-  - ../high-availability/ # /docs/grafana/<GRAFANA_VERSION>/alerting/high-availability
-  - ../fundamentals/high-availability/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/high-availability
-canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-high-availability/
-description: Configure High Availability
-keywords:
-  - grafana
-  - alerting
-  - tutorials
-  - ha
-  - high availability
-labels:
+
+- ../unified-alerting/high-availability/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/high-availability
+- ../high-availability/enable-alerting-ha/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/high-availability/enable-alerting-ha/
+- ../high-availability/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/high-availability
+- ../fundamentals/high-availability/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/high-availability
+  canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-high-availability/
+  description: Configure High Availability
+  keywords:
+- grafana
+- alerting
+- tutorials
+- ha
+- high availability
+  labels:
   products:
-    - enterprise
-    - oss
-title: Configure high availability
-weight: 600
-refs:
-  state-history:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/monitor-status/view-alert-state-history/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/monitor-status/view-alert-state-history/
-  meta-monitoring:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/monitor/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/monitor/
----
+  - enterprise
+  - oss
+    title: Configure high availability
+    weight: 600
+    refs:
+    state-history:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/monitor-status/view-alert-state-history/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/monitor-status/view-alert-state-history/
+    meta-monitoring:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/monitor/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/monitor/
+
+-----
 
 # Configure high availability
 
 Grafana Alerting uses the Prometheus model of separating the evaluation of alert rules from the delivering of notifications. In this model, the evaluation of alert rules is done in the alert generator and the delivering of notifications is done in the alert receiver. In Grafana Alerting, the alert generator is the Scheduler and the receiver is the Alertmanager.
 
-{{< figure src="/static/img/docs/alerting/unified/high-availability-ua.png" class="docs-image--no-shadow" max-width= "750px" caption="High availability" >}}
+{{\< figure src="/static/img/docs/alerting/unified/high-availability-ua.png" class="docs-image--no-shadow" max-width= "750px" caption="High availability" \>}}
 
 When running multiple instances of Grafana, all alert rules are evaluated on all instances. You can think of the evaluation of alert rules as being duplicated by the number of running Grafana instances. This is how Grafana Alerting makes sure that as long as at least one Grafana instance is working, alert rules are still be evaluated and notifications for alerts are still sent.
 
@@ -55,13 +58,13 @@ Since gossiping of notifications and silences uses both TCP and UDP port `9094`,
 
 **To enable high availability support:**
 
-1. In your custom configuration file ($WORKING_DIR/conf/custom.ini), go to the `[unified_alerting]` section.
-1. Set `[ha_peers]` to the number of hosts for each Grafana instance in the cluster (using a format of host:port), for example, `ha_peers=10.0.0.5:9094,10.0.0.6:9094,10.0.0.7:9094`.
+1. In your custom configuration file ($WORKING\_DIR/conf/custom.ini), go to the `[unified_alerting]` section.
+2. Set `[ha_peers]` to the number of hosts for each Grafana instance in the cluster (using a format of host:port), for example, `ha_peers=10.0.0.5:9094,10.0.0.6:9094,10.0.0.7:9094`.
    You must have at least one (1) Grafana instance added to the `ha_peers` section.
-1. Set `[ha_listen_address]` to the instance IP address using a format of `host:port` (or the [Pod's](https://kubernetes.io/docs/concepts/workloads/pods/) IP in the case of using Kubernetes).
+3. Set `[ha_listen_address]` to the instance IP address using a format of `host:port` (or the [Pod's](https://kubernetes.io/docs/concepts/workloads/pods/) IP in the case of using Kubernetes).
    By default, it is set to listen to all interfaces (`0.0.0.0`).
-1. Set `[ha_advertise_address]` to the instance's hostname or IP address in the format "host:port". Use this setting when the instance is behind NAT (Network Address Translation), such as in Docker Swarm or Kubernetes service, where external and internal addresses differ. This address helps other cluster instances communicate with it. The setting is optional.
-1. Set `[ha_peer_timeout]` in the `[unified_alerting]` section of the custom.ini to specify the time to wait for an instance to send a notification via the Alertmanager. The default value is 15s, but it may increase if Grafana servers are located in different geographic regions or if the network latency between them is high.
+4. Set `[ha_advertise_address]` to the instance's hostname or IP address in the format "host:port". Use this setting when the instance is behind NAT (Network Address Translation), such as in Docker Swarm or Kubernetes service, where external and internal addresses differ. This address helps other cluster instances communicate with it. The setting is optional.
+5. Set `[ha_peer_timeout]` in the `[unified_alerting]` section of the custom.ini to specify the time to wait for an instance to send a notification via the Alertmanager. The default value is 15s, but it may increase if Grafana servers are located in different geographic regions or if the network latency between them is high.
 
 For a demo, see this [example using Docker Compose](https://github.com/grafana/alerting-ha-docker-examples/tree/main/memberlist).
 
@@ -71,20 +74,20 @@ As an alternative to Memberlist, you can use Redis for high availability. This i
 database for HA and cannot support the meshing of all Grafana servers.
 
 1. Make sure you have a Redis server that supports pub/sub. If you use a proxy in front of your Redis cluster, make sure the proxy supports pub/sub.
-1. In your custom configuration file ($WORKING_DIR/conf/custom.ini), go to the `[unified_alerting]` section.
-1. Set `ha_redis_address` to the Redis server address Grafana should connect to.
-1. Optional: Set the username and password if authentication is enabled on the Redis server using `ha_redis_username` and `ha_redis_password`.
-1. Optional: Set `ha_redis_prefix` to something unique if you plan to share the Redis server with multiple Grafana instances.
-1. Optional: Set `ha_redis_tls_enabled` to `true` and configure the corresponding `ha_redis_tls_*` fields to secure communications between Grafana and Redis with Transport Layer Security (TLS).
-1. Set `[ha_advertise_address]` to `ha_advertise_address = "${POD_IP}:9094"` This is required if the instance doesn't have an IP address that is part of RFC 6890 with a default route.
+2. In your custom configuration file ($WORKING\_DIR/conf/custom.ini), go to the `[unified_alerting]` section.
+3. Set `ha_redis_address` to the Redis server address Grafana should connect to.
+4. Optional: Set the username and password if authentication is enabled on the Redis server using `ha_redis_username` and `ha_redis_password`.
+5. Optional: Set `ha_redis_prefix` to something unique if you plan to share the Redis server with multiple Grafana instances.
+6. Optional: Set `ha_redis_tls_enabled` to `true` and configure the corresponding `ha_redis_tls_*` fields to secure communications between Grafana and Redis with Transport Layer Security (TLS).
+7. Set `[ha_advertise_address]` to `ha_advertise_address = "${POD_IP}:9094"` This is required if the instance doesn't have an IP address that is part of RFC 6890 with a default route.
 
 For a demo, see this [example using Docker Compose](https://github.com/grafana/alerting-ha-docker-examples/tree/main/redis).
 
 ## Enable alerting high availability using Kubernetes
 
 1. You can expose the Pod IP [through an environment variable](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) via the container definition.
-
-   ```yaml
+   
+   ``` yaml
    env:
      - name: POD_IP
        valueFrom:
@@ -92,9 +95,9 @@ For a demo, see this [example using Docker Compose](https://github.com/grafana/a
            fieldPath: status.podIP
    ```
 
-1. Add the port 9094 to the Grafana deployment:
-
-   ```yaml
+2. Add the port 9094 to the Grafana deployment:
+   
+   ``` yaml
    ports:
      - name: grafana
        containerPort: 3000
@@ -107,9 +110,9 @@ For a demo, see this [example using Docker Compose](https://github.com/grafana/a
        protocol: UDP
    ```
 
-1. Add the environment variables to the Grafana deployment:
-
-   ```yaml
+3. Add the environment variables to the Grafana deployment:
+   
+   ``` yaml
    env:
      - name: POD_IP
        valueFrom:
@@ -117,9 +120,9 @@ For a demo, see this [example using Docker Compose](https://github.com/grafana/a
            fieldPath: status.podIP
    ```
 
-1. Create a headless service that returns the Pod IP instead of the service IP, which is what the `ha_peers` need:
-
-   ```yaml
+4. Create a headless service that returns the Pod IP instead of the service IP, which is what the `ha_peers` need:
+   
+   ``` yaml
    apiVersion: v1
    kind: Service
    metadata:
@@ -137,11 +140,11 @@ For a demo, see this [example using Docker Compose](https://github.com/grafana/a
        app: grafana
    ```
 
-1. Make sure your grafana deployment has the label matching the selector, e.g. `app:grafana`:
+5. Make sure your grafana deployment has the label matching the selector, e.g. `app:grafana`:
 
-1. Add in the grafana.ini:
-
-   ```bash
+6. Add in the grafana.ini:
+   
+   ``` bash
    [unified_alerting]
    enabled = true
    ha_listen_address = "${POD_IP}:9094"
@@ -167,21 +170,21 @@ You can also confirm your high availability setup by monitoring Alertmanager met
 
 | Metric                                               | Description                                                                                                                                                |
 | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| alertmanager_cluster_members                         | Number indicating current number of members in cluster.                                                                                                    |
-| alertmanager_cluster_messages_received_total         | Total number of cluster messages received.                                                                                                                 |
-| alertmanager_cluster_messages_received_size_total    | Total size of cluster messages received.                                                                                                                   |
-| alertmanager_cluster_messages_sent_total             | Total number of cluster messages sent.                                                                                                                     |
-| alertmanager_cluster_messages_sent_size_total        | Total number of cluster messages received.                                                                                                                 |
-| alertmanager_cluster_messages_publish_failures_total | Total number of messages that failed to be published.                                                                                                      |
-| alertmanager_cluster_pings_seconds                   | Histogram of latencies for ping messages.                                                                                                                  |
-| alertmanager_cluster_pings_failures_total            | Total number of failed pings.                                                                                                                              |
-| alertmanager_peer_position                           | The position an Alertmanager instance believes it holds, which defines its role in the cluster. Peers should be numbered sequentially, starting from zero. |
+| alertmanager\_cluster\_members                         | Number indicating current number of members in cluster.                                                                                                    |
+| alertmanager\_cluster\_messages\_received\_total         | Total number of cluster messages received.                                                                                                                 |
+| alertmanager\_cluster\_messages\_received\_size\_total    | Total size of cluster messages received.                                                                                                                   |
+| alertmanager\_cluster\_messages\_sent\_total             | Total number of cluster messages sent.                                                                                                                     |
+| alertmanager\_cluster\_messages\_sent\_size\_total        | Total number of cluster messages received.                                                                                                                 |
+| alertmanager\_cluster\_messages\_publish\_failures\_total | Total number of messages that failed to be published.                                                                                                      |
+| alertmanager\_cluster\_pings\_seconds                   | Histogram of latencies for ping messages.                                                                                                                  |
+| alertmanager\_cluster\_pings\_failures\_total            | Total number of failed pings.                                                                                                                              |
+| alertmanager\_peer\_position                           | The position an Alertmanager instance believes it holds, which defines its role in the cluster. Peers should be numbered sequentially, starting from zero. |
 
 You can confirm the number of Grafana instances in your alerting high availability setup by querying the `alertmanager_cluster_members` and `alertmanager_peer_position` metrics.
 
 Note that these alerting high availability metrics are exposed via the `/metrics` endpoint in Grafana, and are not automatically collected or displayed. If you have a Prometheus instance connected to Grafana, add a `scrape_config` to scrape Grafana metrics and then query these metrics in Explore.
 
-```yaml
+``` yaml
 - job_name: grafana
   honor_timestamps: true
   scrape_interval: 15s
@@ -204,4 +207,4 @@ When multiple Grafana instances are running, all alert rules are evaluated on ea
 
 Alertmanagers in HA mode communicate with each other to coordinate notification delivery. However, this setup can sometimes lead to duplicated or out-of-order notifications. By design, HA prioritizes sending duplicate notifications over the risk of missing notifications.
 
-To avoid duplicate notifications, you can configure a shared alertmanager to manage notifications for all Grafana instances. For more information, refer to [add an external alertmanager](/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-alertmanager/).
+To avoid duplicate notifications, you can configure a shared alertmanager to manage notifications for all Grafana instances. For more information, refer to [add an external alertmanager](/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/configure-alertmanager/).

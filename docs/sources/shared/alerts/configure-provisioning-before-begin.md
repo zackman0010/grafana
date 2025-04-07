@@ -1,9 +1,6 @@
----
-labels:
-  products:
-    - oss
-title: 'Provisioning'
----
+-----
+
+## labels: products: - oss title: 'Provisioning'
 
 ### Provisioning
 

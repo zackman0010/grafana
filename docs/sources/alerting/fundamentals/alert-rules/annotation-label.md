@@ -1,57 +1,60 @@
----
+-----
+
 aliases:
-  - ../../fundamentals/annotation-label/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/annotation-label/
-  - ../../fundamentals/annotation-label/labels-and-label-matchers/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/annotation-label/labels-and-label-matchers/
-  - ../../fundamentals/annotation-label/how-to-use-labels/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/annotation-label/how-to-use-labels/
-  - ../../alerting-rules/alert-annotation-label/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/alert-annotation-label/
-  - ../../unified-alerting/alerting-rules/alert-annotation-label/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/alerting-rules/alert-annotation-label/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/annotation-label/
-description: Learn how to use annotations and labels to store key information about alerts
-keywords:
-  - grafana
-  - alerting
-  - guide
-  - rules
-  - create
-labels:
+
+- ../../fundamentals/annotation-label/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/annotation-label/
+- ../../fundamentals/annotation-label/labels-and-label-matchers/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/annotation-label/labels-and-label-matchers/
+- ../../fundamentals/annotation-label/how-to-use-labels/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/annotation-label/how-to-use-labels/
+- ../../alerting-rules/alert-annotation-label/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/alert-annotation-label/
+- ../../unified-alerting/alerting-rules/alert-annotation-label/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/alerting-rules/alert-annotation-label/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/annotation-label/
+  description: Learn how to use annotations and labels to store key information about alerts
+  keywords:
+- grafana
+- alerting
+- guide
+- rules
+- create
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Labels and annotations
-weight: 105
-refs:
-  alert-instances:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals#alert-instances
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals#alert-instances
-  link-alert-rules-to-panels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/link-alert-rules-to-panels/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/link-alert-rules-to-panels/
-  templates:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/templates/
-  alert-rule-evaluation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rule-evaluation/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rule-evaluation/
-  silences:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/create-silence/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
-  notification-policies:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/notification-policies/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Labels and annotations
+    weight: 105
+    refs:
+    alert-instances:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals\#alert-instances
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals\#alert-instances
+    link-alert-rules-to-panels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/link-alert-rules-to-panels/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/link-alert-rules-to-panels/
+    templates:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/templates/
+    alert-rule-evaluation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rule-evaluation/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rule-evaluation/
+    silences:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/create-silence/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
+    notification-policies:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/notification-policies/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
+
+-----
 
 # Labels and annotations
 
@@ -68,7 +71,7 @@ Examples of labels are `server=server1` or `team=backend`. Each alert rule can h
 
 For example, an alert instance might have the label set `{alertname="High CPU usage",server="server1"}` while another alert instance might have the label set `{alertname="High CPU usage",server="server2"}`. These are two separate alert instances because although their `alertname` labels are the same, their `server` labels are different.
 
-{{< figure alt="Image shows an example of an alert instance and the labels used on the alert instance." src="/static/img/docs/alerting/unified/multi-dimensional-alert.png" >}}
+{{\< figure alt="Image shows an example of an alert instance and the labels used on the alert instance." src="/static/img/docs/alerting/unified/multi-dimensional-alert.png" \>}}
 
 Labels are a fundamental component of alerting:
 
@@ -91,7 +94,7 @@ Additionally, you can use a [template](ref:templates) to customize the label val
 
 Query labels are labels returned by the data source query.
 
-{{< figure src="/media/docs/alerting/query-labels-and-values.png" max-width="1200px" caption="An alert rule query returning labels from the query." >}}
+{{\< figure src="/media/docs/alerting/query-labels-and-values.png" max-width="1200px" caption="An alert rule query returning labels from the query." \>}}
 
 Query labels can generate multiple alert instances from the same alert rule, helping to distinguish alerts from different data. In this example, the `instance` label generates an alert instance for each server.
 
@@ -102,7 +105,7 @@ Reserved labels are automatically added by Grafana:
 - `alertname`: the name of the alert rule.
 - `grafana_folder`: the title of the folder containing the alert.
 
-Labels prefixed with `grafana_` are reserved by Grafana for special use. You can disable reserved labels via the [`unified_alerting.reserved_labels`](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana#unified_alertingreserved_labels) option.
+Labels prefixed with `grafana_` are reserved by Grafana for special use. You can disable reserved labels via the [`unified_alerting.reserved_labels`](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana#unified_alertingreserved_labels) option.
 
 {{<admonition type="note">}}
 
@@ -114,10 +117,10 @@ Ensure the label set for an alert does not have two or more labels with the same
 - If a configured label has the same name as a reserved label, it is omitted.
   {{</admonition>}}
 
-{{< collapse title="Label key format" >}}
+{{\< collapse title="Label key format" \>}}
 
 Grafana has a built-in Alertmanager that supports both Unicode label keys and values. If you are using an external Prometheus Alertmanager, label keys must be compatible with their [data model](https://prometheus.io/docs/concepts/data_model/#metric-names-and-labels).
-This means that label keys must only contain _ASCII letters_, _numbers_, and _underscores_.
+This means that label keys must only contain *ASCII letters*, *numbers*, and *underscores*.
 Label keys must also be matched by the regular expression `[a-zA-Z_][a-zA-Z0-9_]*`.
 Any invalid characters are removed or replaced by the Grafana alerting engine before being sent to the external Alertmanager according to the following rules:
 
@@ -130,7 +133,7 @@ Example: A label key/value pair `Alert! 🔔="🔥"` will become `Alert_0x1f514=
 
 If multiple label keys are sanitized to the same value, the duplicates have a short hash of the original label appended as a suffix.
 
-{{< /collapse >}}
+{{\< /collapse \>}}
 
 ## Annotations
 
@@ -147,18 +150,14 @@ Annotations are displayed in Grafana and are included by default in notification
 
 For example, you can edit the annotation `summary` to explain why the alert was triggered:
 
-```
-CPU usage has exceeded 80% for the last 5 minutes.
-```
+    CPU usage has exceeded 80% for the last 5 minutes.
 
 And edit the `description` annotation to provide more context and how to respond:
 
-```
-The web server's CPU has exceeded 80% for more than 5 minutes.
-
-This indicates that the system is under heavy load and may result in an outage.
-
-Consider scaling the server's resources and investigating bottlenecks.
-```
+    The web server's CPU has exceeded 80% for more than 5 minutes.
+    
+    This indicates that the system is under heavy load and may result in an outage.
+    
+    Consider scaling the server's resources and investigating bottlenecks.
 
 Like labels, annotations can use a [template](ref:templates) to include dynamic data from queries.

@@ -69,7 +69,7 @@ Distortions allow to replace the function that will execute inside the child rea
 Distortions also allow to intercept the exchange of objects between the child realm and the incubator realm, we can, for
 example, inspect all DOM elements access and generally speaking all objects that go to the child realm.
 
-Currently the distortions implemented are in the distortion_map folder and mostly revolve around preventing plugins from
+Currently the distortions implemented are in the distortion\_map folder and mostly revolve around preventing plugins from
 creating forbidden elements (iframes) and to fix functionality that is otherwise broken inside the child realm (e.g. Web
 workers)
 
@@ -77,7 +77,7 @@ workers)
 
 Here's an example of a distortion in an fetch call from inside a child realm upon an onClick event:
 
-```mermaid
+``` mermaid
 sequenceDiagram
     participant blue as Incubator Realm
     participant proxy as DistortionHandler

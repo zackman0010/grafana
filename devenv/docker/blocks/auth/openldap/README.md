@@ -1,12 +1,12 @@
 # OpenLDAP for MacOS Docker Block
 
-This Docker block is an updated version from [OpenLDAP](../openldap/) block. This Docker block uses `osixia/openldap` image. The original Docker block was based of `debian:jessie` which is not available for Apple's ARM chip. 
+This Docker block is an updated version from [OpenLDAP](../openldap/) block. This Docker block uses `osixia/openldap` image. The original Docker block was based of `debian:jessie` which is not available for Apple's ARM chip.
 
 ## Deployment
 
 First build and deploy the `openldap` container.
 
-```bash
+``` bash
 make devenv sources=auth/openldap
 ```
 
@@ -22,7 +22,7 @@ The `osixia/openldap` container will update the database with any `*.ldif` file 
 
 The following changes are needed at Grafana's configuration file.
 
-```ini
+``` ini
 [auth.ldap]
 enabled = true
 config_file = conf/ldap.toml
@@ -58,7 +58,8 @@ The default configuration between Grafana and the OpenLDAP container is configur
 ## Configure LDAP with TLS
 
 After the `openldap` container has been deployed, you have to copy the CA from the docker container:
-```bash
+
+``` bash
 # get the container ID
 docker ps
 
@@ -67,7 +68,7 @@ docker cp CONTAINER-ID:"/container/service/:ssl-tools/assets/default-ca/default-
 
 To configure TLS you need the following lines in the .toml file under the `[[servers]]` section:
 
-```ini
+``` ini
 tls_ciphers = ["TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"]
 min_tls_version = "TLS1.2"
 ssl_skip_verify = true
@@ -80,14 +81,19 @@ For simplicity, the same private key is shared between the server and the client
 
 - To connect over LDAPS include this config:
 
-```ini
+<!-- end list -->
+
+``` ini
 port = 636
 use_ssl = true
 start_tls = false
 ```
-- To connect with STARTTLS use this config: 
 
-```ini
+- To connect with STARTTLS use this config:
+
+<!-- end list -->
+
+``` ini
 port = 389
 use_ssl = true
 start_tls = true

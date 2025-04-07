@@ -1,28 +1,31 @@
----
+-----
+
 aliases:
-  - ../../reference/dashboard/
-  - ../json-model/
-keywords:
-  - grafana
-  - dashboard
-  - documentation
-  - json
-  - model
-labels:
+
+- ../../reference/dashboard/
+- ../json-model/
+  keywords:
+- grafana
+- dashboard
+- documentation
+- json
+- model
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: JSON model
-description: View your Grafana dashboard JSON object
-weight: 700
-refs:
-  annotations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/annotate-visualizations/
----
+  - cloud
+  - enterprise
+  - oss
+    title: JSON model
+    description: View your Grafana dashboard JSON object
+    weight: 700
+    refs:
+    annotations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/annotate-visualizations/
+
+-----
 
 # Dashboard JSON model
 
@@ -31,9 +34,9 @@ A dashboard in Grafana is represented by a JSON object, which stores metadata of
 To view the JSON of a dashboard:
 
 1. Click **Edit** in the top-right corner of the dashboard.
-1. Click **Settings**.
-1. Go to the **JSON Model** tab.
-1. When you've finished viewing the JSON, click **Back to dashboard** and **Exit edit**.
+2. Click **Settings**.
+3. Go to the **JSON Model** tab.
+4. When you've finished viewing the JSON, click **Back to dashboard** and **Exit edit**.
 
 ## JSON fields
 
@@ -43,7 +46,7 @@ When a user creates a new dashboard, a new dashboard JSON object is initialized 
 In the following JSON, id is shown as null which is the default value assigned to it until a dashboard is saved. Once a dashboard is saved, an integer value is assigned to the `id` field.
 {{% /admonition %}}
 
-```json
+``` json
 {
   "id": null,
   "uid": "cLV5GDCkz",
@@ -98,7 +101,7 @@ Each field in the dashboard JSON is explained below with its usage:
 
 Panels are the building blocks of a dashboard. It consists of data source queries, type of graphs, aliases, etc. Panel JSON consists of an array of JSON objects, each representing a different panel. Most of the fields are common for all panels but some fields depend on the panel type. Following is an example of panel JSON of a text panel.
 
-```json
+``` json
 "panels": [
   {
     "type": "text",
@@ -128,7 +131,7 @@ The grid has a negative gravity that moves panels up if there is empty space abo
 
 ### timepicker
 
-```json
+``` json
 "timepicker": {
     "collapse": false,
     "enable": true,
@@ -175,8 +178,8 @@ Usage of the fields is explained below:
 | **now**               |                                                                                                                                       |
 | **hidden**            | whether timepicker is hidden or not                                                                                                   |
 | **nowDelay**          | override the now time by entering a time delay. Use this option to accommodate known delays in data aggregation to avoid null values. |
-| **quick_ranges**      | custom quick ranges                                                                                                                   |
-| **refresh_intervals** | interval options available in the refresh picker dropdown                                                                             |
+| **quick\_ranges**      | custom quick ranges                                                                                                                   |
+| **refresh\_intervals** | interval options available in the refresh picker dropdown                                                                             |
 | **status**            |                                                                                                                                       |
 | **type**              |                                                                                                                                       |
 
@@ -184,7 +187,7 @@ Usage of the fields is explained below:
 
 The `templating` field contains an array of template variables with their saved values along with some other metadata, for example:
 
-```json
+``` json
  "templating": {
     "enable": true,
     "list": [

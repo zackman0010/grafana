@@ -1,40 +1,43 @@
----
+-----
+
 aliases:
-  - ../../data-sources/azure-monitor/template-variables/
-  - ../azuremonitor/template-variables/
-description: Using template variables with Azure Monitor in Grafana
-keywords:
-  - grafana
-  - microsoft
-  - azure
-  - monitor
-  - application
-  - insights
-  - log
-  - analytics
-  - templates
-  - variables
-  - queries
-labels:
+
+- ../../data-sources/azure-monitor/template-variables/
+- ../azuremonitor/template-variables/
+  description: Using template variables with Azure Monitor in Grafana
+  keywords:
+- grafana
+- microsoft
+- azure
+- monitor
+- application
+- insights
+- log
+- analytics
+- templates
+- variables
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Azure Monitor template variables
-weight: 400
-refs:
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Azure Monitor template variables
+    weight: 400
+    refs:
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+
+-----
 
 # Azure Monitor template variables
 
@@ -61,9 +64,9 @@ You can specify these Azure Monitor data source queries in the Variable edit vie
 | **Custom Namespaces**   | Returns metric namespaces for the specified resource.                                                                                          |
 | **Custom Metric Names** | Returns a list of custom metric names for the specified resource.                                                                              |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Custom metrics cannot be emitted against a subscription or resource group. Select resources only when you need to retrieve custom metric namespaces or custom metric names associated with a specific resource.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 You can use any Log Analytics Kusto Query Language (KQL) query that returns a single list of values in the `Query` field.
 For example:
@@ -79,7 +82,7 @@ For example:
 
 This time series query uses query variables:
 
-```kusto
+``` kusto
 Perf
 | where ObjectName == "$object" and CounterName == "$metric"
 | where TimeGenerated >= $__timeFrom() and TimeGenerated <= $__timeTo()

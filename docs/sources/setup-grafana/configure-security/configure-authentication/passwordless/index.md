@@ -1,13 +1,6 @@
----
-description: Learn how to configure passwordless authentication with magic links in Grafana
-labels:
-  products:
-    - enterprise
-    - oss
-menuTitle: Passwordless
-title: Configure passwordless authentication with magic links
-weight: 200
----
+-----
+
+## description: Learn how to configure passwordless authentication with magic links in Grafana labels: products: - enterprise - oss menuTitle: Passwordless title: Configure passwordless authentication with magic links weight: 200
 
 # Configure passwordless authentication with magic links
 
@@ -21,7 +14,7 @@ Passwordless authentication is an experimental feature. Engineering and on-call 
 
 To enable passwordless authentication, use the following configuration:
 
-```bash
+``` bash
 [auth.passwordless]
 enabled = true
 ```
@@ -30,7 +23,7 @@ enabled = true
 
 By default, the one-time password (OTP) sent to a user's email is valid for 20 minutes. Use the `code_expiration` option to change the duration that the OTP is valid.
 
-```bash
+``` bash
 [auth.passwordless]
 enabled = true
 code_expiration = 20m
@@ -42,7 +35,7 @@ The SMTP server must be enabled so that Grafana can send emails.
 The following configuration enables the SMTP server.
 For more information on configuring the SMTP server, refer to [SMTP](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#smtp).
 
-```bash
+``` bash
 [smtp]
 enabled = true
 ```

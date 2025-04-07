@@ -1,6 +1,6 @@
 # Contribute to the Grafana project
 
-We're excited that you're considering making a contribution to the Grafana project! This is the place to find guides for contributors to our open-source project.
+We're excited that you're considering making a contribution to the Grafana project\! This is the place to find guides for contributors to our open-source project.
 
 These are some good resources to explore for developers:
 

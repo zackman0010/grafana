@@ -1,22 +1,26 @@
----
+-----
+
 description: Breaking changes for Grafana v11.0
 keywords:
-  - grafana
-  - breaking changes
-  - documentation
-  - '11.0'
-  - '11.0-preview'
-  - release notes
-labels:
+
+- grafana
+- breaking changes
+- documentation
+- '11.0'
+- '11.0-preview'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Breaking changes in Grafana v11.0
-weight: -3
----
+  - cloud
+  - enterprise
+  - oss
+    title: Breaking changes in Grafana v11.0
+    weight: -3
+
+-----
 
 <!-- vale GoogleWe = NO -->
+
 <!-- vale We = NO -->
 
 # Breaking changes in Grafana v11.0
@@ -38,7 +42,7 @@ For each change, the provided information:
 - Guides you in how to mitigate for the change or migrate
 - Provides more learning resources
 
-For release highlights and deprecations, refer to our [v11.0 What’s new](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/whatsnew/whats-new-in-v11-0/). For the specific steps we recommend when you upgrade to v11.0, check out our [Upgrade guide](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/upgrade-guide/upgrade-v11.0/).
+For release highlights and deprecations, refer to our [v11.0 What’s new](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/whatsnew/whats-new-in-v11-0/). For the specific steps we recommend when you upgrade to v11.0, check out our [Upgrade guide](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/upgrade-guide/upgrade-v11.0/).
 
 <!--
 ## Feature
@@ -57,11 +61,11 @@ In Grafana v11, support for the deprecated AngularJS framework is turned off by 
 
 #### Migration/mitigation
 
-To avoid disruption, ensure all plugins are up to date and migrate from any remaining AngularJS plugins to a React-based alternative. If a plugin relies on AngularJS, a warning icon and message will be displayed in the [plugins catalog](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/plugin-management/#plugin-catalog) in Grafana and any dashboard panel where it's used. Additionally, a warning banner will appear in any impacted dashboards. A list of all impacted dashboards can also be generated using the [`detect-angular-dashboards`](https://github.com/grafana/detect-angular-dashboards) tool.
+To avoid disruption, ensure all plugins are up to date and migrate from any remaining AngularJS plugins to a React-based alternative. If a plugin relies on AngularJS, a warning icon and message will be displayed in the [plugins catalog](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/plugin-management/#plugin-catalog) in Grafana and any dashboard panel where it's used. Additionally, a warning banner will appear in any impacted dashboards. A list of all impacted dashboards can also be generated using the [`detect-angular-dashboards`](https://github.com/grafana/detect-angular-dashboards) tool.
 
-Our [documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/developers/angular_deprecation/angular-plugins/) lists all known public plugins and provides migration advice when possible.
+Our [documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/developers/angular_deprecation/angular-plugins/) lists all known public plugins and provides migration advice when possible.
 
-For self-managed users of Grafana and existing Grafana Cloud instances, you can temporarily re-enable support through the [configuration parameter](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#angular_support_enabled), `angular_support_enabled=false`. However, AngularJS-based plugins will not receive any further updates and we strongly recommend migration as soon as possible. This configuration parameter will also be removed in the next major release after Grafana v11.
+For self-managed users of Grafana and existing Grafana Cloud instances, you can temporarily re-enable support through the [configuration parameter](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#angular_support_enabled), `angular_support_enabled=false`. However, AngularJS-based plugins will not receive any further updates and we strongly recommend migration as soon as possible. This configuration parameter will also be removed in the next major release after Grafana v11.
 
 New Grafana Cloud users will be unable to request that support be added to their instance.
 
@@ -81,16 +85,16 @@ Turn off anonymous access, and consider using public dashboards to allow view-on
 
 #### Learn more
 
-[Anonymous access documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-authentication/grafana/#anonymous-authentication)
+[Anonymous access documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-authentication/grafana/#anonymous-authentication)
 
 ### Legacy alerting is entirely removed
 
-Legacy alerting has reached its end-of-life. In Grafana v11 you can no longer enable legacy alerting, and Grafana will fail to start if the settings are not updated to run the new Grafana Alerting. This also means that starting in Grafana v11, it is no longer possible to migrate from legacy alerting to our new alerting. Grafana v10.4.x is the last version that offers migration, so make sure to migrate to the new Grafana Alerting system _before_ upgrading to Grafana v11. Learn more about Grafana Alerting and the advantages of the new system in the [legacy alerting deprecation documentation](https://grafana.com/docs/grafana/v10.4/alerting/set-up/migrating-alerts/legacy-alerting-deprecation/). Learn more about migration in the [upgrade alerting documentation](https://grafana.com/docs/grafana/v10.4/alerting/set-up/migrating-alerts/).
+Legacy alerting has reached its end-of-life. In Grafana v11 you can no longer enable legacy alerting, and Grafana will fail to start if the settings are not updated to run the new Grafana Alerting. This also means that starting in Grafana v11, it is no longer possible to migrate from legacy alerting to our new alerting. Grafana v10.4.x is the last version that offers migration, so make sure to migrate to the new Grafana Alerting system *before* upgrading to Grafana v11. Learn more about Grafana Alerting and the advantages of the new system in the [legacy alerting deprecation documentation](https://grafana.com/docs/grafana/v10.4/alerting/set-up/migrating-alerts/legacy-alerting-deprecation/). Learn more about migration in the [upgrade alerting documentation](https://grafana.com/docs/grafana/v10.4/alerting/set-up/migrating-alerts/).
 
 For more details on the code removal, review the following PRs:
 
-- [https://github.com/grafana/grafana/pull/83651](https://github.com/grafana/grafana/pull/83651)
-- [https://github.com/grafana/grafana/issues/81268](https://github.com/grafana/grafana/issues/81268)
+- <https://github.com/grafana/grafana/pull/83651>
+- <https://github.com/grafana/grafana/issues/81268>
 
 ### Deprecated endpoints and fields in Reporting removed
 
@@ -104,7 +108,7 @@ Ensure deprecated endpoints are updated to new corresponding endpoints and depre
 
 #### Learn more
 
-The [Reporting API documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/developers/http_api/reporting/) lists all supported endpoints and fields.
+The [Reporting API documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/developers/http_api/reporting/) lists all supported endpoints and fields.
 
 ### Change custom branding public dashboard footer behavior
 
@@ -118,7 +122,7 @@ Ensure you have a public dashboard footer logo or footer text set if you don't w
 
 #### Learn more
 
-[Configure custom branding documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/configure-custom-branding/#custom-branding-for-shared-dashboards) for public dashboards
+[Configure custom branding documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/configure-custom-branding/#custom-branding-for-shared-dashboards) for public dashboards
 
 ### Subfolders cause very rare issues with folders that have forward slashes in their names
 
@@ -135,13 +139,13 @@ Please note that if you use file provisioning, you can upgrade and update the ro
 
 #### Learn more
 
-[Subfolders announcement](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/whatsnew/whats-new-in-v11-0/#subfolders)
+[Subfolders announcement](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/whatsnew/whats-new-in-v11-0/#subfolders)
 
 [Provisioning: Provision dashboards into subfolders PR](https://github.com/grafana/grafana/pull/79793)
 
 ### The Input data source is removed
 
-The direct input data source plugin has been removed in Grafana v11. It has been in alpha for four years and is superseded by [TestData](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/datasources/testdata/), which ships with Grafana. This is a small deprecation.
+The direct input data source plugin has been removed in Grafana v11. It has been in alpha for four years and is superseded by [TestData](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/datasources/testdata/), which ships with Grafana. This is a small deprecation.
 
 Review [this PR](https://github.com/grafana/grafana/pull/83163) for details.
 
@@ -169,7 +173,7 @@ We've added a validation between the response of the ID token HD parameter and t
 
 If you set Google OAuth configuration using `api_url,` you might be using the legacy implementation of OAuth, which doesn't have the HD parameter describing the organization from which the approved token comes. This could break your login flow.
 
-You can turn off this feature through the configuration toggle `validate_hd `. Anyone using the legacy Google OAuth configuration should turn off this validation if the ID Token response doesn't have the HD parameter.
+You can turn off this feature through the configuration toggle ` validate_hd  `. Anyone using the legacy Google OAuth configuration should turn off this validation if the ID Token response doesn't have the HD parameter.
 
 [GitHub PR](https://github.com/grafana/grafana/pull/83229)
 
@@ -179,7 +183,7 @@ You can turn off this feature through the configuration toggle `validate_hd `. A
 
 With the introduction of the Scenes library to dashboards, the URL that’s generated when viewing an individual repeated panel has changed. We’ve changed how these panels are referenced and what used to be `&viewPanel=panel-5` is now `&viewPanel=panel-3-clone1`.
 
-This means that the previous URLs won’t work anymore and instead you'll be redirected to the dashboard view and you'll get a _Panel not found_ error. From this point on, the dashboard will continue to work as expected.
+This means that the previous URLs won’t work anymore and instead you'll be redirected to the dashboard view and you'll get a *Panel not found* error. From this point on, the dashboard will continue to work as expected.
 
 #### Migration/mitigation
 

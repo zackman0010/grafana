@@ -1,42 +1,45 @@
----
+-----
+
 aliases:
-  - ../data-sources/prometheus/
-  - ../features/datasources/prometheus/
-description: Guide for configuring Prometheus in Grafana
-keywords:
-  - grafana
-  - prometheus
-  - guide
-labels:
+
+- ../data-sources/prometheus/
+- ../features/datasources/prometheus/
+  description: Guide for configuring Prometheus in Grafana
+  keywords:
+- grafana
+- prometheus
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure Prometheus
-title: Configure the Prometheus data source
-weight: 200
-refs:
-  intro-to-prometheus:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/intro-to-prometheus/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/intro-to-prometheus/
-  exemplars:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/exemplars/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/exemplars/
-  configure-data-links-value-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/#value-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/#value-variables
-  alerting-alert-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure Prometheus
+    title: Configure the Prometheus data source
+    weight: 200
+    refs:
+    intro-to-prometheus:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/intro-to-prometheus/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/intro-to-prometheus/
+    exemplars:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/exemplars/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/exemplars/
+    configure-data-links-value-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/\#value-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/\#value-variables
+    alerting-alert-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/
+
+-----
 
 # Configure Prometheus
 
@@ -48,18 +51,18 @@ Grafana ships with built-in support for Prometheus. If you are new to Prometheus
 
 ## Configure the data source
 
-{{< shared id="add-prom-data-source" >}}
+{{\< shared id="add-prom-data-source" \>}}
 
 To add the Prometheus data source, complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Under **Connections**, click **Add new connection**.
-1. Enter `Prometheus` in the search bar.
-1. Click **Prometheus data source**.
-1. Click **Add new data source** in the upper right.
-1. Enter a name for the data source.
+2. Under **Connections**, click **Add new connection**.
+3. Enter `Prometheus` in the search bar.
+4. Click **Prometheus data source**.
+5. Click **Add new data source** in the upper right.
+6. Enter a name for the data source.
 
-{{< /shared >}}
+{{\< /shared \>}}
 
 You will be taken to the **Settings** tab where you will set up your Prometheus configuration.
 
@@ -75,18 +78,18 @@ The first option to configure is the name of your connection:
 
 ### Connection section
 
-- **Prometheus server URL** - The URL of your Prometheus server. {{< shared id="prom-data-source-url" >}}
+- **Prometheus server URL** - The URL of your Prometheus server. {{\< shared id="prom-data-source-url" \>}}
   If your Prometheus server is local, use `http://localhost:9090`. If it's on a server within a network, this is the URL with the port where you are running Prometheus. Example: `http://prometheus.example.orgname:9090`.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 
 If you're running Grafana and Prometheus together in different container environments, each localhost refers to its own container - if the server URL is localhost:9090, that means port 9090 inside the Grafana container, not port 9090 on the host machine.
 
 You should use the IP address of the Prometheus container, or the hostname if you are using Docker Compose. Alternatively, you can consider `http://host.docker.internal:9090`.
 
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< /shared >}}
+{{\< /shared \>}}
 
 ### Authentication section
 
@@ -132,7 +135,7 @@ Following are additional configuration options.
 
 {{% admonition type="note" %}}
 
-The **Manage alerts via Alerting UI** toggle is enabled by default. You can change this behavior by setting the [default_manage_alerts_ui_toggle](../../../setup-grafana/configure-grafana/#default_manage_alerts_ui_toggle) option in the Grafana configuration file.
+The **Manage alerts via Alerting UI** toggle is enabled by default. You can change this behavior by setting the [default\_manage\_alerts\_ui\_toggle](../../../setup-grafana/configure-grafana/#default_manage_alerts_ui_toggle) option in the Grafana configuration file.
 
 {{% /admonition %}}
 
@@ -160,7 +163,7 @@ The **Manage alerts via Alerting UI** toggle is enabled by default. You can chan
 
 ### Other
 
-- **Custom query parameters** - Add custom parameters to the Prometheus query URL. For example `timeout`, `partial_response`, `dedup`, or `max_source_resolution`. Multiple parameters should be concatenated together with an '&amp;'.
+- **Custom query parameters** - Add custom parameters to the Prometheus query URL. For example `timeout`, `partial_response`, `dedup`, or `max_source_resolution`. Multiple parameters should be concatenated together with an '&'.
 
 - **HTTP method** - Use either `POST` or `GET` HTTP method to query your data source. `POST` is the recommended and pre-selected method as it allows bigger queries. Change to `GET` if you have a Prometheus version older than 2.1 or if `POST` requests are restricted in your network.
 
@@ -170,9 +173,9 @@ Support for exemplars is available only for the Prometheus data source. If this 
 
 - **Internal link** - Toggle on to enable an internal link. When enabled, reveals the data source selector. Select the backend tracing data store for your exemplar data.
 
-- **URL** - _(Visible if you **disable** `Internal link`)_ Defines the external link's URL trace backend. You can interpolate the value from the field by using the [`${__value.raw}` macro](ref:configure-data-links-value-variables).
+- **URL** - *(Visible if you **disable** `Internal link`)* Defines the external link's URL trace backend. You can interpolate the value from the field by using the [`${__value.raw}` macro](ref:configure-data-links-value-variables).
 
-- **Data source** - _(Visible if you **enable** `Internal link`)_ The data source the exemplar will navigate to.
+- **Data source** - *(Visible if you **enable** `Internal link`)* The data source the exemplar will navigate to.
 
 - **URL label** - Adds a custom display label to override the value of the `Label name` field.
 
@@ -190,7 +193,7 @@ Refer to the following troubleshooting information, as required.
 
 If metric data doesn't appear in Explore after you've successfully tested a connection to a Prometheus data source or sent
 metrics to Grafana Cloud, ensure that you've selected the correct data source in the **Data source** drop-down menu. If
-you've used remote_write to send metrics to Grafana Cloud, the data source name follows the convention
+you've used remote\_write to send metrics to Grafana Cloud, the data source name follows the convention
 `grafanacloud-stackname-prom`.
 
 <!-- vale Grafana.Spelling = YES -->

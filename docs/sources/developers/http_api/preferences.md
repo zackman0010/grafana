@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/preferences/
-canonical: /docs/grafana/latest/developers/http_api/preferences/
-description: Grafana HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - preferences
-labels:
+
+- ../../http\_api/preferences/
+  canonical: /docs/grafana/latest/developers/http\_api/preferences/
+  description: Grafana HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- preferences
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Preferences API'
----
+  - enterprise
+  - oss
+    title: 'Preferences API'
+
+-----
 
 # User and Org Preferences API
 
@@ -33,7 +36,7 @@ system default value.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/user/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -42,7 +45,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -67,7 +70,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/user/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -82,7 +85,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 
@@ -97,7 +100,7 @@ Update one or more preferences without modifying the others.
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/user/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -110,7 +113,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 
@@ -123,7 +126,7 @@ Content-Type: text/plain; charset=utf-8
 
 **Example Request**:
 
-```http
+``` http
 GET /api/org/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -132,7 +135,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -156,7 +159,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/org/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -171,7 +174,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 
@@ -186,7 +189,7 @@ Update one or more preferences without modifying the others.
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/org/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -199,7 +202,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 

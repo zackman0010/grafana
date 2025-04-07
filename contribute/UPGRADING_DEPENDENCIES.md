@@ -33,11 +33,11 @@ If you are touching the workspace, you may also want to run `make update-workspa
 You have to commit the changes to `go.mod`, `go.sum`, and `go.work.sum` before you submit the pull request, otherwise CI jobs may fail.
 Submodules have similar files, and may also need to be committed.
 
-To understand what the actual dependencies of `grafana-server` are, you can run it with the `-vv` flag. Note that this command might produce an output different from `go.mod` contents, and `-vv` option is the source of truth here. The output lists the modules _compiled_ into the executable, whereas `go.mod` lists also test and weak transitive dependencies (that is, modules, used in some packages, which aren't in use by itself). If you're interested in reporting a vulnerability in a dependency module, consult the `-vv` output, maybe the "dependency" isn't actually a dependency as such.
+To understand what the actual dependencies of `grafana-server` are, you can run it with the `-vv` flag. Note that this command might produce an output different from `go.mod` contents, and `-vv` option is the source of truth here. The output lists the modules *compiled* into the executable, whereas `go.mod` lists also test and weak transitive dependencies (that is, modules, used in some packages, which aren't in use by itself). If you're interested in reporting a vulnerability in a dependency module, consult the `-vv` output, maybe the "dependency" isn't actually a dependency as such.
 
 ### Upgrading dependencies
 
-If you need to upgrade a direct or indirect dependency, you can do it like so, where _`MODULE`_ is the dependency in question: `go get -u <MODULE>`. The corresponding entry in `go.mod` should then have the version you specified. If it's an indirect dependency, the entry should have the `// indirect` comment.
+If you need to upgrade a direct or indirect dependency, you can do it like so, where *`MODULE`* is the dependency in question: `go get -u <MODULE>`. The corresponding entry in `go.mod` should then have the version you specified. If it's an indirect dependency, the entry should have the `// indirect` comment.
 
 To do so, execute `go mod tidy` to ensure that `go.mod` and `go.sum` are updated. If the indirect dependency turns out to not be used (transitively) by any of our packages, `go mod tidy` actually strips it from `go.mod`. In that case, you can just ignore it because ultimately it isn't used.
 

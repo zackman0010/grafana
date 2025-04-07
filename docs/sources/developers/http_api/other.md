@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/other/
-canonical: /docs/grafana/latest/developers/http_api/other/
-description: Grafana Other HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - other
-labels:
+
+- ../../http\_api/other/
+  canonical: /docs/grafana/latest/developers/http\_api/other/
+  description: Grafana Other HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- other
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Other HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Other HTTP API '
+
+-----
 
 # Frontend Settings API
 
@@ -24,7 +27,7 @@ title: 'Other HTTP API '
 
 **Example Request**:
 
-```http
+``` http
 GET /api/frontend/settings HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -33,7 +36,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -74,7 +77,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 GET /api/login/ping HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -83,7 +86,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -98,14 +101,14 @@ Content-Type: application/json
 
 **Example Request**
 
-```http
+``` http
 GET /api/health
 Accept: application/json
 ```
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 
 {

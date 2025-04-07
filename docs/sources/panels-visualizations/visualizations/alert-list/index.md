@@ -1,40 +1,43 @@
----
+-----
+
 aliases:
-  - ../../features/panels/alertlist/
-  - ../../panels/visualizations/alert-list-panel/
-  - ../../reference/alertlist/
-  - ../../visualizations/alert-list-panel/
-keywords:
-  - grafana
-  - alert list
-  - documentation
-  - panel
-  - alertlist
-labels:
+
+- ../../features/panels/alertlist/
+- ../../panels/visualizations/alert-list-panel/
+- ../../reference/alertlist/
+- ../../visualizations/alert-list-panel/
+  keywords:
+- grafana
+- alert list
+- documentation
+- panel
+- alertlist
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Alert list
-description: Configure options for Grafana's alert list visualization
-weight: 100
-refs:
-  grafana-alerting-overview:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/
-  create-dashboard:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
-  alert-label:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Alert list
+    description: Configure options for Grafana's alert list visualization
+    weight: 100
+    refs:
+    grafana-alerting-overview:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/
+    create-dashboard:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
+    alert-label:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
+
+-----
 
 # Alert list
 
@@ -44,21 +47,21 @@ Alert lists allow you to display a list of important alerts that you want to tra
 
 On each dashboard load, this visualization queries the alert list, always providing the most up-to-date results.
 
-{{< docs/play title="Alert List" url="https://play.grafana.org/d/bdodlcyou483ke/" >}}
+{{\< docs/play title="Alert List" url="https://play.grafana.org/d/bdodlcyou483ke/" \>}}
 
 ## Configure an alert list
 
 Once you’ve [created a dashboard](ref:create-dashboard), the following video shows you how to configure an alert list visualization:
 
-{{< youtube id="o4rK7_AXZ9Y" >}}
+{{\< youtube id="o4rK7\_AXZ9Y" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Options
 
@@ -85,7 +88,7 @@ Select how to order the alerts displayed. Choose from:
 - **Importance** - By importance according to the following values, with 1 being the highest:
   - alerting: 1
   - firing: 1
-  - no_data: 2
+  - no\_data: 2
   - pending: 3
   - ok: 4
   - paused: 5

@@ -1,17 +1,16 @@
 # Query service
 
-This query service aims to replace the existing /api/ds/query.  
+This query service aims to replace the existing /api/ds/query.
 
 The key differences are:
+
 1. This service has a stronger type system (not simplejson)
 2. Same workflow regardless if expressions exist
 3. Datasource settings+access is managed in each datasource, not at the beginning
 
-
-
 ### Current /api/ds/query workflow
 
-```mermaid
+``` mermaid
 sequenceDiagram
     autonumber
     actor User as User or Process
@@ -48,11 +47,9 @@ sequenceDiagram
     api->>User: return results
 ```
 
-
-
 ### /apis/query.grafana.app (in single tenant grafana)
 
-```mermaid
+``` mermaid
 sequenceDiagram
     autonumber
     actor User as User or Process
@@ -75,4 +72,3 @@ sequenceDiagram
     api->>api: Verify ResultExpectations
     api->>User: return results
 ```
-

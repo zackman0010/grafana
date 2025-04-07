@@ -1,11 +1,6 @@
----
-headless: true
-labels:
-  products:
-    - enterprise
-    - oss
-title: Back up Grafana
----
+-----
+
+## headless: true labels: products: - enterprise - oss title: Back up Grafana
 
 # Back up Grafana
 
@@ -20,7 +15,7 @@ The Grafana configuration files are located in the following directories:
 - Default configuration: `$WORKING_DIR/defaults.ini` (Don't change this file)
 - Custom configuration: `$WORKING_DIR/custom.ini`
 
-For more information on where to find configuration files, refer to [Configuration file location](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#configuration-file-location).
+For more information on where to find configuration files, refer to [Configuration file location](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#configuration-file-location).
 
 {{% admonition type="note" %}}
 If you installed Grafana using the `deb` or `rpm` packages, then your configuration file is located at
@@ -58,7 +53,7 @@ The SQLite database file is located in one of the following directories:
 
 To back up or restore a MySQL Grafana database, run the following commands:
 
-```bash
+``` bash
 backup:
 > mysqldump -u root -p[root_password] [grafana] > grafana_backup.sql
 
@@ -70,7 +65,7 @@ restore:
 
 To back up or restore a Postgres Grafana database, run the following commands:
 
-```bash
+``` bash
 backup:
 > pg_dump grafana > grafana_backup
 

@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../http_api/team/
-canonical: /docs/grafana/latest/developers/http_api/team/
-description: Grafana Team HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - team
-  - teams
-  - group
-labels:
+
+- ../../http\_api/team/
+  canonical: /docs/grafana/latest/developers/http\_api/team/
+  description: Grafana Team HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- team
+- teams
+- group
+  labels:
   products:
-    - enterprise
-    - oss
-title: Team HTTP API
----
+  - enterprise
+  - oss
+    title: Team HTTP API
+
+-----
 
 # Team API
 
@@ -47,7 +50,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/teams/search?perpage=10&page=1&query=mytestteam HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -56,7 +59,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -85,7 +88,7 @@ The `totalCount` field in the response can be used for pagination of the teams l
 
 The `query` parameter is optional and it will return results where the query value is contained in the `name` field. Query values with spaces need to be URL encoded e.g. `query=my%20team`.
 
-The `sort` param is an optional comma separated list of options to order the search result. Accepted values for the sort filter are: ` name-asc`, `name-desc`, `email-asc`, `email-desc`, `memberCount-asc`, `memberCount-desc`. By default, if `sort` is not specified, the teams list will be ordered by `name` in ascending order.
+The `sort` param is an optional comma separated list of options to order the search result. Accepted values for the sort filter are: `  name-asc `, `name-desc`, `email-asc`, `email-desc`, `memberCount-asc`, `memberCount-desc`. By default, if `sort` is not specified, the teams list will be ordered by `name` in ascending order.
 
 ### Using the name parameter
 
@@ -113,7 +116,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/teams/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -122,7 +125,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -159,7 +162,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/teams HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -173,7 +176,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -203,7 +206,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/teams/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -217,7 +220,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -246,7 +249,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/teams/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -255,7 +258,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -283,7 +286,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/teams/1/members HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -292,7 +295,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -336,7 +339,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/teams/1/members HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -349,7 +352,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -378,7 +381,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/teams/2/members/3 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -387,7 +390,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -406,7 +409,7 @@ Status Codes:
 Allows bulk updating team members and administrators using user emails.
 Will override all current members and administrators for the specified team.
 
-`PUT /api/teams/:teamId/members
+\`PUT /api/teams/:teamId/members
 
 **Required permissions**
 
@@ -418,7 +421,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/teams/1/members HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -432,7 +435,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -461,7 +464,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/teams/2/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -470,7 +473,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -495,7 +498,7 @@ See note in the [introduction](#team-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/teams/2/preferences HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -518,7 +521,7 @@ Omitting a key will cause the current value to be replaced with the system defau
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: text/plain; charset=utf-8
 

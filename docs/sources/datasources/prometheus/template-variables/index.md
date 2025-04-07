@@ -1,43 +1,46 @@
----
+-----
+
 aliases:
-  - ../../data-sources/prometheus/template-variables/
-description: Using template variables with Prometheus in Grafana
-keywords:
-  - grafana
-  - prometheus
-  - templates
-  - variables
-  - queries
-labels:
+
+- ../../data-sources/prometheus/template-variables/
+  description: Using template variables with Prometheus in Grafana
+  keywords:
+- grafana
+- prometheus
+- templates
+- variables
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Prometheus template variables
-weight: 400
-refs:
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  add-template-variables-add-ad-hoc-filters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-  add-template-variables-global-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#global-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#global-variables
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Prometheus template variables
+    weight: 400
+    refs:
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    add-template-variables-add-ad-hoc-filters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+    add-template-variables-global-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#global-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#global-variables
+
+-----
 
 # Prometheus template variables
 
@@ -61,7 +64,7 @@ Select a Prometheus data source query type and enter the required inputs:
 | `Series query`  | `metric`, `label` or both | Returns a list of time series associated with the entered data.                                                                                               | /api/v1/series                                 |
 | `Classic query` | classic query string      | Deprecated, classic version of variable query editor. Enter a string with the query type using a syntax like the following: `label_values(<metric>, <label>)` | all                                            |
 
-For details on _metric names_, _label names_, and _label values_, refer to the [Prometheus documentation](http://prometheus.io/docs/concepts/data_model/#metric-names-and-labels).
+For details on *metric names*, *label names*, and *label values*, refer to the [Prometheus documentation](http://prometheus.io/docs/concepts/data_model/#metric-names-and-labels).
 
 ### Query options
 
@@ -95,17 +98,13 @@ Make sure to set the variable's `refresh` trigger to be `On Time Range Change` t
 
 Populate a variable with the busiest 5 request instances based on average QPS over the time range shown in the dashboard:
 
-```
-Query: query_result(topk(5, sum(rate(http_requests_total[$__range])) by (instance)))
-Regex: /"([^"]+)"/
-```
+    Query: query_result(topk(5, sum(rate(http_requests_total[$__range])) by (instance)))
+    Regex: /"([^"]+)"/
 
 Populate a variable with the instances having a certain state over the time range shown in the dashboard, using `$__range_s`:
 
-```
-Query: query_result(max_over_time(<metric>[${__range_s}s]) != <state>)
-Regex:
-```
+    Query: query_result(max_over_time(<metric>[${__range_s}s]) != <state>)
+    Regex:
 
 ## Use `$__rate_interval`
 
@@ -114,28 +113,22 @@ Because `$__rate_interval` is always at least four times the value of the Scrape
 
 For example, instead of using:
 
-```
-rate(http_requests_total[5m])
-```
+    rate(http_requests_total[5m])
 
 or:
 
-```
-rate(http_requests_total[$__interval])
-```
+    rate(http_requests_total[$__interval])
 
 We recommend that you use:
 
-```
-rate(http_requests_total[$__rate_interval])
-```
+    rate(http_requests_total[$__rate_interval])
 
 The value of `$__rate_interval` is defined as
 *max(`$__interval` + *Scrape interval*, 4 \* *Scrape interval*)*,
-where _Scrape interval_ is the "Min step" setting (also known as `query*interval`, a setting per PromQL query) if any is set.
+where *Scrape interval* is the "Min step" setting (also known as `query*interval`, a setting per PromQL query) if any is set.
 Otherwise, Grafana uses the Prometheus data source's "Scrape interval" setting.
 
-The "Min interval" setting in the panel is modified by the resolution setting, and therefore doesn't have any effect on _Scrape interval_.
+The "Min interval" setting in the panel is modified by the resolution setting, and therefore doesn't have any effect on *Scrape interval*.
 
 For details, refer to the [Grafana blog](/blog/2020/09/28/new-in-grafana-7.2-__rate_interval-for-prometheus-rate-queries-that-just-work/).
 
@@ -146,7 +139,7 @@ The Prometheus data source supports two variable syntaxes for use in the **Query
 - `$<varname>`, for example `rate(http_requests_total{job=~"$job"}[$_rate_interval])`, which is easier to read and write but does not allow you to use a variable in the middle of a word.
 - `[[varname]]`, for example `rate(http_requests_total{job=~"[[job]]"}[$_rate_interval])`
 
-If you've enabled the _Multi-value_ or _Include all value_ options, Grafana converts the labels from plain text to a regex-compatible string, which requires you to use `=~` instead of `=`.
+If you've enabled the *Multi-value* or *Include all value* options, Grafana converts the labels from plain text to a regex-compatible string, which requires you to use `=~` instead of `=`.
 
 ## Use the ad hoc filters variable type
 

@@ -137,36 +137,34 @@ type DeleteLetterCommand struct {
 
 `pkg/services/alphabetical/alphabeticalimpl`
 
-```
-package alphabeticalimpl
-
-// this name can be whatever, it's not supposed to be used from outside
-// the service except for in Wire.
-type Svc struct { … }
-
-func ProviceSvc(numbers numerical.Numerical, db db.DB) Svc { … }
-
-func (s *Svc) GetLetter(ctx context.Context, q root.GetLetterQuery) (root.Letter, error) { … }
-func (s *Svc) ListCachedLetters(ctx context.Context, q root.ListCachedLettersQuery) root.Letters { … }
-func (s *Svc) DeleteLetter(ctx context.Context, q root.DeleteLetterCommand) error { … }
-
-type letterStore interface {
-  Get(ctx.Context, id int) (root.Letter, error)
-  Delete(ctx.Context, root.DeleteLetterCommand) error
-}
-
-type sqlLetterStore struct {
-  db.DB
-}
-
-func (s *sqlStore) Get(ctx.Context, id int) (root.Letter, error) { … }
-func (s *sqlStore) Delete(ctx.Context, root.DeleteLetterCommand) error { … }
-```
+    package alphabeticalimpl
+    
+    // this name can be whatever, it's not supposed to be used from outside
+    // the service except for in Wire.
+    type Svc struct { … }
+    
+    func ProviceSvc(numbers numerical.Numerical, db db.DB) Svc { … }
+    
+    func (s *Svc) GetLetter(ctx context.Context, q root.GetLetterQuery) (root.Letter, error) { … }
+    func (s *Svc) ListCachedLetters(ctx context.Context, q root.ListCachedLettersQuery) root.Letters { … }
+    func (s *Svc) DeleteLetter(ctx context.Context, q root.DeleteLetterCommand) error { … }
+    
+    type letterStore interface {
+      Get(ctx.Context, id int) (root.Letter, error)
+      Delete(ctx.Context, root.DeleteLetterCommand) error
+    }
+    
+    type sqlLetterStore struct {
+      db.DB
+    }
+    
+    func (s *sqlStore) Get(ctx.Context, id int) (root.Letter, error) { … }
+    func (s *sqlStore) Delete(ctx.Context, root.DeleteLetterCommand) error { … }
 
 ## Legacy package hierarchy
 
 > **Note:** Many services still adhere to the legacy model as outlined below. While it is okay to
-> extend existing services based on the legacy model, you are _strongly_ encouraged to structure any
+> extend existing services based on the legacy model, you are *strongly* encouraged to structure any
 > new services or major refactorings using the new package layout.
 
 Grafana has long used a package-by-layer layout where domain types
@@ -176,27 +174,27 @@ and so forth.
 This is an example of how the tea pot service could be structured
 throughout the codebase in the legacy model:
 
-- _pkg/_
-  - _api/_
-    - _api.go_ contains the endpoints for the
-    - _tea_pot.go_ contains methods on the _pkg/api.HTTPServer_ type
+- *pkg/*
+  - *api/*
+    - *api.go* contains the endpoints for the
+    - *tea\_pot.go* contains methods on the *pkg/api.HTTPServer* type
       that interacts with the service based on queries coming in via the HTTP
       API.
-    - _dtos/tea_pot.go_ extends the _pkg/models_ file with types
+    - *dtos/tea\_pot.go* extends the *pkg/models* file with types
       that are meant for translation to and from the API. It's not as commonly
-      present as _pkg/models_.
-  - _models/tea_pot.go_ contains the models for the service, this
-    includes the _command_ and _query_ structs that are used when calling
+      present as *pkg/models*.
+  - *models/tea\_pot.go* contains the models for the service, this
+    includes the *command* and *query* structs that are used when calling
     the service or SQL store methods related to the service and also any
     models representing an abstraction provided by the service.
-  - _services/_
-    - _sqlstore_
-      - _tea_pot.go_ contains SQL queries for
+  - *services/*
+    - *sqlstore*
+      - *tea\_pot.go* contains SQL queries for
         interacting with stored objects related to the tea pot service.
-      - _migrations/tea_pot.go_ contains the migrations necessary to
+      - *migrations/tea\_pot.go* contains the migrations necessary to
         build the
-    - _teapot/\*_ contains functions or a service for doing
-      logical operations beyond those done in _pkg/api_ or _pkg/services/sqlstore_
+    - *teapot/\** contains functions or a service for doing
+      logical operations beyond those done in *pkg/api* or *pkg/services/sqlstore*
       for the service.
 
 The implementation of legacy services varies widely from service to

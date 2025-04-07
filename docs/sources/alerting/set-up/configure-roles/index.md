@@ -1,24 +1,27 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-roles/
 description: Configure roles and permissions for Grafana Alerting
 keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - roles and permissions
-labels:
+
+- grafana
+- alerting
+- set up
+- configure
+- roles and permissions
+  labels:
   products:
-    - oss
-title: Configure roles and permissions
-weight: 150
----
+  - oss
+    title: Configure roles and permissions
+    weight: 150
+
+-----
 
 # Configure roles and permissions
 
 A user is any individual who can log in to Grafana. Each user is associated with a role that includes permissions. Permissions determine the tasks a user can perform in the system. For example, the Admin role includes permissions for an administrator to create and delete users.
 
-For more information, refer to [Organization roles](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#organization-roles).
+For more information, refer to [Organization roles](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#organization-roles).
 
 ## Manage access using roles
 
@@ -36,9 +39,9 @@ Details of the roles and the access they provide for Grafana Alerting are below.
 
 To assign roles, admins need to complete the following steps.
 
-1. Navigate to **Administration** > **Users and access** > **Users, Teams, or Service Accounts**.
-1. Search for the user, team or service account you want to add a role for.
-1. Add the role you want to assign.
+1. Navigate to **Administration** \> **Users and access** \> **Users, Teams, or Service Accounts**.
+2. Search for the user, team or service account you want to add a role for.
+3. Add the role you want to assign.
 
 ## Manage access using folder permissions
 
@@ -51,19 +54,19 @@ Refer to the following table for details on the additional access provided by fo
 | Folder permission | Additional Access                                                                                       |
 | ----------------- | ------------------------------------------------------------------------------------------------------- |
 | View              | No additional access: all permissions already contained in Viewer role.                                 |
-| Edit              | Write access to alert rules and their rule-specific silences _only_ in the given folder and subfolders. |
+| Edit              | Write access to alert rules and their rule-specific silences *only* in the given folder and subfolders. |
 | Admin             | Same additional access as Edit.                                                                         |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 You can't use folders to customize access to notification resources.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 To manage folder permissions, complete the following steps.
 
 1. In the left-side menu, click **Dashboards**.
-1. Hover your mouse cursor over a folder and click **Go to folder**.
-1. Click **Manage permissions** from the Folder actions menu.
-1. Update or add permissions as required.
+2. Hover your mouse cursor over a folder and click **Go to folder**.
+3. Click **Manage permissions** from the Folder actions menu.
+4. Update or add permissions as required.
 
 ## Manage access using contact point permissions
 
@@ -88,6 +91,6 @@ Refer to the following table for details on the additional access provided by co
 To contact point permissions, complete the following steps.
 
 1. In the left-side menu, click **Contact points**.
-1. Hover your mouse cursor over a contact point and click **More**.
-1. Click **Manage permissions** from the actions menu.
-1. Update or add permissions as required.
+2. Hover your mouse cursor over a contact point and click **More**.
+3. Click **Manage permissions** from the actions menu.
+4. Update or add permissions as required.

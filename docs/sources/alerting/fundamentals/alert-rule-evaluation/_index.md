@@ -1,26 +1,29 @@
----
+-----
+
 aliases:
-  - ../fundamentals/alert-rules/rule-evaluation/ # /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/rule-evaluation/
-canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/
-description: Use alert rule evaluation to determine how frequently an alert rule should be evaluated and how quickly it should change its state
-keywords:
-  - grafana
-  - alerting
-  - evaluation
-labels:
+
+- ../fundamentals/alert-rules/rule-evaluation/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/rule-evaluation/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/
+  description: Use alert rule evaluation to determine how frequently an alert rule should be evaluated and how quickly it should change its state
+  keywords:
+- grafana
+- alerting
+- evaluation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Alert rule evaluation
-weight: 108
-refs:
-  alerts-state-health:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rule-evaluation/state-and-health/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rule-evaluation/state-and-health/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Alert rule evaluation
+    weight: 108
+    refs:
+    alerts-state-health:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rule-evaluation/state-and-health/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rule-evaluation/state-and-health/
+
+-----
 
 # Alert rule evaluation
 
@@ -29,7 +32,7 @@ The criteria determining when an alert rule fires are based on two settings:
 - [Evaluation group](#evaluation-group): how frequently the alert rule is evaluated.
 - [Pending period](#pending-period): how long the condition must be met to start firing.
 
-{{< figure src="/media/docs/alerting/alert-rule-evaluation.png" max-width="750px" alt="Set the evaluation behavior of the alert rule in Grafana." caption="Set alert rule evaluation" >}}
+{{\< figure src="/media/docs/alerting/alert-rule-evaluation.png" max-width="750px" alt="Set the evaluation behavior of the alert rule in Grafana." caption="Set alert rule evaluation" \>}}
 
 ## Evaluation group
 
@@ -61,7 +64,7 @@ Keep in mind:
 - Alert instances from the same alert rule may be in different states. For instance, only one observed machine might start firing.
 - Only **Alerting** and **Resolved** alert instances are routed to manage their notifications.
 
-{{< figure src="/media/docs/alerting/alert-rule-evaluation-overview-statediagram-v2.png" alt="A diagram of the alert instance states and when to route their notifications."  max-width="750px" >}}
+{{\< figure src="/media/docs/alerting/alert-rule-evaluation-overview-statediagram-v2.png" alt="A diagram of the alert instance states and when to route their notifications."  max-width="750px" \>}}
 
 <!--
 Remove ///

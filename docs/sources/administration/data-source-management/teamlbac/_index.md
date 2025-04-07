@@ -1,17 +1,20 @@
----
+-----
+
 description: Label based data access for Teams
 keywords:
-  - grafana
-  - loki
-  - mimir
-  - lbac
-labels:
+
+- grafana
+- loki
+- mimir
+- lbac
+  labels:
   products:
-    - enterprise
-    - cloud
-title: Label Based Access Control (LBAC) for data sources
-weight: 100
----
+  - enterprise
+  - cloud
+    title: Label Based Access Control (LBAC) for data sources
+    weight: 100
+
+-----
 
 # Label Based Access Control (LBAC) for data sources
 
@@ -46,11 +49,11 @@ This feature addresses two common challenges faced by Grafana users:
 
 1. Having a high number of Grafana Cloud data sources.
    LBAC for data sources lets Grafana administrators reduce the total number of data sources per instance from hundreds, to one.
-1. Using the same dashboard across multiple teams.
+2. Using the same dashboard across multiple teams.
    LBAC for data sources lets Grafana Teams use the same dashboard with different access control rules.
 
-To set up LBAC for data sources for a Loki data source, refer to [Configure LBAC for Loki Data Source](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/teamlbac/configure-teamlbac-for-loki/).
-To set up LBAC for data sources for a Prometheus data source, refer to [Configure LBAC for Prometheus Data Source](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/teamlbac/configure-teamlbac-for-prometheus/).
+To set up LBAC for data sources for a Loki data source, refer to [Configure LBAC for Loki Data Source](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/data-source-management/teamlbac/configure-teamlbac-for-loki/).
+To set up LBAC for data sources for a Prometheus data source, refer to [Configure LBAC for Prometheus Data Source](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/data-source-management/teamlbac/configure-teamlbac-for-prometheus/).
 
 ## Logs and Metrics Filtering with LBAC
 
@@ -99,7 +102,7 @@ Query results include lines that match any of the rules.
 
 Only users with data source `Admin` permissions can edit LBAC for data sources rules in the **Data source permissions** tab because changing LBAC rules requires the same access level as editing data source permissions.
 
-To set up LBAC for data sources for a data source, refer to [Configure LBAC for data sources](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/teamlbac/configure-teamlbac-for-loki/).
+To set up LBAC for data sources for a data source, refer to [Configure LBAC for data sources](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/data-source-management/teamlbac/configure-teamlbac-for-loki/).
 
 ## Provisioning of LBAC rules
 

@@ -15,7 +15,7 @@ Included services
 
 Build a Grafana docker container from current branch and commit and tag it as grafana/grafana:dev.
 
-```bash
+``` bash
 $ cd <grafana repo>
 $ make build-docker-full
 ```
@@ -24,7 +24,7 @@ $ make build-docker-full
 
 #### Alternative 1 - Use dnsmasq
 
-```bash
+``` bash
 $ sudo apt-get install dnsmasq
 $ echo 'address=/loc/127.0.0.1' | sudo tee /etc/dnsmasq.d/dnsmasq-loc.conf > /dev/null
 $ sudo /etc/init.d/dnsmasq restart
@@ -39,7 +39,7 @@ PING whatever.loc (127.0.0.1) 56(84) bytes of data.
 
 Update your `/etc/hosts` to be able to access Grafana and/or Prometheus UI using a hostname.
 
-```bash
+``` bash
 $ cat /etc/hosts
 127.0.0.1       grafana.loc
 127.0.0.1       prometheus.loc
@@ -47,20 +47,25 @@ $ cat /etc/hosts
 
 ## Start services
 
-```bash
+``` bash
 $ docker-compose up -d
 ```
 
 Browse
+
 - http://grafana.loc/
 - http://prometheus.loc/
-
 
 ## Test alerting
 
 ### Create contact points
+
 TBD
+
 ### Create alerts
+
 TBD
+
 ### Create silences
+
 TBD

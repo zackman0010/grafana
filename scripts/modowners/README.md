@@ -34,22 +34,20 @@ Example CLI command to get a list of all owners with a count of the number of de
 
 Example output:
 
-```
-@grafana/grafana-release-guild 5
-@grafana/grafana-bi-squad 2
-@grafana/grafana-app-platform-squad 13
-@grafana/observability-metrics 4
-@grafana/observability-traces-and-profiling 6
-@grafana/aws-datasources 2
-@grafana/alerting-squad-backend 22
-@grafana/plugins-platform-backend 7
-@grafana/grafana-operator-experience-squad 3
-@grafana/dataviz-squad 1
-@grafana/grafana-backend-group 75
-@grafana/grafana-as-code 11
-@grafana/identity-access-team 6
-@grafana/partner-datasources 4
-```
+    @grafana/grafana-release-guild 5
+    @grafana/grafana-bi-squad 2
+    @grafana/grafana-app-platform-squad 13
+    @grafana/observability-metrics 4
+    @grafana/observability-traces-and-profiling 6
+    @grafana/aws-datasources 2
+    @grafana/alerting-squad-backend 22
+    @grafana/plugins-platform-backend 7
+    @grafana/grafana-operator-experience-squad 3
+    @grafana/dataviz-squad 1
+    @grafana/grafana-backend-group 75
+    @grafana/grafana-as-code 11
+    @grafana/identity-access-team 6
+    @grafana/partner-datasources 4
 
 Example CLI command to get the owner for a specific dependency (you must use `dependency@version`, not `dependency version`):
 
@@ -57,9 +55,7 @@ Example CLI command to get the owner for a specific dependency (you must use `de
 
 Example output:
 
-```
-@grafana/grafana-backend-group
-```
+    @grafana/grafana-backend-group
 
 ### `module`
 
@@ -71,18 +67,16 @@ Example CLI command to list all direct dependencies owned by Delivery and Authnz
 
 Example output:
 
-```
-github.com/BurntSushi/toml@v1.2.1
-github.com/go-ldap/ldap/v3@v3.4.4
-github.com/magefile/mage@v1.14.0
-golang.org/x/oauth2@v0.8.0
-github.com/drone/drone-cli@v1.6.1
-github.com/google/go-github/v45@v45.2.0
-github.com/Masterminds/semver/v3@v3.1.1
-gopkg.in/square/go-jose.v2@v2.6.0
-filippo.io/age@v1.1.1
-github.com/docker/docker@v23.0.4+incompatible
-```
+    github.com/BurntSushi/toml@v1.2.1
+    github.com/go-ldap/ldap/v3@v3.4.4
+    github.com/magefile/mage@v1.14.0
+    golang.org/x/oauth2@v0.8.0
+    github.com/drone/drone-cli@v1.6.1
+    github.com/google/go-github/v45@v45.2.0
+    github.com/Masterminds/semver/v3@v3.1.1
+    gopkg.in/square/go-jose.v2@v2.6.0
+    filippo.io/age@v1.1.1
+    github.com/docker/docker@v23.0.4+incompatible
 
 ## Action items
 

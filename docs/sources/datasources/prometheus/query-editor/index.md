@@ -1,47 +1,50 @@
----
+-----
+
 aliases:
-  - ../../data-sources/prometheus/query-editor/
-description: Guide for using the Prometheus data source's query editor
-keywords:
-  - grafana
-  - prometheus
-  - logs
-  - queries
-labels:
+
+- ../../data-sources/prometheus/query-editor/
+  description: Guide for using the Prometheus data source's query editor
+  keywords:
+- grafana
+- prometheus
+- logs
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Prometheus query editor
-weight: 300
-refs:
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-  exemplars:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/exemplars/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/exemplars/
-  heatmap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-  time-series-transform:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/#transform
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/#transform
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Prometheus query editor
+    weight: 300
+    refs:
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+    exemplars:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/exemplars/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/exemplars/
+    heatmap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+    time-series-transform:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/\#transform
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/\#transform
+
+-----
 
 # Prometheus query editor
 
@@ -60,7 +63,7 @@ The Prometheus query editor has two modes:
 
 Each mode is explained in greater detail below.
 
-{{< figure src="/static/img/docs/prometheus/editing-mode.png" max-width="500px" class="docs-image--no-shadow" caption="Query editor mode" >}}
+{{\< figure src="/static/img/docs/prometheus/editing-mode.png" max-width="500px" class="docs-image--no-shadow" caption="Query editor mode" \>}}
 
 Both modes are synchronized, so you can switch between them. However, if there is an issue with the query while switching modes, a warning message will appear.
 
@@ -69,7 +72,7 @@ Both modes are synchronized, so you can switch between them. However, if there i
 The query editor toolbar contains the following elements:
 
 - **Kick start your query** - Click to see a list of operation patterns that help you quickly get started adding multiple operations to your query. These include:
-
+  
   - Rate query starters
   - Histogram query starters
   - Binary query starters
@@ -78,7 +81,7 @@ Click the arrow next to each to see available options to add to your query.
 
 - **Explain** - Toggle to display a step-by-step explanation of all query components and operations.
 
-{{< figure src="/static/img/docs/prometheus/explain-results.png" max-width="500px" class="docs-image--no-shadow" caption="Explain results" >}}
+{{\< figure src="/static/img/docs/prometheus/explain-results.png" max-width="500px" class="docs-image--no-shadow" caption="Explain results" \>}}
 
 - **Builder/Code** - Click the corresponding **Builder** or **Code** tab on the toolbar to select a editor mode.
 
@@ -86,7 +89,7 @@ Click the arrow next to each to see available options to add to your query.
 
 You can configure Prometheus-specific options in the query editor by setting several options regardless of mode.
 
-{{< figure src="/static/img/docs/prometheus/options.png" max-width="500px" class="docs-image--no-shadow" caption="Options" >}}
+{{\< figure src="/static/img/docs/prometheus/options.png" max-width="500px" class="docs-image--no-shadow" caption="Options" \>}}
 
 ### Legend
 
@@ -137,7 +140,7 @@ There is no option to add exemplars with an **Instant** query type.
 
 Click **Inspector** to get detailed statistics regarding your query. Inspector functions as a kind of debugging tool that "inspects" your query. It provides query statistics under **Stats**, request response time under **Query**, data frame details under **{} JSON**, and the shape of your data under **Data**.
 
-{{< figure src="/static/img/docs/prometheus/insepctor-9-5.png" max-width="500px" class="docs-image--no-shadow" caption="Inspector" >}}
+{{\< figure src="/static/img/docs/prometheus/insepctor-9-5.png" max-width="500px" class="docs-image--no-shadow" caption="Inspector" \>}}
 
 ## Builder mode
 
@@ -145,13 +148,13 @@ Click **Inspector** to get detailed statistics regarding your query. Inspector f
 
 This video demonstrates how to use the visual Prometheus query builder:
 
-{{< vimeo 720004179 >}}
+{{\< vimeo 720004179 \>}}
 
 </br>
 
 ### Metrics
 
-{{< figure src="/static/img/docs/prometheus/metrics-and-labels.png" max-width="500px" class="docs-image--no-shadow" caption="Metric and label filters" >}}
+{{\< figure src="/static/img/docs/prometheus/metrics-and-labels.png" max-width="500px" class="docs-image--no-shadow" caption="Metric and label filters" \>}}
 
 When you are ready to create a query, you can choose the specific metric name from the dropdown list under **Metric**.
 The data source requests the list of available metrics from the Prometheus server based on the selected time rage.
@@ -159,7 +162,7 @@ You can also enter text into the selector when the dropdown is open to search an
 
 #### Metrics explorer
 
-{{< figure src="/static/img/docs/prometheus/screenshot-grafana-prometheus-metrics-explorer-2.png" max-width="500px" class="docs-image--no-shadow" caption="Metrics explorer" >}}
+{{\< figure src="/static/img/docs/prometheus/screenshot-grafana-prometheus-metrics-explorer-2.png" max-width="500px" class="docs-image--no-shadow" caption="Metrics explorer" \>}}
 
 If you would like to explore your metrics in the query builder further, you can open the **Metrics Explorer** by clicking the first option in the metric select component of the query builder.
 
@@ -183,7 +186,7 @@ Use the `+` button to add a label, and the `x` button to remove a label.
 
 ### Operations
 
-{{< figure src="/static/img/docs/prometheus/operations.png" max-width="500px" class="docs-image--no-shadow" caption="Operations" >}}
+{{\< figure src="/static/img/docs/prometheus/operations.png" max-width="500px" class="docs-image--no-shadow" caption="Operations" \>}}
 
 Select the **+ Operations** button to add operations to your query.
 
@@ -198,14 +201,14 @@ The query editor groups operations into the following sections:
 
 All operations have function parameters under the operation header. Click the `operator` to see a full list of supported functions. Some operations allow you to apply specific labels to functions.
 
-{{< figure src="/static/img/docs/prometheus/use-function-by-label-9-5.png" max-width="500px" class="docs-image--no-shadow" caption="Functions and labels" >}}
+{{\< figure src="/static/img/docs/prometheus/use-function-by-label-9-5.png" max-width="500px" class="docs-image--no-shadow" caption="Functions and labels" \>}}
 
 Some operations make sense only when used in a specific order.
 If adding an operation would result in nonsensical query, the query editor adds the operation to the correct place.
 
 #### Hints
 
-{{< figure src="/static/img/docs/prometheus/hint-example.png" max-width="500px" class="docs-image--no-shadow" caption="Hint" >}}
+{{\< figure src="/static/img/docs/prometheus/hint-example.png" max-width="500px" class="docs-image--no-shadow" caption="Hint" \>}}
 
 The query editor can detect which operations are most appropriate for some selected metrics.
 If it does, it displays a hint next to the **+ Operations** button.
@@ -218,7 +221,7 @@ Once you are satisfied with your query, click **Run query**.
 
 **Code mode** is for the experienced Prometheus user with prior expertise in PromQL, Prometheus' query language. The Code mode editor allows you to create queries just as you would in Prometheus. For more information about PromQL see [Querying Prometheus](http://prometheus.io/docs/querying/basics/).
 
-{{< figure src="/static/img/docs/prometheus/code-mode.png" max-width="500px" class="docs-image--no-shadow" caption="Code mode" >}}
+{{\< figure src="/static/img/docs/prometheus/code-mode.png" max-width="500px" class="docs-image--no-shadow" caption="Code mode" \>}}
 
 The user interface (UI) also lets you select metrics, labels, filters and operations.
 
@@ -236,7 +239,7 @@ The metrics browser locates metrics and selects relevant labels to help you buil
 When you click **Metrics browser** in `Code` mode, it displays all available metrics and labels.
 If supported by your Prometheus instance, each metric also displays its `HELP` and `TYPE` as a tooltip.
 
-{{< figure src="/static/img/docs/prometheus/metric-browser.png" max-width="500px" class="docs-image--no-shadow" caption="Metrics browser" >}}
+{{\< figure src="/static/img/docs/prometheus/metric-browser.png" max-width="500px" class="docs-image--no-shadow" caption="Metrics browser" \>}}
 
 When you select a metric under Step 1, the browser narrows down the available labels to show only the ones applicable to the metric.
 You can then select one or more labels shown in Step 2.

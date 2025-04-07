@@ -1,42 +1,45 @@
----
+-----
+
 aliases:
-  - ../../data-sources/loki/query-editor/
-description: Guide for using the Loki data source's query editor
-keywords:
-  - grafana
-  - loki
-  - logs
-  - queries
-labels:
+
+- ../../data-sources/loki/query-editor/
+  description: Guide for using the Loki data source's query editor
+  keywords:
+- grafana
+- loki
+- logs
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Loki query editor
-weight: 300
-refs:
-  annotate-visualizations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-  logs:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/logs/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/logs/
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Loki query editor
+    weight: 300
+    refs:
+    annotate-visualizations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+    logs:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/logs/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/logs/
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+
+-----
 
 # Loki query editor
 
@@ -83,17 +86,18 @@ Click the arrow next to each to see available query options.
 To navigate Loki and build a query:
 
 1. Choose labels to locate.
-1. Search for the values of your selected labels.
 
+2. Search for the values of your selected labels.
+   
    The search field supports fuzzy search, and the label browser also supports faceting to list only possible label combinations.
 
-1. Select the **Show logs** button to display log lines based on the selected labels, or select the **Show logs rate** button to show the rate based on metrics such as requests per second. Additionally, you can validate the selector by clicking the **Validate selector** button. Click **Clear** to start from the beginning.
+3. Select the **Show logs** button to display log lines based on the selected labels, or select the **Show logs rate** button to show the rate based on metrics such as requests per second. Additionally, you can validate the selector by clicking the **Validate selector** button. Click **Clear** to start from the beginning.
 
-{{< figure src="/static/img/docs/explore/Loki_label_browser.png" class="docs-image--no-shadow" max-width="800px" caption="The Loki label browser" >}}
+{{\< figure src="/static/img/docs/explore/Loki\_label\_browser.png" class="docs-image--no-shadow" max-width="800px" caption="The Loki label browser" \>}}
 
 - **Explain query** - Toggle to display a step-by-step explanation of all query components and operations.
 
-{{< figure src="/static/img/docs/prometheus/explain-results.png" max-width="500px" class="docs-image--no-shadow" caption="Explain results" >}}
+{{\< figure src="/static/img/docs/prometheus/explain-results.png" max-width="500px" class="docs-image--no-shadow" caption="Explain results" \>}}
 
 - **Builder/Code** - Click the corresponding **Builder** or **Code** tab on the toolbar to select an editor mode.
 
@@ -127,9 +131,9 @@ Each operation's header displays its name, and additional action buttons appear 
 
 | Button                                                                                                                  | Action                                                            |
 | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| {{< figure src="/static/img/docs/v95/loki_operation_replace.png" class="docs-image--no-shadow" max-width="30px" >}}     | Replaces the operation with different operation of the same type. |
-| {{< figure src="/static/img/docs/v95/loki_operation_description.png" class="docs-image--no-shadow" max-width="30px" >}} | Opens the operation's description tooltip.                        |
-| {{< figure src="/static/img/docs/v95/loki_operation_remove.png" class="docs-image--no-shadow" max-width="30px" >}}      | Removes the operation.                                            |
+| {{\< figure src="/static/img/docs/v95/loki\_operation\_replace.png" class="docs-image--no-shadow" max-width="30px" \>}}     | Replaces the operation with different operation of the same type. |
+| {{\< figure src="/static/img/docs/v95/loki\_operation\_description.png" class="docs-image--no-shadow" max-width="30px" \>}} | Opens the operation's description tooltip.                        |
+| {{\< figure src="/static/img/docs/v95/loki\_operation\_remove.png" class="docs-image--no-shadow" max-width="30px" \>}}      | Removes the operation.                                            |
 
 The query editor groups operations into the following sections:
 
@@ -201,7 +205,7 @@ Loki supports live tailing of logs in real-time in [Explore](ref:explore).
 Live tailing relies on two Websocket connections: one between the browser and Grafana server, and another between the Grafana server and Loki server.
 
 To start tailing logs click the **Live** button in the top right corner of the Explore view.
-{{< figure src="/static/img/docs/v95/loki_tailing.png" class="docs-image--no-shadow" max-width="80px" >}}
+{{\< figure src="/static/img/docs/v95/loki\_tailing.png" class="docs-image--no-shadow" max-width="80px" \>}}
 
 #### Proxying examples
 
@@ -209,9 +213,7 @@ If you use reverse proxies, configure them accordingly to use live tailing:
 
 **Using Apache2 for proxying between the browser and the Grafana server:**
 
-```
-ProxyPassMatch "^/(api/datasources/proxy/\d+/loki/api/v1/tail)" "ws://127.0.0.1:3000/$1"
-```
+    ProxyPassMatch "^/(api/datasources/proxy/\d+/loki/api/v1/tail)" "ws://127.0.0.1:3000/$1"
 
 **Using NGINX:**
 

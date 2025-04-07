@@ -1,8 +1,6 @@
----
-title: Field overrides options
-comments: |
-  This file is used in the following visualizations: bar chart, bar gauge, candlestick, canvas, gauge, geomap, heatmap, histogram, pie chart, stat, state timeline, status history, table, time series, trend, xy chart
----
+-----
+
+## title: Field overrides options comments: | This file is used in the following visualizations: bar chart, bar gauge, candlestick, canvas, gauge, geomap, heatmap, histogram, pie chart, stat, state timeline, status history, table, time series, trend, xy chart
 
 Overrides allow you to customize visualization settings for specific fields or series. When you add an override rule, it targets a particular set of fields and lets you define multiple options for how that field is displayed.
 

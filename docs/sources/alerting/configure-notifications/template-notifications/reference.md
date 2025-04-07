@@ -1,48 +1,51 @@
----
+-----
+
 aliases:
-  - ../../manage-notifications/template-notifications/reference/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/template-notifications/reference/
-canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/template-notifications/reference/
-description: Learn about templating notifications options
-keywords:
-  - grafana
-  - alerting
-  - notifications
-  - templates
-labels:
+
+- ../../manage-notifications/template-notifications/reference/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/template-notifications/reference/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/template-notifications/reference/
+  description: Learn about templating notifications options
+  keywords:
+- grafana
+- alerting
+- notifications
+- templates
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Notification template reference
-menuTitle: Template reference
-weight: 102
-refs:
-  label-types:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/#label-types
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/#label-types
-  alert-rule-template-reference:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/reference/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/reference/
-  alert-grouping:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
-  template-language:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/language/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/
-  template-language-functions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/language/#functions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/#functions
----
+  - cloud
+  - enterprise
+  - oss
+    title: Notification template reference
+    menuTitle: Template reference
+    weight: 102
+    refs:
+    label-types:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/\#label-types
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/\#label-types
+    alert-rule-template-reference:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/reference/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/reference/
+    alert-grouping:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
+    template-language:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/language/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/
+    template-language-functions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/language/\#functions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/language/\#functions
+
+-----
 
 # Notification template reference
 
@@ -60,9 +63,9 @@ In notification templates, dot (`.`) is initialized with the following data:
 | ------------------- | ----------------- | ----------------------------------------------------------------------------------------------------- |
 | `Receiver`          | string            | The name of the contact point sending the notification                                                |
 | `Status`            | string            | The status is `firing` if at least one alert is firing, otherwise `resolved`.                         |
-| `Alerts`            | [][Alert](#alert) | List of all firing and resolved alerts in this notification.                                          |
-| `Alerts.Firing`     | [][Alert](#alert) | List of all firing alerts in this notification.                                                       |
-| `Alerts.Resolved`   | [][Alert](#alert) | List of all resolved alerts in this notification.                                                     |
+| `Alerts`            | \[\][Alert](#alert) | List of all firing and resolved alerts in this notification.                                          |
+| `Alerts.Firing`     | \[\][Alert](#alert) | List of all firing alerts in this notification.                                                       |
+| `Alerts.Resolved`   | \[\][Alert](#alert) | List of all resolved alerts in this notification.                                                     |
 | `GroupLabels`       | [KV](#kv)         | The labels that group these alerts in this notification based on the `Group by` option.               |
 | `CommonLabels`      | [KV](#kv)         | The labels common to all alerts in this notification.                                                 |
 | `CommonAnnotations` | [KV](#kv)         | The annotations common to all alerts in this notification.                                            |
@@ -72,7 +75,7 @@ It's important to remember that [a single notification can group multiple alerts
 
 Here's an example that prints all available notification data from dot (`.`):
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ .Receiver }}
   {{ .Status }}
@@ -88,7 +91,7 @@ Here's an example that prints all available notification data from dot (`.`):
 
 You can execute this template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "custom_template" . }}
 ```
 
@@ -118,7 +121,7 @@ Grafana-managed alerts include these additional properties:
 
 This example iterates over the list of firing and resolved alerts (`.Alerts`) in the notification and prints the data for each alert:
 
-```go
+``` go
 {{ define "custom_template" }}
 {{ range .Alerts }}
   {{ .Status }}
@@ -141,7 +144,7 @@ This example iterates over the list of firing and resolved alerts (`.Alerts`) in
 
 You can run this template by passing the dot (`.`):
 
-```go
+``` go
 {{ template "custom_template" . }}
 ```
 
@@ -151,7 +154,7 @@ You can run this template by passing the dot (`.`):
 
 Similarly to accessing variable properties, you can use `.` to retrieve the value of a value. For example:
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ .CommonLabels.grafana_folder }}
 {{ end }}
@@ -164,13 +167,13 @@ Additionally, KV provides methods to sort the pairs, remove keys, and iterate ov
 | Method name | Description                                    | Arguments | Returns   |
 | ----------- | ---------------------------------------------- | --------- | --------- |
 | SortedPairs | Returns a sorted list of key/value pairs.      |           | Pairs     |
-| Remove      | Returns a copy of the KV with the keys removed | []string  | [KV](#kv) |
-| Names       | Return the names of the label names            |           | []string  |
-| Values      | Return a list of the values                    |           | []string  |
+| Remove      | Returns a copy of the KV with the keys removed | \[\]string  | [KV](#kv) |
+| Names       | Return the names of the label names            |           | \[\]string  |
+| Values      | Return a list of the values                    |           | \[\]string  |
 
 Here's an example of using these methods:
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ .CommonLabels.SortedPairs }}
   {{ .CommonLabels.Names }}
@@ -185,7 +188,7 @@ Some template functions and properties return a `Time` object, which refers to t
 
 When accessing a `Time` object, you can use various [`Time` functions](https://pkg.go.dev/time#Time) in your templates as follows.
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ range .Alerts }}
     {{ .StartsAt  }}
@@ -216,7 +219,7 @@ In addition, the following functions are also available for templating notificat
 | `trimSpace`    | string                     | string        | Removes leading and trailing white spaces.                                                                                                                                                                       |
 | `match`        | pattern, text              | boolean       | Matches the text against a regular expression pattern.                                                                                                                                                           |
 | `reReplaceAll` | pattern, replacement, text | string        | Replaces text matching the regular expression.                                                                                                                                                                   |
-| `join`         | sep string, s []string     | string        | Concatenates the elements of s to create a single string. The separator string sep is placed between elements in the resulting string.                                                                           |
+| `join`         | sep string, s \[\]string     | string        | Concatenates the elements of s to create a single string. The separator string sep is placed between elements in the resulting string.                                                                           |
 | `safeHtml`     | string                     | string        | Marks string as HTML not requiring auto-escaping.                                                                                                                                                                |
 | `stringSlice`  | ...string                  | string        | Returns the passed strings as a slice of strings. auto-escaping.                                                                                                                                                 |
 | `date`         | string, [Time](#time)      | string        | Format a time in the specified format. For format options, refer to [Go's time format documentation](https://pkg.go.dev/time#pkg-constants).                                                                     |
@@ -224,7 +227,7 @@ In addition, the following functions are also available for templating notificat
 
 Here's an example using some functions to format text:
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ title "hello, world!" }}
   {{ toUpper "Hello, world!" }}
@@ -240,7 +243,7 @@ Here's an example using some functions to format text:
 
 `date` and `tz` can format times. For example, to print the time an alert fired in the format `15:04:05 MST`:
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ range .Alerts }}
     {{ .StartsAt | date "15:04:05 MST" }}
@@ -250,7 +253,7 @@ Here's an example using some functions to format text:
 
 You can then use `tz` to change the timezone from UTC to local time, such as `Europe/Paris`.
 
-```go
+``` go
 {{ define "custom_template" }}
   {{ range .Alerts }}
     {{ .StartsAt | tz "Europe/Paris" }}
@@ -259,7 +262,7 @@ You can then use `tz` to change the timezone from UTC to local time, such as `Eu
 {{ end }}
 ```
 
-```template-output
+``` template-output
 2024-10-30 21:01:45.227 +0100 CET
 21:01:45 CET
 ```

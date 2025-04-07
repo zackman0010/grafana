@@ -1,37 +1,40 @@
----
+-----
+
 description: Learn how to configure SCIM provisioning with Azure AD in Grafana Enterprise. This guide provides step-by-step instructions for setting up automated user and team management, including enterprise application configuration, service account creation, attribute mapping, and provisioning settings to ensure seamless integration between Azure AD and Grafana.
 keywords:
-  - grafana
-  - scim
-  - azure
-  - azure ad
-  - entra id
-  - provisioning
-  - user-management
-  - team-management
-labels:
+
+- grafana
+- scim
+- azure
+- azure ad
+- entra id
+- provisioning
+- user-management
+- team-management
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Configure SCIM with Azure AD
-title: Configure SCIM with Azure AD
-weight: 320
----
+  - cloud
+  - enterprise
+    menuTitle: Configure SCIM with Azure AD
+    title: Configure SCIM with Azure AD
+    weight: 320
+
+-----
 
 # Configure SCIM with Azure AD
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in [Grafana Enterprise](../../../introduction/grafana-enterprise/) and [Grafana Cloud Advanced](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 This guide explains how to configure SCIM provisioning with Azure AD to automate user and team management in Grafana.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature is behind the `enableSCIM` feature toggle.
 You can enable feature toggles through configuration file or environment variables.
 
-For more information, refer to the [feature toggles documentation](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles).
-{{< /admonition >}}
+For more information, refer to the [feature toggles documentation](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#feature_toggles).
+{{\< /admonition \>}}
 
 ## Prerequisites
 
@@ -48,7 +51,7 @@ To enable SCIM provisioning in Grafana, create a service account and generate a 
 
 ### Create a service account
 
-1. Navigate to **Administration > User Access > Service accounts**
+1. Navigate to **Administration \> User Access \> Service accounts**
 2. Click **Add new service account**
 3. Create a new access token and save it securely
    - This token will be used in the Azure AD configuration
@@ -77,9 +80,9 @@ Configure the enterprise application in Azure AD to enable automated user and te
 
 ### Configure attribute mappings
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Only work email addresses are supported. Azure AD must be configured to use `emails[type eq "work"].value` for email mapping.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Configure the following required attributes:
 

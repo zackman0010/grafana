@@ -1,35 +1,38 @@
----
+-----
+
 description: Learn how to configure SCIM provisioning with Okta in Grafana. This guide provides step-by-step instructions for setting up automated user and team management, including SAML configuration, service account creation, attribute mapping, and provisioning settings to ensure seamless integration between Okta and Grafana.
 keywords:
-  - grafana
-  - scim
-  - okta
-  - provisioning
-  - user-management
-  - team-management
-labels:
+
+- grafana
+- scim
+- okta
+- provisioning
+- user-management
+- team-management
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Configure SCIM with Okta
-title: Configure SCIM with Okta
-weight: 320
----
+  - cloud
+  - enterprise
+    menuTitle: Configure SCIM with Okta
+    title: Configure SCIM with Okta
+    weight: 320
+
+-----
 
 # Configure SCIM with Okta
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in [Grafana Enterprise](../../../introduction/grafana-enterprise/) and [Grafana Cloud Advanced](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 This guide explains how to configure SCIM provisioning with Okta to automate user and team management in Grafana.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature is behind the `enableSCIM` feature toggle.
 You can enable feature toggles through configuration file or environment variables.
 
-For more information, refer to the [feature toggles documentation](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles).
-{{< /admonition >}}
+For more information, refer to the [feature toggles documentation](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#feature_toggles).
+{{\< /admonition \>}}
 
 ## Prerequisites
 
@@ -46,7 +49,7 @@ To enable SCIM provisioning in Grafana, create a service account and generate an
 
 ### Create a service account
 
-1. Navigate to **Administration > User Access > Service accounts**
+1. Navigate to **Administration \> User Access \> Service accounts**
 2. Click **Add new service account**
 3. Create a new access token and save it securely
    - This token will be used in the Okta configuration
@@ -74,9 +77,7 @@ In the **To App** tab, enable:
 In the **Integration** tab, configure:
 
 - **SCIM Connector base URL:**
-  ```
-  https://{resource_name}/apis/scim.grafana.app/v0alpha1/namespaces/stacks-{stack-id}
-  ```
+      https://{resource_name}/apis/scim.grafana.app/v0alpha1/namespaces/stacks-{stack-id}
 - **Unique identifier field:** userName
 - **Supported provisioning actions:**
   - Import New Users and Profile Updates

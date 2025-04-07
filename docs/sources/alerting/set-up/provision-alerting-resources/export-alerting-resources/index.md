@@ -1,103 +1,106 @@
----
+-----
+
 aliases:
-  - ../../provision-alerting-resources/view-provisioned-resources/ # /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/view-provisioned-resources/
-canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/export-alerting-resources/
-description: Export alerting resources in Grafana
-keywords:
-  - grafana
-  - alerting
-  - alerting resources
-  - provisioning
-labels:
+
+- ../../provision-alerting-resources/view-provisioned-resources/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/view-provisioned-resources/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/export-alerting-resources/
+  description: Export alerting resources in Grafana
+  keywords:
+- grafana
+- alerting
+- alerting resources
+- provisioning
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Export alerting resources
-weight: 300
-refs:
-  alerting_file_provisioning:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/file-provisioning/
-  export_mute_timings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-mute-timings-exportspan-export-all-mute-timings-in-provisioning-file-format-_routegetmutetimingsexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-mute-timings-exportspan-export-all-mute-timings-in-provisioning-file-format-_routegetmutetimingsexport_
-  export_rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rules-exportspan-export-all-alert-rules-in-provisioning-file-format-_routegetalertrulesexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rules-exportspan-export-all-alert-rules-in-provisioning-file-format-_routegetalertrulesexport_
-  alerting_file_provisioning_template:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/file-provisioning/#import-templates
-  export_rule_group:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rule-group-exportspan-export-an-alert-rule-group-in-provisioning-file-format-_routegetalertrulegroupexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rule-group-exportspan-export-an-alert-rule-group-in-provisioning-file-format-_routegetalertrulegroupexport_
-  alerting_tf_provisioning_template:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/terraform-provisioning/#import-contact-points-and-templates
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/#import-contact-points-and-templates
-  export_mute_timing:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-mute-timing-exportspan-export-a-mute-timing-in-provisioning-file-format-_routegetmutetimingexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-mute-timing-exportspan-export-a-mute-timing-in-provisioning-file-format-_routegetmutetimingexport_
-  alerting_http_mutetimings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#mute-timings
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/#mute-timings
-  alerting_http_alertrules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#alert-rules
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/#alert-rules
-  alerting_tf_provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/terraform-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/
-  export_rule:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rule-exportspan-export-an-alert-rule-in-provisioning-file-format-_routegetalertruleexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-alert-rule-exportspan-export-an-alert-rule-in-provisioning-file-format-_routegetalertruleexport_
-  alerting_http_templates:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#notification-template-groups
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/#notification-template-groups
-  alerting_http_contactpoints:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#contact-points
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/#contact-points
-  alerting_http_notificationpolicies:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#notification-policies
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/#notification-policies
-  export_notifications:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-policy-tree-exportspan-export-the-notification-policy-tree-in-provisioning-file-format-_routegetpolicytreeexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-policy-tree-exportspan-export-the-notification-policy-tree-in-provisioning-file-format-_routegetpolicytreeexport_
-  alerting_http_provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-  export_contacts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-contactpoints-exportspan-export-all-contact-points-in-provisioning-file-format-_routegetcontactpointsexport_
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/#span-idroute-get-contactpoints-exportspan-export-all-contact-points-in-provisioning-file-format-_routegetcontactpointsexport_
----
+  - cloud
+  - enterprise
+  - oss
+    title: Export alerting resources
+    weight: 300
+    refs:
+    alerting\_file\_provisioning:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/file-provisioning/
+    export\_mute\_timings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-mute-timings-exportspan-export-all-mute-timings-in-provisioning-file-format-*routegetmutetimingsexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-mute-timings-exportspan-export-all-mute-timings-in-provisioning-file-format-*routegetmutetimingsexport*
+    export\_rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rules-exportspan-export-all-alert-rules-in-provisioning-file-format-*routegetalertrulesexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rules-exportspan-export-all-alert-rules-in-provisioning-file-format-*routegetalertrulesexport*
+    alerting\_file\_provisioning\_template:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/file-provisioning/\#import-templates
+    export\_rule\_group:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rule-group-exportspan-export-an-alert-rule-group-in-provisioning-file-format-*routegetalertrulegroupexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rule-group-exportspan-export-an-alert-rule-group-in-provisioning-file-format-*routegetalertrulegroupexport*
+    alerting\_tf\_provisioning\_template:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/terraform-provisioning/\#import-contact-points-and-templates
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/\#import-contact-points-and-templates
+    export\_mute\_timing:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-mute-timing-exportspan-export-a-mute-timing-in-provisioning-file-format-*routegetmutetimingexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-mute-timing-exportspan-export-a-mute-timing-in-provisioning-file-format-*routegetmutetimingexport*
+    alerting\_http\_mutetimings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#mute-timings
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#mute-timings
+    alerting\_http\_alertrules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#alert-rules
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#alert-rules
+    alerting\_tf\_provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/terraform-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/terraform-provisioning/
+    export\_rule:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rule-exportspan-export-an-alert-rule-in-provisioning-file-format-*routegetalertruleexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-alert-rule-exportspan-export-an-alert-rule-in-provisioning-file-format-*routegetalertruleexport*
+    alerting\_http\_templates:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#notification-template-groups
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#notification-template-groups
+    alerting\_http\_contactpoints:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#contact-points
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#contact-points
+    alerting\_http\_notificationpolicies:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#notification-policies
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#notification-policies
+    export\_notifications:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-policy-tree-exportspan-export-the-notification-policy-tree-in-provisioning-file-format-*routegetpolicytreeexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-policy-tree-exportspan-export-the-notification-policy-tree-in-provisioning-file-format-*routegetpolicytreeexport*
+    alerting\_http\_provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+    export\_contacts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-contactpoints-exportspan-export-all-contact-points-in-provisioning-file-format-*routegetcontactpointsexport*
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/\#span-idroute-get-contactpoints-exportspan-export-all-contact-points-in-provisioning-file-format-*routegetcontactpointsexport*
+
+-----
 
 # Export alerting resources
 
@@ -109,11 +112,11 @@ There are distinct methods to export your alerting resources:
 - [HTTP Alerting API](#http-alerting-api) exports in JSON API format used by the HTTP Alerting API.
 - [HTTP Alerting API - Export endpoints](#export-api-endpoints) exports in YAML or JSON formats for file provisioning.
 
-{{< admonition type="note" >}}
-Alerting resources imported through [file provisioning](/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/file-provisioning) cannot be edited in the Grafana UI. This prevents changes made in the UI from being overridden by file provisioning during Grafana restarts.
+{{\< admonition type="note" \>}}
+Alerting resources imported through [file provisioning](/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/provision-alerting-resources/file-provisioning) cannot be edited in the Grafana UI. This prevents changes made in the UI from being overridden by file provisioning during Grafana restarts.
 
-If you need to modify provisioned alerting resources in Grafana, refer to [edit HTTP API alerting resources in the Grafana UI](/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning#edit-resources-in-the-grafana-ui) or to [edit Terraform alerting resources in the Grafana UI](/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/terraform-provisioning#enable-editing-resources-in-the-grafana-ui).
-{{< /admonition >}}
+If you need to modify provisioned alerting resources in Grafana, refer to [edit HTTP API alerting resources in the Grafana UI](/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning#edit-resources-in-the-grafana-ui) or to [edit Terraform alerting resources in the Grafana UI](/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/provision-alerting-resources/terraform-provisioning#enable-editing-resources-in-the-grafana-ui).
+{{\< /admonition \>}}
 
 ## Export from the Grafana UI
 
@@ -123,17 +126,23 @@ The export options listed below enable you to download resources in YAML, JSON, 
 
 To export alert rules from the Grafana UI, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Alert rules**.
-1. To export all Grafana-managed rules, click **Export rules**.
-1. To export a folder, change the **View as** to **List**.
-1. Select the folder you want to export and click the **Export rules folder** icon.
-1. To export a group, change the **View as** to **Grouped**.
-1. Find the group you want to export and click the **Export rule group** icon.
-1. Choose the format to export in.
+1. Click **Alerts & IRM** -\> **Alert rules**.
 
+2. To export all Grafana-managed rules, click **Export rules**.
+
+3. To export a folder, change the **View as** to **List**.
+
+4. Select the folder you want to export and click the **Export rules folder** icon.
+
+5. To export a group, change the **View as** to **Grouped**.
+
+6. Find the group you want to export and click the **Export rule group** icon.
+
+7. Choose the format to export in.
+   
    The exported alert rule data appears in different formats - YAML, JSON, Terraform.
 
-1. Click **Copy Code** or **Download**.
+8. Click **Copy Code** or **Download**.
 
 ### Modify alert rule and export rule group without saving changes
 
@@ -143,15 +152,19 @@ Use the **Modify export** mode to edit and export an alert rule without updating
 
 To export a modified alert rule without saving the modifications, complete the following steps from the Grafana UI.
 
-1. Click **Alerts & IRM** -> **Alert rules**.
-1. Locate the alert rule you want to edit and click **More** -> **Modify Export** to open the Alert Rule form.
-1. From the Alert Rule form, edit the fields you want to change. Changes made are not applied to the alert rule.
-1. Click **Export**.
-1. Choose the format to export in.
+1. Click **Alerts & IRM** -\> **Alert rules**.
 
+2. Locate the alert rule you want to edit and click **More** -\> **Modify Export** to open the Alert Rule form.
+
+3. From the Alert Rule form, edit the fields you want to change. Changes made are not applied to the alert rule.
+
+4. Click **Export**.
+
+5. Choose the format to export in.
+   
    The exported alert rule group appears in different formats - YAML, JSON, Terraform.
 
-1. Click **Copy Code** or **Download**.
+6. Click **Copy Code** or **Download**.
 
 ### Export a new alert rule definition without saving changes
 
@@ -163,7 +176,7 @@ An alert rule definition differs from an alert rule in the sense that you define
 
 To export your alert rule definition into Terraform (HCL) format, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Alert rules**.
+1. Click **Alerts & IRM** -\> **Alert rules**.
 2. Click **Export rule definition**.
 3. Fill out the alert rule details.
 4. Choose a provisioned folder and group to add your alert rule definition to.
@@ -174,13 +187,15 @@ To export your alert rule definition into Terraform (HCL) format, complete the f
 
 To export contact points from the Grafana UI, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Contact points**.
-1. Find the contact point you want to export and click **More** -> **Export**.
-1. Choose the format to export in.
+1. Click **Alerts & IRM** -\> **Contact points**.
 
+2. Find the contact point you want to export and click **More** -\> **Export**.
+
+3. Choose the format to export in.
+   
    The exported contact point appears in different formats - YAML, JSON, Terraform.
 
-1. Click **Copy Code** or **Download**.
+4. Click **Copy Code** or **Download**.
 
 ### Export notification template groups
 
@@ -188,23 +203,25 @@ Grafana currently doesn't offer an Export UI or [Export endpoint](#export-api-en
 
 However, you can export it by manually copying the content and name of the notification template group from the Grafana UI.
 
-1. Click **Alerts & IRM** -> **Contact points** -> **Notification templates** tab.
-1. Find the notification template group you want to export.
-1. Copy the content and name.
-1. Adjust it for the [file provisioning format](ref:alerting_file_provisioning_template) or [Terraform resource](ref:alerting_tf_provisioning_template).
+1. Click **Alerts & IRM** -\> **Contact points** -\> **Notification templates** tab.
+2. Find the notification template group you want to export.
+3. Copy the content and name.
+4. Adjust it for the [file provisioning format](ref:alerting_file_provisioning_template) or [Terraform resource](ref:alerting_tf_provisioning_template).
 
 ### Export the notification policy tree
 
 All notification policies are provisioned through a single resource: the root of the notification policy tree.
 
-{{< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 To export the notification policy tree from the Grafana UI, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Notification policies**.
-2. In the **Default notification policy** section, click **...** -> **Export**.
-3. Choose the format to export in.
+1. Click **Alerts & IRM** -\> **Notification policies**.
 
+2. In the **Default notification policy** section, click **...** -\> **Export**.
+
+3. Choose the format to export in.
+   
    The exported contact point appears in different formats - YAML, JSON, Terraform.
 
 4. Click **Copy Code** or **Download**.
@@ -213,13 +230,15 @@ To export the notification policy tree from the Grafana UI, complete the followi
 
 To export mute timings from the Grafana UI, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Notification policies**, and then the **Mute timings** tab.
-1. Find the mute timing you want to export and click **Export**.
-1. Choose the format to export in.
+1. Click **Alerts & IRM** -\> **Notification policies**, and then the **Mute timings** tab.
 
+2. Find the mute timing you want to export and click **Export**.
+
+3. Choose the format to export in.
+   
    The exported contact point appears in different formats - YAML, JSON, Terraform.
 
-1. Click **Copy Code** or **Download**.
+4. Click **Copy Code** or **Download**.
 
 ## HTTP Alerting API
 
@@ -252,6 +271,5 @@ The **Alerting HTTP API** provides specific endpoints for exporting alerting res
 These endpoints accept a `download` parameter to download a file containing the exported resources.
 
 <!-- prettier-ignore-start -->
-
 
 <!-- prettier-ignore-end -->

@@ -1,57 +1,60 @@
----
+-----
+
 aliases:
-  - ../../data-sources/tempo/query-editor/
-description: Guide for using the Tempo data source's query editor
-keywords:
-  - grafana
-  - tempo
-  - traces
-  - queries
-labels:
+
+- ../../data-sources/tempo/query-editor/
+  description: Guide for using the Tempo data source's query editor
+  keywords:
+- grafana
+- tempo
+- traces
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query tracing data
-title: Query tracing data
-weight: 300
-refs:
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  service-graph:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/tempo/service-graph/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/tempo/service-graph/
-  recorded-queries:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/recorded-queries/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/recorded-queries/
-  query-history-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/query-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/query-management/
-  query-inspector:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/explore-inspector/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/explore-inspector/
-  explore-traces-app:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/simplified-exploration/traces/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/simplified-exploration/traces/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query tracing data
+    title: Query tracing data
+    weight: 300
+    refs:
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    service-graph:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/tempo/service-graph/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/tempo/service-graph/
+    recorded-queries:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/recorded-queries/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/recorded-queries/
+    query-history-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/query-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/query-management/
+    query-inspector:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/explore-inspector/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/explore-inspector/
+    explore-traces-app:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/simplified-exploration/traces/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/simplified-exploration/traces/
+
+-----
 
 # Query tracing data
 
@@ -60,9 +63,9 @@ The queries use [TraceQL](/docs/tempo/latest/traceql), the query language design
 
 For general documentation on querying data sources in Grafana, refer to [Query and transform data](ref:query-transform-data).
 
-{{< admonition type="tip" >}}
+{{\< admonition type="tip" \>}}
 Don't know TraceQL? Try [Grafana Traces Drilldown](ref:explore-traces-app), an intuitive, queryless app that lets you explore your tracing data using RED metrics.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Before you begin
 
@@ -75,7 +78,7 @@ You can use the **Search** query builder's user interface to select options to s
 These selections generate a TraceQL query.
 Any query generated using **Search** query builder can be transferred to the **TraceQL** query editor, where you can edit the query directly.
 
-To learn more about how to query by TraceQL, refer to the [TraceQL documentation](https://grafana.com/docs/tempo/<TEMPO_VERSION>/traceql).
+To learn more about how to query by TraceQL, refer to the [TraceQL documentation](https://grafana.com/docs/tempo/\<TEMPO_VERSION\>/traceql).
 
 ## Choose a query editing mode
 
@@ -129,9 +132,9 @@ For more information about the service graph, refer to [Service graph](../servic
 
 ## Use TraceQL panels in dashboards
 
-To add TraceQL panels to your dashboard, refer to the [Traces panel documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/traces/).
+To add TraceQL panels to your dashboard, refer to the [Traces panel documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/panels-visualizations/visualizations/traces/).
 
-To learn more about Grafana dashboards, refer to the [Use dashboards documentation](/docs/grafana/<GRAFANA_VERSION>/dashboards/use-dashboards/).
+To learn more about Grafana dashboards, refer to the [Use dashboards documentation](/docs/grafana/\<GRAFANA_VERSION\>/dashboards/use-dashboards/).
 
 ## Set options for query builder and editor
 
@@ -165,12 +168,12 @@ Each time you add a new query, it adds a new section, or query block, that conta
 The added query and results table appear in the navigation under **Queries** and **Tables** respectively.
 You can use the navigation to view query, results table, and service graph blocks.
 
-{{< video-embed src="/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-editor.mp4" max-width="800px" class="my-cool-video" caption="Navigating through the query blocks" align="center" >}}
+{{\< video-embed src="/media/docs/grafana/data-sources/tempo/query-editor/tempo-ds-editor.mp4" max-width="800px" class="my-cool-video" caption="Navigating through the query blocks" align="center" \>}}
 
 To add a query block:
 
 1. Select **+ Add query**.
-1. Choose a query type: **Search**, **TraceQL**, or **Service Graph**.
+2. Choose a query type: **Search**, **TraceQL**, or **Service Graph**.
 
 To remove a query block, select the **Remove query** trash can icon.
 
@@ -216,13 +219,11 @@ TraceQL queries that compare multiple spansets may not correctly return all trac
 
 <!-- vale Grafana.Quotes = YES -->
 
-```
-{ span.attr1 = "bar" } && { span.attr2 = "foo" }
-```
+    { span.attr1 = "bar" } && { span.attr2 = "foo" }
 
 TraceQL evaluates a contiguously stored trace.
 If these two conditions are satisfied in separate tenants, then Tempo doesn't return the trace.
 
 Refer to [Set up a multi-stack Tempo data source in Grafana](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/multi-stack-data-sources/#set-up-a-multi-stack-tempo-data-source-in-grafana) for information about configuring the Tempo data source.
 
-For information about Tempo configuration requirements, refer to the [Cross-tenant query](https://grafana.com/docs/tempo/<TEMPO_VERSION>/operations/cross_tenant_query/) and [Enable multitenancy](https://grafana.com/docs/tempo/<TEMPO_VERSION>/operations/multitenancy/) documentation.
+For information about Tempo configuration requirements, refer to the [Cross-tenant query](https://grafana.com/docs/tempo/\<TEMPO_VERSION\>/operations/cross_tenant_query/) and [Enable multitenancy](https://grafana.com/docs/tempo/\<TEMPO_VERSION\>/operations/multitenancy/) documentation.

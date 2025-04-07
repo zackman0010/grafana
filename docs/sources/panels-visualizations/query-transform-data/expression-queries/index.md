@@ -1,40 +1,43 @@
----
+-----
+
 aliases:
-  - ../../panels/query-a-data-source/use-expressions-to-manipulate-data/
-  - ../../panels/query-a-data-source/use-expressions-to-manipulate-data/about-expressions/
-  - ../../panels/query-a-data-source/use-expressions-to-manipulate-data/write-an-expression/
-  - ./
-labels:
-  products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Write expression queries
-title: Write expression queries
-description: Write server-side expressions to manipulate data using math and other operations
-weight: 40
-refs:
-  no-data-and-error-handling:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/#configure-no-data-and-error-handling
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-grafana-managed-rule/#configure-no-data-and-error-handling
-  multiple-dimensional-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries-dimensions/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries-dimensions/
-  grafana-alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
+
+- ../../panels/query-a-data-source/use-expressions-to-manipulate-data/
+- ../../panels/query-a-data-source/use-expressions-to-manipulate-data/about-expressions/
+- ../../panels/query-a-data-source/use-expressions-to-manipulate-data/write-an-expression/
+- ./
   labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries-dimensions/#labels
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/timeseries-dimensions/#labels
----
+  products:
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Write expression queries
+    title: Write expression queries
+    description: Write server-side expressions to manipulate data using math and other operations
+    weight: 40
+    refs:
+    no-data-and-error-handling:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/\#configure-no-data-and-error-handling
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/create-grafana-managed-rule/\#configure-no-data-and-error-handling
+    multiple-dimensional-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries-dimensions/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries-dimensions/
+    grafana-alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+    labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries-dimensions/\#labels
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/timeseries-dimensions/\#labels
+
+-----
 
 # Write expression queries
 
@@ -81,7 +84,7 @@ Data source queries, when used with expressions, are executed by the expression 
 
 Currently, the only non-time series format (number) is supported when you're using data frames and you have a table response that returns a data frame with no time, string columns, and one number column:
 
-| Loc | Host | Avg_CPU |
+| Loc | Host | Avg\_CPU |
 | --- | ---- | ------- |
 | MIA | A    | 1       |
 | NYC | B    | 2       |
@@ -126,7 +129,7 @@ So if you have numbers with labels like `{host=web01}` in `$A` and another numbe
 - If both `$A` and `$B` each contain only one item (one series, or one number), they will join.
 - If labels are exact match they will join.
 - If labels are a subset of the other, for example and item in `$A` is labeled `{host=A,dc=MIA}` and item in `$B` is labeled `{host=A}` they will join.
-- Currently, if within a variable such as `$A` there are different tag _keys_ for each item, the join behavior is undefined.
+- Currently, if within a variable such as `$A` there are different tag *keys* for each item, the join behavior is undefined.
 
 The relational and logical operators return 0 for false 1 for true.
 
@@ -138,25 +141,25 @@ While most functions exist in the own expression operations, the math operation 
 
 abs returns the absolute value of its argument which can be a number or a series. For example `abs(-1)` or `abs($A)`.
 
-###### is_inf
+###### is\_inf
 
-is_inf takes a number or a series and returns `1` for `Inf` values (negative or positive) and `0` for other values. For example `is_inf($A)`.
+is\_inf takes a number or a series and returns `1` for `Inf` values (negative or positive) and `0` for other values. For example `is_inf($A)`.
 
 {{% admonition type="note" %}}
 If you need to specifically check for negative infinity for example, you can do a comparison like `$A == infn()`.
 {{% /admonition %}}
 
-###### is_nan
+###### is\_nan
 
-is_nan takes a number or a series and returns `1` for `NaN` values and `0` for other values. For example `is_nan($A)`. This function exists because `NaN` is not equal to `NaN`.
+is\_nan takes a number or a series and returns `1` for `NaN` values and `0` for other values. For example `is_nan($A)`. This function exists because `NaN` is not equal to `NaN`.
 
-###### is_null
+###### is\_null
 
-is_null takes a number or a series and returns `1` for `null` values and `0` for other values. For example `is_null($A)`.
+is\_null takes a number or a series and returns `1` for `null` values and `0` for other values. For example `is_null($A)`.
 
-###### is_number
+###### is\_number
 
-is_number takes a number or a series and returns `1` for all real number values and `0` for other values (which are `null`, `Inf+`, `Inf-`, and `NaN`). For example `is_number($A)`.
+is\_number takes a number or a series and returns `1` for all real number values and `0` for other values (which are `null`, `Inf+`, `Inf-`, and `NaN`). For example `is_number($A)`.
 
 ###### log
 
@@ -186,7 +189,7 @@ Reduce takes one or more time series returned from a query or an expression and 
 
 - **Function -** The reduction function to use
 - **Input -** The variable (refID (such as `A`)) to resample
-- **Mode -** Allows control behavior of reduction function when a series contains non-numerical values (null, NaN, +\-Inf)
+- **Mode -** Allows control behavior of reduction function when a series contains non-numerical values (null, NaN, +-Inf)
 
 ##### Reduction Functions
 
@@ -214,11 +217,11 @@ Last returns the last number in the series. If the series has no values then ret
 
 ###### Strict
 
-In Strict mode the input series is processed as is. If any values in the series are non-numeric (null, NaN or +\-Inf), NaN is returned.
+In Strict mode the input series is processed as is. If any values in the series are non-numeric (null, NaN or +-Inf), NaN is returned.
 
 ###### Drop Non-Numeric
 
-In this mode all non-numeric values (null, NaN or +\-Inf) in the input series are filtered out before executing the reduction function.
+In this mode all non-numeric values (null, NaN or +-Inf) in the input series are filtered out before executing the reduction function.
 
 ###### Replace Non-Numeric
 
@@ -245,13 +248,16 @@ If your data source supports them, then Grafana displays the **Expression** butt
 For more information about expressions, refer to [About expressions](#about-expressions).
 
 1. Open the panel.
-1. Below the query, click **Expression**.
-1. In the **Operation** field, select the type of expression you want to write.
 
+2. Below the query, click **Expression**.
+
+3. In the **Operation** field, select the type of expression you want to write.
+   
    For more information about expression operations, refer to [About expressions](#about-expressions).
 
-1. Write the expression.
-1. Click **Apply**.
+4. Write the expression.
+
+5. Click **Apply**.
 
 ## Special cases
 

@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../guides/whats-new-in-v9-3/
-description: Learn about new and updated features in Grafana v9.3
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '9.3'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v9-3/
+  description: Learn about new and updated features in Grafana v9.3
+  keywords:
+- grafana
+- new
+- documentation
+- '9.3'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v9.3
-weight: -34
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v9.3
+    weight: -34
+
+-----
 
 # What's new in Grafana v9.3
 
-Welcome to Grafana 9.3! Read on to learn about our navigation overhaul, support for four new languages, new panels and transformations, several often-requested auth improvements, usability improvements to Alerting, and more. For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md).
+Welcome to Grafana 9.3\! Read on to learn about our navigation overhaul, support for four new languages, new panels and transformations, several often-requested auth improvements, usability improvements to Alerting, and more. For even more detail about all the changes in this release, refer to the [changelog](https://github.com/grafana/grafana/blob/main/CHANGELOG.md).
 
 ## New navigation
 
@@ -35,7 +38,7 @@ To try out Grafana’s new navigation, enable the `topnav` feature toggle. If yo
 
 **Note:** The Grafana and Grafana Cloud documentation has not yet been updated to reflect changes to the navigation - these changes will roll out when the new navigation becomes generally available.
 
-{{< figure src="/static/img/docs/navigation/navigation-9-3.png" max-width="750px" caption="New navigation for Grafana" >}}
+{{\< figure src="/static/img/docs/navigation/navigation-9-3.png" max-width="750px" caption="New navigation for Grafana" \>}}
 
 ## View dashboards in Spanish, French, German, and Simplified Chinese
 
@@ -47,7 +50,7 @@ With millions of users across the globe, Grafana has a global footprint. In orde
 
 Read more about configuring the [default language for your organization](../../administration/organization-preferences/) and [updating your profile](../../administration/user-management/user-preferences/) in our documentation.
 
-{{< figure src="/static/img/docs/internationalization/internationalization-9-3.png" max-width="750px" caption="Grafana available in Spanish, French, German, and Simplified Chinese" >}}
+{{\< figure src="/static/img/docs/internationalization/internationalization-9-3.png" max-width="750px" caption="Grafana available in Spanish, French, German, and Simplified Chinese" \>}}
 
 ## Geomap panel
 
@@ -55,7 +58,7 @@ Generally available in all editions of Grafana
 
 We have added a new alpha layer type in Geomap called photo layer. This layer enables you to render a photo at each data point. To learn more about the photo layer and the geomap panel, refer to [Photos layer](../../panels-visualizations/visualizations/geomap/#photos-layer-alpha).
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-photos-9-3-0.png" max-width="750px" caption="Geomap panel photos layer" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-photos-9-3-0.png" max-width="750px" caption="Geomap panel photos layer" \>}}
 
 ## Canvas panel
 
@@ -65,7 +68,7 @@ Canvas is a new panel that combines the power of Grafana with the flexibility of
 
 In Grafana v9.3, we have added icon value mapping support to the Canvas panel. This enables you to dynamically set which icon to display based on your data. To learn more about the Canvas panel, refer to [Canvas](../../panels-visualizations/visualizations/canvas/).
 
-{{< video-embed src="/static/img/docs/canvas-panel/canvas-icon-value-mapping-support-9-3-0.mp4" max-width="750px" caption="Canvas panel icon value mapping support" >}}
+{{\< video-embed src="/static/img/docs/canvas-panel/canvas-icon-value-mapping-support-9-3-0.mp4" max-width="750px" caption="Canvas panel icon value mapping support" \>}}
 
 ## Public dashboards improvements
 
@@ -77,7 +80,7 @@ Available in **experimental** in Grafana Open Source, Enterprise, and Cloud Adva
 
 You can use Public Dashboards to make a given dashboard available to anyone on the internet without needing to sign in. In Grafana v9.3, we have introduced a new screen where you can manage all of your public dashboards. From here, you can view a list of all of the public dashboards in your Grafana instance, navigate to the underlying dashboard, see if it is enabled, link out to the public version of the dashboard, or update the public dashboard's configuration. You can see a public dashboard's configuration if you have view access to the dashboard itself, and you can edit its configuration if you have the Admin or Server Admin role or the "Public Dashboard writer" role if you are using RBAC in Grafana Enterprise or Cloud Advanced.
 
-To check out this new screen and configure your public dashboards, navigate to **Dashboards > Public Dashboards**.
+To check out this new screen and configure your public dashboards, navigate to **Dashboards \> Public Dashboards**.
 
 ### Choose to display annotations in public dashboards
 
@@ -87,7 +90,7 @@ Annotations are now supported in public dashboards, with the exception of query 
 
 Note that because Public Dashboards is an experimental feature, you need to enable it in Grafana using the `publicDashboards` [feature toggle](../../setup-grafana/configure-grafana/#feature_toggles), or open a support ticket requesting public dashboards if you are a Cloud Advanced customer.
 
-To learn more about public dashboards, refer to [Public dashboards](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/).
+To learn more about public dashboards, refer to [Public dashboards](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/).
 
 ## New transformation: Partition by values
 
@@ -137,7 +140,7 @@ Because dashboards appear on a screen and reports are PDFs, it can be challengin
 
 The zoom feature is located in the **Format Report** section of your reporting configuration. To learn more about reporting, refer to [Create and manage reports](../../dashboards/create-reports/).
 
-{{< figure src="/static/img/docs/enterprise/reports/report-zoom.png" max-width="750px" caption="Report zoom feature with PDF documents at three different zoom levels" >}}
+{{\< figure src="/static/img/docs/enterprise/reports/report-zoom.png" max-width="750px" caption="Report zoom feature with PDF documents at three different zoom levels" \>}}
 
 ## Users and access
 
@@ -159,7 +162,7 @@ In the older versions of Grafana, usernames were case-sensitive. This created co
 
 > Note: If you use Grafana Cloud or you run Grafana with MySQL as your database, you will not experience any user identity conflicts and you do not need to use this tool.
 
-```bash
+``` bash
 # lists all the conflicting users
 $ grafana-cli user-manager conflicts list
 
@@ -243,10 +246,10 @@ Add alert values to notification templates, so that you can create a single temp
 
 When an alert fails to fire, see when something is wrong with your contact point(s) and the reason for the error. The Receivers API contains information on the error, including a time stamp, duration of the attempt, and the error. You can also view the errors for each contact point in the UI.
 
-{{< figure src="/static/img/docs/alerting/alert-view-notification-errors-whats-new-v9.3.png" max-width="750px" caption="Alert notification errors" >}}
+{{\< figure src="/static/img/docs/alerting/alert-view-notification-errors-whats-new-v9.3.png" max-width="750px" caption="Alert notification errors" \>}}
 
 ### Redesign of the expressions pipeline
 
 We've redesigned the expressions pipeline editor to combine the expressions editor and the preview into a single view.
 
-{{< figure src="/static/img/docs/alerting/alert-expression-pipeline-whats-new-v9.3.png" max-width="750px" caption="Expression pipeline redesign" >}}
+{{\< figure src="/static/img/docs/alerting/alert-expression-pipeline-whats-new-v9.3.png" max-width="750px" caption="Expression pipeline redesign" \>}}

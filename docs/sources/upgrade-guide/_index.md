@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - installation/upgrading/
-  - setup-grafana/upgrade-grafana
-description: Upgrade Grafana
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- installation/upgrading/
+- setup-grafana/upgrade-grafana
+  description: Upgrade Grafana
+  keywords:
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-title: Upgrade Grafana
-weight: 3
----
+  - enterprise
+  - oss
+    title: Upgrade Grafana
+    weight: 3
+
+-----
 
 # Upgrade Grafana
 
@@ -26,4 +29,4 @@ To learn what's available in a Grafana release, refer to [What's New](../whatsne
 
 Refer to any of the following upgrade guides:
 
-{{< section menuTitle="true">}}
+{{\< section menuTitle="true"\>}}

@@ -1,32 +1,35 @@
----
+-----
+
 aliases:
-  - ../../panels/visualizations/status-history/
-  - ../../visualizations/status-history/
-description: Configure options for Grafana's status history visualization
-keywords:
-  - grafana
-  - docs
-  - status history
-  - panel
-labels:
+
+- ../../panels/visualizations/status-history/
+- ../../visualizations/status-history/
+  description: Configure options for Grafana's status history visualization
+  keywords:
+- grafana
+- docs
+- status history
+- panel
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Status history
-weight: 100
-refs:
-  color-scheme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
-  value-mappings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-value-mappings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-value-mappings/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Status history
+    weight: 100
+    refs:
+    color-scheme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+    value-mappings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-value-mappings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-value-mappings/
+
+-----
 
 # Status history
 
@@ -34,10 +37,10 @@ A status history visualization displays data in a way that shows periodic states
 
 For example, if you're monitoring the health status of different services, you can use a status history to visualize the different statuses, such as “True” or "False," over time. Each status is represented by a different color:
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-status-history-v11.6.png" max-width="800px" alt="A status history panel showing the health status of different sensors" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-status-history-v11.6.png" max-width="800px" alt="A status history panel showing the health status of different sensors" \>}}
 
 {{% admonition type="note" %}}
-A status history is similar to a [state timeline](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/state-timeline/), but has different [configuration options](#status-history-options). Unlike state timelines, status histories don't merge consecutive values.
+A status history is similar to a [state timeline](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/panels-visualizations/visualizations/state-timeline/), but has different [configuration options](#status-history-options). Unlike state timelines, status histories don't merge consecutive values.
 {{% /admonition %}}
 
 Use a status history when you need to:
@@ -48,11 +51,11 @@ Use a status history when you need to:
 
 ## Configure a status history
 
-Once you've [created a dashboard](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/), you can use the following state timeline video as a reference for how to configure a status history:
+Once you've [created a dashboard](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/build-dashboards/create-dashboard/), you can use the following state timeline video as a reference for how to configure a status history:
 
-{{< youtube id="a9wZHM0mdxo" >}}
+{{\< youtube id="a9wZHM0mdxo" \>}}
 
-{{< docs/play title="Grafana State Timeline & Status History" url="https://play.grafana.org/d/qD-rVv6Mz/6-state-timeline-and-status-history?orgId=1s" >}}
+{{\< docs/play title="Grafana State Timeline & Status History" url="https://play.grafana.org/d/qD-rVv6Mz/6-state-timeline-and-status-history?orgId=1s" \>}}
 
 ## Supported data formats
 
@@ -68,7 +71,7 @@ The following tables are examples of the type of data you need for a status hist
 
 #### Single time column with null values
 
-| Timestamps         | Backend_01 | Backend_02 |
+| Timestamps         | Backend\_01 | Backend\_02 |
 | ------------------ | ---------- | ---------- |
 | 2024-02-29 8:00:00 | OK         | WARN       |
 | 2024-02-29 8:15:00 | WARN       |            |
@@ -79,11 +82,11 @@ The following tables are examples of the type of data you need for a status hist
 
 The data is converted as follows, with the null and empty values visualized as gaps in the status history:
 
-{{< figure src="/static/img/docs/status-history-panel/status_history_with_null.png" max-width="1025px" alt="A status history panel with null values showing the status of two servers" >}}
+{{\< figure src="/static/img/docs/status-history-panel/status\_history\_with\_null.png" max-width="1025px" alt="A status history panel with null values showing the status of two servers" \>}}
 
 #### Two time columns without null values
 
-| Start time         | End time           | Backend_01 | Backend_02 |
+| Start time         | End time           | Backend\_01 | Backend\_02 |
 | ------------------ | ------------------ | ---------- | ---------- |
 | 2024-02-29 8:00:00 | 2024-02-29 8:15:00 | OK         | OK         |
 | 2024-02-29 8:15:00 | 2024-02-29 8:30:00 | OK         | OK         |
@@ -93,15 +96,15 @@ The data is converted as follows, with the null and empty values visualized as g
 
 The data is converted as follows:
 
-{{< figure src="/static/img/docs/status-history-panel/status_history.png" max-width="1025px" alt="A status history panel with two time columns showing the status of two servers" >}}
+{{\< figure src="/static/img/docs/status-history-panel/status\_history.png" max-width="1025px" alt="A status history panel with two time columns showing the status of two servers" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Status history options
 
@@ -122,32 +125,32 @@ Use these options to refine the visualization.
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-2.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/legend-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Tooltip options
 
-{{< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/tooltip-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Axis options
 
-{{< docs/shared lookup="visualizations/axis-options-3.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/axis-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

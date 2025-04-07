@@ -1,26 +1,29 @@
----
+-----
+
 description: Upgrade to Grafana v9.0
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-labels:
+
+- grafana
+- configuration
+- documentation
+- upgrade
+  labels:
   products:
-    - enterprise
-    - oss
-menutitle: Upgrade to v9.0
-title: Upgrade to Grafana v9.0
-weight: 2300
----
+  - enterprise
+  - oss
+    menutitle: Upgrade to v9.0
+    title: Upgrade to Grafana v9.0
+    weight: 2300
+
+-----
 
 # Upgrade to Grafana v9.0
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA VERSION>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 ## Technical notes
 
@@ -31,7 +34,7 @@ This section describes technical changes associated with this release of Grafana
 Fine-grained access control is now called "Role-based access control (RBAC)". As part of the Grafana 9.0 release, the feature is generally available, and there are several breaking changes:
 
 - Built-in roles are now called basic roles. They now consist of permissions, not roles.
-- The Terraform `builtin_role_assignment` resource is deprecated. Please use [grafana_role](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/role) resource instead.
+- The Terraform `builtin_role_assignment` resource is deprecated. Please use [grafana\_role](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/role) resource instead.
 - Grafana provisioning has a new schema. Please refer to [Provisioning RBAC with Grafana](/docs/grafana/latest/administration/roles-and-permissions/access-control/rbac-grafana-provisioning/) to learn more about provisioning.
 - Basic roles no longer support permission inheritance. Previously, when permissions of a Viewer basic role were modified, it was propagated to the Editor and Admin basic roles. With the Grafana 9.0 release, this is not the case anymore.
 - Several role-based access control actions have been renamed. All database entries that use legacy action names will be migrated to use the new names, but provisioning files and scripts will have to be updated by the user. This change also means that if Grafana is downgraded from 9.0 to a lower version, some role-based access control permissions will not be resolved correctly.
@@ -63,7 +66,7 @@ In the InfluxDB data source, browser access mode was deprecated in grafana 8.0.0
 
 ### Transformations: Allow more complex regex expressions in rename by regex
 
-The rename by regex transformation has been improved to allow global patterns of the form `/<stringToReplace>/g`. Depending on the regex match used, this may cause some transformations to behave slightly differently. You can guarantee the same behavior as before by wrapping the match string in forward slashes (`/`), for example, `(.*)` would become `/(.*)/`. ([Github Issue #48179](https://github.com/grafana/grafana/pull/48179))
+The rename by regex transformation has been improved to allow global patterns of the form `/<stringToReplace>/g`. Depending on the regex match used, this may cause some transformations to behave slightly differently. You can guarantee the same behavior as before by wrapping the match string in forward slashes (`/`), for example, `(.*)` would become `/(.*)/`. ([Github Issue \#48179](https://github.com/grafana/grafana/pull/48179))
 
 ### Clock Panel
 
@@ -97,11 +100,11 @@ possible workarounds in case you end up in an undesired situation.
 
 When we release Grafana 9.0 on June 14th, Grafana will no longer enforce viewers and editor-admins differently. That means that regardless of whether your Grafana Enterprise license is tiered or combined, instead of seeing this on the Stats & Licensing page:
 
-{{< figure src="/static/img/docs/enterprise/separate-licenses.png" max-width="500px" caption="Separate license" >}}
+{{\< figure src="/static/img/docs/enterprise/separate-licenses.png" max-width="500px" caption="Separate license" \>}}
 
 You will see this:
 
-{{< figure src="/static/img/docs/enterprise/combined-licenses.png" max-width="500px" caption="Combined license" >}}
+{{\< figure src="/static/img/docs/enterprise/combined-licenses.png" max-width="500px" caption="Combined license" \>}}
 
 It also means that Grafana will count all users the same, regardless of their role, including org roles (Viewer, Editor, Admin) and fine-grained roles (Dashboard Editor, Reports Editor, etc.). You won’t see a separate warning banner or see users locked out if you hit your limit of viewers or editor-admins, only your total combined limit of active users.
 

@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../admin/metrics/
-  - ../administration/jaeger-instrumentation/
-  - ../administration/view-server/internal-metrics/
-description: Jaeger traces emitted and propagation by Grafana
-keywords:
-  - grafana
-  - jaeger
-  - tracing
-labels:
+
+- ../admin/metrics/
+- ../administration/jaeger-instrumentation/
+- ../administration/view-server/internal-metrics/
+  description: Jaeger traces emitted and propagation by Grafana
+  keywords:
+- grafana
+- jaeger
+- tracing
+  labels:
   products:
-    - enterprise
-    - oss
-title: Set up Grafana monitoring
-weight: 800
----
+  - enterprise
+  - oss
+    title: Set up Grafana monitoring
+    weight: 800
+
+-----
 
 # Set up Grafana monitoring
 
@@ -48,72 +51,68 @@ When enabled, Grafana exposes a number of metrics, including:
 These instructions assume you have already added Prometheus as a data source in Grafana.
 
 1. Enable Prometheus to scrape metrics from Grafana. In your configuration file (`grafana.ini` or `custom.ini` depending on your operating system) remove the semicolon to enable the following configuration options:
+   
+       # Metrics available at HTTP URL /metrics and /metrics/plugins/:pluginId
+       [metrics]
+       # Disable / Enable internal metrics
+       enabled           = true
+       
+       # Disable total stats (stat_totals_*) metrics to be generated
+       disable_total_stats = false
 
-   ```
-   # Metrics available at HTTP URL /metrics and /metrics/plugins/:pluginId
-   [metrics]
-   # Disable / Enable internal metrics
-   enabled           = true
+2. (optional) If you want to require authorization to view the metrics endpoints, then uncomment and set the following options:
+   
+       basic_auth_username =
+       basic_auth_password =
 
-   # Disable total stats (stat_totals_*) metrics to be generated
-   disable_total_stats = false
-   ```
+3. Restart Grafana. Grafana now exposes metrics at http://localhost:3000/metrics.
 
-1. (optional) If you want to require authorization to view the metrics endpoints, then uncomment and set the following options:
-
-   ```
-   basic_auth_username =
-   basic_auth_password =
-   ```
-
-1. Restart Grafana. Grafana now exposes metrics at http://localhost:3000/metrics.
-1. Add the job to your prometheus.yml file.
+4. Add the job to your prometheus.yml file.
    Example:
+   
+       - job_name: 'grafana_metrics'
+       
+          scrape_interval: 15s
+          scrape_timeout: 5s
+       
+          static_configs:
+            - targets: ['localhost:3000']
 
-   ```
-   - job_name: 'grafana_metrics'
+5. Restart Prometheus. Your new job should appear on the Targets tab.
 
-      scrape_interval: 15s
-      scrape_timeout: 5s
+6. In Grafana, click **Connections** in the left-side menu.
 
-      static_configs:
-        - targets: ['localhost:3000']
-   ```
+7. Under your connections, click **Data Sources**.
 
-1. Restart Prometheus. Your new job should appear on the Targets tab.
-1. In Grafana, click **Connections** in the left-side menu.
-1. Under your connections, click **Data Sources**.
-1. Select the **Prometheus** data source.
-1. Under the name of your data source, click **Dashboards**.
-1. On the Dashboards tab, click **Import** in the _Grafana metrics_ row to import the Grafana metrics dashboard. All scraped Grafana metrics are available in the dashboard.
+8. Select the **Prometheus** data source.
+
+9. Under the name of your data source, click **Dashboards**.
+
+10. On the Dashboards tab, click **Import** in the *Grafana metrics* row to import the Grafana metrics dashboard. All scraped Grafana metrics are available in the dashboard.
 
 ### View Grafana metrics in Graphite
 
 These instructions assume you have already added Graphite as a data source in Grafana.
 
 1. Enable sending metrics to Graphite. In your configuration file (`grafana.ini` or `custom.ini` depending on your operating system) remove the semicolon to enable the following configuration options:
+   
+       # Metrics available at HTTP API Url /metrics
+       [metrics]
+       # Disable / Enable internal metrics
+       enabled           = true
+       
+       # Disable total stats (stat_totals_*) metrics to be generated
+       disable_total_stats = false
 
-   ```
-   # Metrics available at HTTP API Url /metrics
-   [metrics]
-   # Disable / Enable internal metrics
-   enabled           = true
+2. Enable \[metrics.graphite\] options:
+   
+       # Send internal metrics to Graphite
+       [metrics.graphite]
+       # Enable by setting the address setting (ex localhost:2003)
+       address = <hostname or ip>:<port#>
+       prefix = prod.grafana.%(instance_name)s.
 
-   # Disable total stats (stat_totals_*) metrics to be generated
-   disable_total_stats = false
-   ```
-
-1. Enable [metrics.graphite] options:
-
-   ```
-   # Send internal metrics to Graphite
-   [metrics.graphite]
-   # Enable by setting the address setting (ex localhost:2003)
-   address = <hostname or ip>:<port#>
-   prefix = prod.grafana.%(instance_name)s.
-   ```
-
-1. Restart Grafana. Grafana now exposes metrics at http://localhost:3000/metrics and sends them to the Graphite location you specified.
+3. Restart Grafana. Grafana now exposes metrics at http://localhost:3000/metrics and sends them to the Graphite location you specified.
 
 ### Pull metrics from Grafana backend plugin into Prometheus
 
@@ -122,40 +121,38 @@ Any installed [backend plugin](https://grafana.com/developers/plugin-tools/key-c
 These instructions assume you have already added Prometheus as a data source in Grafana.
 
 1. Enable Prometheus to scrape backend plugin metrics from Grafana. In your configuration file (`grafana.ini` or `custom.ini` depending on your operating system) remove the semicolon to enable the following configuration options:
+   
+       # Metrics available at HTTP URL /metrics and /metrics/plugins/:pluginId
+       [metrics]
+       # Disable / Enable internal metrics
+       enabled           = true
+       
+       # Disable total stats (stat_totals_*) metrics to be generated
+       disable_total_stats = false
 
-   ```
-   # Metrics available at HTTP URL /metrics and /metrics/plugins/:pluginId
-   [metrics]
-   # Disable / Enable internal metrics
-   enabled           = true
+2. (optional) If you want to require authorization to view the metrics endpoints, then uncomment and set the following options:
+   
+       basic_auth_username =
+       basic_auth_password =
 
-   # Disable total stats (stat_totals_*) metrics to be generated
-   disable_total_stats = false
-   ```
+3. Restart Grafana. Grafana now exposes metrics at `http://localhost:3000/metrics/plugins/<plugin id>`, e.g. http://localhost:3000/metrics/plugins/grafana-github-datasource if you have the [Grafana GitHub datasource](/grafana/plugins/grafana-github-datasource/) installed.
 
-1. (optional) If you want to require authorization to view the metrics endpoints, then uncomment and set the following options:
-
-   ```
-   basic_auth_username =
-   basic_auth_password =
-   ```
-
-1. Restart Grafana. Grafana now exposes metrics at `http://localhost:3000/metrics/plugins/<plugin id>`, e.g. http://localhost:3000/metrics/plugins/grafana-github-datasource if you have the [Grafana GitHub datasource](/grafana/plugins/grafana-github-datasource/) installed.
-1. Add the job to your prometheus.yml file.
+4. Add the job to your prometheus.yml file.
    Example:
+   
+       - job_name: 'grafana_github_datasource'
+       
+          scrape_interval: 15s
+          scrape_timeout: 5s
+          metrics_path: /metrics/plugins/grafana-test-datasource
+       
+          static_configs:
+            - targets: ['localhost:3000']
 
-   ```
-   - job_name: 'grafana_github_datasource'
+5. Restart Prometheus. Your new job should appear on the Targets tab.
 
-      scrape_interval: 15s
-      scrape_timeout: 5s
-      metrics_path: /metrics/plugins/grafana-test-datasource
+6. In Grafana, hover your mouse over the **Configuration** (gear) icon on the left sidebar and then click **Data Sources**.
 
-      static_configs:
-        - targets: ['localhost:3000']
-   ```
+7. Select the **Prometheus** data source.
 
-1. Restart Prometheus. Your new job should appear on the Targets tab.
-1. In Grafana, hover your mouse over the **Configuration** (gear) icon on the left sidebar and then click **Data Sources**.
-1. Select the **Prometheus** data source.
-1. Import a Golang application metrics dashboard - for example [Go Processes](/grafana/dashboards/6671).
+8. Import a Golang application metrics dashboard - for example [Go Processes](/grafana/dashboards/6671).

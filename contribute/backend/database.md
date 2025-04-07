@@ -12,7 +12,7 @@ Grafana supports the [following databases](https://grafana.com/docs/installation
 
 Grafana uses the [XORM](https://xorm.io) framework for persisting objects to the database. For more information on how to use XORM, refer to the [documentation](https://gobook.io/read/gitea.com/xorm/manual-en-US/).
 
-[Services](services.md) don't use XORM directly. Instead, services use the _SQL store_, a special type of service that provides an abstraction for the database layer. There are two ways of using the `sqlstore`: using `sqlstore` handlers, and using the `SQLStore` instance.
+[Services](services.md) don't use XORM directly. Instead, services use the *SQL store*, a special type of service that provides an abstraction for the database layer. There are two ways of using the `sqlstore`: using `sqlstore` handlers, and using the `SQLStore` instance.
 
 ## `sqlstore` handlers
 
@@ -20,8 +20,8 @@ Grafana uses the [XORM](https://xorm.io) framework for persisting objects to the
 
 The `sqlstore` package allows you to register [command handlers](communication.md#commands-and-queries) that either store or retrieve objects from the database. The `sqlstore` handlers are similar to services:
 
-- [Services](services.md) are command handlers that _contain business logic_.
-- `sqlstore` handlers are command handlers that _access the database_.
+- [Services](services.md) are command handlers that *contain business logic*.
+- `sqlstore` handlers are command handlers that *access the database*.
 
 ### Register a `sqlstore` handler
 
@@ -33,7 +33,9 @@ To register a handler:
 - Create a [command handler](communication.md#commands-and-queries).
 - Register the handler in the `init` function:
 
-```go
+<!-- end list -->
+
+``` go
 func init() {
     bus.AddHandlerCtx("sql", DeleteDashboard)
 }
@@ -54,7 +56,7 @@ As opposed to a `sqlstore` handler, the `SQLStore` is a service itself. Like the
 
 To use the `SQLStore`, inject it in your service struct:
 
-```go
+``` go
 type MyService struct {
     SQLStore *sqlstore.SQLStore `inject:""`
 }
@@ -62,7 +64,7 @@ type MyService struct {
 
 You can now make SQL queries in any of your [command handlers](communication.md#commands-and-queries) or [event listeners](communication.md#subscribe-to-an-event):
 
-```go
+``` go
 func (s *MyService) DeleteDashboard(ctx context.Context, cmd *models.DeleteDashboardCommand) error {
     if err := s.SQLStore.WithDbSession(ctx, func(sess *db.Session) error {
         _, err := sess.Exec("DELETE FROM dashboards WHERE dashboard_id=?", cmd.DashboardID)
@@ -75,7 +77,7 @@ For transactions, use the `WithTransactionalDbSession` method instead.
 
 ## Migrations
 
-As your use of Grafana evolves, you may need to create _schema migrations_ for one or more database tables.
+As your use of Grafana evolves, you may need to create *schema migrations* for one or more database tables.
 
 To see all the types of migrations you can add, refer to [migrations.go](/pkg/services/sqlstore/migrator/migrations.go).
 
@@ -98,7 +100,9 @@ Most services have their migrations located in the [migrations](/pkg/services/sq
 To add a migration:
 
 - Open the [migrations.go](/pkg/services/sqlstore/migrations/migrations.go) file.
+
 - In the `AddMigrations` function, find the `addXxxMigration` function for the service you want to create a migration for.
+
 - At the end of the `addXxxMigration` function, register your migration (refer to the following example).
 
 - [Example](https://github.com/grafana/grafana/blob/00d0640b6e778ddaca021670fe851fe00982acf2/pkg/services/sqlstore/migrations/migrations.go#L55-L70)
@@ -114,7 +118,9 @@ To add a migration:
 - If needed, add the `AddMigration(mg *migrator.Migrator)` method to the service.
 - At the end of the `AddMigration` method, register your migration:
 
-```go
+<!-- end list -->
+
+``` go
 func (s *MyService) AddMigration(mg *migrator.Migrator) {
     // ...
 

@@ -1,21 +1,24 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/integrations/configure-mqtt/
 description: Configure the MQTT notifier integration for Alerting
 keywords:
-  - grafana
-  - alerting
-  - guide
-  - contact point
-  - mqtt
-labels:
+
+- grafana
+- alerting
+- guide
+- contact point
+- mqtt
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: MQTT
-title: Configure the MQTT notifier for Alerting
-weight: 140
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: MQTT
+    title: Configure the MQTT notifier for Alerting
+    weight: 140
+
+-----
 
 # Configure the MQTT notifier for Alerting
 
@@ -26,19 +29,26 @@ Use the Grafana Alerting - MQTT integration to send notifications to an MQTT bro
 To configure the MQTT integration for Alerting, complete the following steps.
 
 1. In the left-side menu, click **Alerts & IRM** and then **Alerting**.
-1. On the **Contact Points** tab, click **+ Add contact point**.
-1. Enter a descriptive name for the contact point.
-1. From the Integration list, select **MQTT**.
-1. Enter your broker URL in the **Broker URL** field. Supports `tcp`, `ssl`, `mqtt`, `mqtts`, `ws`, `wss` schemes. For example: `tcp://127.0.0.1:1883`.
-1. Enter the MQTT topic name in the **Topic** field.
-1. In **Optional MQTT settings**, specify additional settings for the MQTT integration if needed.
-1. Click **Test** to check that your integration works.
 
-   ** For Grafana Alertmanager only.**
+2. On the **Contact Points** tab, click **+ Add contact point**.
 
+3. Enter a descriptive name for the contact point.
+
+4. From the Integration list, select **MQTT**.
+
+5. Enter your broker URL in the **Broker URL** field. Supports `tcp`, `ssl`, `mqtt`, `mqtts`, `ws`, `wss` schemes. For example: `tcp://127.0.0.1:1883`.
+
+6. Enter the MQTT topic name in the **Topic** field.
+
+7. In **Optional MQTT settings**, specify additional settings for the MQTT integration if needed.
+
+8. Click **Test** to check that your integration works.
+   
+   \*\* For Grafana Alertmanager only.\*\*
+   
    A test alert notification should be sent to the MQTT broker.
 
-1. Click **Save** contact point.
+9. Click **Save** contact point.
 
 The integration sends data in JSON format by default. You can change that using **Message format** field in the **Optional MQTT settings** section. There are two supported formats:
 
@@ -49,7 +59,7 @@ The integration sends data in JSON format by default. You can change that using 
 
 If the JSON message format is selected in **Optional MQTT settings**, the payload is sent in the following structure.
 
-```json
+``` json
 {
   "receiver": "My MQTT integration",
   "status": "firing",
@@ -153,6 +163,6 @@ Each alert instance in the `alerts` array has the following fields.
 | panelURL     | string | A link to the panel if the alert has a Panel ID annotation                         |
 | imageURL     | string | URL of a screenshot of a panel assigned to the rule that created this notification |
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Alert rules are not coupled to dashboards anymore. The fields related to dashboards `dashboardId` and `panelId` have been removed.
-{{< /admonition >}}
+{{\< /admonition \>}}

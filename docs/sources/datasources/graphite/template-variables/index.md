@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../../data-sources/graphite/template-variables/
-description: Guide for using template variables when querying the Graphite data source
-keywords:
-  - grafana
-  - graphite
-  - queries
-  - template
-  - variable
-labels:
+
+- ../../data-sources/graphite/template-variables/
+  description: Guide for using template variables when querying the Graphite data source
+  keywords:
+- grafana
+- graphite
+- queries
+- template
+- variable
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Graphite template variables
-weight: 300
-refs:
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  variable-syntax-advanced-variable-format-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/#advanced-variable-format-options
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/variable-syntax/#advanced-variable-format-options
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Graphite template variables
+    weight: 300
+    refs:
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    variable-syntax-advanced-variable-format-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/\#advanced-variable-format-options
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/variable-syntax/\#advanced-variable-format-options
+
+-----
 
 # Graphite template variables
 
@@ -65,9 +68,7 @@ To create a variable using tag values, use the Grafana functions `tags` and `tag
 
 Multiple filter expressions and expressions can contain other variables. For example:
 
-```
-tag_values(server, server=~backend\*, app=~${apps:regex})
-```
+    tag_values(server, server=~backend\*, app=~${apps:regex})
 
 For details, refer to the [Graphite docs on the autocomplete API for tags](http://graphite.readthedocs.io/en/latest/tags.html#auto-complete-support).
 
@@ -80,7 +81,7 @@ Non-tag queries use the default glob formatting for multi-value variables.
 
 **Using regex formatting and the Equal Tilde operator, `=~`:**
 
-```text
+``` text
 server=~${servers:regex}
 ```
 
@@ -126,7 +127,7 @@ For example, `apps.$app.servers.*` uses the variable `$app` in its query definit
 ### Use `__searchFilter` to filter query variable results
 
 You can use `__searchFilter` in the query field to filter the query result based on what the user types in the dropdown select box.
-The default value for `__searchFilter` is `*` if you've not entered anything, and `` when used as part of a regular expression.
+The default value for `__searchFilter` is `*` if you've not entered anything, and \`\` when used as part of a regular expression.
 
 #### Search filter example
 
@@ -134,13 +135,13 @@ To use `__searchFilter` as part of the query field to enable searching for `serv
 
 Query
 
-```bash
+``` bash
 apps.$app.servers.$__searchFilter
 ```
 
 TagValues
 
-```bash
+``` bash
 tag_values(server, server=~${__searchFilter:regex})
 ```
 

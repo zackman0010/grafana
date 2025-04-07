@@ -1,61 +1,64 @@
----
+-----
+
 aliases:
-  - ../data-sources/aws-cloudwatch/
-  - ../data-sources/aws-cloudwatch/preconfig-cloudwatch-dashboards/
-  - ../data-sources/aws-cloudwatch/provision-cloudwatch/
-  - cloudwatch/
-  - preconfig-cloudwatch-dashboards/
-  - provision-cloudwatch/
-description: Guide for using Amazon CloudWatch in Grafana
-keywords:
-  - grafana
-  - cloudwatch
-  - guide
-labels:
+
+- ../data-sources/aws-cloudwatch/
+- ../data-sources/aws-cloudwatch/preconfig-cloudwatch-dashboards/
+- ../data-sources/aws-cloudwatch/provision-cloudwatch/
+- cloudwatch/
+- preconfig-cloudwatch-dashboards/
+- provision-cloudwatch/
+  description: Guide for using Amazon CloudWatch in Grafana
+  keywords:
+- grafana
+- cloudwatch
+- guide
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Amazon CloudWatch
-title: Amazon CloudWatch data source
-weight: 200
-refs:
-  logs:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/logs/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/logs/
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  configure-grafana-aws:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#aws
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#aws
-  alerting:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Amazon CloudWatch
+    title: Amazon CloudWatch data source
+    weight: 200
+    refs:
+    logs:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/logs/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/logs/
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    configure-grafana-aws:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#aws
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#aws
+    alerting:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+
+-----
 
 # Amazon CloudWatch data source
 
@@ -75,10 +78,13 @@ To troubleshoot issues while setting up the CloudWatch data source, check the `/
 ## Configure the data source
 
 1. Click **Connections** in the left-side menu.
-1. Under Your connections, click **Data sources**.
-1. Enter `CloudWatch` in the search bar.
-1. Click **CloudWatch**.
 
+2. Under Your connections, click **Data sources**.
+
+3. Enter `CloudWatch` in the search bar.
+
+4. Click **CloudWatch**.
+   
    The **Settings** tab of the data source is displayed.
 
 ### Configure AWS authentication
@@ -95,7 +101,7 @@ You can attach these permissions to the IAM role or IAM user you configured in [
 
 ##### Metrics-only permissions
 
-```json
+``` json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -136,7 +142,7 @@ You can attach these permissions to the IAM role or IAM user you configured in [
 
 ##### Logs-only permissions
 
-```json
+``` json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -171,7 +177,7 @@ You can attach these permissions to the IAM role or IAM user you configured in [
 
 ##### Metrics and logs permissions
 
-```json
+``` json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -225,7 +231,7 @@ You can attach these permissions to the IAM role or IAM user you configured in [
 
 ##### Cross-account observability permissions
 
-```json
+``` json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -238,9 +244,9 @@ You can attach these permissions to the IAM role or IAM user you configured in [
 }
 ```
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Cross-account observability lets you to retrieve metrics and logs across different accounts in a single region but you can't query EC2 Instance Attributes across accounts because those come from the EC2 API and not the CloudWatch API.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Configure CloudWatch settings
 
@@ -248,7 +254,7 @@ Cross-account observability lets you to retrieve metrics and logs across differe
 
 Grafana can't load custom namespaces through the CloudWatch [GetMetricData API](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricData.html).
 
-To make custom metrics appear in the data source's query editor fields, specify the names of the namespaces containing the custom metrics in the data source configuration's _Namespaces of Custom Metrics_ field.
+To make custom metrics appear in the data source's query editor fields, specify the names of the namespaces containing the custom metrics in the data source configuration's *Namespaces of Custom Metrics* field.
 The field accepts multiple namespaces separated by commas.
 
 #### Timeout
@@ -263,7 +269,7 @@ Because of limits on concurrently running queries in CloudWatch, they can also t
 
 To automatically add links in your logs when the log contains the `@xrayTraceId` field, link an X-Ray data source in the "X-Ray trace link" section of the data source configuration.
 
-{{< figure src="/static/img/docs/cloudwatch/xray-trace-link-configuration-8-2.png" max-width="800px" class="docs-image--no-shadow" caption="Trace link configuration" >}}
+{{\< figure src="/static/img/docs/cloudwatch/xray-trace-link-configuration-8-2.png" max-width="800px" class="docs-image--no-shadow" caption="Trace link configuration" \>}}
 
 The data source select contains only existing data source instances of type X-Ray.
 To use this feature, you must already have an X-Ray data source configured.
@@ -275,7 +281,7 @@ To log the `@xrayTraceId`, see the [AWS X-Ray documentation](https://docs.amazon
 
 To provide the field to Grafana, your log queries must also contain the `@xrayTraceId` field, for example by using the query `fields @message, @xrayTraceId`.
 
-{{< figure src="/static/img/docs/cloudwatch/xray-link-log-details-8-2.png" max-width="800px" class="docs-image--no-shadow" caption="Trace link in log details" >}}
+{{\< figure src="/static/img/docs/cloudwatch/xray-link-log-details-8-2.png" max-width="800px" class="docs-image--no-shadow" caption="Trace link in log details" \>}}
 
 ### Configure the data source with grafana.ini
 
@@ -283,9 +289,9 @@ The Grafana [configuration file](ref:configure-grafana-aws) includes an `AWS` se
 
 | Configuration option      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `allowed_auth_providers`  | Specifies which authentication providers are allowed for the CloudWatch data source. The following providers are enabled by default in open-source Grafana: `default` (AWS SDK default), keys (Access and secret key), credentials (Credentials file), ec2_IAM_role (EC2 IAM role).                                                                                                                                                             |
+| `allowed_auth_providers`  | Specifies which authentication providers are allowed for the CloudWatch data source. The following providers are enabled by default in open-source Grafana: `default` (AWS SDK default), keys (Access and secret key), credentials (Credentials file), ec2\_IAM\_role (EC2 IAM role).                                                                                                                                                             |
 | `assume_role_enabled`     | Allows you to disable `assume role (ARN)` in the CloudWatch data source. The assume role (ARN) is enabled by default in open-source Grafana.                                                                                                                                                                                                                                                                                                    |
-| `list_metrics_page_limit` | Sets the limit of List Metrics API pages. When a custom namespace is specified in the query editor, the [List Metrics API](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html) populates the _Metrics_ field and _Dimension_ fields. The API is paginated and returns up to 500 results per page, and the data source also limits the number of pages to 500 by default. This setting customizes that limit. |
+| `list_metrics_page_limit` | Sets the limit of List Metrics API pages. When a custom namespace is specified in the query editor, the [List Metrics API](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html) populates the *Metrics* field and *Dimension* fields. The API is paginated and returns up to 500 results per page, and the data source also limits the number of pages to 500 by default. This setting customizes that limit. |
 
 ### Provision the data source
 
@@ -296,7 +302,7 @@ For more information about provisioning, and for available configuration options
 
 ##### Using AWS SDK (default)
 
-```yaml
+``` yaml
 apiVersion: 1
 datasources:
   - name: CloudWatch
@@ -308,7 +314,7 @@ datasources:
 
 ##### Using credentials' profile name (non-default)
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -323,7 +329,7 @@ datasources:
 
 ##### Using accessKey and secretKey
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -339,7 +345,7 @@ datasources:
 
 ##### Using AWS SDK Default and ARN of IAM Role to Assume
 
-```yaml
+``` yaml
 apiVersion: 1
 datasources:
   - name: CloudWatch
@@ -358,7 +364,7 @@ For details, see the [query editor documentation](query-editor/).
 
 ## Query caching
 
-When you enable [query and resource caching](/docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/#query-and-resource-caching), Grafana temporarily stores the results of data source queries and resource requests. Query caching is available in CloudWatch Metrics in Grafana Cloud and Grafana Enterprise. It is not available in CloudWatch Logs Insights due to how query results are polled from AWS.
+When you enable [query and resource caching](/docs/grafana/\<GRAFANA_VERSION\>/administration/data-source-management/#query-and-resource-caching), Grafana temporarily stores the results of data source queries and resource requests. Query caching is available in CloudWatch Metrics in Grafana Cloud and Grafana Enterprise. It is not available in CloudWatch Logs Insights due to how query results are polled from AWS.
 
 ## Use template variables
 
@@ -381,13 +387,14 @@ The CloudWatch data source ships with curated and pre-configured dashboards for 
 **To import curated dashboards:**
 
 1. Navigate to the data source's [configuration page](#configure-the-data-source).
-1. Select the **Dashboards** tab.
 
+2. Select the **Dashboards** tab.
+   
    This displays the curated selection of importable dashboards.
 
-1. Select **Import** for the dashboard to import.
+3. Select **Import** for the dashboard to import.
 
-{{< figure src="/static/img/docs/v65/cloudwatch-dashboard-import.png" caption="CloudWatch dashboard import" >}}
+{{\< figure src="/static/img/docs/v65/cloudwatch-dashboard-import.png" caption="CloudWatch dashboard import" \>}}
 
 **To customize an imported dashboard:**
 
@@ -401,11 +408,9 @@ For example, you can enable alerts through the use of the `stats` command.
 
 This is also a valid query for alerting on messages that include the text "Exception":
 
-```
-filter @message like /Exception/
-    | stats count(*) as exceptionCount by bin(1h)
-    | sort exceptionCount desc
-```
+    filter @message like /Exception/
+        | stats count(*) as exceptionCount by bin(1h)
+        | sort exceptionCount desc
 
 {{% admonition type="note" %}}
 If you receive an error like `input data must be a wide series but got ...` when trying to alert on a query, make sure that your query returns valid numeric data that can be output to a Time series panel.

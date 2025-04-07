@@ -1,18 +1,21 @@
----
-canonical: https://grafana.com/docs/grafana/latest/developers/http_api/examples/
+-----
+
+canonical: https://grafana.com/docs/grafana/latest/developers/http\_api/examples/
 keywords:
-  - grafana
-  - tutorials
-  - API
-labels:
+
+- grafana
+- tutorials
+- API
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'HTTP API examples'
-menuTitle: 'Examples'
-weight: 02
----
+  - enterprise
+  - oss
+    title: 'HTTP API examples'
+    menuTitle: 'Examples'
+    weight: 02
+
+-----
 
 # HTTP API examples
 
-{{< section >}}
+{{\< section \>}}

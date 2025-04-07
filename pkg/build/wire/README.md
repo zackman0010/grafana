@@ -1,29 +1,23 @@
 # Wire: Automated Initialization in Go
 
 [![Build Status](https://github.com/google/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/google/wire/actions)
-[![godoc](https://godoc.org/github.com/google/wire?status.svg)][godoc]
+[![godoc](https://godoc.org/github.com/google/wire?status.svg)](https://godoc.org/github.com/google/wire)
 [![Coverage](https://codecov.io/gh/google/wire/branch/master/graph/badge.svg)](https://codecov.io/gh/google/wire)
 
-
 Wire is a code generation tool that automates connecting components using
-[dependency injection][]. Dependencies between components are represented in
+[dependency injection](https://en.wikipedia.org/wiki/Dependency_injection). Dependencies between components are represented in
 Wire as function parameters, encouraging explicit initialization instead of
 global variables. Because Wire operates without runtime state or reflection,
 code written to be used with Wire is useful even for hand-written
 initialization.
 
-For an overview, see the [introductory blog post][].
-
-[dependency injection]: https://en.wikipedia.org/wiki/Dependency_injection
-[introductory blog post]: https://blog.golang.org/wire
-[godoc]: https://godoc.org/github.com/google/wire
-[travis]: https://travis-ci.com/google/wire
+For an overview, see the [introductory blog post](https://blog.golang.org/wire).
 
 ## Installing
 
 Install Wire by running:
 
-```shell
+``` shell
 go install github.com/google/wire/cmd/wire@latest
 ```
 
@@ -31,15 +25,10 @@ and ensuring that `$GOPATH/bin` is added to your `$PATH`.
 
 ## Documentation
 
-- [Tutorial][]
-- [User Guide][]
-- [Best Practices][]
-- [FAQ][]
-
-[Tutorial]: ./_tutorial/README.md
-[Best Practices]: ./docs/best-practices.md
-[FAQ]: ./docs/faq.md
-[User Guide]: ./docs/guide.md
+- [Tutorial](./_tutorial/README.md)
+- [User Guide](./docs/guide.md)
+- [Best Practices](./docs/best-practices.md)
+- [FAQ](./docs/faq.md)
 
 ## Project status
 
@@ -54,7 +43,4 @@ reports and fixes.
 
 For questions, please use [GitHub Discussions](https://github.com/google/wire/discussions).
 
-This project is covered by the Go [Code of Conduct][].
-
-[Code of Conduct]: ./CODE_OF_CONDUCT.md
-[go-cloud mailing list]: https://groups.google.com/forum/#!forum/go-cloud
+This project is covered by the Go [Code of Conduct](./CODE_OF_CONDUCT.md).

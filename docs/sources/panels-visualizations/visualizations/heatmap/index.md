@@ -1,37 +1,40 @@
----
+-----
+
 aliases:
-  - ../../features/panels/heatmap/
-  - ../../visualizations/heatmap/
-description: Configure options for Grafana's heatmap visualization
-keywords:
-  - grafana
-  - heatmap
-  - panel
-  - documentation
-labels:
+
+- ../../features/panels/heatmap/
+- ../../visualizations/heatmap/
+  description: Configure options for Grafana's heatmap visualization
+  keywords:
+- grafana
+- heatmap
+- panel
+- documentation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Heatmap
-weight: 100
-refs:
-  intro-histograms-heatmaps:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/intro-histograms/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/fundamentals/intro-histograms/
-  histograms:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
-  dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Heatmap
+    weight: 100
+    refs:
+    intro-histograms-heatmaps:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/intro-histograms/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/fundamentals/intro-histograms/
+    histograms:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
+    dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/create-dashboard/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/create-dashboard/
+
+-----
 
 # Heatmap
 
@@ -39,9 +42,9 @@ Heatmaps allow you to view [histograms](ref:histograms) over time. While histogr
 
 For example, if you want to understand the temperature changes for the past few years, you can use a heatmap visualization to identify trends in your data:
 
-{{< figure src="/static/img/docs/heatmap-panel/temperature_heatmap.png" max-width="1025px" alt="A heatmap visualization showing the random walk distribution over time" >}}
+{{\< figure src="/static/img/docs/heatmap-panel/temperature\_heatmap.png" max-width="1025px" alt="A heatmap visualization showing the random walk distribution over time" \>}}
 
-{{< docs/play title="Grafana Heatmaps" url="https://play.grafana.org/d/heatmap-calculate-log/" >}}
+{{\< docs/play title="Grafana Heatmaps" url="https://play.grafana.org/d/heatmap-calculate-log/" \>}}
 
 You can use a heatmap visualization if you need to:
 
@@ -54,7 +57,7 @@ You can use a heatmap visualization if you need to:
 
 Once you’ve created a [dashboard](ref:dashboards), the following video shows you how to configure a heatmap visualization:
 
-{{< youtube id="SGWBzQ54koE" >}}
+{{\< youtube id="SGWBzQ54koE" \>}}
 
 ## Supported data formats
 
@@ -76,15 +79,15 @@ The table below is a simplified output of random walk distribution over time:
 
 The data is converted as follows:
 
-{{< figure src="/static/img/docs/heatmap-panel/heatmap.png" max-width="1025px" alt="A heatmap visualization showing the random walk distribution over time" >}}
+{{\< figure src="/static/img/docs/heatmap-panel/heatmap.png" max-width="1025px" alt="A heatmap visualization showing the random walk distribution over time" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Heatmap options
 
@@ -120,7 +123,7 @@ The following options define the display of the y-axis.
 
 <!-- prettier-ignore-end -->
 
-{{< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+3" >}}
+{{\< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+3" \>}}
 
 ### Colors options
 
@@ -167,8 +170,8 @@ Use these settings to control the display of heatmap cells.
 | Unit | Unit configuration. |
 | Decimals | This setting determines decimal configuration. |
 | Cell gap | Set how much space there is between cells. |
-| Hide cells with values <= | Enter a value. |
-| Hide cells with values >= | Enter a value. |
+| Hide cells with values \<= | Enter a value. |
+| Hide cells with values \>= | Enter a value. |
 
 <!-- prettier-ignore-end -->
 
@@ -210,8 +213,8 @@ Set the color used to show exemplar data.
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

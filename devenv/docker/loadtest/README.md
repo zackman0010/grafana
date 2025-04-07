@@ -13,56 +13,55 @@ enable auth proxy together with configuring Grafana for auth proxy.
 
 Run load test for 15 minutes using 2 virtual users and targeting http://localhost:3000.
 
-```bash
+``` bash
 $ ./run.sh
 ```
 
 Run load test for custom duration:
 
-```bash
+``` bash
 $ ./run.sh -d 10s
 ```
 
 Run load test for custom target url:
 
-```bash
+``` bash
 $ ./run.sh -u http://grafana.loc
 ```
 
 Run load test for 10 virtual users:
 
-```bash
+``` bash
 $ ./run.sh -v 10
 ```
 
 Run load test and send the results to the database "myDb" in influxDB running locally on port 8086 (with no authentication):
 
-```bash
+``` bash
 $ ./run.sh  -o influxdb=http://localhost:8086/myDb
 ```
 
 Run auth token slow test (random query latency between 1 and 30 seconds):
 
-```bash
+``` bash
 $ ./run.sh -c auth_token_slow_test -s 30
 ```
 
 Run auth proxy test:
 
-```bash
+``` bash
 $ ./run.sh -c auth_proxy_test
 ```
 
 Run API key test (option `-k` must be a valid `admin` API key)
 
-```bash
+``` bash
 $ ./run.sh -c auth_token_test -k "<api key here>"
 ```
 
-
 Example output:
 
-```bash
+``` bash
 
           /\      |‾‾|  /‾‾/  /‾/
      /\  /  \     |  |_/  /  / /

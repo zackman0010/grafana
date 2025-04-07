@@ -1,21 +1,19 @@
----
-labels:
-  products:
-    - cloud
-    - enterprise
-    - oss
-title: 'Add an alertmanager data source'
----
+-----
+
+## labels: products: - cloud - enterprise - oss title: 'Add an alertmanager data source'
 
 1. Click **Connections** in the left-side menu.
-1. Under Your connections, click **Data sources**.
-1. Enter `Alertmanager` in the search bar.
-1. Click **Alertmanager**.
 
+2. Under Your connections, click **Data sources**.
+
+3. Enter `Alertmanager` in the search bar.
+
+4. Click **Alertmanager**.
+   
    The **Settings** tab of the data source is displayed.
 
-1. Set the data source's basic configuration options:
-
+5. Set the data source's basic configuration options:
+   
    | Name                            | Description                                                                                                                                                                                 |
    | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
    | **Name**                        | Sets the name you use to refer to the data source                                                                                                                                           |

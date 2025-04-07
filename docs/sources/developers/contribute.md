@@ -1,16 +1,19 @@
----
+-----
+
 keywords:
-  - grafana
-  - documentation
-  - developers
-  - resources
-labels:
+
+- grafana
+- documentation
+- developers
+- resources
+  labels:
   products:
-    - enterprise
-    - oss
-title: Contribute to Grafana
-weight: 300
----
+  - enterprise
+  - oss
+    title: Contribute to Grafana
+    weight: 300
+
+-----
 
 # Contribute to Grafana
 
@@ -34,7 +37,7 @@ These resources are useful for all developers.
 
 ## Best practices and style
 
-Our [style guides](https://github.com/grafana/grafana/tree/main/contribute/style-guides) outline Grafana style for frontend, backend, documentation, and more, including best practices. Please read through them before you start editing or coding!
+Our [style guides](https://github.com/grafana/grafana/tree/main/contribute/style-guides) outline Grafana style for frontend, backend, documentation, and more, including best practices. Please read through them before you start editing or coding\!
 
 - [Backend style guide](https://github.com/grafana/grafana/blob/main/contribute/backend/style-guide.md) explains how we want to write Go code in the future.
 

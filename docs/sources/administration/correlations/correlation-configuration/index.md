@@ -1,11 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Correlation
-weight: 10
----
+-----
+
+## labels: products: - enterprise - oss title: Correlation weight: 10
 
 # Correlation
 

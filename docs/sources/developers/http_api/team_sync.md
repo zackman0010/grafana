@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../http_api/external_group_sync/
-  - ./external_group_sync/
-canonical: /docs/grafana/latest/developers/http_api/team_sync/
-description: Grafana Team Sync HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - team
-  - teams
-  - group
-  - member
-  - enterprise
-labels:
+
+- ../../http\_api/external\_group\_sync/
+- ./external\_group\_sync/
+  canonical: /docs/grafana/latest/developers/http\_api/team\_sync/
+  description: Grafana Team Sync HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- team
+- teams
+- group
+- member
+- enterprise
+  labels:
   products:
-    - enterprise
-    - oss
-title: Team Sync HTTP API
----
+  - enterprise
+  - oss
+    title: Team Sync HTTP API
+
+-----
 
 # Team Sync API
 
@@ -41,7 +44,7 @@ See note in the [introduction](#external-group-synchronization-api) for an expla
 
 **Example Request**:
 
-```http
+``` http
 GET /api/teams/1/groups HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -50,7 +53,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -83,7 +86,7 @@ See note in the [introduction](#external-group-synchronization-api) for an expla
 
 **Example Request**:
 
-```http
+``` http
 POST /api/teams/1/groups HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -96,7 +99,7 @@ Authorization: Bearer YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -125,7 +128,7 @@ See note in the [introduction](#external-group-synchronization-api) for an expla
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/teams/1/groups?groupId=cn%3Deditors%2Cou%3Dgroups%2Cdc%3Dgrafana%2Cdc%3Dorg HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -134,7 +137,7 @@ Authorization: Bearer glsa_kcVxDhZtu5ISOZIEt
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

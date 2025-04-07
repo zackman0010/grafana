@@ -1,27 +1,30 @@
----
+-----
+
 description: Learn how Grafana dashboards are built.
 keywords:
-  - grafana
-  - dashboards
-  - panel
-  - data source
-  - transform
-  - query
-labels:
+
+- grafana
+- dashboards
+- panel
+- data source
+- transform
+- query
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Dashboard overview
-title: Grafana dashboards overview
-weight: 390
-refs:
-  transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Dashboard overview
+    title: Grafana dashboards overview
+    weight: 390
+    refs:
+    transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/
+
+-----
 
 # Grafana dashboards overview
 
@@ -29,13 +32,13 @@ Have you ever wondered what a dashboard is? In the observability world, this ter
 
 The following image illustrates a sample Grafana dashboard:
 
-{{< figure src="/media/docs/grafana/dashboards-overview/complex-dashboard-example.png" max-width="750px" caption="Example Grafana dashboard" >}}
+{{\< figure src="/media/docs/grafana/dashboards-overview/complex-dashboard-example.png" max-width="750px" caption="Example Grafana dashboard" \>}}
 
 A Grafana dashboard consists of panels displaying data in beautiful graphs, charts, and other visualizations. These panels are created using components that transform raw data from a data source into visualizations. The process involves passing data through three gates: a plugin, a query, and an optional transformation.
 
 The image below displays all the gates, followed by detailed explanations of their purpose, usage, and significance.
 
-{{< figure src="/media/docs/grafana/dashboards-overview/dashboard-component-architecture.png" max-width="750px" caption="Dashboard component architecture" >}}
+{{\< figure src="/media/docs/grafana/dashboards-overview/dashboard-component-architecture.png" max-width="750px" caption="Dashboard component architecture" \>}}
 
 ## Data sources
 
@@ -45,7 +48,7 @@ It can be difficult to understand the distinctions between different data source
 
 ## Plugins
 
-A Grafana plugin is software that adds new capabilities to Grafana. They come in many types, but right now we'll address _data source plugins_. The job of a Grafana data source plugin is to take a query you want answered, retrieve the data from the data source, and reconcile the differences between the data model of the data source and the data model of Grafana dashboards. It does this using a unified data structure called a [data frame](https://grafana.com/developers/plugin-tools/key-concepts/data-frames).
+A Grafana plugin is software that adds new capabilities to Grafana. They come in many types, but right now we'll address *data source plugins*. The job of a Grafana data source plugin is to take a query you want answered, retrieve the data from the data source, and reconcile the differences between the data model of the data source and the data model of Grafana dashboards. It does this using a unified data structure called a [data frame](https://grafana.com/developers/plugin-tools/key-concepts/data-frames).
 
 The data coming into the plugin from the data source might be in many different formats (such as JSON, rows and columns, or CSV), but when it leaves the plugin and moves through the rest of the gates toward a visualization, it's always in data frames.
 
@@ -59,7 +62,7 @@ When working with data sources, it's crucial to recognize that each one has its 
 
 The following image shows the Query Editor associated with the Prometheus data source. The `node_cpu_seconds_total` query is written in PromQL and requests just one metric:
 
-{{< figure src="/media/docs/grafana/dashboards-overview/example-query.png" max-width="750px" caption="Example query" >}}
+{{\< figure src="/media/docs/grafana/dashboards-overview/example-query.png" max-width="750px" caption="Example query" \>}}
 
 ## Transformations
 
@@ -76,7 +79,7 @@ Transformations are located in the **Transform** tab in the edit dialog for a pa
 
 The following image shows the transformation dialog:
 
-{{< figure src="/media/docs/grafana/dashboards-overview/example-transform-chain.png" max-width="750px" caption="Example chain of transformations" >}}
+{{\< figure src="/media/docs/grafana/dashboards-overview/example-transform-chain.png" max-width="750px" caption="Example chain of transformations" \>}}
 
 ## Panels
 
@@ -86,7 +89,7 @@ The panel options let you customize many aspects of the visualization and the op
 
 The following image shows a table panel being edited, the panel settings showing the query at the bottom, and the panel options on the right. In this image, you can see how the data source, plugin, query, and panel all come together.
 
-{{< figure src="/media/docs/grafana/dashboards-overview/example-table-panel.png" max-width="750px" caption="Example table panel" >}}
+{{\< figure src="/media/docs/grafana/dashboards-overview/example-table-panel.png" max-width="750px" caption="Example table panel" \>}}
 
 Selecting the best visualization depends on the data and how you want it presented. To see examples of dashboards in one place that you can browse and inspect, refer to [Grafana Play](https://play.grafana.org/), which has feature showcases and a variety of examples.
 

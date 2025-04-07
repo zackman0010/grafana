@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../basics/glossary/
-  - ../getting-started/glossary/
-  - ../guides/glossary/
-description: Grafana glossary
-keywords:
-  - grafana
-  - intro
-  - glossary
-  - dictionary
-labels:
+
+- ../basics/glossary/
+- ../getting-started/glossary/
+- ../guides/glossary/
+  description: Grafana glossary
+  keywords:
+- grafana
+- intro
+- glossary
+- dictionary
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Glossary
-weight: 850
----
+  - cloud
+  - enterprise
+  - oss
+    title: Glossary
+    weight: 850
+
+-----
 
 # Glossary
 

@@ -42,7 +42,7 @@ See [formatting guidelines](create-pull-request.md#formatting-guidelines) for mo
 
 The Grafana release process uses a bot to automatically assign pull requests to a milestone to make it easier for release managers to track changes. For example, [generating changelog (release note)](#what-to-include-in-changelog-and-release-notes) must be in a milestone.
 
-That being said, _you don't have to assign a milestone manually_ to a pull request. Instead, when it is merged and closed, a bot will then look for the most appropriate milestone and assign it to the pull request.
+That being said, *you don't have to assign a milestone manually* to a pull request. Instead, when it is merged and closed, a bot will then look for the most appropriate milestone and assign it to the pull request.
 
 The bot-assigned milestone should always reflect the branch into which the pull request is merged. For example:
 
@@ -98,7 +98,7 @@ Label the pull request with `area/grafana/ui` or `area/grafana/runtime`.
 
 In case the pull request introduces a deprecation you should document this. Label the pull request with `add to changelog` and use the following template at the end of the pull request description to describe the deprecation change.
 
-```md
+``` md
 # Deprecation notice
 
 <Deprecation description>
@@ -108,7 +108,7 @@ In case the pull request introduces a deprecation you should document this. Labe
 
 In case the pull request introduces a breaking change you should document this. Label the pull request with `add to changelog` and `breaking change` and use the following template at the end of the pull request description describing the breaking change:
 
-```md
+``` md
 # Release notice breaking change
 
 <Breaking change description>
@@ -118,7 +118,7 @@ In case the pull request introduces a breaking change you should document this. 
 
 Backporting is the process of copying the pull request into the version branch of one or multiple previous releases.
 
-Backporting is a rare exception, should only be done for _critical bug fixes_, and involves the intervention of a Grafana Labs employee.
+Backporting is a rare exception, should only be done for *critical bug fixes*, and involves the intervention of a Grafana Labs employee.
 
 If your pull request fixes a critical bug and needs to be backported, add it to the "Critical Bug Release" form so the team can approve the backport and know that a release needs to be made. Specify the correct `backport vx.x` labels for the releases to which the fix needs to be backported. Once approved, the backporting process continues.
 

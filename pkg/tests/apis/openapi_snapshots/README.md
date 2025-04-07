@@ -6,27 +6,32 @@ The RTK API clients are generated from processed OpenAPI files using the `script
 
 To generate or update the RTK API clients:
 
-1. _If generating or updating an RTK client for the first time_, update `scripts/generate-rtk-apis.js` so `schemaFile` points to the processed spec files, for example:
-   ```typescript
+1. *If generating or updating an RTK client for the first time*, update `scripts/generate-rtk-apis.js` so `schemaFile` points to the processed spec files, for example:
+   
+   ``` typescript
    '../public/app/features/dashboards/api/endpoints.gen.ts': {
      schemaFile: '../data/openapi/dashboard.grafana.app-v0alpha1.json',
    },
    ```
 
 2. Generate or update the OpenAPI spec files by running:
-   ```bash
+   
+   ``` bash
    go test pkg/tests/apis/openapi_test.go
    ```
-   _If generating an RTK client for a new API_, also add a new group/version of the API to the `groups` slice. If the API is behind a feature toggle, add the toggle to `EnableFeatureToggles` in `pkg/tests/apis/openapi_test.go`.
-
+   
+   *If generating an RTK client for a new API*, also add a new group/version of the API to the `groups` slice. If the API is behind a feature toggle, add the toggle to `EnableFeatureToggles` in `pkg/tests/apis/openapi_test.go`.
 
 3. Run:
-   ```bash
+   
+   ``` bash
    yarn generate-apis
    ```
+   
    This command generates (or updates) the spec files in the `data/openapi` directory and generates the RTK API clients.
 
 If you want to process the OpenAPI files without generating the RTK API clients (for example, if you have a separate `generate-rtk-apis` file), run:
-```bash
+
+``` bash
 yarn process-specs
 ```

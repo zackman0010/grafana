@@ -1,23 +1,26 @@
----
+-----
+
 description: Guide for upgrading to Grafana v11.2
 keywords:
-  - grafana
-  - configuration
-  - documentation
-  - upgrade
-  - '11.2'
-title: Upgrade to Grafana v11.2
-menuTitle: Upgrade to v11.2
-weight: 1000
----
+
+- grafana
+- configuration
+- documentation
+- upgrade
+- '11.2'
+  title: Upgrade to Grafana v11.2
+  menuTitle: Upgrade to v11.2
+  weight: 1000
+
+-----
 
 # Upgrade to Grafana v11.2
 
-{{< docs/shared lookup="upgrade/intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="upgrade/intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
-{{< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="back-up/back-up-grafana.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="upgrade/upgrade-common-tasks.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Technical notes
 
@@ -49,9 +52,9 @@ A data source UID can only contain:
 
 - You can fetch all your data sources using the `/api/datasources` API. Review the `uid` fields, comparing them to the correct format, as shown [in the docs](https://grafana.com/docs/grafana/latest/developers/http_api/data_source/#get-all-data-sources). Following is a script that can help, but note that it's missing authentication that you [have to add yourself](https://grafana.com/docs/grafana/latest/developers/http_api/#authenticating-api-requests):
 
-```
-curl http://localhost:3000/api/datasources | jq '.[] | select((.uid | test("^[a-zA-Z0-9\\-_]+$") | not) or (.uid | length > 40)) | {id, uid, name, type}'
-```
+<!-- end list -->
+
+    curl http://localhost:3000/api/datasources | jq '.[] | select((.uid | test("^[a-zA-Z0-9\\-_]+$") | not) or (.uid | length > 40)) | {id, uid, name, type}'
 
 - Alternatively, you can check the server logs for the `Invalid datasource uid` [error](https://github.com/grafana/grafana/blob/68751ed3107c4d15d33f34b15183ee276611785c/pkg/services/datasources/service/store.go#L429).
 
@@ -62,11 +65,12 @@ You'll need to create a new data source with the correct UID and update your das
 #### How do I update my dashboards to use the new or updated data source?
 
 1. Go to the dashboard using the data source and update it by selecting the new or updated data source from the picker below your panel.
-1. Update the dashboard's JSON model directly using search and replace.
 
+2. Update the dashboard's JSON model directly using search and replace.
+   
    Navigate to [dashboard json model](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/view-dashboard-json-model/) and carefully replace all the instances of old `uid` with the newly created `uid`.
-
-   {{< figure src="/media/docs/grafana/screenshot-grafana-11-datasource-uid-enforcement.png" alt="Updating JSON Model of a Dashboard">}}
+   
+   {{\< figure src="/media/docs/grafana/screenshot-grafana-11-datasource-uid-enforcement.png" alt="Updating JSON Model of a Dashboard"\>}}
 
 #### How do I update my alert rules to use the new or updated data source?
 

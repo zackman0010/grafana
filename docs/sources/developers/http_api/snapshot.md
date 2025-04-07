@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/snapshot/
-canonical: /docs/grafana/latest/developers/http_api/snapshot/
-description: Grafana HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - snapshot
-labels:
+
+- ../../http\_api/snapshot/
+  canonical: /docs/grafana/latest/developers/http\_api/snapshot/
+  description: Grafana HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- snapshot
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Snapshot API'
----
+  - enterprise
+  - oss
+    title: 'Snapshot API'
+
+-----
 
 # Snapshot API
 
@@ -24,7 +27,7 @@ title: 'Snapshot API'
 
 **Example Request**:
 
-```http
+``` http
     POST /api/snapshots HTTP/1.1
     Accept: application/json
     Content-Type: application/json
@@ -75,7 +78,7 @@ When creating a snapshot using the API, you have to provide the full dashboard p
 
 **Example Response**:
 
-```http
+``` http
     HTTP/1.1 200
     Content-Type: application/json
     {
@@ -103,7 +106,7 @@ Query parameters:
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboard/snapshots HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -111,7 +114,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -137,7 +140,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 GET /api/snapshots/YYYYYYY HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -145,7 +148,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -194,7 +197,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/snapshots/YYYYYYY HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -202,7 +205,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -217,14 +220,14 @@ This API call can be used without authentication by using the secret delete key 
 
 **Example Request**:
 
-```http
+``` http
 GET /api/snapshots-delete/XXXXXXX HTTP/1.1
 Accept: application/json
 ```
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

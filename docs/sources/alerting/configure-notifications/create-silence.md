@@ -1,109 +1,119 @@
----
+-----
+
 aliases:
-  - ../silences/create-silence/ # /docs/grafana/<GRAFANA_VERSION>/alerting/silences/create-silence/
-  - ../silences/edit-silence/ # /docs/grafana/<GRAFANA_VERSION>/alerting/silences/edit-silence/
-  - ../silences/linking-to-silence-form/ # /docs/grafana/<GRAFANA_VERSION>/alerting/silences/linking-to-silence-form/
-  - ../silences/remove-silence/ # /docs/grafana/<GRAFANA_VERSION>/alerting/silences/remove-silence/
-  - ../unified-alerting/silences/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/silences/
-  - ../silences/ # /docs/grafana/<GRAFANA_VERSION>/alerting/silences/
-  - ../manage-notifications/create-silence/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/create-silence/
-canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/create-silence/
-description: Create silences to stop notifications from getting created for a specified window of time
-keywords:
-  - grafana
-  - alerting
-  - silence
-  - mute
-labels:
+
+- ../silences/create-silence/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/silences/create-silence/
+- ../silences/edit-silence/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/silences/edit-silence/
+- ../silences/linking-to-silence-form/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/silences/linking-to-silence-form/
+- ../silences/remove-silence/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/silences/remove-silence/
+- ../unified-alerting/silences/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/silences/
+- ../silences/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/silences/
+- ../manage-notifications/create-silence/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/create-silence/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/create-silence/
+  description: Create silences to stop notifications from getting created for a specified window of time
+  keywords:
+- grafana
+- alerting
+- silence
+- mute
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Configure silences
-weight: 440
-refs:
-  configure-alertmanager:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-alertmanager/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
-  silence-url:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/reference/#alert
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/#alert
-  shared-alert-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
-  shared-notification-policies:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/notification-policies/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
-  shared-silences:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/create-silence/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
-  shared-mute-timings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/mute-timings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
-  alertmanager-architecture:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-alertmanager/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Configure silences
+    weight: 440
+    refs:
+    configure-alertmanager:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/configure-alertmanager/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
+    silence-url:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/reference/\#alert
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/\#alert
+    shared-alert-labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/
+    shared-notification-policies:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/notification-policies/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/notification-policies/
+    shared-silences:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/create-silence/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-silence/
+    shared-mute-timings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/mute-timings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
+    alertmanager-architecture:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/configure-alertmanager/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
+
+-----
 
 # Configure silences
 
 Silences stop notifications from being created for a specified time window but do not interrupt alert evaluation. Use them to temporarily prevent alert notifications, such as during incident response or a maintenance window.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Silences are assigned to a [specific Alertmanager](ref:alertmanager-architecture) and only suppress notifications for alerts managed by that Alertmanager.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< docs/shared lookup="alerts/mute-timings-vs-silences.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/mute-timings-vs-silences.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Add silences
 
 To add a silence, complete the following steps.
 
 1. In the left-side menu, click **Alerts & IRM** and then **Alerting**.
-1. Click **Silences**.
-1. From the **Alertmanager** dropdown, select an external Alertmanager to create and manage silences for the external data source. Otherwise, keep the default option of Grafana.
-1. Click **Create silence** to open the Create silence page.
-1. In **Silence start and end**, select the start and end date to indicate when the silence should go into effect and expire.
-1. Optionally, in **Duration**, specify how long the silence is enforced. This automatically updates the end time in the **Silence start and end** field.
-1. In the **Label** and **Value** fields, enter one or more _Matching Labels_ to determine which alerts the silence applies to.
 
-   {{< docs/shared lookup="alerts/how_label_matching_works.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+2. Click **Silences**.
 
+3. From the **Alertmanager** dropdown, select an external Alertmanager to create and manage silences for the external data source. Otherwise, keep the default option of Grafana.
+
+4. Click **Create silence** to open the Create silence page.
+
+5. In **Silence start and end**, select the start and end date to indicate when the silence should go into effect and expire.
+
+6. Optionally, in **Duration**, specify how long the silence is enforced. This automatically updates the end time in the **Silence start and end** field.
+
+7. In the **Label** and **Value** fields, enter one or more *Matching Labels* to determine which alerts the silence applies to.
+   
+   {{\< docs/shared lookup="alerts/how\_label\_matching\_works.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
+   
    Any matching alerts (in the firing state only) display under **Affected alert instances**.
 
-1. In **Comment**, add details about the silence.
-1. Click **Submit**.
+8. In **Comment**, add details about the silence.
+
+9. Click **Submit**.
 
 ## Edit silences
 
 To edit a silence, complete the following steps.
 
 1. In the left-side menu, click **Alerts & IRM** and then **Alerting**.
-1. Click **Silences** to view the list of existing silences.
-1. Find the silence you want to edit, then click **Edit** (pen icon).
-1. Make the desired changes, then click **Submit** to save your changes.
+2. Click **Silences** to view the list of existing silences.
+3. Find the silence you want to edit, then click **Edit** (pen icon).
+4. Make the desired changes, then click **Submit** to save your changes.
 
 ## Remove silences
 
 To remove a silence, complete the following steps.
 
 1. In the left-side menu, click **Alerts & IRM** and then **Alerting**.
-1. Click **Silences** to view the list of existing silences.
-1. Select the silence you want to end, then click **Unsilence**.
+2. Click **Silences** to view the list of existing silences.
+3. Select the silence you want to end, then click **Unsilence**.
 
 > **Note:** You cannot remove a silence manually. Silences that have ended are retained and listed for five days.
 
@@ -121,7 +131,7 @@ In custom notification templates, you can use [`.Alert.SilenceURL`](ref:silence-
 
 If [`.Alert.SilenceURL`](ref:silence-url) doesn’t fit your specific use case, you can also create a custom silence link for your custom templates.
 
-{{< collapse title="Create a custom silence link" >}}
+{{\< collapse title="Create a custom silence link" \>}}
 
 When linking to a silence form, provide the default matching labels and comment via `matcher` and `comment` query parameters. The `matcher` parameter should be in the following format `[label][operator][value]` where the `operator` parameter can be one of the following: `=` (equals, not regular expression), `!=` (not equals, not regular expression), `=~` (equals, regular expression), `!~` (not equals, regular expression).
 The URL can contain many query parameters with the key `matcher`.
@@ -129,7 +139,7 @@ For example, to link to silence form with matching labels `severity=critical` & 
 
 To link to a new silence page for an external Alertmanager, add a `alertmanager` query parameter with the Alertmanager data source name.
 
-{{< /collapse >}}
+{{\< /collapse \>}}
 
 ## Inhibition rules
 

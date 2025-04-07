@@ -1,8 +1,6 @@
----
-title: Graph styles options
-comments: |
-  This file is used in the following visualizations: candlestick, time series.
----
+-----
+
+## title: Graph styles options comments: | This file is used in the following visualizations: candlestick, time series.
 
 <!-- prettier-start-ignore -->
 
@@ -70,13 +68,13 @@ The **Gradient mode** option located under the **Graph styles** section has a mo
 
 If the **Color scheme** is set to **From thresholds (by value)** and **Gradient mode** is set to **Scheme**, then the line or bar color changes as it crosses the defined thresholds.
 
-{{< figure src="/static/img/docs/time-series-panel/gradient_mode_scheme_thresholds_line.png" max-width="1200px" alt="Colors scheme: From thresholds" >}}
+{{\< figure src="/static/img/docs/time-series-panel/gradient\_mode\_scheme\_thresholds\_line.png" max-width="1200px" alt="Colors scheme: From thresholds" \>}}
 
 ###### Gradient color schemes
 
 The following image shows a line chart with the **Green-Yellow-Red (by value)** color scheme option selected.
 
-{{< figure src="/static/img/docs/time-series-panel/gradient_mode_scheme_line.png" max-width="1200px" alt="Color scheme: Green-Yellow-Red" >}}
+{{\< figure src="/static/img/docs/time-series-panel/gradient\_mode\_scheme\_line.png" max-width="1200px" alt="Color scheme: Green-Yellow-Red" \>}}
 
 #### Line style
 
@@ -88,9 +86,9 @@ Choose a solid, dashed, or dotted line style:
 
 ![Line styles examples](/static/img/docs/time-series-panel/line-styles-examples-v9.png)
 
-{{< docs/shared lookup="visualizations/connect-null-values.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/connect-null-values.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
-{{< docs/shared lookup="visualizations/disconnect-values.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/disconnect-values.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 To change the color, use the standard [color scheme](ref:color-scheme) field option.
 
@@ -115,10 +113,13 @@ Set whether Grafana stacks or displays series on top of each other. Be cautious 
 The stacking group option is only available as an override. For more information about creating an override, refer to [Configure field overrides](ref:configure-field-overrides).
 
 1. Edit the panel and click **Overrides**.
-1. Create a field override for the **Stack series** option.
-1. In stacking mode, click **Normal**.
-1. Name the stacking group in which you want the series to appear.
 
+2. Create a field override for the **Stack series** option.
+
+3. In stacking mode, click **Normal**.
+
+4. Name the stacking group in which you want the series to appear.
+   
    The stacking group name option is only available when you create an override.
 
 #### Bar alignment

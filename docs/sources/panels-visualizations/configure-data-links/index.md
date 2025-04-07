@@ -1,138 +1,141 @@
----
+-----
+
 aliases:
-  - ../linking/data-link-variables/
-  - ../linking/data-links/
-  - ../panels/configure-data-links/
-  - ../reference/datalinks/
-  - ../variables/url-variables/
-  - ../variables/variable-types/url-variables/
-keywords:
-  - grafana
-  - url variables
-  - variables
-  - data link
-  - documentation
-  - playlist
-labels:
+
+- ../linking/data-link-variables/
+- ../linking/data-links/
+- ../panels/configure-data-links/
+- ../reference/datalinks/
+- ../variables/url-variables/
+- ../variables/variable-types/url-variables/
+  keywords:
+- grafana
+- url variables
+- variables
+- data link
+- documentation
+- playlist
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure data links and actions
-title: Configure data links and actions
-description: Configure data links to create links between dashboards and link to external resources
-weight: 80
-refs:
-  api-settings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/canvas/#button-api-options
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/latest/panels-visualizations/visualizations/canvas/#button-api-options
-  global-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__from-and-__to
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#__from-and-__to
-  heatmap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/heatmap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/heatmap/
-  templates-and-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  status-history:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/status-history/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
-  bar-gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
-  canvas:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/canvas/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
-  candlestick:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/candlestick/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
-  gauge:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/gauge/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
-  google-cloud-monitoring:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/google-cloud-monitoring/query-editor/#deep-link-from-grafana-panels-to-the-google-cloud-console-metrics-explorer
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/google-cloud-monitoring/query-editor/#deep-link-from-grafana-panels-to-the-google-cloud-console-metrics-explorer
-  state-timeline:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/state-timeline/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
-  xy-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/xy-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
-  trend:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/trend/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
-  geomap:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/geomap/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
-  stat:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/stat/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
-  time-series:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
-  cloudwatch:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/aws-cloudwatch/query-editor/#deep-link-grafana-panels-to-the-cloudwatch-console-1
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/aws-cloudwatch/query-editor/#deep-link-grafana-panels-to-the-cloudwatch-console-1
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
-  histogram:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/histogram/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
-  pie-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/pie-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
-  bar-chart:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/bar-chart/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure data links and actions
+    title: Configure data links and actions
+    description: Configure data links to create links between dashboards and link to external resources
+    weight: 80
+    refs:
+    api-settings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/canvas/\#button-api-options
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/latest/panels-visualizations/visualizations/canvas/\#button-api-options
+    global-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_from-and-\_\_to
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#\_\_from-and-\_\_to
+    heatmap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/heatmap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/heatmap/
+    templates-and-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    status-history:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/status-history/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/status-history/
+    bar-gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-gauge/
+    canvas:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/canvas/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/canvas/
+    candlestick:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/candlestick/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/candlestick/
+    gauge:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/gauge/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/gauge/
+    google-cloud-monitoring:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/google-cloud-monitoring/query-editor/\#deep-link-from-grafana-panels-to-the-google-cloud-console-metrics-explorer
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/google-cloud-monitoring/query-editor/\#deep-link-from-grafana-panels-to-the-google-cloud-console-metrics-explorer
+    state-timeline:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/state-timeline/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/state-timeline/
+    xy-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/xy-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/xy-chart/
+    trend:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/trend/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/trend/
+    geomap:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/geomap/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/geomap/
+    stat:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/stat/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/stat/
+    time-series:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+    cloudwatch:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/aws-cloudwatch/query-editor/\#deep-link-grafana-panels-to-the-cloudwatch-console-1
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/aws-cloudwatch/query-editor/\#deep-link-grafana-panels-to-the-cloudwatch-console-1
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/table/
+    histogram:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/histogram/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/histogram/
+    pie-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/pie-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/pie-chart/
+    bar-chart:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/bar-chart/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/bar-chart/
+
+-----
 
 # Configure data links and actions
 
-_Data links_ allow you to link to other panels, dashboards, and external resources and _actions_ let you trigger basic, unauthenticated, API calls.
+*Data links* allow you to link to other panels, dashboards, and external resources and *actions* let you trigger basic, unauthenticated, API calls.
 In both cases, you can carry out these tasks while maintaining the context of the source panel.
 
 ## Data links
@@ -153,7 +156,7 @@ If there's only one data link in the visualization, clicking anywhere on the vis
 
 You can configure data links for the following visualizations:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Bar chart](ref:bar-chart)
 - [Bar gauge](ref:bar-gauge)
@@ -172,7 +175,7 @@ You can configure data links for the following visualizations:
 - [Trend](ref:trend)
 - [XY chart](ref:xy-chart)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 ## Actions
 
@@ -182,7 +185,7 @@ Using actions, you can trigger processes like starting or shutting down a server
 
 You can configure actions for the following visualizations:
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Bar chart](ref:bar-chart)
 - [Candlestick](ref:candlestick)
@@ -193,9 +196,9 @@ You can configure actions for the following visualizations:
 - [Trend](ref:trend)
 - [XY chart](ref:xy-chart)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
-## Data link and action variables {#data-link-variables}
+## Data link and action variables {\#data-link-variables}
 
 Variables in data links and actions let you send people to a detailed dashboard or trigger an API call with preserved data filters. For example, you could use variables to specify a label, time range, series, or variable selection.
 
@@ -205,7 +208,7 @@ To see a list of available variables, enter `$` in the data link or action **URL
 These variables changed in 6.4 so if you have an older version of Grafana, then use the version picker to select docs for an older version of Grafana.
 {{% /admonition %}}
 
-Azure Monitor, [CloudWatch](ref:cloudwatch), and [Google Cloud Monitoring](ref:google-cloud-monitoring) have pre-configured data links called _deep links_.
+Azure Monitor, [CloudWatch](ref:cloudwatch), and [Google Cloud Monitoring](ref:google-cloud-monitoring) have pre-configured data links called *deep links*.
 
 You can also use template variables in your data links or actions URLs. For more information, refer to [Templates and variables](ref:templates-and-variables).
 
@@ -278,67 +281,82 @@ When linking to another dashboard that uses template variables, select variable 
 
 If you want to add all of the current dashboard's variables to the URL, then use `${__all_variables}`.
 
-## Add data links or actions {#add-a-data-link}
+## Add data links or actions {\#add-a-data-link}
 
 The following tasks describe how to configure data links and actions.
 
-{{< tabs >}}
-{{< tab-content name="Add data links" >}}
+{{\< tabs \>}}
+{{\< tab-content name="Add data links" \>}}
 To add a data link, follow these steps:
 
 1. Navigate to the panel to which you want to add the data link.
-1. Hover over any part of the panel to display the menu icon in the upper-right corner.
-1. Click the menu icon and select **Edit** to open the panel editor.
-1. Scroll down to the **Data links and actions** section and expand it.
-1. Click **+ Add link**.
-1. In the dialog box that opens, enter a **Title**.
 
+2. Hover over any part of the panel to display the menu icon in the upper-right corner.
+
+3. Click the menu icon and select **Edit** to open the panel editor.
+
+4. Scroll down to the **Data links and actions** section and expand it.
+
+5. Click **+ Add link**.
+
+6. In the dialog box that opens, enter a **Title**.
+   
    This is a human-readable label for the link displayed in the UI. This is a required field.
 
-1. Enter the **URL** to which you want to link.
-
+7. Enter the **URL** to which you want to link.
+   
    To add a data link variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. This is a required field.
 
-1. If you want the link to open in a new tab, toggle the **Open in a new tab** switch.
-1. If you want the data link to open with a single click on the visualization, toggle the **One click** switch.
+8. If you want the link to open in a new tab, toggle the **Open in a new tab** switch.
 
+9. If you want the data link to open with a single click on the visualization, toggle the **One click** switch.
+   
    Only one data link can have **One click** enabled at a time. **One click** is only supported for some visualizations.
 
-1. Click **Save** to save changes and close the dialog box.
-1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
+10. Click **Save** to save changes and close the dialog box.
 
-   {{< /tab-content >}}
-   {{< tab-content name="Add actions" >}}
+11. Click **Save dashboard**.
 
-   {{< admonition type="note">}}
-   Actions are not supported for all visualizations. For the list of supported visualizations, refer to [Supported visualizations](#supported-visualizations-1).
-   {{< /admonition >}}
+12. Click **Back to dashboard** and then **Exit edit**.
+    
+    {{\< /tab-content \>}}
+    {{\< tab-content name="Add actions" \>}}
+    
+    {{\< admonition type="note"\>}}
+    Actions are not supported for all visualizations. For the list of supported visualizations, refer to [Supported visualizations](#supported-visualizations-1).
+    {{\< /admonition \>}}
+    
+    To add an action, by follow these steps:
 
-   To add an action, by follow these steps:
+13. Navigate to the panel to which you want to add the action.
 
-1. Navigate to the panel to which you want to add the action.
-1. Hover over any part of the panel to display the menu icon in the upper-right corner.
-1. Click the menu icon and select **Edit** to open the panel editor.
-1. Scroll down to the **Data links and actions** section and expand it.
-1. Click **+ Add action**.
-1. In the dialog box that opens, define the API call settings:
+14. Hover over any part of the panel to display the menu icon in the upper-right corner.
 
-   | Option               | Description                                                                                                                                               |
-   | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | Title                | A human-readable label for the action that's displayed in the UI.                                                                                         |
-   | Confirmation message | A descriptive prompt to confirm or cancel the action.                                                                                                     |
-   | Method               | Select from **POST**, **PUT**, or **GET**.                                                                                                                |
-   | URL                  | The request URL.</p><p>To add a variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. |
-   | Query parameters     | **Key** and **Value** pairs. Click the **+** icon to add as many key/value pairs as you need.                                                             |
-   | Headers              | Comprised of **Key** and **Value** pairs and a **Content-Type**.</p><p>Click the **+** icon to add as many key/value pairs as you need.                   |
-   | Content-Type         | Select from the following: **application/json**, **text/plain**, **application/XML**, and **application/x-www-form-urlencoded**.                          |
-   | Body                 | The body of the request.                                                                                                                                  |
+15. Click the menu icon and select **Edit** to open the panel editor.
 
-1. Click **Save** to save changes and close the dialog box.
-1. Click **Save dashboard**.
-1. Click **Back to dashboard** and then **Exit edit**.
-   {{< /tab-content >}}
-   {{< /tabs >}}
+16. Scroll down to the **Data links and actions** section and expand it.
+
+17. Click **+ Add action**.
+
+18. In the dialog box that opens, define the API call settings:
+    
+    | Option               | Description                                                                                                                                               |
+    | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Title                | A human-readable label for the action that's displayed in the UI.                                                                                         |
+    | Confirmation message | A descriptive prompt to confirm or cancel the action.                                                                                                     |
+    | Method               | Select from **POST**, **PUT**, or **GET**.                                                                                                                |
+    | URL                  | The request URL.</p><p>To add a variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. |
+    | Query parameters     | **Key** and **Value** pairs. Click the **+** icon to add as many key/value pairs as you need.                                                             |
+    | Headers              | Comprised of **Key** and **Value** pairs and a **Content-Type**.</p><p>Click the **+** icon to add as many key/value pairs as you need.                   |
+    | Content-Type         | Select from the following: **application/json**, **text/plain**, **application/XML**, and **application/x-www-form-urlencoded**.                          |
+    | Body                 | The body of the request.                                                                                                                                  |
+
+19. Click **Save** to save changes and close the dialog box.
+
+20. Click **Save dashboard**.
+
+21. Click **Back to dashboard** and then **Exit edit**.
+    {{\< /tab-content \>}}
+    {{\< /tabs \>}}
 
 If you add multiple data links or actions, you can control the order in which they appear in the visualization. To do this, click and drag the data link or action to the desired position.

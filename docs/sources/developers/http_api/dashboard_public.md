@@ -1,26 +1,29 @@
----
+-----
+
 aliases:
-  - ../../http_api/dashboard_public/
-canonical: /docs/grafana/latest/developers/http_api/dashboard_public/
-description: Grafana Shared Dashboards HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - dashboard
-labels:
+
+- ../../http\_api/dashboard\_public/
+  canonical: /docs/grafana/latest/developers/http\_api/dashboard\_public/
+  description: Grafana Shared Dashboards HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- dashboard
+  labels:
   products:
-    - enterprise
-    - oss
-title: Shared Dashboards HTTP API
-refs:
-  role-based-access-control-permissions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
----
+  - enterprise
+  - oss
+    title: Shared Dashboards HTTP API
+    refs:
+    role-based-access-control-permissions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/
+
+-----
 
 # Shared Dashboards API
 
@@ -46,7 +49,7 @@ See note in the [introduction](#shared-dashboards-api) for an explanation.
 
 **Example Request for new shared dashboard**:
 
-```http
+``` http
 POST /api/dashboards/uid/xCpsVuc4z/public-dashboards/ HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -73,7 +76,7 @@ JSON Body schema:
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 78
@@ -103,7 +106,7 @@ Status Codes:
 
 The error response body will have the following properties:
 
-```http
+``` http
 HTTP/1.1 400 Bad request
 Content-Type: application/json; charset=UTF-8
 Content-Length: 107
@@ -131,7 +134,7 @@ See note in the [introduction](#shared-dashboard-api) for an explanation.
 
 **Example Request for updating a shared dashboard**:
 
-```http
+``` http
 PATCH /api/dashboards/uid/xCpsVuc4z/public-dashboards/cd56d9fd-f3d4-486d-afba-a21760e2acbe HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -154,7 +157,7 @@ JSON Body schema:
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 78
@@ -184,7 +187,7 @@ Status Codes:
 
 The error response body will have the following properties:
 
-```http
+``` http
 HTTP/1.1 400 Bad request
 Content-Type: application/json; charset=UTF-8
 Content-Length: 107
@@ -212,7 +215,7 @@ See note in the [introduction](#shared-dashboard-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboards/uid/xCpsVuc4z/public-dashboards/ HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -221,7 +224,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -263,7 +266,7 @@ See note in the [introduction](#shared-dashboard-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/dashboards/uid/xCpsVuc4z/public-dashboards/cd56d9fd-f3d4-486d-afba-a21760e2acbe HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -290,7 +293,7 @@ See note in the [introduction](#shared-dashboard-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/dashboards/public-dashboards?perpage=2&page=3 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -299,7 +302,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

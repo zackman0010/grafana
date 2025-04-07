@@ -1,13 +1,6 @@
----
-description: Detect and revoke leaked Grafana service account tokens
-labels:
-  products:
-    - enterprise
-    - oss
-menuTitle: Configure secret scanning
-title: Configure Grafana secret scanning and notifications
-weight: 1000
----
+-----
+
+## description: Detect and revoke leaked Grafana service account tokens labels: products: - enterprise - oss menuTitle: Configure secret scanning title: Configure Grafana secret scanning and notifications weight: 1000
 
 # Configure Grafana secret scanning and notifications
 
@@ -27,7 +20,7 @@ You can also configure the service to send an outgoing webhook notification to a
 
 The notification includes a JSON payload that contains the following data:
 
-```json
+``` json
 {
   "alert_uid": "c9ce50a1-d66b-45e4-9b5d-175766cfc026",
   "link_to_upstream_details": <URL to token leak>,
@@ -46,15 +39,17 @@ Secret scanning is disabled by default. Outgoing connections are made once you e
 ## Before you begin
 
 - Ensure all your API keys have been migrated to service accounts.
-  For more information about service account migration, refer to [Migrate API keys to Grafana service accounts](/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/).
+  For more information about service account migration, refer to [Migrate API keys to Grafana service accounts](/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/).
 
 ## Configure secret scanning
 
 1. Open the Grafana configuration file.
 
-1. In the `[secretscan]` section, update the following parameters:
+2. In the `[secretscan]` section, update the following parameters:
 
-```ini
+<!-- end list -->
+
+``` ini
 [secretscan]
 # Enable secretscan feature
 enabled = true
@@ -70,14 +65,16 @@ Save the configuration file and restart Grafana.
 1. Create an oncall integration of the type **Webhook** and set up alerts.
    To learn how to create a Grafana OnCall integration, refer to [Inbound Webhook integrations for Grafana OnCall](/docs/oncall/latest/integrations/webhook/).
 
-1. Copy the webhook URL of the new integration.
+2. Copy the webhook URL of the new integration.
 
-1. Open the Grafana configuration file.
+3. Open the Grafana configuration file.
 
-1. In the `[secretscan]` section, update the following parameters,
+4. In the `[secretscan]` section, update the following parameters,
    replacing the URL with the webhook URL you copied in step 2.
 
-```ini
+<!-- end list -->
+
+``` ini
 [secretscan]
 # URL to send a webhook payload in oncall format
 oncall_url = https://example.url/integrations/v1/webhook/3a359nib9eweAd9lAAAETVdOx/

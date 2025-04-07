@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../http_api/auth/
-  - ../../http_api/authentication/
-canonical: /docs/grafana/latest/developers/http_api/auth/
-description: Grafana Authentication HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - authentication
-labels:
+
+- ../../http\_api/auth/
+- ../../http\_api/authentication/
+  canonical: /docs/grafana/latest/developers/http\_api/auth/
+  description: Grafana Authentication HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- authentication
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Authentication HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Authentication HTTP API '
+
+-----
 
 # Authentication API
 
@@ -46,7 +49,7 @@ See note in the [introduction](#authentication-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/auth/keys HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -59,7 +62,7 @@ Query Parameters:
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -85,13 +88,13 @@ This endpoint has been made obsolete in Grafana 11.3.0.
 
 {{% /admonition %}}
 
-Endpoint is obsolete and has been moved to [Grafana service account API](../serviceaccount/). For more information, refer to [Migrate to Grafana service account API](/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/).
+Endpoint is obsolete and has been moved to [Grafana service account API](../serviceaccount/). For more information, refer to [Migrate to Grafana service account API](/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/).
 
 `POST /api/auth/keys`
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 410
 Content-Type: application/json
 
@@ -118,7 +121,7 @@ See note in the [introduction](#authentication-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/auth/keys/3 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -127,7 +130,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

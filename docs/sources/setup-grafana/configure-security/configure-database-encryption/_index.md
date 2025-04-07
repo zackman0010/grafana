@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../../administration/database-encryption/
-  - ../../enterprise/enterprise-encryption/
-description: If you have a Grafana Enterprise license, you can integrate with a variety
+
+- ../../administration/database-encryption/
+- ../../enterprise/enterprise-encryption/
+  description: If you have a Grafana Enterprise license, you can integrate with a variety
   of key management system providers.
-labels:
+  labels:
   products:
-    - enterprise
-    - oss
-title: Configure database encryption
-weight: 700
----
+  - enterprise
+  - oss
+    title: Configure database encryption
+    weight: 700
+
+-----
 
 # Configure database encryption
 

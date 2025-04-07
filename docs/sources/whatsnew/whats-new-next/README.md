@@ -1,6 +1,6 @@
----
-draft: true
----
+-----
+
+## draft: true
 
 # Contribute to 'What's new in Grafana Cloud'
 

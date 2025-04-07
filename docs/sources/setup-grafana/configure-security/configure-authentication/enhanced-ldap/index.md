@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/enhanced_ldap/
-  - ../../../auth/enhanced_ldap/
-description: Grafana Enhanced LDAP Integration Guide
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - ldap
-  - active directory
-  - enterprise
-labels:
+
+- ../../../enterprise/enhanced\_ldap/
+- ../../../auth/enhanced\_ldap/
+  description: Grafana Enhanced LDAP Integration Guide
+  keywords:
+- grafana
+- configuration
+- documentation
+- ldap
+- active directory
+- enterprise
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Enhanced LDAP
-title: Configure enhanced LDAP integration
-weight: 400
----
+  - cloud
+  - enterprise
+    menuTitle: Enhanced LDAP
+    title: Configure enhanced LDAP integration
+    weight: 400
+
+-----
 
 # Configure enhanced LDAP integration
 
@@ -39,7 +42,7 @@ Grafana keeps track of all synchronized users in teams, and you can see which us
 This mechanism allows Grafana to remove an existing synchronized user from a team when its LDAP group membership changes. This mechanism also allows you to manually add
 a user as member of a team, and it will not be removed when the user signs in. This gives you flexibility to combine LDAP group memberships and Grafana team memberships.
 
-[Learn more about team sync.](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync)
+[Learn more about team sync.](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync)
 
 <div class="clearfix"></div>
 
@@ -51,9 +54,9 @@ With active LDAP synchronization, you can configure Grafana to actively sync use
 
 Users with updated role and team membership will need to refresh the page to get access to the new features.
 
-Removed users are automatically logged out and their account disabled. These accounts are displayed in the Server Admin > Users page with a `disabled` label. Disabled users keep their custom permissions on dashboards, folders, and data sources, so if you add them back in your LDAP database, they have access to the application with the same custom permissions as before.
+Removed users are automatically logged out and their account disabled. These accounts are displayed in the Server Admin \> Users page with a `disabled` label. Disabled users keep their custom permissions on dashboards, folders, and data sources, so if you add them back in your LDAP database, they have access to the application with the same custom permissions as before.
 
-```bash
+``` bash
 [auth.ldap]
 ...
 
@@ -78,12 +81,10 @@ For the synchronization to work, the `servers.search_filter` and `servers.attrib
 
 For example:
 
-```
-[[servers]]
-search_filter = "(sAMAccountName=%s)"
-
-[servers.attributes]
-username  = "sAMAccountName"
-```
+    [[servers]]
+    search_filter = "(sAMAccountName=%s)"
+    
+    [servers.attributes]
+    username  = "sAMAccountName"
 
 If the attributes aren't the same, the users' sessions will be terminated after each synchronization. That's because the search will be done using the username's value, and that value doesn't exist for the attribute used in the search filter.

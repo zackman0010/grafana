@@ -1,70 +1,73 @@
----
+-----
+
 aliases:
-  - ../../features/panels/table_panel/
-  - ../../panels/visualizations/table/filter-table-columns/
-  - ../../reference/table/
-  - ../../visualizations/table/
-  - ../../visualizations/table/filter-table-columns/
-  - /docs/grafana/next/panels/visualizations/table/table-field-options/
-description: Configure options for Grafana's table visualization
-keywords:
-  - grafana
-  - dashboard
-  - panels
-  - table panel
-  - table options
-  - format tables
-  - table filter
-  - filter columns
-labels:
+
+- ../../features/panels/table\_panel/
+- ../../panels/visualizations/table/filter-table-columns/
+- ../../reference/table/
+- ../../visualizations/table/
+- ../../visualizations/table/filter-table-columns/
+- /docs/grafana/next/panels/visualizations/table/table-field-options/
+  description: Configure options for Grafana's table visualization
+  keywords:
+- grafana
+- dashboard
+- panels
+- table panel
+- table options
+- format tables
+- table filter
+- filter columns
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Table
-weight: 100
-refs:
-  calculations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
-  time-series-panel:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
-  time-series-to-table-transformation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/#time-series-to-table-transform
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/#time-series-to-table-transform
-  color-scheme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
-  configuration-file:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#configuration-file-location
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#configuration-file-location
-  field-override:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-overrides/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
-  data-transformation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/
-  build-query:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Table
+    weight: 100
+    refs:
+    calculations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+    time-series-panel:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+    time-series-to-table-transformation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/\#time-series-to-table-transform
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/\#time-series-to-table-transform
+    color-scheme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+    configuration-file:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#configuration-file-location
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#configuration-file-location
+    field-override:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-overrides/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
+    data-transformation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/
+    build-query:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
+
+-----
 
 # Table
 
@@ -85,32 +88,32 @@ Any information you might want to put in a spreadsheet can often be best visuali
 
 Tables also provide different styles to visualize data inside the table cells, such as colored text and cell backgrounds, gauges, sparklines, data links, JSON code, and images.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Annotations and alerts are not currently supported for tables.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Configure a table visualization
 
 The following video provides a visual walkthrough of the options you can set in a table visualization.
 If you want to see a configuration in action, check out the video:
 
-{{< youtube id="PCY7O8EJeJY" >}}
+{{\< youtube id="PCY7O8EJeJY" \>}}
 
-{{< docs/play title="Table Visualizations in Grafana" url="https://play.grafana.org/d/OhR1ID6Mk/" >}}
+{{\< docs/play title="Table Visualizations in Grafana" url="https://play.grafana.org/d/OhR1ID6Mk/" \>}}
 
 ## Supported data formats
 
 The table visualization supports any data that has a column-row structure.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 If you’re using a cell type such as sparkline or JSON, the data requirements may differ in a way that’s specific to that type. For more info refer to [Cell type](#cell-type).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Example
 
 This example shows a basic dataset in which there's data for every table cell:
 
-```csv
+``` csv
 Column1, Column2, Column3
 value1 , value2 , value3
 value4 , value5 , value6
@@ -119,7 +122,7 @@ value7 , value8 , value9
 
 If a cell is missing or the table column-row structure is not complete, as in the following example, the table visualization won’t display any of the data:
 
-```csv
+``` csv
 Column1, Column2, Column3
 value1 , value2 , value3
 gap1   , gap2
@@ -138,40 +141,42 @@ For example, you can show or hide specific values.
 To turn on column filtering, follow these steps:
 
 1. In Grafana, navigate to the dashboard with the table with the columns that you want to filter.
-1. Hover over any part of the panel to which you want to add the link to display the actions menu on the top right corner.
-1. Click the menu and select **Edit**.
-1. In the panel editor pane, expand the **Table** options section.
-1. Toggle on the [**Column filter** switch](#table-options).
+2. Hover over any part of the panel to which you want to add the link to display the actions menu on the top right corner.
+3. Click the menu and select **Edit**.
+4. In the panel editor pane, expand the **Table** options section.
+5. Toggle on the [**Column filter** switch](#table-options).
 
 A filter icon (funnel) appears next to each column title.
 
-{{< figure src="/static/img/docs/tables/column-filter-with-icon.png" max-width="350px" alt="Column filtering turned on" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/tables/column-filter-with-icon.png" max-width="350px" alt="Column filtering turned on" class="docs-image--no-shadow" \>}}
 
 ### Filter column values
 
 To filter column values, follow these steps:
 
 1. Click the filter icon (funnel) next to a column title.
-
+   
    Grafana displays the filter options for that column.
+   
+   {{\< figure src="/static/img/docs/tables/filter-column-values.png" max-width="300px" alt="Filter column values" class="docs-image--no-shadow" \>}}
 
-   {{< figure src="/static/img/docs/tables/filter-column-values.png" max-width="300px" alt="Filter column values" class="docs-image--no-shadow" >}}
+2. Click the checkbox next to the values that you want to display or click **Select all**.
 
-1. Click the checkbox next to the values that you want to display or click **Select all**.
-1. Enter text in the search field at the top to show those values in the display so that you can select them rather than scroll to find them.
-1. Choose from several operators to display column values:
+3. Enter text in the search field at the top to show those values in the display so that you can select them rather than scroll to find them.
 
+4. Choose from several operators to display column values:
+   
    - **Contains** - Matches a regex pattern (operator by default).
-   - **Expression** - Evaluates a boolean expression. The character `$` represents the column value in the expression (for example, "$ >= 10 && $ <= 12").
+   - **Expression** - Evaluates a boolean expression. The character `$` represents the column value in the expression (for example, "$ \>= 10 && $ \<= 12").
    - The typical comparison operators: `=`, `!=`, `<`, `<=`, `>`, `>=`.
 
-1. Click the checkbox above the **Ok** and **Cancel** buttons to add or remove all displayed values to and from the filter.
+5. Click the checkbox above the **Ok** and **Cancel** buttons to add or remove all displayed values to and from the filter.
 
 ### Clear column filters
 
 Columns with filters applied have a blue filter displayed next to the title.
 
-{{< figure src="/static/img/docs/tables/filtered-column.png" max-width="100px" alt="Filtered column" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/tables/filtered-column.png" max-width="100px" alt="Filtered column" class="docs-image--no-shadow" \>}}
 
 To remove the filter, click the blue filter icon and then click **Clear filter**.
 
@@ -181,20 +186,20 @@ Click a column title to change the sort order from default to descending to asce
 Each time you click, the sort order changes to the next option in the cycle.
 You can sort multiple columns by holding the `Shift` key and clicking the column name.
 
-{{< figure src="/static/img/docs/tables/sort-descending.png" max-width="350px" alt="Sort descending" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/tables/sort-descending.png" max-width="350px" alt="Sort descending" class="docs-image--no-shadow" \>}}
 
 ## Dataset selector
 
 If the data queried contains multiple datasets, a table displays a drop-down list at the bottom, so you can select the dataset you want to visualize.
 This option is only available when you're editing the panel.
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-table-multi-dataset-v11.3.png" max-width="650px" alt="Table visualization with multiple datasets" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-table-multi-dataset-v11.3.png" max-width="650px" alt="Table visualization with multiple datasets" \>}}
 
 ## Configuration options
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Table options
 
@@ -234,7 +239,7 @@ By default, Grafana automatically chooses display settings.
 You can override these settings by choosing one of the following cell types to control the default display for all fields.
 Additional configuration is available for some cell types.
 
-If you want to apply a cell type to only some fields instead of all fields, you can do so using the **Cell options > Cell type** field override.
+If you want to apply a cell type to only some fields instead of all fields, you can do so using the **Cell options \> Cell type** field override.
 
 | Cell type                                 | Description                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -243,7 +248,7 @@ If you want to apply a cell type to only some fields instead of all fields, you 
 | [Colored text](#colored-text)             | If thresholds are set, then the field text is displayed in the appropriate threshold color.                                                                                                                                                                                                                                                   |
 | [Colored background](#colored-background) | If thresholds are set, then the field background is displayed in the appropriate threshold color.                                                                                                                                                                                                                                             |
 | [Gauge](#gauge)                           | Cells can be displayed as a graphical gauge, with several different presentation types. You can set the [Gauge display mode](#gauge-display-mode) and the [Value display](#value-display) options.                                                                                                                                            |
-| Data links                                | If you've configured data links, when the cell type is **Auto**, the cell text becomes clickable. If you change the cell type to **Data links**, the cell text reflects the titles of the configured data links. To control the application of data link text more granularly, use a **Cell option > Cell type > Data links** field override. |
+| Data links                                | If you've configured data links, when the cell type is **Auto**, the cell text becomes clickable. If you change the cell type to **Data links**, the cell text reflects the titles of the configured data links. To control the application of data link text more granularly, use a **Cell option \> Cell type \> Data links** field override. |
 | [JSON View](#json-view)                   | Shows values formatted as code.                                                                                                                                                                                                                                                                                                               |
 | [Image](#image)                           | If the field value is an image URL or a base64 encoded image, the table displays the image.                                                                                                                                                                                                                                                   |
 | [Actions](#actions)                       | The cell displays a button that triggers a basic, unauthenticated API call when clicked.                                                                                                                                                                                                                                                      |
@@ -264,9 +269,9 @@ If thresholds are set, with this cell type, the field text is displayed in the a
 
 ![Table with colored text cell type](/media/docs/grafana/panels-visualizations/screenshot-table-colored-text-v11.3-2.png)
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This is an experimental feature.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ##### Colored background
 
@@ -283,10 +288,10 @@ If thresholds are set, with this cell type, the field background is displayed in
 
 With this cell type, cells can be displayed as a graphical gauge, with several different presentation types controlled by the [gauge display mode](#gauge-display-mode) and the [value display](#value-display).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 The maximum and minimum values of the gauges are configured automatically from the smallest and largest values in your whole dataset.
 If you don't want the max/min values to be pulled from the whole dataset, you can configure them for each column using [field overrides](#field-overrides).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ###### Gauge display mode
 
@@ -296,9 +301,9 @@ You can set three gauge display modes.
 
 | Option | Description |
 | ------ | ----------- |
-| Basic | Shows a simple gauge with the threshold levels defining the color of gauge. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-basic-v11.3.png" alt="Table cell with basic gauge mode" >}} |
-| Gradient | The threshold levels define a gradient. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-gradient-v11.3.png" alt="Table cell with gradient gauge mode" >}} |
-| Retro LCD | The gauge is split up in small cells that are lit or unlit. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-retro-v11.3.png" alt="Table cell with retro LCD gauge mode" >}} |
+| Basic | Shows a simple gauge with the threshold levels defining the color of gauge. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-basic-v11.3.png" alt="Table cell with basic gauge mode" \>}} |
+| Gradient | The threshold levels define a gradient. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-gradient-v11.3.png" alt="Table cell with gradient gauge mode" \>}} |
+| Retro LCD | The gauge is split up in small cells that are lit or unlit. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-mode-retro-v11.3.png" alt="Table cell with retro LCD gauge mode" \>}} |
 
 <!-- prettier-ignore-end -->
 
@@ -310,9 +315,9 @@ Labels displayed alongside of the gauges can be set to be colored by value, matc
 
 | Option | Description |
 | ------ | ----------- |
-| Value color | Labels are colored by value. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-value-color-v11.3.png" alt="Table with labels in value color" >}} |
-| Text color | Labels match the theme text color. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-text-color-v11.3.png" alt="Table with labels in theme color" >}} |
-| Hidden | Labels are hidden. {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-hidden-v11.3.png" alt="Table with labels hidden" >}} |
+| Value color | Labels are colored by value. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-value-color-v11.3.png" alt="Table with labels in value color" \>}} |
+| Text color | Labels match the theme text color. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-text-color-v11.3.png" alt="Table with labels in theme color" \>}} |
+| Hidden | Labels are hidden. {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-labels-hidden-v11.3.png" alt="Table with labels hidden" \>}} |
 
 <!-- prettier-ignore-end -->
 
@@ -321,7 +326,7 @@ Labels displayed alongside of the gauges can be set to be colored by value, matc
 This cell type shows values formatted as code.
 If a value is an object the JSON view allowing browsing the JSON object will appear on hover.
 
-{{< figure src="/static/img/docs/tables/json-view.png" max-width="350px" alt="JSON view" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/tables/json-view.png" max-width="350px" alt="JSON view" class="docs-image--no-shadow" \>}}
 
 ##### Image
 
@@ -340,6 +345,7 @@ The cell displays a button that triggers a basic, unauthenticated API call when 
 Configure the API call with the following options:
 
 <!-- prettier-ignore-start -->
+
 | Option  | Description  |
 | ------- | ------------ |
 | Endpoint | Enter the endpoint URL. |
@@ -353,14 +359,14 @@ Configure the API call with the following options:
 
 #### Wrap text
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Text wrapping is in [public preview](https://grafana.com/docs/release-life-cycle/#public-preview), however, it’s available to use by default.
 We’d love hear from you about how this new feature is working. To provide feedback, you can open an issue in the [Grafana GitHub repository](https://github.com/grafana/grafana).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Toggle the **Wrap text** switch to wrap text in the cell that contains the longest content in your table.
 
-To wrap the text _in a specific column only_, use a **Fields with name** [field override](ref:field-override), select the **Cell options > Cell type** override property, and toggle on the **Wrap text** switch.
+To wrap the text *in a specific column only*, use a **Fields with name** [field override](ref:field-override), select the **Cell options \> Cell type** override property, and toggle on the **Wrap text** switch.
 
 This option is available for the following cell types: **Auto**, **Colored text**, and **Colored background**.
 
@@ -374,24 +380,24 @@ However, you can switch back and forth between tabs.
 
 This option is available for the following cell types: **Auto**, **Colored text**, **Colored background**, and **JSON View**.
 
-If you want to apply this setting to only some fields instead of all fields, you can do so using the **Cell options > Cell value inspect** field override.
+If you want to apply this setting to only some fields instead of all fields, you can do so using the **Cell options \> Cell value inspect** field override.
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-3.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-3.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

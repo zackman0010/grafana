@@ -1,33 +1,36 @@
----
+-----
+
 aliases:
-  - ../../features/panels/bar_gauge/
-  - ../../panels/visualizations/bar-gauge-panel/
-  - ../../visualizations/bar-gauge-panel/
-description: Configure options for Grafana's bar gauge visualization
-keywords:
-  - grafana
-  - bar
-  - bar gauge
-labels:
+
+- ../../features/panels/bar\_gauge/
+- ../../panels/visualizations/bar-gauge-panel/
+- ../../visualizations/bar-gauge-panel/
+  description: Configure options for Grafana's bar gauge visualization
+  keywords:
+- grafana
+- bar
+- bar gauge
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Bar gauge
-weight: 100
-refs:
-  calculation-types:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Bar gauge
+    weight: 100
+    refs:
+    calculation-types:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+
+-----
 
 # Bar gauge
 
 Bar gauges simplify your data by reducing every field to a single value. You choose how Grafana calculates the reduction. This visualization can show one or more bar gauges depending on how many series, rows, or columns your query returns.
 
-{{< figure src="/static/img/docs/v66/bar_gauge_cover.png" max-width="1025px" alt="Bar gauge panel" >}}
+{{\< figure src="/static/img/docs/v66/bar\_gauge\_cover.png" max-width="1025px" alt="Bar gauge panel" \>}}
 
 The bar gauge visualization displays values as bars with various lengths or fills proportional to the values they represent. They differ from traditional bar charts in that they act as gauges displaying metrics between ranges. One example is a thermometer displaying body temperature in a bar filling up.
 
@@ -43,9 +46,9 @@ You can use a bar gauge visualization when you need to show:
 
 The following video shows you how to create and configure a bar gauge visualization:
 
-{{< youtube id="7PhDysObEXA" >}}
+{{\< youtube id="7PhDysObEXA" \>}}
 
-{{< docs/play title="Bar Gauge" url="https://play.grafana.org/d/vmie2cmWz/" >}}
+{{\< docs/play title="Bar Gauge" url="https://play.grafana.org/d/vmie2cmWz/" \>}}
 
 ## Supported data formats
 
@@ -99,11 +102,11 @@ For more information on these settings, refer to [Value options](#value-options)
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value options
 
@@ -142,7 +145,7 @@ Adjust how the gauge is displayed.
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Text size options
 
@@ -153,20 +156,20 @@ Set the sizes of the following text elements in pixels:
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

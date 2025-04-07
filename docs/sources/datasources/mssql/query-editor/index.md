@@ -1,45 +1,48 @@
----
+-----
+
 aliases:
-  - ../../data-sources/mssql/query-editor/
-description: Guide for using the Microsoft SQL Server data source's query editor
-keywords:
-  - grafana
-  - MSSQL
-  - Microsoft
-  - SQL
-  - guide
-  - Azure SQL Database
-  - queries
-labels:
+
+- ../../data-sources/mssql/query-editor/
+  description: Guide for using the Microsoft SQL Server data source's query editor
+  keywords:
+- grafana
+- MSSQL
+- Microsoft
+- SQL
+- guide
+- Azure SQL Database
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Microsoft SQL Server query editor
-weight: 300
-refs:
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  table:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/table/
-  configure-standard-options-display-name:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#display-name
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#display-name
-  annotate-visualizations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Microsoft SQL Server query editor
+    weight: 300
+    refs:
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    table:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/table/
+    configure-standard-options-display-name:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#display-name
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#display-name
+    annotate-visualizations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+
+-----
 
 # Microsoft SQL Server query editor
 
@@ -82,7 +85,7 @@ For details about using these formats, refer to [Use table queries](#use-table-q
 
 ## Code mode
 
-{{< figure src="/static/img/docs/v92/sql_code_editor.png" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v92/sql\_code\_editor.png" class="docs-image--no-shadow" \>}}
 
 In **Code mode**, you can write complex queries using a text editor with autocompletion features and syntax highlighting.
 
@@ -109,7 +112,7 @@ Code mode supports autocompletion of tables, columns, SQL keywords, standard SQL
 
 ## Builder mode
 
-{{< figure src="/static/img/docs/v92/mssql_query_builder.png" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v92/mssql\_query\_builder.png" class="docs-image--no-shadow" \>}}
 
 In **Builder mode**, you can build queries using a visual interface.
 
@@ -129,7 +132,7 @@ You can select an optional aggregation function for the column in the **Aggregat
 
 To add more value columns, click the plus (`+`) button to the right of the column's row.
 
-{{< docs/shared source="grafana" lookup="datasources/sql-query-builder-macros.md" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared source="grafana" lookup="datasources/sql-query-builder-macros.md" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Filter data (WHERE)
 
@@ -163,22 +166,22 @@ To simplify syntax and to allow for dynamic components, such as date range filte
 
 | Macro example                                         | Replaced by                                                                                                                                                                                                                                                            |
 | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$__time(dateColumn)`                                 | An expression to rename the column to _time_. For example, _dateColumn as time_                                                                                                                                                                                        |
-| `$__timeEpoch(dateColumn)`                            | An expression to convert a DATETIME column type to Unix timestamp and rename it to _time_.<br/>For example, _DATEDIFF(second, '1970-01-01', dateColumn) AS time_                                                                                                       |
-| `$__timeFilter(dateColumn)`                           | A time range filter using the specified column name.<br/>For example, _dateColumn BETWEEN '2017-04-21T05:01:17Z' AND '2017-04-21T05:06:17Z'_                                                                                                                           |
-| `$__timeFrom()`                                       | The start of the currently active time selection. For example, _'2017-04-21T05:01:17Z'_                                                                                                                                                                                |
-| `$__timeTo()`                                         | The end of the currently active time selection. For example, _'2017-04-21T05:06:17Z'_                                                                                                                                                                                  |
-| `$__timeGroup(dateColumn,'5m'[, fillvalue])`          | An expression usable in GROUP BY clause. Providing a _fillValue_ of _NULL_ or _floating value_ will automatically fill empty series in timerange with that value.<br/>For example, _CAST(ROUND(DATEDIFF(second, '1970-01-01', time_column)/300.0, 0) as bigint)\*300_. |
+| `$__time(dateColumn)`                                 | An expression to rename the column to *time*. For example, *dateColumn as time*                                                                                                                                                                                        |
+| `$__timeEpoch(dateColumn)`                            | An expression to convert a DATETIME column type to Unix timestamp and rename it to *time*.<br/>For example, *DATEDIFF(second, '1970-01-01', dateColumn) AS time*                                                                                                       |
+| `$__timeFilter(dateColumn)`                           | A time range filter using the specified column name.<br/>For example, *dateColumn BETWEEN '2017-04-21T05:01:17Z' AND '2017-04-21T05:06:17Z'*                                                                                                                           |
+| `$__timeFrom()`                                       | The start of the currently active time selection. For example, *'2017-04-21T05:01:17Z'*                                                                                                                                                                                |
+| `$__timeTo()`                                         | The end of the currently active time selection. For example, *'2017-04-21T05:06:17Z'*                                                                                                                                                                                  |
+| `$__timeGroup(dateColumn,'5m'[, fillvalue])`          | An expression usable in GROUP BY clause. Providing a *fillValue* of *NULL* or *floating value* will automatically fill empty series in timerange with that value.<br/>For example, *CAST(ROUND(DATEDIFF(second, '1970-01-01', time\_column)/300.0, 0) as bigint)\*300*. |
 | `$__timeGroup(dateColumn,'5m', 0)`                    | Same as above but with a fill parameter so missing points in that series will be added by grafana and 0 will be used as value.                                                                                                                                         |
 | `$__timeGroup(dateColumn,'5m', NULL)`                 | Same as above but NULL will be used as value for missing points.                                                                                                                                                                                                       |
 | `$__timeGroup(dateColumn,'5m', previous)`             | Same as above but the previous value in that series will be used as fill value if no value has been seen yet NULL will be used.                                                                                                                                        |
 | `$__timeGroupAlias(dateColumn,'5m')`                  | Same as `$__timeGroup` but with an added column alias.                                                                                                                                                                                                                 |
-| `$__unixEpochFilter(dateColumn)`                      | A time range filter using the specified column name with times represented as Unix timestamp. For example, _dateColumn > 1494410783 AND dateColumn < 1494497183_                                                                                                       |
-| `$__unixEpochFrom()`                                  | The start of the currently active time selection as Unix timestamp. For example, _1494410783_                                                                                                                                                                          |
-| `$__unixEpochTo()`                                    | The end of the currently active time selection as Unix timestamp. For example, _1494497183_                                                                                                                                                                            |
-| `$__unixEpochNanoFilter(dateColumn)`                  | A time range filter using the specified column name with times represented as nanosecond timestamp. For example, _dateColumn > 1494410783152415214 AND dateColumn < 1494497183142514872_                                                                               |
-| `$__unixEpochNanoFrom()`                              | The start of the currently active time selection as nanosecond timestamp. For example, _1494410783152415214_                                                                                                                                                           |
-| `$__unixEpochNanoTo()`                                | The end of the currently active time selection as nanosecond timestamp. For example, _1494497183142514872_                                                                                                                                                             |
+| `$__unixEpochFilter(dateColumn)`                      | A time range filter using the specified column name with times represented as Unix timestamp. For example, *dateColumn \> 1494410783 AND dateColumn \< 1494497183*                                                                                                       |
+| `$__unixEpochFrom()`                                  | The start of the currently active time selection as Unix timestamp. For example, *1494410783*                                                                                                                                                                          |
+| `$__unixEpochTo()`                                    | The end of the currently active time selection as Unix timestamp. For example, *1494497183*                                                                                                                                                                            |
+| `$__unixEpochNanoFilter(dateColumn)`                  | A time range filter using the specified column name with times represented as nanosecond timestamp. For example, *dateColumn \> 1494410783152415214 AND dateColumn \< 1494497183142514872*                                                                               |
+| `$__unixEpochNanoFrom()`                              | The start of the currently active time selection as nanosecond timestamp. For example, *1494410783152415214*                                                                                                                                                           |
+| `$__unixEpochNanoTo()`                                | The end of the currently active time selection as nanosecond timestamp. For example, *1494497183142514872*                                                                                                                                                             |
 | `$__unixEpochGroup(dateColumn,'5m', [fillmode])`      | Same as `$__timeGroup` but for times stored as Unix timestamp.                                                                                                                                                                                                         |
 | `$__unixEpochGroupAlias(dateColumn,'5m', [fillmode])` | Same as above but also adds a column alias.                                                                                                                                                                                                                            |
 
@@ -194,7 +197,7 @@ The Table panel then displays the query results with whatever columns and rows a
 
 **Example database table:**
 
-```sql
+``` sql
 CREATE TABLE [event] (
   time_sec bigint,
   description nvarchar(100),
@@ -202,7 +205,7 @@ CREATE TABLE [event] (
 )
 ```
 
-```sql
+``` sql
 CREATE TABLE [mssql_types] (
   c_bit bit, c_tinyint tinyint, c_smallint smallint, c_int int, c_bigint bigint, c_money money, c_smallmoney smallmoney, c_numeric numeric(10,5),
   c_real real, c_decimal decimal(10,2), c_float float,
@@ -222,11 +225,11 @@ SELECT
 
 Query editor with example query:
 
-{{< figure src="/static/img/docs/v51/mssql_table_query.png" max-width="500px" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v51/mssql\_table\_query.png" max-width="500px" class="docs-image--no-shadow" \>}}
 
 The query:
 
-```sql
+``` sql
 SELECT * FROM [mssql_types]
 ```
 
@@ -234,7 +237,7 @@ To control the name of the Table panel columns, use the standard `AS` SQL column
 
 For example:
 
-```sql
+``` sql
 SELECT
   c_bit as [column1], c_tinyint as [column2]
 FROM
@@ -243,13 +246,13 @@ FROM
 
 The resulting table panel:
 
-{{< figure src="/static/img/docs/v51/mssql_table_result.png" max-width="1489px" class="docs-image--no-shadow" >}}
+{{\< figure src="/static/img/docs/v51/mssql\_table\_result.png" max-width="1489px" class="docs-image--no-shadow" \>}}
 
 ## Use time series queries
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Store timestamps in UTC to avoid issues with time shifts in Grafana when using non-UTC timezones.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 If you set the **Format** setting in the query editor to **Time series**, then the query must have a column named `time` that returns either a SQL datetime or any numeric datatype representing Unix epoch in seconds.
 Result sets of time series queries must also be sorted by time for panels to properly visualize the result.
@@ -268,7 +271,7 @@ To optionally customize the default series name formatting, refer to [Standard o
 
 **Example with `metric` column:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias(time_date_time, '5m'),
   min("value_double"),
@@ -281,7 +284,7 @@ ORDER BY 1
 
 Data frame result:
 
-```text
+``` text
 +---------------------+-----------------+
 | Name: time          | Name: min       |
 | Labels:             | Labels:         |
@@ -296,7 +299,7 @@ Data frame result:
 
 **Using the fill parameter in the $\_\_timeGroupAlias macro to convert null values to be zero instead:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias(createdAt, '5m', 0),
   sum(value) as value,
@@ -310,11 +313,11 @@ GROUP BY
 ORDER BY 1
 ```
 
-Given the data frame result in the following example and using the graph panel, you will get two series named _value 10.0.1.1_ and _value 10.0.1.2_. To render the series with a name of _10.0.1.1_ and _10.0.1.2_ , use a [Standard options definitions](ref:configure-standard-options-display-name) display name value of `${__field.labels.hostname}`.
+Given the data frame result in the following example and using the graph panel, you will get two series named *value 10.0.1.1* and *value 10.0.1.2*. To render the series with a name of *10.0.1.1* and *10.0.1.2* , use a [Standard options definitions](ref:configure-standard-options-display-name) display name value of `${__field.labels.hostname}`.
 
 Data frame result:
 
-```text
+``` text
 +---------------------+---------------------------+---------------------------+
 | Name: time          | Name: value               | Name: value               |
 | Labels:             | Labels: hostname=10.0.1.1 | Labels: hostname=10.0.1.2 |
@@ -327,7 +330,7 @@ Data frame result:
 
 **Using multiple columns:**
 
-```sql
+``` sql
 SELECT
   $__timeGroupAlias(time_date_time, '5m'),
   min(value_double) as min_value,
@@ -340,7 +343,7 @@ ORDER BY 1
 
 Data frame result:
 
-```text
+``` text
 +---------------------+-----------------+-----------------+
 | Name: time          | Name: min_value | Name: max_value |
 | Labels:             | Labels:         | Labels:         |
@@ -367,7 +370,7 @@ You can add annotation queries in the Dashboard menu's Annotations view.
 
 **Example database tables:**
 
-```sql
+``` sql
 CREATE TABLE [events] (
   time_sec bigint,
   description nvarchar(100),
@@ -379,7 +382,7 @@ We also use the database table defined in [Time series queries](#time-series-que
 
 **Example query using time column with epoch values:**
 
-```sql
+``` sql
 SELECT
   time_sec as time,
   description as [text],
@@ -393,7 +396,7 @@ ORDER BY 1
 
 **Example region query using time and timeend columns with epoch values:**
 
-```sql
+``` sql
 SELECT
   time_sec as time,
   time_end_sec as timeend,
@@ -408,7 +411,7 @@ ORDER BY 1
 
 **Example query using time column of native SQL date/time data type:**
 
-```sql
+``` sql
 SELECT
   time,
   measurement as text,
@@ -430,12 +433,12 @@ Please note that any macro function will not work inside a stored procedure.
 
 ### Examples
 
-{{< figure src="/static/img/docs/v51/mssql_metrics_graph.png" class="docs-image--no-shadow docs-image--right" >}}
+{{\< figure src="/static/img/docs/v51/mssql\_metrics\_graph.png" class="docs-image--no-shadow docs-image--right" \>}}
 For the following examples, the database table is defined in [Time series queries](#time-series-queries). Let's say that we want to visualize four series in a graph panel, such as all combinations of columns `valueOne`, `valueTwo` and `measurement`. Graph panel to the right visualizes what we want to achieve. To solve this, we need to use two queries:
 
 **First query:**
 
-```sql
+``` sql
 SELECT
   $__timeGroup(time, '5m') as time,
   measurement + ' - value one' as metric,
@@ -452,7 +455,7 @@ ORDER BY 1
 
 **Second query:**
 
-```sql
+``` sql
 SELECT
   $__timeGroup(time, '5m') as time,
   measurement + ' - value two' as metric,
@@ -474,7 +477,7 @@ which will be used to filter the data to return from the stored procedure.
 We're mimicking the `$__timeGroup(time, '5m')` in the select and group by expressions, and that's why there are a lot of lengthy expressions needed -
 these could be extracted to MS SQL functions, if wanted.
 
-```sql
+``` sql
 CREATE PROCEDURE sp_test_epoch(
   @from int,
   @to 	int
@@ -509,7 +512,7 @@ END
 
 Then we can use the following query for our graph panel.
 
-```sql
+``` sql
 DECLARE
   @from int = $__unixEpochFrom(),
   @to int = $__unixEpochTo()
@@ -526,7 +529,7 @@ which will be used to filter the data to return from the stored procedure.
 We're mimicking the `$__timeGroup(time, '5m')` in the select and group by expressions and that's why there's a lot of lengthy expressions needed -
 these could be extracted to MS SQL functions, if wanted.
 
-```sql
+``` sql
 CREATE PROCEDURE sp_test_datetime(
   @from datetime,
   @to 	datetime
@@ -562,7 +565,7 @@ END
 
 Then we can use the following query for our graph panel.
 
-```sql
+``` sql
 DECLARE
   @from datetime = $__timeFrom(),
   @to datetime = $__timeTo()

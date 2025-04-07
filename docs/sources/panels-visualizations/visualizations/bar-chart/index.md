@@ -1,48 +1,51 @@
----
+-----
+
 aliases:
-  - ../../panels/visualizations/bar-chart/
-  - ../../visualizations/bar-chart/
-description: Configure options for Grafana's bar chart visualization
-keywords:
-  - grafana
-  - docs
-  - bar chart
-  - panel
-  - barchart
-labels:
+
+- ../../panels/visualizations/bar-chart/
+- ../../visualizations/bar-chart/
+  description: Configure options for Grafana's bar chart visualization
+  keywords:
+- grafana
+- docs
+- bar chart
+- panel
+- barchart
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Bar chart
-weight: 100
-refs:
-  standard-calculations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
-  standard-options-definitions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#max
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#max
-  add-a-field-override:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-overrides/#add-a-field-override
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/#add-a-field-override
-  configure-data-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
-  time-series:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Bar chart
+    weight: 100
+    refs:
+    standard-calculations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+    standard-options-definitions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#max
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#max
+    add-a-field-override:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-overrides/\#add-a-field-override
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/\#add-a-field-override
+    configure-data-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
+    time-series:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+
+-----
 
 # Bar chart
 
@@ -62,9 +65,9 @@ You can use the bar chart visualization if you need to show:
 
 The following video shows you how to create and configure a bar chart visualization:
 
-{{< youtube id="qyKE9-71KkE" >}}
+{{\< youtube id="qyKE9-71KkE" \>}}
 
-{{< docs/play title="Grafana Bar Charts and Pie Charts" url="https://play.grafana.org/d/ktMs4D6Mk/" >}}
+{{\< docs/play title="Grafana Bar Charts and Pie Charts" url="https://play.grafana.org/d/ktMs4D6Mk/" \>}}
 
 ## Supported data formats
 
@@ -78,7 +81,7 @@ The text or time field is used to label the bars or values in each row of data a
 | ----- | ------ | ------ | ------ |
 | uno   | 5      | 3      | 2      |
 
-![Bar chart single row example](/media/docs/grafana/panels-visualizations/screenshot-grafana-11.1-barchart-example1.png 'Bar chart single row example')
+![Bar chart single row example](/media/docs/grafana/panels-visualizations/screenshot-grafana-11.1-barchart-example1.png "Bar chart single row example")
 
 If you have more than one text or time field, by default, the visualization uses the first one, but you can change this in the x-axis option as described in the [Bar chart options](#bar-chart-options) section.
 
@@ -92,7 +95,7 @@ If your dataset contains multiple rows, the visualization displays multiple bar 
 | dos   | 10     | 6      | 4      |
 | tres  | 20     | 8      | 2      |
 
-![Bar chart multiple row example](/media/docs/grafana/panels-visualizations/screenshot-grafana-11.1-barchart-example2.png 'Bar chart multiple row example')
+![Bar chart multiple row example](/media/docs/grafana/panels-visualizations/screenshot-grafana-11.1-barchart-example2.png "Bar chart multiple row example")
 
 While the first field can be time-based and you can use a bar chart to plot time-series data, for large amounts of time-series data, we recommend that you use the [time series visualization](ref:time-series) and configure it to be displayed as bars.
 
@@ -100,11 +103,11 @@ We recommend that you only use one dataset in a bar chart because using multiple
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Bar chart options
 
@@ -137,25 +140,28 @@ Use these options to refine your visualization.
 Set the mode of the gradient fill. Fill gradient is based on the line color. To change the color, use the standard color scheme field option. Gradient appearance is influenced by the **Fill opacity** setting. Choose from:
 
 - **None** - No gradient fill. This is the default setting.
+
 - **Opacity** - Transparency of the gradient is calculated based on the values on the y-axis. Opacity of the fill is increasing with the values on the Y-axis.
+
 - **Hue** - Gradient color is generated based on the hue of the line color.
-- **Scheme** - The bar receives a gradient color defined by the **Standard options > Color scheme** selection.
 
+- **Scheme** - The bar receives a gradient color defined by the **Standard options \> Color scheme** selection.
+  
   - **From thresholds** - If the **Color scheme** selection is **From thresholds (by value)**, then each bar is the color of the defined threshold.
-
-    {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-colors-by-thresholds-v11.3.png" alt="Color scheme From thresholds" caption="Color scheme: From thresholds" >}}
-
+    
+    {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-colors-by-thresholds-v11.3.png" alt="Color scheme From thresholds" caption="Color scheme: From thresholds" \>}}
+  
   - **Gradient color schemes** - The following image shows a bar chart with the **Green-Yellow-Red (by value)** color scheme option selected.
-
-    {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-colors-by-value-v11.3.png" alt="Color scheme Green-Yellow-Red" caption="Color scheme: Green-Yellow-Red" >}}
+    
+    {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-colors-by-value-v11.3.png" alt="Color scheme Green-Yellow-Red" caption="Color scheme: Green-Yellow-Red" \>}}
 
 ### Tooltip options
 
-{{< docs/shared lookup="visualizations/tooltip-options-1.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/tooltip-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Text size
 
@@ -193,24 +199,24 @@ Set a **Soft min** or **soft max** option for better control of Y-axis limits. B
 
 You can set standard min/max options to define hard limits of the Y-axis. For more information, refer to [Standard options definitions](ref:standard-options-definitions).
 
-{{< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+3" >}}
+{{\< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+3" \>}}
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

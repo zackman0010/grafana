@@ -1,60 +1,63 @@
----
+-----
+
 aliases:
-  - ../features/datasources/phlare/ # /docs/grafana/<GRAFANA_VERSION>/features/datasources/phlare/
-  - ../features/datasources/grafana-pyroscope/ # /docs/grafana/<GRAFANA_VERSION>/features/datasources/grafana-pyroscope/
-  - ../datasources/grafana-pyroscope/ # /docs/grafana/<GRAFANA_VERSION>/datasources/grafana-pyroscope/
-description: Horizontally-scalable, highly-available, multi-tenant continuous profiling
+
+- ../features/datasources/phlare/ \# /docs/grafana/\<GRAFANA\_VERSION\>/features/datasources/phlare/
+- ../features/datasources/grafana-pyroscope/ \# /docs/grafana/\<GRAFANA\_VERSION\>/features/datasources/grafana-pyroscope/
+- ../datasources/grafana-pyroscope/ \# /docs/grafana/\<GRAFANA\_VERSION\>/datasources/grafana-pyroscope/
+  description: Horizontally-scalable, highly-available, multi-tenant continuous profiling
   aggregation system. OSS profiling solution from Grafana Labs.
-keywords:
-  - phlare
-  - guide
-  - profiling
-  - pyroscope
-labels:
+  keywords:
+- phlare
+- guide
+- profiling
+- pyroscope
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Pyroscope
-weight: 1350
-refs:
-  flame-graph:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/flame-graph/
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana-cloud/visualizations/panels-visualizations/visualizations/flame-graph/
-  configure-tempo-data-source:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/datasources/tempo/configure-tempo-data-source/
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana-cloud/connect-externally-hosted/data-sources/tempo/configure-tempo-data-source/
-  explore:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/explore/
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#datasources
-  flame-graph-panel:
-    - pattern: /docs/grafana/
-      destination: https://grafana.com/docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/flame-graph/
-    - pattern: /docs/grafana-cloud/
-      destination: https://grafana.com/docs/grafana-cloud/visualizations/panels-visualizations/visualizations/flame-graph/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Pyroscope
+    weight: 1350
+    refs:
+    flame-graph:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/flame-graph/
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana-cloud/visualizations/panels-visualizations/visualizations/flame-graph/
+    configure-tempo-data-source:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/datasources/tempo/configure-tempo-data-source/
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana-cloud/connect-externally-hosted/data-sources/tempo/configure-tempo-data-source/
+    explore:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/explore/
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#datasources
+    flame-graph-panel:
+  - pattern: /docs/grafana/
+    destination: https://grafana.com/docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/flame-graph/
+  - pattern: /docs/grafana-cloud/
+    destination: https://grafana.com/docs/grafana-cloud/visualizations/panels-visualizations/visualizations/flame-graph/
+
+-----
 
 # Grafana Pyroscope data source
 
 Grafana Pyroscope is a horizontally scalable, highly available, multi-tenant, OSS, continuous profiling aggregation system.
 Add a Pyroscope data source to query your profiles in [Explore](ref:explore).
 
-Refer to [Introduction to Pyroscope](https://grafana.com/docs/pyroscope/<PYROSCOPE_VERSION>/introduction/) to understand profiling and Pyroscope.
+Refer to [Introduction to Pyroscope](https://grafana.com/docs/pyroscope/\<PYROSCOPE_VERSION\>/introduction/) to understand profiling and Pyroscope.
 
 To use profiling data, you should:
 
-- [Configure your application to send profiles](/docs/pyroscope/<PYROSCOPE_VERSION>/configure-client/)
+- [Configure your application to send profiles](/docs/pyroscope/\<PYROSCOPE_VERSION\>/configure-client/)
 - [Configure the Grafana Pyroscope data source](./configure-pyroscope-data-source/).
 - [View and query profiling data using Profiles Drilldown or the query editor ](./query-profile-data/)
 
@@ -65,7 +68,7 @@ While code profiling has been a long-standing practice, continuous profiling rep
 This technique adds two critical dimensions to traditional profiles:
 
 Time
-: Profiling data is collected _continuously_, providing a time-centric view that allows querying performance data from any point in the past.
+: Profiling data is collected *continuously*, providing a time-centric view that allows querying performance data from any point in the past.
 
 Metadata
 : Profiles are enriched with metadata, adding contextual depth to the performance data.
@@ -101,9 +104,9 @@ Combined traces and profiles let you see granular line-level detail when availab
 
 ![trace-profiler-view](https://grafana.com/static/img/pyroscope/pyroscope-trace-profiler-view-2023-11-30.png)
 
-For more information, refer to the [Traces to profile section](ref:configure-tempo-data-source) and [Link tracing and profiling with span profiles](https://grafana.com/docs/pyroscope/<PYROSCOPE_VERSION>/configure-client/trace-span-profiles/).
+For more information, refer to the [Traces to profile section](ref:configure-tempo-data-source) and [Link tracing and profiling with span profiles](https://grafana.com/docs/pyroscope/\<PYROSCOPE_VERSION\>/configure-client/trace-span-profiles/).
 
-{{< youtube id="AG8VzfFMLxo" >}}
+{{\< youtube id="AG8VzfFMLxo" \>}}
 
 ## Provision the Pyroscope data source
 
@@ -112,7 +115,7 @@ To learn more, and to view the available provisioning settings, refer to [provis
 
 Here is an example configuration:
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

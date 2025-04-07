@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v9-1/
-description: Learn about new and updated features in Grafana v9.1
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '9.1'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v9-1/
+  description: Learn about new and updated features in Grafana v9.1
+  keywords:
+- grafana
+- new
+- documentation
+- '9.1'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v9.1
-weight: -33
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v9.1
+    weight: -33
+
+-----
 
 # What's new in Grafana v9.1
 
@@ -42,7 +45,7 @@ Service accounts have been in beta since Grafana v8.5.
 During that time, we've improved the UI and migration path from API keys, made it possible to add service accounts to teams, and inherit team permissions.
 To learn more about service accounts, see the [documentation](../../administration/service-accounts/).
 
-{{< figure src="/static/img/docs/service-accounts/add-service-account-token-9-1.png" max-width="750px" caption="Adding a service account token" >}}
+{{\< figure src="/static/img/docs/service-accounts/add-service-account-token-9-1.png" max-width="750px" caption="Adding a service account token" \>}}
 
 #### JWT URL embedding
 
@@ -50,9 +53,9 @@ You can now easily embed Grafana in other applications by adding a JWT token dir
 When the JWT token is passed through the request URL to Grafana, Grafana validates and authenticates the token linked to a specific user, allowing access to dashboards which that user can view.
 To see JWT URL embedding in action, see the [sample project](https://github.com/grafana/grafana-iframe-oauth-sample).
 
-> **Note:** JWT URL Embedding and `allow_embedding` are not available to Grafana Cloud users. For Grafana Cloud, use [public dashboards](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/). To enable that, [open a ticket with our Support team](/docs/grafana-cloud/account-management/support/).
+> **Note:** JWT URL Embedding and `allow_embedding` are not available to Grafana Cloud users. For Grafana Cloud, use [public dashboards](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/). To enable that, [open a ticket with our Support team](/docs/grafana-cloud/account-management/support/).
 
-{{< figure src="/static/img/docs/dashboards/jwt-url-embedding-9-1.png" max-width="750px" caption="A JWT token used to embed Grafana" >}}
+{{\< figure src="/static/img/docs/dashboards/jwt-url-embedding-9-1.png" max-width="750px" caption="A JWT token used to embed Grafana" \>}}
 
 #### Organization role mapping for GitHub OAuth2 authentication
 
@@ -62,7 +65,7 @@ For more information, see the [documentation](../../setup-grafana/configure-secu
 
 Grafana Cloud users can access this feature by [opening a support ticket in the Cloud Portal](/profile/org#support).
 
-{{< figure src="/static/img/docs/permissions/org-role-mapping-github-9-1.png" max-width="750px" caption="Configuring GitHub OAuth2 authentication with role mapping" >}}
+{{\< figure src="/static/img/docs/permissions/org-role-mapping-github-9-1.png" max-width="750px" caption="Configuring GitHub OAuth2 authentication with role mapping" \>}}
 
 ### Search and navigation
 
@@ -77,13 +80,13 @@ Previously, Grafana used SQL database queries to find dashboards by title.
 With the feature toggle enabled, Grafana can build an in-memory index of all dashboards.
 To learn more about search in Grafana, see the [documentation](../../dashboards/use-dashboards/#dashboard-search).
 
-{{< figure src="/static/img/docs/dashboards/panel-title-search-9-1.png" max-width="750px" caption="Searching for a panel title" >}}
+{{\< figure src="/static/img/docs/dashboards/panel-title-search-9-1.png" max-width="750px" caption="Searching for a panel title" \>}}
 
 #### Starred dashboards in the navigation bar
 
 As part of the upcoming improvements to Grafana's navigation, you can now directly access your [starred dashboards](../../dashboards/use-dashboards/) from the navigation bar.
 
-{{< figure src="/static/img/docs/dashboards/starred-dashboards-9-1.png" max-width="750px" caption="Accessing your starred dashboards" >}}
+{{\< figure src="/static/img/docs/dashboards/starred-dashboards-9-1.png" max-width="750px" caption="Accessing your starred dashboards" \>}}
 
 ### Panels
 
@@ -93,14 +96,14 @@ The beta heatmap announced in version 9.0 is now used throughout Grafana.
 Its performance is improved, and it now supports [exemplars](../../fundamentals/exemplars/).
 To learn more about the heatmap panel, see the [documentation](../../panels-visualizations/visualizations/heatmap/).
 
-{{< figure src="/static/img/docs/panels/heatmap-panel-9-1.png" max-width="750px" caption="A heatmap panel" >}}
+{{\< figure src="/static/img/docs/panels/heatmap-panel-9-1.png" max-width="750px" caption="A heatmap panel" \>}}
 
 #### Geomap
 
 You can now measure both distances and areas on Geomap visualizations by using the panel's new [measure tools](../../panels-visualizations/visualizations/geomap/#show-measure-tools).
 To learn more about the Geomap panel, see the [documentation](../../panels-visualizations/visualizations/geomap/).
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-area-9-1-0.png" max-width="750px" caption="Geomap panel measuring tool - area" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-map-controls-measure-area-9-1-0.png" max-width="750px" caption="Geomap panel measuring tool - area" \>}}
 
 #### (Beta) Trace to metrics
 
@@ -116,7 +119,7 @@ Metrics for span durations, counts, and errors filtered by service or span are a
 The metrics generator introduced in Tempo 1.4 pairs extremely well with the trace to metrics feature.
 To learn more about the metrics generator, see the [blog post](/blog/2022/05/02/new-in-grafana-tempo-1.4-introducing-the-metrics-generator/).
 
-{{< figure src="/static/img/docs/panels/trace-to-metrics-9-1.png" max-width="750px" caption="Linking a trace to a metrics query" >}}
+{{\< figure src="/static/img/docs/panels/trace-to-metrics-9-1.png" max-width="750px" caption="Linking a trace to a metrics query" \>}}
 
 #### (Beta) APM table
 
@@ -137,7 +140,7 @@ We also provide a link from the table directly to Tempo search, making it easier
 
 To learn more about the APM table, see the [documentation](../../datasources/tempo/#apm-table).
 
-{{< figure src="/static/img/docs/panels/apm-table-9-1.png" max-width="750px" caption="An APM table in the Explore view" >}}
+{{\< figure src="/static/img/docs/panels/apm-table-9-1.png" max-width="750px" caption="An APM table in the Explore view" \>}}
 
 ### Sharing
 
@@ -156,7 +159,7 @@ The public view of a dashboard has a few restrictions:
 - The public dashboard is displayed in a read-only kiosk view.
 - The time range is fixed to the dashboard default time range.
 
-To learn more, see the [documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/share-dashboards-panels/shared-dashboards/).
+To learn more, see the [documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/share-dashboards-panels/shared-dashboards/).
 
 #### Provisioning improvements for Grafana Alerting
 
@@ -190,7 +193,7 @@ Reporting is better in a few specific ways in Grafana version 9.1:
 
 To learn more about reporting, see the [documentation](../../dashboards/share-dashboards-panels/#reporting).
 
-{{< figure src="/static/img/docs/enterprise/reporting-draft-9-1.png" max-width="750px" caption="Saving a report as a draft" >}}
+{{\< figure src="/static/img/docs/enterprise/reporting-draft-9-1.png" max-width="750px" caption="Saving a report as a draft" \>}}
 
 #### (Beta) Configure custom branding in Grafana's UI
 
@@ -201,7 +204,7 @@ Previously, you could only configure custom branding in Grafana's configuration 
 Now, you can experiment with customization in Grafana's Admin section in the UI, or customize branding and links using the API.
 This is an early-access feature available only to self-managed customers.
 
-{{< figure src="/static/img/docs/enterprise/custom-branding-9-1.png" max-width="750px" caption="Configuring custom branding" >}}
+{{\< figure src="/static/img/docs/enterprise/custom-branding-9-1.png" max-width="750px" caption="Configuring custom branding" \>}}
 
 ### Authentication and security
 
@@ -217,7 +220,7 @@ In v9.1, you can determine which users, teams, and roles can access app plugins 
 You can also control who can view, edit, or administer dashboard and data source usage insights, as well as data source query caching configuration.
 For more details, see the [RBAC documentation](../../administration/roles-and-permissions/access-control/).
 
-{{< figure src="/static/img/docs/enterprise/rbac-app-plugins-9-1.png" max-width="750px" caption="Configuring role-based-access to app plugins" >}}
+{{\< figure src="/static/img/docs/enterprise/rbac-app-plugins-9-1.png" max-width="750px" caption="Configuring role-based-access to app plugins" \>}}
 
 #### Rotate your database encryption keys using Grafana's API
 
@@ -235,7 +238,7 @@ If you want to record all actions on the Grafana server, including GETs and page
 This results in more logs, but it can be useful to debug specific issues or make sure you catch everything happening in Grafana for security or compliance reasons.
 To learn more, see the [configuration documentation](../../setup-grafana/configure-grafana/enterprise-configuration/#verbose).
 
-{{< figure src="/static/img/docs/enterprise/verbose-audit-logs-9-1.png" max-width="750px" caption="Verbose audit logging output" >}}
+{{\< figure src="/static/img/docs/enterprise/verbose-audit-logs-9-1.png" max-width="750px" caption="Verbose audit logging output" \>}}
 
 #### See (and don't edit) users synced from SAML, LDAP, and OAuth identity providers
 
@@ -244,14 +247,14 @@ Previously, you could edit those settings in the Grafana UI, but they would reve
 To make user management clearer, you can now see which settings are synchronized from your identity provider, but you cannot edit those settings.
 To learn more about authentication, see the [documentation](../../setup-grafana/configure-security/configure-authentication/).
 
-{{< figure src="/static/img/docs/enterprise/oauth-synced-user-9-1.png" max-width="750px" caption="Non-interactive view of a user synced via OAuth" >}}
+{{\< figure src="/static/img/docs/enterprise/oauth-synced-user-9-1.png" max-width="750px" caption="Non-interactive view of a user synced via OAuth" \>}}
 
 #### Support wildcards for LDAP groups in team sync
 
 Team sync lets you set up synchronization between your authentication provider's teams and Grafana teams.
 To leverage your existing Active Directory in an efficient way without having to create multiple teams, you can now use wildcards when configuring LDAP groups, so that multiple Active Directory groups can be added at once to a single team.
 
-{{< figure src="/static/img/docs/enterprise/ldap-wildcard-teamsync-9-1.png" max-width="750px" caption="Using wildcard mapping for team sync" >}}
+{{\< figure src="/static/img/docs/enterprise/ldap-wildcard-teamsync-9-1.png" max-width="750px" caption="Using wildcard mapping for team sync" \>}}
 
 #### Redirect binding support for AzureAD SAML Single Logout
 

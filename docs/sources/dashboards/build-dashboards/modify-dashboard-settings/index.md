@@ -1,41 +1,44 @@
----
+-----
+
 keywords:
-  - time settings
-  - variables
-  - links
-  - dashboard
-  - settings
-labels:
+
+- time settings
+- variables
+- links
+- dashboard
+- settings
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Modify dashboard settings
-title: Modify dashboard settings
-description: Manage and edit your dashboard settings
-weight: 8
-refs:
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  json-fields:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/view-dashboard-json-model/#json-fields
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/view-dashboard-json-model/#json-fields
-  data-source:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/
-  dashboard-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/#dashboard-links
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/#dashboard-links
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Modify dashboard settings
+    title: Modify dashboard settings
+    description: Manage and edit your dashboard settings
+    weight: 8
+    refs:
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    json-fields:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/view-dashboard-json-model/\#json-fields
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/view-dashboard-json-model/\#json-fields
+    data-source:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/
+    dashboard-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/\#dashboard-links
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/build-dashboards/manage-dashboard-links/\#dashboard-links
+
+-----
 
 # Modify dashboard settings
 
@@ -50,15 +53,16 @@ The dashboard settings page allows you to:
 To access the dashboard setting page:
 
 1. Click **Edit** in the top-right corner of the dashboard.
-1. Click **Settings**.
+2. Click **Settings**.
 
 ## Modify dashboard time settings
 
 Adjust dashboard time settings when you want to change the dashboard timezone, the local browser time, and specify auto-refresh time intervals.
 
 1. On the **Settings** page, scroll down to the **Time Options** section of the **General** tab.
-1. Specify time settings as follows.
 
+2. Specify time settings as follows.
+   
    - **Time zone:** Specify the local time zone of the service or system that you are monitoring. This can be helpful when monitoring a system or service that operates across several time zones.
      - **Default:** Grafana uses the default selected time zone for the user profile, team, or organization. If no time zone is specified for the user profile, a team the user is a member of, or the organization, then Grafana uses the local browser time.
      - **Browser time:** The time zone configured for the viewing user browser is used. This is usually the same time zone as set on the computer.
@@ -67,10 +71,13 @@ Adjust dashboard time settings when you want to change the dashboard timezone, t
    - **Now delay:** Override the `now` time by entering a time delay. Use this option to accommodate known delays in data aggregation to avoid null values.
    - **Hide time picker:** Select this option if you do not want Grafana to display the time picker.
 
-1. Click **Save dashboard**.
-1. (Optional) Enter a description of the changes you've made.
-1. Click **Save**.
-1. Click **Exit edit**.
+3. Click **Save dashboard**.
+
+4. (Optional) Enter a description of the changes you've made.
+
+5. Click **Save**.
+
+6. Click **Exit edit**.
 
 ## Add tags
 
@@ -81,15 +88,20 @@ Tags can be up to 50 characters long, including spaces.
 To add tags to a dashboard, follow these steps:
 
 1. On the **Settings** page, scroll down to the **Tags** section of the **General** tab.
-1. In the field, enter a new or existing tag.
 
+2. In the field, enter a new or existing tag.
+   
    If you're entering an existing tag, make sure that you spell it the same way or a new tag is created.
 
-1. Click **Add** or press the Enter key.
-1. Click **Save dashboard**.
-1. (Optional) Enter a description of the changes you've made.
-1. Click **Save**.
-1. Click **Exit edit**.
+3. Click **Add** or press the Enter key.
+
+4. Click **Save dashboard**.
+
+5. (Optional) Enter a description of the changes you've made.
+
+6. Click **Save**.
+
+7. Click **Exit edit**.
 
 When you're on the **Dashboards** page, any tags you've entered show up under the **Tags** column.
 
@@ -99,13 +111,13 @@ An annotation query is a query that queries for events. These events can be visu
 icon you can hover over to see the event information.
 
 1. On the **Settings** page, go to the **Annotations** tab.
-1. Click **Add annotation query**.
-1. Enter a name and select a data source.
-1. Complete the rest of the form to build a query and annotation.
-1. Click **Save dashboard**.
-1. (Optional) Enter a description of the changes you've made.
-1. Click **Save**.
-1. Click **Exit edit**.
+2. Click **Add annotation query**.
+3. Enter a name and select a data source.
+4. Complete the rest of the form to build a query and annotation.
+5. Click **Save dashboard**.
+6. (Optional) Enter a description of the changes you've made.
+7. Click **Save**.
+8. Click **Exit edit**.
 
 The query editor UI changes based on the data source you select. Refer to the [Data source](ref:data-source) documentation for details on how to construct a query.
 
@@ -118,37 +130,50 @@ the dashboard. These dropdowns make it easy to change the data being displayed i
 For more information about variables, refer to [Variables](ref:variables).
 
 1. On the **Settings** page, go to the **Variables** tab.
-1. Click **+ New variable**.
-1. In the **Select variable type** drop-down, choose an option.
 
+2. Click **+ New variable**.
+
+3. In the **Select variable type** drop-down, choose an option.
+   
    The variable type you select impacts which fields you populate on the page.
 
-1. In the **General** section, enter the name of the variable.
-
+4. In the **General** section, enter the name of the variable.
+   
    This is the name that you'll use later in queries.
 
-1. Set the rest of the variable options.
-1. Click **Save dashboard**.
-1. (Optional) Enter a description of the changes you've made.
-1. Click **Save**.
-1. Click **Exit edit**.
+5. Set the rest of the variable options.
+
+6. Click **Save dashboard**.
+
+7. (Optional) Enter a description of the changes you've made.
+
+8. Click **Save**.
+
+9. Click **Exit edit**.
 
 ## Add a link
 
 Dashboard links enable you to place links to other dashboards and web sites directly below the dashboard header. Links provide for easy navigation to other, related dashboards and content.
 
 1. On the **Settings** page, click the **Links** tab.
-1. Click **+ New link**.
-1. Enter title for the link.
-1. In the **Type** drop-down, select **Dashboards** or **Link**.
-1. Set the rest of the link options.
 
+2. Click **+ New link**.
+
+3. Enter title for the link.
+
+4. In the **Type** drop-down, select **Dashboards** or **Link**.
+
+5. Set the rest of the link options.
+   
    For more detailed directions on creating links, refer to [Dashboard links](ref:dashboard-links)
 
-1. Click **Save dashboard**.
-1. (Optional) Enter a description of the changes you've made.
-1. Click **Save**.
-1. Click **Exit edit**.
+6. Click **Save dashboard**.
+
+7. (Optional) Enter a description of the changes you've made.
+
+8. Click **Save**.
+
+9. Click **Exit edit**.
 
 ## View dashboard JSON model
 

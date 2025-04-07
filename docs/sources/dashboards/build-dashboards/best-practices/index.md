@@ -1,72 +1,75 @@
----
+-----
+
 aliases:
-  - ../../best-practices/
-  - ../../best-practices/best-practices-for-creating-dashboards/
-  - ../../best-practices/best-practices-for-managing-dashboards/
-  - ../../best-practices/common-observability-strategies/
-  - ../../best-practices/dashboard-management-maturity-levels/
-  - ../../getting-started/strategies/
-description: Learn best practices for building and maintaining Grafana dashboards
-labels:
+
+- ../../best-practices/
+- ../../best-practices/best-practices-for-creating-dashboards/
+- ../../best-practices/best-practices-for-managing-dashboards/
+- ../../best-practices/common-observability-strategies/
+- ../../best-practices/dashboard-management-maturity-levels/
+- ../../getting-started/strategies/
+  description: Learn best practices for building and maintaining Grafana dashboards
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Best practices
-title: Grafana dashboard best practices
-weight: 800
-refs:
-  text-panel:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/text/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/text/
-  text-panel-visualization:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/text/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/text/
-  data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/
-  url-parameters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/#data-link-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/#data-link-variables
-  variable-examples:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/#examples-of-templates-and-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/#examples-of-templates-and-variables
-  dashboard-list-panel:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/dashboard-list/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/dashboard-list/
-  manage-dashboard-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/manage-dashboard-links/
-  usage-insights:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/assess-dashboard-usage/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/assess-dashboard-usage/
-  templates-and-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-  thresholds:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-thresholds/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-thresholds/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Best practices
+    title: Grafana dashboard best practices
+    weight: 800
+    refs:
+    text-panel:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/text/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/text/
+    text-panel-visualization:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/text/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/text/
+    data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/
+    url-parameters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/\#data-link-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/\#data-link-variables
+    variable-examples:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/\#examples-of-templates-and-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/\#examples-of-templates-and-variables
+    dashboard-list-panel:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/dashboard-list/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/dashboard-list/
+    manage-dashboard-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/manage-dashboard-links/
+    usage-insights:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/assess-dashboard-usage/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/assess-dashboard-usage/
+    templates-and-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+    thresholds:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-thresholds/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-thresholds/
+
+-----
 
 # Grafana dashboard best practices
 
@@ -120,11 +123,11 @@ This method is similar to the RED method, but it includes saturation.
 - **Errors -** Rate of requests that are failing
 - **Saturation -** How "full" your system is
 
-{{< docs/play title="The Four Golden Signals" url="https://play.grafana.org/d/000000109/" >}}
+{{\< docs/play title="The Four Golden Signals" url="https://play.grafana.org/d/000000109/" \>}}
 
 ## Dashboard management maturity model
 
-_Dashboard management maturity_ refers to how well-designed and efficient your dashboard ecosystem is. It's recommended that you periodically review your dashboard setup to gauge where you are and how you can improve.
+*Dashboard management maturity* refers to how well-designed and efficient your dashboard ecosystem is. It's recommended that you periodically review your dashboard setup to gauge where you are and how you can improve.
 
 Broadly speaking, dashboard maturity can be defined as low, medium, or high.
 
@@ -150,26 +153,32 @@ At this stage, you are starting to manage your dashboard use with methodical das
 How can you tell you are here?
 
 - Prevent sprawl by using template variables. For example, you don't need a separate dashboard for each node, you can use query variables. Even better, you can make the data source a template variable too, so you can reuse the same dashboard across different clusters and monitoring backends.
-
+  
   Refer to the list of [Variable examples](ref:variable-examples) if you want some ideas.
 
 - Methodical dashboards according to an [observability strategy](#common-observability-strategies).
-- Hierarchical dashboards with drill-downs to the next level.
 
-  {{< figure class="float-right"  max-width="100%" src="/static/img/docs/best-practices/drill-down-example.png" caption="Example of using drill-down" >}}
+- Hierarchical dashboards with drill-downs to the next level.
+  
+  {{\< figure class="float-right"  max-width="100%" src="/static/img/docs/best-practices/drill-down-example.png" caption="Example of using drill-down" \>}}
 
 - Dashboard design reflects service hierarchies. The example shown below uses the RED method (request and error rate on the left, latency duration on the right) with one row per service. The row order reflects the data flow.
-
-  {{< figure class="float-right"  max-width="100%" src="/static/img/docs/best-practices/service-hierarchy-example.png" caption="Example of a service hierarchy" >}}
+  
+  {{\< figure class="float-right"  max-width="100%" src="/static/img/docs/best-practices/service-hierarchy-example.png" caption="Example of a service hierarchy" \>}}
 
 - Compare like to like: split service dashboards when the magnitude differs. Make sure aggregated metrics don't drown out important information.
+
 - Expressive charts with meaningful use of color and normalizing axes where you can.
+  
   - Example of meaningful color: Blue means it's good, red means it's bad. [Thresholds](ref:thresholds) can help with that.
   - Example of normalizing axes: When comparing CPU usage, measure by percentage rather than raw number, because machines can have a different number of cores. Normalizing CPU usage by the number of cores reduces cognitive load because the viewer can trust that at 100% all cores are being used, without having to know the number of CPUs.
+
 - Directed browsing cuts down on "guessing."
+  
   - Template variables make it harder to "just browse" randomly or aimlessly.
   - Most dashboards should be linked to by alerts.
   - Browsing is directed with links. For more information, refer to [Manage dashboard links](ref:manage-dashboard-links).
+
 - Version-controlled dashboard JSON.
 
 ### High - optimized use
@@ -206,7 +215,7 @@ Keep your graphs simple and focused on answering the question that you are askin
 
 <!-- vale Grafana.GoogleWill = NO -->
 
-_Cognitive load_ is basically how hard you need to think about something in order to figure it out. Make your dashboard easy to interpret. Other users and future you (when you're trying to figure out what broke at 2 AM) will appreciate it.
+*Cognitive load* is basically how hard you need to think about something in order to figure it out. Make your dashboard easy to interpret. Other users and future you (when you're trying to figure out what broke at 2 AM) will appreciate it.
 
 Ask yourself:
 
@@ -267,7 +276,7 @@ What is your dashboard maturity level? Analyze your current dashboard setup and 
 - Copying dashboards with no significant changes is not a good idea.
   - You miss out on updates to the original dashboard, such as documentation changes, bug fixes, or additions to metrics.
   - In many cases copies are being made to simply customize the view by setting template parameters. This should instead be done by maintaining a link to the master dashboard and customizing the view with [URL parameters](ref:url-parameters).
-- When you must copy a dashboard, clearly rename it and _do not_ copy the dashboard tags. Tags are important metadata for dashboards that are used during search. Copying tags can result in false matches.
+- When you must copy a dashboard, clearly rename it and *do not* copy the dashboard tags. Tags are important metadata for dashboards that are used during search. Copying tags can result in false matches.
 - Maintain a dashboard of dashboards or cross-reference dashboards. This can be done in several ways:
   - Create dashboard links, panel, or data links. Links can go to other dashboards or to external systems. For more information, refer to [Manage dashboard links](ref:manage-dashboard-links).
   - Add a [Dashboard list panel](ref:dashboard-list-panel). You can then customize what you see by doing tag or folder searches.

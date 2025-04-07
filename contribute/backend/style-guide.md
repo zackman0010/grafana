@@ -19,7 +19,7 @@ checks.
 
 To run all linters, use the `lint-go` Makefile target:
 
-```bash
+``` bash
 make lint-go
 ```
 
@@ -37,7 +37,7 @@ Currently, this is just used to ensure that test databases are correctly set up 
 
 Each package SHOULD include a [TestMain](https://pkg.go.dev/testing#hdr-Main) function that calls `testsuite.Run(m)`:
 
-```go
+``` go
 package mypkg
 
 import (
@@ -62,7 +62,7 @@ We run unit and integration tests separately, to help keep our CI pipeline runni
 
 To properly mark a test as being an integration test, you must format your test function definition as follows, with the function name starting with `TestIntegration` and the check for `testing.Short()`:
 
-```go
+``` go
 func TestIntegrationFoo(t *testing.T) {
     if testing.Short() {
         t.Skip("skipping integration test")
@@ -77,8 +77,8 @@ func TestIntegrationFoo(t *testing.T) {
 ### Assertions
 
 Use respectively [`assert.*`](https://github.com/stretchr/testify#assert-package) functions to make assertions that
-should _not_ halt the test ("soft checks") and [`require.*`](https://github.com/stretchr/testify#require-package)
-functions to make assertions that _should_ halt the test ("hard checks"). Typically, you want to use the latter type of
+should *not* halt the test ("soft checks") and [`require.*`](https://github.com/stretchr/testify#require-package)
+functions to make assertions that *should* halt the test ("hard checks"). Typically, you want to use the latter type of
 check to assert that errors have or have not happened, since continuing the test after such an assertion fails is
 chaotic (the system under test will be in an undefined state) and you'll often have segfaults in practice.
 
@@ -108,7 +108,7 @@ This is useful when you expect different behaviors of the same function.
 
 Given this interface:
 
-```go
+``` go
 type MyInterface interface {
     Get(ctx context.Context, id string) (Object, error)
 }
@@ -116,7 +116,7 @@ type MyInterface interface {
 
 Mock implementation should be like this:
 
-```go
+``` go
 import "github.com/stretchr/testify/mock"
 
 type MockImplementation struct {
@@ -131,7 +131,7 @@ func (m *MockImplementation) Get(ctx context.Context, id string) (Object, error)
 
 And use it in the following way:
 
-```go
+``` go
 objectToReturn := Object{Message: "abc"}
 errToReturn := errors.New("my error")
 
@@ -158,9 +158,7 @@ use [`mockery`](https://github.com/vektra/mockery) library to generate the mocks
 
 The command is like the following (there are more options documented if you need to use another one):
 
-```
-mockery --name InterfaceName --structname MockImplementationName --inpackage --filename my_implementation_mock.go
-```
+    mockery --name InterfaceName --structname MockImplementationName --inpackage --filename my_implementation_mock.go
 
 - `--name`: Interface to mock
 - `--structname`: Mock implementation name
@@ -172,15 +170,13 @@ If any interface signature changes, executing the command again updates the mock
 Additionally, you can put `go:generate` command on the top of the file as a comment. It's useful because some IDEs
 like Goland and Visual Studio Code allows executing scripts from the IDE.
 
-```
-package <package>
-
-import (
-	...
-)
-
-//go:generate mockery --name InterfaceName --structname MockImplementationName --inpackage --filename my_implementation_mock.go
-```
+    package <package>
+    
+    import (
+    	...
+    )
+    
+    //go:generate mockery --name InterfaceName --structname MockImplementationName --inpackage --filename my_implementation_mock.go
 
 ## Globals
 
@@ -197,7 +193,7 @@ Valid reasons to use a pointer include (but not necessarily limited to):
 - You might need to pass a modifiable argument to a function
 - Copying an object might incur a performance hit (benchmark to check your assumptions, copying is often faster than
   allocating heap memory)
-- You might _need_ `nil` to tell if a variable isn't set, although usually it's better to use the type's zero
+- You might *need* `nil` to tell if a variable isn't set, although usually it's better to use the type's zero
   value to tell instead
 
 ## Database

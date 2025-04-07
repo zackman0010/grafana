@@ -1,41 +1,44 @@
----
+-----
+
 description: Learn how to use SCIM provisioning to synchronize users and groups from your identity provider to Grafana. SCIM enables automated user management, team provisioning, and enhanced security through real-time synchronization with your identity provider.
 keywords:
-  - grafana
-  - scim
-  - provisioning
-  - user-management
-  - team-management
-labels:
+
+- grafana
+- scim
+- provisioning
+- user-management
+- team-management
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Configure SCIM provisioning
-title: Configure SCIM provisioning
-weight: 300
----
+  - cloud
+  - enterprise
+    menuTitle: Configure SCIM provisioning
+    title: Configure SCIM provisioning
+    weight: 300
+
+-----
 
 # Configure SCIM provisioning
 
 System for Cross-domain Identity Management (SCIM) is an open standard that allows automated user provisioning and management. With SCIM, you can automate the provisioning of users and groups from your identity provider to Grafana.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in [Grafana Enterprise](../../../introduction/grafana-enterprise/) and [Grafana Cloud Advanced](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 This feature is behind the `enableSCIM` feature toggle.
 You can enable feature toggles through configuration file or environment variables.
 
-For more information, refer to the [feature toggles documentation](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#feature_toggles).
-{{< /admonition >}}
+For more information, refer to the [feature toggles documentation](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#feature_toggles).
+{{\< /admonition \>}}
 
 ## Benefits
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 SCIM provisioning only works SAML authentication.
 Other authentication methods aren't supported.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 SCIM offers several advantages for managing users and teams in Grafana:
 
@@ -52,24 +55,24 @@ Users with Basic Auth credentials and those using their grafana.com accounts wil
 
 ## Configure SCIM in Grafana
 
-The table below describes all SCIM configuration options. Like any other Grafana configuration, you can apply these options as [environment variables](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#override-configuration-with-environment-variables).
+The table below describes all SCIM configuration options. Like any other Grafana configuration, you can apply these options as [environment variables](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#override-configuration-with-environment-variables).
 
 | Setting              | Required | Description                                                                                                                                                                                | Default |
 | -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
 | `user_sync_enabled`  | Yes      | Enable SCIM user provisioning. When enabled, Grafana will create, update, and deactivate users based on SCIM requests from your identity provider.                                         | `true`  |
 | `group_sync_enabled` | No       | Enable SCIM group provisioning. When enabled, Grafana will create, update, and delete teams based on SCIM requests from your identity provider. Cannot be enabled if Team Sync is enabled. | `false` |
 
-{{< admonition type="warning" >}}
+{{\< admonition type="warning" \>}}
 **Team Sync Compatibility**:
 
 - SCIM group sync (`group_sync_enabled = true`) and Team Sync cannot be enabled simultaneously
 - You can use SCIM user sync (`user_sync_enabled = true`) alongside Team Sync
 - For more details about migration and compatibility, see [SCIM vs Team Sync](./manage-users-teams/_index.md#scim-vs-team-sync)
-  {{< /admonition >}}
+  {{\< /admonition \>}}
 
 ### Example SCIM configuration
 
-```ini
+``` ini
 [auth.scim]
 user_sync_enabled = true
 group_sync_enabled = false

@@ -13,23 +13,23 @@ Support bundles are generated from information located in the Grafana UI's onlin
 To add a new support bundle collector, follow these steps which use the usage stats service as an example. For example:
 
 1. Import the support bundles registry in the service's `ProvideService` function:
-
-   ```go
+   
+   ``` go
    type UsageStats struct {
    	...
    }
-
+   
    func ProvideService(
    	...
    	bundleRegistry supportbundles.Service, // Bundle registry
    ) (*UsageStats, error)
    ```
-
+   
    After importing the support bundle, run `make gen-go` to wire the registry to the service.
 
-1. Implement the collector. For example:
-
-   ```go
+2. Implement the collector. For example:
+   
+   ``` go
    func (uss *UsageStats) supportBundleCollector() supportbundles.Collector {
    	return supportbundles.Collector{
    		UID:               "usage-stats", // Unique ID for the collector
@@ -46,12 +46,12 @@ To add a new support bundle collector, follow these steps which use the usage st
    			if err != nil {
    				return nil, err
    			}
-
+   
    			data, err := json.Marshal(report)
    			if err != nil {
    				return nil, err
    			}
-
+   
    			return &supportbundles.SupportItem{
    				// Filename of the file in the archive
    				// Can be any extension (most commonly, .json and .md).
@@ -63,9 +63,11 @@ To add a new support bundle collector, follow these steps which use the usage st
    }
    ```
 
-1. Register the collector in the service's `ProvideService` function. For example:
+3. Register the collector in the service's `ProvideService` function. For example:
 
-```go
+<!-- end list -->
+
+``` go
 func ProvideService(
     ...
 ) (*UsageStats, error) {

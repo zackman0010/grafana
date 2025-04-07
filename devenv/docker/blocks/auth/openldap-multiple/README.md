@@ -7,7 +7,7 @@ Instead of launching solely 1 openldap server, it launches two.
 
 First build and deploy the `openldap` containers.
 
-```bash
+``` bash
 make devenv sources=auth/openldap-multiple
 ```
 
@@ -24,15 +24,16 @@ The `osixia/openldap` container will update the database with any `*.ldif` file 
 
 The following changes are needed at Grafana's configuration file.
 
-```ini
+``` ini
 [auth.ldap]
 enabled = true
 config_file = ./devenv/docker/blocks/auth/openldap-multiple/ldap_dev.toml
 ```
 
-## Available users and groups 
+## Available users and groups
 
 ### Srv1 (dc=srv1-grafana,dc=org)
+
 - admins
   - ldap-admin-srv1
 - editors

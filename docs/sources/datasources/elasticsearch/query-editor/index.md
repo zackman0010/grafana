@@ -1,31 +1,34 @@
----
+-----
+
 aliases:
-  - ../../data-sources/elasticsearch/query-editor/
-  - ../../data-sources/elasticsearch/template-variables/
-description: Guide for using the Elasticsearch data source's query editor
-keywords:
-  - grafana
-  - elasticsearch
-  - lucene
-  - metrics
-  - logs
-  - queries
-labels:
+
+- ../../data-sources/elasticsearch/query-editor/
+- ../../data-sources/elasticsearch/template-variables/
+  description: Guide for using the Elasticsearch data source's query editor
+  keywords:
+- grafana
+- elasticsearch
+- lucene
+- metrics
+- logs
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-    - data source
-menuTitle: Query editor
-title: Elasticsearch query editor
-weight: 300
-refs:
-  query-and-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+  - data source
+    menuTitle: Query editor
+    title: Elasticsearch query editor
+    weight: 300
+    refs:
+    query-and-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
+
+-----
 
 # Elasticsearch query editor
 
@@ -36,7 +39,7 @@ See [Lucene query syntax](https://www.elastic.co/guide/en/kibana/current/lucene-
 When composing Lucene queries, ensure that you use uppercase boolean operators: `AND`, `OR`, and `NOT`. Lowercase versions of these operators are not supported by the Lucene query syntax.
 {{% /admonition %}}
 
-{{< figure src="/static/img/docs/elasticsearch/elastic-query-editor-10.1.png" max-width="800px" class="docs-image--no-shadow" caption="Elasticsearch query editor" >}}
+{{\< figure src="/static/img/docs/elasticsearch/elastic-query-editor-10.1.png" max-width="800px" class="docs-image--no-shadow" caption="Elasticsearch query editor" \>}}
 
 For general documentation on querying data sources in Grafana, including options and functions common to all query editors, see [Query and transform data](ref:query-and-transform-data).
 
@@ -61,7 +64,7 @@ Metrics queries aggregate data and produce a variety of calculations such as cou
 - **Alias** - Aliasing only applies to **time series queries**, where the last group is `date histogram`. This is ignored for any other type of query.
 
 - **Metric** - Metrics aggregations include:
-
+  
   - count - see [Value count aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/8.9/search-aggregations-metrics-valuecount-aggregation.html)
   - average - see [Avg aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/8.9/search-aggregations-metrics-rate-aggregation.html)
   - sum - see [Sum aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html)
@@ -78,7 +81,7 @@ You can select multiple metrics and group by multiple terms or filters when usin
 Use the **+ sign** to the right to add multiple metrics to your query. Click on the **eye icon** next to **Metric** to hide metrics, and the **garbage can icon** to remove metrics.
 
 - **Group by options** - Create multiple group by options when constructing your Elasticsearch query. Date histogram is the default option. Below is a list of options in the dropdown menu.
-
+  
   - terms - see [Terms aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html).
   - filter - see [Filter aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-filter-aggregation.html).
   - geo hash grid - see [Geohash grid aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-geohashgrid-aggregation.html).
@@ -123,7 +126,7 @@ The **nested** group by option is currently experimental, you can select a field
 
 Click the **+ sign** to add multiple group by options. The data will grouped in order (first by, then by).
 
-{{< figure src="/static/img/docs/elasticsearch/group-by-then-by-10.2.png" max-width="850px" class="docs-image--no-shadow" caption="Group by options" >}}
+{{\< figure src="/static/img/docs/elasticsearch/group-by-then-by-10.2.png" max-width="850px" class="docs-image--no-shadow" caption="Group by options" \>}}
 
 ### Logs query type
 

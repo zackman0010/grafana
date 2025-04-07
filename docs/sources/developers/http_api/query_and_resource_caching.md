@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../http_api/query_caching/
-  - ../../http_api/resource_caching/
-  - ../../http_api/caching/
-canonical: /docs/grafana/latest/developers/http_api/query_and_resource_caching/
-description: Grafana Enterprise Query and Resource Caching HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - caching
-  - query caching
-  - resource caching
-  - data source
-labels:
+
+- ../../http\_api/query\_caching/
+- ../../http\_api/resource\_caching/
+- ../../http\_api/caching/
+  canonical: /docs/grafana/latest/developers/http\_api/query\_and\_resource\_caching/
+  description: Grafana Enterprise Query and Resource Caching HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- caching
+- query caching
+- resource caching
+- data source
+  labels:
   products:
-    - enterprise
-    - oss
-title: Query and Resource Caching HTTP API
----
+  - enterprise
+  - oss
+    title: Query and Resource Caching HTTP API
+
+-----
 
 # Query and resource caching API
 
@@ -43,7 +46,7 @@ See note in the [introduction](#query-and-resource-caching-api) for an explanati
 
 **Example Request**:
 
-```http
+``` http
 POST /api/datasources/jZrmlLCGka/cache/enable HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -52,7 +55,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -93,7 +96,7 @@ See note in the [introduction](#query-and-resource-caching-api) for an explanati
 
 **Example Request**:
 
-```http
+``` http
 POST /api/datasources/jZrmlLCGka/cache/disable HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -102,7 +105,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -131,7 +134,7 @@ Content-Type: application/json
 
 `POST /api/datasources/:dataSourceUID/cache/clean`
 
-Will clean cached data for _all_ data sources with caching enabled. The `dataSourceUID` specified will only be used to return the configuration for that data source.
+Will clean cached data for *all* data sources with caching enabled. The `dataSourceUID` specified will only be used to return the configuration for that data source.
 
 **Required permissions**
 
@@ -145,7 +148,7 @@ See note in the [introduction](#query-and-resource-caching-api) for an explanati
 
 **Example Request**:
 
-```http
+``` http
 POST /api/datasources/jZrmlLCGka/cache/clean HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -154,7 +157,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -195,7 +198,7 @@ See note in the [introduction](#query-and-resource-caching-api) for an explanati
 
 **Example Request**:
 
-```http
+``` http
 POST /api/datasources/jZrmlLCGka/cache HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -224,7 +227,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -266,7 +269,7 @@ See note in the [introduction](#query-and-resource-caching-api) for an explanati
 
 **Example Request**:
 
-```http
+``` http
 GET /api/datasources/jZrmlLCGka/cache HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -275,7 +278,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

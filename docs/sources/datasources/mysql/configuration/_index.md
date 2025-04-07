@@ -1,40 +1,43 @@
----
+-----
+
 description: This document provides instructions for configuring the MySQL data source and explains available configuration options.
 keywords:
-  - grafana
-  - mysql
-  - guide
-  - configure
-labels:
+
+- grafana
+- mysql
+- guide
+- configure
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure the MySQL data source
-title: Configure the MySQL data source
-weight: 10
-refs:
-  add-template-variables-interval:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#__interval
-  add-template-variables-interval-ms:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#__interval_ms
-    - pattern: /docs/grafana-cloud/
-      destination: docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/#__interval_ms
-  provisioning-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#data-sources
-  data-source-management:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure the MySQL data source
+    title: Configure the MySQL data source
+    weight: 10
+    refs:
+    add-template-variables-interval:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#\_\_interval
+    add-template-variables-interval-ms:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+  - pattern: /docs/grafana-cloud/
+    destination: docs/grafana-cloud/visualizations/dashboards/variables/add-template-variables/\#\_\_interval\_ms
+    provisioning-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#data-sources
+    data-source-management:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+
+-----
 
 # Configure the MySQL data source
 
@@ -47,13 +50,13 @@ Administrators can also [configure the data source via YAML](#provision-the-data
 
 Grafana ships with the MySQL plugin, so no additional installation is required.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 When adding a data source, ensure the database user you specify has only `SELECT` permissions on the relevant database and tables. Grafana does not validate the safety of queries, which means they can include potentially harmful SQL statements, such as `USE otherdb;` or `DROP TABLE user;`, which could get executed. To minimize this risk, Grafana strongly recommends creating a dedicated MySQL user with restricted permissions.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 Example:
 
-```sql
+``` sql
  CREATE USER 'grafanaReader' IDENTIFIED BY 'password';
  GRANT SELECT ON mydatabase.mytable TO 'grafanaReader';
 ```
@@ -65,9 +68,9 @@ Use wildcards (`*`) in place of a database or table if you want to grant access 
 To add the MySQL data source complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Click **Add new connection** and type `MySQL` in the search bar.
-1. Select the **MySQL data source** option.
-1. Click **Add new data source** in the upper right.
+2. Click **Add new connection** and type `MySQL` in the search bar.
+3. Select the **MySQL data source** option.
+4. Click **Add new data source** in the upper right.
 
 You are taken to the **Settings** tab where you will configure the data source.
 
@@ -107,11 +110,11 @@ The following are additional MySQL settings.
 - **Max open** - The maximum number of open connections to the database, default `100`.
 - **Max idle** - The maximum number of connections in the idle connection pool, default `100`.
 - **Auto (max idle)** - Toggle to set the maximum number of idle connections to the number of maximum open connections. The default is `true`.
-- **Max lifetime** - The maximum amount of time in seconds a connection may be reused. This should always be lower than configured [wait_timeout](https://dev.mysql.com/doc/en/server-system-variables.html#sysvar_wait_timeout) in MySQL. The default is `14400`, or 4 hours.
+- **Max lifetime** - The maximum amount of time in seconds a connection may be reused. This should always be lower than configured [wait\_timeout](https://dev.mysql.com/doc/en/server-system-variables.html#sysvar_wait_timeout) in MySQL. The default is `14400`, or 4 hours.
 
 **Private data source connect:**
 
-**Private data source connect** - _Only for Grafana Cloud users._ Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
+**Private data source connect** - *Only for Grafana Cloud users.* Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
 
 Click **Manage private data source connect** to be taken to your PDC connection page, where you’ll find your PDC configuration details.
 
@@ -145,7 +148,7 @@ For more information about provisioning, and available configuration options, re
 
 **Basic provisioning:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -165,7 +168,7 @@ datasources:
 
 **Using TLS verification:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -188,7 +191,7 @@ datasources:
 
 **Use TLS and skip certificate verification:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

@@ -1,14 +1,17 @@
----
+-----
+
 aliases:
-  - ../../enterprise/white-labeling/
-  - ../enable-custom-branding/
-description: Change the look of Grafana to match your corporate brand.
-labels:
+
+- ../../enterprise/white-labeling/
+- ../enable-custom-branding/
+  description: Change the look of Grafana to match your corporate brand.
+  labels:
   products:
-    - enterprise
-title: Configure custom branding
-weight: 300
----
+  - enterprise
+    title: Configure custom branding
+    weight: 300
+
+-----
 
 # Configure custom branding
 
@@ -41,7 +44,7 @@ With custom branding, you have the ability to modify the following elements:
 
 The configuration file in Grafana Enterprise contains the following options. For more information about configuring Grafana, refer to [Configure Grafana](../).
 
-```ini
+``` ini
 # Enterprise only
 [white_labeling]
 # Set to your company name to override application title
@@ -81,7 +84,7 @@ The configuration file in Grafana Enterprise contains the following options. For
 
 You have the option of adding custom links in place of the default footer links (Documentation, Support, Community). Below is an example of how to replace the default footer and help links with custom links.
 
-```ini
+``` ini
 footer_links = support guides extracustom
 footer_links_support_text = Support
 footer_links_support_url = http://your.support.site
@@ -93,15 +96,13 @@ footer_links_extracustom_url = http://your.custom.site
 
 The following example shows configuring custom branding using environment variables instead of the `custom.ini` or `grafana.ini` files.
 
-```
-GF_WHITE_LABELING_FOOTER_LINKS=support guides extracustom
-GF_WHITE_LABELING_FOOTER_LINKS_SUPPORT_TEXT=Support
-GF_WHITE_LABELING_FOOTER_LINKS_SUPPORT_URL=http://your.support.site
-GF_WHITE_LABELING_FOOTER_LINKS_GUIDES_TEXT=Guides
-GF_WHITE_LABELING_FOOTER_LINKS_GUIDES_URL=http://your.guides.site
-GF_WHITE_LABELING_FOOTER_LINKS_EXTRACUSTOM_TEXT=Custom Text
-GF_WHITE_LABELING_FOOTER_LINKS_EXTRACUSTOM_URL=http://your.custom.site
-```
+    GF_WHITE_LABELING_FOOTER_LINKS=support guides extracustom
+    GF_WHITE_LABELING_FOOTER_LINKS_SUPPORT_TEXT=Support
+    GF_WHITE_LABELING_FOOTER_LINKS_SUPPORT_URL=http://your.support.site
+    GF_WHITE_LABELING_FOOTER_LINKS_GUIDES_TEXT=Guides
+    GF_WHITE_LABELING_FOOTER_LINKS_GUIDES_URL=http://your.guides.site
+    GF_WHITE_LABELING_FOOTER_LINKS_EXTRACUSTOM_TEXT=Custom Text
+    GF_WHITE_LABELING_FOOTER_LINKS_EXTRACUSTOM_URL=http://your.custom.site
 
 {{% admonition type="note" %}}
 The following two links are always present in the footer:
@@ -117,7 +118,7 @@ If you specify `footer_links` or `GF_WHITE_LABELING_FOOTER_LINKS`, then all othe
 In addition to the customizations described below, you can customize the footer of your shared dashboards.
 To customize the footer of a shared dashboard, add the following section to the `grafana.ini` file.
 
-```ini
+``` ini
 [white_labeling.public_dashboards]
 
 # Hides the footer for the shared dashboards if set to `true`.

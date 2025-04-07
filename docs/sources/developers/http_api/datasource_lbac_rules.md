@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../http_api/datasource_lbac_rules/
-canonical: /docs/grafana/latest/developers/http_api/datasource_lbac_rules/
-description: Data Source LBAC rules API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - datasource
-  - lbac
-  - acl
-  - enterprise
-labels:
+
+- ../../http\_api/datasource\_lbac\_rules/
+  canonical: /docs/grafana/latest/developers/http\_api/datasource\_lbac\_rules/
+  description: Data Source LBAC rules API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- datasource
+- lbac
+- acl
+- enterprise
+  labels:
   products:
-    - cloud
-title: Datasource LBAC rules HTTP API
----
+  - cloud
+    title: Datasource LBAC rules HTTP API
+
+-----
 
 # Data Source LBAC rules API
 
@@ -34,22 +37,20 @@ Gets all existing LBAC rules for the data source with the given `uid`.
 
 | Action           | Scope                                                                                    |
 | ---------------- | ---------------------------------------------------------------------------------------- |
-| datasources:read | datasources:_<br>datasources:uid:_<br>datasources:uid:my_datasource (single data source) |
+| datasources:read | datasources:*<br>datasources:uid:*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```
-GET /api/datasources/uid/my_datasource/lbac/teams HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
-```
+    GET /api/datasources/uid/my_datasource/lbac/teams HTTP/1.1
+    Accept: application/json
+    Content-Type: application/json
+    Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 131
@@ -83,14 +84,14 @@ Deleting a team from the list will remove the team's LBAC rules. You have to sub
 
 | Action                        | Scope                                                                                    |
 | ----------------------------- | ---------------------------------------------------------------------------------------- |
-| datasources:write             | datasources:_<br>datasources:uid:_<br>datasources:uid:my_datasource (single data source) |
-| datasources.permissions:write | datasources:_<br>datasources:uid:_<br>datasources:uid:my_datasource (single data source) |
+| datasources:write             | datasources:*<br>datasources:uid:*<br>datasources:uid:my\_datasource (single data source) |
+| datasources.permissions:write | datasources:*<br>datasources:uid:*<br>datasources:uid:my\_datasource (single data source) |
 
 ### Examples
 
 **Example request:**
 
-```http
+``` http
 PUT /api/datasources/uid/my_datasource/lbac/teams
 Accept: application/json
 Content-Type: application/json
@@ -116,7 +117,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 35

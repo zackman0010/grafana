@@ -4,4 +4,4 @@ Grafana ships with **built in** support for CloudWatch. Simply add it as a data 
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/datasources/cloudwatch/](https://grafana.com/docs/grafana/latest/datasources/cloudwatch/)
+<https://grafana.com/docs/grafana/latest/datasources/cloudwatch/>

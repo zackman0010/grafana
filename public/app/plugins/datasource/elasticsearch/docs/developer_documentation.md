@@ -28,4 +28,4 @@ Many Explore and Log features are implemented through `DataSourceWithXXXSupport`
 
 ## Supported ES Versions and version changes
 
-The supported ElasticSearch version is documented at https://grafana.com/docs/grafana/latest/datasources/ElasticSearch/#supported-ElasticSearch-versions. We typically update it with major Grafana versions, following ElasticSearch [Elastic Product End of Life Dates](https://www.elastic.co/support/eol) to the last supported versions of ElasticSearch available at the time of Grafana's release.
+The supported ElasticSearch version is documented at https://grafana.com/docs/grafana/latest/datasources/ElasticSearch/\#supported-ElasticSearch-versions. We typically update it with major Grafana versions, following ElasticSearch [Elastic Product End of Life Dates](https://www.elastic.co/support/eol) to the last supported versions of ElasticSearch available at the time of Grafana's release.

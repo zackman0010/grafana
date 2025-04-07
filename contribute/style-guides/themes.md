@@ -21,7 +21,7 @@ The following section describes how to use Grafana themes in React components.
 
 The `useStyles2` hook memoizes the function and provides access to the theme.
 
-```tsx
+``` tsx
 import { FC } from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
@@ -42,7 +42,7 @@ const getStyles = (theme: GrafanaTheme2) =>
 
 Use code similar to the following to give your component access to the theme variables:
 
-```tsx
+``` tsx
 import { FC } from 'react';
 import { useTheme2 } from '@grafana/ui';
 
@@ -142,7 +142,7 @@ To customize font family, font sizes, and line heights, use the variables under 
 
 Use `ThemeContext` like this:
 
-```tsx
+``` tsx
 import { ThemeContext } from '@grafana/data';
 
 <ThemeContext.Consumer>{(theme) => <Foo theme={theme} />}</ThemeContext.Consumer>;
@@ -152,7 +152,7 @@ import { ThemeContext } from '@grafana/data';
 
 With this method your component will be automatically wrapped in `ThemeContext.Consumer` and provided with current theme via the `theme` prop. Components used with `withTheme` must implement the `Themeable` interface.
 
-```ts
+``` ts
 import  { ThemeContext, Themeable } from '@grafana/ui';
 
 interface FooProps extends Themeable2 {}
@@ -166,7 +166,7 @@ export default withTheme2(Foo);
 
 If you need to pass a theme object to a function that you are testing, then import `createTheme` and call it without any arguments. For example:
 
-```tsx
+``` tsx
 import { createTheme } from '@grafana/data';
 
 describe('MyComponent', () => {

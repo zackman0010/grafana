@@ -1,29 +1,32 @@
----
+-----
+
 aliases:
-  - ../../features/panels/candlestick/
-  - ../../panels/visualizations/candlestick/
-  - ../../visualizations/candlestick/
-description: Configure options for Grafana's candlestick visualization
-keywords:
-  - grafana
-  - Candlestick
-  - OHLC
-  - panel
-  - documentation
-labels:
+
+- ../../features/panels/candlestick/
+- ../../panels/visualizations/candlestick/
+- ../../visualizations/candlestick/
+  description: Configure options for Grafana's candlestick visualization
+  keywords:
+- grafana
+- Candlestick
+- OHLC
+- panel
+- documentation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Candlestick
-weight: 100
-refs:
-  time-series-visualization:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/visualizations/time-series/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Candlestick
+    weight: 100
+    refs:
+    time-series-visualization:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/visualizations/time-series/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/visualizations/time-series/
+
+-----
 
 # Candlestick
 
@@ -33,9 +36,9 @@ Candlestick visualizations build upon the foundation of the [time series visuali
 
 You can use a candlestick if you want to visualize, at a glance, how a price moved over time, whether it went up, down, or stayed the same, and how much it fluctuated:
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-candlestick-v11.6.png" max-width="750px" alt="A candlestick visualization" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-candlestick-v11.6.png" max-width="750px" alt="A candlestick visualization" \>}}
 
-Each candlestick is represented as a rectangle, referred to as the _candlestick body_. The candlestick body displays the opening and closing prices during a time period. Green candlesticks represent when the price appreciated while the red candlesticks represent when the price depreciated. The lines sticking out the candlestick body are referred to as _wicks_ or _shadows_, which represent the highest and lowest prices during the time period.
+Each candlestick is represented as a rectangle, referred to as the *candlestick body*. The candlestick body displays the opening and closing prices during a time period. Green candlesticks represent when the price appreciated while the red candlesticks represent when the price depreciated. The lines sticking out the candlestick body are referred to as *wicks* or *shadows*, which represent the highest and lowest prices during the time period.
 
 Use a candlestick when you need to:
 
@@ -45,11 +48,11 @@ Use a candlestick when you need to:
 
 ## Configure a candlestick
 
-Once you’ve created a [dashboard](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/create-dashboard/), the following video shows you how to configure a candlestick visualization:
+Once you’ve created a [dashboard](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/dashboards/build-dashboards/create-dashboard/), the following video shows you how to configure a candlestick visualization:
 
-{{< youtube id="IOFKBgbf3aM" >}}
+{{\< youtube id="IOFKBgbf3aM" \>}}
 
-{{< docs/play title="Candlestick" url="https://play.grafana.org/d/candlestick/candlestick" >}}
+{{\< docs/play title="Candlestick" url="https://play.grafana.org/d/candlestick/candlestick" \>}}
 
 ## Supported data formats
 
@@ -74,15 +77,15 @@ The candlestick visualization works best with price movement data for an asset. 
 
 The data is converted as follows:
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-candles-volume-v11.6.png" max-width="750px" alt="A candlestick visualization showing the price movements of specific asset." >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-candles-volume-v11.6.png" max-width="750px" alt="A candlestick visualization showing the price movements of specific asset." \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Candlestick options
 
@@ -102,11 +105,12 @@ The following options let you control which data is displayed in the visualizati
 The **Color strategy** option controls how colors are applied to dimensions. Choose from:
 
 - **Since Open** - The default behavior. This mode uses the **Up color** if the intra-period price movement is positive. In other words, if the value on close is greater or equal to the value on open, the **Up color** is used.
+
 - **Since Prior Close** - An alternative display method where the color of the candle is based on the inter-period price movement or change in value. In other words, if the value on open is greater than the previous value on close, the **Up color** is used. If the value on open is lower than the previous value on close, the **Down color** is used.
+  
+  This option also triggers the *hollow candlestick* visualization mode. Hollow candlesticks indicate that the intra-period movement is positive (value is higher on close than on open), while filled candlesticks indicate the intra-period change is negative (value is lower on close than on open). To learn more, refer to the [explanation of the differences](https://thetradingbible.com/how-to-read-hollow-candlesticks).
 
-  This option also triggers the _hollow candlestick_ visualization mode. Hollow candlesticks indicate that the intra-period movement is positive (value is higher on close than on open), while filled candlesticks indicate the intra-period change is negative (value is lower on close than on open). To learn more, refer to the [explanation of the differences](https://thetradingbible.com/how-to-read-hollow-candlesticks).
-
-#### Open, High, Low, Close, Volume {#open-high-low-close}
+#### Open, High, Low, Close, Volume {\#open-high-low-close}
 
 The candlestick visualization attempts to map fields from your data to the appropriate dimension:
 
@@ -122,7 +126,7 @@ The candlestick visualization legend doesn't display these values.
 
 If your data can't be mapped to these dimensions for some reason (for example, because the column names aren't the same), you can map them manually using the **Open**, **High**, **Low**, and **Close** fields under the **Candlestick** options in the panel editor:
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-olhc-options-v11.6.png" max-width="400px" alt="Open, High, Low, and Close fields in the panel editor" >}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-olhc-options-v11.6.png" max-width="400px" alt="Open, High, Low, and Close fields in the panel editor" \>}}
 
 #### Additional fields
 
@@ -167,34 +171,34 @@ Set the hover proximity (in pixels) to control how close the cursor must be to a
 
 ### Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Graph styles options
 
 The options under the **Graph styles** section let you control the general appearance of [additional fields](#additional-fields) in the visualization, excluding [color](#standard-options).
 
-{{< docs/shared lookup="visualizations/graph-styles-options.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/graph-styles-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Axis options
 
-{{< docs/shared lookup="visualizations/axis-options-2.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+1" >}}
+{{\< docs/shared lookup="visualizations/axis-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+1" \>}}
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

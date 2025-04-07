@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v8-4/
-description: Learn about new and updated features in Grafana v8.4
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '8.4'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v8-4/
+  description: Learn about new and updated features in Grafana v8.4
+  keywords:
+- grafana
+- new
+- documentation
+- '8.4'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v8.4
-weight: -33
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v8.4
+    weight: -33
+
+-----
 
 # What's new in Grafana v8.4
 
@@ -33,13 +36,13 @@ We’ve summarized what’s new in the release here, but you might also be inter
 
 You can now share links to your playlists the same way as with dashboards, to easily set up the same playlist on multiple devices or kiosks.
 
-{{< figure src="/static/img/docs/dashboards/share-playlists-8-4.png" max-width="1200px" caption="Share playlist" >}}
+{{\< figure src="/static/img/docs/dashboards/share-playlists-8-4.png" max-width="1200px" caption="Share playlist" \>}}
 
 #### `$__interval` and `$__interval_ms` in panel title
 
 We’ve expanded the functionality of this existing and popular feature. You can now use `$__interval` and `$__interval_ms` in panel titles. This new function displays the interval that’s used in a specific panel without requiring edit mode.
 
-{{< figure src="/static/img/docs/panels/interval-8-4.png" max-width="1200px" caption="Time intervals" >}}
+{{\< figure src="/static/img/docs/panels/interval-8-4.png" max-width="1200px" caption="Time intervals" \>}}
 
 #### Accessibility improvements
 
@@ -64,7 +67,7 @@ As of 8.4, you can rotate your KEK and quickly re-encrypt your DEKs in case a ke
 
 Envelope encryption is not enabled by default in version 8.4. You can enable it by adding the term `envelopeEncryption` to the list of feature toggles in your [Grafana configuration](/docs/grafana/next/administration/configuration/#feature_toggles?mdm=email), or by sending a request to support if you use Grafana Cloud.
 
-{{< figure src="/static/img/docs/encryption/rotate-encryption-8-4.png" max-width="1200px" caption="Rotate encryption" >}}
+{{\< figure src="/static/img/docs/encryption/rotate-encryption-8-4.png" max-width="1200px" caption="Rotate encryption" \>}}
 
 ### Alerting
 
@@ -80,7 +83,7 @@ The new Alert Panel displays your alerts and associated alert instances, and sup
 
 Traditionally alerts in the Alert Panel were grouped by the alert rule that created them. When you are monitoring a complex resource like an industrial pump, you typically have multiple alerts defined for that resource to observe different metrics. The new custom grouping feature allows you to view all alert instances for individual resource by specifying a label such as “pump identifier”.
 
-{{< figure src="/static/img/docs/alerting/unified/custom-grouping-8-4.png" max-width="1200px" caption="Custom grouping in alerting" >}}
+{{\< figure src="/static/img/docs/alerting/unified/custom-grouping-8-4.png" max-width="1200px" caption="Custom grouping in alerting" \>}}
 
 #### WeCom contact point
 
@@ -98,13 +101,13 @@ We’ve expanded the bar chart so that you can:
   - Skip values when there are too many labels.
   - Rotate labels.
 
-{{< figure src="/static/img/docs/bar-chart-panel/bar-chart-8-4.png" max-width="1200px" caption="Updated bar chart" >}}
+{{\< figure src="/static/img/docs/bar-chart-panel/bar-chart-8-4.png" max-width="1200px" caption="Updated bar chart" \>}}
 
 #### Geomap
 
 Geomap now supports tooltips with data-links across multiple layers.
 
-{{< figure src="/static/img/docs/geomap-panel/geomap-tooltips-multiple-layers-8-4.png" max-width="1200px" caption="Assign SAML users role" >}}
+{{\< figure src="/static/img/docs/geomap-panel/geomap-tooltips-multiple-layers-8-4.png" max-width="1200px" caption="Assign SAML users role" \>}}
 
 ### OpenAPI v2 specification
 
@@ -126,7 +129,7 @@ In 8.4 you can also control access to Team and API key functionality itself, lik
 
 Enable role-based access control by adding the term `accesscontrol` to the list of feature toggles in your [Grafana configuration](/docs/grafana/next/administration/configuration/#feature_toggles?mdm=email), or by sending a request to support if you use Grafana Cloud. Learn more about role-based access control in the [role-based access control section of the docs](/docs/grafana/next/enterprise/access-control/).
 
-{{< figure src="/static/img/docs/enterprise/8-4-fine-grain-access-control.png" max-width="1200px" caption="Assign SAML users role" >}}
+{{\< figure src="/static/img/docs/enterprise/8-4-fine-grain-access-control.png" max-width="1200px" caption="Assign SAML users role" \>}}
 
 #### Assign SAML users different roles in different Organizations
 
@@ -134,7 +137,7 @@ You can use Grafana's SAML integration to map organizations in your SAML service
 
 Additionally, you can now grant multiple SAML organizations access to Grafana, using the `allowed_organizations` attribute. Previously, you could only map one.
 
-{{< figure src="/static/img/docs/enterprise/8-4-SAML-auth.png" max-width="1200px" caption="Assign SAML users role" >}}
+{{\< figure src="/static/img/docs/enterprise/8-4-SAML-auth.png" max-width="1200px" caption="Assign SAML users role" \>}}
 
 Learn more in our [SAML docs](../../setup-grafana/configure-security/configure-authentication/saml/).
 
@@ -152,4 +155,4 @@ You can also now manually clear the cache for a given data source in case data b
 
 To learn more, refer to [query caching in the Grafana Enterprise docs](/docs/grafana/next/enterprise/query-caching/)
 
-{{< figure src="/static/img/docs/enterprise/8-4-query-caching.png" max-width="1200px" caption="Grafana Enterprise query caching" >}}
+{{\< figure src="/static/img/docs/enterprise/8-4-query-caching.png" max-width="1200px" caption="Grafana Enterprise query caching" \>}}

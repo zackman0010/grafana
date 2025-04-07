@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../administration/configure-docker/
-  - ../installation/configure-docker/
-description: Guide for configuring the Grafana Docker image
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - docker
-  - docker compose
-labels:
+
+- ../administration/configure-docker/
+- ../installation/configure-docker/
+  description: Guide for configuring the Grafana Docker image
+  keywords:
+- grafana
+- configuration
+- documentation
+- docker
+- docker compose
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Configure a Docker image
-title: Configure a Grafana Docker image
-weight: 1800
----
+  - enterprise
+  - oss
+    menuTitle: Configure a Docker image
+    title: Configure a Grafana Docker image
+    weight: 1800
+
+-----
 
 # Configure a Grafana Docker image
 
@@ -62,7 +65,7 @@ You can also run a specific version of Grafana or a beta version based on the ma
 
 To run a specific version of Grafana, add it in the command <version number> section:
 
-```bash
+``` bash
 docker run -d -p 3000:3000 --name grafana grafana/grafana-enterprise:<version number>
 ```
 
@@ -70,13 +73,13 @@ Example:
 
 The following command runs the Grafana Enterprise container and specifies version 9.4.7. If you want to run a different version, modify the version number section.
 
-```bash
+``` bash
 docker run -d -p 3000:3000 --name grafana grafana/grafana-enterprise:9.4.7
 ```
 
 ## Run the Grafana main branch
 
-After every successful build of the main branch, two tags, `grafana/grafana-oss:main` and `grafana/grafana-oss:main-ubuntu`, are updated. Additionally, two new tags are created: `grafana/grafana-oss-dev:<version><build ID>-pre` and `grafana/grafana-oss-dev:<version><build ID>-pre-ubuntu`, where `version` is the next version of Grafana and `build ID `is the ID of the corresponding CI build. These tags provide access to the most recent Grafana main builds. For more information, refer to [grafana/grafana-oss-dev](https://hub.docker.com/r/grafana/grafana-oss-dev/tags).
+After every successful build of the main branch, two tags, `grafana/grafana-oss:main` and `grafana/grafana-oss:main-ubuntu`, are updated. Additionally, two new tags are created: `grafana/grafana-oss-dev:<version><build ID>-pre` and `grafana/grafana-oss-dev:<version><build ID>-pre-ubuntu`, where `version` is the next version of Grafana and ` build ID  `is the ID of the corresponding CI build. These tags provide access to the most recent Grafana main builds. For more information, refer to [grafana/grafana-oss-dev](https://hub.docker.com/r/grafana/grafana-oss-dev/tags).
 
 To ensure stability and consistency, we strongly recommend using the `grafana/grafana-oss-dev:<version><build ID>-pre` tag when running the Grafana main branch in a production environment. This tag ensures that you are using a specific version of Grafana instead of the most recent commit, which could potentially introduce bugs or issues. It also avoids polluting the tag namespace for the main Grafana images with thousands of pre-release tags.
 
@@ -90,12 +93,12 @@ The following configurations are set by default when you start the Grafana Docke
 
 | Setting               | Default value             |
 | --------------------- | ------------------------- |
-| GF_PATHS_CONFIG       | /etc/grafana/grafana.ini  |
-| GF_PATHS_DATA         | /var/lib/grafana          |
-| GF_PATHS_HOME         | /usr/share/grafana        |
-| GF_PATHS_LOGS         | /var/log/grafana          |
-| GF_PATHS_PLUGINS      | /var/lib/grafana/plugins  |
-| GF_PATHS_PROVISIONING | /etc/grafana/provisioning |
+| GF\_PATHS\_CONFIG       | /etc/grafana/grafana.ini  |
+| GF\_PATHS\_DATA         | /var/lib/grafana          |
+| GF\_PATHS\_HOME         | /usr/share/grafana        |
+| GF\_PATHS\_LOGS         | /var/log/grafana          |
+| GF\_PATHS\_PLUGINS      | /var/lib/grafana/plugins  |
+| GF\_PATHS\_PROVISIONING | /etc/grafana/provisioning |
 
 ## Install plugins in the Docker container
 
@@ -109,7 +112,7 @@ Example:
 
 The following command runs Grafana Enterprise on **port 3000** in detached mode and installs the custom plugin, which is specified as a URL parameter in the `GF_PLUGINS_PREINSTALL` environment variable.
 
-```bash
+``` bash
 docker run -d -p 3000:3000 --name=grafana \
   -e "GF_PLUGINS_PREINSTALL=custom-plugin@@http://plugin-domain.com/my-custom-plugin.zip,grafana-clock-panel" \
   grafana/grafana-enterprise
@@ -125,7 +128,7 @@ Example:
 
 The following example shows you how to build and run a custom Grafana Docker image based on the latest official Ubuntu-based Grafana Docker image:
 
-```bash
+``` bash
 # go to the custom directory
 cd packaging/docker/custom
 
@@ -142,13 +145,13 @@ docker run -d -p 3000:3000 --name=grafana grafana-custom
 
 > **Note:** This feature is experimental.
 
-Currently, the Grafana Image Renderer plugin requires dependencies that are not available in the Grafana Docker image (see [GitHub Issue#301](https://github.com/grafana/grafana-image-renderer/issues/301) for more details). However, you can create a customized Docker image using the `GF_INSTALL_IMAGE_RENDERER_PLUGIN` build argument as a solution. This will install the necessary dependencies for the Grafana Image Renderer plugin to run.
+Currently, the Grafana Image Renderer plugin requires dependencies that are not available in the Grafana Docker image (see [GitHub Issue\#301](https://github.com/grafana/grafana-image-renderer/issues/301) for more details). However, you can create a customized Docker image using the `GF_INSTALL_IMAGE_RENDERER_PLUGIN` build argument as a solution. This will install the necessary dependencies for the Grafana Image Renderer plugin to run.
 
 Example:
 
 The following example shows how to build a customized Grafana Docker image that includes the Image Renderer plugin.
 
-```bash
+``` bash
 # go to the folder
 cd packaging/docker/custom
 
@@ -172,7 +175,7 @@ Example:
 
 The following example shows how to build and run a custom Grafana Docker image with pre-installed plugins.
 
-```bash
+``` bash
 # go to the custom directory
 cd packaging/docker/custom
 
@@ -193,7 +196,7 @@ You can create a Docker image containing a plugin that is exclusive to your orga
 
 The following example demonstrates creating a customized Grafana Docker image that includes a custom plugin from a URL link, the clock panel plugin, and the simple-json-datasource plugin. You can define these plugins in the build argument using the Grafana Plugin environment variable.
 
-```bash
+``` bash
 # go to the folder
 cd packaging/docker/custom
 
@@ -215,7 +218,7 @@ Example:
 
 The following example runs Grafana using the `console file` log mode that is set in the `GF_LOG_MODE` environment variable.
 
-```bash
+``` bash
 # Run Grafana while logging to both standard out
 # and /var/log/grafana/grafana.log
 
@@ -243,50 +246,48 @@ The example below shows how to use Grafana environment variables via Docker Secr
 
 The example uses the following values for the AWS Cloudwatch data source:
 
-```bash
+``` bash
 AWS_default_ACCESS_KEY_ID=aws01us02
 AWS_default_SECRET_ACCESS_KEY=topsecret9b78c6
 AWS_default_REGION=us-east-1
 ```
 
 1. Create a Docker secret for each of the values noted above.
-
-   ```bash
+   
+   ``` bash
    echo "aws01us02" | docker secret create aws_access_key_id -
    ```
-
-   ```bash
+   
+   ``` bash
    echo "topsecret9b78c6" | docker secret create aws_secret_access_key -
    ```
-
-   ```bash
+   
+   ``` bash
    echo "us-east-1" | docker secret create aws_region -
    ```
 
-1. Run the following command to determine that the secrets were created.
-
-   ```bash
+2. Run the following command to determine that the secrets were created.
+   
+   ``` bash
    $ docker secret ls
    ```
-
+   
    The output from the command should look similar to the following:
-
-   ```
-   ID                          NAME           DRIVER    CREATED              UPDATED
-   i4g62kyuy80lnti5d05oqzgwh   aws_access_key_id             5 minutes ago        5 minutes ago
-   uegit5plcwodp57fxbqbnke7h   aws_secret_access_key         3 minutes ago        3 minutes ago
-   fxbqbnke7hplcwodp57fuegit   aws_region                    About a minute ago   About a minute ago
-   ```
+   
+       ID                          NAME           DRIVER    CREATED              UPDATED
+       i4g62kyuy80lnti5d05oqzgwh   aws_access_key_id             5 minutes ago        5 minutes ago
+       uegit5plcwodp57fxbqbnke7h   aws_secret_access_key         3 minutes ago        3 minutes ago
+       fxbqbnke7hplcwodp57fuegit   aws_region                    About a minute ago   About a minute ago
 
    Where:
-
+   
    ID = the secret unique ID that will be use in the docker run command
-
+   
    NAME = the logical name defined for each secret
 
-1. Add the secrets to the command line when you run Docker.
-
-   ```bash
+3. Add the secrets to the command line when you run Docker.
+   
+   ``` bash
    docker run -d -p 3000:3000 --name grafana \
      -e "GF_DEFAULT_INSTANCE_NAME=my-grafana" \
      -e "GF_AWS_PROFILES=default" \
@@ -315,7 +316,7 @@ For more information about logging, refer to [logs](../configure-grafana/#log).
 
 To increase the log level to `DEBUG` mode, add the environment variable `GF_LOG_LEVEL` to the command line.
 
-```bash
+``` bash
 docker run -d -p 3000:3000 --name=grafana \
   -e "GF_LOG_LEVEL=debug" \
   grafana/grafana-enterprise
@@ -325,7 +326,7 @@ docker run -d -p 3000:3000 --name=grafana \
 
 To increase the log level to `DEBUG` mode, add the environment variable `GF_LOG_LEVEL` to the `docker-compose.yaml` file.
 
-```yaml
+``` yaml
 version: '3.8'
 services:
   grafana:
@@ -347,7 +348,7 @@ volumes:
 
 The chance of syntax errors appearing in a YAML file increases as the file becomes more complex. You can use the following command to check for syntax errors.
 
-```bash
+``` bash
 # go to your docker-compose.yaml directory
 cd /path-to/docker-compose/file
 

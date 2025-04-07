@@ -1,10 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Shared Content
----
+-----
+
+## labels: products: - enterprise - oss title: Shared Content
 
 Use test.md to experiment and test formats and syntax.
 
@@ -14,9 +10,7 @@ When you have a chunk of text or steps that stand alone, not part of an ordered 
 
 The syntax to invoke this file would be the following, minus the backslash:
 
-```
-\{{< docs/shared lookup="example.md" source="grafana" version="<GRAFANA VERSION>" >}}
-```
+    \{{< docs/shared lookup="example.md" source="grafana" version="<GRAFANA VERSION>" >}}
 
 ## Part of a list
 
@@ -26,12 +20,10 @@ When you have steps that you want to use in more than one numbered list. This fo
 
 Below is an example from the docs, with backslashes added. The initial spaces are not necessary for the numbered list to work and make no difference in the output, but they aid in code readability.
 
-```
-\{{< docs/list >}}
-  \{{< docs/shared lookup="manage-users/view-server-user-list.md" source="grafana" version="<GRAFANA VERSION>" >}}
-  1. Click the user account that you want to edit. If necessary, use the search field to find the account.
-\{{< /docs/list >}}
-```
+    \{{< docs/list >}}
+      \{{< docs/shared lookup="manage-users/view-server-user-list.md" source="grafana" version="<GRAFANA VERSION>" >}}
+      1. Click the user account that you want to edit. If necessary, use the search field to find the account.
+    \{{< /docs/list >}}
 
 You cannot use short codes in an ordered list with sublists. The shortcode breaks the sublist indentation.
 
@@ -39,8 +31,8 @@ You cannot use short codes in an ordered list with sublists. The shortcode break
 
 All unordered list steps included as part of a list will appear as second-level lists (with the hollow circle bullet) rather than first-level lists (solid circle bullet), even if the list is not indented in the shared file or the document file.
 
-{{< docs/list >}}
-{{< docs/shared lookup="test.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/list \>}}
+{{\< docs/shared lookup="test.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 - Bullet text
-  {{< /docs/list >}}
+  {{\< /docs/list \>}}

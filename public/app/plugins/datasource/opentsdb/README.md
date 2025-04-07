@@ -4,4 +4,4 @@ Grafana ships with **built in** support for OpenTSDB, a scalable, distributed ti
 
 Read more about it here:
 
-[http://docs.grafana.org/datasources/opentsdb/](http://docs.grafana.org/datasources/opentsdb/)
+<http://docs.grafana.org/datasources/opentsdb/>

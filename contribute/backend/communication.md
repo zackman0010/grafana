@@ -27,17 +27,15 @@ The first value `U` carries a value of any exported type appropriate for the ser
 The following example shows an interface that provides method signatures for
 some calls adhering to these guidelines:
 
-```
-type Alphabetical interface {
-  // GetLetter returns either an error or letter.
-  GetLetter(context.Context, GetLetterQuery) (Letter, error)
-  // ListCachedLetters cannot fail, and doesn't return an error.
-  ListCachedLetters(context.Context, ListCachedLettersQuery) Letters
-  // DeleteLetter doesn't have any return values other than errors, so it
-  // returns only an error.
-  DeleteLetter(context.Contxt, DeleteLetterCommand) error
-}
-```
+    type Alphabetical interface {
+      // GetLetter returns either an error or letter.
+      GetLetter(context.Context, GetLetterQuery) (Letter, error)
+      // ListCachedLetters cannot fail, and doesn't return an error.
+      ListCachedLetters(context.Context, ListCachedLettersQuery) Letters
+      // DeleteLetter doesn't have any return values other than errors, so it
+      // returns only an error.
+      DeleteLetter(context.Contxt, DeleteLetterCommand) error
+    }
 
 > **Note:** Because we request an operation to be performed, command are written in imperative mood, such as `CreateFolderCommand`, `GetDashboardQuery` and `DeletePlaylistCommand`.
 
@@ -63,46 +61,42 @@ and mutation of the `msg` variable or returning structured information in
 You should refactor all `Result` fields so that they are returned from
 the query method. For example:
 
-```
-type GetQuery struct {
-  Something int
-
-  Result ResultType
-}
-
-func (s *Service) Get(ctx context.Context, cmd *GetQuery) error {
-  // ...do something
-  cmd.Result = result
-  return nil
-}
-```
+    type GetQuery struct {
+      Something int
+    
+      Result ResultType
+    }
+    
+    func (s *Service) Get(ctx context.Context, cmd *GetQuery) error {
+      // ...do something
+      cmd.Result = result
+      return nil
+    }
 
 should become
 
-```
-type GetQuery struct {
-  Something int
-}
-
-func (s *Service) Get(ctx context.Context, cmd GetQuery) (ResultType, error) {
-  // ...do something
-  return result, nil
-}
-```
+    type GetQuery struct {
+      Something int
+    }
+    
+    func (s *Service) Get(ctx context.Context, cmd GetQuery) (ResultType, error) {
+      // ...do something
+      return result, nil
+    }
 
 ## Events
 
-An _event_ is something that happened in the past. Since an event has already happened, you can't change it. Instead, you can react to events by triggering additional application logic to be run, whenever they occur.
+An *event* is something that happened in the past. Since an event has already happened, you can't change it. Instead, you can react to events by triggering additional application logic to be run, whenever they occur.
 
 > **Note:** Because events happened in the past, their names are written in the past tense, such as `UserCreated` and `OrgUpdated`.
 
 ### Subscribe to an event
 
-In order to react to an event, you first need to _subscribe_ to it.
+In order to react to an event, you first need to *subscribe* to it.
 
-To subscribe to an event, register an _event listener_ in the service's `Init` method:
+To subscribe to an event, register an *event listener* in the service's `Init` method:
 
-```go
+``` go
 func (s *MyService) Init() error {
     s.bus.AddEventListener(s.UserCreated)
     return nil
@@ -119,7 +113,7 @@ func (s *MyService) UserCreated(event *events.UserCreated) error {
 
 If you want to let other parts of the application react to changes in a service, you can publish your own events. For example:
 
-```go
+``` go
 event := &events.StickersSentEvent {
     UserID: "taylor",
     Count:   1,

@@ -1,39 +1,42 @@
----
+-----
+
 aliases:
-  - ../../alerting/alert-groups/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alert-groups/
-  - ../../alerting/alert-groups/filter-alerts/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alert-groups/filter-alerts/
-  - ../../alerting/alert-groups/view-alert-grouping/ # /docs/grafana/<GRAFANA_VERSION>/alerting/alert-groups/view-alert-grouping/
-  - ../../alerting/unified-alerting/alert-groups/ # /docs/grafana/<GRAFANA_VERSION>/alerting/unified-alerting/alert-groups/
-  - ../../alerting/manage-notifications/view-notification-errors/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/view-notification-errors/
-  - ../../alerting/manage-notifications/view-alert-groups/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/view-alert-groups/
-canonical: https://grafana.com/docs/grafana/latest/alerting/monitor-status/view-active-notifications/
-description: The Active notifications view lists grouped alerts that are actively triggering notifications.
-keywords:
-  - grafana
-  - alerting
-  - alerts
-  - errors
-  - notifications
-  - groups
-labels:
+
+- ../../alerting/alert-groups/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alert-groups/
+- ../../alerting/alert-groups/filter-alerts/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alert-groups/filter-alerts/
+- ../../alerting/alert-groups/view-alert-grouping/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alert-groups/view-alert-grouping/
+- ../../alerting/unified-alerting/alert-groups/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/unified-alerting/alert-groups/
+- ../../alerting/manage-notifications/view-notification-errors/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/view-notification-errors/
+- ../../alerting/manage-notifications/view-alert-groups/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/view-alert-groups/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/monitor-status/view-active-notifications/
+  description: The Active notifications view lists grouped alerts that are actively triggering notifications.
+  keywords:
+- grafana
+- alerting
+- alerts
+- errors
+- notifications
+- groups
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: View active notifications
-weight: 800
-refs:
-  alertmanager:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/configure-alertmanager/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
-  grouping:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/notifications/group-alert-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
----
+  - cloud
+  - enterprise
+  - oss
+    title: View active notifications
+    weight: 800
+    refs:
+    alertmanager:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/configure-alertmanager/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/configure-alertmanager/
+    grouping:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/notifications/group-alert-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/notifications/group-alert-notifications/
+
+-----
 
 # View active notifications
 
@@ -52,15 +55,16 @@ The Active notifications view is useful for debugging and verifying how notifica
 
 To view alert groups, complete the following steps.
 
-1. Click **Alerts & IRM** -> **Alerting**.
-1. Click **Active notifications** to view the list of groups firing notifications.
+1. Click **Alerts & IRM** -\> **Alerting**.
 
-   {{< figure src="/media/docs/alerting/active-notifications-view2.png" max-width="750px" alt="Active notifications view in Grafana Alerting" >}}
-
+2. Click **Active notifications** to view the list of groups firing notifications.
+   
+   {{\< figure src="/media/docs/alerting/active-notifications-view2.png" max-width="750px" alt="Active notifications view in Grafana Alerting" \>}}
+   
    By default, alert groups are grouped by the notification policies grouping.
-
+   
    Each group displays its label set, contact point, and the number of alert instances (or alerts).
-
+   
    Then, click on a group to access its alert instances. You can find alert instances by their label set and view their notification state.
 
 ### Notification states
@@ -97,7 +101,7 @@ Notification errors are only available with [pre-configured Grafana Alertmanager
 
 Notification errors provide information about why they failed to be sent or were not received.
 
-To view notification errors, navigate to **Alerts & IRM** -> **Alerting** -> **Contact points**.
+To view notification errors, navigate to **Alerts & IRM** -\> **Alerting** -\> **Contact points**.
 
 Each contact point displays a message about the status of their latest notification deliveries.
 

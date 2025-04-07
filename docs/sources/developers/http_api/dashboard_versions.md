@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../http_api/dashboard_versions/
-  - ../../http_api/dashboardversions/
-canonical: /docs/grafana/latest/developers/http_api/dashboard_versions/
-description: Grafana Dashboard Versions HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - dashboard
-  - versions
-labels:
+
+- ../../http\_api/dashboard\_versions/
+- ../../http\_api/dashboardversions/
+  canonical: /docs/grafana/latest/developers/http\_api/dashboard\_versions/
+  description: Grafana Dashboard Versions HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- dashboard
+- versions
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Dashboard Versions HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Dashboard Versions HTTP API '
+
+-----
 
 # Dashboard Versions
 
@@ -33,7 +36,7 @@ Gets all existing dashboard versions for the dashboard with the given `uid`.
 
 **Example request for getting all dashboard versions**:
 
-```http
+``` http
 GET /api/dashboards/uid/QA7wKklGz/versions?limit=2?start=0 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -42,7 +45,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 428
@@ -88,7 +91,7 @@ Get the dashboard version with the given version, for the dashboard with the giv
 
 **Example request for getting a dashboard version**:
 
-```http
+``` http
 GET /api/dashboards/id/1/versions/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -97,7 +100,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 1300
@@ -175,7 +178,7 @@ Restores a dashboard to a given dashboard version using `uid`.
 
 **Example request for restoring a dashboard version**:
 
-```http
+``` http
 POST /api/dashboards/uid/QA7wKklGz/restore
 Accept: application/json
 Content-Type: application/json
@@ -192,7 +195,7 @@ JSON body schema:
 
 **Example response**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 Content-Length: 67
@@ -223,7 +226,7 @@ Status codes:
 
 **Example error response**
 
-```http
+``` http
 HTTP/1.1 404 Not Found
 Content-Type: application/json; charset=UTF-8
 Content-Length: 46
@@ -245,7 +248,7 @@ Compares two dashboard versions by calculating the JSON diff of them.
 
 **Example request**:
 
-```http
+``` http
 POST /api/dashboards/calculate-diff HTTP/1.1
 Accept: text/html
 Content-Type: application/json
@@ -272,7 +275,7 @@ JSON body schema:
 
 **Example response (JSON diff)**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
 
@@ -292,7 +295,7 @@ Status Codes:
 
 **Example response (basic diff)**:
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
 

@@ -1,6 +1,6 @@
 # Contribute to our documentation
 
-Welcome! We're glad you're here.
+Welcome\! We're glad you're here.
 
 [Writers' Toolkit](https://grafana.com/docs/writers-toolkit/) is an open source project intended to empower both internal and external contributors to help make our technical documentation even better.
 

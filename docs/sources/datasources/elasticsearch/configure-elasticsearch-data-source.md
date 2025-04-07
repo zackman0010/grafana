@@ -1,38 +1,41 @@
----
+-----
+
 aliases:
-  - ../data-sources/elasticsearch/
-  - ../features/datasources/elasticsearch/
-description: Guide for configuring the Elasticsearch data source in Grafana
-keywords:
-  - grafana
-  - elasticsearch
-  - guide
-  - data source
-labels:
+
+- ../data-sources/elasticsearch/
+- ../features/datasources/elasticsearch/
+  description: Guide for configuring the Elasticsearch data source in Grafana
+  keywords:
+- grafana
+- elasticsearch
+- guide
+- data source
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure Elasticsearch
-title: Configure the Elasticsearch data source
-weight: 200
-refs:
-  administration-documentation:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/
-  supported-expressions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#log-level
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/logs-integration/#log-level
-  query-and-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure Elasticsearch
+    title: Configure the Elasticsearch data source
+    weight: 200
+    refs:
+    administration-documentation:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/data-source-management/
+    supported-expressions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#log-level
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/logs-integration/\#log-level
+    query-and-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/
+
+-----
 
 # Configure the Elasticsearch data source
 
@@ -49,7 +52,7 @@ Administrators can also [configure the data source via YAML](ref:provisioning-da
 When Elasticsearch security features are enabled, it is essential to configure the necessary cluster privileges to ensure seamless operation. Below is a list of the required privileges along with their purposes:
 
 - **monitor** - Necessary to retrieve the version information of the connected Elasticsearch instance.
-- **view_index_metadata** - Required for accessing mapping definitions of indices.
+- **view\_index\_metadata** - Required for accessing mapping definitions of indices.
 - **read** - Grants the ability to perform search and retrieval operations on indices. This is essential for querying and extracting data from the cluster.
 
 ## Add the data source
@@ -57,10 +60,10 @@ When Elasticsearch security features are enabled, it is essential to configure t
 To add the Elasticsearch data source, complete the following steps:
 
 1. Click **Connections** in the left-side menu.
-1. Under **Connections**, click **Add new connection**.
-1. Enter `Elasticsearch` in the search bar.
-1. Click **Elasticsearch** under the **Data source** section.
-1. Click **Add new data source** in the upper right.
+2. Under **Connections**, click **Add new connection**.
+3. Enter `Elasticsearch` in the search bar.
+4. Click **Elasticsearch** under the **Data source** section.
+5. Click **Add new data source** in the upper right.
 
 You will be taken to the **Settings** tab where you will set up your Elasticsearch configuration.
 
@@ -70,7 +73,7 @@ The following is a list of configuration options for Elasticsearch.
 
 The first option to configure is the name of your connection:
 
-- **Name** - The data source name. This is how you refer to the data source in panels and queries. Examples: elastic-1, elasticsearch_metrics.
+- **Name** - The data source name. This is how you refer to the data source in panels and queries. Examples: elastic-1, elasticsearch\_metrics.
 
 - **Default** - Toggle to select as the default data source option. When you go to a dashboard panel or Explore, this will be the default selected data source.
 
@@ -130,7 +133,7 @@ The following settings are specific to the Elasticsearch data source.
 - **Index name** - Use the index settings to specify a default for the `time field` and your Elasticsearch index's name. You can use a time pattern, such as `YYYY.MM.DD`, or a wildcard for the index name.
 
 - **Pattern** - Select the matching pattern if using one in your index name. Options include:
-
+  
   - no pattern
   - hourly
   - daily
@@ -143,7 +146,7 @@ The following settings are specific to the Elasticsearch data source.
 - **Max concurrent shard requests** - Sets the number of shards being queried at the same time. The default is `5`. For more information on shards see [Elasticsearch's documentation](https://www.elastic.co/guide/en/elasticsearch/reference/8.9/scalability.html#scalability).
 
 - **Min time interval** - Defines a lower limit for the auto group-by time interval. This value **must** be formatted as a number followed by a valid time identifier:
-
+  
   | Identifier | Description |
   | ---------- | ----------- |
   | `y`        | year        |

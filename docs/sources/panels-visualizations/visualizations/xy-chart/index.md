@@ -1,61 +1,64 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/xy-chart/
 keywords:
-  - grafana
-  - chart
-  - xy chart
-  - documentation
-  - guide
-  - graph
-labels:
+
+- grafana
+- chart
+- xy chart
+- documentation
+- guide
+- graph
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-description: Configure options for Grafana's xy chart
-title: XY chart
-weight: 100
-refs:
-  panel-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-panel-options/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-panel-options/
-  data-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
-  configure-standard-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#max
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#max
-  standard-options:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/
-  color-scheme:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-standard-options/#color-scheme
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/#color-scheme
-  add-a-field-override:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-overrides/#add-a-field-override
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/#add-a-field-override
-  configure-field-overrides:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-overrides/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
----
+  - cloud
+  - enterprise
+  - oss
+    description: Configure options for Grafana's xy chart
+    title: XY chart
+    weight: 100
+    refs:
+    panel-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-panel-options/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-panel-options/
+    data-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
+    configure-standard-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#max
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#max
+    standard-options:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/
+    color-scheme:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-standard-options/\#color-scheme
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-standard-options/\#color-scheme
+    add-a-field-override:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-overrides/\#add-a-field-override
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/\#add-a-field-override
+    configure-field-overrides:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-overrides/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-overrides/
+
+-----
 
 # XY chart
 
@@ -69,7 +72,7 @@ You can use any type of tabular data with at least two numeric fields in an xy c
 
 ## Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## XY chart options
 
@@ -114,14 +117,14 @@ After the x-field is set, by default, all the remaining number fields in the dat
 
 The series of the chart are generated from the y-fields. To make changes to a series in an xy chart, make [overrides](ref:configure-field-overrides) to the y-field.
 
-{{< admonition type=note >}}
+{{\< admonition type=note \>}}
 Any field you use in the [Size field](#size-field) or [Color field](#color-field) doesn't generate a series.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 You can also use [overrides](ref:configure-field-overrides) to exclude y-fields individually. To do so, add an override with the following properties for each y-field you want removed:
 
 - Override type: **Fields with name**
-- Override property: **Series > Hide in area**
+- Override property: **Series \> Hide in area**
 - Area: **Viz**
 
 ##### Size field
@@ -216,7 +219,7 @@ Set the maximum height of the tooltip box. The default is 600 pixels.
 
 ## Legend options
 
-{{< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/legend-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Axis options
 
@@ -295,7 +298,7 @@ Use this option to transform the series values without affecting the values show
 The transform option is only available as an override.
 {{% /admonition %}}
 
-{{< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="<GRAFANA_VERSION>" leveloffset="+2" >}}
+{{\< docs/shared lookup="visualizations/multiple-y-axes.md" source="grafana" version="\<GRAFANA\_VERSION\>" leveloffset="+2" \>}}
 
 ## Standard options
 
@@ -310,8 +313,8 @@ To learn more, refer to [Configure standard options](ref:configure-standard-opti
 
 ## Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

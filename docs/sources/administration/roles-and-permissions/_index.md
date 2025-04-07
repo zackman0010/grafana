@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../manage-users/
-  - ../permissions/
-  - ../permissions/organization_roles/
-  - ../permissions/overview/
-  - manage-users-and-permissions/about-users-and-permissions/
-description: Information about Grafana user, team, and organization roles and permissions
-labels:
+
+- ../manage-users/
+- ../permissions/
+- ../permissions/organization\_roles/
+- ../permissions/overview/
+- manage-users-and-permissions/about-users-and-permissions/
+  description: Information about Grafana user, team, and organization roles and permissions
+  labels:
   products:
-    - enterprise
-    - oss
-    - cloud
-title: Roles and permissions
-weight: 300
----
+  - enterprise
+  - oss
+  - cloud
+    title: Roles and permissions
+    weight: 300
+
+-----
 
 # Roles and permissions
 
-A _user_ is any individual who can log in to Grafana. Each user is associated with a _role_ that includes _permissions_. Permissions determine the tasks a user can perform in the system. For example, the **Admin** role includes permissions for an administrator to create and delete users.
+A *user* is any individual who can log in to Grafana. Each user is associated with a *role* that includes *permissions*. Permissions determine the tasks a user can perform in the system. For example, the **Admin** role includes permissions for an administrator to create and delete users.
 
 You can assign a user one of three types of permissions:
 
@@ -29,9 +32,9 @@ You can assign a user one of three types of permissions:
 If you are running Grafana Enterprise, you can also control access to data sources and use role-based access control to grant user access to read and write permissions to specific Grafana resources. For more information about access control options available with Grafana Enterprise, refer to [Grafana Enterprise user permissions features](#grafana-enterprise-user-permissions-features).
 {{% /admonition %}}
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 For Grafana Cloud users, Grafana Support is not authorised to make org role changes. Instead, contact your org administrator.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Grafana server administrators
 
@@ -77,7 +80,7 @@ For more information about managing organization users, see [User management](..
 
 ### Organization roles
 
-Organization role-based permissions are global, which means that each permission level applies to all Grafana resources within an given organization. For example, an editor can see and update _all_ dashboards in an organization, unless those dashboards have been specifically restricted using [dashboard permissions](../user-management/manage-dashboard-permissions/).
+Organization role-based permissions are global, which means that each permission level applies to all Grafana resources within an given organization. For example, an editor can see and update *all* dashboards in an organization, unless those dashboards have been specifically restricted using [dashboard permissions](../user-management/manage-dashboard-permissions/).
 
 Grafana uses the following roles to control user access:
 
@@ -109,14 +112,14 @@ The following table lists permissions for each role.
 
 ## Dashboard permissions
 
-When you want to extend a viewer's ability to edit and save dashboard changes or limit an editor's permission to modify a dashboard, you can assign permissions to dashboards and folders. For example, you might want a certain viewer to be able to edit a dashboard. While that user can _see_ all dashboards, you can grant them access to _update_ only one of them.
+When you want to extend a viewer's ability to edit and save dashboard changes or limit an editor's permission to modify a dashboard, you can assign permissions to dashboards and folders. For example, you might want a certain viewer to be able to edit a dashboard. While that user can *see* all dashboards, you can grant them access to *update* only one of them.
 
 > Important: The dashboard permissions you specify override the organization permissions you assign to the user for the selected entity.
 
 You can specify the following permissions to dashboards and folders.
 
 - **Admin**: Can create, edit, or delete a dashboard. Can edit or delete a folder, and create dashboards and subfolders in a folder. Administrators can also change dashboard and folder permissions.
-- **Edit**: Can create, edit, or delete a dashboard. Can edit or delete a folder, and create dashboards and subfolders in a folder. Editors _cannot_ change folder or dashboard permissions.
+- **Edit**: Can create, edit, or delete a dashboard. Can edit or delete a folder, and create dashboards and subfolders in a folder. Editors *cannot* change folder or dashboard permissions.
 - **View**: Can only view dashboards and folders.
 
 > Important: When a user creates a dashboard or a folder they are automatically granted **Admin** permissions for it.

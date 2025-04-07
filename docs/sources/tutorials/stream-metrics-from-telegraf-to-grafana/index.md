@@ -1,22 +1,25 @@
----
+-----
+
 Feedback Link: https://github.com/grafana/tutorials/issues/new
 authors:
-  - grafana_labs
-categories:
-  - administration
-description: Use Telegraf to stream live metrics to Grafana.
-id: stream-metrics-from-telegraf-to-grafana
-labels:
+
+- grafana\_labs
+  categories:
+- administration
+  description: Use Telegraf to stream live metrics to Grafana.
+  id: stream-metrics-from-telegraf-to-grafana
+  labels:
   products:
-    - enterprise
-    - oss
-status: Published
-summary: Use Telegraf to stream live metrics to Grafana.
-tags:
-  - beginner
-title: Stream metrics from Telegraf to Grafana
-weight: 75
----
+  - enterprise
+  - oss
+    status: Published
+    summary: Use Telegraf to stream live metrics to Grafana.
+    tags:
+- beginner
+  title: Stream metrics from Telegraf to Grafana
+  weight: 75
+
+-----
 
 ## Introduction
 
@@ -37,8 +40,8 @@ In this tutorial, you'll:
 ## Run Grafana and create admin token
 
 1. Run Grafana following [installation instructions](/docs/grafana/latest/installation/) for your operating system.
-1. Log in and go to Configuration -> API Keys.
-1. Press "Add API key" button and create a new API token with **Admin** role.
+2. Log in and go to Configuration -\> API Keys.
+3. Press "Add API key" button and create a new API token with **Admin** role.
 
 ## Configure and run Telegraf
 
@@ -48,21 +51,19 @@ You can install it following [official installation instructions](https://docs.i
 
 In this tutorial we will be using Telegraf HTTP output plugin to send metrics in Influx format to Grafana. We can use a configuration like this:
 
-```
-[agent]
-  interval = "1s"
-  flush_interval = "1s"
-
-[[inputs.cpu]]
-  percpu = false
-  totalcpu = true
-
-[[outputs.http]]
-  url = "http://localhost:3000/api/live/push/custom_stream_id"
-  data_format = "influx"
-  [outputs.http.headers]
-    Authorization = "Bearer <Your API Key>"
-```
+    [agent]
+      interval = "1s"
+      flush_interval = "1s"
+    
+    [[inputs.cpu]]
+      percpu = false
+      totalcpu = true
+    
+    [[outputs.http]]
+      url = "http://localhost:3000/api/live/push/custom_stream_id"
+      data_format = "influx"
+      [outputs.http.headers]
+        Authorization = "Bearer <Your API Key>"
 
 Make sure to replace `<Your API Key>` placeholder with your actual API key created in the previous step. Save this config into `telegraf.conf` file and run Telegraf pointing to this config file. Telegraf will periodically (once in a second) report the state of total CPU usage on a host to Grafana (which is supposed to be running on `http://localhost:3000`). Of course you can replace `custom_stream_id` to something more meaningful for your use case.
 
@@ -73,12 +74,12 @@ The only thing left here is to create a dashboard with streaming data.
 ## Create dashboard with streaming data
 
 1. Click **Dashboards** in the left-side menu.
-1. Click **New** and select **New Dashboard**.
-1. On the empty dashboard, click **+ Add visualization**.
-1. In the modal that opens, select the `-- Grafana --` data source.
-1. Select `Live Measurements` query type.
-1. Find and select `stream/custom_stream_id/cpu` measurement for Channel field.
-1. Save dashboard changes.
+2. Click **New** and select **New Dashboard**.
+3. On the empty dashboard, click **+ Add visualization**.
+4. In the modal that opens, select the `-- Grafana --` data source.
+5. Select `Live Measurements` query type.
+6. Find and select `stream/custom_stream_id/cpu` measurement for Channel field.
+7. Save dashboard changes.
 
 After making these steps Grafana UI should subscribe to the channel `stream/custom_stream_id/cpu` and you should see CPU data updates coming from Telegraf in near real-time.
 
@@ -86,21 +87,19 @@ After making these steps Grafana UI should subscribe to the channel `stream/cust
 
 If you aim for a high-frequency update sending then you may want to use the WebSocket output plugin of Telegraf (introduced in Telegraf v1.19.0) instead of the HTTP output plugin we used above. Configure WebSocket output plugin like this:
 
-```
-[agent]
-  interval = "500ms"
-  flush_interval = "500ms"
-
-[[inputs.cpu]]
-  percpu = false
-  totalcpu = true
-
-[[outputs.websocket]]
-  url = "ws://localhost:3000/api/live/push/custom_stream_id"
-  data_format = "influx"
-  [outputs.websocket.headers]
-    Authorization = "Bearer <Your API Key>"
-```
+    [agent]
+      interval = "500ms"
+      flush_interval = "500ms"
+    
+    [[inputs.cpu]]
+      percpu = false
+      totalcpu = true
+    
+    [[outputs.websocket]]
+      url = "ws://localhost:3000/api/live/push/custom_stream_id"
+      data_format = "influx"
+      [outputs.websocket.headers]
+        Authorization = "Bearer <Your API Key>"
 
 WebSocket avoids running all Grafana HTTP middleware on each request from Telegraf thus reducing Grafana backend CPU usage significantly.
 

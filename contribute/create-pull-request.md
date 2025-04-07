@@ -91,12 +91,12 @@ A well-written pull request minimizes the time to get your change accepted. The 
 
 Grafana uses the guidelines for commit messages outlined in the article [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/), with the following additions:
 
-- Subject line must begin with the _area_ of the commit.
+- Subject line must begin with the *area* of the commit.
 - Footer in the form of an optional [keyword and issue reference](https://help.github.com/en/articles/closing-issues-using-keywords).
 
 #### Area
 
-The _area_ refers to a specific part of Grafana's codebase. It should be given in the upper camel case format. For example: UpperCamelCase.
+The *area* refers to a specific part of Grafana's codebase. It should be given in the upper camel case format. For example: UpperCamelCase.
 
 Prefer using one of the following areas:
 
@@ -124,7 +124,7 @@ If you're unsure, see the existing [changelog](https://github.com/grafana/grafan
 
 The pull request title should be formatted according to `<Area>: <Summary>` (Both "Area" and "Summary" should start with a capital letter).
 
-The Grafana team _squashes_ all commits into one when we accept a pull request. The title of the pull request becomes the subject line of the squashed commit message. We still encourage contributors to write informative commit messages, as they become a part of the Git commit body.
+The Grafana team *squashes* all commits into one when we accept a pull request. The title of the pull request becomes the subject line of the squashed commit message. We still encourage contributors to write informative commit messages, as they become a part of the Git commit body.
 
 We use the pull request title when we generate change logs for releases. As such, we strive to make the title as informative as possible.
 

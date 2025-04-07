@@ -1,12 +1,8 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: 'How label matching works'
----
+-----
 
-{{< collapse title="How label matching works" >}}
+## labels: products: - enterprise - oss title: 'How label matching works'
+
+{{\< collapse title="How label matching works" \>}}
 
 Use [labels](ref:shared-alert-labels) and label matchers to link alert rules to [notification policies](ref:shared-notification-policies) and [silences](ref:shared-silences). This allows for a flexible way to manage your alert instances, specify which policy should handle them, and which alerts to silence.
 
@@ -17,7 +13,7 @@ A label matchers consists of 3 distinct parts, the **label**, the **value** and 
 - The **Value** field matches against the corresponding value for the specified **Label** name. How it matches depends on the **Operator** value.
 
 - The **Operator** field is the operator to match against the label value. The available operators are:
-
+  
   | Operator | Description                                        |
   | -------- | -------------------------------------------------- |
   | `=`      | Select labels that are exactly equal to the value. |
@@ -38,7 +34,7 @@ If you define the following set of labels for your alert:
 then:
 
 - A label matcher defined as `foo=bar` matches this alert rule.
-- A label matcher defined as `foo!=bar` does _not_ match this alert rule.
+- A label matcher defined as `foo!=bar` does *not* match this alert rule.
 - A label matcher defined as `id=~[0-9]+` matches this alert rule.
 - A label matcher defined as `baz!~[0-9]+` matches this alert rule.
 - Two label matchers defined as `foo=bar` and `id=~[0-9]+` match this alert rule.
@@ -55,4 +51,4 @@ Here is an example that shows how to exclude the label `Team`. You can choose be
 | `team` | `!~`     | `.+`  |
 | `team` | `=~`     | `^$`  |
 
-{{< /collapse >}}
+{{\< /collapse \>}}

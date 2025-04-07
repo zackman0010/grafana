@@ -1,18 +1,21 @@
----
+-----
+
 aliases:
-  - getting-started-influxdb/
-description: Learn how to build your first InfluxDB dashboard in Grafana.
-labels:
+
+- getting-started-influxdb/
+  description: Learn how to build your first InfluxDB dashboard in Grafana.
+  labels:
   products:
-    - enterprise
-    - oss
-title: Get started with Grafana and InfluxDB
-weight: 400
----
+  - enterprise
+  - oss
+    title: Get started with Grafana and InfluxDB
+    weight: 400
+
+-----
 
 # Get started with Grafana and InfluxDB
 
-{{< docs/shared lookup="influxdb/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="influxdb/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 #### Get InfluxDB
 
@@ -39,7 +42,7 @@ Windows users might need to make additional adjustments. Look for special instru
 You can have more than one InfluxDB data source defined in Grafana.
 
 1. Follow the general instructions to [add a data source](../../datasources/#add-a-data-source).
-1. Decide if you will use InfluxQL or Flux as your query language.
+2. Decide if you will use InfluxQL or Flux as your query language.
    - [Configure the data source](../../datasources/influxdb/#configure-the-data-source) for your chosen query language.
      Each query language has its own unique data source settings.
    - For querying features specific to each language, see the data source's [query editor documentation](../../datasources/influxdb/query-editor/).
@@ -76,9 +79,9 @@ Grafana displays a list of possible series. Click one to select it, and Grafana 
 Create a simple Flux query.
 
 1. [Add a panel](../../dashboards/build-dashboards/create-dashboard/).
-1. In the query editor, select your InfluxDB-Flux data source. For more information, refer to [Queries](../../panels-visualizations/query-transform-data/).
-1. Select the **Table** visualization.
-1. In the query editor text field, enter `buckets()` and then click outside of the query editor.
+2. In the query editor, select your InfluxDB-Flux data source. For more information, refer to [Queries](../../panels-visualizations/query-transform-data/).
+3. Select the **Table** visualization.
+4. In the query editor text field, enter `buckets()` and then click outside of the query editor.
 
 This generic query returns a list of buckets.
 
@@ -87,17 +90,20 @@ This generic query returns a list of buckets.
 You can also create Flux queries in the InfluxDB Explore view.
 
 1. In your browser, log in to the InfluxDB native UI (OSS is typically something like http://localhost:8086 or for InfluxDB Cloud use: https://cloud2.influxdata.com).
-1. Click **Explore** to open the Data Explorer.
-1. The InfluxDB Data Explorer provides two mechanisms for creating Flux queries: a graphical query editor and a script editor. Using the graphical query editor, [create a query](https://docs.influxdata.com/influxdb/cloud/query-data/execute-queries/data-explorer/). It will look something like this:
 
+2. Click **Explore** to open the Data Explorer.
+
+3. The InfluxDB Data Explorer provides two mechanisms for creating Flux queries: a graphical query editor and a script editor. Using the graphical query editor, [create a query](https://docs.influxdata.com/influxdb/cloud/query-data/execute-queries/data-explorer/). It will look something like this:
+   
    ![InfluxDB Explore query](/static/img/docs/influxdb/influx-explore-query-7-5.png)
 
-1. Click **Script Editor** to view the text of the query, and then copy all the lines of your Flux code, which will look something like this:
-
+4. Click **Script Editor** to view the text of the query, and then copy all the lines of your Flux code, which will look something like this:
+   
    ![InfluxDB Explore Script Editor](/static/img/docs/influxdb/explore-query-text-7-5.png)
 
-1. In Grafana, [add a panel](../../dashboards/build-dashboards/create-dashboard/) and then paste your Flux code into the query editor.
-1. Click **Apply**. Your new panel should be visible with data from your Flux query.
+5. In Grafana, [add a panel](../../dashboards/build-dashboards/create-dashboard/) and then paste your Flux code into the query editor.
+
+6. Click **Apply**. Your new panel should be visible with data from your Flux query.
 
 #### Check InfluxDB metrics in Grafana Explore
 
@@ -105,7 +111,7 @@ In your Grafana instance, go to the [Explore](../../explore/) view and build que
 
 #### Start building dashboards
 
-There you go! Use Explore and Data Explorer to experiment with your data, and add the queries that you like to your dashboard as panels. Have fun!
+There you go\! Use Explore and Data Explorer to experiment with your data, and add the queries that you like to your dashboard as panels. Have fun\!
 
 Here are some resources to learn more:
 

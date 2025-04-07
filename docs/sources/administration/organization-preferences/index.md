@@ -1,18 +1,21 @@
----
+-----
+
 aliases:
-  - change-home-dashboard/
-  - preferences/
-  - preferences/change-grafana-name/
-  - preferences/change-grafana-theme/
-  - preferences/change-grafana-timezone/
-  - preferences/change-home-dashboard/
-labels:
+
+- change-home-dashboard/
+- preferences/
+- preferences/change-grafana-name/
+- preferences/change-grafana-theme/
+- preferences/change-grafana-timezone/
+- preferences/change-home-dashboard/
+  labels:
   products:
-    - enterprise
-    - oss
-title: Organization preferences
-weight: 500
----
+  - enterprise
+  - oss
+    title: Organization preferences
+    weight: 500
+
+-----
 
 # Organization preferences
 
@@ -27,7 +30,7 @@ Preferences are sometimes confusing because they can be set at four different le
 
 The lowest level always takes precedence. For example, if a user sets their theme to **Light**, then their visualization of Grafana displays the light theme. Nothing at any higher level can override that.
 
-If the user is aware of the change and intended it, then that's great! But if the user is a Server Admin who made the change to their user preferences a long time ago, they might have forgotten they did that. Then, if that Server Admin is trying to change the theme at the server level, they'll get frustrated as none of their changes have any effect that they can see. (Also, the users on the server might be confused, because _they_ can see the server-level changes!)
+If the user is aware of the change and intended it, then that's great\! But if the user is a Server Admin who made the change to their user preferences a long time ago, they might have forgotten they did that. Then, if that Server Admin is trying to change the theme at the server level, they'll get frustrated as none of their changes have any effect that they can see. (Also, the users on the server might be confused, because *they* can see the server-level changes\!)
 
 ## Change Grafana name and email
 
@@ -44,21 +47,21 @@ Grafana server administrators and organization administrators can change organiz
 Follow these instructions if you are a Grafana Server Admin.
 
 1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Organizations**.
-1. In the organization list, click the name of the organization that you want to change.
-1. In **Name**, enter the new organization name.
-1. Click **Update**.
+2. Click **General**.
+3. Click **Organizations**.
+4. In the organization list, click the name of the organization that you want to change.
+5. In **Name**, enter the new organization name.
+6. Click **Update**.
 
 #### Organization Admin change organization name
 
 If you are an Organization Admin, follow these steps:
 
 1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Default preferences**.
-1. In **Organization name**, enter the new name.
-1. Click **Update organization name**.
+2. Click **General**.
+3. Click **Default preferences**.
+4. In **Organization name**, enter the new name.
+5. Click **Update organization name**.
 
 ### Change team name or email
 
@@ -66,12 +69,12 @@ Organization administrators and team administrators can change team names and em
 To change the team name or email, follow these steps:
 
 1. Click **Administration** in the left-side menu, **Users and access**, and select **Team**.
-1. In the team list, click the name of the team that you want to change.
-1. Click the **Settings** tab.
-1. In the Team details section, you can edit the following:
+2. In the team list, click the name of the team that you want to change.
+3. Click the **Settings** tab.
+4. In the Team details section, you can edit the following:
    - **Name -** Edit this field to change the display name associated with the team.
    - **Email -** Edit this field to change the email address associated with the team.
-1. Click **Update**.
+5. Click **Update**.
 
 ### Change user name or email
 
@@ -111,7 +114,7 @@ This opens the **Change theme** drawer, where you can view all themes.
 
 ### Change server UI theme
 
-As a Grafana server administrator, you can change the default Grafana UI theme for all users who are on the server by setting the [default_theme](../../setup-grafana/configure-grafana/#default_theme) option in the Grafana configuration file.
+As a Grafana server administrator, you can change the default Grafana UI theme for all users who are on the server by setting the [default\_theme](../../setup-grafana/configure-grafana/#default_theme) option in the Grafana configuration file.
 
 To see what the current settings are, refer to [View server settings](../stats-and-license/#view-server-settings).
 
@@ -120,28 +123,28 @@ To see what the current settings are, refer to [View server settings](../stats-a
 Organization administrators can change the UI theme for all users in an organization.
 
 1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Default preferences**.
-1. In the Preferences section, select the UI theme.
-1. Click **Save**.
+2. Click **General**.
+3. Click **Default preferences**.
+4. In the Preferences section, select the UI theme.
+5. Click **Save**.
 
 ### Change team UI theme
 
 Organization and team administrators can change the UI theme for all users on a team.
 
 1. Click **Administration** in the left-side menu, **Users and access**, and select **Teams**.
-1. Click the team for which you want to change the UI theme.
-1. Click the **Settings** tab.
-1. In the Preferences section, select the UI theme.
-1. Click **Save**.
+2. Click the team for which you want to change the UI theme.
+3. Click the **Settings** tab.
+4. In the Preferences section, select the UI theme.
+5. Click **Save**.
 
 ### Change your personal UI theme
 
 You can change the UI theme for your user account. This setting overrides UI theme settings at higher levels.
 
 1. Click the user icon in the top right corner of the page and select **Profile**.
-1. In the Preferences section, select the UI theme.
-1. Click **Save**.
+2. In the Preferences section, select the UI theme.
+3. Click **Save**.
 
 ## Change the Grafana default timezone
 
@@ -151,35 +154,35 @@ Some tasks require certain permissions. For more information about roles, refer 
 
 ### Set server timezone
 
-Grafana server administrators can choose a default timezone for all users on the server by setting the [default_timezone](../../setup-grafana/configure-grafana/#default_timezone) option in the Grafana configuration file.
+Grafana server administrators can choose a default timezone for all users on the server by setting the [default\_timezone](../../setup-grafana/configure-grafana/#default_timezone) option in the Grafana configuration file.
 
 ### Set organization timezone
 
 Organization administrators can choose a default timezone for their organization.
 
 1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Default preferences**.
-1. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
-1. Click **Save**.
+2. Click **General**.
+3. Click **Default preferences**.
+4. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
+5. Click **Save**.
 
 ### Set team timezone
 
 Organization administrators and team administrators can choose a default timezone for all users on a team.
 
 1. Click **Administration** in the left-side menu, **Users and access**, and select **Teams**.
-1. Click the team for which you want to change the timezone.
-1. Click the **Settings** tab.
-1. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
-1. Click **Save**.
+2. Click the team for which you want to change the timezone.
+3. Click the **Settings** tab.
+4. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
+5. Click **Save**.
 
 ### Set your personal timezone
 
 You can change the timezone for your user account. This setting overrides timezone settings at higher levels.
 
 1. Click the user icon in the top right corner of the page and select **Profile**.
-1. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
-1. Click **Save**.
+2. Click to select an option in the **Timezone** list. **Default** is either the browser local timezone or the timezone selected at a higher level.
+3. Click **Save**.
 
 ## Change the default home dashboard
 
@@ -191,18 +194,20 @@ Some tasks require certain permissions. For more information about roles, refer 
 
 Users with the Grafana Server Admin flag on their account or access to the configuration file can define a JSON file to use as the home dashboard for all users on the server.
 
-#### [Optional] Convert an existing dashboard into a JSON file
+#### \[Optional\] Convert an existing dashboard into a JSON file
 
 1. Navigate to the page of the dashboard you want to use as the home dashboard.
-1. Click the **Share** button at the top right of the screen.
-1. In the Export tab, click **Save to file**. Grafana converts the dashboard to a JSON file and saves it locally.
+2. Click the **Share** button at the top right of the screen.
+3. In the Export tab, click **Save to file**. Grafana converts the dashboard to a JSON file and saves it locally.
 
 #### Use a JSON file as the home dashboard
 
 1. Save your JSON file somewhere that Grafana can access it. For example, in the Grafana `data` folder of Grafana.
-1. Update your configuration file to set the path to the JSON file. Refer to [default_home_dashboard_path](../../setup-grafana/configure-grafana/#default_home_dashboard_path) for more information about modifying the Grafana configuration files.
+2. Update your configuration file to set the path to the JSON file. Refer to [default\_home\_dashboard\_path](../../setup-grafana/configure-grafana/#default_home_dashboard_path) for more information about modifying the Grafana configuration files.
 
-```ini
+<!-- end list -->
+
+``` ini
 [dashboards]
 # Path to the default home dashboard. If this value is empty, then Grafana uses StaticRootPath + "dashboards/home.json"
 default_home_dashboard_path = data/main-dashboard.json
@@ -217,65 +222,65 @@ On Linux, Grafana uses `/usr/share/grafana/public/dashboards/home.json` as the d
 Organization administrators can choose a default home dashboard for their organization.
 
 1. Navigate to the dashboard you want to set as the home dashboard.
-1. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
-1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Default preferences**.
-1. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
-1. Click **Save**.
+2. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
+3. Click **Administration** in the left-side menu.
+4. Click **General**.
+5. Click **Default preferences**.
+6. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
+7. Click **Save**.
 
 ### Set home dashboard for your team
 
 Organization administrators and Team Admins can set a default home dashboard for all users on a team.
 
 1. Navigate to the dashboard you want to set as the home dashboard.
-1. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
-1. Click **Administration** in the left-side menu, **Users and access**, and select **Teams**.
-1. Click the team for which you want to change the home dashboard.
-1. Click the **Settings** tab.
-1. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
-1. Click **Save**.
+2. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
+3. Click **Administration** in the left-side menu, **Users and access**, and select **Teams**.
+4. Click the team for which you want to change the home dashboard.
+5. Click the **Settings** tab.
+6. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
+7. Click **Save**.
 
 ### Set your personal home dashboard
 
 You can choose your own personal home dashboard. This setting overrides all home dashboards set at higher levels.
 
 1. Navigate to the dashboard you want to set as the home dashboard.
-1. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
-1. Click the user icon in the top right corner of the page and select **Profile**.
-1. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
-1. Click **Save**.
+2. Click the star next to the dashboard title to mark the dashboard as a favorite if it is not already.
+3. Click the user icon in the top right corner of the page and select **Profile**.
+4. In the **Home Dashboard** field, select the dashboard that you want to use for your home dashboard. Options include all starred dashboards.
+5. Click **Save**.
 
 ## Change Grafana language
 
 ### Change server language
 
-Grafana server administrators can change the default Grafana UI language for all users on the server by setting the [default_language](../../setup-grafana/configure-grafana/#default_language) option in the Grafana configuration file.
+Grafana server administrators can change the default Grafana UI language for all users on the server by setting the [default\_language](../../setup-grafana/configure-grafana/#default_language) option in the Grafana configuration file.
 
 ### Change organization language
 
 Organization administrators can change the language for all users in an organization.
 
 1. Click **Administration** in the left-side menu.
-1. Click **General**.
-1. Click **Default preferences**.
-1. In the Preferences section, select an option in the **Language** dropdown.
-1. Click **Save**.
+2. Click **General**.
+3. Click **Default preferences**.
+4. In the Preferences section, select an option in the **Language** dropdown.
+5. Click **Save**.
 
 ### Change team language
 
 Organization and team administrators can set a default language for all users on a team.
 
 1. Click **Administration** in the left-side menu, **Users and access**, and select **Teams**.
-1. Click the team for which you want to change the language.
-1. Click the **Settings** tab.
-1. In the Preferences section, select an option in the **Language** dropdown.
-1. Click **Save**.
+2. Click the team for which you want to change the language.
+3. Click the **Settings** tab.
+4. In the Preferences section, select an option in the **Language** dropdown.
+5. Click **Save**.
 
 ### Change your personal language
 
 You can change the language for your user account. This setting overrides language settings at higher levels.
 
 1. Click the user icon in the top right corner of the page and select **Profile**.
-1. In the Preferences section, select an option in the **Language** dropdown.
-1. Click **Save**.
+2. In the Preferences section, select an option in the **Language** dropdown.
+3. Click **Save**.

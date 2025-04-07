@@ -1,44 +1,47 @@
----
+-----
+
 aliases:
-  - ../../data-sources/loki/template-variables/
-description: Guide for using template variables when querying the Loki data source
-keywords:
-  - grafana
-  - loki
-  - logs
-  - queries
-  - template
-  - variable
-labels:
+
+- ../../data-sources/loki/template-variables/
+  description: Guide for using template variables when querying the Loki data source
+  keywords:
+- grafana
+- loki
+- logs
+- queries
+- template
+- variable
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Template variables
-title: Loki template variables
-weight: 300
-refs:
-  add-template-variables-add-ad-hoc-filters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#add-ad-hoc-filters
-  add-template-variables-global-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#global-variables
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/#global-variables
-  add-template-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/add-template-variables/
-  variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Template variables
+    title: Loki template variables
+    weight: 300
+    refs:
+    add-template-variables-add-ad-hoc-filters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#add-ad-hoc-filters
+    add-template-variables-global-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#global-variables
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/\#global-variables
+    add-template-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/add-template-variables/
+    variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+
+-----
 
 # Loki template variables
 
@@ -50,7 +53,7 @@ For an introduction to templating and template variables, refer to the [Templati
 
 ## Use query variables
 
-Variables of the type _Query_ help you query Loki for lists of labels or label values.
+Variables of the type *Query* help you query Loki for lists of labels or label values.
 The Loki data source provides a form to select the type of values expected for a given variable.
 
 The form has these options:

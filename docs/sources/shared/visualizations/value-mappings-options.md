@@ -1,8 +1,6 @@
----
-title: Value mappings options
-comments: |
-  This file is used in the following visualizations: bar chart, bar gauge, candlestick, canvas, gauge, geomap, histogram, pie chart, stat, state timeline, status history, table, time series, trend
----
+-----
+
+## title: Value mappings options comments: | This file is used in the following visualizations: bar chart, bar gauge, candlestick, canvas, gauge, geomap, histogram, pie chart, stat, state timeline, status history, table, time series, trend
 
 Value mapping is a technique you can use to change how data appears in a visualization.
 

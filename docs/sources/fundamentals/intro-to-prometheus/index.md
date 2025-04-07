@@ -1,33 +1,36 @@
----
+-----
+
 aliases:
-  - ../basics/timeseries/
-  - /docs/grafana-cloud/introduction/prometheus/
-description: Introduction to Prometheus
-keywords:
-  - grafana
-  - intro
-  - Prometheus
-  - metrics
-  - time series
-labels:
+
+- ../basics/timeseries/
+- /docs/grafana-cloud/introduction/prometheus/
+  description: Introduction to Prometheus
+  keywords:
+- grafana
+- intro
+- Prometheus
+- metrics
+- time series
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What is Prometheus?
-weight: 300
-refs:
-  prometheus:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/prometheus/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/prometheus/
-  build-dashboards:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/
----
+  - cloud
+  - enterprise
+  - oss
+    title: What is Prometheus?
+    weight: 300
+    refs:
+    prometheus:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/prometheus/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/prometheus/
+    build-dashboards:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/
+
+-----
 
 # What is Prometheus?
 
@@ -39,14 +42,14 @@ Prometheus began in 2012 at SoundCloud because existing technologies were insuff
 
 The following panel in a Grafana dashboard shows how much disk bandwidth on a Mac laptop is being used. The green line represents disk `reads`, and the yellow line represents `writes`.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/disk-io.png" max-width="750px" caption="Disk I/O dashboard" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/disk-io.png" max-width="750px" caption="Disk I/O dashboard" \>}}
 
-Data like these form _time series_. The X-axis is a moment in time and the Y-axis is a number or measurement; for example, 5 megabytes per second. This type of time series data appears everywhere in systems monitoring, as well as in places such as seasonal temperature charts and stock prices. This data is simply some measurement (such as a company stock price or Disk I/O) through a series of time instants.
+Data like these form *time series*. The X-axis is a moment in time and the Y-axis is a number or measurement; for example, 5 megabytes per second. This type of time series data appears everywhere in systems monitoring, as well as in places such as seasonal temperature charts and stock prices. This data is simply some measurement (such as a company stock price or Disk I/O) through a series of time instants.
 
 Prometheus is a technology that collects and stores time series data. Time series are fundamental to Prometheus; its [data model](https://prometheus.io/docs/concepts/data_model/) is arranged into:
 
-- _metrics_ that consist of a _timestamp_ and a _sample_, which is the numeric value, such as how many disk bytes have been read or a stock price
-- a set of labels called _dimensions_, for example, `job` and `device`
+- *metrics* that consist of a *timestamp* and a *sample*, which is the numeric value, such as how many disk bytes have been read or a stock price
+- a set of labels called *dimensions*, for example, `job` and `device`
 
 You can store time series data in any relational database, however, these systems are not developed to store and query large volumes of time series data. Prometheus and similar software provide tools to compact and optimize time series data.
 
@@ -60,23 +63,23 @@ The **Metrics browser** field contains the following query:
 
 In this example, the Y-axis shows the total number of bytes written, and the X-axis shows dates and times. As the laptop runs, the number of bytes written increases over time. Below **Metrics browser** is a counter that counts the number of bytes written over time.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/dashboard-example.png" max-width="750px" caption="Metrics browser and counter" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/dashboard-example.png" max-width="750px" caption="Metrics browser and counter" \>}}
 
 The query is a simple example of [PromQL](/blog/2020/02/04/introduction-to-promql-the-prometheus-query-language/), the Prometheus Query Language. The query identifies the metric of interest (`node_disk_written_bytes_total`) and provides two labels (`job` and `device`). The label selector `job="integrations/macos-node"` filters metrics. It both reduces the scope of the metrics to those coming from the MacOS integration job and specifies that the “device” label cannot be empty. The result of this query is the raw stream of numbers that the graph displays.
 
-Although this view provides some insight into the performance of the system, it doesn’t provide the full story. A clearer picture of system performance requires understanding the rate of change that displays _how fast the data being written is changing_. To properly monitor disk performance, you need to also see spikes in activity that illustrate if and when the system is under load, and whether disk performance is at risk. PromQL includes a [rate()](https://prometheus.io/docs/prometheus/latest/querying/functions/#rate) function that shows the per-second average rate of increase over `5m` (5-minute) intervals. This view provides a much clearer picture of what’s happening with the system.
+Although this view provides some insight into the performance of the system, it doesn’t provide the full story. A clearer picture of system performance requires understanding the rate of change that displays *how fast the data being written is changing*. To properly monitor disk performance, you need to also see spikes in activity that illustrate if and when the system is under load, and whether disk performance is at risk. PromQL includes a [rate()](https://prometheus.io/docs/prometheus/latest/querying/functions/#rate) function that shows the per-second average rate of increase over `5m` (5-minute) intervals. This view provides a much clearer picture of what’s happening with the system.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/rate-function.png" max-width="750px" caption="Prometheus rate function" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/rate-function.png" max-width="750px" caption="Prometheus rate function" \>}}
 
 A counter metric is just one type of metric; it is a number (such as total bytes written) that only increases. Prometheus [supports several others](https://prometheus.io/docs/concepts/metric_types/), such as the metric type `gauge`, which can increase or decrease.
 
 The following gauge visualization displays the total RAM usage on a computer.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/gauge-example.png" max-width="750px" caption="Gauge visualization" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/gauge-example.png" max-width="750px" caption="Gauge visualization" \>}}
 
 The third metric type is called a `histogram`, which counts observations and organizes them into configurable groups. The following example displays floating-point numbers grouped into ranges that display how frequently each occurred.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/histogram-example.png" max-width="750px" caption="Histogram visualization" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/histogram-example.png" max-width="750px" caption="Histogram visualization" \>}}
 
 These core concepts of time series, metrics, labels, and aggregation functions are foundational to Grafana and observability.
 
@@ -102,9 +105,9 @@ Consider the following example. Suppose a 'MyApp' application uses a Prometheus 
 
 The following image shows the two metrics associated with the endpoint. The HELP text explains what the metric means, and the TYPE text indicates what kind of metric it is (in this case, a gauge). `MyAppnodejs_active_request_total` indicates the number of requests (in this case, `1`). `MyAppnodejs_heap_size_total_bytes` indicates the heap size reported in bytes. There are only two numbers because this data shows the value at the moment the data was fetched.
 
-{{< figure src="/media/docs/grafana/intro-prometheus/endpoint-data.png" max-width="750px" caption="Endpoint example" >}}
+{{\< figure src="/media/docs/grafana/intro-prometheus/endpoint-data.png" max-width="750px" caption="Endpoint example" \>}}
 
-The 'MyApp' metrics are available in an HTTP endpoint, but how do they get to Grafana, and subsequently, into a dashboard? The process of recording and transmitting the readings of an application or piece of infrastructure is known as _telemetry_. Telemetry is critical to observability because it helps you understand exactly what's going on in your infrastructure. The metrics introduced previously, for example, `MyAppnodejs_active_requests_total`, are telemetry data.
+The 'MyApp' metrics are available in an HTTP endpoint, but how do they get to Grafana, and subsequently, into a dashboard? The process of recording and transmitting the readings of an application or piece of infrastructure is known as *telemetry*. Telemetry is critical to observability because it helps you understand exactly what's going on in your infrastructure. The metrics introduced previously, for example, `MyAppnodejs_active_requests_total`, are telemetry data.
 
 To get metrics into Grafana, you can use either the Prometheus software or [Grafana Alloy](https://grafana.com/docs/alloy/latest/) to scrape metrics. Grafana Alloy collects and forwards the telemetry data to open-source deployments of the Grafana Stack, Grafana Cloud, or Grafana Enterprise, where your data can be analyzed. For example, you can configure Grafana Alloy to pull the data from 'MyApp' every five seconds and send the results to Grafana Cloud.
 
@@ -112,7 +115,7 @@ Metrics data is only one type of telemetry data; the other kinds are logs and tr
 
 The following image illustrates how Grafana Alloy works as an intermediary between 'MyApp' and Grafana Cloud.
 
-{{< figure src="/media/docs/alloy/flow-diagram-small-alloy.png" alt="Grafana Alloy" caption="Grafana Alloy" >}}
+{{\< figure src="/media/docs/alloy/flow-diagram-small-alloy.png" alt="Grafana Alloy" caption="Grafana Alloy" \>}}
 
 ## Bringing it together
 

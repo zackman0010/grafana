@@ -6,4 +6,4 @@ The Alert List panel allows you to display alerts on a dashboard. The list can b
 
 Read more about it here:
 
-[http://docs.grafana.org/features/panels/alertlist/](http://docs.grafana.org/features/panels/alertlist/)
+<http://docs.grafana.org/features/panels/alertlist/>

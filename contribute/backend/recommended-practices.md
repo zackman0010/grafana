@@ -1,7 +1,7 @@
 # Currently recommended practices
 
 Grafana Labs occasionally identifies patterns that may be useful or harmful so that we can introduce or remove from the codebase.
-When the complexity or importance of introducing or removing such idiomatic patterns is sufficiently high, we document it on this page to provide a reference. Because the relevance of these practices may vary over time, we call them _currently recommended practices_.
+When the complexity or importance of introducing or removing such idiomatic patterns is sufficiently high, we document it on this page to provide a reference. Because the relevance of these practices may vary over time, we call them *currently recommended practices*.
 
 ## Large-scale refactoring
 
@@ -34,13 +34,13 @@ recommended practice, we recommend that you follow the practices as put forth
 by the Go project for development of Go code or the Go compiler itself
 as appropriate.
 
-Firstly, best practice is the online book [_Effective Go_](https://golang.org/doc/effective_go.html), which isn't updated to reflect more recent changes since Go was initially released, but which remains a good source for understanding the general differences between Go and other languages.
+Firstly, best practice is the online book [*Effective Go*](https://golang.org/doc/effective_go.html), which isn't updated to reflect more recent changes since Go was initially released, but which remains a good source for understanding the general differences between Go and other languages.
 
 Secondly, the guidelines for [Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments) for the Go compiler can mostly be applied directly to the Grafana codebase.
 There are idiosyncrasies in Grafana, such as interfaces living closer to their declarations than to their users for services, and the documentation doesn't enforce public declarations.
 Instead, the documentation prioritizes high coverage aimed at end-users over documenting internals in the backend.
 
-- [_Effective Go_](https://golang.org/doc/effective_go.html).
+- [*Effective Go*](https://golang.org/doc/effective_go.html).
 - [Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments).
 
 ## 100 - Global state

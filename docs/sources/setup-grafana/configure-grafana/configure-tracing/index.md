@@ -1,26 +1,29 @@
----
+-----
+
 aliases:
-  - ../../troubleshooting/diagnostics/
-  - ../enable-diagnostics/
-description: Learn how to configure profiling and tracing so that you can troubleshoot Grafana.
-keywords:
-  - grafana
-  - troubleshooting
-  - documentation
-  - guide
-labels:
+
+- ../../troubleshooting/diagnostics/
+- ../enable-diagnostics/
+  description: Learn how to configure profiling and tracing so that you can troubleshoot Grafana.
+  keywords:
+- grafana
+- troubleshooting
+- documentation
+- guide
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Configure profiling and tracing
-title: Configure profiling and tracing to troubleshoot Grafana
-weight: 200
----
+  - enterprise
+  - oss
+    menuTitle: Configure profiling and tracing
+    title: Configure profiling and tracing to troubleshoot Grafana
+    weight: 200
+
+-----
 
 # Configure profiling and tracing to troubleshoot Grafana
 
 You can set up the `grafana-server` process to enable certain diagnostics when it starts. This can be useful
-when investigating certain performance problems. It's _not_ recommended to have these enabled by default.
+when investigating certain performance problems. It's *not* recommended to have these enabled by default.
 
 ## Turn on profiling and collect profiles
 
@@ -31,13 +34,13 @@ Running Grafana with profiling enabled and without block and mutex profiling ena
 
 Enable profiling:
 
-```bash
+``` bash
 ./grafana server -profile -profile-addr=0.0.0.0 -profile-port=8080
 ```
 
 Enable profiling with block and mutex profiling enabled with a fraction of 20%:
 
-```bash
+``` bash
 ./grafana server -profile -profile-addr=0.0.0.0 -profile-port=8080 -profile-block-rate=5 -profile-mutex-rate=5
 ```
 
@@ -47,7 +50,7 @@ There are some additional [godeltaprof](https://github.com/grafana/pyroscope-go/
 
 You can configure or override profiling settings using environment variables:
 
-```bash
+``` bash
 export GF_DIAGNOSTICS_PROFILING_ENABLED=true
 export GF_DIAGNOSTICS_PROFILING_ADDR=0.0.0.0
 export GF_DIAGNOSTICS_PROFILING_PORT=8080
@@ -61,7 +64,7 @@ In general, you use the [Go command pprof](https://golang.org/cmd/pprof/) to bot
 
 When experiencing high memory usage or potential memory leaks it's useful to collect several heap profiles and later when analyzing, compare them. It's a good idea to wait some time, e.g. 30 seconds, between collecting each profile to allow memory consumption to increase.
 
-```bash
+``` bash
 curl http://<profile-addr>:<profile-port>/debug/pprof/heap > heap1.pprof
 sleep 30
 curl http://<profile-addr>:<profile-port>/debug/pprof/heap > heap2.pprof
@@ -69,7 +72,7 @@ curl http://<profile-addr>:<profile-port>/debug/pprof/heap > heap2.pprof
 
 You can then use pprof tool to compare two heap profiles:
 
-```bash
+``` bash
 go tool pprof -http=localhost:8081 --base heap1.pprof heap2.pprof
 ```
 
@@ -77,13 +80,13 @@ go tool pprof -http=localhost:8081 --base heap1.pprof heap2.pprof
 
 When experiencing high CPU usage it's suggested to collect CPU profiles over a period of time, e.g. 30 seconds.
 
-```bash
+``` bash
 curl 'http://<profile-addr>:<profile-port>/debug/pprof/profile?seconds=30' > profile.pprof
 ```
 
 You can then use pprof tool to analyze the collected CPU profile:
 
-```bash
+``` bash
 go tool pprof -http=localhost:8081 profile.pprof
 ```
 
@@ -91,20 +94,20 @@ go tool pprof -http=localhost:8081 profile.pprof
 
 The `grafana-server` can be started with the arguments `-tracing` to enable tracing and `-tracing-file` to override the default trace file (`trace.out`) where trace result is written to. For example:
 
-```bash
+``` bash
 ./grafana server -tracing -tracing-file=/tmp/trace.out
 ```
 
 You can configure or override profiling settings using environment variables:
 
-```bash
+``` bash
 export GF_DIAGNOSTICS_TRACING_ENABLED=true
 export GF_DIAGNOSTICS_TRACING_FILE=/tmp/trace.out
 ```
 
 View the trace in a web browser (Go required to be installed):
 
-```bash
+``` bash
 go tool trace <trace file>
 2019/11/24 22:20:42 Parsing trace...
 2019/11/24 22:20:42 Splitting trace...

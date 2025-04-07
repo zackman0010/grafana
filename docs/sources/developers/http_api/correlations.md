@@ -1,21 +1,24 @@
----
+-----
+
 aliases:
-  - ../../http_api/correlations/
-canonical: /docs/grafana/latest/developers/http_api/correlations/
-description: Grafana Correlations HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - correlations
-  - Glue
-labels:
+
+- ../../http\_api/correlations/
+  canonical: /docs/grafana/latest/developers/http\_api/correlations/
+  description: Grafana Correlations HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- correlations
+- Glue
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Correlations HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Correlations HTTP API '
+
+-----
 
 # Correlations API
 
@@ -29,7 +32,7 @@ Creates a correlation between two data sources - the source data source identifi
 
 **Example request:**
 
-```http
+``` http
 POST /api/datasources/uid/uyBf2637k/correlations HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -54,7 +57,7 @@ JSON body schema:
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -91,7 +94,7 @@ Deletes a correlation.
 
 **Example request:**
 
-```http
+``` http
 DELETE /api/datasources/uid/uyBf2637k/correlations/J6gn7d31L HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -100,7 +103,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -124,7 +127,7 @@ Updates a correlation.
 
 **Example request:**
 
-```http
+``` http
 POST /api/datasources/uid/uyBf2637k/correlations/J6gn7d31L HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -142,7 +145,7 @@ JSON body schema:
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -179,7 +182,7 @@ Gets a single correlation.
 
 **Example request:**
 
-```http
+``` http
 GET /api/datasources/uid/uyBf2637k/correlations/J6gn7d31L HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -187,7 +190,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -220,7 +223,7 @@ Get all correlations originating from the data source identified by the given `s
 
 **Example request:**
 
-```http
+``` http
 GET /api/datasources/uid/uyBf2637k/correlations HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -228,7 +231,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 [
@@ -282,7 +285,7 @@ Query parameters:
 
 **Example request:**
 
-```http
+``` http
 GET /api/datasources/correlations HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
@@ -290,7 +293,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 [

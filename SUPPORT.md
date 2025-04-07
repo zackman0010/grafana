@@ -1,6 +1,6 @@
 # Get Grafana help
 
----
+-----
 
 First, check the official [Grafana documentation](https://grafana.com/docs/).
 

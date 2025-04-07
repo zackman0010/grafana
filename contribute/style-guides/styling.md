@@ -10,9 +10,9 @@ For styling components, use [Emotion's `css` function](https://emotion.sh/docs/@
 
 To access the Emotion theme in your styles, use the `useStyles` hook. This hook provides basic memoization and access to the theme object.
 
-> **Note:** Please remember to put `getStyles` function at the end of the file!
+> **Note:** Please remember to put `getStyles` function at the end of the file\!
 
-```tsx
+``` tsx
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import { css } from '@emotion/css';
@@ -42,7 +42,7 @@ This feature can be especially useful in certain use cases:
 
 Let's say you need to style a component that has a different background depending on the `isActive` property. For example:
 
-```tsx
+``` tsx
 import { css, cx } from '@emotion/css';
 
 import { GrafanaTheme2 } from '@grafana/data';

@@ -1,10 +1,6 @@
----
-title: Legend mode and legend placement
-comments: |
-  There are two legend shared files to cover the most common combinations of options. 
-  Using two shared files ensures that content remains consistent across visualizations that share the same options and users don't have to figure out which options apply to a specific visualization when reading that content. 
-  This file is used in the following visualizations: state timeline, status history
----
+-----
+
+## title: Legend mode and legend placement comments: | There are two legend shared files to cover the most common combinations of options. Using two shared files ensures that content remains consistent across visualizations that share the same options and users don't have to figure out which options apply to a specific visualization when reading that content. This file is used in the following visualizations: state timeline, status history
 
 When the legend option is enabled it can show either the value mappings or the threshold brackets. To show the value mappings in the legend, it's important that the **Color scheme** as referenced in [Color scheme](../../configure-standard-options#color-scheme) is set to **Single color** or **Classic palette**. To see the threshold brackets in the legend set the **Color scheme** to **From thresholds**.
 

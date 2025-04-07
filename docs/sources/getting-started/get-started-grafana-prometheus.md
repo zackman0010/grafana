@@ -1,16 +1,19 @@
----
+-----
+
 aliases:
-  - ../guides/getting_started/
-  - ../guides/gettingstarted/
-  - getting-started-prometheus/
-description: Learn how to build your first Prometheus dashboard in Grafana.
-labels:
+
+- ../guides/getting\_started/
+- ../guides/gettingstarted/
+- getting-started-prometheus/
+  description: Learn how to build your first Prometheus dashboard in Grafana.
+  labels:
   products:
-    - enterprise
-    - oss
-title: Get started with Grafana and Prometheus
-weight: 300
----
+  - enterprise
+  - oss
+    title: Get started with Grafana and Prometheus
+    weight: 300
+
+-----
 
 # Get started with Grafana and Prometheus
 
@@ -23,14 +26,14 @@ Check out our Prometheus **Learning Journeys**.
 - [Send metrics to Grafana Cloud using Prometheus remote write](https://www.grafana.com/docs/learning-journeys/prom-remote-write/) to explore Grafana Cloud without making significant changes to your existing configuration.
   {{% /admonition %}}
 
-_Grafana and Prometheus_:
+*Grafana and Prometheus*:
 
 1. Download Prometheus and Node exporter
-1. Install Prometheus Node exporter
-1. Install and configure Prometheus
-1. Configure Prometheus for Grafana
-1. Check Prometheus metrics in Grafana Explore view
-1. Start building dashboards
+2. Install Prometheus Node exporter
+3. Install and configure Prometheus
+4. Configure Prometheus for Grafana
+5. Check Prometheus metrics in Grafana Explore view
+6. Start building dashboards
 
 ## Download Prometheus and Node exporter
 
@@ -50,21 +53,19 @@ Prometheus Node exporter is a widely used tool that exposes system metrics. For 
 When you run Node exporter locally, navigate to `http://localhost:9100/metrics` to check that it is exporting metrics.
 
 {{% admonition type="note" %}}
-The instructions in the referenced topic are intended for Linux users. You may have to alter the instructions slightly depending on your operating system. For example, if you are on Windows, use the [windows_exporter](https://github.com/prometheus-community/windows_exporter) instead.
+The instructions in the referenced topic are intended for Linux users. You may have to alter the instructions slightly depending on your operating system. For example, if you are on Windows, use the [windows\_exporter](https://github.com/prometheus-community/windows_exporter) instead.
 {{% /admonition %}}
 
 ## Install and configure Prometheus
 
 1. After [downloading Prometheus](https://prometheus.io/download/#prometheus), extract it and navigate to the directory.
+   
+       tar xvfz prometheus-*.tar.gz
+       cd prometheus-*
 
-   ```
-   tar xvfz prometheus-*.tar.gz
-   cd prometheus-*
-   ```
+2. Locate the `prometheus.yml` file in the directory.
 
-1. Locate the `prometheus.yml` file in the directory.
-
-1. Modify the Prometheus configuration file to monitor the hosts where you installed Node exporter.
+3. Modify the Prometheus configuration file to monitor the hosts where you installed Node exporter.
 
 By default, Prometheus looks for the file `prometheus.yml` in the current working directory. This behavior can be changed via the `--config.file` command line flag. For example, some Prometheus installers use it to set the configuration file to `/etc/prometheus/prometheus.yml`.
 
@@ -84,12 +85,12 @@ The following example shows you the code you should add. Notice that static conf
 ```
 
 1. Start the Prometheus service:
-
+   
    ```
     ./prometheus --config.file=./prometheus.yml
    ```
 
-1. Confirm that Prometheus is running by navigating to `http://localhost:9090`.
+2. Confirm that Prometheus is running by navigating to `http://localhost:9090`.
 
 You can see that the Node exporter metrics have been delivered to Prometheus. Next, the metrics will be sent to Grafana.
 
@@ -107,13 +108,11 @@ This guide describes configuring Prometheus in a hosted Grafana instance on Graf
 
 Add the following code to your prometheus.yml file to begin sending metrics to your hosted Grafana instance.
 
-```
-remote_write:
-- url: <https://your-remote-write-endpoint>
-  basic_auth:
-    username: <your user name>
-    password: <Your Grafana.com API Key>
-```
+    remote_write:
+    - url: <https://your-remote-write-endpoint>
+      basic_auth:
+        username: <your user name>
+        password: <Your Grafana.com API Key>
 
 {{% admonition type="note" %}}
 To configure your Prometheus instance to work with Grafana locally instead of Grafana Cloud, install Grafana [here](/grafana/download) and follow the configuration steps listed [here](/docs/grafana/latest/datasources/prometheus/#configure-the-data-source).
@@ -123,7 +122,7 @@ To configure your Prometheus instance to work with Grafana locally instead of Gr
 
 These are some of the troubleshooting steps you can try if Prometheus isn’t running or functioning as expected. The steps provided have been selected based on the Learning Journeys we offer for Prometheus. If you’d like to explore further, check out the [Prometheus Learning Journey](https://grafana.com/docs/learning-journeys/prometheus/) if you want to visualize data in Grafana Cloud without sending or storing data in Grafana Cloud, such as for local retention needs. Alternatively, if you already have a Prometheus setup and want to explore Grafana Cloud without making significant changes, visit the [Prometheus remote write learning journey](https://grafana.com/docs/learning-journeys/prom-remote-write/).
 
-### 1. Checking if Prometheus is running
+### 1\. Checking if Prometheus is running
 
 If the Prometheus web UI is inaccessible (e.g., "Connection refused" error in the browser) or Prometheus queries fail (e.g., errors in Grafana like "Data source unavailable" or "No data points"), a good place to start is confirming that the Prometheus process and service are running.
 
@@ -131,7 +130,7 @@ You can do this by checking the system process or verifying the service status:
 
 **Linux**
 
-```bash
+``` bash
 sudo systemctl status prometheus
 ```
 
@@ -139,7 +138,7 @@ sudo systemctl status prometheus
 
 **MacOS**
 
-```bash
+``` bash
 pgrep prometheus
 ```
 
@@ -147,13 +146,13 @@ pgrep prometheus
 
 **Windows** (`PowerShell`)
 
-```powershell
+``` powershell
 Get-Process -Name prometheus -ErrorAction SilentlyContinue
 ```
 
 - Checks if the Prometheus process is running by name.
 
-### 2. If Prometheus is not running
+### 2\. If Prometheus is not running
 
 Start by checking for common causes:
 
@@ -163,13 +162,13 @@ Prometheus runs on port 9090 by default. If another process is using this port, 
 
 **Linux & MacOS**
 
-```bash
+``` bash
 lsof -i :9090
 ```
 
 **Windows** (`PowerShell`)
 
-```powershell
+``` powershell
 netstat -ano | findstr :9090
 ```
 
@@ -179,7 +178,7 @@ netstat -ano | findstr :9090
 
 **Linux & MacOS**
 
-```bash
+``` bash
 ls /usr/local/bin/prometheus /usr/local/bin/promtool
 ```
 
@@ -187,7 +186,7 @@ ls /usr/local/bin/prometheus /usr/local/bin/promtool
 
 **Check if Prometheus is in the path**.
 
-```bash
+``` bash
 which prometheus
 which promtool
 ```
@@ -198,7 +197,7 @@ which promtool
 
 **Linux & MacOs**
 
-```bash
+``` bash
 ls /etc/prometheus /var/lib/prometheus
 ls /etc/prometheus/prometheus.yml
 ```
@@ -207,19 +206,19 @@ ls /etc/prometheus/prometheus.yml
 
 **Check permissions**: If Prometheus is running as a dedicated user, ensure the correct ownership:
 
-```bash
+``` bash
 sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus
 ```
 
 (Optional) **Secure Prometheus by creating a dedicated user**
 
-```bash
+``` bash
 sudo useradd --no-create-home --shell /bin/false prometheus
 ```
 
 - Recommended for security: runs Prometheus as a non-login user.
 
-### 3. Checking if Prometheus is running as a service
+### 3\. Checking if Prometheus is running as a service
 
 If Prometheus is running as a process, check whether it is properly set up and managed as a service to ensure it restarts automatically after reboots or failures.
 
@@ -227,25 +226,25 @@ If Prometheus is running as a process, check whether it is properly set up and m
 
 **Linux**
 
-```bash
+``` bash
 systemctl status prometheus.service
 ```
 
 **Windows**
 
-```powershell
+``` powershell
 sc query prometheus
 ```
 
 **MacOs**
 
-```bash
+``` bash
 pgrep prometheus
 ```
 
 - If the service is **inactive (dead) or stopped**, proceed to the next steps.
 
-### 4. If Prometheus is not running as a service
+### 4\. If Prometheus is not running as a service
 
 If Prometheus is not running as a managed service, ensure it is correctly configured and can restart automatically.
 
@@ -253,13 +252,15 @@ If Prometheus is not running as a managed service, ensure it is correctly config
 
 Check the service unit file to ensure correct paths:
 
-```bash
+``` bash
 sudo nano /etc/systemd/system/prometheus.service
 ```
 
 - Look for the `ExecStart` line:
 
-```bash
+<!-- end list -->
+
+``` bash
 ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus/
 ```
 
@@ -270,7 +271,7 @@ ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
 
 **Restart and enable Prometheus service (Linux & MacOs)**
 
-```bash
+``` bash
 sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
@@ -281,7 +282,7 @@ sudo systemctl status prometheus
 
 After restarting, verify if Prometheus is responsive:
 
-```bash
+``` bash
 curl -s http://localhost:9090/-/ready
 ```
 
@@ -291,16 +292,16 @@ curl -s http://localhost:9090/-/ready
 
 If running as a Windows service, restart it:
 
-```powershell
+``` powershell
 net stop prometheus
 net start prometheus
 ```
 
-### 5. Checking if Prometheus is capturing metrics
+### 5\. Checking if Prometheus is capturing metrics
 
 If you installed [Node exporter](#install-prometheus-node-exporter) to expose your system metrics, you can check if Prometheus is capturing metrics by sending a request to the `/metrics` endpoint.
 
-```bash
+``` bash
 curl http://localhost:9090/metrics
 ```
 
@@ -312,7 +313,7 @@ In your Grafana instance, go to the [Drilldown](https://www.grafana.com/docs/gra
 
 ## Start building dashboards
 
-Now that you have a curated list of queries, create [dashboards](../../dashboards/) to render system metrics monitored by Prometheus. When you install Prometheus and Node exporter or windows_exporter, you will find recommended dashboards for use.
+Now that you have a curated list of queries, create [dashboards](../../dashboards/) to render system metrics monitored by Prometheus. When you install Prometheus and Node exporter or windows\_exporter, you will find recommended dashboards for use.
 
 The following image shows a dashboard with three panels showing some system metrics.
 

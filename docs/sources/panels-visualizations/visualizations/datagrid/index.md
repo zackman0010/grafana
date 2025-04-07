@@ -1,31 +1,34 @@
----
+-----
+
 aliases:
-  - ../../features/panels/datagrid_panel/
-  - ../../reference/datagrid/
-  - ../../visualizations/datagrid/
-description: Configure options for Grafana's datagrid visualization
-keywords:
-  - grafana
-  - dashboard
-  - panels
-  - datagrid
-  - datagrid panel
-  - datagrid options
-labels:
+
+- ../../features/panels/datagrid\_panel/
+- ../../reference/datagrid/
+- ../../visualizations/datagrid/
+  description: Configure options for Grafana's datagrid visualization
+  keywords:
+- grafana
+- dashboard
+- panels
+- datagrid
+- datagrid panel
+- datagrid options
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Datagrid
-title: Datagrid
-weight: 100
-refs:
-  special-data-sources:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/#special-data-sources
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/#special-data-sources
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Datagrid
+    title: Datagrid
+    weight: 100
+    refs:
+    special-data-sources:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/\#special-data-sources
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/\#special-data-sources
+
+-----
 
 # Datagrid
 
@@ -59,13 +62,13 @@ To provide a more streamlined experience, the datagrid has a context menu that c
 
 Deleting a row or column will remove the data from the datagrid, while clearing a row or column will only remove the data from the cells, leaving the row or column intact.
 
-{{< figure src="/media/docs/datagrid/screenshot-grafana-datagrid-context-menu-2.png" alt="Datagrid context menu" max-width="400px" >}}
+{{\< figure src="/media/docs/datagrid/screenshot-grafana-datagrid-context-menu-2.png" alt="Datagrid context menu" max-width="400px" \>}}
 
 ### Header menu
 
 You can also access a header menu by clicking the dropdown icon next to the header title. From here, you can not only delete or clear a column, but also rename it, freeze it, or convert the field type of the column.
 
-{{< figure src="/media/docs/datagrid/screenshot-grafana-datagrid-header-menu-2.png" alt="Datagrid header menu" max-width="500px" >}}
+{{\< figure src="/media/docs/datagrid/screenshot-grafana-datagrid-header-menu-2.png" alt="Datagrid header menu" max-width="500px" \>}}
 
 ## Selecting series
 
@@ -82,8 +85,8 @@ You can add data to a datagrid by creating a new column or row.
 To create a new column, take the following steps:
 
 1. In an existing panel, click the **+** button in the table header after the last column.
-1. When prompted, add a name for the new column.
-1. Click anywhere outside the field or press the Enter key to save the column.
+2. When prompted, add a name for the new column.
+3. Click anywhere outside the field or press the Enter key to save the column.
 
 Now you can add data in each cell.
 
@@ -94,7 +97,7 @@ To add a new row, click a **+** button after the last row. The button is present
 You can edit data by taking the following steps:
 
 1. Double-click on the cell that needs to be modified. This will activate the cell and allow you to edit the data.
-1. After editing the data, click anywhere outside the cell or press the Enter key to finalize the edit.
+2. After editing the data, click anywhere outside the cell or press the Enter key to finalize the edit.
 
 To easily clear a cell of data, you can click on a cell to focus it and then press the Delete key.
 
@@ -105,8 +108,8 @@ You can move columns and rows as needed.
 To move a column, take the following steps:
 
 1. Click and hold the header of the column that needs to be moved.
-1. Drag the column to the desired location.
-1. Release the mouse button to finalize the move.
+2. Drag the column to the desired location.
+3. Release the mouse button to finalize the move.
 
 To move a row, click and hold on the row selector from the number column situated on the far left side of the grid, and drag it to the desired location. Releasing the mouse button finalizes the move.
 
@@ -119,10 +122,10 @@ You can select multiple cells by clicking on a single cell and dragging the mous
 To delete or clear multiple rows, take the following steps:
 
 1. Hover over the number column (to the left of the first column in the grid) to display row checkbox.
-1. Select the checkboxes for the rows you want to work with.
+2. Select the checkboxes for the rows you want to work with.
    To select multiple consecutive rows, press and hold the Shift key while clicking on the first and last row. To select non-consecutive rows, press and hold the Ctrl (or Cmd) key while clicking the desired rows.
-1. Right-click to access the context menu.
-1. Select **Delete rows** or **Clear rows**.
+3. Right-click to access the context menu.
+4. Select **Delete rows** or **Clear rows**.
 
 The same rules apply to columns by clicking the column headers.
 
@@ -130,4 +133,4 @@ To delete all rows, use the "select all" checkbox at the top left corner of the 
 
 ## Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

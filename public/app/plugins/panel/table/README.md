@@ -6,4 +6,4 @@ The table panel is very flexible, supporting both multiple modes for time series
 
 Check out the [Table Panel Showcase in the Grafana Playground](https://play.grafana.org/d/U_bZIMRMk/7-table-panel-showcase) or read more about it here:
 
-[https://grafana.com/docs/grafana/latest/features/panels/table_panel/](https://grafana.com/docs/grafana/latest/features/panels/table_panel/)
+[https://grafana.com/docs/grafana/latest/features/panels/table\_panel/](https://grafana.com/docs/grafana/latest/features/panels/table_panel/)

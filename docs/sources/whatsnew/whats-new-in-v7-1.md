@@ -1,23 +1,26 @@
----
-_build:
-  list: false
+-----
+
+\_build:
+list: false
 aliases:
-  - ../guides/whats-new-in-v7-1/
-description: Learn about new and updated features in Grafana v7.1
-keywords:
-  - grafana
-  - new
-  - documentation
-  - '7.1'
-  - release notes
-labels:
+
+- ../guides/whats-new-in-v7-1/
+  description: Learn about new and updated features in Grafana v7.1
+  keywords:
+- grafana
+- new
+- documentation
+- '7.1'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: What's new in Grafana v7.1
-weight: -28
----
+  - cloud
+  - enterprise
+  - oss
+    title: What's new in Grafana v7.1
+    weight: -28
+
+-----
 
 # What's new in Grafana v7.1
 
@@ -47,7 +50,7 @@ Support for Flux and Influx v2 has been added. The InfluxData blog post, [How to
 
 In Grafana v 7.1 we are introducing search functionality in Query history. You can search across queries and your comments. It is especially useful in combination with a time filter and data source filter. Read more about [Query history here](../../explore/#query-history).
 
-{{< figure src="/static/img/docs/v71/query_history_search.gif" max-width="800px" caption="Query history search" >}}
+{{\< figure src="/static/img/docs/v71/query\_history\_search.gif" max-width="800px" caption="Query history search" \>}}
 
 ## Explore modes unified
 
@@ -80,7 +83,7 @@ By default, the Stat panel displays:
 
 You can use the Text mode option to control what text the panel renders. If the value is not important, only name and color is, then change the `Text mode` to **Name**. The value will still be used to determine color and is displayed in a tooltip.
 
-{{< figure src="/static/img/docs/v71/stat-panel-text-modes.png" max-width="1025px" caption="Stat panel" >}}
+{{\< figure src="/static/img/docs/v71/stat-panel-text-modes.png" max-width="1025px" caption="Stat panel" \>}}
 
 ## Provisioning of apps
 

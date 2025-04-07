@@ -4,7 +4,7 @@ Since version 8.4, HTTP API details are [specified](https://editor.swagger.io/?u
 
 # OpenAPI annotations
 
-The OpenAPI v2 specification is generated automatically from the annotated Go code using [go-swagger](https://github.com/go-swagger/go-swagger) which scans the source code for [annotation rules](https://goswagger.io/use/spec.html). Refer to [this getting started guide](https://medium.com/@pedram.esmaeeli/generate-swagger-specification-from-go-source-code-648615f7b9d9) for getting familiar with the toolkit. 
+The OpenAPI v2 specification is generated automatically from the annotated Go code using [go-swagger](https://github.com/go-swagger/go-swagger) which scans the source code for [annotation rules](https://goswagger.io/use/spec.html). Refer to [this getting started guide](https://medium.com/@pedram.esmaeeli/generate-swagger-specification-from-go-source-code-648615f7b9d9) for getting familiar with the toolkit.
 
 Developers modifying the HTTP API endpoints need to make sure to add the necessary annotations so that their changes are reflected into the generated specifications.
 
@@ -14,7 +14,7 @@ The following route defines a `PATCH` endpoint under the `/serviceaccounts/{serv
 
 > For enterprise endpoints make sure you add the `enterprise` tag as well.
 
-```go
+``` go
 
 // swagger:route PATCH /serviceaccounts/{serviceAccountId} service_accounts updateServiceAccount
 //
@@ -38,10 +38,13 @@ The `go-swagger` can discover such annotations by scanning any code imported by 
 ## Example of endpoint parameters
 
 The following struct defines the route parameters for the `updateServiceAccount` endpoint. The route expects:
-* a path parameter denoting the service account identifier and
-* a body parameter with the new values for the specific service account
 
-```go
+- a path parameter denoting the service account identifier and
+- a body parameter with the new values for the specific service account
+
+<!-- end list -->
+
+``` go
 
 // swagger:parameters updateServiceAccount
 type UpdateServiceAccountParams struct {
@@ -56,7 +59,7 @@ type UpdateServiceAccountParams struct {
 
 The following struct defines the response for the `updateServiceAccount` endpoint in case of a successful `200` response.
 
-```go
+``` go
 
 // swagger:response updateServiceAccountResponse
 type UpdateServiceAccountResponse struct {
@@ -74,7 +77,7 @@ type UpdateServiceAccountResponse struct {
 
 Developers can re-create the OpenAPI v2 and v3 specifications using the following command:
 
-```bash
+``` bash
 make swagger-clean && make openapi3-gen
 ```
 
@@ -83,5 +86,6 @@ They can observe its output into the `public/api-merged.json` and `public/openap
 Finally, they can browser and try out both the OpenAPI v2 and v3 via the Swagger UI editor (served by the grafana server) by navigating to `/swagger`.
 
 If there are any issues generating the specifications (e.g., diff containing unrelated changes to your PR or unusually large diff), please run the following two commands to ensure your Swagger version is up to date, then re-run the make commands.
+
 - `go install github.com/bwplotka/bingo@latest`
 - `bingo get github.com/go-swagger/go-swagger/cmd/swagger@v0.30.2`

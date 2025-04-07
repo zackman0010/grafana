@@ -1,32 +1,35 @@
----
+-----
+
 aliases:
-  - ../../features/panels/canvas/
-  - ../../visualizations/canvas/
-description: Configure options for Grafana's canvas visualization
-keywords:
-  - grafana
-  - canvas
-  - panel
-  - documentation
-labels:
+
+- ../../features/panels/canvas/
+- ../../visualizations/canvas/
+  description: Configure options for Grafana's canvas visualization
+  keywords:
+- grafana
+- canvas
+- panel
+- documentation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Canvas
-weight: 100
-refs:
-  data-links:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/configure-data-links/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
-  add-field-from-calculation-transform:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/transform-data/#add-field-from-calculation
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/#add-field-from-calculation
----
+  - cloud
+  - enterprise
+  - oss
+    title: Canvas
+    weight: 100
+    refs:
+    data-links:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/configure-data-links/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/configure-data-links/
+    add-field-from-calculation-transform:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/transform-data/\#add-field-from-calculation
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/transform-data/\#add-field-from-calculation
+
+-----
 
 # Canvas
 
@@ -34,20 +37,20 @@ Canvases combine the power of Grafana with the flexibility of custom elements.
 They are extensible visualizations that allow you to add and arrange elements wherever you want within unstructured static and dynamic layouts.
 This lets you design custom visualizations and overlay data in ways that aren't possible with standard Grafana visualizations, all within the Grafana UI.
 
-{{< video-embed src="/static/img/docs/canvas-panel/canvas-beta-overview-9-2-0.mp4" max-width="750px" alt="Canvas beta overview" >}}
+{{\< video-embed src="/static/img/docs/canvas-panel/canvas-beta-overview-9-2-0.mp4" max-width="750px" alt="Canvas beta overview" \>}}
 
 If you've used popular UI and web design tools, then designing canvases will feel very familiar.
 With all of these dynamic elements, there's almost no limit to what a canvas can display.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 We'd love your feedback on the canvas visualization. Please check out the [open Github issues](https://github.com/grafana/grafana/issues?page=1&q=is%3Aopen+is%3Aissue+label%3Aarea%2Fpanel%2Fcanvas) and [submit a new feature request](https://github.com/grafana/grafana/issues/new?assignees=&labels=type%2Ffeature-request,area%2Fpanel%2Fcanvas&title=Canvas:&projects=grafana-dataviz&template=1-feature_requests.md) as needed.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Configure a canvas visualization
 
 The following video shows you how to create and configure a canvas visualization:
 
-{{< youtube id="b7AYKoFcPpY" >}}
+{{\< youtube id="b7AYKoFcPpY" \>}}
 
 ## Supported data formats
 
@@ -73,7 +76,7 @@ When you select an element that you've added to a canvas, you can access [config
 
 The following sections describe the different elements available.
 
-{{< column-list >}}
+{{\< column-list \>}}
 
 - [Metric value](#metric-value)
 - [Text](#text)
@@ -86,7 +89,7 @@ The following sections describe the different elements available.
 - [Parallelogram](#basic-shapes)
 - [Button](#button)
 
-{{< /column-list >}}
+{{\< /column-list \>}}
 
 #### Basic shapes
 
@@ -114,15 +117,19 @@ The icon element lets you add a supported icon to the canvas. Icons can have the
 
 You can add a custom icon by referencing an SVG file. To add a custom icon, follow these steps:
 
-1. Under **Icon > SVG Path**, if it's not already selected, select **Fixed** as your file source.
-1. Click **Select a value** in the field below.
-1. In the dialog box that opens, click the **URL** tab.
-1. Enter the URL in the field below the **URL** tab.
+1. Under **Icon \> SVG Path**, if it's not already selected, select **Fixed** as your file source.
 
-   {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-v11.3.png" max-width="250px" alt="Add a custom image URL" >}}
+2. Click **Select a value** in the field below.
 
-1. Click **Select**.
-1. (Optional) Add a background image to your icon with the **Background (icon)** option by following the steps to [add a custom image](#add-custom-images-to-elements).
+3. In the dialog box that opens, click the **URL** tab.
+
+4. Enter the URL in the field below the **URL** tab.
+   
+   {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-v11.3.png" max-width="250px" alt="Add a custom image URL" \>}}
+
+5. Click **Select**.
+
+6. (Optional) Add a background image to your icon with the **Background (icon)** option by following the steps to [add a custom image](#add-custom-images-to-elements).
 
 If you don't have an SVG file, you can use a rectangle element instead of an icon and set its background image to an image file type. To add a custom image for another element type, follow the steps to [add a custom image](#add-custom-images-to-elements).
 
@@ -130,7 +137,7 @@ If you don't have an SVG file, you can use a rectangle element instead of an ico
 
 The server element lets you easily represent a single server, a stack of servers, a database, or a terminal. Server elements support status color, bulb color, and a bulb blink rate all configurable by fixed or field values.
 
-{{< figure src="/media/docs/grafana/canvas-server-element-9-4-0.png" max-width="650px" alt="Canvas server element" >}}
+{{\< figure src="/media/docs/grafana/canvas-server-element-9-4-0.png" max-width="650px" alt="Canvas server element" \>}}
 
 #### Button
 
@@ -140,15 +147,16 @@ The button element lets you add a basic button to the canvas. Button elements su
 A button click will only trigger an API call when [inline editing](#inline-editing) is disabled.
 {{% /admonition %}}
 
-{{< video-embed src="/media/docs/grafana/2023-20-10-Canvas-Button-Element-Enablement-Video.mp4" max-width="650px" alt="Canvas button element demo" >}}
+{{\< video-embed src="/media/docs/grafana/2023-20-10-Canvas-Button-Element-Enablement-Video.mp4" max-width="650px" alt="Canvas button element demo" \>}}
 
-{{< docs/play title="Canvas Visualization: Buttons" url="https://play.grafana.org/d/c9ea65f5-ed5a-45cf-8fb7-f82af7c3afdf/" >}}
+{{\< docs/play title="Canvas Visualization: Buttons" url="https://play.grafana.org/d/c9ea65f5-ed5a-45cf-8fb7-f82af7c3afdf/" \>}}
 
 ##### Button API options
 
 The following options let you configure basic, unauthenticated API calls:
 
 <!-- prettier-ignore-start -->
+
 | Option  | Description  |
 | ------- | ------------ |
 | Endpoint | Enter the endpoint URL. |
@@ -168,16 +176,18 @@ The image must be hosted at a URL that allows requests from your Grafana instanc
 To upload a custom image, follow these steps:
 
 1. Under **Background (\<ELEMENT TYPE\>)**, if it's not already selected, select **Fixed** as your image source.
+   
+   {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-src-v11.3.png" max-width="300px" alt="Custom image source selection" \>}}
 
-   {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-src-v11.3.png" max-width="300px" alt="Custom image source selection" >}}
+2. Click **Select a value** in the field below.
 
-1. Click **Select a value** in the field below.
-1. In the dialog box that opens, click the **URL** tab.
-1. Enter the URL in the field below the **URL** tab.
+3. In the dialog box that opens, click the **URL** tab.
 
-   {{< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-v11.3.png" max-width="250px" alt="Add a custom image URL" >}}
+4. Enter the URL in the field below the **URL** tab.
+   
+   {{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-canvas-custom-image-v11.3.png" max-width="250px" alt="Add a custom image URL" \>}}
 
-1. Click **Select**.
+5. Click **Select**.
 
 ## Connections
 
@@ -186,12 +196,14 @@ When building a canvas, you can connect elements together to create more complex
 To create a connection, follow these steps:
 
 1. In the panel edit pane, expand the **Canvas** options section.
-1. Toggle on the **Inline editing** switch.
-1. Hover the cursor over an element you want to connect to display the connection anchors:
 
+2. Toggle on the **Inline editing** switch.
+
+3. Hover the cursor over an element you want to connect to display the connection anchors:
+   
    ![Element with connection anchors displayed](/media/docs/grafana/panels-visualizations/screenshot-connection-anchors-v11.3.png)
 
-1. Drag the cursor from a connection anchor on that element to one on another element.
+4. Drag the cursor from a connection anchor on that element to one on another element.
 
 To remove a connection, click the connection and then press the `Delete` or `Backspace` key.
 
@@ -208,7 +220,7 @@ If you move a connection so that it's almost a right angle or a straight line, t
 
 You can set the size, color, direction, and style of connections based on fixed or field values. To do so, enter into panel edit mode, select the connection, and modify the connection's properties in the panel editor. For more information on connection styles, refer to [Selected connection options](#selected-connection-options).
 
-{{< youtube id="0iO2gqv0XNA" >}}
+{{\< youtube id="0iO2gqv0XNA" \>}}
 
 ## Canvas editing
 
@@ -218,7 +230,7 @@ You can make changes to a canvas visualization while in the context of the dashb
 
 You can edit your canvas inline while in dashboard mode. The inline editor menu displays the options relevant to the part of the canvas that you've selected. You can also move the editor window around.
 
-{{< video-embed src="/static/img/docs/canvas-panel/canvas-inline-editor-9-2-0.mp4" max-width="750px" alt="Inline editor demo" >}}
+{{\< video-embed src="/static/img/docs/canvas-panel/canvas-inline-editor-9-2-0.mp4" max-width="750px" alt="Inline editor demo" \>}}
 
 ### Context menu
 
@@ -226,19 +238,19 @@ The context menu lets you perform common tasks quickly and efficiently. Supporte
 
 The context menu is triggered by a right click action over the panel or over a given canvas element. When right clicking the panel, you are able to set a background image and easily add elements to the canvas.
 
-{{< figure src="/static/img/docs/canvas-panel/canvas-panel-context-menu-9-3-0.png" max-width="350px" alt="Canvas panel context menu" >}}
+{{\< figure src="/static/img/docs/canvas-panel/canvas-panel-context-menu-9-3-0.png" max-width="350px" alt="Canvas panel context menu" \>}}
 
 When right clicking an element, you are able to edit, delete, duplicate, and modify the element's layer positioning.
 
-{{< figure src="/static/img/docs/canvas-panel/canvas-context-menu-9-2-0.png" max-width="250px"  alt="Canvas element context menu" >}}
+{{\< figure src="/static/img/docs/canvas-panel/canvas-context-menu-9-2-0.png" max-width="250px"  alt="Canvas element context menu" \>}}
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Canvas options
 
@@ -246,7 +258,7 @@ When right clicking an element, you are able to edit, delete, duplicate, and mod
 
 The inline editing toggle lets you lock or unlock the canvas. When turned off the canvas becomes “locked”, freezing elements in place and preventing unintended modifications.
 
-{{< video-embed src="/static/img/docs/canvas-panel/canvas-inline-editing-toggle-9-2-0.mp4" max-width="750px" alt="Inline editing toggle demo" >}}
+{{\< video-embed src="/static/img/docs/canvas-panel/canvas-inline-editing-toggle-9-2-0.mp4" max-width="750px" alt="Inline editing toggle demo" \>}}
 
 #### Experimental Element types
 
@@ -256,7 +268,7 @@ Toggle the switch to include experimental element types in the available selecti
 
 You can enable panning and zooming in a canvas. This allows you to both create and navigate more complex designs.
 
-{{< docs/public-preview product="Canvas pan and zoom" featureFlag="`canvasPanelPanZoom`" >}}
+{{\< docs/public-preview product="Canvas pan and zoom" featureFlag="`canvasPanelPanZoom`" \>}}
 
 Use the following pointer and keyboard strokes:
 
@@ -265,7 +277,7 @@ Use the following pointer and keyboard strokes:
 - **Pan** - Middle mouse/wheel + drag OR Control + right-click + drag
 - **Reset** - Double-click
 
-{{< video-embed src="/media/docs/grafana/2024-01-05-Canvas-Pan-&-Zoom-Enablement-Video.mp4" max-width="750px" alt="Canvas pan and zoom enablement video" >}}
+{{\< video-embed src="/media/docs/grafana/2024-01-05-Canvas-Pan-&-Zoom-Enablement-Video.mp4" max-width="750px" alt="Canvas pan and zoom enablement video" \>}}
 
 ##### Infinite panning
 
@@ -302,9 +314,9 @@ You can also take the following actions on elements:
 To update the name of an element, follow these steps:
 
 1. Hover the cursor over the element name so the **Edit layer name** (pencil) icon is displayed.
-1. Click the **Edit layer name** icon.
-1. Enter a new name.
-1. Click outside of the name field.
+2. Click the **Edit layer name** icon.
+3. Enter a new name.
+4. Click outside of the name field.
 
 #### Background (canvas)
 
@@ -414,67 +426,83 @@ To do this, click and drag the link or action to the desired position.
 
 The following tasks describe how to configure data links and actions.
 
-{{< tabs >}}
-{{< tab-content name="Add data links" >}}
+{{\< tabs \>}}
+{{\< tab-content name="Add data links" \>}}
 To add a data link, follow these steps:
 
 1. Enable inline editing.
-1. Click the element to which you want to add the data link.
-1. In either the inline editor or panel editor, expand the **Selected element** editor.
-1. Scroll down to the **Data links and actions** section and expand it.
-1. Click **+ Add link**.
-1. In the dialog box that opens, enter a **Title**.
 
+2. Click the element to which you want to add the data link.
+
+3. In either the inline editor or panel editor, expand the **Selected element** editor.
+
+4. Scroll down to the **Data links and actions** section and expand it.
+
+5. Click **+ Add link**.
+
+6. In the dialog box that opens, enter a **Title**.
+   
    This is a human-readable label for the link displayed in the UI. This is a required field.
 
-1. Enter the **URL** or variable to which you want to link.
-
+7. Enter the **URL** or variable to which you want to link.
+   
    To add a data link variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. This is a required field.
 
-1. If you want the link to open in a new tab, toggle the **Open in a new tab** switch.
-1. If you want the data link to open with a single click on the element, toggle the **One click** switch.
+8. If you want the link to open in a new tab, toggle the **Open in a new tab** switch.
 
+9. If you want the data link to open with a single click on the element, toggle the **One click** switch.
+   
    Only one data link or action can have **One click** enabled at a time.
 
-1. Click **Save** to save changes and close the dialog box.
-1. Disable inline editing.
-   {{< /tab-content >}}
-   {{< tab-content name="Add actions" >}}
-   To add an action, by follow these steps:
+10. Click **Save** to save changes and close the dialog box.
 
-1. Enable inline editing.
-1. Click the element to which you want to add the data link.
-1. In either the inline editor or panel editor, expand the **Selected element** editor.
-1. Scroll down to the **Data links and actions** section and expand it.
-1. Click **+ Add action**.
-1. In the dialog box that opens, set the action options:
+11. Disable inline editing.
+    {{\< /tab-content \>}}
+    {{\< tab-content name="Add actions" \>}}
+    To add an action, by follow these steps:
 
-   | Option               | Description                                                                                                                                                                                     |
-   | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | Title                | A human-readable label for the action that's displayed in the UI.                                                                                                                               |
-   | Confirmation message | A descriptive prompt to confirm or cancel the action.                                                                                                                                           |
-   | One click            | If you want the action to be triggered by a single click on the element, toggle the switch.</p><p>Only one data link or action can have **One click** enabled at a time.                        |
-   | Method               | Select from **POST**, **PUT**, or **GET**.                                                                                                                                                      |
-   | URL                  | The request URL or variable to which you want to link.</p><p>To add a variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. |
-   | Query parameters     | **Key** and **Value** pairs. Click the **+** icon to add as many key/value pairs as you need.                                                                                                   |
-   | Headers              | Comprised of **Key** and **Value** pairs and a **Content-Type**.</p><p>Click the **+** icon to add as many key/value pairs as you need.                                                         |
-   | Content-Type         | Select from the following: **application/json**, **text/plain**, **application/XML**, and **application/x-www-form-urlencoded**.                                                                |
-   | Body                 | The body of the request.                                                                                                                                                                        |
+12. Enable inline editing.
 
-1. Click **Save** to save changes and close the dialog box.
-1. Disable inline editing.
-   {{< /tab-content >}}
-   {{< /tabs >}}
+13. Click the element to which you want to add the data link.
+
+14. In either the inline editor or panel editor, expand the **Selected element** editor.
+
+15. Scroll down to the **Data links and actions** section and expand it.
+
+16. Click **+ Add action**.
+
+17. In the dialog box that opens, set the action options:
+    
+    | Option               | Description                                                                                                                                                                                     |
+    | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Title                | A human-readable label for the action that's displayed in the UI.                                                                                                                               |
+    | Confirmation message | A descriptive prompt to confirm or cancel the action.                                                                                                                                           |
+    | One click            | If you want the action to be triggered by a single click on the element, toggle the switch.</p><p>Only one data link or action can have **One click** enabled at a time.                        |
+    | Method               | Select from **POST**, **PUT**, or **GET**.                                                                                                                                                      |
+    | URL                  | The request URL or variable to which you want to link.</p><p>To add a variable, click in the **URL** field and enter `$` or press Ctrl+Space or Cmd+Space to see a list of available variables. |
+    | Query parameters     | **Key** and **Value** pairs. Click the **+** icon to add as many key/value pairs as you need.                                                                                                   |
+    | Headers              | Comprised of **Key** and **Value** pairs and a **Content-Type**.</p><p>Click the **+** icon to add as many key/value pairs as you need.                                                         |
+    | Content-Type         | Select from the following: **application/json**, **text/plain**, **application/XML**, and **application/x-www-form-urlencoded**.                                                                |
+    | Body                 | The body of the request.                                                                                                                                                                        |
+
+18. Click **Save** to save changes and close the dialog box.
+
+19. Disable inline editing.
+    {{\< /tab-content \>}}
+    {{\< /tabs \>}}
 
 ### Selected connection options
 
 You can style the selected connection using the following options:
 
 - **Color** - Set the connection color.
-- **Size** - Control the size of the connection by entering a number in the **Value** field.
-- **Radius** - Add curve to the connection by entering a value to represent the degree.
-- **Arrow Direction** - Control the appearance of the arrow head. Choose from:
 
+- **Size** - Control the size of the connection by entering a number in the **Value** field.
+
+- **Radius** - Add curve to the connection by entering a value to represent the degree.
+
+- **Arrow Direction** - Control the appearance of the arrow head. Choose from:
+  
   - **Forward** - The arrow head points in the direction in which the connection was drawn.
   - **Reverse** - The arrow head points in the opposite direction of which the connection was drawn.
   - **Both** - Adds arrow heads to both ends of the connection.
@@ -484,16 +512,16 @@ You can style the selected connection using the following options:
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

@@ -4,4 +4,4 @@ Grafana ships with **built in** support for Azure Monitor. You just have to add 
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/datasources/azuremonitor/](https://grafana.com/docs/grafana/latest/datasources/azuremonitor/)
+<https://grafana.com/docs/grafana/latest/datasources/azuremonitor/>

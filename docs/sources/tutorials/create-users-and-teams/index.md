@@ -1,22 +1,25 @@
----
+-----
+
 Feedback Link: https://github.com/grafana/tutorials/issues/new
 authors:
-  - grafana_labs
-categories:
-  - administration
-description: Learn how to set up teams and users.
-id: create-users-and-teams
-labels:
+
+- grafana\_labs
+  categories:
+- administration
+  description: Learn how to set up teams and users.
+  id: create-users-and-teams
+  labels:
   products:
-    - enterprise
-    - oss
-status: Published
-summary: Learn how to set up teams and users.
-tags:
-  - beginner
-title: Create users and teams
-weight: 20
----
+  - enterprise
+  - oss
+    status: Published
+    summary: Learn how to set up teams and users.
+    tags:
+- beginner
+  title: Create users and teams
+  weight: 20
+
+-----
 
 ## Introduction
 
@@ -26,7 +29,7 @@ and make sure they're only able to access the resources they need.
 
 ### Scenario
 
-_Graphona_, a fictional telemarketing company, has asked you to configure Grafana
+*Graphona*, a fictional telemarketing company, has asked you to configure Grafana
 for their teams.
 
 In this scenario, you'll:
@@ -44,7 +47,7 @@ In this scenario, you'll:
 
 ## Add users
 
-In Grafana, all users are granted an _organization role_ that determines what
+In Grafana, all users are granted an *organization role* that determines what
 resources they can access.
 
 There are three types of organization roles in Grafana. The **Grafana Admin** is
@@ -75,12 +78,12 @@ Graphona has asked you to add a group of early adopters that work in the Marketi
 Repeat the following steps for each of the employees in the table above to create the new user accounts:
 
 1. Log in as a user that has the **Server Admin** role.
-1. On the sidebar, click the **Server Admin** (shield) icon.
-1. Choose **Users** from the menu drop-down, then click **New User**.
-1. Enter the **Name**, **Email**, **Username**, and **Password** from the table above.
-1. Click the **Create User** button to create the account.
+2. On the sidebar, click the **Server Admin** (shield) icon.
+3. Choose **Users** from the menu drop-down, then click **New User**.
+4. Enter the **Name**, **Email**, **Username**, and **Password** from the table above.
+5. Click the **Create User** button to create the account.
 
-When you create a user they are granted the Viewer role by default, which means that they won't be able to make any changes to any of the resources in Grafana. That's ok for now, you'll grant more user permissions by adding users to _teams_ in the next step.
+When you create a user they are granted the Viewer role by default, which means that they won't be able to make any changes to any of the resources in Grafana. That's ok for now, you'll grant more user permissions by adding users to *teams* in the next step.
 
 ## Assign users to teams
 
@@ -101,24 +104,24 @@ In this step, you'll create two teams and assign users to them.
 
 #### Create a team
 
-Create the _Marketing_ and _Engineering_ teams.
+Create the *Marketing* and *Engineering* teams.
 
 1. In the sidebar, hover your mouse over the **Configuration** (gear) icon and
    then click **Teams**.
-1. Click **New team**.
-1. In **Name**, enter the name of the team: either _Marketing_ or _Engineering_.
+2. Click **New team**.
+3. In **Name**, enter the name of the team: either *Marketing* or *Engineering*.
    You do not need to enter an email.
-1. Click **Create**.
-1. Click on the **Teams** link at the top of the page to return to teams page and create the second team.
+4. Click **Create**.
+5. Click on the **Teams** link at the top of the page to return to teams page and create the second team.
 
 #### Add a user to a team
 
 Repeat these steps for each user to assign them to their team. Refer to the table above for team assignments.
 
-1. Click the team name _Marketing_ or _Engineering_ to add members to that team.
-1. Click **Add member**.
-1. In the **Add team member** box, click the drop-down arrow to choose the user you want to add to the team .
-1. Click **Add to team**.
+1. Click the team name *Marketing* or *Engineering* to add members to that team.
+2. Click **Add member**.
+3. In the **Add team member** box, click the drop-down arrow to choose the user you want to add to the team .
+4. Click **Add to team**.
 
 When you're done, you'll have two teams with two users assigned to each.
 
@@ -130,7 +133,7 @@ It's a good practice to use folders to organize collections of related dashboard
 
 The Marketing team is going to use Grafana for analytics, while the Engineering team wants to monitor the application they're building.
 
-You'll create two folders, _Analytics_ and _Application_, where each team can add their own dashboards. The teams still want to be able to view each other's dashboards.
+You'll create two folders, *Analytics* and *Application*, where each team can add their own dashboards. The teams still want to be able to view each other's dashboards.
 
 | Folder      | Team        | Permissions |
 | ----------- | ----------- | ----------- |
@@ -144,10 +147,10 @@ Repeat the following steps for each folder. You'll move through all three steps 
 #### Add a folder for each team
 
 1. In the sidebar, hover your cursor over the **Dashboards** (four squares) icon and then click **Browse**.
-1. To create a folder, click **New Folder**.
-1. In **Name**, enter the folder name.
-1. Click **Create**.
-1. Stay in the folder view and move on to the next sections to edit permissions for this folder.
+2. To create a folder, click **New Folder**.
+3. In **Name**, enter the folder name.
+4. Click **Create**.
+5. Stay in the folder view and move on to the next sections to edit permissions for this folder.
 
 #### Remove the viewer role from folder permissions
 
@@ -156,18 +159,18 @@ By default, when you create a folder, all users with the Viewer role are granted
 In this example, Graphona wants to explicitly grant teams access to folders. To support this, you need to remove the Viewer role from the list of permissions:
 
 1. Go to the **Permissions** tab.
-1. Remove the Viewer role from the list, by clicking the red button on the right.
-1. Stay in the permissions tab and move on to the next section to grant folder permissions for each team.
+2. Remove the Viewer role from the list, by clicking the red button on the right.
+3. Stay in the permissions tab and move on to the next section to grant folder permissions for each team.
 
 #### Grant folder permissions to a team:
 
 1. Click **Add Permission**.
-1. In the **Add Permission For** dialog, make sure "Team" is selected in the first box.
-1. In the second box, select the team to grant access to.
-1. In the third box, select the access you want to grant.
-1. Click **Save**.
-1. Repeat for the other team.
-1. Click the **Dashboards** link at the top of the page to return to the dashboard list.
+2. In the **Add Permission For** dialog, make sure "Team" is selected in the first box.
+3. In the second box, select the team to grant access to.
+4. In the third box, select the access you want to grant.
+5. Click **Save**.
+6. Repeat for the other team.
+7. Click the **Dashboards** link at the top of the page to return to the dashboard list.
 
 When you're finished, you'll have two empty folders, the contents of which can only be viewed by members of the Marketing or Engineering teams. Only Marketing team members can edit the contents of the Analytics folder, only Engineering team members can edit the contents of the Application folder.
 
@@ -188,31 +191,31 @@ Graphona has hired a consultant to assist the Marketing team. The consultant sho
 #### Add a new user
 
 1. In the sidebar, click the **Server Admin** (shield) icon.
-1. In the Users tab, click **New user**.
-1. In **Name**, enter the name of the user.
-1. In **E-mail**, enter the email of the user.
-1. In **Username**, enter the username that the user will use to log in.
-1. In **Password**, enter a password. The user can change their password once they log in.
-1. Click **Create user** to create the user account.
+2. In the Users tab, click **New user**.
+3. In **Name**, enter the name of the user.
+4. In **E-mail**, enter the email of the user.
+5. In **Username**, enter the username that the user will use to log in.
+6. In **Password**, enter a password. The user can change their password once they log in.
+7. Click **Create user** to create the user account.
 
 #### Create a dashboard
 
 1. In the sidebar, click the **Create** (plus) icon to create a new dashboard.
-1. In the top right corner, click the cog icon to go to **Dashboard settings**.
-1. In **Name**, enter **SEO**.
-1. Click **Save Dashboard**.
-1. In the **Save dashboard as...** pop-up, choose the **Analytics** folder from the drop-down and click **Save**.
+2. In the top right corner, click the cog icon to go to **Dashboard settings**.
+3. In **Name**, enter **SEO**.
+4. Click **Save Dashboard**.
+5. In the **Save dashboard as...** pop-up, choose the **Analytics** folder from the drop-down and click **Save**.
 
 #### Grant a user permission to view dashboard
 
 1. In the top right corner of your dashboard, click the cog icon to go to **Dashboard settings**.
-1. Go to the **Permissions** tab, and click **Add Permission**.
-1. In the **Add Permission For** dialog, select **User** in the first box.
-1. In the second box, select the user to grant access to: Luc Masson.
-1. In the third box, select **View**.
-1. Click **Save**.
-1. Click **Save dashboard**.
-1. Add a note about giving Luc Masson Viewer permission for the dashboard and then click **Save**.
+2. Go to the **Permissions** tab, and click **Add Permission**.
+3. In the **Add Permission For** dialog, select **User** in the first box.
+4. In the second box, select the user to grant access to: Luc Masson.
+5. In the third box, select **View**.
+6. Click **Save**.
+7. Click **Save dashboard**.
+8. Add a note about giving Luc Masson Viewer permission for the dashboard and then click **Save**.
 
 You've created a new user and given them unique permissions to view a single dashboard within a folder.
 
@@ -223,13 +226,13 @@ You can repeat these steps to log in as the other users you've created see the d
 For this example, you can log in as the user `luc.masson` to see that they can only access the SEO dashboard.
 
 1. Click the profile (avatar) button in the bottom left corner, choose **Sign out**.
-1. Enter `luc.masson` as the username.
-1. Enter the password you created for Luc.
-1. Click **Log in**.
-1. In the sidebar, hover your cursor over the **Dashboards** (four squares) icon and then click **Browse**.
-1. You'll notice that you won't see the **Analytics** folder in the folder view because we did not give Luc folder permission.
-1. Click on the list icon (3 lines) to see the dashboard list.
-1. Click on the **SEO dashboard**, there shouldn't be any editing permissions since we assigned Luc the viewer role.
+2. Enter `luc.masson` as the username.
+3. Enter the password you created for Luc.
+4. Click **Log in**.
+5. In the sidebar, hover your cursor over the **Dashboards** (four squares) icon and then click **Browse**.
+6. You'll notice that you won't see the **Analytics** folder in the folder view because we did not give Luc folder permission.
+7. Click on the list icon (3 lines) to see the dashboard list.
+8. Click on the **SEO dashboard**, there shouldn't be any editing permissions since we assigned Luc the viewer role.
 
 ## Summary
 

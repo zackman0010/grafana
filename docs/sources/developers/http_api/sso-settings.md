@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../http_api/sso-settings/
-  - ../../http_api/ssosettings/
-canonical: /docs/grafana/latest/developers/http_api/sso-settings/
-description: Grafana SSO Settings API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - sso
-  - sso-settings
-labels:
+
+- ../../http\_api/sso-settings/
+- ../../http\_api/ssosettings/
+  canonical: /docs/grafana/latest/developers/http\_api/sso-settings/
+  description: Grafana SSO Settings API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- sso
+- sso-settings
+  labels:
   products:
-    - enterprise
-    - oss
-title: SSO Settings API
----
+  - enterprise
+  - oss
+    title: SSO Settings API
+
+-----
 
 # SSO Settings API
 
@@ -53,7 +56,7 @@ See note in the [introduction](#sso-settings) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/v1/sso-settings HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -62,7 +65,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 [
@@ -120,7 +123,7 @@ See note in the [introduction](#sso-settings) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/v1/sso-settings/github HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -129,7 +132,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 ETag: db87f729761898ee
@@ -183,7 +186,7 @@ See note in the [introduction](#sso-settings) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/v1/sso-settings/github HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -202,7 +205,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```
@@ -230,7 +233,7 @@ See note in the [introduction](#sso-settings) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/v1/sso-settings/azuread HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -239,7 +242,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```

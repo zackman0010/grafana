@@ -16,7 +16,7 @@ Included services
 
 Build a Grafana docker container from current branch and commit and tag it as grafana/grafana:dev.
 
-```bash
+``` bash
 $ cd <grafana repo>
 $ make build-docker-full
 ```
@@ -25,7 +25,7 @@ $ make build-docker-full
 
 #### Alternative 1 - Use dnsmasq
 
-```bash
+``` bash
 $ sudo apt-get install dnsmasq
 $ echo 'address=/loc/127.0.0.1' | sudo tee /etc/dnsmasq.d/dnsmasq-loc.conf > /dev/null
 $ sudo /etc/init.d/dnsmasq restart
@@ -40,7 +40,7 @@ PING whatever.loc (127.0.0.1) 56(84) bytes of data.
 
 Update your `/etc/hosts` to be able to access Grafana and/or Prometheus UI using a hostname.
 
-```bash
+``` bash
 $ cat /etc/hosts
 127.0.0.1       grafana.loc
 127.0.0.1       prometheus.loc
@@ -48,17 +48,18 @@ $ cat /etc/hosts
 
 ## Start services
 
-```bash
+``` bash
 $ docker-compose up -d
 ```
 
 Browse
+
 - http://grafana.loc/
 - http://prometheus.loc/
 
 Check for any errors
 
-```bash
+``` bash
 $ docker-compose logs | grep error
 ```
 
@@ -66,7 +67,7 @@ $ docker-compose logs | grep error
 
 Scale number of Grafana instances to `<instances>`
 
-```bash
+``` bash
 $ docker-compose up --scale grafana=<instances> -d
 # for example 3 instances
 $ docker-compose up --scale grafana=3 -d
@@ -78,7 +79,7 @@ $ docker-compose up --scale grafana=3 -d
 
 Creates default notification channels, if not already exists
 
-```bash
+``` bash
 $ ./alerts.sh setup
 ```
 
@@ -86,19 +87,19 @@ $ ./alerts.sh setup
 
 Disable
 
-```bash
+``` bash
 $ ./alerts.sh slack -d
 ```
 
 Enable and configure url
 
-```bash
+``` bash
 $ ./alerts.sh slack -u https://hooks.slack.com/services/...
 ```
 
 Enable, configure url and enable reminders
 
-```bash
+``` bash
 $ ./alerts.sh slack -u https://hooks.slack.com/services/... -r -e 10m
 ```
 
@@ -106,19 +107,19 @@ $ ./alerts.sh slack -u https://hooks.slack.com/services/... -r -e 10m
 
 Provision 1 dashboard/alert rule (default)
 
-```bash
+``` bash
 $ ./alerts.sh provision
 ```
 
 Provision 10 dashboards/alert rules
 
-```bash
+``` bash
 $ ./alerts.sh provision -a 10
 ```
 
 Provision 10 dashboards/alert rules and change condition to `gt > 100`
 
-```bash
+``` bash
 $ ./alerts.sh provision -a 10 -c 100
 ```
 
@@ -126,12 +127,12 @@ $ ./alerts.sh provision -a 10 -c 100
 
 Pause
 
-```bash
+``` bash
 $ ./alerts.sh pause
 ```
 
 Unpause
 
-```bash
+``` bash
 $ ./alerts.sh unpause
 ```

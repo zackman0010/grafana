@@ -8,13 +8,13 @@ Users have to be created manually. The docker-compose up command takes a few min
 
 To create a user with username: `ldap-viewer` and password: `grafana123`
 
-```bash
+``` bash
 kinit admin
 ```
 
 Log in with password `Secret123`
 
-```bash
+``` bash
 ipa user-add ldap-viewer --first ldap --last viewer
 ipa passwd ldap-viewer
 ldappasswd -D uid=ldap-viewer,cn=users,cn=accounts,dc=example,dc=org -w test -a test -s grafana123
@@ -22,9 +22,9 @@ ldappasswd -D uid=ldap-viewer,cn=users,cn=accounts,dc=example,dc=org -w test -a 
 
 ## Enabling FreeIPA LDAP in Grafana
 
-Copy the ldap_freeipa.toml file in this folder into your `conf` folder (it is gitignored already). To enable it in the .ini file to get Grafana to use this block:
+Copy the ldap\_freeipa.toml file in this folder into your `conf` folder (it is gitignored already). To enable it in the .ini file to get Grafana to use this block:
 
-```ini
+``` ini
 [auth.ldap]
 enabled = true
 config_file = conf/ldap_freeipa.toml

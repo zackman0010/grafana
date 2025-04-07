@@ -1,13 +1,16 @@
----
+-----
+
 aliases:
-  - plugins/developing/
-labels:
+
+- plugins/developing/
+  labels:
   products:
-    - enterprise
-    - oss
-title: Developers
-weight: 190
----
+  - enterprise
+  - oss
+    title: Developers
+    weight: 190
+
+-----
 
 # Developers
 
@@ -20,7 +23,7 @@ Go to the [Grafana developer portal](/developers) to access the following docume
 
 This section of our documentation contains additional resources:
 
-{{< section >}}
+{{\< section \>}}
 
 You might also find the following resources to be helpful:
 

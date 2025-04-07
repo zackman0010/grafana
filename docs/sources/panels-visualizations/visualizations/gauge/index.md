@@ -1,33 +1,36 @@
----
+-----
+
 aliases:
-  - ../../features/panels/gauge/
-  - ../../panels/visualizations/gauge-panel/
-  - ../../visualizations/gauge-panel/
-description: Configure options for Grafana's gauge visualization
-keywords:
-  - grafana
-  - gauge
-  - gauge panel
-labels:
+
+- ../../features/panels/gauge/
+- ../../panels/visualizations/gauge-panel/
+- ../../visualizations/gauge-panel/
+  description: Configure options for Grafana's gauge visualization
+  keywords:
+- grafana
+- gauge
+- gauge panel
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Gauge
-weight: 100
-refs:
-  calculation-types:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/calculation-types/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Gauge
+    weight: 100
+    refs:
+    calculation-types:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/calculation-types/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/panels-visualizations/query-transform-data/calculation-types/
+
+-----
 
 # Gauge
 
 Gauges are single-value visualizations that allow you to quickly visualize where a value falls within a defined or calculated min and max range. With repeat options, you can display multiple gauges, each corresponding to a different series, column, or row.
 
-{{< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-visualization-v11.4.png" alt="A gauge visualization">}}
+{{\< figure src="/media/docs/grafana/panels-visualizations/screenshot-gauge-visualization-v11.4.png" alt="A gauge visualization"\>}}
 
 You can use gauges if you need to track:
 
@@ -43,9 +46,9 @@ You can use gauges if you need to track:
 
 The following video provides beginner steps for creating gauge panels. You'll learn the data requirements and caveats, special customizations, and much more:
 
-{{< youtube id="QwXj3y_YpnE" >}}
+{{\< youtube id="QwXj3y\_YpnE" \>}}
 
-{{< docs/play title="Grafana Gauge Visualization" url="https://play.grafana.org/d/KIhkVD6Gk/" >}}
+{{\< docs/play title="Grafana Gauge Visualization" url="https://play.grafana.org/d/KIhkVD6Gk/" \>}}
 
 ## Supported data formats
 
@@ -115,11 +118,11 @@ Even when minimum and maximum values aren’t displayed, the visualization still
 
 ## Configuration options
 
-{{< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/config-options-intro.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value options
 
@@ -169,20 +172,20 @@ Adjust the sizes of the gauge text.
 
 ### Standard options
 
-{{< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/standard-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Data links and actions
 
-{{< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/datalink-options-1.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Value mappings
 
-{{< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/value-mappings-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Thresholds
 
-{{< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/thresholds-options-2.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ### Field overrides
 
-{{< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/overrides-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}

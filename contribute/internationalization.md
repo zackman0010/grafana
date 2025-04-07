@@ -19,7 +19,9 @@ Grafana uses the [i18next](https://www.i18next.com/) framework for managing tran
 
 1. For JSX children, use the `<Trans />` component from `app/core/internationalization` with the `i18nKey`, ensuring it conforms to the following guidelines, with the default English translation. For example:
 
-```jsx
+<!-- end list -->
+
+``` jsx
 import { Trans } from 'app/core/internationalization';
 
 const SearchTitle = ({ term }) => <Trans i18nKey="search-page.results-title">Results for {{ term }}</Trans>;
@@ -31,7 +33,7 @@ There may be cases where you need to interpolate variables inside other componen
 
 If the nested component is displaying the variable only (e.g. to add emphasis or color), the best solution is to create a new wrapping component:
 
-```jsx
+``` jsx
 import { Trans } from 'app/core/internationalization';
 import { Text } from '@grafana/ui';
 
@@ -46,7 +48,7 @@ const SearchTitle = ({ term }) => (
 
 However there are also cases where the nested component might be displaying additional text which also needs to be translated. In this case, you can use the `values` prop to explicitly pass variables to the translation, and reference them as templated strings in the markup. For example:
 
-```jsx
+``` jsx
 import { Trans } from 'app/core/internationalization';
 import { Text } from '@grafana/ui';
 
@@ -61,7 +63,7 @@ When translating in `grafana-ui`, use a relative path to import `<Trans />` and 
 
 Note that our tooling must be able to statically analyze the code to extract the phrase, so the `i18nKey` can't be dynamic. For example: the following will not work:
 
-```jsx
+``` jsx
 const ErrorMessage = ({ id, message }) => <Trans i18nKey={`errors.${id}`}>There was an error: {{ message }}</Trans>;
 ```
 
@@ -74,7 +76,7 @@ const ErrorMessage = ({ id, message }) => <Trans i18nKey={`errors.${id}`}>There 
 
 Sometimes you may need to translate a string cannot be represented in JSX, such as `placeholder` props. Use the `t` macro for this.
 
-```jsx
+``` jsx
 import { t } from "app/core/internationalization"
 
 const placeholder = t('form.username-placeholder','Username');
@@ -82,9 +84,9 @@ const placeholder = t('form.username-placeholder','Username');
 return <input type="value" placeholder={placeholder}>
 ```
 
-Interpolating phrases is a bit more verbose. Make sure the placeholders in the string match the values passed in the object - there's no type safety here!
+Interpolating phrases is a bit more verbose. Make sure the placeholders in the string match the values passed in the object - there's no type safety here\!
 
-```jsx
+``` jsx
 const placeholder = t('page.greeting', 'Hello {{ username }}', { username });
 ```
 
@@ -96,7 +98,7 @@ While the `t` function can technically be used outside of React functions (for e
    1. Go to the Grafana OSS Crowdin project.
    2. In the top right, select the "dot dot dot" menu.
    3. Under **Target languages**, add the language.
-   4. If Crowdin's locale code is different from our IETF language tag (such as Chinese Simplified), add a custom mapping in **Project Settings** -> **Language mapping**.
+   4. If Crowdin's locale code is different from our IETF language tag (such as Chinese Simplified), add a custom mapping in **Project Settings** -\> **Language mapping**.
 2. Sync the new (empty) language to the repo.
    1. In Grafana's Github Actions, go to [Crowdin Download Action](https://github.com/grafana/grafana/actions/workflows/i18n-crowdin-download.yml).
    2. From main, select **Run workflow**.
@@ -121,9 +123,9 @@ Grafana loads the message catalog JSON before the initial render.
 
 We set explicit IDs for phrases to make it easier to identify phrases out of context, and to track where they're used.
 
-IDs follow a naming scheme that includes _where_ the phrase is used. The exception is the rare case of a single reoccurring word like "Cancel", but the default is to use a feature-specific phrase.
+IDs follow a naming scheme that includes *where* the phrase is used. The exception is the rare case of a single reoccurring word like "Cancel", but the default is to use a feature-specific phrase.
 
-Message IDs are made of _up to_ three segments in the format `feature.area.phrase`. For example:
+Message IDs are made of *up to* three segments in the format `feature.area.phrase`. For example:
 
 - `dashboard.header.refresh-label`
 - `explore.toolbar.share-tooltip`
@@ -145,7 +147,7 @@ Refer to the [i18next](https://www.i18next.com/) and [react-i18next](https://rea
 
 For fixed phrases:
 
-```jsx
+``` jsx
 import { Trans } from 'app/core/internationalization';
 
 <Trans i18nKey="page.greeting">Hello user!</Trans>;
@@ -153,7 +155,7 @@ import { Trans } from 'app/core/internationalization';
 
 To interpolate a variable, include it as an object child. It's a weird syntax, but `Trans` will do its magic to make it work:
 
-```jsx
+``` jsx
 import { Trans } from 'app/core/internationalization';
 
 <Trans i18nKey="page.greeting">Hello {{ name: user.name }}!</Trans>;
@@ -164,7 +166,7 @@ const userName = user.name;
 
 Variables must be strings (or, must support calling `.toString()`, which we almost never want). For example:
 
-```jsx
+``` jsx
 import { Trans } from 'app/core/internationalization';
 
 // This will not work
@@ -182,7 +184,7 @@ const userName = user.name;
 
 Both HTML tags and React components can be included in a phase. The `Trans` function handles interpolating for its children.
 
-```js
+``` js
 import { Trans } from "app/core/internationalization"
 
 <Trans i18nKey="page.explainer">
@@ -201,7 +203,7 @@ import { Trans } from "app/core/internationalization"
 
 Plurals require special handling to make sure they can be translated according to the rules of each locale (which may be more complex than you think). Use either the `<Trans />` component or the `t` function, with the `count` prop to provide a singular form. For example:
 
-```js
+``` js
 import { Trans } from 'app/core/internationalization';
 
 <Trans i18nKey="inbox.heading" count={messages.length}>
@@ -209,7 +211,7 @@ import { Trans } from 'app/core/internationalization';
 </Trans>;
 ```
 
-```js
+``` js
 import { t } from 'app/core/internationalization';
 
 const translatedString = t('inbox.heading', 'You got {{count}} messages', { count: messages.length });
@@ -217,7 +219,7 @@ const translatedString = t('inbox.heading', 'You got {{count}} messages', { coun
 
 Once extracted with `make i18n-extract` you need to manually edit the [English `grafana.json` message catalog](../public/locales/en-US/grafana.json) to correct the plural forms. Refer to the [react-i18next docs](https://react.i18next.com/latest/trans-component#plural) for more details.
 
-```json
+``` json
 {
   "inbox": {
     "heading_one": "You got {{count}} message",
@@ -233,14 +235,14 @@ Once extracted with `make i18n-extract` you need to manually edit the [English `
 To provide feedback on translations, sign into Crowdin and follow these steps:
 
 1. Open the Grafana OSS project in Crowdin.
-1. On the left menu, click **Dashboard**. A list of available languages appears under the **Translations** section. Click the one you want to comment on.
-1. There is a table with the file structure in it:
+2. On the left menu, click **Dashboard**. A list of available languages appears under the **Translations** section. Click the one you want to comment on.
+3. There is a table with the file structure in it:
    <br>
    `grafana/main > public > locales > 'language denomination' > grafana.json`
    <br>
    Click the `grafana.json` file.
-1. In the left section, click the **Search in file** input. Search for the string that you want to comment on. You can search in English, as it's the default language, or in the language the string is translated into.
-1. Once you have found the string, on the right hand side there is a **Comments** section where you can send your feedback about the translation. Tag `@Translated` to be sure the team of linguists gets notified.
+4. In the left section, click the **Search in file** input. Search for the string that you want to comment on. You can search in English, as it's the default language, or in the language the string is translated into.
+5. Once you have found the string, on the right hand side there is a **Comments** section where you can send your feedback about the translation. Tag `@Translated` to be sure the team of linguists gets notified.
 
 ## Documentation
 

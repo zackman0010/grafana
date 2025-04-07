@@ -1,15 +1,18 @@
----
+-----
+
 aliases:
-  - ../../../auth/grafana/
-description: Learn how to configure basic authentication in Grafana
-labels:
+
+- ../../../auth/grafana/
+  description: Learn how to configure basic authentication in Grafana
+  labels:
   products:
-    - enterprise
-    - oss
-menuTitle: Basic auth
-title: Configure basic authentication
-weight: 200
----
+  - enterprise
+  - oss
+    menuTitle: Basic auth
+    title: Configure basic authentication
+    weight: 200
+
+-----
 
 # Configure basic authentication
 
@@ -19,7 +22,7 @@ Grafana provides a basic authentication system with password authentication enab
 
 To disable basic authentication, use the following configuration:
 
-```bash
+``` bash
 [auth.basic]
 enabled = false
 ```
@@ -36,7 +39,9 @@ With the `password_policy` option enabled, new and updated passwords must meet t
 - At least one number
 - At least one special character
 
-```bash
+<!-- end list -->
+
+``` bash
 [auth.basic]
 password_policy = true
 ```
@@ -49,7 +54,7 @@ Existing passwords that do not comply with the new password policy will not be a
 
 To hide the Grafana login form, use the following configuration setting:
 
-```bash
+``` bash
 [auth]
 disable_login_form = true
 ```

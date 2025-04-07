@@ -1,32 +1,35 @@
----
+-----
+
 aliases:
-  - ../../http_api/admin/
-canonical: /docs/grafana/latest/developers/http_api/admin/
-description: Grafana Admin HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - admin
-labels:
+
+- ../../http\_api/admin/
+  canonical: /docs/grafana/latest/developers/http\_api/admin/
+  description: Grafana Admin HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- admin
+  labels:
   products:
-    - enterprise
-    - oss
-title: 'Admin HTTP API '
----
+  - enterprise
+  - oss
+    title: 'Admin HTTP API '
+
+-----
 
 # Admin API
 
-{{< admonition type="caution" >}}
+{{\< admonition type="caution" \>}}
 You can't authenticate to the Admin HTTP API with service account tokens.
 Service accounts are limited to an organization and an organization role.
-They can't be granted [Grafana server administrator permissions](/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/#grafana-server-administrators).
+They can't be granted [Grafana server administrator permissions](/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/#grafana-server-administrators).
 
 To use these API endpoints you have to use Basic authentication and the Grafana user must have the Grafana server administrator permission.
 
 The `admin` user that Grafana is provisioned with by default has permissions to use these API endpoints.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 > If you are running Grafana Enterprise, for some endpoints you'll need to have specific permissions. Refer to [Role-based access control permissions](../../../administration/roles-and-permissions/access-control/custom-role-actions-scopes/) for more information.
 
@@ -34,7 +37,7 @@ The `admin` user that Grafana is provisioned with by default has permissions to 
 
 `GET /api/admin/settings`
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -42,11 +45,11 @@ See note in the [introduction](#admin-api) for an explanation.
 
 | Action        | Scope                                                                               |
 | ------------- | ----------------------------------------------------------------------------------- |
-| settings:read | settings:\*_<br>settings:auth.saml:_<br>settings:auth.saml:enabled (property level) |
+| settings:read | settings:\**<br>settings:auth.saml:*<br>settings:auth.saml:enabled (property level) |
 
 **Example Request**:
 
-```http
+``` http
 GET /api/admin/settings
 Accept: application/json
 Content-Type: application/json
@@ -54,7 +57,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -217,11 +220,11 @@ See note in the [introduction](#admin-api) for an explanation.
 
 | Action         | Scope                                                                               |
 | -------------- | ----------------------------------------------------------------------------------- |
-| settings:write | settings:\*_<br>settings:auth.saml:_<br>settings:auth.saml:enabled (property level) |
+| settings:write | settings:\**<br>settings:auth.saml:*<br>settings:auth.saml:enabled (property level) |
 
 **Example request:**
 
-```http
+``` http
 PUT /api/admin/settings
 Accept: application/json
 Content-Type: application/json
@@ -241,7 +244,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 32
@@ -263,7 +266,7 @@ Status codes:
 
 `GET /api/admin/stats`
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -275,7 +278,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/admin/stats
 Accept: application/json
 Content-Type: application/json
@@ -283,7 +286,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -307,11 +310,11 @@ Content-Type: application/json
 
 Preview usage report to be sent to vendor.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/admin/usage-report-preview
 Accept: application/json
 Content-Type: application/json
@@ -319,7 +322,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -345,7 +348,7 @@ Content-Type: application/json
 
 `POST /api/admin/users`
 
-Create new user. Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Create new user. Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -357,7 +360,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/users HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -371,11 +374,11 @@ Content-Type: application/json
 }
 ```
 
-Note that `OrgId` is an optional parameter that can be used to assign a new user to a different organization when [auto_assign_org](../../../setup-grafana/configure-grafana/#auto-assign-org) is set to `true`.
+Note that `OrgId` is an optional parameter that can be used to assign a new user to a different organization when [auto\_assign\_org](../../../setup-grafana/configure-grafana/#auto-assign-org) is set to `true`.
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -386,7 +389,7 @@ Content-Type: application/json
 
 `PUT /api/admin/users/:id/password`
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 Change password for a specific user.
 
 **Required permissions**
@@ -399,7 +402,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/admin/users/2/password HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -409,7 +412,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -420,7 +423,7 @@ Content-Type: application/json
 
 `PUT /api/admin/users/:id/permissions`
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -432,7 +435,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PUT /api/admin/users/2/permissions HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -442,7 +445,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -453,7 +456,7 @@ Content-Type: application/json
 
 `DELETE /api/admin/users/:id`
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -465,7 +468,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/admin/users/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -473,7 +476,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -486,7 +489,7 @@ Content-Type: application/json
 
 Return a list of all auth tokens (devices) that the user currently have logged in from.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -498,7 +501,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/admin/users/1/auth-tokens HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -506,7 +509,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -545,7 +548,7 @@ Content-Type: application/json
 Revokes the given auth token (device) for the user. User of issued auth token (device) will no longer be logged in
 and will be required to authenticate again upon next activity.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -557,7 +560,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/users/1/revoke-auth-token HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -569,7 +572,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -585,7 +588,7 @@ Content-Type: application/json
 Logout user revokes all auth tokens (devices) for the user. User of issued auth tokens (devices) will no longer be logged in
 and will be required to authenticate again upon next activity.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -597,7 +600,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/users/1/logout HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -605,7 +608,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -630,7 +633,7 @@ Reloads the provisioning config files for specified type and provision entities 
 until the new provisioned entities are already stored in the database. In case of dashboards, it will stop
 polling for changes in dashboard files and then restart it with new configurations after returning.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Required permissions**
 
@@ -646,7 +649,7 @@ See note in the [introduction](#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/provisioning/dashboards/reload HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -654,7 +657,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -669,11 +672,11 @@ Content-Type: application/json
 
 Reloads the LDAP configuration.
 
-Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/<GRAFANA_VERSION>/http_api/admin/#admin-api) for an explanation.
+Only works with Basic Authentication (username and password). See [introduction](/docs/grafana/\<GRAFANA_VERSION\>/http_api/admin/#admin-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/ldap/reload HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -681,7 +684,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -698,7 +701,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/encryption/rotate-data-keys HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -706,7 +709,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```
@@ -719,7 +722,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/encryption/reencrypt-data-keys HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -727,7 +730,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```
@@ -740,7 +743,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/encryption/reencrypt-secrets HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -748,7 +751,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```
@@ -761,7 +764,7 @@ Content-Type: application/json
 
 **Example Request**:
 
-```http
+``` http
 POST /api/admin/encryption/rollback-secrets HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -769,7 +772,7 @@ Content-Type: application/json
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 204
 Content-Type: application/json
 ```

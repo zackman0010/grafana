@@ -1,7 +1,3 @@
----
-headless: true
-labels:
-  products:
-    - enterprise
-    - oss
----
+-----
+
+## headless: true labels: products: - enterprise - oss

@@ -8,25 +8,21 @@ The default license for this project is [AGPL-3.0-only](LICENSE).
 
 The following directories and their subdirectories are licensed under Apache-2.0:
 
-```
-packages/grafana-data/
-packages/grafana-e2e-selectors/
-packages/grafana-runtime/
-packages/grafana-ui/
-packaging/
-kinds/
-pkg/kinds/
-pkg/kindsys/
-pkg/registry/schemas/
-grafana-mixin/
-public/app/plugins/datasource/tempo
-public/app/features/explore/TraceView/components
-public/img/icons/solid/
-public/img/icons/unicons/
-```
+    packages/grafana-data/
+    packages/grafana-e2e-selectors/
+    packages/grafana-runtime/
+    packages/grafana-ui/
+    packaging/
+    kinds/
+    pkg/kinds/
+    pkg/kindsys/
+    pkg/registry/schemas/
+    grafana-mixin/
+    public/app/plugins/datasource/tempo
+    public/app/features/explore/TraceView/components
+    public/img/icons/solid/
+    public/img/icons/unicons/
 
 The following directories and their subdirectories are licensed under their original upstream licenses:
 
-```
-public/vendor/
-```
+    public/vendor/

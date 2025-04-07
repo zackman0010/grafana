@@ -4,4 +4,4 @@ The Heatmap panel allows you to view histograms over time and is **included** wi
 
 Read more about it here:
 
-[http://docs.grafana.org/features/panels/heatmap/](http://docs.grafana.org/features/panels/heatmap/)
+<http://docs.grafana.org/features/panels/heatmap/>

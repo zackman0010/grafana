@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../manage-notifications/images-in-notifications/ # /docs/grafana/<GRAFANA_VERSION>/alerting/manage-notifications/images-in-notifications/
-canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/template-notifications/images-in-notifications/
-description: Use images in notifications to help users better understand why alerts are firing or have been resolved
-keywords:
-  - grafana
-  - alerting
-  - images
-  - notifications
-labels:
+
+- ../../manage-notifications/images-in-notifications/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/manage-notifications/images-in-notifications/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/template-notifications/images-in-notifications/
+  description: Use images in notifications to help users better understand why alerts are firing or have been resolved
+  keywords:
+- grafana
+- alerting
+- images
+- notifications
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Use images in notifications
-menuTitle: Use images
-weight: 105
----
+  - cloud
+  - enterprise
+  - oss
+    title: Use images in notifications
+    menuTitle: Use images
+    weight: 105
+
+-----
 
 # Use images in notifications
 
@@ -42,7 +45,7 @@ Refer to the table at the end of this page for a list of contact points and thei
 
 1. To use images in notifications, Grafana must be set up to use image rendering. You can either install the image rendering plugin or run it as a remote rendering service.
 
-2. When a screenshot is taken, it is saved to the [data][paths] folder, even if Grafana is configured to upload screenshots to a cloud storage service. Grafana must have write-access to this folder otherwise screenshots cannot be saved to disk and an error is logged for each failed screenshot attempt.
+2. When a screenshot is taken, it is saved to the \[data\]\[paths\] folder, even if Grafana is configured to upload screenshots to a cloud storage service. Grafana must have write-access to this folder otherwise screenshots cannot be saved to disk and an error is logged for each failed screenshot attempt.
 
 3. You should use a cloud storage service unless sending alerts to Discord, email, Pushover, Slack or Telegram. These integrations support either embedding screenshots in the email or attaching screenshots to the notification, while other integrations must link screenshots uploaded to a cloud storage bucket. If a cloud storage service has been configured then integrations that support both link screenshots from the cloud storage bucket instead of embedding or attaching screenshots to the notification.
 

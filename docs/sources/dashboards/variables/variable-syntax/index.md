@@ -1,24 +1,27 @@
----
+-----
+
 aliases:
-  - ../../reference/templating/
-  - ../../variables/advanced-variable-format-options/
-  - ../../variables/syntax/
-keywords:
-  - grafana
-  - templating
-  - documentation
-  - guide
-  - template
-  - variable
-labels:
+
+- ../../reference/templating/
+- ../../variables/advanced-variable-format-options/
+- ../../variables/syntax/
+  keywords:
+- grafana
+- templating
+- documentation
+- guide
+- template
+- variable
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Variable syntax
-description: Learn about different types of variable syntax
-weight: 300
----
+  - cloud
+  - enterprise
+  - oss
+    title: Variable syntax
+    description: Learn about different types of variable syntax
+    weight: 300
+
+-----
 
 # Variable syntax
 
@@ -31,8 +34,8 @@ Panel titles and metric queries can refer to variables using two different synta
 - `${var_name:<format>}` This format gives you more control over how Grafana interpolates values. Refer to [Advanced variable format options](#advanced-variable-format-options) for more detail on all the formatting types.
 - `[[varname]]` Do not use. Deprecated old syntax, will be removed in a future release.
 
-Before queries are sent to your data source the query is _interpolated_, meaning the variable is replaced with its current value. During
-interpolation, the variable value might be _escaped_ in order to conform to the syntax of the query language and where it is used.
+Before queries are sent to your data source the query is *interpolated*, meaning the variable is replaced with its current value. During
+interpolation, the variable value might be *escaped* in order to conform to the syntax of the query language and where it is used.
 For example, a variable used in a regex expression in an InfluxDB or Prometheus query will be regex escaped. Read the data source specific
 documentation topic for details on value escaping during interpolation.
 
@@ -58,7 +61,7 @@ An alternative syntax (that might be deprecated in the future) is `[[var_name:op
 
 Formats variables with multiple values as a comma-separated string.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:csv}'
 Interpolation result: 'test1,test2'
@@ -68,7 +71,7 @@ Interpolation result: 'test1,test2'
 
 Formats variables with multiple values in custom format for OpenTSDB.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:distributed}'
 Interpolation result: 'test1,servers=test2'
@@ -78,7 +81,7 @@ Interpolation result: 'test1,servers=test2'
 
 Formats single- and multi-valued variables into a comma-separated string, escapes `"` in each value by `\"` and quotes each value with `"`.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:doublequote}'
 Interpolation result: '"test1","test2"'
@@ -88,7 +91,7 @@ Interpolation result: '"test1","test2"'
 
 Formats variables with multiple values into a glob (for Graphite queries).
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:glob}'
 Interpolation result: '{test1,test2}'
@@ -98,7 +101,7 @@ Interpolation result: '{test1,test2}'
 
 Formats variables with multiple values as a comma-separated string.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:json}'
 Interpolation result: '["test1", "test2"]'
@@ -108,7 +111,7 @@ Interpolation result: '["test1", "test2"]'
 
 Formats variables with multiple values in Lucene format for Elasticsearch.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:lucene}'
 Interpolation result: '("test1" OR "test2")'
@@ -118,7 +121,7 @@ Interpolation result: '("test1" OR "test2")'
 
 Formats single and multi valued variables for use in URL parameters.
 
-```bash
+``` bash
 servers = ['foo()bar BAZ', 'test2']
 String to interpolate: '${servers:percentencode}'
 Interpolation result: 'foo%28%29bar%20BAZ%2Ctest2'
@@ -128,7 +131,7 @@ Interpolation result: 'foo%28%29bar%20BAZ%2Ctest2'
 
 Formats variables with multiple values into a pipe-separated string.
 
-```bash
+``` bash
 servers = ['test1.', 'test2']
 String to interpolate: '${servers:pipe}'
 Interpolation result: 'test1.|test2'
@@ -138,7 +141,7 @@ Interpolation result: 'test1.|test2'
 
 The raw format for a data source variable returns the UID (unique identifier) of the data source, rather than its name.
 
-```bash
+``` bash
 datasourceVariable = 'd7bbe725-9e48-4af8-a0cb-6cb255d873a3'
 String to interpolate: '${datasourceVariable:raw}'
 Interpolation result: 'd7bbe725-9e48-4af8-a0cb-6cb255d873a3'
@@ -148,7 +151,7 @@ Interpolation result: 'd7bbe725-9e48-4af8-a0cb-6cb255d873a3'
 
 Formats variables with multiple values into a regex string.
 
-```bash
+``` bash
 servers = ['test1.', 'test2']
 String to interpolate: '${servers:regex}'
 Interpolation result: '(test1\.|test2)'
@@ -158,7 +161,7 @@ Interpolation result: '(test1\.|test2)'
 
 Formats single- and multi-valued variables into a comma-separated string, escapes `'` in each value by `\'` and quotes each value with `'`.
 
-```bash
+``` bash
 servers = ['test1', 'test2']
 String to interpolate: '${servers:singlequote}'
 Interpolation result: "'test1','test2'"
@@ -168,7 +171,7 @@ Interpolation result: "'test1','test2'"
 
 Formats single- and multi-valued variables into a comma-separated string, escapes `'` in each value by `''` and quotes each value with `'`.
 
-```bash
+``` bash
 servers = ["test'1", "test2"]
 String to interpolate: '${servers:sqlstring}'
 Interpolation result: "'test''1','test2'"
@@ -178,7 +181,7 @@ Interpolation result: "'test''1','test2'"
 
 Formats single- and multi-valued variables into their text representation. For a single variable it will just return the text representation. For multi-valued variables it will return the text representation combined with `+`.
 
-```bash
+``` bash
 servers = ["test1", "test2"]
 String to interpolate: '${servers:text}'
 Interpolation result: "test1 + test2"
@@ -188,7 +191,7 @@ Interpolation result: "test1 + test2"
 
 Formats single- and multi-valued variables into their query parameter representation. Example: `var-foo=value1&var-foo=value2`
 
-```bash
+``` bash
 servers = ["test1", "test2"]
 String to interpolate: '${servers:queryparam}'
 Interpolation result: "var-servers=test1&var-servers=test2"

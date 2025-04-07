@@ -12,7 +12,7 @@ If we wait for canceled requests to complete, they might create unnecessary load
 
 ### Request cancellation by Grafana version
 
-Grafana uses a concept called _request cancellation_ to cancel any ongoing request that Grafana doesn't need. The process for canceling requests in this manner varies by Grafana version.
+Grafana uses a concept called *request cancellation* to cancel any ongoing request that Grafana doesn't need. The process for canceling requests in this manner varies by Grafana version.
 
 #### Before Grafana 7.2
 
@@ -41,7 +41,7 @@ Not supported.
 
 ### After Grafana 7.2
 
-Grafana uses a _request queue_ to process all incoming data requests in order while reserving a free "spot" for any requests to the Grafana API.
+Grafana uses a *request queue* to process all incoming data requests in order while reserving a free "spot" for any requests to the Grafana API.
 
 Since the first implementation of the request queue doesn't take into account what browser the user uses, the request queue's limit for parallel data source requests is hard-coded to 5.
 

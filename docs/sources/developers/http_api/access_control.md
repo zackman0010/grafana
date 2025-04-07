@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../../http_api/access_control/
-  - ../../http_api/accesscontrol/
-canonical: /docs/grafana/latest/developers/http_api/access_control/
-description: ''
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - role-based-access-control
-  - acl
-  - enterprise
-labels:
+
+- ../../http\_api/access\_control/
+- ../../http\_api/accesscontrol/
+  canonical: /docs/grafana/latest/developers/http\_api/access\_control/
+  description: ''
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- role-based-access-control
+- acl
+- enterprise
+  labels:
   products:
-    - enterprise
-    - oss
-title: RBAC HTTP API
----
+  - enterprise
+  - oss
+    title: RBAC HTTP API
+
+-----
 
 # RBAC API
 
@@ -41,7 +44,7 @@ Returns an indicator to check if role-based access control is enabled or not.
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/status
 Accept: application/json
 Content-Type: application/json
@@ -49,7 +52,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -87,7 +90,7 @@ Query Parameters:
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/roles
 Accept: application/json
 Content-Type: application/json
@@ -95,7 +98,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -145,7 +148,7 @@ Get a role for the given UID.
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/roles/PYnDO3rMk
 Accept: application/json
 Content-Type: application/json
@@ -153,7 +156,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -239,7 +242,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 POST /api/access-control/roles
 Accept: application/json
 Content-Type: application/json
@@ -285,7 +288,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -321,7 +324,7 @@ Permission validation only occurs when permission validation is enabled (`rbac.p
 
 The following example shows a request with an invalid action. The action `serviceaccounts.permissions:reader` is not a valid action. The valid action should be `serviceaccounts.permissions:read`.
 
-```http
+``` http
 POST /api/access-control/roles HTTP/1.1
 Content-Type: application/json
 {
@@ -335,7 +338,7 @@ Content-Type: application/json
 }
 ```
 
-```http
+``` http
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 {
@@ -353,7 +356,7 @@ Content-Type: application/json
 
 The following example shows a request with an invalid scope. The scope `serviceaccounts:serviceaccount6` is not a valid scope for the action `serviceaccounts.permissions:read`. The valid scopes for this action are `*`, `serviceaccounts:*` and `serviceaccounts:id:*`.
 
-```http
+``` http
 POST /api/access-control/roles HTTP/1.1
 Content-Type: application/json
 {
@@ -367,7 +370,7 @@ Content-Type: application/json
 }
 ```
 
-```http
+``` http
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 {
@@ -409,7 +412,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 PUT /api/access-control/roles/jZrmlLCGka
 Accept: application/json
 Content-Type: application/json
@@ -456,7 +459,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -523,7 +526,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 DELETE /api/access-control/roles/jZrmlLCGka?force=true&global=false
 Accept: application/json
 ```
@@ -537,7 +540,7 @@ Accept: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -576,14 +579,14 @@ Query Parameters:
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/users/1/roles
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -628,14 +631,14 @@ No permission is required.
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/user/permissions
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -673,14 +676,14 @@ Lists the permissions granted to a given user.
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/users/1/permissions
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -724,7 +727,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 POST /api/access-control/users/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -744,7 +747,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -788,14 +791,14 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 DELETE /api/access-control/users/1/roles/AFUXBHKnk
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -837,7 +840,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 PUT /api/access-control/users/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -861,7 +864,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -899,14 +902,14 @@ Query Parameters:
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/users/1/roles
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -947,14 +950,14 @@ Lists the permissions that a given service account has.
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/users/1/permissions
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -998,7 +1001,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 POST /api/access-control/users/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -1018,7 +1021,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1062,14 +1065,14 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 DELETE /api/access-control/users/1/roles/AFUXBHKnk
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1111,7 +1114,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 PUT /api/access-control/users/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -1135,7 +1138,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1173,14 +1176,14 @@ Query Parameters:
 
 #### Example request
 
-```http
+``` http
 GET /api/access-control/teams/1/roles
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1226,7 +1229,7 @@ For example, if a user does not have the permissions required to create users, t
 
 #### Example request
 
-```http
+``` http
 POST /api/access-control/teams/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -1244,7 +1247,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1273,7 +1276,7 @@ For bulk updates consider [Set team role assignments](#set-team-role-assignments
 #### Required permissions
 
 `permissions:type:delegate` scope ensures that users can only unassign roles which have same, or a subset of permissions which the user has.
-For example, if a user does not have the permissions required to create users, they won't be able to assign a role that contains these permissions. This is done to prevent escalation of privileges.```
+For example, if a user does not have the permissions required to create users, they won't be able to assign a role that contains these permissions. This is done to prevent escalation of privileges.\`\`\`
 
 | Action             | Scope                     |
 | ------------------ | ------------------------- |
@@ -1281,14 +1284,14 @@ For example, if a user does not have the permissions required to create users, t
 
 #### Example request
 
-```http
+``` http
 DELETE /api/access-control/teams/1/roles/AFUXBHKnk
 Accept: application/json
 ```
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1330,7 +1333,7 @@ For example, if a user does not have required permissions for creating users, th
 
 #### Example request
 
-```http
+``` http
 PUT /api/access-control/teams/1/roles
 Accept: application/json
 Content-Type: application/json
@@ -1352,7 +1355,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 
@@ -1387,7 +1390,7 @@ Reset basic roles permissions to their default.
 
 #### Example request
 
-```http
+``` http
 POST /api/access-control/roles/hard-reset
 Accept: application/json
 Content-Type: application/json
@@ -1405,7 +1408,7 @@ Content-Type: application/json
 
 #### Example response
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=UTF-8
 

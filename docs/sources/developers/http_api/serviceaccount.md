@@ -1,20 +1,23 @@
----
+-----
+
 aliases:
-  - ../../http_api/serviceaccount/
-canonical: /docs/grafana/latest/developers/http_api/serviceaccount/
-description: Grafana service account HTTP API
-keywords:
-  - grafana
-  - http
-  - documentation
-  - api
-  - serviceaccount
-labels:
+
+- ../../http\_api/serviceaccount/
+  canonical: /docs/grafana/latest/developers/http\_api/serviceaccount/
+  description: Grafana service account HTTP API
+  keywords:
+- grafana
+- http
+- documentation
+- api
+- serviceaccount
+  labels:
   products:
-    - enterprise
-    - oss
-title: Service account HTTP API
----
+  - enterprise
+  - oss
+    title: Service account HTTP API
+
+-----
 
 # Service account API
 
@@ -35,7 +38,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/serviceaccounts/search?perpage=10&page=1&query=mygraf HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -46,7 +49,7 @@ Default value for the `perpage` parameter is `1000` and for the `page` parameter
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 {
@@ -102,7 +105,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -117,7 +120,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 201
 Content-Type: application/json
 
@@ -151,7 +154,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/serviceaccounts/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -160,7 +163,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -192,7 +195,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 PATCH /api/serviceaccounts/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -206,7 +209,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -240,7 +243,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/serviceaccounts/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -249,7 +252,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -258,7 +261,7 @@ Content-Type: application/json
 }
 ```
 
----
+-----
 
 ## Migrate API keys to service accounts
 
@@ -274,7 +277,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts/migrate HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -283,7 +286,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -306,7 +309,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts/migrate/4 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -315,7 +318,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -338,7 +341,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts/migrationstatus HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -347,7 +350,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -370,7 +373,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts/hideApiKeys HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -379,7 +382,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -402,7 +405,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 GET /api/serviceaccounts/2/tokens HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -411,7 +414,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -442,7 +445,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 POST /api/serviceaccounts/2/tokens HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -458,7 +461,7 @@ Default value for the `secondsToLive` is 0, which means that the service account
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -483,7 +486,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/serviceaccounts/2/tokens/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -492,7 +495,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 
@@ -517,7 +520,7 @@ See note in the [introduction](#service-account-api) for an explanation.
 
 **Example Request**:
 
-```http
+``` http
 DELETE /api/serviceaccounts/1/revert/glsa_VVQjot0nijQ59lun6pMZRtsdBXxnFQ9M_77c34a79 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -526,7 +529,7 @@ Authorization: Basic YWRtaW46YWRtaW4=
 
 **Example Response**:
 
-```http
+``` http
 HTTP/1.1 200
 Content-Type: application/json
 

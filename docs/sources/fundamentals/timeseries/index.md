@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../basics/timeseries/
-  - /docs/grafana-cloud/introduction/timeseries/
-description: Introduction to time series
-keywords:
-  - grafana
-  - intro
-  - guide
-  - concepts
-  - timeseries
-labels:
+
+- ../basics/timeseries/
+- /docs/grafana-cloud/introduction/timeseries/
+  description: Introduction to time series
+  keywords:
+- grafana
+- intro
+- guide
+- concepts
+- timeseries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Introduction to time series
-weight: 400
----
+  - cloud
+  - enterprise
+  - oss
+    title: Introduction to time series
+    weight: 400
+
+-----
 
 # Introduction to time series
 
@@ -28,11 +31,11 @@ Imagine you wanted to know how the temperature outside changes throughout the da
 | 10:00 | 26°C  |
 | 11:00 | 27°C  |
 
-Temperature data like this is one example of what we call a _time series_ — a sequence of measurements, ordered in time. Every row in the table represents one individual measurement at a specific time.
+Temperature data like this is one example of what we call a *time series* — a sequence of measurements, ordered in time. Every row in the table represents one individual measurement at a specific time.
 
-Tables are useful when you want to identify individual measurements, but they make it difficult to see the big picture. A more common visualization for time series is the _graph_, which instead places each measurement along a time axis. Visual representations like the graph make it easier to discover patterns and features of the data that otherwise would be difficult to see.
+Tables are useful when you want to identify individual measurements, but they make it difficult to see the big picture. A more common visualization for time series is the *graph*, which instead places each measurement along a time axis. Visual representations like the graph make it easier to discover patterns and features of the data that otherwise would be difficult to see.
 
-{{< figure src="/static/img/docs/example_graph.png" class="docs-image--no-shadow" max-width="850px" alt="Temperature data displayed on dashboard" >}}
+{{\< figure src="/static/img/docs/example\_graph.png" class="docs-image--no-shadow" max-width="850px" alt="Temperature data displayed on dashboard" \>}}
 
 Temperature data like the one in the example, is far from the only example of a time series. Other examples of time series are:
 
@@ -49,13 +52,13 @@ Time series are powerful. They help you understand the past by letting you analy
 
 Time series can also help you predict the future, by uncovering trends in your data. If the number of registered users has been increasing monthly by 4% for the past few months, you can predict how big your user base is going to be at the end of the year.
 
-Some time series have patterns that repeat themselves over a known period. For example, the temperature is typically higher during the day, before it dips down at night. By identifying these periodic, or _seasonal_, time series, you can make confident predictions about the next period. If you know that the system load peaks every day around 18:00, you can add more machines right before.
+Some time series have patterns that repeat themselves over a known period. For example, the temperature is typically higher during the day, before it dips down at night. By identifying these periodic, or *seasonal*, time series, you can make confident predictions about the next period. If you know that the system load peaks every day around 18:00, you can add more machines right before.
 
 ## Aggregating time series
 
 Depending on what you're measuring, the data can vary greatly. What if you wanted to compare periods longer than the interval between measurements? If you'd measure the temperature once every hour, you'd end up with 24 data points per day. To compare the temperature in August over the years, you'd have to combine the 31 times 24 data points into one.
 
-Combining a collection of measurements is called _aggregation_. There are several ways to aggregate time series data. Here are some common ones:
+Combining a collection of measurements is called *aggregation*. There are several ways to aggregate time series data. Here are some common ones:
 
 - **Average** returns the sum of all values divided by the total number of values.
 - **Min** and **Max** return the smallest and largest value in the collection.
@@ -78,35 +81,27 @@ Modern time series databases take advantage of the fact that measurements are on
 
 Look at this sequence of Unix timestamps:
 
-```
-1572524345, 1572524375, 1572524404, 1572524434, 1572524464
-```
+    1572524345, 1572524375, 1572524404, 1572524434, 1572524464
 
-Looking at these timestamps, they all start with `1572524`, leading to poor use of disk space. Instead, we could store each subsequent timestamp as the difference, or _delta_, from the first one:
+Looking at these timestamps, they all start with `1572524`, leading to poor use of disk space. Instead, we could store each subsequent timestamp as the difference, or *delta*, from the first one:
 
-```
-1572524345, +30, +29, +30, +30
-```
+    1572524345, +30, +29, +30, +30
 
 We could even take it a step further, by calculating the deltas of these deltas:
 
-```
-1572524345, +30, -1, +1, +0
-```
+    1572524345, +30, -1, +1, +0
 
 If measurements are taken at regular intervals, most of these delta-of-deltas will be 0. Because of optimizations like these, TSDBs use drastically less space than other databases.
 
-Another feature of a TSDB is the ability to filter measurements using _tags_. Each data point is labeled with a tag that adds context information, such as where the measurement was taken. Here's an example of the [InfluxDB data format](https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_tutorial/#syntax) that demonstrates how each measurement is stored.
+Another feature of a TSDB is the ability to filter measurements using *tags*. Each data point is labeled with a tag that adds context information, such as where the measurement was taken. Here's an example of the [InfluxDB data format](https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_tutorial/#syntax) that demonstrates how each measurement is stored.
 
-```
-weather,location=us-midwest temperature=82 1465839830100400200
-  |    -------------------- --------------  |
-  |             |             |             |
-  |             |             |             |
-+-----------+--------+-+---------+-+---------+
-|measurement|,tag_set| |field_set| |timestamp|
-+-----------+--------+-+---------+-+---------+
-```
+    weather,location=us-midwest temperature=82 1465839830100400200
+      |    -------------------- --------------  |
+      |             |             |             |
+      |             |             |             |
+    +-----------+--------+-+---------+-+---------+
+    |measurement|,tag_set| |field_set| |timestamp|
+    +-----------+--------+-+---------+-+---------+
 
 Here are some of the TSDBs supported by Grafana:
 
@@ -116,7 +111,7 @@ Here are some of the TSDBs supported by Grafana:
 
 ### Collecting time series data
 
-Now that we have a place to store our time series, how do we actually gather the measurements? To collect time series data, you'd typically install a _collector_ on the device, machine, or instance you want to monitor. Some collectors are made with a specific database in mind, and some support different output destinations.
+Now that we have a place to store our time series, how do we actually gather the measurements? To collect time series data, you'd typically install a *collector* on the device, machine, or instance you want to monitor. Some collectors are made with a specific database in mind, and some support different output destinations.
 
 Here are some examples of collectors:
 
@@ -125,7 +120,7 @@ Here are some examples of collectors:
 - [Prometheus exporters](https://prometheus.io/docs/instrumenting/exporters/)
 - [Telegraf](https://github.com/influxdata/telegraf)
 
-A collector either _pushes_ data to a database or lets the database _pull_ the data from it. Both methods come with their own set of pros and cons:
+A collector either *pushes* data to a database or lets the database *pull* the data from it. Both methods come with their own set of pros and cons:
 
 |      | Pros                                                                      | Cons                                                                     |
 | ---- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |

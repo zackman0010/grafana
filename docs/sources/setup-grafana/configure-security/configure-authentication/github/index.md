@@ -1,25 +1,28 @@
----
+-----
+
 aliases:
-  - ../../../auth/github/
-description: Configure GitHub OAuth authentication
-keywords:
-  - grafana
-  - configuration
-  - documentation
-  - oauth
-labels:
+
+- ../../../auth/github/
+  description: Configure GitHub OAuth authentication
+  keywords:
+- grafana
+- configuration
+- documentation
+- oauth
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: GitHub OAuth
-title: Configure GitHub OAuth authentication
-weight: 900
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: GitHub OAuth
+    title: Configure GitHub OAuth authentication
+    weight: 900
+
+-----
 
 # Configure GitHub OAuth authentication
 
-{{< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" >}}
+{{\< docs/shared lookup="auth/intro.md" source="grafana" version="<GRAFANA VERSION>" \>}}
 
 This topic describes how to configure GitHub OAuth authentication.
 
@@ -34,12 +37,12 @@ Ensure you know how to create a GitHub OAuth app. Consult GitHub's documentation
 ### Create a GitHub OAuth App
 
 1. Log in to your GitHub account.
-   In **Profile > Settings > Developer settings**, select **OAuth Apps**.
-1. Click **New OAuth App**.
-1. Fill out the fields, using your Grafana homepage URL when appropriate.
+   In **Profile \> Settings \> Developer settings**, select **OAuth Apps**.
+2. Click **New OAuth App**.
+3. Fill out the fields, using your Grafana homepage URL when appropriate.
    In the **Authorization callback URL** field, enter the following: `https://<YOUR-GRAFANA-URL>/login/github` .
-1. Note your client ID.
-1. Generate, then note, your client secret.
+4. Note your client ID.
+5. Generate, then note, your client secret.
 
 ## Configure GitHub authentication client using the Grafana UI
 
@@ -47,7 +50,7 @@ Ensure you know how to create a GitHub OAuth app. Consult GitHub's documentation
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle.
 {{% /admonition %}}
 
-As a Grafana Admin, you can configure GitHub OAuth client from within Grafana using the GitHub UI. To do this, navigate to **Administration > Authentication > GitHub** page and fill in the form. If you have a current configuration in the Grafana configuration file, the form will be pre-populated with those values. Otherwise the form will contain default values.
+As a Grafana Admin, you can configure GitHub OAuth client from within Grafana using the GitHub UI. To do this, navigate to **Administration \> Authentication \> GitHub** page and fill in the form. If you have a current configuration in the Grafana configuration file, the form will be pre-populated with those values. Otherwise the form will contain default values.
 
 After you have filled in the form, click **Save**. If the save was successful, Grafana will apply the new configurations.
 
@@ -65,7 +68,7 @@ Refer to [configuration options](#configuration-options) for more information.
 Available in Public Preview in Grafana 10.4 behind the `ssoSettingsApi` feature toggle. Supported in the Terraform provider since v2.12.0.
 {{% /admonition %}}
 
-```terraform
+``` terraform
 resource "grafana_sso_settings" "github_sso_settings" {
   provider_name = "github"
   oauth2_settings {
@@ -94,25 +97,28 @@ Ensure that you have access to the [Grafana configuration file](../../../configu
 To configure GitHub authentication with Grafana, follow these steps:
 
 1. Create an OAuth application in GitHub.
-1. Set the callback URL for your GitHub OAuth app to `http://<my_grafana_server_name_or_ip>:<grafana_server_port>/login/github`.
 
+2. Set the callback URL for your GitHub OAuth app to `http://<my_grafana_server_name_or_ip>:<grafana_server_port>/login/github`.
+   
    Ensure that the callback URL is the complete HTTP address that you use to access Grafana via your browser, but with the appended path of `/login/github`.
-
+   
    For the callback URL to be correct, it might be necessary to set the `root_url` option in the `[server]`section of the Grafana configuration file. For example, if you are serving Grafana behind a proxy.
 
-1. Refer to the following table to update field values located in the `[auth.github]` section of the Grafana configuration file:
-
+3. Refer to the following table to update field values located in the `[auth.github]` section of the Grafana configuration file:
+   
    | Field                        | Description                                                                         |
    | ---------------------------- | ----------------------------------------------------------------------------------- |
    | `client_id`, `client_secret` | These values must match the client ID and client secret from your GitHub OAuth app. |
    | `enabled`                    | Enables GitHub authentication. Set this value to `true`.                            |
-
+   
    Review the list of other GitHub [configuration options](#configuration-options) and complete them, as necessary.
 
-1. [Configure role mapping](#configure-role-mapping).
-1. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
-1. Restart Grafana.
+4. [Configure role mapping](#configure-role-mapping).
 
+5. Optional: [Configure team synchronization](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
+
+6. Restart Grafana.
+   
    You should now see a GitHub login button on the login page and be able to log in or sign up with your GitHub accounts.
 
 ### Configure role mapping
@@ -144,7 +150,7 @@ The external user is part of the following GitHub teams: `@my-github-organizatio
 
 Config:
 
-```ini
+``` ini
 org_mapping = @my-github-organization/my-github-team-1:org_foo:Viewer @my-github-organization/my-github-team-2:org_bar:Editor *:org_baz:Editor
 ```
 
@@ -153,7 +159,7 @@ org_mapping = @my-github-organization/my-github-team-1:org_foo:Viewer @my-github
 In this example, the user with login `octocat` has been granted the `Admin` role.
 All other users are granted the `Viewer` role.
 
-```bash
+``` bash
 role_attribute_path = [login=='octocat'][0] && 'Admin' || 'Viewer'
 ```
 
@@ -162,7 +168,7 @@ role_attribute_path = [login=='octocat'][0] && 'Admin' || 'Viewer'
 In this example, the user from GitHub team `my-github-team` has been granted the `Editor` role.
 All other users are granted the `Viewer` role.
 
-```bash
+``` bash
 role_attribute_path = contains(groups[*], '@my-github-organization/my-github-team') && 'Editor' || 'Viewer'
 ```
 
@@ -173,7 +179,7 @@ the users from GitHub teams `engineers` and `managers` have been granted the `Ed
 the users from GitHub team `qa` have been granted the `Viewer` role and
 all other users are granted the `None` role.
 
-```bash
+``` bash
 role_attribute_path = contains(groups[*], '@my-github-organization/admins') && 'Admin' || contains(groups[*], '@my-github-organization/devops') && 'Admin' || contains(groups[*], '@my-github-organization/engineers') && 'Editor' || contains(groups[*], '@my-github-organization/managers') && 'Editor' || contains(groups[*], '@my-github-organization/qa') && 'Viewer' || 'None'
 ```
 
@@ -182,7 +188,7 @@ role_attribute_path = contains(groups[*], '@my-github-organization/admins') && '
 In this example, the user with login `octocat` has been granted the `Admin` organization role as well as the Grafana server admin role.
 All other users are granted the `Viewer` role.
 
-```bash
+``` bash
 role_attribute_path = [login=='octocat'][0] && 'GrafanaAdmin' || 'Viewer'
 ```
 
@@ -190,7 +196,7 @@ role_attribute_path = [login=='octocat'][0] && 'GrafanaAdmin' || 'Viewer'
 
 In this example, all users will be assigned `Viewer` role regardless of the user information received from the identity provider.
 
-```ini
+``` ini
 role_attribute_path = "'Viewer'"
 skip_org_role_sync = false
 ```
@@ -199,7 +205,7 @@ skip_org_role_sync = false
 
 This section includes an example of GitHub configuration in the Grafana configuration file.
 
-```bash
+``` bash
 [auth.github]
 enabled = true
 client_id = YOUR_GITHUB_APP_CLIENT_ID
@@ -218,9 +224,9 @@ role_attribute_path = [login=='octocat'][0] && 'GrafanaAdmin' || 'Viewer'
 
 ## Configure team synchronization
 
-{{< admonition type="note" >}}
-Available in [Grafana Enterprise](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and Grafana Cloud.
-{{< /admonition >}}
+{{\< admonition type="note" \>}}
+Available in [Grafana Enterprise](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and Grafana Cloud.
+{{\< /admonition \>}}
 
 By using Team Sync, you can map teams from your GitHub organization to teams within Grafana. This will automatically assign users to the appropriate teams.
 Teams for each user are synchronized when the user logs in.
@@ -232,15 +238,15 @@ GitHub teams can be referenced in two ways:
 
 Examples: `https://github.com/orgs/grafana/teams/developers` or `@grafana/developers`.
 
-To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-security/configure-team-sync/).
+To learn more about Team Sync, refer to [Configure team sync](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-security/configure-team-sync/).
 
 ## Configuration options
 
 The table below describes all GitHub OAuth configuration options. You can apply these options as environment variables, similar to any other configuration within Grafana. For more information, refer to [Override configuration with environment variables](../../../configure-grafana/#override-configuration-with-environment-variables).
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 If the configuration option requires a JMESPath expression that includes a colon, enclose the entire expression in quotes to prevent parsing errors. For example `role_attribute_path: "role:view"`
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 | Setting                      | Required | Supported on Cloud | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Default                                       |
 | ---------------------------- | -------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
@@ -263,7 +269,7 @@ If the configuration option requires a JMESPath expression that includes a colon
 | `allowed_organizations`      | No       | Yes                | List of comma- or space-separated organizations. User must be a member of at least one organization to log in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |                                               |
 | `allowed_domains`            | No       | Yes                | List of comma- or space-separated domains. User must belong to at least one domain to log in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                               |
 | `team_ids`                   | No       | Yes                | Integer list of team IDs. If set, user has to be a member of one of the given teams to log in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |                                               |
-| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. _You should only use this for testing_, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `false`                                       |
+| `tls_skip_verify_insecure`   | No       | No                 | If set to `true`, the client accepts any certificate presented by the server and any host name in that certificate. *You should only use this for testing*, because this mode leaves SSL/TLS susceptible to man-in-the-middle attacks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `false`                                       |
 | `tls_client_cert`            | No       | No                 | The path to the certificate.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |                                               |
 | `tls_client_key`             | No       | No                 | The path to the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                               |
 | `tls_client_ca`              | No       | No                 | The path to the trusted certificate authority list.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                               |

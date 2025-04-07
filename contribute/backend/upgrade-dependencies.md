@@ -12,7 +12,7 @@ Additionally, you typically want to upgrade your protobuf compiler toolchain and
 
 After you've installed Buf CLI, re-compile the protobuf files in Grafana and the plugin SDK. Use this code:
 
-```shell
+``` shell
 cd $GRAFANA
 make protobuf
 cd $GRAFANA_PLUGIN_SDK_GO

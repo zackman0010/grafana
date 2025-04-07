@@ -1,41 +1,44 @@
----
+-----
+
 aliases:
-  - ../../data-sources/graphite/query-editor/
-description: Guide for using the Graphite data source's query editor
-keywords:
-  - grafana
-  - microsoft
-  - graphite
-  - monitor
-  - metrics
-  - logs
-  - resources
-  - queries
-labels:
+
+- ../../data-sources/graphite/query-editor/
+  description: Guide for using the Graphite data source's query editor
+  keywords:
+- grafana
+- microsoft
+- graphite
+- monitor
+- metrics
+- logs
+- resources
+- queries
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Query editor
-title: Graphite query editor
-weight: 300
-refs:
-  query-transform-data:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/panels-visualizations/query-transform-data/
-  annotate-visualizations:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/build-dashboards/annotate-visualizations/
-  set-up-grafana-monitoring:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/set-up-grafana-monitoring/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/set-up-grafana-monitoring/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Query editor
+    title: Graphite query editor
+    weight: 300
+    refs:
+    query-transform-data:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/panels-visualizations/query-transform-data/
+    annotate-visualizations:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/build-dashboards/annotate-visualizations/
+    set-up-grafana-monitoring:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/set-up-grafana-monitoring/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/set-up-grafana-monitoring/
+
+-----
 
 # Graphite query editor
 
@@ -55,7 +58,7 @@ Click **Select metric** to navigate the metric space.
 Once you begin, you can use the mouse or keyboard arrow keys.
 You can also select a wildcard and still continue.
 
-{{< figure src="/static/img/docs/graphite/graphite-query-editor-still.png" animated-gif="/static/img/docs/graphite/graphite-query-editor.gif" >}}
+{{\< figure src="/static/img/docs/graphite/graphite-query-editor-still.png" animated-gif="/static/img/docs/graphite/graphite-query-editor.gif" \>}}
 
 ## Functions
 
@@ -65,7 +68,7 @@ a function is selected, it will be added and your focus will be in the text box 
 - To edit or change a parameter, click on it and it will turn into a text box.
 - To delete a function, click the function name followed by the x icon.
 
-{{< figure src="/static/img/docs/graphite/graphite-functions-still.png" animated-gif="/static/img/docs/graphite/graphite-functions-demo.gif" >}}
+{{\< figure src="/static/img/docs/graphite/graphite-functions-still.png" animated-gif="/static/img/docs/graphite/graphite-functions-demo.gif" \>}}
 
 Some functions like aliasByNode support an optional second argument. To add an argument, hover your mouse over the first argument and then click the `+` symbol that appears. To remove the second optional parameter, click on it and leave it blank and the editor will remove it.
 
@@ -102,7 +105,7 @@ To combine time series, click **Combine** in the **Functions** list.
 
 ### Select and explor data with tags
 
-In Graphite, _everything_ is a tag.
+In Graphite, *everything* is a tag.
 
 When exploring data, previously selected tags filter the remaining result set.
 To select data, use the `seriesByTag` function, which takes tag expressions (`=`, `!=`, `=~`, `!=~`) to filter timeseries.

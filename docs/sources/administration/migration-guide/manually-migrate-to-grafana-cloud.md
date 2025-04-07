@@ -1,21 +1,24 @@
----
+-----
+
 description: Migrate from Grafana OSS/Enterprise to Grafana Cloud manually
 keywords:
-  - Grafana Cloud
-  - Grafana Enterprise
-  - Grafana OSS
-menuTitle: Manually migrate to Grafana Cloud
-title: Migrate from Grafana OSS/Enterprise to Grafana Cloud manually
-weight: 300
----
+
+- Grafana Cloud
+- Grafana Enterprise
+- Grafana OSS
+  menuTitle: Manually migrate to Grafana Cloud
+  title: Migrate from Grafana OSS/Enterprise to Grafana Cloud manually
+  weight: 300
+
+-----
 
 # Migrate from Grafana OSS/Enterprise to Grafana Cloud manually
 
 This migration guide is designed to assist Grafana OSS/Enterprise users in seamlessly transitioning manually to Grafana Cloud.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 There isn't yet a standard method for importing existing data into Grafana Cloud from self-managed databases.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ## Plan and perform a manual migration
 
@@ -70,26 +73,26 @@ In the provided code snippets throughout this migration guide, you need to subst
 Migration of plugins is the first step when transitioning from Grafana OSS/Enterprise to Grafana Cloud, given that plugins are integral components that influence the functionality and display of other Grafana resources, such as dashboards.
 
 1. To retrieve the Plugins installed in your Grafana OSS/Enterprise instance, issue an HTTP GET request to the `/api/plugins` endpoint. Use the following shell command:
-
-   ```shell
+   
+   ``` shell
    response=$(curl -s -H "Accept: application/json" -H "Authorization: Bearer $GRAFANA_SOURCE_TOKEN" "${GRAFANA_ONPREM_INSTANCE_URL}/api/plugins")
-
+   
    plugins=$(echo $response | jq '[.[] | select(.signatureType == "community" or (.signatureType != "internal" and .signatureType != "")) | {name: .id, version: .info.version}]')
-
+   
    echo "$plugins" > plugins.json
    ```
-
+   
    The command provided above will carry out an HTTP request to this endpoint and accomplish several tasks:
-
+   
    - It issues a GET request to the `/api/plugins` endpoint of your Grafana OSS/Enterprise instance to retrieve a list of installed plugins.
    - It filters out the list to only include community plugins and those signed by external parties.
    - It extracts the plugin ID and version before storing them in a `plugins.json` file.
 
-1. To import the plugins in your Grafana Cloud Instance, execute the following command. This command constructs an HTTP POST request to `https://grafana.com/api/instances/<stack_slug>/plugins`
-
-   ```shell
+2. To import the plugins in your Grafana Cloud Instance, execute the following command. This command constructs an HTTP POST request to `https://grafana.com/api/instances/<stack_slug>/plugins`
+   
+   ``` shell
    CLOUD_INSTANCE=$GRAFANA_CLOUD_INSTANCE_URL
-
+   
    stack_slug="${CLOUD_INSTANCE#*//}"
    stack_slug="${stack_slug%%.*}"
    jq -c '.[]' plugins.json | while IFS= read -r plugin; do
@@ -103,11 +106,11 @@ Migration of plugins is the first step when transitioning from Grafana OSS/Enter
      echo "POST response for plugin $name version $version: $response"
    done
    ```
-
+   
    Replace `<GRAFANA_CLOUD_ACCESS_TOKEN>` with your Grafana Cloud Access Policy Token. To create a new one, refer to Grafana Cloud [access policies documentation](https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/)
-
+   
    This script iterates through each plugin listed in the `plugins.json` file:
-
+   
    - It constructs a POST request for each plugin to add it to the specified Grafana Cloud instance.
    - It reports back the response for each POST request to give you confirmation or information about any issues that occurred.
 
@@ -119,7 +122,7 @@ If you already use tools like [Terraform](https://grafana.com/docs/grafana-cloud
 
 Grizzly is a command line tool that streamlines working with Grafana resources. Use it to migrate most of the content in your Grafana instance. Follow these steps in your terminal to install Grizzly. If you need to change the os or the architecture, Refer to the Grizzly [releases](https://github.com/grafana/grizzly/releases) and use the binary according to your needs.
 
-```shell
+``` shell
 # download the binary (adapt os and arch as needed)
 $ curl -fSL -o "/usr/local/bin/grr" "https://github.com/grafana/grizzly/releases/download/v0.3.1/grr-linux-amd64"
 
@@ -132,14 +135,14 @@ $ grr --help
 
 First, create a new folder on your computer and navigate to it to keep your work organized.
 
-```shell
+``` shell
 mkdir grafana-migration
 cd grafana-migration
 ```
 
 To give grizzly access to your Grafana OSS/Enterprise instance and the Grafana Cloud Instance, you need to create a [service account](https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/) and a corresponding [access token](https://www.grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/#service-account-tokens) on each instance. You can use these tokens to authenticate requests to pull and push resources. Follow these steps on your Grafana OSS/Enterprise instance:
 
-- Navigate to the **Administration -> Users and access -> Service Accounts** Page within the Grafana OSS/Enterprise instance.
+- Navigate to the **Administration -\> Users and access -\> Service Accounts** Page within the Grafana OSS/Enterprise instance.
 - Click on **Add Service Account**
 - Give the Service account a descriptive name like “grizzly-migration” and apply the **Admin** role.
 - After creating the account, click on **Add Service Account Token**
@@ -151,7 +154,7 @@ Complete the service account creation and token generation process for your Graf
 
 Next, to tell grizzly which instances you’re going to work on, use the following commands:
 
-```shell
+``` shell
 grr config create-context grafana-onprem
 grr config use-context grafana-onprem
 grr config set output-format json
@@ -171,7 +174,7 @@ Afterward, you will have two contexts set up; one for your local Grafana OSS/Ent
 
 Switch to the `grafana-onprem` context and use the pull command to fetch the resources you want to migrate:
 
-```shell
+``` shell
 grr config use-context grafana-onprem
 grr pull . \
   -t 'Dashboard/*' \
@@ -189,7 +192,7 @@ This will fetch the specified resources from Grafana and store them in the curre
 
 With everything in place, switch to the Grafana cloud context and use the following commands to apply the resources to the configured instance:
 
-```shell
+``` shell
 grr config use-context grafana-cloud
 
 grr apply . -t 'DashboardFolder/*'
@@ -205,7 +208,7 @@ grr apply . -t 'AlertNotificationPolicy/*'
 
 After migrating your data sources, you must fill in their credentials, like tokens, usernames, or passwords. For security reasons, grizzly cannot read encrypted data source credentials from the existing Grafana instance.
 
-To fill in the missing authentication information, go to the **Connections -> Datasources** page in your new Grafana Cloud instance and verify that credentials for all data sources are set. You can skip data sources starting with `grafanacloud` - These are managed by Grafana Cloud directly and provide access to Grafana Cloud databases.
+To fill in the missing authentication information, go to the **Connections -\> Datasources** page in your new Grafana Cloud instance and verify that credentials for all data sources are set. You can skip data sources starting with `grafanacloud` - These are managed by Grafana Cloud directly and provide access to Grafana Cloud databases.
 
 If one of your data sources can only be accessed from your internal network, take a look at the [Private Data Source Connect documentation](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
 
@@ -228,22 +231,22 @@ Grizzly does not currently support Reports and Playlists as a resource, so you c
 #### Reports (For Grafana Enterprise only)
 
 1. To export your Reports, you will need to invoke the `api/reports` endpoint of your Grafana OSS/Enterprise instance. The below shell command accomplishes this by using `curl` to send a request to the endpoint and then stores the retrieved report configuration into a file named `reports.json`.
-
-   ```shell
+   
+   ``` shell
    curl ${GRAFANA_ONPREM_INSTANCE_URL}/api/reports -H "Authorization: Bearer $GRAFANA_SOURCE_TOKEN" > reports.json
    ```
 
 2. To upload the configuration data you have saved in the `reports.json` file to your new Grafana Cloud instance, run the below command. The command will take the local file `reports.json` and push its contents to the `api/reports` endpoint of your Grafana Cloud instance.
-
-   ```shell
+   
+   ``` shell
    jq -M -r -c '.[]' < reports.json | while read -r json; do curl -XPOST ${GRAFANA_CLOUD_INSTANCE_URL}/api/reports -H"Authorization: Bearer $GRAFANA_DEST_TOKEN" -d"$json" -H 'Content-Type: application/json'; done
    ```
 
 #### Playlists
 
 1. To retrieve the Playlists from your Grafana OSS/Enterprise instance, issue an HTTP GET request to the `/api/playlists` endpoint. Use the following shell command:
-
-   ```shell
+   
+   ``` shell
    mkdir playlists
    curl "${GRAFANA_ONPREM_INSTANCE_URL}/api/playlists" \
    -H "Authorization: Bearer $GRAFANA_SOURCE_TOKEN" \
@@ -254,16 +257,16 @@ Grizzly does not currently support Reports and Playlists as a resource, so you c
        > playlists/$uid.json; \
    done
    ```
-
+   
    The command provided above will carry out an HTTP request to this endpoint and accomplish several tasks:
-
+   
    - It fetches an array of all the playlists available in the Grafana OSS/Enterprise instance.
    - It then iterates through each playlist to obtain the complete set of details.
    - Finally, it stores each playlist's specification as separate JSON files within a directory named `playlists`
 
 2. To import the playlists, execute the following command. This command constructs an HTTP POST request targeting the `/api/playlists` endpoint of your Grafana Cloud Instance.
-
-   ```shell
+   
+   ``` shell
    for playlist in playlists/*; do
      curl -XPOST "${GRAFANA_CLOUD_INSTANCE_URL}/api/playlists" \
        -H "Authorization: Bearer $GRAFANA_DEST_TOKEN" \

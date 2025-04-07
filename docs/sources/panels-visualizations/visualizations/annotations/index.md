@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ../../features/panels/annotations/
-  - ../../panels/visualizations/annotations/
-  - ../../visualizations/annotations/
-description: Configure options for Grafana's annotations list visualization
-keywords:
-  - grafana
-  - Annotations
-  - panel
-  - documentation
-labels:
+
+- ../../features/panels/annotations/
+- ../../panels/visualizations/annotations/
+- ../../visualizations/annotations/
+  description: Configure options for Grafana's annotations list visualization
+  keywords:
+- grafana
+- Annotations
+- panel
+- documentation
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Annotations list
-weight: 100
----
+  - cloud
+  - enterprise
+  - oss
+    title: Annotations list
+    weight: 100
+
+-----
 
 # Annotations list
 
@@ -24,7 +27,7 @@ The annotations list shows a list of available annotations you can use to view a
 
 ## Panel options
 
-{{< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="visualizations/panel-options.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 ## Annotation query
 
@@ -70,7 +73,7 @@ Use this option to show or hide the time the annotation creation time.
 
 ### Show Tags
 
-Use this option to show or hide the tags associated with an annotation. _NB_: You can use the tags to live-filter the annotations list on the visualization itself.
+Use this option to show or hide the tags associated with an annotation. *NB*: You can use the tags to live-filter the annotations list on the visualization itself.
 
 ## Link behavior
 

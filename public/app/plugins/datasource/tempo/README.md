@@ -4,4 +4,4 @@ Grafana ships with **built in** support for Tempo, an open source, easy-to-use, 
 
 Read more about it here:
 
-[https://docs.grafana.org/datasources/tempo/](https://docs.grafana.org/datasources/tempo/)
+<https://docs.grafana.org/datasources/tempo/>

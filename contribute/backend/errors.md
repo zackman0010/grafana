@@ -17,7 +17,7 @@ For a service, declare the different categories of errors that may occur
 from your service (this corresponds to categories for which you might want
 to have specific public error messages or templates).
 
-Globally construct variables using the `errutil.<status>(status, messageID, opts...)
+Globally construct variables using the \`errutil.<status>(status, messageID, opts...)
 functions. For example:
 
 - `errutil.NotFound(messageID, opts...)`
@@ -57,7 +57,7 @@ The other side of the coin is that even though such messages as
 "wrong password" are reasonable errors to distinguish internally,
 for security reasons the end-user shouldn't be told which particular
 error they struck. This means that they should share the same base (such
-as _login.Failed_).
+as *login.Failed*).
 This is the minimization rule of grouping together distinct logged errors that provide the same information via the API.
 
 To set a static message sent to the client when the error occurs, append the
@@ -69,7 +69,7 @@ You can then construct errors using the `Base.Errorf` method, which
 functions like the [fmt.Errorf](https://pkg.go.dev/fmt#Errorf) method
 except that it creates an `errutil.Error`.
 
-```go
+``` go
 package main
 
 import (
@@ -103,7 +103,7 @@ This documentation isn't readily available on `pkg.go.dev`, but it can be viewed
 
 You can optionally specify an error source that describes an error's origin.
 By default, it's `_server_` and means the error originates from within the application, for example, Grafana.
-The `errutil.WithDownstream()` option may be appended to the `NewBase` function call to denote an error originates from a _downstream_ server or service.
+The `errutil.WithDownstream()` option may be appended to the `NewBase` function call to denote an error originates from a *downstream* server or service.
 The error source information is used in the API layer to distinguish between Grafana errors and non-Grafana errors. Error source information is given for use when instrumenting the application, allowing Grafana operators to define SLOs based on actual Grafana errors.
 
 ## Handle errors in the API

@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../troubleshooting/troubleshoot-dashboards/
-  - ../reference/timerange/
-canonical: https://grafana.com/docs/grafana/latest/dashboards/troubleshoot-dashboards/
-keywords:
-  - grafana
-  - dashboard
-  - troubleshoot
-  - time range
-labels:
+
+- ../troubleshooting/troubleshoot-dashboards/
+- ../reference/timerange/
+  canonical: https://grafana.com/docs/grafana/latest/dashboards/troubleshoot-dashboards/
+  keywords:
+- grafana
+- dashboard
+- troubleshoot
+- time range
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Troubleshoot dashboards
-title: Troubleshoot dashboards
-description: Learn how to troubleshoot common dashboard issues
-weight: 1000
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Troubleshoot dashboards
+    title: Troubleshoot dashboards
+    description: Learn how to troubleshoot common dashboard issues
+    weight: 1000
+
+-----
 
 # Troubleshoot dashboards
 
@@ -49,10 +52,10 @@ The graph in the following image has:
 - Points and 3-point radius enabled to highlight where data points are actually present.
 - **Connect null values** set to **Always**.
 
-{{< figure src="/static/img/docs/troubleshooting/grafana_null_connected.png" max-width="1200px" alt="Graph with null values connected" >}}
+{{\< figure src="/static/img/docs/troubleshooting/grafana\_null\_connected.png" max-width="1200px" alt="Graph with null values connected" \>}}
 
 The graph in this next image shows bars instead of lines and has the **No value** option under **Standard options** set to **0**.
 
-{{< figure src="/static/img/docs/troubleshooting/grafana_null_zero.png" max-width="1200px" alt="Graph with null values not connected" >}}
+{{\< figure src="/static/img/docs/troubleshooting/grafana\_null\_zero.png" max-width="1200px" alt="Graph with null values not connected" \>}}
 
 As you can see, there's a significant difference in the visualizations.

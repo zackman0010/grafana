@@ -1,80 +1,83 @@
----
+-----
+
 aliases:
-  - ../administration/reports/ # /docs/grafana/latest/administration/reports/
-  - ../enterprise/export-pdf/ # /docs/grafana/latest/enterprise/export-pdf/
-  - ../enterprise/reporting/ # /docs/grafana/latest/enterprise/reporting/
-  - ../panels/create-reports/ # /docs/grafana/latest/panels/create-reports/
-  - reporting/ # /docs/grafana/latest/dashboards/reporting/
-keywords:
-  - grafana
-  - reporting
-  - export
-  - pdf
-labels:
+
+- ../administration/reports/ \# /docs/grafana/latest/administration/reports/
+- ../enterprise/export-pdf/ \# /docs/grafana/latest/enterprise/export-pdf/
+- ../enterprise/reporting/ \# /docs/grafana/latest/enterprise/reporting/
+- ../panels/create-reports/ \# /docs/grafana/latest/panels/create-reports/
+- reporting/ \# /docs/grafana/latest/dashboards/reporting/
+  keywords:
+- grafana
+- reporting
+- export
+- pdf
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Reporting
-title: Create and manage reports
-description: Generate and share PDF reports from your Grafana dashboards
-weight: 600
-refs:
-  grafana-enterprise:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/
-  image-rendering:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/image-rendering/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/image-rendering/
-  max-size-configuration:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/enterprise-configuration/#max_attachment_size_mb
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/enterprise-configuration/#max_attachment_size_mb
-  log-filters:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#filters
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#filters
-  permission:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/
-  rbac:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/
-  send-report:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/developers/http_api/reporting/#send-a-report
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/reporting/#send-a-report
-  smtp:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#smtp
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#smtp
-  temp-data-lifetime:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#temp_data_lifetime
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#temp_data_lifetime
-  templates-and-variables:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/variables/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/variables/
-  time-range-controls:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/dashboards/use-dashboards/#set-dashboard-time-range
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/visualizations/dashboards/use-dashboards/#set-dashboard-time-range
----
+  - cloud
+  - enterprise
+    menuTitle: Reporting
+    title: Create and manage reports
+    description: Generate and share PDF reports from your Grafana dashboards
+    weight: 600
+    refs:
+    grafana-enterprise:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/introduction/grafana-enterprise/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/introduction/grafana-enterprise/
+    image-rendering:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/image-rendering/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/image-rendering/
+    max-size-configuration:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/enterprise-configuration/\#max\_attachment\_size\_mb
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/enterprise-configuration/\#max\_attachment\_size\_mb
+    log-filters:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#filters
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#filters
+    permission:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/
+    rbac:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/
+    send-report:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/developers/http\_api/reporting/\#send-a-report
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/reporting/\#send-a-report
+    smtp:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#smtp
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#smtp
+    temp-data-lifetime:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#temp\_data\_lifetime
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/setup-grafana/configure-grafana/\#temp\_data\_lifetime
+    templates-and-variables:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/variables/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/variables/
+    time-range-controls:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/dashboards/use-dashboards/\#set-dashboard-time-range
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/visualizations/dashboards/use-dashboards/\#set-dashboard-time-range
+
+-----
 
 # Create and manage reports
 
@@ -116,20 +119,20 @@ You can also save the report as a draft at any step in the process:
 
 To create a report, follow these steps:
 
-1. In the main menu, click **Dashboards > Reporting**.
-1. Click **+ Create a new report**.
-1. Complete the report steps, as needed:
+1. In the main menu, click **Dashboards \> Reporting**.
+2. Click **+ Create a new report**.
+3. Complete the report steps, as needed:
    - [Select dashboard](#1-select-dashboard)
    - [Format report](#2-format-report)
    - [Schedule](#3-schedule)
    - [Share](#4-share)
    - [Confirm](#5-confirm)
-1. Click one of the following buttons in the top-right corner of the screen:
+4. Click one of the following buttons in the top-right corner of the screen:
    - **Send now** or **Schedule send** - The report is sent according the schedule you've set.
    - **Save as draft** - You can save a draft at any point during the report creation or update process, even if it's missing required fields. The report won't be sent according to its schedule while it's a draft.
    - **Discard** - Delete the report draft. This action can't be reversed.
 
-### 1. Select dashboard
+### 1\. Select dashboard
 
 At this step, select the dashboard or dashboards on which the report is based, as well as the variables and time ranges for those dashboards.
 The options are:
@@ -178,10 +181,10 @@ If you want to use a specific time zone, save the dashboard with a fixed time zo
 
 Each dashboard's time zone setting is visible in the [time range controls](ref:time-range-controls).
 
-### 2. Format report
+### 2\. Format report
 
 At this step, select one or more report formatting options.
-You can select multiple options, but you must select _at least one_:
+You can select multiple options, but you must select *at least one*:
 
 - [Attach the report as a PDF](#attach-the-report-as-a-pdf)
 - [Include table data as PDF appendix](#table-data-in-pdf) (Public preview only)
@@ -194,13 +197,17 @@ You can select multiple options, but you must select _at least one_:
 If you selected the PDF format option under the **Style the PDF** section, you can configure the following options:
 
 - **Configure multiple PDFs** - Click the **Combine all dashboard PDFs in one file** checkbox if you want to generate one PDF file for all the dashboards included in the report. This option is only displayed if your report includes multiple dashboards.
+
 - **Configure report header** - Click the **Show template variables** checkbox to show dashboard variables.
+
 - **Orientation** - Set the report orientation in **Portrait** or **Landscape**. Refer to the [Layout and orientation table](#layout-and-orientation) to see examples.
+
 - **Layout** - Select one of the following:
-
+  
   - **Simple** - Renders each panel as full-width across the PDF.
+  
   - **Grid** - Renders the PDF with the same panel arrangement and width as the source dashboard.
-
+    
     Refer to the [Layout and orientation table](#layout-and-orientation) to see examples.
 
 - **Zoom** - Zoom in to enlarge text in your PDF, or zoom out to see more data (like table columns) per panel.
@@ -213,10 +220,10 @@ Click **Preview PDF** in the top-right corner of the screen to view a rendered P
 
 | Layout | Orientation | Description                                                                                               | Preview    |
 | ------ | ----------- | --------------------------------------------------------------------------------------------------------- | ------------ |
-| Simple | Portrait    | Generates an A4 page in portrait mode with three panels per page.                                         | {{< figure src="/static/img/docs/enterprise/reports_portrait_preview.png" max-width="500px" alt="Simple layout in portrait" >}}    |
-| Simple | Landscape   | Generates an A4 page in landscape mode with a single panel per page.                                      | {{< figure src="/static/img/docs/enterprise/reports_landscape_preview.png" max-width="500px" alt="Simple layout in landscape" >}}                     |
-| Grid   | Portrait    | Generates an A4 page in portrait mode with panels arranged in the same way as at the original dashboard.  | {{< figure src="/static/img/docs/enterprise/reports_grid_portrait_preview.png" max-width="500px" alt="Grid layout in portrait" >}} |
-| Grid   | Landscape   | Generates an A4 page in landscape mode with panels arranged in the same way as in the original dashboard. | {{< figure src="/static/img/docs/enterprise/reports_grid_landscape_preview.png" max-width="500px" alt="Grid layout in landscape" >}}                  |
+| Simple | Portrait    | Generates an A4 page in portrait mode with three panels per page.                                         | {{\< figure src="/static/img/docs/enterprise/reports\_portrait\_preview.png" max-width="500px" alt="Simple layout in portrait" \>}}    |
+| Simple | Landscape   | Generates an A4 page in landscape mode with a single panel per page.                                      | {{\< figure src="/static/img/docs/enterprise/reports\_landscape\_preview.png" max-width="500px" alt="Simple layout in landscape" \>}}                     |
+| Grid   | Portrait    | Generates an A4 page in portrait mode with panels arranged in the same way as at the original dashboard.  | {{\< figure src="/static/img/docs/enterprise/reports\_grid\_portrait\_preview.png" max-width="500px" alt="Grid layout in portrait" \>}} |
+| Grid   | Landscape   | Generates an A4 page in landscape mode with panels arranged in the same way as in the original dashboard. | {{\< figure src="/static/img/docs/enterprise/reports\_grid\_landscape\_preview.png" max-width="500px" alt="Grid layout in landscape" \>}}                  |
 
 <!-- prettier-ignore-end -->
 
@@ -233,16 +240,16 @@ Click **Download CSV** in the top-right corner of the screen to download a zippe
 
 #### Table data in PDF
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Available in public preview (`pdfTables` feature toggle) in [Grafana Enterprise](ref:grafana-enterprise) v10.3+ with the [Grafana image renderer plugin](/grafana/plugins/grafana-image-renderer) v3.0+, as well as in [Grafana Cloud](/docs/grafana-cloud/).
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 When there's more data in your table visualizations than can be shown in the dashboard PDF, you can select one of these two options to access all table visualization data as PDF in your reports:
 
 - **Include table data as PDF appendix** - Adds an appendix to the dashboard PDF.
 - **Attach a separate PDF of table data** - Generates a separate PDF file.
 
-### 3. Schedule
+### 3\. Schedule
 
 At this step, set scheduling information.
 Options vary depending on the frequency you select.
@@ -259,7 +266,7 @@ Options vary depending on the frequency you select.
 
 <!-- prettier-ignore-end -->
 
-### 4. Share
+### 4\. Share
 
 At this step, enter information related to sharing the report:
 
@@ -282,7 +289,7 @@ At this step, enter information related to sharing the report:
 Click **Send test email** in the top-right corner of the screen to verify that the configuration works as expected and to verify that emails are working.
 You can choose to send this email to the recipients configured for the report, or to a different set of email addresses only used for testing.
 
-### 5. Confirm
+### 5\. Confirm
 
 At this step, the confirmation page displays all the report settings.
 Review them and confirm that they're correct or click the provided **Edit** links for each section to make updates.
@@ -305,20 +312,21 @@ On the **Reports** page, you can view and manage your existing reports or create
 
 To edit a report, follow these steps:
 
-1. In the main menu, click **Dashboards > Reporting**.
-1. Click the row of the report you want to update.
-1. Click the **Edit report** button in the top-right hand corner or click the **Edit** link for a specific section to go to that one directly.
-1. When you've finished making changes, click **Confirm** at the top of the screen to go to the last step.
-1. Click **Update report**.
+1. In the main menu, click **Dashboards \> Reporting**.
+2. Click the row of the report you want to update.
+3. Click the **Edit report** button in the top-right hand corner or click the **Edit** link for a specific section to go to that one directly.
+4. When you've finished making changes, click **Confirm** at the top of the screen to go to the last step.
+5. Click **Update report**.
 
-### Pause or resume reports {#pause-a-report}
+### Pause or resume reports {\#pause-a-report}
 
 You can pause and resume sending reports from the report list view.
 To do this, follow these steps:
 
-1. In the main menu, click **Dashboards > Reporting**.
-1. On the row of the report you want to update, do one of the following:
+1. In the main menu, click **Dashboards \> Reporting**.
 
+2. On the row of the report you want to update, do one of the following:
+   
    - Click the pause icon - The report won't be sent according to its schedule until it's resumed.
    - Click the resume icon - The report resumes on its previous schedule.
 
@@ -326,9 +334,9 @@ To do this, follow these steps:
 
 To delete a report, follow these steps:
 
-1. In the main menu, click **Dashboards > Reporting**.
-1. On the row of the report you want to update, click the trash can icon.
-1. Click **Delete** to confirm.
+1. In the main menu, click **Dashboards \> Reporting**.
+2. On the row of the report you want to update, click the trash can icon.
+3. Click **Delete** to confirm.
 
 Deleting a report is irreversible.
 
@@ -337,7 +345,7 @@ Deleting a report is irreversible.
 To troubleshoot and get more log information, enable debug logging in the configuration file.
 Refer to the [log filters configuration documentation](ref:log-filters) for more information.
 
-```bash
+``` bash
 [log]
 filters = rendering:debug,report.api:debug,report.render:debug,report.scheduler:debug,report.sender:debug,report.service:debug
 ```

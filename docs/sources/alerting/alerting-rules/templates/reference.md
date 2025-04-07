@@ -1,62 +1,65 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/alerting-rules/templates/reference/
 description: Reference for variables and functions in Grafana alert rule templating.
 keywords:
-  - grafana
-  - alerting
-  - templating
-  - labels
-  - annotations
-labels:
+
+- grafana
+- alerting
+- templating
+- labels
+- annotations
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Annotation and label template reference
-menuTitle: Template reference
-weight: 101
-refs:
-  label-types:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/annotation-label/#label-types
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/#label-types
-  notification-template-reference:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/reference/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/
-  language:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/language/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/
-  language-functions:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/language/#functions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/#functions
-  language-index:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/language/#functions
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/#functions
-  print-all-labels-from-a-classic-condition:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/examples/#print-all-labels-from-a-classic-condition
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/examples/#print-all-labels-from-a-classic-condition
-  template-annotations-and-labels:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/templates/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
-  explore:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/explore/
----
+  - cloud
+  - enterprise
+  - oss
+    title: Annotation and label template reference
+    menuTitle: Template reference
+    weight: 101
+    refs:
+    label-types:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/fundamentals/alert-rules/annotation-label/\#label-types
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/fundamentals/alert-rules/annotation-label/\#label-types
+    notification-template-reference:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/reference/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/reference/
+    language:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/language/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/
+    language-functions:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/language/\#functions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/\#functions
+    language-index:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/language/\#functions
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/language/\#functions
+    print-all-labels-from-a-classic-condition:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/examples/\#print-all-labels-from-a-classic-condition
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/examples/\#print-all-labels-from-a-classic-condition
+    template-annotations-and-labels:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/templates/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/templates/
+    explore:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/explore/
+
+-----
 
 # Annotation and label template reference
 
@@ -72,9 +75,7 @@ Variables represent dynamic values from alert rule queries that can be displayed
 
 The `$` and `.` symbols are used to reference variables and their properties. You can reference variables directly in your alert rule definitions using the `$` symbol followed by the variable name. Similarly, you can access properties of variables using the dot (`.`) notation in alert rule templates.
 
-```
-{{ $values.A.Value }}
-```
+    {{ $values.A.Value }}
 
 Templates are based on the **Go templating system**. Refer to [Template language](ref:language) for additional information.
 
@@ -90,19 +91,15 @@ The following variables are available when templating annotations and labels:
 
 The `$labels` variable contains all labels from the query. It excludes [user-configured and reserved labels](ref:label-types), containing only query labels.
 
-{{< figure src="/media/docs/alerting/query-labels-and-values.png" max-width="1200px" caption="An alert rule displaying labels and value from a query." >}}
+{{\< figure src="/media/docs/alerting/query-labels-and-values.png" max-width="1200px" caption="An alert rule displaying labels and value from a query." \>}}
 
 For example, suppose you have a query that returns CPU usage for all of your servers, and you have an alert rule that fires when any of your servers have exceeded 80% CPU usage for the last 5 minutes. You want to add a summary annotation to the alert that tells you which server is experiencing high CPU usage. With the `$labels` variable you can write a template that prints a human-readable sentence such as:
 
-```
-CPU usage for {{ $labels.instance }} has exceeded 80% for the last 5 minutes
-```
+    CPU usage for {{ $labels.instance }} has exceeded 80% for the last 5 minutes
 
 The outcome of this template would be:
 
-```
-CPU usage for server1 has exceeded 80% for the last 5 minutes
-```
+    CPU usage for server1 has exceeded 80% for the last 5 minutes
 
 > If you are using a classic condition then `$labels` will not contain any labels from the query. Classic conditions discard these labels in order to enforce uni-dimensional behavior (at most one alert per alert rule). If you want to use labels from the query in your template then use the example [here](ref:print-all-labels-from-a-classic-condition).
 
@@ -119,27 +116,19 @@ Each Ref IDs, such as `$values.A`, has the following properties
 
 Here's the previous example printing now the value of the instant query with Ref ID `A`:
 
-```
-{{ $values.A.Value }} CPU usage for {{ $labels.instance }} over the last 5 minutes.
-```
+    {{ $values.A.Value }} CPU usage for {{ $labels.instance }} over the last 5 minutes.
 
 If the alert has the label `instance=server1` and the query returns `81.2345`, the template would print:
 
-```
-81.2345 CPU usage for instance1 over the last 5 minutes.
-```
+    81.2345 CPU usage for instance1 over the last 5 minutes.
 
 If the query in Ref ID `A` is a range query rather than an instant query then add a reduce expression with Ref ID `B` and replace `$values.A.Value` with `$values.B.Value`:
 
-```
-{{ $values.B.Value }} CPU usage for {{ $labels.instance }} over the last 5 minutes.
-```
+    {{ $values.B.Value }} CPU usage for {{ $labels.instance }} over the last 5 minutes.
 
 Alternatively, you can use the `index()` function to retrieve the query value:
 
-```
-{{ index $values "B" }} CPU usage for {{ index $labels "instance" }} over the last 5 minutes.
-```
+    {{ index $values "B" }} CPU usage for {{ index $labels "instance" }} over the last 5 minutes.
 
 #### $value
 
@@ -149,21 +138,15 @@ When a single data source is used in the alert rule, `$value` will return the qu
 
 This example prints the `$value` variable:
 
-```
-{{ $value }}: CPU usage has exceeded 80% for the last 5 minutes.
-```
+    {{ $value }}: CPU usage has exceeded 80% for the last 5 minutes.
 
 When using multiple data sources, it would display something like this:
 
-```
-[ var='A' labels={instance=instance1} value=81.234, , [ var='B' labels={instance=instance2} value=1 ] ]: CPU usage has exceeded 80% for the last 5 minutes.
-```
+    [ var='A' labels={instance=instance1} value=81.234, , [ var='B' labels={instance=instance2} value=1 ] ]: CPU usage has exceeded 80% for the last 5 minutes.
 
 But with a single data source, it would display just the value of the query:
 
-```
-81.234: CPU usage has exceeded 80% for the last 5 minutes.
-```
+    81.234: CPU usage has exceeded 80% for the last 5 minutes.
 
 Instead, we recommend using [$values](#values), which contains the same information as `$value` but is structured in an easier-to-use table format.
 
@@ -205,7 +188,7 @@ In addition, the following functions are also available for templating annotatio
 
 | Name                        | Arguments     | Returns                | Description                                                                      |
 | --------------------------- | ------------- | ---------------------- | -------------------------------------------------------------------------------- |
-| [args](#args)               | []interface{} | map[string]interface{} | Translates a list of objects to a map with keys arg0, arg1 etc.                  |
+| [args](#args)               | \[\]interface{} | map\[string\]interface{} | Translates a list of objects to a map with keys arg0, arg1 etc.                  |
 | [safeHtml](#safehtml)       | string        | string                 | Marks string as HTML not requiring auto-escaping.                                |
 | [externalURL](#externalurl) | none          | string                 | Returns the external URL of the Grafana server as configured in the ini file(s). |
 | [pathPrefix](#pathprefix)   | none          | string                 | Returns the path of the Grafana server as configured in the ini file(s).         |
@@ -216,241 +199,161 @@ For further context on these functions, note that templating in Grafana is based
 
 The `humanize` function humanizes decimal numbers:
 
-```
-{{ humanize 1000.0 }}
-```
+    {{ humanize 1000.0 }}
 
-```
-1k
-```
+    1k
 
 #### humanize1024
 
 The `humanize1024` works similar to `humanize` but but uses 1024 as the base rather than 1000:
 
-```
-{{ humanize1024 1024.0 }}
-```
+    {{ humanize1024 1024.0 }}
 
-```
-1ki
-```
+    1ki
 
 #### humanizeDuration
 
 The `humanizeDuration` function humanizes a duration in seconds:
 
-```
-{{ humanizeDuration 60.0 }}
-```
+    {{ humanizeDuration 60.0 }}
 
-```
-1m 0s
-```
+    1m 0s
 
 #### humanizePercentage
 
 The `humanizePercentage` function humanizes a ratio value between 0 and 1 to a percentage:
 
-```
-{{ humanizePercentage 0.2 }}
-```
+    {{ humanizePercentage 0.2 }}
 
-```
-20%
-```
+    20%
 
 #### humanizeTimestamp
 
 The `humanizeTimestamp` function humanizes a Unix timestamp:
 
-```
-{{ humanizeTimestamp 1577836800.0 }}
-```
+    {{ humanizeTimestamp 1577836800.0 }}
 
-```
-2020-01-01 00:00:00 +0000 UTC
-```
+    2020-01-01 00:00:00 +0000 UTC
 
 #### toTime
 
 The `toTime` function converts a Unix timestamp in seconds to time.:
 
-```
-{{ toTime 1727802106 }}
-```
+    {{ toTime 1727802106 }}
 
-```
-2024-10-01 17:01:46 +0000 UTC
-```
+    2024-10-01 17:01:46 +0000 UTC
 
 #### title
 
 The `title` function capitalizes the first character of each word:
 
-```
-{{ title "hello, world!" }}
-```
+    {{ title "hello, world!" }}
 
-```
-Hello, World!
-```
+    Hello, World!
 
 #### toUpper
 
 The `toUpper` function returns all text in uppercase:
 
-```
-{{ toUpper "Hello, world!" }}
-```
+    {{ toUpper "Hello, world!" }}
 
-```
-HELLO, WORLD!
-```
+    HELLO, WORLD!
 
 #### toLower
 
 The `toLower` function returns all text in lowercase:
 
-```
-{{ toLower "Hello, world!" }}
-```
+    {{ toLower "Hello, world!" }}
 
-```
-hello, world!
-```
+    hello, world!
 
 #### stripPort
 
 The `stripPort` splits string into host and port, then returns only host:
 
-```
-{{ stripPort "example.com:8080" }}
-```
+    {{ stripPort "example.com:8080" }}
 
-```
-example.com
-```
+    example.com
 
 #### match
 
 The `match` function matches the text against a regular expression pattern:
 
-```
-{{ match "a.*" "abc" }}
-```
+    {{ match "a.*" "abc" }}
 
-```
-true
-```
+    true
 
 #### reReplaceAll
 
 The `reReplaceAll` function replaces text matching the regular expression:
 
-```
-{{ reReplaceAll "localhost:(.*)" "example.com:$1" "localhost:8080" }}
-```
+    {{ reReplaceAll "localhost:(.*)" "example.com:$1" "localhost:8080" }}
 
-```
-example.com:8080
-```
+    example.com:8080
 
 #### graphLink
 
 The `graphLink` function returns the path to the graphical view in [Explore](ref:explore) for the given expression and data source:
 
-```
-{{ graphLink "{\"expr\": \"up\", \"datasource\": \"gdev-prometheus\"}" }}
-```
+    {{ graphLink "{\"expr\": \"up\", \"datasource\": \"gdev-prometheus\"}" }}
 
-```
-/explore?left=["now-1h","now","gdev-prometheus",{"datasource":"gdev-prometheus","expr":"up","instant":false,"range":true}]
-```
+    /explore?left=["now-1h","now","gdev-prometheus",{"datasource":"gdev-prometheus","expr":"up","instant":false,"range":true}]
 
 #### parseDuration
 
 The `parseDuration` function parses a duration string such as "1h" into the number of seconds it represents.
 
-```
-{{ parseDuration "1h" }}
-```
+    {{ parseDuration "1h" }}
 
-```
-3600
-```
+    3600
 
 #### stripDomain
 
 The `stripDomain` removes the domain part of a FQDN, leaving port untouched:
 
-```
-{{ stripDomain "example.com:8080" }}
-```
+    {{ stripDomain "example.com:8080" }}
 
-```
-example:8080
-```
+    example:8080
 
 #### tableLink
 
 The `tableLink` function returns the path to the tabular view in [Explore](ref:explore) for the given expression and data source:
 
-```
-{{ tableLink "{\"expr\": \"up\", \"datasource\": \"gdev-prometheus\"}" }}
-```
+    {{ tableLink "{\"expr\": \"up\", \"datasource\": \"gdev-prometheus\"}" }}
 
-```
-/explore?left=["now-1h","now","gdev-prometheus",{"datasource":"gdev-prometheus","expr":"up","instant":true,"range":false}]
-```
+    /explore?left=["now-1h","now","gdev-prometheus",{"datasource":"gdev-prometheus","expr":"up","instant":true,"range":false}]
 
 #### args
 
 The `args` function translates a list of objects to a map with keys arg0, arg1 etc. This is intended to allow multiple arguments to be passed to templates:
 
-```
-{{define "x"}}{{.arg0}} {{.arg1}}{{end}}{{template "x" (args 1 "2")}}
-```
+    {{define "x"}}{{.arg0}} {{.arg1}}{{end}}{{template "x" (args 1 "2")}}
 
-```
-1 2
-```
+    1 2
 
 #### safeHtml
 
 The `safeHtml` function marks string as HTML not requiring auto-escaping:
 
-```
-{{ safeHtml "<b>Text</b>"}}
-```
+    {{ safeHtml "<b>Text</b>"}}
 
-```
-<b>Text</b>
-```
+    <b>Text</b>
 
 #### externalURL
 
 The `externalURL` function returns the external URL of the Grafana server as configured in the ini file(s):
 
-```
-{{ externalURL }}
-```
+    {{ externalURL }}
 
-```
-https://example.com/grafana
-```
+    https://example.com/grafana
 
 #### pathPrefix
 
 The `pathPrefix` function returns the path of the Grafana server as configured in the ini file(s):
 
-```
-{{ pathPrefix }}
-```
+    {{ pathPrefix }}
 
-```
-/grafana
-```
+    /grafana
 
 ## Differences with notification templates
 

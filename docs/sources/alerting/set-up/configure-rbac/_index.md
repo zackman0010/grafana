@@ -1,19 +1,22 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-rbac/
 description: Configure RBAC for Grafana Alerting
 keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - RBAC
-labels:
+
+- grafana
+- alerting
+- set up
+- configure
+- RBAC
+  labels:
   products:
-    - enterprise
-    - cloud
-title: Configure RBAC
-weight: 155
----
+  - enterprise
+  - cloud
+    title: Configure RBAC
+    weight: 155
+
+-----
 
 # Configure RBAC
 

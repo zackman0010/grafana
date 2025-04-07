@@ -6,7 +6,7 @@ This topic contains instructions for installing Grafana using the Docker image.
 
 Start the Docker container by binding Grafana to external port `3000`.
 
-```bash
+``` bash
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
 ```
 
@@ -18,21 +18,21 @@ Further documentation can be found at http://docs.grafana.org/installation/docke
 
 ### v9.0.3
 
-- Upgraded glibc version to glibc [2.35](https://sourceware.org/pipermail/libc-alpha/2022-February/136040.html) [#51107](https://github.com/grafana/grafana/pull/51107/files)
+- Upgraded glibc version to glibc [2.35](https://sourceware.org/pipermail/libc-alpha/2022-February/136040.html) [\#51107](https://github.com/grafana/grafana/pull/51107/files)
 
 ### v8.3.0-beta2
 
-- Our Alpine based images have been upgraded to Alpine [3.14.3](https://alpinelinux.org/posts/Alpine-3.14.3-released.html) [#41922](https://github.com/grafana/grafana/pull/41922) [@hairyhenderson](https://github.com/hairyhenderson)
-- Our Go build image has been upgraded to Go [1.17.2](https://golang.org/doc/devel/release#go1.17.minor) [#41922](https://github.com/grafana/grafana/pull/41922) [@hairyhenderson](https://github.com/hairyhenderson)
+- Our Alpine based images have been upgraded to Alpine [3.14.3](https://alpinelinux.org/posts/Alpine-3.14.3-released.html) [\#41922](https://github.com/grafana/grafana/pull/41922) [@hairyhenderson](https://github.com/hairyhenderson)
+- Our Go build image has been upgraded to Go [1.17.2](https://golang.org/doc/devel/release#go1.17.minor) [\#41922](https://github.com/grafana/grafana/pull/41922) [@hairyhenderson](https://github.com/hairyhenderson)
 
 ### v8.2.6
 
-- **Security:** Upgrade Alpine based images to [3.14.3](https://alpinelinux.org/posts/Alpine-3.14.3-released.html). [#42061](https://github.com/grafana/grafana/pull/42061), [@dsotirakis](https://github.com/dsotirakis)
-- **Security:** Upgrade Go to [1.17.2](https://go.dev/doc/devel/release#go1.17.minor). [#42427](https://github.com/grafana/grafana/pull/42427), [@idafurjes](https://github.com/idafurjes)
+- **Security:** Upgrade Alpine based images to [3.14.3](https://alpinelinux.org/posts/Alpine-3.14.3-released.html). [\#42061](https://github.com/grafana/grafana/pull/42061), [@dsotirakis](https://github.com/dsotirakis)
+- **Security:** Upgrade Go to [1.17.2](https://go.dev/doc/devel/release#go1.17.minor). [\#42427](https://github.com/grafana/grafana/pull/42427), [@idafurjes](https://github.com/idafurjes)
 
 ### v7.3.0-beta1
 
-- OpenShift compatibility. [#27813](https://github.com/grafana/grafana/pull/27813), [@xlson](https://github.com/grafana/grafana/pull/27813)
+- OpenShift compatibility. [\#27813](https://github.com/grafana/grafana/pull/27813), [@xlson](https://github.com/grafana/grafana/pull/27813)
 
 ### v7.0.0-beta3
 
@@ -44,9 +44,9 @@ Further documentation can be found at http://docs.grafana.org/installation/docke
 
 ### v6.5.0-beta1
 
-- Build and publish an additional Ubuntu based docker image. [#20196](https://github.com/grafana/grafana/pull/20196), [@aknuds1](https://github.com/aknuds1)
-- Build and use musl-based binaries in alpine images to resolve glibc incompatibility issues. [#19798](https://github.com/grafana/grafana/pull/19798), [@aknuds1](https://github.com/aknuds1)
-- Add additional glibc dependencies to support certain backend plugins in alpine. [#20214](https://github.com/grafana/grafana/pull/20214), [@briangann](https://github.com/briangann)
+- Build and publish an additional Ubuntu based docker image. [\#20196](https://github.com/grafana/grafana/pull/20196), [@aknuds1](https://github.com/aknuds1)
+- Build and use musl-based binaries in alpine images to resolve glibc incompatibility issues. [\#19798](https://github.com/grafana/grafana/pull/19798), [@aknuds1](https://github.com/aknuds1)
+- Add additional glibc dependencies to support certain backend plugins in alpine. [\#20214](https://github.com/grafana/grafana/pull/20214), [@briangann](https://github.com/briangann)
 
 ### v6.4.0-beta1
 
@@ -62,19 +62,19 @@ Further documentation can be found at http://docs.grafana.org/installation/docke
 
 ### v5.4.3
 
-- Added ability to build and publish Docker images for armv7 and arm64, #14617, thx @johanneswuerbach.
+- Added ability to build and publish Docker images for armv7 and arm64, \#14617, thx @johanneswuerbach.
 
 ### v5.3.2
 
-- Added Curl back into the Docker image for utility, #13794.
+- Added Curl back into the Docker image for utility, \#13794.
 
 ### v5.3.0-beta1
 
-- Made it possible to set a specific plugin URL, #12861, thx ClementGautier.
+- Made it possible to set a specific plugin URL, \#12861, thx ClementGautier.
 
 ### v5.1.5, v5.2.0-beta2
 
-- Fixed: config keys ending with \_FILE are not respected [#170](https://github.com/grafana/grafana-docker/issues/170).
+- Fixed: config keys ending with \_FILE are not respected [\#170](https://github.com/grafana/grafana-docker/issues/170).
 
 ### v5.2.0-beta1
 
@@ -92,7 +92,7 @@ Further documentation can be found at http://docs.grafana.org/installation/docke
 
 ### v4.2.0
 
-- Plugins are now installed into ${GF_PATHS_PLUGINS}.
+- Plugins are now installed into ${GF\_PATHS\_PLUGINS}.
 - Building the container now requires a full URL to the Debian package instead of just the version.
 - Fixed bug caused by installing multiple plugins.
 
@@ -102,4 +102,4 @@ Further documentation can be found at http://docs.grafana.org/installation/docke
 
 ### v3.1.1
 
-- Made it possible to install specific plugin version https://github.com/grafana/grafana-docker/issues/59#issuecomment-260584026.
+- Made it possible to install specific plugin version https://github.com/grafana/grafana-docker/issues/59\#issuecomment-260584026.

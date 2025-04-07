@@ -6,4 +6,4 @@ This chart is **included** with Grafana.
 
 Read more about it here:
 
-[https://grafana.com/docs/grafana/latest/visualizations/candlestick/](https://grafana.com/docs/grafana/latest/visualizations/candlestick/)
+<https://grafana.com/docs/grafana/latest/visualizations/candlestick/>

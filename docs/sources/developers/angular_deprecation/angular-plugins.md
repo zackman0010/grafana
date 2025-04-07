@@ -1,18 +1,21 @@
----
+-----
+
 keywords:
-  - grafana
-  - plugins
-  - plugin
-  - angular
-  - deprecation
-  - migration
-labels:
+
+- grafana
+- plugins
+- plugin
+- angular
+- deprecation
+- migration
+  labels:
   products:
-    - enterprise
-    - oss
-title: Plugins using AngularJS
-description: An annotated list of Grafana plugins using AngularJS.
----
+  - enterprise
+  - oss
+    title: Plugins using AngularJS
+    description: An annotated list of Grafana plugins using AngularJS.
+
+-----
 
 # Plugins using AngularJS
 
@@ -44,7 +47,7 @@ Grafana OSS and Grafana Enterprise support the creation of private plugins for u
 
 The `detect-angular-dashboards` tool listed above will include private plugins in its report **if the Grafana version is v10.1.0 or later**.
 
-Additionally, warning icons and messages will be displayed when browsing the catalog via **Administration** > **Plugins and Data** > **Plugins** in your local instance.
+Additionally, warning icons and messages will be displayed when browsing the catalog via **Administration** \> **Plugins and Data** \> **Plugins** in your local instance.
 
 ## Automatic migration of plugins
 

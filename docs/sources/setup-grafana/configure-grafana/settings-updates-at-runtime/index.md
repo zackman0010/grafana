@@ -1,18 +1,21 @@
----
+-----
+
 aliases:
-  - ../../enterprise/settings-updates/
-description: Settings updates at runtime
-keywords:
-  - grafana
-  - runtime
-  - settings
-labels:
+
+- ../../enterprise/settings-updates/
+  description: Settings updates at runtime
+  keywords:
+- grafana
+- runtime
+- settings
+  labels:
   products:
-    - enterprise
-    - oss
-title: Settings updates at runtime
-weight: 500
----
+  - enterprise
+  - oss
+    title: Settings updates at runtime
+    weight: 500
+
+-----
 
 # Settings updates at runtime
 
@@ -45,7 +48,7 @@ should contain (either one or both):
 
 For example, if you provide the following `updates`:
 
-```json
+``` json
 {
   "updates": {
     "auth.saml": {
@@ -58,7 +61,7 @@ For example, if you provide the following `updates`:
 
 it would enable SAML and disable single logouts. And, if you provide the following `removals`:
 
-```json
+``` json
 {
   "removals": {
     "auth.saml": ["allow_idp_initiated"]
@@ -72,7 +75,7 @@ environment variable, command line arguments or any other accepted mechanism to 
 
 Therefore, the complete HTTP payload would looks like:
 
-```json
+``` json
 {
   "updates": {
     "auth.saml": {

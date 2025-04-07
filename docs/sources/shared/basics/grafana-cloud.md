@@ -1,10 +1,6 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: Grafana Cloud
----
+-----
+
+## labels: products: - enterprise - oss title: Grafana Cloud
 
 ## Grafana Cloud
 

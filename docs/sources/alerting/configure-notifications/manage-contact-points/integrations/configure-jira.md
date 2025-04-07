@@ -1,26 +1,29 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/integrations/configure-jira/
 description: Configure the Jira integration to receive notifications when your alerts are firing
 keywords:
-  - grafana
-  - alerting
-  - Jira
-  - integration
-labels:
+
+- grafana
+- alerting
+- Jira
+- integration
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Jira
-title: Configure Jira for Alerting
-weight: 121
-refs:
-  configure-contact-points:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/manage-contact-points/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Jira
+    title: Configure Jira for Alerting
+    weight: 121
+    refs:
+    configure-contact-points:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/manage-contact-points/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
+
+-----
 
 # Configure Jira for Alerting
 
@@ -38,7 +41,7 @@ Before you begin, ensure you have the following:
 
 To create a contact point with a Jira integration, complete the following steps:
 
-1. Navigate to **Alerts & IRM** -> **Alerting** -> **Contact points**.
+1. Navigate to **Alerts & IRM** -\> **Alerting** -\> **Contact points**.
 2. Click **+ Add contact point**.
 3. Enter a name for the contact point.
 4. From the **Integration** list, select **Jira**.

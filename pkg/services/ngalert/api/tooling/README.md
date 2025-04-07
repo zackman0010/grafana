@@ -8,8 +8,9 @@ This aims to define the unified alerting API as code. It generates OpenAPI defin
 `make serve` - regenerate the Swagger document, and host rendered docs on port 80. [view api](http://localhost)
 
 ## Requires
- - [go-swagger](https://github.com/go-swagger/go-swagger)
- - [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
+
+- [go-swagger](https://github.com/go-swagger/go-swagger)
+- [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
 
 ## Why
 
@@ -23,6 +24,4 @@ We have some endpoints that we document publicly as being stable, and others tha
 
 To stabilize an endpoint, add the `stable` tag to its route comment:
 
-```
-// swagger:route GET /provisioning/contact-points provisioning stable RouteGetContactpoints
-```
+    // swagger:route GET /provisioning/contact-points provisioning stable RouteGetContactpoints

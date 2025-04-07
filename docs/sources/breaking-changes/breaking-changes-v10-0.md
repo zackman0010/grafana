@@ -1,19 +1,22 @@
----
+-----
+
 description: Learn about breaking changes in Grafana v10.0
 keywords:
-  - grafana
-  - breaking changes
-  - documentation
-  - '10.0'
-  - release notes
-labels:
+
+- grafana
+- breaking changes
+- documentation
+- '10.0'
+- release notes
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Breaking changes in Grafana v10.0
-weight: -1
----
+  - cloud
+  - enterprise
+  - oss
+    title: Breaking changes in Grafana v10.0
+    weight: -1
+
+-----
 
 # Breaking changes in Grafana v10.0
 
@@ -53,7 +56,7 @@ You create a new Grafana Cloud stack and intend to use any panel or data source 
 
 AngularJS is an old frontend framework that stopped active development many years ago. Because of that, it's a security risk. AngularJS also requires **unsafe-eval** in the [CSP (Content Security Policy)](https://developer.mozilla.org/en/Security/CSP) settings, which also reduces the security level of how javascript is executed in the browser.
 
-Angular plugin support in Grafana is deprecated, meaning it will be removed in a future release. There are still some community and private plugins built using Angular. Starting with v9.0, Grafana has a server configuration option, called [angular_support_enabled](../../setup-grafana/configure-grafana/#angular_support_enabled), that controls whether Angular plugin support is available.
+Angular plugin support in Grafana is deprecated, meaning it will be removed in a future release. There are still some community and private plugins built using Angular. Starting with v9.0, Grafana has a server configuration option, called [angular\_support\_enabled](../../setup-grafana/configure-grafana/#angular_support_enabled), that controls whether Angular plugin support is available.
 
 #### Change in Grafana v10
 
@@ -77,7 +80,7 @@ You use Grafana legacy alerting and have requested new features or changes to it
 
 #### Description
 
-Grafana legacy alerting (dashboard alerts) has been deprecated since Grafana v9.0, in favor of the new, improved Grafana Alerting. In Grafana v10, the legacy alerting codebase&mdash;which depends on Angular&mdash;is still available, but we'll no longer contribute to it or accept external contributions for it. We'll continue to work on the migration path from legacy alerting to Grafana Alerting for our remaining users that need to migrate.
+Grafana legacy alerting (dashboard alerts) has been deprecated since Grafana v9.0, in favor of the new, improved Grafana Alerting. In Grafana v10, the legacy alerting codebase—which depends on Angular—is still available, but we'll no longer contribute to it or accept external contributions for it. We'll continue to work on the migration path from legacy alerting to Grafana Alerting for our remaining users that need to migrate.
 
 #### Migration path
 
@@ -99,11 +102,11 @@ Grafana's [HTTP API endpoints for generating and managing API Keys](../../develo
 
 #### Migration path
 
-While upgrading to Grafana v10, you don't need to take any action; your API keys will be automatically migrated. To test or perform the migration from API keys to service accounts before upgrading to Grafana v10, follow our [migration documentation](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/).
+While upgrading to Grafana v10, you don't need to take any action; your API keys will be automatically migrated. To test or perform the migration from API keys to service accounts before upgrading to Grafana v10, follow our [migration documentation](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/).
 
 #### Learn more
 
-- [Documentation on migrating from API keys to service accounts](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/migrate-api-keys/)
+- [Documentation on migrating from API keys to service accounts](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/service-accounts/migrate-api-keys/)
 
 - [Blog post announcement with a video demo including how to migrate](https://grafana.com/blog/2022/08/24/new-in-grafana-9.1-service-accounts-are-now-ga/)
 
@@ -137,7 +140,7 @@ Starting from Grafana 9, RBAC has been enabled by default. An option to disable 
 
 #### Migration path
 
-No action is needed&mdash;migration is automatic. Users' current roles, permissions, SSO mapping, and other authorization functionality will continue to work as before.
+No action is needed—migration is automatic. Users' current roles, permissions, SSO mapping, and other authorization functionality will continue to work as before.
 
 ### Usernames are now case-insensitive by default
 
@@ -149,7 +152,7 @@ You run Grafana with a Postgres or sqlite database, you import users from differ
 
 When someone signs up for a Grafana account, they can do it using an email or a login. The fields were case sensitive, which could lead to two or more accounts being created for the same user. Additionally, Grafana allows users to set up an authentication provider, and that provider might return an individual's sign-up email with an uppercased domain name or some combination of uppercase and lowercase letters.
 
-Having several accounts leads to split user permissions, confusion among signup flows, and unused "zombie" accounts in your database. Plus, multiple accounts can introduce issues when switching between authentication providers. We refer to these inconsistencies in user uniqueness as a _user identity conflict_.
+Having several accounts leads to split user permissions, confusion among signup flows, and unused "zombie" accounts in your database. Plus, multiple accounts can introduce issues when switching between authentication providers. We refer to these inconsistencies in user uniqueness as a *user identity conflict*.
 
 #### Change in Grafana v10
 
@@ -183,10 +186,8 @@ Grafana will not allow the affected users to sign in.
 
 In order to address any errors, we have provided an escape hatch that allows you to activate email lookup. You can use the following configuration in your Grafana instance to return the previous behavior.
 
-```
-[auth]
-oauth_allow_insecure_email_lookup = true
-```
+    [auth]
+    oauth_allow_insecure_email_lookup = true
 
 We strongly recommend not doing this in case you are using Azure AD as an identity provider with a multi-tenant app.
 
@@ -213,7 +214,7 @@ Open and save each dashboard that uses the Alias field. Alias is migrated to Lab
 
 - [Grafana CloudWatch documentation about the change](../../datasources/aws-cloudwatch/query-editor/#label)
 
-### Athena data source plugin must be updated to version >=2.9.3
+### Athena data source plugin must be updated to version \>=2.9.3
 
 #### You are affected if:
 
@@ -221,13 +222,13 @@ You've installed and are using the Athena data source plugin.
 
 #### Description
 
-Grafana v10.0.0 ships with the new React 18 upgrade. In turn, changes in the batching of state updates in React 18 cause a bug in the query editor in Athena plugin versions <=2.9.2.
+Grafana v10.0.0 ships with the new React 18 upgrade. In turn, changes in the batching of state updates in React 18 cause a bug in the query editor in Athena plugin versions \<=2.9.2.
 
 #### Migration path
 
 Update the plugin to version 2.9.3 or higher in your Grafana instance management console. This will ensure your plugin query editor works as intended.
 
-### Redshift data source plugin must be updated to version >=1.8.3
+### Redshift data source plugin must be updated to version \>=1.8.3
 
 #### You are affected if:
 
@@ -235,7 +236,7 @@ You've installed and are using the Redshift data source plugin.
 
 #### Description
 
-Grafana v10.0.0 ships with the new React 18 upgrade. In turn, changes in the batching of state updates in React 18 cause a bug in the query editor in Redshift plugin versions <=1.8.3.
+Grafana v10.0.0 ships with the new React 18 upgrade. In turn, changes in the batching of state updates in React 18 cause a bug in the query editor in Redshift plugin versions \<=1.8.3.
 
 #### Migration path
 
@@ -301,9 +302,9 @@ If you've written a data source or panel plugin, make sure it doesn't use the fu
 
 #### Learn more
 
-- [https://github.com/grafana/grafana/issues/65779](https://github.com/grafana/grafana/issues/65779)
+- <https://github.com/grafana/grafana/issues/65779>
 
-- [https://github.com/grafana/grafana/issues/65778](https://github.com/grafana/grafana/issues/65778)
+- <https://github.com/grafana/grafana/issues/65778>
 
 ### DataFrame: Use Array<T> or Vector<T> for field values
 
@@ -323,7 +324,7 @@ Any code using Vectors will continue to work without issue. If you've implement
 
 #### Learn more
 
-- [https://github.com/grafana/grafana/issues/66480](https://github.com/grafana/grafana/issues/66480)
+- <https://github.com/grafana/grafana/issues/66480>
 
 ### grafana/toolkit CLI commands have been removed and migrated to the create-plugin package
 

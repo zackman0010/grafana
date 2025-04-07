@@ -7,11 +7,11 @@ The Drone pipelines are built with [Starlark](https://github.com/bazelbuild/star
 ## Drone setup
 
 1. Set environment variables `DRONE_SERVER` and `DRONE_TOKEN` found in your [Drone account](https://drone.grafana.net/account). These environment variables are used to verify that only Grafana employees can make changes to the pipelines.
-1. Install [buildifier](https://github.com/bazelbuild/buildtools/blob/master/buildifier/README.md), and use it to format the Starlark files you want to edit.
+2. Install [buildifier](https://github.com/bazelbuild/buildtools/blob/master/buildifier/README.md), and use it to format the Starlark files you want to edit.
 
 ## Drone development
 
 1. Open a pull request where you can do test runs for your changes. If you need to experiment with secrets, create a pull request in the [`grafana-ci-sandbox repo`](https://github.com/grafana/grafana-ci-sandbox) before opening a pull request in the main repo.
-1. Run `make drone` after making changes to the Starlark files. This builds the `.drone.yml` file.
+2. Run `make drone` after making changes to the Starlark files. This builds the `.drone.yml` file.
 
 For further questions, reach out to the `grafana-release-guild` squad.

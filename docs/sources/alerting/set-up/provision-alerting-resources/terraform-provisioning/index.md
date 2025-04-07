@@ -1,76 +1,79 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/terraform-provisioning/
 description: Create and manage alerting resources using Terraform
 keywords:
-  - grafana
-  - alerting
-  - alerting resources
-  - provisioning
-  - Terraform
-labels:
+
+- grafana
+- alerting
+- alerting resources
+- provisioning
+- Terraform
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Use Terraform to provision
-title: Use Terraform to provision alerting resources
-weight: 200
-refs:
-  alerting_http_provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
-  contact-points:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/manage-contact-points/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
-  notification-template:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/template-notifications/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
-  provision-cloud-with-terraform:
-    - pattern: /docs/
-      destination: /docs/grafana-cloud/developer-resources/infrastructure-as-code/terraform/terraform-cloud-stack/
-  mute-timings:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/mute-timings/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
-  alerting_export:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/export-alerting-resources/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/
-  rbac-terraform-provisioning:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
-  notification-policy:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/configure-notifications/create-notification-policy/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-notification-policy/
-  alerting-rules:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/
-  service-accounts:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
-  rbac-role-definitions:
-    - pattern: /docs/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/
-  testdata:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/datasources/testdata/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/testdata/
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Use Terraform to provision
+    title: Use Terraform to provision alerting resources
+    weight: 200
+    refs:
+    alerting\_http\_provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/http-api-provisioning/
+    contact-points:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/manage-contact-points/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/manage-contact-points/
+    notification-template:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/template-notifications/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/template-notifications/
+    provision-cloud-with-terraform:
+  - pattern: /docs/
+    destination: /docs/grafana-cloud/developer-resources/infrastructure-as-code/terraform/terraform-cloud-stack/
+    mute-timings:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/mute-timings/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/mute-timings/
+    alerting\_export:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/provision-alerting-resources/export-alerting-resources/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/set-up/provision-alerting-resources/export-alerting-resources/
+    rbac-terraform-provisioning:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
+    notification-policy:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/configure-notifications/create-notification-policy/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/configure-notifications/create-notification-policy/
+    alerting-rules:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/alerting/alerting-rules/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/alerting-and-irm/alerting/alerting-rules/
+    service-accounts:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+    rbac-role-definitions:
+  - pattern: /docs/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-fixed-basic-role-definitions/
+    testdata:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/datasources/testdata/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/connect-externally-hosted/data-sources/testdata/
+
+-----
 
 # Use Terraform to provision alerting resources
 
@@ -81,11 +84,11 @@ This guide outlines the steps and references to provision alerting resources wit
 To create and manage your alerting resources using Terraform, you have to complete the following tasks.
 
 1. Create an API key to configure the Terraform provider.
-1. Create your alerting resources in Terraform format by
+2. Create your alerting resources in Terraform format by
    - [exporting configured alerting resources](ref:alerting_export)
    - or writing the [Terraform Alerting schemas](https://registry.terraform.io/providers/grafana/grafana/latest/docs).
      > By default, you cannot edit provisioned resources. Enable [`disable_provenance` in the Terraform resource](#enable-editing-resources-in-the-grafana-ui) to allow changes in the Grafana UI.
-1. Run `terraform apply` to provision your alerting resources.
+3. Run `terraform apply` to provision your alerting resources.
 
 Before you begin, you should have available a Grafana instance and [Terraform installed](https://www.terraform.io/downloads) on your machine.
 
@@ -94,13 +97,13 @@ Before you begin, you should have available a Grafana instance and [Terraform in
 You can create a [service account token](ref:service-accounts) to authenticate Terraform with Grafana. To create an API key for provisioning alerting resources, complete the following steps.
 
 1. Create a new service account.
-1. Assign the role or permission to access the [Alerting provisioning API](ref:alerting_http_provisioning).
-1. Create a new service account token.
-1. Name and save the token for use in Terraform.
+2. Assign the role or permission to access the [Alerting provisioning API](ref:alerting_http_provisioning).
+3. Create a new service account token.
+4. Name and save the token for use in Terraform.
 
 You can now move to the working directory for your Terraform configurations, and create a file named `main.tf` like:
 
-```main.tf
+``` main.tf
 terraform {
     required_providers {
         grafana = {
@@ -131,11 +134,11 @@ For Grafana Cloud, refer to the [instructions to manage a Grafana Cloud stack wi
 
 | Alerting resource                                   | Terraform resource                                                                                                               |
 | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| [Alert rules](ref:alerting-rules)                   | [grafana_rule_group](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/rule_group)                   |
-| [Contact points](ref:contact-points)                | [grafana_contact_point](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/contact_point)             |
-| [Notification templates](ref:notification-template) | [grafana_message_template](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/message_template)       |
-| [Notification policy tree](ref:notification-policy) | [grafana_notification_policy](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/notification_policy) |
-| [Mute timings](ref:mute-timings)                    | [grafana_mute_timing](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/mute_timing)                 |
+| [Alert rules](ref:alerting-rules)                   | [grafana\_rule\_group](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/rule_group)                   |
+| [Contact points](ref:contact-points)                | [grafana\_contact\_point](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/contact_point)             |
+| [Notification templates](ref:notification-template) | [grafana\_message\_template](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/message_template)       |
+| [Notification policy tree](ref:notification-policy) | [grafana\_notification\_policy](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/notification_policy) |
+| [Mute timings](ref:mute-timings)                    | [grafana\_mute\_timing](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/mute_timing)                 |
 
 In this section, we'll create Terraform configurations for each alerting resource and demonstrate how to link them together.
 
@@ -144,43 +147,43 @@ In this section, we'll create Terraform configurations for each alerting resourc
 [Alert rules](ref:alerting-rules) enable you to receive alerts by querying any backend Grafana data sources.
 
 1. First, create a data source to query and a folder to store your rules in.
-
+   
    In this example, the [TestData](ref:testdata) data source is used.
-
-   ```terraform
+   
+   ``` terraform
    resource "grafana_data_source" "<terraform_data_source_name>" {
        name = "TestData"
        type = "testdata"
    }
-
+   
    resource "grafana_folder" "<terraform_folder_name>" {
        title = "My Rule Folder"
    }
    ```
-
+   
    Replace the following field values:
-
+   
    - `<terraform_data_source_name>` with the terraform name of the data source.
    - `<terraform_folder_name>` with the terraform name of the folder.
 
-1. Create or find an alert rule you want to import in Grafana.
+2. Create or find an alert rule you want to import in Grafana.
 
-1. [Export](ref:alerting_export) the alert rule group in Terraform format. This exports the alert rule group as [`grafana_rule_group` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/rule_group).
-
+3. [Export](ref:alerting_export) the alert rule group in Terraform format. This exports the alert rule group as [`grafana_rule_group` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/rule_group).
+   
    You can edit the exported resource, or alternatively, consider creating the resource from scratch.
-
-   ```terraform
+   
+   ``` terraform
    resource "grafana_rule_group" "<terraform_rule_group_name>" {
        name = "My Alert Rules"
        folder_uid = grafana_folder.<terraform_folder_name>.uid
        interval_seconds = 60
        org_id = 1
-
+   
        rule {
            name = "My Random Walk Alert"
            condition = "C"
            for = "0s"
-
+   
            // Query the datasource.
            data {
                ref_id = "A"
@@ -197,7 +200,7 @@ In this section, we'll create Terraform configurations for each alerting resourc
                    refId = "A"
                })
            }
-
+   
            // The query was configured to obtain data from the last 60 seconds. Let's alert on the average value of that series using a Reduce stage.
            data {
                datasource_uid = "__expr__"
@@ -212,7 +215,7 @@ In this section, we'll create Terraform configurations for each alerting resourc
                    to = 0
                }
            }
-
+   
            // Now, let's use a math expression as our threshold.
            // We want to alert when the value of stage "B" above exceeds 70.
            data {
@@ -231,19 +234,19 @@ In this section, we'll create Terraform configurations for each alerting resourc
        }
    }
    ```
-
+   
    Replace the following field values:
-
+   
    - `<terraform_rule_group_name>` with the name of the alert rule group.
-
+   
    Note that the distinct Grafana resources are connected through `uid` values in their Terraform configurations. The `uid` value will be randomly generated when provisioning.
-
+   
    To link the alert rule group with its respective data source and folder in this example, replace the following field values:
-
+   
    - `<terraform_data_source_name>` with the terraform name of the previously defined data source.
    - `<terraform_folder_name>` with the terraform name of the previously defined folder.
 
-1. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
+4. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
 
 ### Add contact points
 
@@ -251,26 +254,26 @@ In this section, we'll create Terraform configurations for each alerting resourc
 
 1. Create or find the contact points you want to import in Grafana. Alternatively, consider writing the resource in code as demonstrated in the example below.
 
-1. [Export](ref:alerting_export) the contact point in Terraform format. This exports the contact point as [`grafana_contact_point` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/contact_point)—edit it if necessary.
+2. [Export](ref:alerting_export) the contact point in Terraform format. This exports the contact point as [`grafana_contact_point` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/contact_point)—edit it if necessary.
 
-1. In this example, notifications are muted on weekends.
-
-   ```terraform
+3. In this example, notifications are muted on weekends.
+   
+   ``` terraform
     resource "grafana_contact_point" "<terraform_contact_point_name>" {
         name = "My contact point email"
-
+   
         email {
             addresses               = ["<email_address>"]
         }
     }
    ```
-
+   
    Replace the following field values:
-
+   
    - `<terraform_contact_point_name>` with the terraform name of the contact point. It will be used to reference the contact point in other Terraform resources.
    - `<email_address>` with the email to receive alert notifications.
 
-1. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
+4. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
 
 ### Add and enable notification templates
 
@@ -278,14 +281,14 @@ In this section, we'll create Terraform configurations for each alerting resourc
 
 1. Create or find the notification template group you want to import in Grafana. Alternatively, consider writing the resource in code as demonstrated in the example below.
 
-1. [Export](ref:alerting_export) the notification template group as [`grafana_message_template` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/message_template).
-
+2. [Export](ref:alerting_export) the notification template group as [`grafana_message_template` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/message_template).
+   
    This example creates a notification template group named `custom_emails` that defines a `custom_email.message` template.
-
-   ```terraform
+   
+   ``` terraform
     resource "grafana_message_template" "<terraform_message_template_name>" {
         name = "custom_emails"
-
+   
         template = <<EOT
     {{ define "custom_email.message" }}
     Lorem ipsum - Custom alert!
@@ -293,15 +296,15 @@ In this section, we'll create Terraform configurations for each alerting resourc
     EOT
     }
    ```
-
+   
    This enables contact points to use the notification templates (`{{ define "<NAME>"}}`) within the notification template group.
 
-1. In the previous contact point, enable the template by setting the `email.message` property as follows.
-
-   ```terraform
+3. In the previous contact point, enable the template by setting the `email.message` property as follows.
+   
+   ``` terraform
     resource "grafana_contact_point" "<terraform_contact_point_name>" {
         name = "My contact point email"
-
+   
         email {
             addresses               = ["<email_address>"]
             message                 = "{{ template \"custom_email.message\" .}}"
@@ -309,7 +312,7 @@ In this section, we'll create Terraform configurations for each alerting resourc
     }
    ```
 
-1. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
+4. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
 
 ### Add mute timings
 
@@ -317,57 +320,57 @@ In this section, we'll create Terraform configurations for each alerting resourc
 
 1. Create or find the mute timings you want to import in Grafana. Alternatively, consider writing the resource in code as demonstrated in the example below.
 
-1. [Export](ref:alerting_export) the mute timing in Terraform format. This exports the mute timing as [`grafana_mute_timing` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/mute_timing)—edit it if necessary.
+2. [Export](ref:alerting_export) the mute timing in Terraform format. This exports the mute timing as [`grafana_mute_timing` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/mute_timing)—edit it if necessary.
 
-1. This example turns off notifications on weekends.
-
-   ```terraform
+3. This example turns off notifications on weekends.
+   
+   ``` terraform
     resource "grafana_mute_timing" "<terraform_mute_timing_name>" {
         name = "No weekends"
-
+   
         intervals {
             weekdays = ["saturday", "sunday"]
         }
     }
    ```
-
+   
    Replace the following field values:
-
+   
    - `<terraform_mute_timing_name>` with the name of the Terraform resource. It will be used to reference the mute timing in the Terraform notification policy tree.
 
-1. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
+4. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
 
 ### Add the notification policy tree
 
 [Notification policies](ref:notification-policy) defines how to route alert instances to your contact points.
 
-{{< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 1. Find the default notification policy tree. Alternatively, consider writing the resource in code as demonstrated in the example below.
 
-1. [Export](ref:alerting_export) the notification policy tree in Terraform format. This exports it as [`grafana_notification_policy` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/notification_policy)—edit it if necessary.
-
-   ```terraform
+2. [Export](ref:alerting_export) the notification policy tree in Terraform format. This exports it as [`grafana_notification_policy` Terraform resource](https://registry.terraform.io/providers/grafana/grafana/latest/docs/resources/notification_policy)—edit it if necessary.
+   
+   ``` terraform
    resource "grafana_notification_policy" "my_policy_tree" {
    contact_point = grafana_contact_point.<terraform_contact_point_name>.name
    ...
-
+   
    policy {
        contact_point = grafana_contact_point.<terraform_contact_point_name>.name
-
+   
        matcher {...}
-
+   
        mute_timings = [grafana_mute_timing.<terraform_mute_timing_name>.name]
    }
    }
    ```
-
+   
    To configure the mute timing and contact point previously created in the notification policy tree, replace the following field values:
-
+   
    - `<terraform_data_source_name>` with the terraform name of the previously defined contact point.
    - `<terraform_folder_name>` with the terraform name of the previously defined mute timing.
 
-1. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
+3. Continue to add more Grafana resources or [use the Terraform CLI for provisioning](#provision-grafana-resources-with-terraform).
 
 ### Enable editing resources in the Grafana UI
 
@@ -375,7 +378,7 @@ By default, you cannot edit resources provisioned via Terraform in Grafana. This
 
 To make provisioned resources editable in the Grafana UI, enable the `disable_provenance` attribute on alerting resources.
 
-```terraform
+``` terraform
 resource "grafana_contact_point" "my_contact_point" {
   name = "My Contact Point"
 
@@ -396,34 +399,34 @@ resource "grafana_message_template" "custom_notification_template_group" {
 To create the previous alerting resources in Grafana with the Terraform CLI, complete the following steps.
 
 1. Initialize the working directory containing the Terraform configuration files.
-
-   ```shell
+   
+   ``` shell
    terraform init
    ```
-
+   
    This command initializes the Terraform directory, installing the Grafana Terraform provider configured in the `main.tf` file.
 
-1. Apply the Terraform configuration files to provision the resources.
-
-   ```shell
+2. Apply the Terraform configuration files to provision the resources.
+   
+   ``` shell
    terraform apply
    ```
-
+   
    Before applying any changes to Grafana, Terraform displays the execution plan and requests your approval.
-
-   ```shell
+   
+   ``` shell
     Plan: 4 to add, 0 to change, 0 to destroy.
-
+   
     Do you want to perform these actions?
     Terraform will perform the actions described above.
     Only 'yes' will be accepted to approve.
-
+   
     Enter a value:
    ```
-
-   Once you have confirmed to proceed with the changes, Terraform will create the provisioned resources in Grafana!
-
-   ```shell
+   
+   Once you have confirmed to proceed with the changes, Terraform will create the provisioned resources in Grafana\!
+   
+   ``` shell
    Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
    ```
 

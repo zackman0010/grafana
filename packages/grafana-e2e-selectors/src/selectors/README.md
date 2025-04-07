@@ -2,7 +2,7 @@
 
 The selectors defined in [pages.ts](./pages.ts) and [components.ts](./components.ts) are versioned. A versioned selector consists of an object literal where value is the selector context and key is the minimum Grafana version for which the value is valid. The versioning is important in plugin end-to-end testing, as it allows them to resolve the right selector values for a given Grafana version.
 
-```typescript
+``` typescript
 const components = {
  PanelEditor: {
    content: {
@@ -31,7 +31,7 @@ A few things to keep in mind:
 
 ## How to add a new selector
 
-> [!CAUTION]
+> \[\!CAUTION\]
 > If you're changing a part of the UI that already has a selector defined, you should reuse the existing selector to avoid breaking end-to-end tests in plugins.
 
 1. Add a new versioned selector object under an existing or new group in [pages.ts](./pages.ts) or [components.ts](./components.ts).

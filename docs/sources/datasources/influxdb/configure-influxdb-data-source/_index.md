@@ -1,30 +1,33 @@
----
+-----
+
 aliases:
-  - ../data-sources/influxdb/
-  - ../data-sources/influxdb/provision-influxdb/
-  - ../features/datasources/influxdb/
-  - provision-influxdb/
-description: Guide for using InfluxDB in Grafana
-keywords:
-  - grafana
-  - influxdb
-  - guide
-  - flux
-labels:
+
+- ../data-sources/influxdb/
+- ../data-sources/influxdb/provision-influxdb/
+- ../features/datasources/influxdb/
+- provision-influxdb/
+  description: Guide for using InfluxDB in Grafana
+  keywords:
+- grafana
+- influxdb
+- guide
+- flux
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-menuTitle: Configure the InfluxDB data source
-title: Configure the InfluxDB data source
-weight: 300
-refs:
-  provision-grafana:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#provision-grafana
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/provisioning/#provision-grafana
----
+  - cloud
+  - enterprise
+  - oss
+    menuTitle: Configure the InfluxDB data source
+    title: Configure the InfluxDB data source
+    weight: 300
+    refs:
+    provision-grafana:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#provision-grafana
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/provisioning/\#provision-grafana
+
+-----
 
 # Configure the InfluxDB data source
 
@@ -34,9 +37,9 @@ This document provides instructions for configuring the InfluxDB data source and
 
 To configure the InfluxDB data source you must have the `Administrator` role.
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 Select the query language you want to use with InfluxDB before adding the InfluxDB data source. Configuration options differ based on query language type.
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 InfluxData provides three query languages. Some key points to consider:
 
@@ -109,7 +112,7 @@ TLS/SSL certificates are encrypted and stored in the Grafana database.
 
 **Private data source connect:**
 
-- **Private data source connect** - _Only for Grafana Cloud users._ Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
+- **Private data source connect** - *Only for Grafana Cloud users.* Private data source connect, or PDC, allows you to establish a private, secured connection between a Grafana Cloud instance, or stack, and data sources secured within a private network. Click the drop-down to locate the URL for PDC. For more information regarding Grafana PDC refer to [Private data source connect (PDC)](https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/).
 
 Click **Manage private data source connect** to be taken to your PDC connection page, where you'll find your PDC configuration details.
 
@@ -125,8 +128,8 @@ The following settings are specific to the InfluxQL query language option.
 - **User** - The user name used to sign in to InfluxDB.
 - **Password** - Defines the token used to query the bucket defined in **Database**. Retrieve the password from the [Tokens page](https://docs.influxdata.com/influxdb/v2.0/security/tokens/view-tokens/) of the InfluxDB UI.
 - **HTTP method** - Sets the HTTP method used to query your data source. The POST method allows for larger queries that would return an error using the GET method. The default method is `POST`.
-- **Min time interval** - _(Optional)_ Sets the minimum time interval for auto group-by. Grafana recommends setting this to match the data write frequency. For example, if your data is written every minute, it’s recommended to set this interval to 1 minute, so that each group contains data from each new write. The default is `10s`. Refer to [Min time interval](#min-time-interval) for format examples.
-- **Max series** - _(Optional)_ Sets a limit on the maximum number of series or tables that Grafana processes. Set a lower limit to prevent system overload, or increase it if you have many small time series and need to display more of them. The default is `1000`.
+- **Min time interval** - *(Optional)* Sets the minimum time interval for auto group-by. Grafana recommends setting this to match the data write frequency. For example, if your data is written every minute, it’s recommended to set this interval to 1 minute, so that each group contains data from each new write. The default is `10s`. Refer to [Min time interval](#min-time-interval) for format examples.
+- **Max series** - *(Optional)* Sets a limit on the maximum number of series or tables that Grafana processes. Set a lower limit to prevent system overload, or increase it if you have many small time series and need to display more of them. The default is `1000`.
 
 ### SQL-specific configuration section
 
@@ -135,9 +138,9 @@ The following settings are specific to the SQL query language option.
 **SQL InfluxDB details section:**
 
 - **Database** - Specify the **bucket ID**. Refer to the **Buckets page** in the InfluxDB UI to locate the ID.
-- **Token** The API token used for SQL queries. Generated on InfluxDB Cloud dashboard under [Load Data > API Tokens](https://docs.influxdata.com/influxdb/cloud-serverless/get-started/setup/#create-an-all-access-api-token) menu.
+- **Token** The API token used for SQL queries. Generated on InfluxDB Cloud dashboard under [Load Data \> API Tokens](https://docs.influxdata.com/influxdb/cloud-serverless/get-started/setup/#create-an-all-access-api-token) menu.
 - **Insecure Connection** - Toggle to disable gRPC TLS security.
-- **Max series** - _(Optional)_ Sets a limit on the maximum number of series or tables that Grafana processes. Set a lower limit to prevent system overload, or increase it if you have many small time series and need to display more of them. The default is `1000`.
+- **Max series** - *(Optional)* Sets a limit on the maximum number of series or tables that Grafana processes. Set a lower limit to prevent system overload, or increase it if you have many small time series and need to display more of them. The default is `1000`.
 
 ### Flux-specific configuration section
 
@@ -147,7 +150,7 @@ The following settings are specific to the Flux query language option.
 
 - **Organization** - The [Influx organization](https://v2.docs.influxdata.com/v2.0/organizations/) used for Flux queries. Also used for the `v.organization` query macro.
 - **Token** - The authentication token used for Flux queries. With Influx 2.0, use the [influx authentication token to function](https://v2.docs.influxdata.com/v2.0/security/tokens/create-token/). Token must be set as `Authorization` header with the value `Token <generated-token>`. For Influx 1.8, the token is `username:password`.
-- **Default bucket** - _(Optional)_ The [Influx bucket](https://v2.docs.influxdata.com/v2.0/organizations/buckets/) used for the `v.defaultBucket` macro in Flux queries.
+- **Default bucket** - *(Optional)* The [Influx bucket](https://v2.docs.influxdata.com/v2.0/organizations/buckets/) used for the `v.defaultBucket` macro in Flux queries.
 - **Min time interval** - Sets the minimum time interval for auto group-by. Grafana recommends aligning this setting with the data write frequency. For example, if data is written every minute, set the interval to 1 minute to ensure each group includes data from every new write. The default is `10s`.
 - **Max series** - Sets a limit on the maximum number of series or tables that Grafana processes. Set a lower limit to prevent system overload, or increase it if you have many small time series and need to display more of them. The default is `1000`.
 
@@ -187,7 +190,7 @@ Provisioning differs based on query language.
 
 **InfluxDB 1.x example:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -205,7 +208,7 @@ datasources:
 
 **InfluxDB 2.x for Flux example:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -224,7 +227,7 @@ datasources:
 
 **InfluxDB 2.x for InfluxQL example:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:
@@ -241,7 +244,7 @@ datasources:
 
 **InfluxDB 3.x for SQL example:**
 
-```yaml
+``` yaml
 apiVersion: 1
 
 datasources:

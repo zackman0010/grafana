@@ -1,58 +1,61 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/rbac-provisioning/
-  - rbac-provisioning/
-description: Learn about RBAC Grafana provisioning and view an example YAML provisioning
+
+- ../../../enterprise/access-control/rbac-provisioning/
+- rbac-provisioning/
+  description: Learn about RBAC Grafana provisioning and view an example YAML provisioning
   file that configures Grafana role assignments.
-labels:
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Provisioning RBAC with Grafana
-title: Provisioning RBAC with Grafana
-weight: 60
-refs:
-  api-rbac-create-and-manage-custom-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/developers/http_api/access_control/#create-and-manage-custom-roles
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access_control/#create-and-manage-custom-roles
-  rbac-terraform-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-terraform-provisioning/
-  rbac-manage-rbac-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/manage-rbac-roles/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/
-  rbac-assign-rbac-roles:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/assign-rbac-roles/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/assign-rbac-roles/
-  service-accounts:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/service-accounts/
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
-  manage-rbac-roles-create-custom-roles-using-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/manage-rbac-roles/#create-custom-roles-using-provisioning
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/#create-custom-roles-using-provisioning
-  assign-rbac-roles-assign-a-fixed-role-to-a-basic-role-using-provisioning:
-    - pattern: /docs/grafana/
-      destination: /docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/assign-rbac-roles/#assign-a-fixed-role-to-a-basic-role-using-provisioning
-    - pattern: /docs/grafana-cloud/
-      destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/assign-rbac-roles/##assign-a-fixed-role-to-a-basic-role-using-provisioning
----
+  - cloud
+  - enterprise
+    menuTitle: Provisioning RBAC with Grafana
+    title: Provisioning RBAC with Grafana
+    weight: 60
+    refs:
+    api-rbac-create-and-manage-custom-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/developers/http\_api/access\_control/\#create-and-manage-custom-roles
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/developer-resources/api-reference/http-api/access\_control/\#create-and-manage-custom-roles
+    rbac-terraform-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/rbac-terraform-provisioning/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/rbac-terraform-provisioning/
+    rbac-manage-rbac-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/manage-rbac-roles/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/
+    rbac-assign-rbac-roles:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/assign-rbac-roles/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/assign-rbac-roles/
+    service-accounts:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/service-accounts/
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/service-accounts/
+    manage-rbac-roles-create-custom-roles-using-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/manage-rbac-roles/\#create-custom-roles-using-provisioning
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/manage-rbac-roles/\#create-custom-roles-using-provisioning
+    assign-rbac-roles-assign-a-fixed-role-to-a-basic-role-using-provisioning:
+  - pattern: /docs/grafana/
+    destination: /docs/grafana/\<GRAFANA\_VERSION\>/administration/roles-and-permissions/access-control/assign-rbac-roles/\#assign-a-fixed-role-to-a-basic-role-using-provisioning
+  - pattern: /docs/grafana-cloud/
+    destination: /docs/grafana-cloud/account-management/authentication-and-permissions/access-control/assign-rbac-roles/\#\#assign-a-fixed-role-to-a-basic-role-using-provisioning
+
+-----
 
 # Provisioning RBAC with Grafana
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
 You can create, change or remove [Custom roles](ref:manage-rbac-roles-create-custom-roles-using-provisioning) and create or remove [basic role assignments](ref:assign-rbac-roles-assign-a-fixed-role-to-a-basic-role-using-provisioning), by adding one or more YAML configuration files in the `provisioning/access-control/` directory.
@@ -67,19 +70,19 @@ Grafana performs provisioning during startup. After you make a change to the con
 
 1. Sign in to the Grafana server.
 
-1. Locate the Grafana provisioning folder.
+2. Locate the Grafana provisioning folder.
 
-1. Create a new YAML in the following folder: **provisioning/access-control**. For example, `provisioning/access-control/custom-roles.yml`
+3. Create a new YAML in the following folder: **provisioning/access-control**. For example, `provisioning/access-control/custom-roles.yml`
 
-1. Add RBAC provisioning details to the configuration file.
-
+4. Add RBAC provisioning details to the configuration file.
+   
    Refer to [Manage RBAC roles](ref:rbac-manage-rbac-roles) and [Assign RBAC roles](ref:rbac-assign-rbac-roles) for instructions.
-
+   
    Refer to [example role provisioning file](#example-role-configuration-file-using-grafana-provisioning) for a complete example of a provisioning file.
 
-1. Reload the provisioning configuration file.
-
-   For more information about reloading the provisioning configuration at runtime, refer to [Reload provisioning configurations](/docs/grafana/<GRAFANA_VERSION>/developers/http_api/admin/#reload-provisioning-configurations).
+5. Reload the provisioning configuration file.
+   
+   For more information about reloading the provisioning configuration at runtime, refer to [Reload provisioning configurations](/docs/grafana/\<GRAFANA_VERSION\>/developers/http_api/admin/#reload-provisioning-configurations).
 
 ## Example role configuration file using Grafana provisioning
 
@@ -93,7 +96,7 @@ The following example shows a complete YAML configuration file that:
 
 ### Example
 
-```yaml
+``` yaml
 ---
 # config file version
 apiVersion: 2

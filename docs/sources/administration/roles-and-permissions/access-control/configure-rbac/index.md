@@ -1,23 +1,26 @@
----
+-----
+
 aliases:
-  - ../../../enterprise/access-control/configure-rbac/
-description: Learn how to configure RBAC.
-labels:
+
+- ../../../enterprise/access-control/configure-rbac/
+  description: Learn how to configure RBAC.
+  labels:
   products:
-    - cloud
-    - enterprise
-menuTitle: Configure RBAC
-title: Configure RBAC in Grafana
-weight: 30
----
+  - cloud
+  - enterprise
+    menuTitle: Configure RBAC
+    title: Configure RBAC in Grafana
+    weight: 30
+
+-----
 
 # Configure RBAC in Grafana
 
 {{% admonition type="note" %}}
-Available in [Grafana Enterprise](/docs/grafana/<GRAFANA_VERSION>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
+Available in [Grafana Enterprise](/docs/grafana/\<GRAFANA_VERSION\>/introduction/grafana-enterprise/) and [Grafana Cloud](/docs/grafana-cloud).
 {{% /admonition %}}
 
-The table below describes all RBAC configuration options. Like any other Grafana configuration, you can apply these options as [environment variables](/docs/grafana/<GRAFANA_VERSION>/setup-grafana/configure-grafana/#override-configuration-with-environment-variables).
+The table below describes all RBAC configuration options. Like any other Grafana configuration, you can apply these options as [environment variables](/docs/grafana/\<GRAFANA_VERSION\>/setup-grafana/configure-grafana/#override-configuration-with-environment-variables).
 
 | Setting                         | Required | Description                                                                                                                                                                                                                                                                                                                     | Default |
 | ------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
@@ -27,7 +30,7 @@ The table below describes all RBAC configuration options. Like any other Grafana
 
 ## Example RBAC configuration
 
-```bash
+``` bash
 [rbac]
 
 permission_cache = true

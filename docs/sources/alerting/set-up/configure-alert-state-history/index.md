@@ -1,18 +1,21 @@
----
+-----
+
 canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/configure-alert-state-history/
 description: Configure alert state history to explore the behavior of your alert rules
 keywords:
-  - grafana
-  - alerting
-  - set up
-  - configure
-  - alert state history
-labels:
+
+- grafana
+- alerting
+- set up
+- configure
+- alert state history
+  labels:
   products:
-    - oss
-title: Configure alert state history
-weight: 250
----
+  - oss
+    title: Configure alert state history
+    weight: 250
+
+-----
 
 # Configure alert state history
 
@@ -30,7 +33,7 @@ The following change to the default configuration should work for most instances
 
 As this might impact the performances of an existing Loki instance, use a separate Loki instance for the alert state history.
 
-```yaml
+``` yaml
 limits_config:
   split_queries_by_interval: '24h'
   max_query_parallelism: 32
@@ -42,7 +45,7 @@ Additional configuration is required in the Grafana configuration file to have i
 
 The example below instructs Grafana to write alert state history to a local Loki instance:
 
-```toml
+``` toml
 [unified_alerting.state_history]
 enabled = true
 backend = "loki"
@@ -64,6 +67,6 @@ If everything is set up correctly you can use the Grafana Explore view to start 
 
 A simple litmus test to see if data is being written correctly into the Loki instance is the following query:
 
-```logQL
+``` logQL
 { from="state-history" } | json
 ```

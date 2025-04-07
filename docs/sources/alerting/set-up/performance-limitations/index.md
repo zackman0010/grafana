@@ -1,22 +1,25 @@
----
+-----
+
 aliases:
-  - ./alerting-limitations/ # /docs/grafana/<GRAFANA_VERSION>/alerting/set-up/alerting-limitations/
-  - ../../alerting/performance-limitations/ # /docs/grafana/<GRAFANA_VERSION>/alerting/performance-limitations/
-canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/performance-limitations/
-description: Learn about performance considerations and limitations
-keywords:
-  - grafana
-  - alerting
-  - performance
-  - limitations
-labels:
+
+- ./alerting-limitations/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/set-up/alerting-limitations/
+- ../../alerting/performance-limitations/ \# /docs/grafana/\<GRAFANA\_VERSION\>/alerting/performance-limitations/
+  canonical: https://grafana.com/docs/grafana/latest/alerting/set-up/performance-limitations/
+  description: Learn about performance considerations and limitations
+  keywords:
+- grafana
+- alerting
+- performance
+- limitations
+  labels:
   products:
-    - cloud
-    - enterprise
-    - oss
-title: Performance considerations and limitations
-weight: 800
----
+  - cloud
+  - enterprise
+  - oss
+    title: Performance considerations and limitations
+    weight: 800
+
+-----
 
 # Performance considerations and limitations
 
@@ -27,7 +30,7 @@ Evaluating alerting rules consumes RAM and CPU to compute the output of an alert
 The following section provides a list of alerting performance considerations.
 
 - Frequency of rule evaluation consideration. The "Evaluate Every" property of an alert rule controls the frequency of rule evaluation. It is recommended to use the lowest acceptable evaluation frequency to support more concurrent rules.
-- Cardinality of the rule's result set. For example, suppose you are monitoring API response errors for every API path, on every virtual machine in your fleet. This set has a cardinality of _n_ number of paths multiplied by _v_ number of VMs. You can reduce the cardinality of a result set - perhaps by monitoring errors-per-VM instead of for each path per VM.
+- Cardinality of the rule's result set. For example, suppose you are monitoring API response errors for every API path, on every virtual machine in your fleet. This set has a cardinality of *n* number of paths multiplied by *v* number of VMs. You can reduce the cardinality of a result set - perhaps by monitoring errors-per-VM instead of for each path per VM.
 - Complexity of the alerting query consideration. Queries that data sources can process and respond to quickly consume fewer resources. Although this consideration is less important than the other considerations listed above, if you have reduced those as much as possible, looking at individual query performance could make a difference.
 
 Each evaluation of an alert rule generates a set of alert instances; one for each member of the result set. The state of all the instances is written to the `alert_instance` table in the Grafana SQL database. This number of write-heavy operations can cause issues when using SQLite.
@@ -46,7 +49,7 @@ It does not support reading or writing alerting rules from any other data source
 
 The latest two minor versions of both Prometheus and Alertmanager are supported. We cannot guarantee that older versions work.
 
-As an example, if the current Prometheus version is `2.31.1`, >= `2.29.0` is supported.
+As an example, if the current Prometheus version is `2.31.1`, \>= `2.29.0` is supported.
 
 ## The Grafana Alertmanager can only receive Grafana managed alerts
 

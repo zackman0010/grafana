@@ -1,15 +1,18 @@
----
+-----
+
 description: Configure LBAC for data sources for Loki data source on Grafana Cloud
 keywords:
-  - loki
-  - datasource
-  - team
-labels:
+
+- loki
+- datasource
+- team
+  labels:
   products:
-    - cloud
-title: Configure LBAC for data sources for Loki
-weight: 250
----
+  - cloud
+    title: Configure LBAC for data sources for Loki
+    weight: 250
+
+-----
 
 # Configure LBAC for data sources for Loki data source on Grafana Cloud
 
@@ -29,17 +32,17 @@ We recommend that you remove all permissions for roles and teams that are not re
 ## Task 1: LBAC Configuration for New Loki Data Source
 
 1. Access Loki data sources details for your stack through grafana.com
-1. Copy Loki details and create a CAP
+2. Copy Loki details and create a CAP
    - Copy the details of your Loki setup.
    - Create a Cloud Access Policy (CAP) for the Loki data source in grafana.com.
    - Ensure the CAP includes `logs:read` permissions.
    - Ensure the CAP does not include `labels` rules.
-1. Create a new Loki data source
+3. Create a new Loki data source
    - In Grafana, proceed to add a new data source and select Loki as the type.
-1. Navigate back to the Loki data source
+4. Navigate back to the Loki data source
    - Set up the Loki data source using basic authentication. Use the userID as the username. Use the generated CAP token as the password.
    - Save and connect.
-1. Navigate to data source permissions
+5. Navigate to data source permissions
    - Go to the permissions tab of the newly created Loki data source. Here, you'll find the LBAC for data sources rules section.
 
-For more information on how to setup LBAC for data sources rules for a Loki data source, refer to [Create LBAC for data sources rules for the Loki data source](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/data-source-management/teamlbac/create-teamlbac-rules/).
+For more information on how to setup LBAC for data sources rules for a Loki data source, refer to [Create LBAC for data sources rules for the Loki data source](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/data-source-management/teamlbac/create-teamlbac-rules/).

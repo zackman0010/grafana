@@ -1,25 +1,21 @@
----
-labels:
-  products:
-    - enterprise
-    - oss
-title: 'Alerting Provisioning HTTP API '
----
+-----
+
+## labels: products: - enterprise - oss title: 'Alerting Provisioning HTTP API '
 
 The Alerting Provisioning HTTP API can be used to create, modify, and delete resources relevant to Grafana-managed alerts. This API is the one used by our [Grafana Terraform provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs).
 
-For more information on the differences between Grafana-managed and data source-managed alerts, refer to [Introduction to alert rules](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/fundamentals/alert-rules/).
+For more information on the differences between Grafana-managed and data source-managed alerts, refer to [Introduction to alert rules](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/fundamentals/alert-rules/).
 
-> If you are running Grafana Enterprise, you need to add specific permissions for some endpoints. For more information, refer to [Role-based access control permissions](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/).
+> If you are running Grafana Enterprise, you need to add specific permissions for some endpoints. For more information, refer to [Role-based access control permissions](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/administration/roles-and-permissions/access-control/custom-role-actions-scopes/).
 
 ## Grafana-managed endpoints
 
-{{< admonition type="note" >}}
+{{\< admonition type="note" \>}}
 In the Alerting provisioning HTTP API, the endpoints use a JSON format that differs from the format returned by the `export` endpoints.
 
-The `export` endpoints allow you to export alerting resources in a JSON format suitable for [provisioning via files](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/set-up/provision-alerting-resources/file-provisioning/). However, this format cannot be used to update resources via the HTTP API.
+The `export` endpoints allow you to export alerting resources in a JSON format suitable for [provisioning via files](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/set-up/provision-alerting-resources/file-provisioning/). However, this format cannot be used to update resources via the HTTP API.
 
-{{< /admonition >}}
+{{\< /admonition \>}}
 
 ### Alert rules
 
@@ -38,7 +34,7 @@ The `export` endpoints allow you to export alerting resources in a JSON format s
 
 **Example request for new alert rule:**
 
-```http
+``` http
 POST /api/v1/provisioning/alert-rules
 Accept: application/json
 Content-Type: application/json
@@ -123,7 +119,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 #### Example Response:
 
-```http
+``` http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
@@ -225,7 +221,7 @@ Content-Type: application/json
 
 **Example Request for all the contact points:**
 
-```http
+``` http
 GET /api/v1/provisioning/contact-points
 Accept: application/json
 Content-Type: application/json
@@ -234,7 +230,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -262,7 +258,7 @@ Content-Type: application/json
 
 **Example Request for exporting the notification policy tree in YAML format:**
 
-```http
+``` http
 GET /api/v1/provisioning/policies/export?format=yaml
 Accept: application/json
 Content-Type: application/json
@@ -271,7 +267,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: text/yaml
 
@@ -305,7 +301,7 @@ Template groups enable you to define multiple notification templates (`{{ define
 
 **Example Request for all notification template groups:**
 
-```http
+``` http
 GET /api/v1/provisioning/templates
 Accept: application/json
 Content-Type: application/json
@@ -314,7 +310,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -346,7 +342,7 @@ Content-Type: application/json
 
 **Example Request for all mute timings:**
 
-```http
+``` http
 GET /api/v1/provisioning/mute-timings
 Accept: application/json
 Content-Type: application/json
@@ -355,7 +351,7 @@ Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
 
 **Example Response:**
 
-```http
+``` http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -383,11 +379,15 @@ By default, you cannot edit API-provisioned alerting resources in Grafana.
 To enable editing these resources in the Grafana UI, add the **`X-Disable-Provenance: true`** header to the following API requests:
 
 - `POST /api/v1/provisioning/alert-rules`
-- `PUT /api/v1/provisioning/folder/{FolderUID}/rule-groups/{Group}` _(This endpoint changes provenance for all alert rules in the alert group)_
+
+- `PUT /api/v1/provisioning/folder/{FolderUID}/rule-groups/{Group}` *(This endpoint changes provenance for all alert rules in the alert group)*
 
 - `POST /api/v1/provisioning/contact-points`
+
 - `POST /api/v1/provisioning/mute-timings`
+
 - `PUT /api/v1/provisioning/templates/{name}`
+
 - `PUT /api/v1/provisioning/policies`
 
 To reset the notification policy tree to the default and unlock it for editing in the Grafana UI, use:
@@ -396,11 +396,11 @@ To reset the notification policy tree to the default and unlock it for editing i
 
 ## Data source-managed resources
 
-The Alerting Provisioning HTTP API can only be used to manage Grafana-managed alert resources. To manage resources related to [data source-managed alerts](https://grafana.com/docs/grafana/<GRAFANA_VERSION>/alerting/alerting-rules/create-data-source-managed-rule/), consider the following tools:
+The Alerting Provisioning HTTP API can only be used to manage Grafana-managed alert resources. To manage resources related to [data source-managed alerts](https://grafana.com/docs/grafana/\<GRAFANA_VERSION\>/alerting/alerting-rules/create-data-source-managed-rule/), consider the following tools:
 
-- [mimirtool](https://grafana.com/docs/mimir/<GRAFANA_VERSION>/manage/tools/mimirtool/): to interact with the Mimir alertmanager and ruler configuration.
+- [mimirtool](https://grafana.com/docs/mimir/\<GRAFANA_VERSION\>/manage/tools/mimirtool/): to interact with the Mimir alertmanager and ruler configuration.
 - [cortex-tools](https://github.com/grafana/cortex-tools#cortextool): to interact with the Cortex alertmanager and ruler configuration.
-- [lokitool](https://grafana.com/docs/loki/<GRAFANA_VERSION>/alert/#lokitool): to configure the Loki Ruler.
+- [lokitool](https://grafana.com/docs/loki/\<GRAFANA_VERSION\>/alert/#lokitool): to configure the Loki Ruler.
 
 Alternatively, the [Grafana Alerting API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/grafana/grafana/main/pkg/services/ngalert/api/tooling/post.json) can be used to access data from data source-managed alerts. This API is primarily intended for internal usage, with the exception of the `/api/v1/provisioning/` endpoints. It's important to note that internal APIs may undergo changes without prior notice and are not officially supported for user consumption.
 
@@ -408,11 +408,9 @@ For Prometheus, `amtool` can also be used to interact with the [AlertManager API
 
 ## Paths
 
-### <span id="route-delete-alert-rule"></span> Delete a specific alert rule by UID. (_RouteDeleteAlertRule_)
+### <span id="route-delete-alert-rule"></span> Delete a specific alert rule by UID. (*RouteDeleteAlertRule*)
 
-```
-DELETE /api/v1/provisioning/alert-rules/:uid
-```
+    DELETE /api/v1/provisioning/alert-rules/:uid
 
 #### Parameters
 
@@ -439,11 +437,9 @@ Status: No Content
 
 ###### <span id="route-delete-alert-rule-204-schema"></span> Schema
 
-### <span id="route-delete-contactpoints"></span> Delete a contact point. (_RouteDeleteContactpoints_)
+### <span id="route-delete-contactpoints"></span> Delete a contact point. (*RouteDeleteContactpoints*)
 
-```
-DELETE /api/v1/provisioning/contact-points/:uid
-```
+    DELETE /api/v1/provisioning/contact-points/:uid
 
 #### Parameters
 
@@ -465,11 +461,9 @@ Status: No Content
 
 ###### <span id="route-delete-contactpoints-204-schema"></span> Schema
 
-### <span id="route-delete-mute-timing"></span> Delete a mute timing. (_RouteDeleteMuteTiming_)
+### <span id="route-delete-mute-timing"></span> Delete a mute timing. (*RouteDeleteMuteTiming*)
 
-```
-DELETE /api/v1/provisioning/mute-timings/:name
-```
+    DELETE /api/v1/provisioning/mute-timings/:name
 
 #### Parameters
 
@@ -501,11 +495,9 @@ Status: Conflict
 
 [GenericPublicError](#generic-public-error)
 
-### <span id="route-delete-template"></span> Delete a notification template group. (_RouteDeleteTemplate_)
+### <span id="route-delete-template"></span> Delete a notification template group. (*RouteDeleteTemplate*)
 
-```
-DELETE /api/v1/provisioning/templates/:name
-```
+    DELETE /api/v1/provisioning/templates/:name
 
 #### Parameters
 
@@ -537,11 +529,9 @@ Status: Conflict
 
 [GenericPublicError](#generic-public-error)
 
-### <span id="route-get-alert-rule"></span> Get a specific alert rule by UID. (_RouteGetAlertRule_)
+### <span id="route-get-alert-rule"></span> Get a specific alert rule by UID. (*RouteGetAlertRule*)
 
-```
-GET /api/v1/provisioning/alert-rules/:uid
-```
+    GET /api/v1/provisioning/alert-rules/:uid
 
 #### Parameters
 
@@ -572,13 +562,11 @@ Status: Not Found
 
 ###### <span id="route-get-alert-rule-404-schema"></span> Schema
 
-### <span id="route-get-alert-rule-export"></span> Export an alert rule in provisioning file format. (_RouteGetAlertRuleExport_)
+### <span id="route-get-alert-rule-export"></span> Export an alert rule in provisioning file format. (*RouteGetAlertRuleExport*)
 
-```
-GET /api/v1/provisioning/alert-rules/:uid/export
-```
+    GET /api/v1/provisioning/alert-rules/:uid/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -611,11 +599,9 @@ Status: Not Found
 
 ###### <span id="route-get-alert-rule-export-404-schema"></span> Schema
 
-### <span id="route-get-alert-rule-group"></span> Get a rule group. (_RouteGetAlertRuleGroup_)
+### <span id="route-get-alert-rule-group"></span> Get a rule group. (*RouteGetAlertRuleGroup*)
 
-```
-GET /api/v1/provisioning/folder/:folderUid/rule-groups/:group
-```
+    GET /api/v1/provisioning/folder/:folderUid/rule-groups/:group
 
 #### Parameters
 
@@ -647,13 +633,11 @@ Status: Not Found
 
 ###### <span id="route-get-alert-rule-group-404-schema"></span> Schema
 
-### <span id="route-get-alert-rule-group-export"></span> Export an alert rule group in provisioning file format. (_RouteGetAlertRuleGroupExport_)
+### <span id="route-get-alert-rule-group-export"></span> Export an alert rule group in provisioning file format. (*RouteGetAlertRuleGroupExport*)
 
-```
-GET /api/v1/provisioning/folder/:folderUid/rule-groups/:group/export
-```
+    GET /api/v1/provisioning/folder/:folderUid/rule-groups/:group/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -687,11 +671,9 @@ Status: Not Found
 
 ###### <span id="route-get-alert-rule-group-export-404-schema"></span> Schema
 
-### <span id="route-get-alert-rules"></span> Get all the alert rules. (_RouteGetAlertRules_)
+### <span id="route-get-alert-rules"></span> Get all the alert rules. (*RouteGetAlertRules*)
 
-```
-GET /api/v1/provisioning/alert-rules
-```
+    GET /api/v1/provisioning/alert-rules
 
 #### All responses
 
@@ -709,13 +691,11 @@ Status: OK
 
 [ProvisionedAlertRules](#provisioned-alert-rules)
 
-### <span id="route-get-alert-rules-export"></span> Export all alert rules in provisioning file format. (_RouteGetAlertRulesExport_)
+### <span id="route-get-alert-rules-export"></span> Export all alert rules in provisioning file format. (*RouteGetAlertRulesExport*)
 
-```
-GET /api/v1/provisioning/alert-rules/export
-```
+    GET /api/v1/provisioning/alert-rules/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -747,11 +727,9 @@ Status: Not Found
 
 ###### <span id="route-get-alert-rules-export-404-schema"></span> Schema
 
-### <span id="route-get-contactpoints"></span> Get all the contact points. (_RouteGetContactpoints_)
+### <span id="route-get-contactpoints"></span> Get all the contact points. (*RouteGetContactpoints*)
 
-```
-GET /api/v1/provisioning/contact-points
-```
+    GET /api/v1/provisioning/contact-points
 
 #### Parameters
 
@@ -775,13 +753,11 @@ Status: OK
 
 [ContactPoints](#contact-points)
 
-### <span id="route-get-contactpoints-export"></span> Export all contact points in provisioning file format. (_RouteGetContactpointsExport_)
+### <span id="route-get-contactpoints-export"></span> Export all contact points in provisioning file format. (*RouteGetContactpointsExport*)
 
-```
-GET /api/v1/provisioning/contact-points/export
-```
+    GET /api/v1/provisioning/contact-points/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -817,11 +793,9 @@ Status: Forbidden
 
 [PermissionDenied](#permission-denied)
 
-### <span id="route-get-mute-timing"></span> Get a mute timing. (_RouteGetMuteTiming_)
+### <span id="route-get-mute-timing"></span> Get a mute timing. (*RouteGetMuteTiming*)
 
-```
-GET /api/v1/provisioning/mute-timings/:name
-```
+    GET /api/v1/provisioning/mute-timings/:name
 
 #### Parameters
 
@@ -852,11 +826,9 @@ Status: Not Found
 
 ###### <span id="route-get-mute-timing-404-schema"></span> Schema
 
-### <span id="route-get-mute-timings"></span> Get all the mute timings. (_RouteGetMuteTimings_)
+### <span id="route-get-mute-timings"></span> Get all the mute timings. (*RouteGetMuteTimings*)
 
-```
-GET /api/v1/provisioning/mute-timings
-```
+    GET /api/v1/provisioning/mute-timings
 
 #### All responses
 
@@ -874,13 +846,11 @@ Status: OK
 
 [MuteTimings](#mute-timings)
 
-### <span id="route-get-mute-timings-export"></span> Export all mute timings in provisioning file format. (_RouteGetMuteTimingsExport_)
+### <span id="route-get-mute-timings-export"></span> Export all mute timings in provisioning file format. (*RouteGetMuteTimingsExport*)
 
-```
-GET /api/v1/provisioning/mute-timings/export
-```
+    GET /api/v1/provisioning/mute-timings/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -914,13 +884,11 @@ Status: Forbidden
 
 [PermissionDenied](#permission-denied)
 
-### <span id="route-get-mute-timing-export"></span> Export a mute timing in provisioning file format. (_RouteGetMuteTimingExport_)
+### <span id="route-get-mute-timing-export"></span> Export a mute timing in provisioning file format. (*RouteGetMuteTimingExport*)
 
-```
-GET /api/v1/provisioning/mute-timings/:name/export
-```
+    GET /api/v1/provisioning/mute-timings/:name/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -955,11 +923,9 @@ Status: Forbidden
 
 [PermissionDenied](#permission-denied)
 
-### <span id="route-get-policy-tree"></span> Get the notification policy tree. (_RouteGetPolicyTree_)
+### <span id="route-get-policy-tree"></span> Get the notification policy tree. (*RouteGetPolicyTree*)
 
-```
-GET /api/v1/provisioning/policies
-```
+    GET /api/v1/provisioning/policies
 
 #### All responses
 
@@ -977,13 +943,11 @@ Status: OK
 
 [Route](#route)
 
-### <span id="route-get-policy-tree-export"></span> Export the notification policy tree in provisioning file format. (_RouteGetPolicyTreeExport_)
+### <span id="route-get-policy-tree-export"></span> Export the notification policy tree in provisioning file format. (*RouteGetPolicyTreeExport*)
 
-```
-GET /api/v1/provisioning/policies/export
-```
+    GET /api/v1/provisioning/policies/export
 
-{{< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/alerting-provisioning-export-produces.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
 #### Parameters
 
@@ -1017,11 +981,9 @@ Status: Not Found
 
 [NotFound](#not-found)
 
-### <span id="route-get-template"></span> Get a notification template group. (_RouteGetTemplate_)
+### <span id="route-get-template"></span> Get a notification template group. (*RouteGetTemplate*)
 
-```
-GET /api/v1/provisioning/templates/:name
-```
+    GET /api/v1/provisioning/templates/:name
 
 #### Parameters
 
@@ -1052,11 +1014,9 @@ Status: OK
 
 ###### <span id="route-get-template-404-schema"></span> Schema
 
-### <span id="route-get-templates"></span> Get all notification template groups. (_RouteGetTemplates_)
+### <span id="route-get-templates"></span> Get all notification template groups. (*RouteGetTemplates*)
 
-```
-GET /api/v1/provisioning/templates
-```
+    GET /api/v1/provisioning/templates
 
 #### All responses
 
@@ -1074,11 +1034,9 @@ Status: OK
 
 [NotificationTemplates](#notification-templates)
 
-### <span id="route-post-alert-rule"></span> Create a new alert rule. (_RoutePostAlertRule_)
+### <span id="route-post-alert-rule"></span> Create a new alert rule. (*RoutePostAlertRule*)
 
-```
-POST /api/v1/provisioning/alert-rules
-```
+    POST /api/v1/provisioning/alert-rules
 
 #### Parameters
 
@@ -1116,11 +1074,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-post-contactpoints"></span> Create a contact point. (_RoutePostContactpoints_)
+### <span id="route-post-contactpoints"></span> Create a contact point. (*RoutePostContactpoints*)
 
-```
-POST /api/v1/provisioning/contact-points
-```
+    POST /api/v1/provisioning/contact-points
 
 When creating a contact point, the `EmbeddedContactPoint.name` property determines if the new contact point is added to an existing one. In the UI, contact points with the same name are grouped together under a single contact point.
 
@@ -1160,11 +1116,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-post-mute-timing"></span> Create a new mute timing. (_RoutePostMuteTiming_)
+### <span id="route-post-mute-timing"></span> Create a new mute timing. (*RoutePostMuteTiming*)
 
-```
-POST /api/v1/provisioning/mute-timings
-```
+    POST /api/v1/provisioning/mute-timings
 
 #### Parameters
 
@@ -1202,11 +1156,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-put-alert-rule"></span> Update an existing alert rule. (_RoutePutAlertRule_)
+### <span id="route-put-alert-rule"></span> Update an existing alert rule. (*RoutePutAlertRule*)
 
-```
-PUT /api/v1/provisioning/alert-rules/:uid
-```
+    PUT /api/v1/provisioning/alert-rules/:uid
 
 #### Parameters
 
@@ -1245,11 +1197,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-put-alert-rule-group"></span> Update the interval or alert rules of a rule group. (_RoutePutAlertRuleGroup_)
+### <span id="route-put-alert-rule-group"></span> Update the interval or alert rules of a rule group. (*RoutePutAlertRuleGroup*)
 
-```
-PUT /api/v1/provisioning/folder/:folderUid/rule-groups/:group
-```
+    PUT /api/v1/provisioning/folder/:folderUid/rule-groups/:group
 
 #### Parameters
 
@@ -1289,11 +1239,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-put-contactpoint"></span> Update an existing contact point. (_RoutePutContactpoint_)
+### <span id="route-put-contactpoint"></span> Update an existing contact point. (*RoutePutContactpoint*)
 
-```
-PUT /api/v1/provisioning/contact-points/:uid
-```
+    PUT /api/v1/provisioning/contact-points/:uid
 
 #### Parameters
 
@@ -1332,11 +1280,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-put-mute-timing"></span> Replace an existing mute timing. (_RoutePutMuteTiming_)
+### <span id="route-put-mute-timing"></span> Replace an existing mute timing. (*RoutePutMuteTiming*)
 
-```
-PUT /api/v1/provisioning/mute-timings/:name
-```
+    PUT /api/v1/provisioning/mute-timings/:name
 
 #### Parameters
 
@@ -1384,13 +1330,11 @@ Status: Conflict
 
 [GenericPublicError](#generic-public-error)
 
-### <span id="route-put-policy-tree"></span> Sets the notification policy tree. (_RoutePutPolicyTree_)
+### <span id="route-put-policy-tree"></span> Sets the notification policy tree. (*RoutePutPolicyTree*)
 
-{{< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="<GRAFANA_VERSION>" >}}
+{{\< docs/shared lookup="alerts/warning-provisioning-tree.md" source="grafana" version="\<GRAFANA\_VERSION\>" \>}}
 
-```
-PUT /api/v1/provisioning/policies
-```
+    PUT /api/v1/provisioning/policies
 
 #### Parameters
 
@@ -1428,11 +1372,9 @@ Status: Bad Request
 
 [ValidationError](#validation-error)
 
-### <span id="route-put-template"></span> Create or update a notification template group. (_RoutePutTemplate_)
+### <span id="route-put-template"></span> Create or update a notification template group. (*RoutePutTemplate*)
 
-```
-PUT /api/v1/provisioning/templates/:name
-```
+    PUT /api/v1/provisioning/templates/:name
 
 {{% responsive-table %}}
 
@@ -1480,11 +1422,9 @@ Status: Conflict
 
 [GenericPublicError](#generic-public-error)
 
-### <span id="route-reset-policy-tree"></span> Clears the notification policy tree. (_RouteResetPolicyTree_)
+### <span id="route-reset-policy-tree"></span> Clears the notification policy tree. (*RouteResetPolicyTree*)
 
-```
-DELETE /api/v1/provisioning/policies
-```
+    DELETE /api/v1/provisioning/policies
 
 #### All responses
 
@@ -1551,7 +1491,7 @@ Status: Accepted
 | `annotations`  | map of string                             | `map[string]string`   |          |         |             |         |
 | `condition`    | string                                    | string                |          |         |             |         |
 | `dashboardUid` | string                                    | string                |          |         |             |         |
-| `data`         | [][AlertQueryExport](#alert-query-export) | `[]*AlertQueryExport` |          |         |             |         |
+| `data`         | \[\][AlertQueryExport](#alert-query-export) | `[]*AlertQueryExport` |          |         |             |         |
 | `execErrState` | string                                    | string                |          |         |             |         |
 | `for`          | [Duration](#duration)                     | Duration              |          |         |             |         |
 | `isPaused`     | boolean                                   | `bool`                |          |         |             |         |
@@ -1573,7 +1513,7 @@ Status: Accepted
 | ----------- | ------------------------------------------------- | ------------------------- | :------: | ------- | ----------- | ------- |
 | `folderUid` | string                                            | string                    |          |         |             |         |
 | `interval`  | int64 (formatted integer)                         | int64                     |          |         |             |         |
-| `rules`     | [][ProvisionedAlertRule](#provisioned-alert-rule) | `[]*ProvisionedAlertRule` |          |         |             |         |
+| `rules`     | \[\][ProvisionedAlertRule](#provisioned-alert-rule) | `[]*ProvisionedAlertRule` |          |         |             |         |
 | `title`     | string                                            | string                    |          |         |             |         |
 
 {{% /responsive-table %}}
@@ -1590,7 +1530,7 @@ Status: Accepted
 | `interval` | [Duration](#duration)                   | Duration             |          |         |             |         |
 | `name`     | string                                  | string               |          |         |             |         |
 | `orgId`    | int64 (formatted integer)               | int64                |          |         |             |         |
-| `rules`    | [][AlertRuleExport](#alert-rule-export) | `[]*AlertRuleExport` |          |         |             |         |
+| `rules`    | \[\][AlertRuleExport](#alert-rule-export) | `[]*AlertRuleExport` |          |         |             |         |
 
 {{% /responsive-table %}}
 
@@ -1603,9 +1543,9 @@ Status: Accepted
 | Name            | Type                                                      | Go type                       | Required | Default | Description | Example |
 | --------------- | --------------------------------------------------------- | ----------------------------- | :------: | ------- | ----------- | ------- |
 | `apiVersion`    | int64 (formatted integer)                                 | int64                         |          |         |             |         |
-| `contactPoints` | [][ContactPointExport](#contact-point-export)             | `[]*ContactPointExport`       |          |         |             |         |
-| `groups`        | [][AlertRuleGroupExport](#alert-rule-group-export)        | `[]*AlertRuleGroupExport`     |          |         |             |         |
-| `policies`      | [][NotificationPolicyExport](#notification-policy-export) | `[]*NotificationPolicyExport` |          |         |             |         |
+| `contactPoints` | \[\][ContactPointExport](#contact-point-export)             | `[]*ContactPointExport`       |          |         |             |         |
+| `groups`        | \[\][AlertRuleGroupExport](#alert-rule-group-export)        | `[]*AlertRuleGroupExport`     |          |         |             |         |
+| `policies`      | \[\][NotificationPolicyExport](#notification-policy-export) | `[]*NotificationPolicyExport` |          |         |             |         |
 
 {{% /responsive-table %}}
 
@@ -1617,11 +1557,11 @@ Status: Accepted
 | ----------- | ------------------------------------ | ------------------- | :------: | ------- | ----------- | ------- |
 | `name`      | string                               | string              |          |         |             |         |
 | `orgId`     | int64 (formatted integer)            | int64               |          |         |             |         |
-| `receivers` | [][ReceiverExport](#receiver-export) | `[]*ReceiverExport` |          |         |             |         |
+| `receivers` | \[\][ReceiverExport](#receiver-export) | `[]*ReceiverExport` |          |         |             |         |
 
 ### <span id="contact-points"></span> ContactPoints
 
-[][EmbeddedContactPoint](#embedded-contact-point)
+\[\][EmbeddedContactPoint](#embedded-contact-point)
 
 ### <span id="duration"></span> Duration
 
@@ -1684,7 +1624,7 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 > provides a Matches method to match a LabelSet against all Matchers in the
 > slice. Note that some users of Matchers might require it to be sorted.
 
-[][Matcher](#matcher)
+\[\][Matcher](#matcher)
 
 ### <span id="mute-time-interval"></span> MuteTimeInterval
 
@@ -1695,7 +1635,7 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 | Name             | Type                             | Go type           | Required | Default | Description         | Example |
 | ---------------- | -------------------------------- | ----------------- | :------: | ------- | ------------------- | ------- |
 | `name`           | string                           | string            |          |         |                     |         |
-| `time_intervals` | [][TimeInterval](#time-interval) | `[]*TimeInterval` |          |         |                     |         |
+| `time_intervals` | \[\][TimeInterval](#time-interval) | `[]*TimeInterval` |          |         |                     |         |
 | `version`        | string                           | string            |          |         | Version of resource |         |
 
 {{% /responsive-table %}}
@@ -1710,7 +1650,7 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 
 ### <span id="mute-timings"></span> MuteTimings
 
-[][MuteTimeInterval](#mute-time-interval)
+\[\][MuteTimeInterval](#mute-time-interval)
 
 ### <span id="not-found"></span> NotFound
 
@@ -1755,7 +1695,7 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 
 ### <span id="notification-templates"></span> NotificationTemplates
 
-[][NotificationTemplate](#notification-template)
+\[\][NotificationTemplate](#notification-template)
 
 ### <span id="object-matchers"></span> ObjectMatchers
 
@@ -1783,7 +1723,7 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 | ------------- | ---------------------------- | ------------------------- | :------: | ------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `annotations` | map of string                | `map[string]string`       |          |         | Optional key-value pairs. `dashboardUId` and `panelId` must be set together; one cannot be set without the other. | `{"runbook_url":"https://supercoolrunbook.com/page/13"}`                                                                                                                                                                                                                                                                                                                                                                         |
 | `condition`   | string                       | string                    |    ✓     |         |                                                                                                                   | `A`                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `data`        | [][AlertQuery](#alert-query) | `[]*AlertQuery`           |    ✓     |         |                                                                                                                   | `[{"datasourceUid":"__expr__","model":{"conditions":[{"evaluator":{"params":[0,0],"type":"gt"},"operator":{"type":"and"},"query":{"params":[]},"reducer":{"params":[],"type":"avg"},"type":"query"}],"datasource":{"type":"__expr__","uid":"__expr__"},"expression":"1 == 1","hide":false,"intervalMs":1000,"maxDataPoints":43200,"refId":"A","type":"math"},"queryType":"","refId":"A","relativeTimeRange":{"from":0,"to":0}}]` |
+| `data`        | \[\][AlertQuery](#alert-query) | `[]*AlertQuery`           |    ✓     |         |                                                                                                                   | `[{"datasourceUid":"__expr__","model":{"conditions":[{"evaluator":{"params":[0,0],"type":"gt"},"operator":{"type":"and"},"query":{"params":[]},"reducer":{"params":[],"type":"avg"},"type":"query"}],"datasource":{"type":"__expr__","uid":"__expr__"},"expression":"1 == 1","hide":false,"intervalMs":1000,"maxDataPoints":43200,"refId":"A","type":"math"},"queryType":"","refId":"A","relativeTimeRange":{"from":0,"to":0}}]` |
 | execErrState  | string                       | string                    |    ✓     |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `folderUID`   | string                       | string                    |    ✓     |         |                                                                                                                   | `project_x`                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `for`         | [Duration](#duration)        | [Duration](#duration)     |    ✓     |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -1791,18 +1731,13 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 | `isPaused`    | boolean                      | `bool`                    |          |         |                                                                                                                   | `false`                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `labels`      | map of string                | `map[string]string`       |          |         |                                                                                                                   | `{"team":"sre-team-1"}`                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `noDataState` | string                       | string                    |    ✓     |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `orgID`       | int64 (formatted integer)    | `int64                    |    ✓     |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `provenance`  | [Provenance](#provenance)    | [Provenance](#provenance) |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `ruleGroup`   | string                       | string                    |    ✓     |         |                                                                                                                   | `eval_group_1`                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `title`       | string                       | string                    |    ✓     |         |                                                                                                                   | `Always firing`                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `uid`         | string                       | string                    |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `updated`     | date-time (formatted string) | `strfmt.DateTime`         |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `orgID`       | int64 (formatted integer)    | ` int64                    |    ✓     |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  | |  `provenance`  | [Provenance](#provenance)    | [Provenance](#provenance) |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  | | `ruleGroup`   | string                       | string                    |    ✓     |         |                                                                                                                   | `eval\_group\_1`                                                                                                                                                                                                                                                                                                                                                                                                                   | | `title`       | string                       | string                    |    ✓     |         |                                                                                                                   | `Always firing`                                                                                                                                                                                                                                                                                                                                                                                                                  | | `uid`         | string                       | string                    |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  | | `updated`     | date-time (formatted string) | `strfmt.DateTime\`         |          |         |                                                                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 {{% /responsive-table %}}
 
 ### <span id="provisioned-alert-rules"></span> ProvisionedAlertRules
 
-[][ProvisionedAlertRule](#provisioned-alert-rule)
+\[\][ProvisionedAlertRule](#provisioned-alert-rule)
 
 ### <span id="raw-message"></span> RawMessage
 
@@ -1854,18 +1789,18 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 | Name                  | Type                               | Go type             | Required | Default | Description                             | Example |
 | --------------------- | ---------------------------------- | ------------------- | :------: | ------- | --------------------------------------- | ------- |
 | `continue`            | boolean                            | `bool`              |          |         |                                         |         |
-| `group_by`            | []string                           | `[]string`          |          |         |                                         |         |
+| `group_by`            | \[\]string                           | `[]string`          |          |         |                                         |         |
 | `group_interval`      | string                             | string              |          |         |                                         |         |
 | `group_wait`          | string                             | string              |          |         |                                         |         |
 | `match`               | map of string                      | `map[string]string` |          |         | Deprecated. Remove before v1.0 release. |         |
 | `match_re`            | [MatchRegexps](#match-regexps)     | `MatchRegexps`      |          |         |                                         |         |
 | `matchers`            | [Matchers](#matchers)              | `Matchers`          |          |         |                                         |         |
-| `mute_time_intervals` | []string                           | `[]string`          |          |         |                                         |         |
+| `mute_time_intervals` | \[\]string                           | `[]string`          |          |         |                                         |         |
 | `object_matchers`     | [ObjectMatchers](#object-matchers) | `ObjectMatchers`    |          |         |                                         |         |
 | `provenance`          | [Provenance](#provenance)          | Provenance          |          |         |                                         |         |
 | `receiver`            | string                             | string              |          |         |                                         |         |
 | `repeat_interval`     | string                             | string              |          |         |                                         |         |
-| `routes`              | [][Route](#route)                  | `[]*Route`          |          |         |                                         |         |
+| `routes`              | \[\][Route](#route)                  | `[]*Route`          |          |         |                                         |         |
 
 {{% /responsive-table %}}
 
@@ -1879,17 +1814,17 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 | Name                  | Type                               | Go type             | Required | Default | Description                             | Example |
 | --------------------- | ---------------------------------- | ------------------- | :------: | ------- | --------------------------------------- | ------- |
 | `continue`            | boolean                            | `bool`              |          |         |                                         |         |
-| `group_by`            | []string                           | `[]string`          |          |         |                                         |         |
+| `group_by`            | \[\]string                           | `[]string`          |          |         |                                         |         |
 | `group_interval`      | string                             | string              |          |         |                                         |         |
 | `group_wait`          | string                             | string              |          |         |                                         |         |
 | `match`               | map of string                      | `map[string]string` |          |         | Deprecated. Remove before v1.0 release. |         |
 | `match_re`            | [MatchRegexps](#match-regexps)     | `MatchRegexps`      |          |         |                                         |         |
 | `matchers`            | [Matchers](#matchers)              | `Matchers`          |          |         |                                         |         |
-| `mute_time_intervals` | []string                           | `[]string`          |          |         |                                         |         |
+| `mute_time_intervals` | \[\]string                           | `[]string`          |          |         |                                         |         |
 | `object_matchers`     | [ObjectMatchers](#object-matchers) | `ObjectMatchers`    |          |         |                                         |         |
 | `receiver`            | string                             | string              |          |         |                                         |         |
 | `repeat_interval`     | string                             | string              |          |         |                                         |         |
-| `routes`              | [][RouteExport](#route-export)     | `[]*RouteExport`    |          |         |                                         |         |
+| `routes`              | \[\][RouteExport](#route-export)     | `[]*RouteExport`    |          |         |                                         |         |
 
 ### <span id="time-interval"></span> TimeInterval
 
@@ -1902,12 +1837,12 @@ When creating a contact point, the `EmbeddedContactPoint.name` property determin
 
 | Name            | Type                       | Go type        | Required | Default | Description | Example |
 | --------------- | -------------------------- | -------------- | :------: | ------- | ----------- | ------- |
-| `days_of_month` | []string                   | []string       |          |         |             |         |
+| `days_of_month` | \[\]string                   | \[\]string       |          |         |             |         |
 | `location`      | string                     | string         |          |         |             |         |
-| `months`        | []string                   | []string       |          |         |             |         |
-| `times`         | [][TimeRange](#time-range) | `[]*TimeRange` |          |         |             |         |
-| `weekdays`      | []string                   | []string       |          |         |             |         |
-| `years`         | []string                   | []string       |          |         |             |         |
+| `months`        | \[\]string                   | \[\]string       |          |         |             |         |
+| `times`         | \[\][TimeRange](#time-range) | `[]*TimeRange` |          |         |             |         |
+| `weekdays`      | \[\]string                   | \[\]string       |          |         |             |         |
+| `years`         | \[\]string                   | \[\]string       |          |         |             |         |
 
 {{% /responsive-table %}}
 
