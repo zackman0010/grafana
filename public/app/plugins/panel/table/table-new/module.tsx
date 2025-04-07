@@ -1,13 +1,4 @@
-import {
-  FieldOverrideContext,
-  FieldType,
-  getFieldDisplayName,
-  PanelPlugin,
-  ReducerID,
-  standardEditorsRegistry,
-  identityOverrideProcessor,
-  FieldConfigProperty,
-} from '@grafana/data';
+import { PanelPlugin, standardEditorsRegistry, identityOverrideProcessor, FieldConfigProperty } from '@grafana/data';
 import { TableCellOptions, TableCellDisplayMode, defaultTableFieldOptions, TableCellHeight } from '@grafana/schema';
 
 import { PaginationEditor } from './PaginationEditor';
