@@ -956,7 +956,38 @@ const getStyles = (theme: GrafanaTheme2, textWrap: boolean) => ({
   cell: css({
     '--rdg-border-color': theme.colors.border.medium,
     borderLeft: 'none',
-    whiteSpace: `${textWrap ? 'break-spaces' : 'nowrap'}`,
+    whiteSpace: 'nowrap',
+    wordWrap: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+
+    // Reset default cell styles for custom cell component styling
+    paddingInline: '0',
+
+    '&:hover': {
+      whiteSpace: 'pre-line',
+      overflow: 'visible',
+      width: '100%',
+      zIndex: theme.zIndex.tooltip,
+      minHeight: '100%',
+      height: 'fit-content',
+
+      '&::before': {
+        content: '""',
+        width: '100%',
+        height: '100%',
+        background: '#fff2',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      },
+    },
+  }),
+  cellWrapped: css({
+    '--rdg-border-color': theme.colors.border.medium,
+    borderLeft: 'none',
+    whiteSpace: 'pre-line',
     wordWrap: 'break-word',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
