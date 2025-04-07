@@ -1,10 +1,11 @@
 import { css, cx } from '@emotion/css';
 import classNames from 'classnames';
+import { Resizable } from 're-resizable';
 import { PropsWithChildren, useEffect } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { locationSearchToObject, locationService, useScopes } from '@grafana/runtime';
-import { LinkButton, useStyles2, useTheme2 } from '@grafana/ui';
+import { getDragStyles, LinkButton, useStyles2, useTheme2 } from '@grafana/ui';
 import { useGrafana } from 'app/core/context/GrafanaContext';
 import { useMediaQueryChange } from 'app/core/hooks/useMediaQueryChange';
 import { Trans } from 'app/core/internationalization';
@@ -14,7 +15,11 @@ import { ScopesDashboards } from 'app/features/scopes/dashboards/ScopesDashboard
 
 import { AppChromeMenu } from './AppChromeMenu';
 import { DOCKED_LOCAL_STORAGE_KEY, DOCKED_MENU_OPEN_LOCAL_STORAGE_KEY } from './AppChromeService';
-import { EXTENSION_SIDEBAR_WIDTH, ExtensionSidebar } from './ExtensionSidebar/ExtensionSidebar';
+import {
+  ExtensionSidebar,
+  MAX_EXTENSION_SIDEBAR_WIDTH,
+  MIN_EXTENSION_SIDEBAR_WIDTH,
+} from './ExtensionSidebar/ExtensionSidebar';
 import { useExtensionSidebarContext } from './ExtensionSidebar/ExtensionSidebarProvider';
 import { MegaMenu, MENU_WIDTH } from './MegaMenu/MegaMenu';
 import { useMegaMenuFocusHelper } from './MegaMenu/utils';
@@ -27,7 +32,12 @@ export interface Props extends PropsWithChildren<{}> {}
 
 export function AppChrome({ children }: Props) {
   const { chrome } = useGrafana();
-  const { isOpen: isExtensionSidebarOpen, isEnabled: isExtensionSidebarEnabled } = useExtensionSidebarContext();
+  const {
+    isOpen: isExtensionSidebarOpen,
+    isEnabled: isExtensionSidebarEnabled,
+    extensionSidebarWidth,
+    setExtensionSidebarWidth,
+  } = useExtensionSidebarContext();
   const state = chrome.useState();
   const theme = useTheme2();
   const scopes = useScopes();
@@ -38,7 +48,12 @@ export function AppChrome({ children }: Props) {
   const isScopesDashboardsOpen = Boolean(
     scopes?.state.enabled && scopes?.state.drawerOpened && !scopes?.state.readOnly
   );
-  const styles = useStyles2(getStyles, Boolean(state.actions) || !!scopes?.state.enabled);
+  const contentSizeStyles = useStyles2(getContentSizeStyles, extensionSidebarWidth);
+  const styles = useStyles2(
+    getStyles,
+    Boolean(state.actions) || !!scopes?.state.enabled ? TOP_BAR_LEVEL_HEIGHT * 2 : TOP_BAR_LEVEL_HEIGHT
+  );
+  const dragStyles = getDragStyles(theme);
   useMediaQueryChange({
     breakpoint: dockedMenuBreakpoint,
     onChange: (e) => {
@@ -125,15 +140,24 @@ export function AppChrome({ children }: Props) {
               [styles.pageContainerMenuDocked]: menuDockedAndOpen || isScopesDashboardsOpen,
               [styles.pageContainerMenuDockedScopes]: menuDockedAndOpen && isScopesDashboardsOpen,
               [styles.pageContainerWithSidebar]: !state.chromeless && isExtensionSidebarOpen,
+              [contentSizeStyles.contentWidth]: !state.chromeless && isExtensionSidebarOpen,
             })}
             id="pageContent"
           >
             {children}
           </main>
           {!state.chromeless && isExtensionSidebarEnabled && isExtensionSidebarOpen && (
-            <div className={styles.sidebarContainer}>
+            <Resizable
+              className={styles.sidebarContainer}
+              defaultSize={{ width: extensionSidebarWidth }}
+              enable={{ left: true }}
+              onResize={(_evt, _direction, ref) => setExtensionSidebarWidth(ref.getBoundingClientRect().width)}
+              handleClasses={{ left: dragStyles.dragHandleVertical }}
+              minWidth={MIN_EXTENSION_SIDEBAR_WIDTH}
+              maxWidth={MAX_EXTENSION_SIDEBAR_WIDTH}
+            >
               <ExtensionSidebar />
-            </div>
+            </Resizable>
           )}
         </div>
       </div>
@@ -146,12 +170,20 @@ export function AppChrome({ children }: Props) {
   );
 }
 
-const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
+const getContentSizeStyles = (_: GrafanaTheme2, extensionSidebarWidth = 0) => {
+  return {
+    contentWidth: css({
+      maxWidth: `calc(100% - ${extensionSidebarWidth}px) !important`,
+    }),
+  };
+};
+
+const getStyles = (theme: GrafanaTheme2, headerHeight = 0) => {
   return {
     content: css({
       display: 'flex',
       flexDirection: 'column',
-      paddingTop: hasActions ? TOP_BAR_LEVEL_HEIGHT * 2 : TOP_BAR_LEVEL_HEIGHT,
+      paddingTop: headerHeight,
       flexGrow: 1,
       height: 'auto',
     }),
@@ -178,7 +210,7 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
     }),
     scopesDashboardsContainer: css({
       position: 'fixed',
-      height: `calc(100% - ${TOP_BAR_LEVEL_HEIGHT}px)`,
+      height: `calc(100% - ${headerHeight}px)`,
       zIndex: 1,
     }),
     scopesDashboardsContainerDocked: css({
@@ -223,7 +255,6 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
       overflow: 'auto',
       height: '100%',
       minHeight: 0,
-      maxWidth: `calc(100% - ${EXTENSION_SIDEBAR_WIDTH})`,
     }),
     skipLink: css({
       position: 'fixed',
@@ -236,8 +267,9 @@ const getStyles = (theme: GrafanaTheme2, hasActions: boolean) => {
       },
     }),
     sidebarContainer: css({
-      position: 'fixed',
-      height: `calc(100% - ${TOP_BAR_LEVEL_HEIGHT}px)`,
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      position: 'fixed !important' as 'fixed',
+      height: `calc(100% - ${headerHeight}px) !important`,
       zIndex: 2,
       right: 0,
     }),
