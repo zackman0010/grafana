@@ -16,8 +16,10 @@ import { TablePanel } from './TablePanel';
 import { tableMigrationHandler, tablePanelChangedHandler } from './migrations';
 import { Options, defaultOptions, FieldConfig } from './panelcfg.gen';
 import { TableSuggestionsSupplier } from './suggestions';
+
 const footerCategory = 'Table footer';
 const cellCategory = ['Cell options'];
+
 export const plugin = new PanelPlugin<Options, FieldConfig>(TablePanel)
   .setPanelChangeHandler(tablePanelChangedHandler)
   .setMigrationHandler(tableMigrationHandler)
