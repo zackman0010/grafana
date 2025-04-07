@@ -12,6 +12,7 @@ interface SummaryCellProps {
 }
 
 export const SummaryCell = ({ sortedRows, field }: SummaryCellProps) => {
+  console.log('summary cell');
   const styles = useStyles2(getStyles);
   const footerItem = getFooterItemNG(sortedRows, field);
 
