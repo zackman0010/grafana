@@ -40,6 +40,7 @@ import {
   FrameToRowsConverter,
   TableNGProps,
   Comparator,
+  SpecialReducer,
 } from './types';
 
 // Extend FieldState to include our custom tracking property
@@ -302,11 +303,31 @@ export interface FooterItem {
 
 /* ------------------------------ Footer calculations ------------------------------ */
 export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | null {
-  if (field.type !== FieldType.number) {
+  const specialStringReducers: SpecialReducer[] = [
+    'allValues',
+    'changeCount',
+    'count',
+    'countAll',
+    'distinctCount',
+    'first',
+    'firstNotNull',
+    'last',
+    'lastNotNull',
+    'uniqueValues',
+  ];
+  const reducers: string[] = field.config.custom?.footer?.reducer ?? [];
+
+  const isSpecialReducer = (reducer: string): reducer is SpecialReducer => {
+    return specialStringReducers.some((specialReducer) => specialReducer === reducer);
+  };
+
+  const isSpecialStringReducer = reducers.some(isSpecialReducer);
+
+  // Only process if it's a number field or has special count reducers
+  if (field.type !== FieldType.number && !isSpecialStringReducer) {
     return null;
   }
 
-  const reducers: string[] = field.config.custom?.footer?.reducer ?? [];
   if (!reducers || reducers.length === 0) {
     return null;
   }
@@ -331,7 +352,7 @@ export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | nu
   }
 
   // Calculate all specified reducers
-  const results = reduceField({
+  const results: Record<string, number | null> = reduceField({
     field: {
       ...field,
       values: rows.map((row) => row[field.name]),
@@ -342,8 +363,10 @@ export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | nu
   // Create an object with reducer names as keys and their formatted values
   const footerItem: FooterItem = {};
 
-  reducers.forEach((reducerId: string) => {
-    if (results[reducerId] !== undefined) {
+  reducers.forEach((reducerId) => {
+    // For number fields, show all reducers
+    // For non-number fields, only show special count reducers
+    if (results[reducerId] !== undefined && (field.type === FieldType.number || isSpecialReducer(reducerId))) {
       const value: number | null = results[reducerId];
       const reducerName = fieldReducers.get(reducerId)?.name || reducerId;
       const formattedValue = field.display ? formattedValueToString(field.display(value)) : String(value);

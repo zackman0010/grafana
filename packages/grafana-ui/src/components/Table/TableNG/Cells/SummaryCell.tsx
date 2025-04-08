@@ -19,15 +19,18 @@ export const SummaryCell = ({ sortedRows, field }: SummaryCellProps) => {
     return <div className={styles.footerCell} />;
   }
 
+  const footerItemEntries = Object.entries(footerItem);
+
   // Render each reducer in the footer
   return (
     <div className={styles.footerCell}>
-      {Object.entries(footerItem).map(([reducerId, { reducerName, formattedValue }]) => {
+      {footerItemEntries.map(([reducerId, { reducerName, formattedValue }]) => {
+        const sanitizedReducerName = reducerName === 'Count all' ? 'Count' : reducerName;
         const isSingleSumReducer = Object.keys(footerItem).every((item) => item === 'sum');
 
         return (
           <div key={reducerId} className={cx(styles.footerItem, isSingleSumReducer && styles.sumReducer)}>
-            {!isSingleSumReducer && <div className={styles.footerItemLabel}>{reducerName}</div>}
+            {!isSingleSumReducer && <div className={styles.footerItemLabel}>{sanitizedReducerName}</div>}
             <div className={styles.footerItemValue}>{formattedValue}</div>
           </div>
         );
@@ -67,6 +70,9 @@ const getStyles = (theme: GrafanaTheme2) => ({
     textTransform: 'uppercase',
   }),
   footerItemValue: css({
+    maxWidth: '75%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     fontWeight: theme.typography.fontWeightMedium,
   }),
   sumReducer: css({

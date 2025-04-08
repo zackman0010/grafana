@@ -25,6 +25,44 @@ export const tableMigrationHandler = (panel: PanelModel<Options>): Partial<Optio
     console.log('Was angular table', panel);
   }
 
+  // Initialize fieldConfig if it doesn't exist
+  if (!panel.fieldConfig) {
+    panel.fieldConfig = {
+      defaults: {},
+      overrides: [],
+    };
+  }
+
+  const oldFooter = panel.options?.footer;
+
+  if (oldFooter) {
+    if (oldFooter.show) {
+      const reducers = oldFooter.reducer;
+
+      panel.fieldConfig.defaults.custom = {
+        ...panel.fieldConfig.defaults.custom,
+        footer: {
+          reducer: reducers,
+        },
+      };
+
+      if (oldFooter.countRows && oldFooter.reducer[0] === 'count') {
+        panel.fieldConfig.defaults.custom.footer.reducer = ['countAll'];
+      }
+
+      if (oldFooter.fields && oldFooter.fields.length > 0) {
+        panel.fieldConfig.defaults.custom.footer.reducer = [];
+        panel.fieldConfig.overrides = [
+          {
+            matcher: { id: 'byName', options: oldFooter.fields[0] },
+            properties: [{ id: 'custom.footer.reducer', value: reducers }],
+          },
+        ];
+      }
+      delete panel.options.footer;
+    }
+  }
+
   // Nothing changed
   return panel.options;
 };
