@@ -52,12 +52,18 @@ export const tableMigrationHandler = (panel: PanelModel<Options>): Partial<Optio
 
       if (oldFooter.fields && oldFooter.fields.length > 0) {
         panel.fieldConfig.defaults.custom.footer.reducer = [];
-        panel.fieldConfig.overrides = [
-          {
-            matcher: { id: 'byName', options: oldFooter.fields[0] },
-            properties: [{ id: 'custom.footer.reducer', value: reducers }],
-          },
-        ];
+
+        // Fields is an array of field names, so iterate through each field name
+        // and override the reducer for that field
+        oldFooter.fields.forEach((fieldName) => {
+          panel.fieldConfig.overrides = [
+            ...panel.fieldConfig.overrides,
+            {
+              matcher: { id: 'byName', options: fieldName },
+              properties: [{ id: 'custom.footer.reducer', value: reducers }],
+            },
+          ];
+        });
       }
       delete panel.options.footer;
     }
