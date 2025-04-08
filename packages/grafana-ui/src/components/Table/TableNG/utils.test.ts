@@ -142,7 +142,6 @@ const mockOptions = {
   setSortColumns: () => {},
   sortColumnsRef,
   textWrap: false,
-  sortedRows: [],
 };
 
 describe('TableNG utils', () => {
