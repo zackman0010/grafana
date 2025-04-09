@@ -296,7 +296,7 @@ interface FooterFieldState extends FieldState {
 
 /* ------------------------------ Footer calculations ------------------------------ */
 export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | null {
-  const specialStringReducers: SpecialReducer[] = [
+  const specialStringReducers: Set<string> = new Set([
     'allValues',
     'changeCount',
     'count',
@@ -307,11 +307,11 @@ export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | nu
     'last',
     'lastNotNull',
     'uniqueValues',
-  ];
+  ]);
   const reducers: string[] = field.config.custom?.footer?.reducer ?? [];
 
   const isSpecialReducer = (reducer: string): reducer is SpecialReducer => {
-    return specialStringReducers.some((specialReducer) => specialReducer === reducer);
+    return specialStringReducers.has(reducer);
   };
 
   const isSpecialStringReducer = reducers.some(isSpecialReducer);
