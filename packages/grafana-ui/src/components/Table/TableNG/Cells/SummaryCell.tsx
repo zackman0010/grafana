@@ -9,9 +9,10 @@ import { getFooterItemNG } from '../utils';
 interface SummaryCellProps {
   sortedRows: TableRow[];
   field: Field;
+  omitCountAll: boolean;
 }
 
-export const SummaryCell = ({ sortedRows, field }: SummaryCellProps) => {
+export const SummaryCell = ({ sortedRows, field, omitCountAll }: SummaryCellProps) => {
   const styles = useStyles2(getStyles);
   const footerItem = getFooterItemNG(sortedRows, field);
 
@@ -25,15 +26,21 @@ export const SummaryCell = ({ sortedRows, field }: SummaryCellProps) => {
   return (
     <div className={styles.footerCell}>
       {footerItemEntries.map(([reducerId, { reducerName, formattedValue }]) => {
-        const sanitizedReducerName = reducerName === 'Count all' ? 'Count' : reducerName;
-        const isSingleSumReducer = Object.keys(footerItem).every((item) => item === 'sum');
+        const isCountAll = reducerId === 'countAll';
 
-        return (
-          <div key={reducerId} className={cx(styles.footerItem, isSingleSumReducer && styles.sumReducer)}>
-            {!isSingleSumReducer && <div className={styles.footerItemLabel}>{sanitizedReducerName}</div>}
-            <div className={styles.footerItemValue}>{formattedValue}</div>
-          </div>
-        );
+        if (!isCountAll || !omitCountAll) {
+          const canonicalReducerName = isCountAll ? 'Count' : reducerName;
+          const isSingleSumReducer = Object.keys(footerItem).every((item) => item === 'sum');
+
+          return (
+            <div key={reducerId} className={cx(styles.footerItem, isSingleSumReducer && styles.sumReducer)}>
+              {!isSingleSumReducer && <div className={styles.footerItemLabel}>{canonicalReducerName}</div>}
+              <div className={styles.footerItemValue}>{formattedValue}</div>
+            </div>
+          );
+        }
+
+        return null;
       })}
     </div>
   );
