@@ -238,15 +238,3 @@ export interface ScrollPosition {
   x: number;
   y: number;
 }
-
-export type SpecialReducer =
-  | 'allValues'
-  | 'changeCount'
-  | 'count'
-  | 'countAll'
-  | 'distinctCount'
-  | 'first'
-  | 'firstNotNull'
-  | 'last'
-  | 'lastNotNull'
-  | 'uniqueValues';

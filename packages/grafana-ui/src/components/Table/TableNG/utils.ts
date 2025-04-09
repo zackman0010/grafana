@@ -40,7 +40,6 @@ import {
   FrameToRowsConverter,
   TableNGProps,
   Comparator,
-  SpecialReducer,
 } from './types';
 
 /* ---------------------------- Cell calculations --------------------------- */
