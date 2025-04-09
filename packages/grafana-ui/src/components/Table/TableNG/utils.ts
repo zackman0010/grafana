@@ -541,12 +541,10 @@ export interface MapFrameToGridOptions extends TableNGProps {
   columnWidth: number | string;
   crossFilterOrder: React.MutableRefObject<string[]>;
   crossFilterRows: React.MutableRefObject<{ [key: string]: TableRow[] }>;
-  defaultLineHeight: number;
   defaultRowHeight: number;
   expandedRows: number[];
   filter: FilterType;
   headerCellRefs: React.MutableRefObject<Record<string, HTMLDivElement>>;
-  ctx: CanvasRenderingContext2D;
   onSortByChange?: (sortBy: TableSortByFieldState[]) => void;
   rows: TableRow[];
   sortedRows: TableRow[];
