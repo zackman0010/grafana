@@ -7,6 +7,8 @@ import { DataQuery } from '@grafana/schema';
 import { PopoverContent, useTheme2 } from '@grafana/ui';
 import { Trans } from 'app/core/internationalization';
 
+import { getOtelDisplayMessage } from '../otel';
+
 import { LogMessageAnsi } from './LogMessageAnsi';
 import { LogRowMenuCell } from './LogRowMenuCell';
 import { LogRowStyles } from './getLogRowStyles';
@@ -114,11 +116,13 @@ const getEllipsisStyles = (theme: GrafanaTheme2) => ({
 });
 
 const restructureLog = (
-  line: string,
+  log: LogRowModel,
   prettifyLogMessage: boolean,
   wrapLogMessage: boolean,
-  expanded: boolean
+  expanded: boolean,
+  otel: boolean,
 ): string => {
+  let line = otel ? getOtelDisplayMessage(log) : log.raw;
   if (prettifyLogMessage) {
     try {
       return JSON.stringify(JSON.parse(line), undefined, 2);
@@ -151,10 +155,9 @@ export const LogRowMessage = memo((props: Props) => {
     logRowMenuIconsBefore,
     logRowMenuIconsAfter,
   } = props;
-  const { hasAnsi, raw } = row;
   const restructuredEntry = useMemo(
-    () => restructureLog(raw, prettifyLogMessage, wrapLogMessage, Boolean(expanded)),
-    [raw, prettifyLogMessage, wrapLogMessage, expanded]
+    () => restructureLog(row, prettifyLogMessage, wrapLogMessage, Boolean(expanded), true),
+    [row, prettifyLogMessage, wrapLogMessage, expanded]
   );
   const shouldShowMenu = mouseIsOver || pinned;
 
@@ -167,7 +170,7 @@ export const LogRowMessage = memo((props: Props) => {
       <td className={styles.logsRowMessage}>
         <div className={wrapLogMessage ? styles.positionRelative : styles.horizontalScroll}>
           <div className={`${styles.logLine} ${styles.positionRelative}`}>
-            <LogMessage hasAnsi={hasAnsi} entry={restructuredEntry} highlights={row.searchWords} styles={styles} />
+            <LogMessage hasAnsi={row.hasAnsi} entry={restructuredEntry} highlights={row.searchWords} styles={styles} />
           </div>
         </div>
       </td>
