@@ -43,11 +43,6 @@ import {
   SpecialReducer,
 } from './types';
 
-// Extend FieldState to include our custom tracking property
-interface FooterFieldState extends FieldState {
-  lastProcessedRowCount?: number;
-}
-
 /* ---------------------------- Cell calculations --------------------------- */
 export function getCellHeight(
   text: string,
@@ -56,12 +51,12 @@ export function getCellHeight(
   lineHeight: number,
   defaultRowHeight: number,
   padding = 0
-) {
+): number {
   const PADDING = padding * 2;
 
   if (typeof text === 'string') {
     const words = text.split(/\s/);
-    const lines = [];
+    const lines: Array<{ width: number; line: string }> = [];
     let currentLine = '';
 
     // Let's just wrap the lines and see how well the measurement works
@@ -190,13 +185,7 @@ export function isTextCell(key: string, columnTypes: Record<string, string>): bo
 
 export function shouldTextOverflow(
   key: string,
-  row: TableRow,
   columnTypes: ColumnTypes,
-  headerCellRefs: React.MutableRefObject<Record<string, HTMLDivElement>>,
-  ctx: CanvasRenderingContext2D,
-  lineHeight: number,
-  defaultRowHeight: number,
-  padding: number,
   textWrap: boolean,
   field: Field,
   cellType: TableCellDisplayMode
@@ -301,8 +290,16 @@ export interface FooterItem {
   };
 }
 
+interface FooterFieldState extends FieldState {
+  lastProcessedRowCount?: number;
+}
+
+interface ExtendedField extends Field {
+  state: FooterFieldState;
+}
+
 /* ------------------------------ Footer calculations ------------------------------ */
-export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | null {
+export function getFooterItemNG(rows: TableRow[], field: ExtendedField): FooterItem | null {
   const specialStringReducers: SpecialReducer[] = [
     'allValues',
     'changeCount',
@@ -339,7 +336,7 @@ export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | nu
   }
 
   const currentRowCount = rows.length;
-  const lastRowCount = (field.state as FooterFieldState).lastProcessedRowCount;
+  const lastRowCount = field.state.lastProcessedRowCount;
 
   // Check if we need to invalidate the cache
   if (lastRowCount !== currentRowCount) {
@@ -348,7 +345,7 @@ export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | nu
       delete field.state.calcs;
     }
     // Update the row count tracker
-    (field.state as FooterFieldState).lastProcessedRowCount = currentRowCount;
+    field.state.lastProcessedRowCount = currentRowCount;
   }
 
   // Calculate all specified reducers

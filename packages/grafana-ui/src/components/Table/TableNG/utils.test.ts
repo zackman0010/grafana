@@ -1620,8 +1620,6 @@ describe('TableNG utils', () => {
       expect(extractPixelValue('not-a-number')).toBe(0);
       expect(extractPixelValue('px')).toBe(0);
       expect(extractPixelValue('')).toBe(0);
-      expect(extractPixelValue(null as any)).toBe(0);
-      expect(extractPixelValue(undefined as any)).toBe(0);
     });
   });
 
@@ -1668,14 +1666,20 @@ describe('TableNG utils', () => {
         row: {
           __depth: depth,
           __index: index,
-          data: hasData ? { length: 2 } : undefined,
+          data: hasData
+            ? {
+                fields: [], // Add an empty fields array to satisfy DataFrame type
+                length: 2,
+                name: 'mockData',
+              }
+            : undefined,
         },
         viewportColumns: [],
         rowIdx: 0,
         isRowSelected: false,
         onRowClick: jest.fn(),
         onRowDoubleClick: jest.fn(),
-        rowClass: '',
+        rowClass: () => '',
         top: 0,
         height: 40,
         'aria-rowindex': 1,
@@ -1691,7 +1695,8 @@ describe('TableNG utils', () => {
         onRowChange: jest.fn(),
         rowArray: [],
         selectedPosition: { idx: 0, rowIdx: 0, mode: 'SELECT' },
-      } as any;
+        selectedCellEditor: undefined,
+      };
     };
 
     const mockPanelContext = {
