@@ -773,21 +773,7 @@ export function mapFrameToDataGrid({
             height={defaultRowHeight}
             justifyContent={justifyColumnContent}
             rowIdx={sortedRows[rowIdx].__index}
-            shouldTextOverflow={() =>
-              shouldTextOverflow(
-                key,
-                row,
-                columnTypes,
-                headerCellRefs,
-                ctx,
-                defaultLineHeight,
-                defaultRowHeight,
-                TABLE.CELL_PADDING,
-                textWraps[field.name],
-                field,
-                cellType
-              )
-            }
+            shouldTextOverflow={() => shouldTextOverflow(key, columnTypes, textWraps[field.name], field, cellType)}
             setIsInspecting={setIsInspecting}
             setContextMenuProps={setContextMenuProps}
             getActions={getActions}
