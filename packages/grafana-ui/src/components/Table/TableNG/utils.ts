@@ -291,15 +291,11 @@ export interface FooterItem {
 }
 
 interface FooterFieldState extends FieldState {
-  lastProcessedRowCount?: number;
-}
-
-interface ExtendedField extends Field {
-  state: FooterFieldState;
+  lastProcessedRowCount: number;
 }
 
 /* ------------------------------ Footer calculations ------------------------------ */
-export function getFooterItemNG(rows: TableRow[], field: ExtendedField): FooterItem | null {
+export function getFooterItemNG(rows: TableRow[], field: Field): FooterItem | null {
   const specialStringReducers: SpecialReducer[] = [
     'allValues',
     'changeCount',
@@ -329,23 +325,26 @@ export function getFooterItemNG(rows: TableRow[], field: ExtendedField): FooterI
     return null;
   }
 
-  // Cache invalidation tracking
-  // Only invalidate the cache when the row count changes, which indicates filtering/sorting changes
-  if (!field.state) {
-    field.state = {};
-  }
+  // Create a new state object that matches the original behavior exactly
+  const newState: FooterFieldState = {
+    lastProcessedRowCount: 0,
+    ...(field.state || {}), // Preserve any existing state properties
+  };
+
+  // Assign back to field
+  field.state = newState;
 
   const currentRowCount = rows.length;
-  const lastRowCount = field.state.lastProcessedRowCount;
+  const lastRowCount = newState.lastProcessedRowCount;
 
   // Check if we need to invalidate the cache
   if (lastRowCount !== currentRowCount) {
     // Cache should be invalidated as row count has changed
-    if (field.state.calcs) {
-      delete field.state.calcs;
+    if (newState.calcs) {
+      delete newState.calcs;
     }
     // Update the row count tracker
-    field.state.lastProcessedRowCount = currentRowCount;
+    newState.lastProcessedRowCount = currentRowCount;
   }
 
   // Calculate all specified reducers
