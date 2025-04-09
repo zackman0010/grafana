@@ -105,12 +105,13 @@ export function TableNG(props: TableNGProps) {
   const [page, setPage] = useState(0);
   // This state will trigger re-render for recalculating row heights
   const [, setResizeTrigger] = useState(0);
-  const [, setReadyForRowHeightCalc] = useState(false);
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>(initialSortColumns);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [isNestedTable, setIsNestedTable] = useState(false);
   const scrollPositionRef = useRef<ScrollPosition>({ x: 0, y: 0 });
   const [hasScroll, setHasScroll] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [measuredWidths, setMeasuredWidths] = useState<Record<string, number>>({});
 
   /* ------------------------------- Local refs ------------------------------- */
   const crossFilterOrder = useRef<string[]>([]);
@@ -473,11 +474,6 @@ export function TableNG(props: TableNGProps) {
     [props.data, calcsRef, filter, expandedRows, expandedRows.length, footerOptions, width, hasScroll, sortedRows] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  // This effect needed to set header cells refs before row height calculation
-  useLayoutEffect(() => {
-    setReadyForRowHeightCalc(Object.keys(headerCellRefs.current).length > 0);
-  }, [columns]);
-
   const renderMenuItems = () => {
     return (
       <>
@@ -533,6 +529,39 @@ export function TableNG(props: TableNGProps) {
     }
   }, [revId]);
 
+  // Measure columns after initial render
+  useLayoutEffect(() => {
+    if (!isInitialized) {
+      const headerCells = tableRef.current?.element?.querySelectorAll('[role="columnheader"]');
+      if (headerCells) {
+        const widths: Record<string, number> = {};
+        Array.from(headerCells).forEach((cell: Element, i) => {
+          const column = columns[i];
+          if (column) {
+            widths[column.key] = cell.getBoundingClientRect().width;
+          }
+        });
+        setMeasuredWidths(widths);
+        setIsInitialized(true);
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Phase 1: Initial render with minimal table to measure columns
+  if (!isInitialized) {
+    return (
+      <DataGrid<TableRow, TableSummaryRow>
+        ref={tableRef}
+        rows={[]}
+        enableVirtualization={false}
+        columns={columns}
+        headerRowHeight={0}
+        style={{ width, height: 1 }} // Minimal height to measure
+      />
+    );
+  }
+
+  // Phase 2: Full table with measured widths
   return (
     <>
       <DataGrid<TableRow, TableSummaryRow>
