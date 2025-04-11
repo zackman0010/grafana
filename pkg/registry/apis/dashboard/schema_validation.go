@@ -20,9 +20,6 @@ import (
 
 // ValidateDashboardSpec validates the dashboard spec and throws a detailed error if there are validation errors.
 func (b *DashboardsAPIBuilder) ValidateDashboardSpec(ctx context.Context, obj runtime.Object, a admission.Attributes) error {
-	// This will be removed with the other PR
-	return nil
-
 	accessor, err := utils.MetaAccessor(obj)
 	if err != nil {
 		return fmt.Errorf("error getting meta accessor: %w", err)
