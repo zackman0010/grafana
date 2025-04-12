@@ -28,6 +28,20 @@ func GetOpenAPIDefinitions(builders []APIGroupBuilder) common.GetOpenAPIDefiniti
 				},
 			},
 		})
+		// Explicitly override DataQuery schema to avoid validation issues with $schema/examples from SDK
+		dataQueryKey := "github.com/grafana/grafana-plugin-sdk-go/experimental/apis/data/v0alpha1.DataQuery"
+		if _, exists := defs[dataQueryKey]; exists {
+			defs[dataQueryKey] = common.OpenAPIDefinition{
+				Schema: spec.Schema{
+					SchemaProps: spec.SchemaProps{
+						Description:          "DataQuery is the query structure common for all datasources.",
+						Type:                 []string{"object"},
+						Properties:           map[string]spec.Schema{},
+						AdditionalProperties: &spec.SchemaOrBool{Allows: true},
+					},
+				},
+			}
+		}
 		for _, b := range builders {
 			g := b.GetOpenAPIDefinitions()
 			if g != nil {
