@@ -121,16 +121,14 @@ function VizAndDataPane({ model }: SceneComponentProps<PanelEditor>) {
       )}
       <div {...containerProps}>
         <div {...primaryProps}>
-          <div {...vizContainerProps}>
-            <div {...vizPrimaryProps}>
-              <div className={styles.vizWrapper}>
-                <panel.Component model={panel} />
-              </div>
+          <div {...vizContainerProps} className={cx(vizContainerProps.className, styles.vizContainer)}>
+            <div {...vizPrimaryProps} className={styles.panelContent}>
+              <panel.Component model={panel} />
             </div>
             {tableView && (
               <>
                 <div {...vizSplitterProps} />
-                <div {...vizSecondaryProps} className={styles.tableWrapper}>
+                <div {...vizSecondaryProps} className={cx(styles.tableWrapper, styles.panelContent)}>
                   {vizSplitterState.collapsed && (
                     <div className={styles.expandTablePane}>
                       <Button
@@ -279,6 +277,11 @@ function getStyles(theme: GrafanaTheme2) {
       flexDirection: 'column',
       height: '100%',
       width: '100%',
+      paddingLeft: theme.spacing(2),
+    }),
+    panelContent: css({
+      height: '100%',
+      width: '100%',
     }),
     tableWrapper: css({
       borderTop: `1px solid ${theme.colors.border.weak}`,
@@ -301,7 +304,6 @@ function getStyles(theme: GrafanaTheme2) {
     vizWrapper: css({
       height: '100%',
       width: '100%',
-      paddingLeft: theme.spacing(2),
     }),
   };
 }
