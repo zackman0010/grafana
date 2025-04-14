@@ -80,6 +80,7 @@ function VizAndDataPane({ model }: SceneComponentProps<PanelEditor>) {
   const { controls } = dashboard.useState();
   const styles = useStyles2(getStyles);
 
+  // Main splitter for viz + table / data pane
   const { containerProps, primaryProps, secondaryProps, splitterProps, splitterState, onToggleCollapse } =
     useSnappingSplitter({
       direction: 'column',
@@ -88,7 +89,24 @@ function VizAndDataPane({ model }: SceneComponentProps<PanelEditor>) {
       collapseBelowPixels: 150,
     });
 
+  // Nested splitter for viz / table
+  const {
+    containerProps: vizContainerProps,
+    primaryProps: vizPrimaryProps,
+    secondaryProps: vizSecondaryProps,
+    splitterProps: vizSplitterProps,
+    splitterState: vizSplitterState,
+    onToggleCollapse: onToggleVizSplit,
+  } = useSnappingSplitter({
+    direction: 'column',
+    dragPosition: 'start',
+    initialSize: 0.7,
+    collapseBelowPixels: 100,
+    collapsed: !tableView,
+  });
+
   containerProps.className = cx(containerProps.className, styles.container);
+  vizContainerProps.className = cx(vizContainerProps.className, styles.vizContainer);
 
   if (!dataPane) {
     primaryProps.style.flexGrow = 1;
@@ -103,7 +121,37 @@ function VizAndDataPane({ model }: SceneComponentProps<PanelEditor>) {
       )}
       <div {...containerProps}>
         <div {...primaryProps}>
-          <VizWrapper panel={panel} tableView={tableView} />
+          <div {...vizContainerProps}>
+            <div {...vizPrimaryProps}>
+              <div className={styles.vizWrapper}>
+                <panel.Component model={panel} />
+              </div>
+            </div>
+            {tableView && (
+              <>
+                <div {...vizSplitterProps} />
+                <div {...vizSecondaryProps} className={styles.tableWrapper}>
+                  {vizSplitterState.collapsed && (
+                    <div className={styles.expandTablePane}>
+                      <Button
+                        tooltip={t('dashboard-scene.viz-and-data-pane.tooltip-open-table-pane', 'Show data table')}
+                        icon={'table'}
+                        onClick={onToggleVizSplit}
+                        variant="secondary"
+                        size="sm"
+                        className={styles.openTablePaneButton}
+                        aria-label={t(
+                          'dashboard-scene.viz-and-data-pane.aria-label-open-table-pane',
+                          'Show data table'
+                        )}
+                      />
+                    </div>
+                  )}
+                  {!vizSplitterState.collapsed && tableView && <tableView.Component model={tableView} />}
+                </div>
+              </>
+            )}
+          </div>
         </div>
         {showLibraryPanelSaveModal && libraryPanel && (
           <SaveLibraryVizPanelModal
@@ -142,22 +190,6 @@ function VizAndDataPane({ model }: SceneComponentProps<PanelEditor>) {
           </>
         )}
       </div>
-    </div>
-  );
-}
-
-interface VizWrapperProps {
-  panel: VizPanel;
-  tableView?: VizPanel;
-}
-
-function VizWrapper({ panel, tableView }: VizWrapperProps) {
-  const styles = useStyles2(getStyles);
-  const panelToShow = tableView ?? panel;
-
-  return (
-    <div className={styles.vizWrapper}>
-      <panelToShow.Component model={panelToShow} />
     </div>
   );
 }
@@ -241,6 +273,30 @@ function getStyles(theme: GrafanaTheme2) {
       svg: {
         rotate: '-90deg',
       },
+    }),
+    vizContainer: css({
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      width: '100%',
+    }),
+    tableWrapper: css({
+      borderTop: `1px solid ${theme.colors.border.weak}`,
+      background: theme.colors.background.primary,
+    }),
+    expandTablePane: css({
+      display: 'flex',
+      flexDirection: 'row',
+      padding: theme.spacing(1),
+      borderTop: `1px solid ${theme.colors.border.weak}`,
+      borderRight: `1px solid ${theme.colors.border.weak}`,
+      background: theme.colors.background.primary,
+      flexGrow: 1,
+      justifyContent: 'space-around',
+    }),
+    openTablePaneButton: css({
+      width: theme.spacing(8),
+      justifyContent: 'center',
     }),
     vizWrapper: css({
       height: '100%',

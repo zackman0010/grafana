@@ -180,10 +180,20 @@ export class PanelEditor extends SceneObjectBase<PanelEditorState> {
         }),
         isInitializing: false,
       });
+
+      // Always create table view if we have data
+      if (panel.state.$data && !this.state.tableView) {
+        this.createTableView();
+      }
     } else {
       // plugin changed after first time initialization
       // Just update data pane
       this._updateDataPane(plugin);
+
+      // Create table view if we switched to a data-enabled panel
+      if (panel.state.$data && !this.state.tableView) {
+        this.createTableView();
+      }
     }
   }
 
@@ -203,6 +213,11 @@ export class PanelEditor extends SceneObjectBase<PanelEditorState> {
         panel.setState({
           $data: undefined,
         });
+      }
+
+      // Clear table view if data source is removed
+      if (this.state.tableView) {
+        this.setState({ tableView: undefined });
       }
     }
 
@@ -308,10 +323,13 @@ export class PanelEditor extends SceneObjectBase<PanelEditorState> {
 
   public onToggleTableView = () => {
     if (this.state.tableView) {
-      this.setState({ tableView: undefined });
-      return;
+      return; // Table view is now always available when we have data, no longer toggled off
     }
 
+    this.createTableView();
+  };
+
+  private createTableView() {
     const panel = this.state.panelRef.resolve();
     const dataProvider = panel.state.$data;
     if (!dataProvider) {
@@ -326,7 +344,7 @@ export class PanelEditor extends SceneObjectBase<PanelEditorState> {
         .setData(new DataProviderSharer({ source: dataProvider.getRef() }))
         .build(),
     });
-  };
+  }
 }
 
 export function buildPanelEditScene(panel: VizPanel, isNewPanel = false): PanelEditor {
