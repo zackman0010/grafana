@@ -3,21 +3,20 @@ import { css, cx } from '@emotion/css';
 import { GrafanaTheme2, VariableHide } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
 import {
-  SceneObjectState,
-  SceneObjectBase,
+  CancelActivationHandler,
   SceneComponentProps,
-  SceneTimePicker,
-  SceneRefreshPicker,
   SceneDebugger,
-  VariableDependencyConfig,
-  sceneGraph,
+  SceneObjectBase,
+  SceneObjectState,
   SceneObjectUrlSyncConfig,
   SceneObjectUrlValues,
-  CancelActivationHandler,
+  SceneRefreshPicker,
+  SceneTimePicker,
+  VariableDependencyConfig,
+  sceneGraph,
 } from '@grafana/scenes';
 import { Box, Stack, useStyles2 } from '@grafana/ui';
 
-import { PanelEditControls } from '../panel-edit/PanelEditControls';
 import { getDashboardSceneFor } from '../utils/utils';
 
 import { DashboardLinksControls } from './DashboardLinksControls';
@@ -143,7 +142,6 @@ function DashboardControlsRenderer({ model }: SceneComponentProps<DashboardContr
         )}
         <Box grow={1} />
         {!hideLinksControls && !editPanel && <DashboardLinksControls links={links} dashboard={dashboard} />}
-        {editPanel && <PanelEditControls panelEditor={editPanel} />}
       </Stack>
       {!hideTimeControls && (
         <Stack justifyContent={'flex-end'}>
