@@ -116,22 +116,9 @@ func (s *secureValueMetadataStorage) Read(ctx context.Context, namespace xkube.N
 		return nil, fmt.Errorf("missing auth info in context")
 	}
 
-	row := &secureValueDB{Name: name, Namespace: namespace.String()}
-
-	err := s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
-		found, err := sess.Get(row)
-		if err != nil {
-			return fmt.Errorf("could not get row: %w", err)
-		}
-
-		if !found {
-			return contracts.ErrSecureValueNotFound
-		}
-
-		return nil
-	})
+	row, err := s.read(ctx, namespace, name)
 	if err != nil {
-		return nil, fmt.Errorf("db failure: %w", err)
+		return nil, fmt.Errorf("read secure value: %w", err)
 	}
 
 	secureValue, err := row.toKubernetes()
@@ -357,4 +344,45 @@ func (s *secureValueMetadataStorage) SetStatusSucceeded(ctx context.Context, nam
 			return nil
 		})
 	})
+}
+
+func (s *secureValueMetadataStorage) ReadForDecrypt(ctx context.Context, namespace xkube.Namespace, name string) (*contracts.SecureValueForDecrypt, error) {
+	_, ok := claims.AuthInfoFrom(ctx)
+	if !ok {
+		return nil, fmt.Errorf("missing auth info in context")
+	}
+
+	row, err := s.read(ctx, namespace, name)
+	if err != nil {
+		return nil, fmt.Errorf("read secure value: %w", err)
+	}
+
+	secureValue, err := row.toDecrypt()
+	if err != nil {
+		return nil, fmt.Errorf("convert to kubernetes object: %w", err)
+	}
+
+	return secureValue, nil
+}
+
+func (s *secureValueMetadataStorage) read(ctx context.Context, namespace xkube.Namespace, name string) (*secureValueDB, error) {
+	row := &secureValueDB{Name: name, Namespace: namespace.String()}
+
+	err := s.db.WithDbSession(ctx, func(sess *sqlstore.DBSession) error {
+		found, err := sess.Get(row)
+		if err != nil {
+			return fmt.Errorf("could not get row: %w", err)
+		}
+
+		if !found {
+			return contracts.ErrSecureValueNotFound
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("db failure: %w", err)
+	}
+
+	return row, nil
 }

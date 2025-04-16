@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	secretv0alpha1 "github.com/grafana/grafana/pkg/apis/secret/v0alpha1"
+	"github.com/grafana/grafana/pkg/registry/apis/secret/contracts"
 	"github.com/grafana/grafana/pkg/registry/apis/secret/xkube"
 	"github.com/grafana/grafana/pkg/storage/secret/migrator"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -222,4 +223,24 @@ func toRow(sv *secretv0alpha1.SecureValue, externalID string) (*secureValueDB, e
 		Ref:        ref,
 		ExternalID: externalID,
 	}, nil
+}
+
+func (sv *secureValueDB) toDecrypt() (*contracts.SecureValueForDecrypt, error) {
+	decrypters := make([]string, 0)
+	if sv.Decrypters != nil && *sv.Decrypters != "" {
+		if err := json.Unmarshal([]byte(*sv.Decrypters), &decrypters); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal decrypters: %w", err)
+		}
+	}
+
+	svForDecrypt := &contracts.SecureValueForDecrypt{
+		Keeper:     sv.Keeper,
+		Decrypters: decrypters,
+		ExternalID: sv.ExternalID,
+	}
+	if sv.Ref != nil {
+		svForDecrypt.Ref = *sv.Ref
+	}
+
+	return svForDecrypt, nil
 }
