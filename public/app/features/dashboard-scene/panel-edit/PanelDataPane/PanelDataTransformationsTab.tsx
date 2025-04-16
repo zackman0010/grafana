@@ -105,7 +105,7 @@ export function PanelDataTransformationsTabRendered({ model }: SceneComponentPro
 
   return (
     <>
-      <TransformationsEditor data={sourceData.data} transformations={transformations} model={model} />
+      <TransformationsEditor data={data} transformations={transformations} model={model} />
       <ButtonGroup>
         <Button
           icon="plus"
