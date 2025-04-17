@@ -11,7 +11,6 @@ keywords:
 labels:
   products:
     - enterprise
-    - oss
 title: Reporting API
 ---
 
