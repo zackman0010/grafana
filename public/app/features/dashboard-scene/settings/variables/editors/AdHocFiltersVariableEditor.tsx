@@ -2,8 +2,12 @@ import { FormEvent } from 'react';
 import { useAsync } from 'react-use';
 
 import { DataSourceInstanceSettings, MetricFindValue, getDataSourceRef } from '@grafana/data';
-import { getDataSourceSrv } from '@grafana/runtime';
-import { AdHocFiltersVariable } from '@grafana/scenes';
+import { selectors } from '@grafana/e2e-selectors';
+import { DataSourcePicker, getDataSourceSrv } from '@grafana/runtime';
+import { AdHocFiltersVariable, SceneVariable } from '@grafana/scenes';
+import { Alert, Stack } from '@grafana/ui';
+import { t } from 'app/core/internationalization';
+import { OptionsPaneItemDescriptor } from 'app/features/dashboard/components/PanelEditor/OptionsPaneItemDescriptor';
 
 import { AdHocVariableForm } from '../components/AdHocVariableForm';
 
@@ -53,5 +57,48 @@ export function AdHocFiltersVariableEditor(props: AdHocFiltersVariableEditorProp
       onDefaultKeysChange={onDefaultKeysChange}
       onAllowCustomValueChange={onAllowCustomValueChange}
     />
+  );
+}
+
+export function getAdhocFiltersVariableOptions(variable: SceneVariable): OptionsPaneItemDescriptor[] {
+  if (!(variable instanceof AdHocFiltersVariable)) {
+    return [];
+  }
+
+  return [
+    new OptionsPaneItemDescriptor({
+      title: t('dashboard.edit-pane.variable.adhoc-options.datasource', 'Data source'),
+      render: () => <AdHocFilterDataSourcePicker variable={variable} />,
+    }),
+  ];
+}
+
+function AdHocFilterDataSourcePicker({ variable }: { variable: AdHocFiltersVariable }) {
+  const { datasource } = variable.useState();
+
+  const { value: dsInstance } = useAsync(async () => {
+    return await getDataSourceSrv().get(datasource);
+  }, [datasource]);
+
+  const onDataSourceChange = async (ds: DataSourceInstanceSettings) => {
+    const dsRef = getDataSourceRef(ds);
+    variable.setState({ datasource: dsRef });
+  };
+
+  const message = dsInstance?.getTagKeys
+    ? 'Ad hoc filters are applied automatically to all queries that target this data source'
+    : 'This data source does not support ad hoc filters yet.';
+
+  return (
+    <Stack direction={'column'} gap={1}>
+      <DataSourcePicker current={datasource} onChange={onDataSourceChange} width={30} variables={true} noDefault />
+      {message ? (
+        <Alert
+          title={message}
+          severity="info"
+          data-testid={selectors.pages.Dashboard.Settings.Variables.Edit.AdHocFiltersVariable.infoText}
+        />
+      ) : null}
+    </Stack>
   );
 }
