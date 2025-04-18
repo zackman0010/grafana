@@ -10,9 +10,9 @@ import (
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/scimsettings"
 	"github.com/grafana/grafana/pkg/services/scimsettings/models"
+	"github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 )
 
-// ProvideStore creates a new database store for SCIM settings.
 func ProvideStore(sqlStore db.DB) scimsettings.Store {
 	return &storeImpl{
 		sqlStore: sqlStore,
@@ -27,8 +27,6 @@ type storeImpl struct {
 
 var _ scimsettings.Store = (*storeImpl)(nil)
 
-// Get retrieves the SCIM settings from the database.
-// Returns scimsettings.ErrSettingsNotFound if no settings row exists.
 func (s *storeImpl) Get(ctx context.Context) (*models.ScimSettings, error) {
 	settings := &models.ScimSettings{}
 	err := s.sqlStore.WithDbSession(ctx, func(sess *db.Session) error {
@@ -37,32 +35,25 @@ func (s *storeImpl) Get(ctx context.Context) (*models.ScimSettings, error) {
 			return fmt.Errorf("database error fetching scim settings: %w", err)
 		}
 		if !has {
-			// Explicitly return ErrSettingsNotFound when no record exists
 			return scimsettings.ErrSettingsNotFound
 		}
 		return nil
 	})
 
 	if err != nil {
-		// Propagate the error (could be ErrSettingsNotFound or another DB error)
 		return nil, err
 	}
 
 	return settings, nil
 }
 
-// Update updates the SCIM settings in the database.
-// It performs an Upsert operation based on whether settings already exist.
 func (s *storeImpl) Update(ctx context.Context, settings *models.ScimSettings) error {
 	return s.sqlStore.WithTransactionalDbSession(ctx, func(sess *db.Session) error {
-		// Attempt to retrieve existing settings to determine if it's an insert or update.
 		existing := &models.ScimSettings{}
 		has, err := sess.OrderBy("id").Limit(1).Get(existing)
-		// Handle ErrSettingsNotFound specifically for the check, but don't error out
 		if err != nil && !errors.Is(err, scimsettings.ErrSettingsNotFound) {
 			return fmt.Errorf("failed to check for existing scim settings: %w", err)
 		}
-		// If settings were not found, 'has' will be false
 		if errors.Is(err, scimsettings.ErrSettingsNotFound) {
 			has = false
 		}
@@ -70,8 +61,7 @@ func (s *storeImpl) Update(ctx context.Context, settings *models.ScimSettings) e
 		settings.UpdatedAt = time.Now()
 
 		if has {
-			// Update existing settings
-			settings.ID = existing.ID // Ensure we update the correct row
+			settings.ID = existing.ID
 			_, err = sess.ID(settings.ID).Update(settings)
 			if err != nil {
 				return fmt.Errorf("failed to update scim settings: %w", err)
@@ -79,7 +69,7 @@ func (s *storeImpl) Update(ctx context.Context, settings *models.ScimSettings) e
 			s.log.Debug("Updated existing SCIM settings", "id", settings.ID)
 		} else {
 			// Insert new settings
-			settings.CreatedAt = settings.UpdatedAt // Set CreatedAt on first insert
+			settings.CreatedAt = settings.UpdatedAt
 			_, err = sess.Insert(settings)
 			if err != nil {
 				return fmt.Errorf("failed to insert scim settings: %w", err)
@@ -88,4 +78,19 @@ func (s *storeImpl) Update(ctx context.Context, settings *models.ScimSettings) e
 		}
 		return nil
 	})
+}
+
+func AddMigration(mg *migrator.Migrator) {
+	scimSettingsV1 := migrator.Table{
+		Name: "scim_settings",
+		Columns: []*migrator.Column{
+			{Name: "id", Type: migrator.DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
+			{Name: "user_sync_enabled", Type: migrator.DB_Bool, Nullable: false},
+			{Name: "group_sync_enabled", Type: migrator.DB_Bool, Nullable: false},
+			{Name: "created_at", Type: migrator.DB_DateTime, Nullable: false},
+			{Name: "updated_at", Type: migrator.DB_DateTime, Nullable: false},
+		},
+	}
+
+	mg.AddMigration("create scim_settings table", migrator.NewAddTableMigration(scimSettingsV1))
 }

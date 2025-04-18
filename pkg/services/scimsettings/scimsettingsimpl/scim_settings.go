@@ -7,7 +7,9 @@ import (
 
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/scimsettings"
+	scimsettingsdb "github.com/grafana/grafana/pkg/services/scimsettings/database"
 	"github.com/grafana/grafana/pkg/services/scimsettings/models"
+	"github.com/grafana/grafana/pkg/services/sqlstore/migrator"
 )
 
 type ServiceImpl struct {
@@ -54,4 +56,9 @@ func (s *ServiceImpl) Update(ctx context.Context, settings *models.ScimSettings)
 	}
 
 	return nil
+}
+
+// AddMigration implements registry.DatabaseMigrator
+func (s *ServiceImpl) AddMigration(mg *migrator.Migrator) {
+	scimsettingsdb.AddMigration(mg)
 }

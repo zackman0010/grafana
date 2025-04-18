@@ -3,8 +3,7 @@ package models
 import "time"
 
 // ScimSettings represents the SCIM configuration stored in the database.
-// Assuming these are global settings for now. If they need to be per-org,
-// an OrgId field would be necessary.
+// Assuming these are global settings, not per-org.
 type ScimSettings struct {
 	ID               int64     `xorm:"pk autoincr 'id'"`
 	UserSyncEnabled  bool      `xorm:"user_sync_enabled" json:"userSyncEnabled"`

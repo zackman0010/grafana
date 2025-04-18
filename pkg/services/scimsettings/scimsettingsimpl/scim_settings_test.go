@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
 	"github.com/grafana/grafana/pkg/infra/log"
@@ -14,14 +15,35 @@ import (
 	"github.com/grafana/grafana/pkg/services/scimsettings/models"
 )
 
+// mockStore is a manual mock for the scimsettings.Store interface.
+type mockStore struct {
+	mock.Mock
+}
+
+// Get implements the scimsettings.Store interface.
+func (m *mockStore) Get(ctx context.Context) (*models.ScimSettings, error) {
+	args := m.Called(ctx)
+	ret0 := args.Get(0)
+	if ret0 == nil {
+		return nil, args.Error(1)
+	}
+	return ret0.(*models.ScimSettings), args.Error(1)
+}
+
+// Update implements the scimsettings.Store interface.
+func (m *mockStore) Update(ctx context.Context, settings *models.ScimSettings) error {
+	args := m.Called(ctx, settings)
+	return args.Error(0)
+}
+
 // setupTestEnv creates a test environment with mock dependencies.
-func setupTestEnv(t *testing.T) (*ServiceImpl, *scimsettings.MockStore) {
+func setupTestEnv(t *testing.T) (*ServiceImpl, *mockStore) {
 	t.Helper()
 
-	store := scimsettings.NewMockStore(t)
-	// reloadable := scimsettings.NewMockReloadable(t) // Removed
-	service := ProvideService(store).(*ServiceImpl) // Cast to ServiceImpl to access fields if needed
-	service.log = log.NewNopLogger()                // Use NopLogger instead of Fake
+	store := &mockStore{}
+	store.Test(t)
+	service := ProvideService(store).(*ServiceImpl)
+	service.log = log.NewNopLogger()
 
 	return service, store
 }

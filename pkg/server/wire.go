@@ -122,9 +122,6 @@ import (
 	"github.com/grafana/grafana/pkg/services/queryhistory"
 	"github.com/grafana/grafana/pkg/services/quota/quotaimpl"
 	"github.com/grafana/grafana/pkg/services/rendering"
-	scimsettings "github.com/grafana/grafana/pkg/services/scimsettings"
-	scimsettingsdb "github.com/grafana/grafana/pkg/services/scimsettings/database"
-	scimsettingsimpl "github.com/grafana/grafana/pkg/services/scimsettings/scimsettingsimpl"
 	"github.com/grafana/grafana/pkg/services/search"
 	"github.com/grafana/grafana/pkg/services/search/sort"
 	"github.com/grafana/grafana/pkg/services/searchV2"
@@ -296,7 +293,6 @@ var wireBasicSet = wire.NewSet(
 	parca.ProvideService,
 	zipkin.ProvideService,
 	jaeger.ProvideService,
-	api.ProvideSCIMSettingsAPI,
 	datasourceservice.ProvideCacheService,
 	wire.Bind(new(datasources.CacheService), new(*datasourceservice.CacheServiceImpl)),
 	encryptionservice.ProvideEncryptionService,
@@ -429,10 +425,6 @@ var wireBasicSet = wire.NewSet(
 	grafanaapiserver.WireSet,
 	apiregistry.WireSet,
 	appregistry.WireSet,
-	scimsettingsdb.ProvideStore,
-	scimsettingsimpl.ProvideService,
-	wire.Bind(new(scimsettings.Store), new(*scimsettingsdb.storeImpl)),
-	wire.Bind(new(scimsettings.Service), new(*scimsettingsimpl.ServiceImpl)),
 )
 
 var wireSet = wire.NewSet(
