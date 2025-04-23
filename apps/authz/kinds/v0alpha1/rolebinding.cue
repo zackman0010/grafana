@@ -14,6 +14,10 @@ RoleBinding: {
 		name: string
 	}
 
+	// TODO: 
+	// includeHidden
+	// global
+
 	subjects: [...#Subject]
 	roleRef: #RoleRef
 }
