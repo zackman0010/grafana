@@ -12,9 +12,12 @@ import (
 )
 
 var (
-	rawSchemaRolev0alpha1     = []byte(`{"spec":{"properties":{"displayName":{"type":"string"},"group":{"type":"string"},"name":{"type":"string"},"permissions":{"description":"TODO:\ndelegatable?: bool\nhidden?: bool\ncreated?\nupdated?","items":{"properties":{"Scope":{"description":"RBAC scope (e.g: \"dashboards:uid:dash1\")","type":"string"},"action":{"description":"RBAC action (e.g: \"dashbaords:read\")","type":"string"}},"required":["action","Scope"],"type":"object"},"type":"array"},"uid":{"type":"string"},"version":{"type":"integer"}},"required":["name","displayName","uid","version","group","permissions"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object"}}`)
-	versionSchemaRolev0alpha1 app.VersionSchema
-	_                         = json.Unmarshal(rawSchemaRolev0alpha1, &versionSchemaRolev0alpha1)
+	rawSchemaRolev0alpha1            = []byte(`{"spec":{"properties":{"displayName":{"type":"string"},"group":{"type":"string"},"name":{"type":"string"},"permissions":{"description":"TODO:\ndelegatable?: bool\nhidden?: bool\ncreated?\nupdated?","items":{"properties":{"Scope":{"description":"RBAC scope (e.g: \"dashboards:uid:dash1\")","type":"string"},"action":{"description":"RBAC action (e.g: \"dashbaords:read\")","type":"string"}},"required":["action","Scope"],"type":"object"},"type":"array"},"uid":{"type":"string"},"version":{"type":"integer"}},"required":["name","displayName","uid","version","group","permissions"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object"}}`)
+	versionSchemaRolev0alpha1        app.VersionSchema
+	_                                = json.Unmarshal(rawSchemaRolev0alpha1, &versionSchemaRolev0alpha1)
+	rawSchemaRoleBindingv0alpha1     = []byte(`{"spec":{"properties":{"roleRef":{"properties":{"kind":{"description":"kind of role","properties":{"displayName":{"type":"string"},"group":{"type":"string"},"name":{"type":"string"},"permissions":{"description":"TODO:\ndelegatable?: bool\nhidden?: bool\ncreated?\nupdated?","items":{"properties":{"Scope":{"description":"RBAC scope (e.g: \"dashboards:uid:dash1\")","type":"string"},"action":{"description":"RBAC action (e.g: \"dashbaords:read\")","type":"string"}},"required":["action","Scope"],"type":"object"},"type":"array"},"uid":{"type":"string"},"version":{"type":"integer"}},"required":["name","displayName","uid","version","group","permissions"],"type":"object"},"name":{"description":"uid of the role","type":"string"}},"required":["kind","name"],"type":"object"},"subjects":{"items":{"properties":{"kind":{"description":"kind of the identity getting the permission","enum":["User","ServiceAccount","Team","BasicRole"],"type":"string"},"name":{"description":"uid of the resource (e.g: \"fold1\")","type":"string"}},"required":["kind","name"],"type":"object"},"type":"array"}},"required":["subjects","roleRef"],"type":"object"},"status":{"properties":{"additionalFields":{"description":"additionalFields is reserved for future use","type":"object","x-kubernetes-preserve-unknown-fields":true},"operatorStates":{"additionalProperties":{"properties":{"descriptiveState":{"description":"descriptiveState is an optional more descriptive state field which has no requirements on format","type":"string"},"details":{"description":"details contains any extra information that is operator-specific","type":"object","x-kubernetes-preserve-unknown-fields":true},"lastEvaluation":{"description":"lastEvaluation is the ResourceVersion last evaluated","type":"string"},"state":{"description":"state describes the state of the lastEvaluation.\nIt is limited to three possible states for machine evaluation.","enum":["success","in_progress","failed"],"type":"string"}},"required":["lastEvaluation","state"],"type":"object"},"description":"operatorStates is a map of operator ID to operator state evaluations.\nAny operator which consumes this kind SHOULD add its state evaluation information to this field.","type":"object"}},"type":"object"}}`)
+	versionSchemaRoleBindingv0alpha1 app.VersionSchema
+	_                                = json.Unmarshal(rawSchemaRoleBindingv0alpha1, &versionSchemaRoleBindingv0alpha1)
 )
 
 var appManifestData = app.ManifestData{
@@ -29,6 +32,18 @@ var appManifestData = app.ManifestData{
 				{
 					Name:   "v0alpha1",
 					Schema: &versionSchemaRolev0alpha1,
+				},
+			},
+		},
+
+		{
+			Kind:       "RoleBinding",
+			Scope:      "Namespaced",
+			Conversion: false,
+			Versions: []app.ManifestKindVersion{
+				{
+					Name:   "v0alpha1",
+					Schema: &versionSchemaRoleBindingv0alpha1,
 				},
 			},
 		},
