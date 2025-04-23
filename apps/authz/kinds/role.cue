@@ -10,15 +10,8 @@ role: {
 	current:    "v0alpha1"
 
 	codegen: {
-		ts: {
-			enabled: false
-		}
-		go: {
-			enabled: true
-			config: {
-				allowMarshalEmptyDisjunctions: true
-			}
-		}
+		frontend: false
+		backend:  true
 	}
 
 	versions: {
