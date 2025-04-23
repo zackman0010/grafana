@@ -10,8 +10,8 @@ role: {
 	current:    "v0alpha1"
 
 	codegen: {
-		frontend: false
-		backend:  true
+		ts: { enabled: false }
+		go: { enabled: true }
 	}
 
 	versions: {
