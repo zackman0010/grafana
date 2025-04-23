@@ -36,6 +36,12 @@ func (s *Service) getUsageStats(ctx context.Context) (map[string]any, error) {
 		m["stats.authz.viewers_can_edit.count"] = 1
 	}
 
+	// Add stats about SCIM
+	m["stats.scim.enabled.count"] = 0
+	if s.cfg.IsFeatureToggleEnabled("enableSCIM") {
+		m["stats.scim.enabled.count"] = 1
+	}
+
 	for _, client := range s.clients {
 		if usac, ok := client.(authn.UsageStatClient); ok {
 			clientStats, err := usac.UsageStatFn(ctx)

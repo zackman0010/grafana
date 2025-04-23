@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/grafana/grafana/pkg/services/authn/authntest"
+	"github.com/grafana/grafana/pkg/services/featuremgmt"
 )
 
 func TestService_getUsageStats(t *testing.T) {
@@ -25,6 +26,7 @@ func TestService_getUsageStats(t *testing.T) {
 	svc.cfg.LDAPAuthEnabled = true
 	//nolint:staticcheck
 	svc.cfg.ViewersCanEdit = true
+	svc.cfg.IsFeatureToggleEnabled = featuremgmt.WithFeatures("enableSCIM").IsEnabled
 
 	got, err := svc.getUsageStats(context.Background())
 	require.NoError(t, err)
@@ -37,6 +39,7 @@ func TestService_getUsageStats(t *testing.T) {
 		"stats.auth_enabled.login_form.count":       1,
 		"stats.authz.viewers_can_edit.count":        1,
 		"stats.test.enabled.count":                  1,
+		"stats.scim.enabled.count":                  1,
 	}
 
 	require.Equal(t, want, got)
