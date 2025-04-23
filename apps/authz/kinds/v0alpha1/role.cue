@@ -13,9 +13,11 @@ Role: {
 	uid: string
 	version: int
 	group: string
+	permissions: [...#Permission]
+
+	// TODO:
 	// delegatable?: bool
 	// hidden?: bool
-	permissions: [...#Permission]
 	// created?
 	// updated?
 }

@@ -22,6 +22,7 @@ type RoleSpec struct {
 	Uid         string `json:"uid"`
 	Version     int64  `json:"version"`
 	Group       string `json:"group"`
+	// TODO:
 	// delegatable?: bool
 	// hidden?: bool
 	// created?
@@ -31,5 +32,7 @@ type RoleSpec struct {
 
 // NewRoleSpec creates a new RoleSpec object.
 func NewRoleSpec() *RoleSpec {
-	return &RoleSpec{}
+	return &RoleSpec{
+		Permissions: []RolespecPermission{},
+	}
 }
