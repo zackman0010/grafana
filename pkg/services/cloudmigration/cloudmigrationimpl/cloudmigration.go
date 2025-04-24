@@ -426,6 +426,8 @@ func (s *Service) CreateSession(ctx context.Context, signedInUser *user.SignedIn
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.CreateSession")
 	defer span.End()
 
+	fmt.Println("DEBUG | grafana version", s.cfg.BuildVersion)
+
 	base64Token := cmd.AuthToken
 	b, err := base64.StdEncoding.DecodeString(base64Token)
 	if err != nil {
