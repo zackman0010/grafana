@@ -2,7 +2,7 @@
   "kind": "Playlist",
   "apiVersion": "playlist.grafana.app/v0alpha1",
   "metadata": {
-    "name": "sample-palylist"
+    "name": "devenv-palylist"
   },
   "spec": {
     "title": "Playlist from provisioning",
@@ -10,11 +10,11 @@
     "items": [
       {
         "type": "dashboard_by_uid",
-        "value": "xCmMwXdVz"
+        "value": "devenv-classic"
       },
       {
-        "type": "dashboard_by_tag",
-        "value": "panel-tests"
+        "type": "dashboard_by_uid",
+        "value": "devenv-v1beta1"
       }
     ]
   }

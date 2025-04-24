@@ -1,0 +1,1 @@
+This folder contains file that can be provisioned using git sync
