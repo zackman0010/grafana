@@ -24,6 +24,7 @@ import (
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	authzextv1 "github.com/grafana/grafana/pkg/services/authz/proto/v1"
 	"github.com/grafana/grafana/pkg/services/authz/zanzana"
+	zanzanaserver "github.com/grafana/grafana/pkg/services/authz/zanzana/server"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/services/grpcserver"
 	"github.com/grafana/grafana/pkg/services/grpcserver/interceptors"
@@ -203,12 +204,47 @@ func (z *Zanzana) start(ctx context.Context) error {
 	authzextv1.RegisterAuthzExtentionServiceServer(grpcServer, zanzanaServer)
 
 	// register grpc health server
-	healthServer := zanzana.NewHealthServer(zanzanaServer)
-	healthv1pb.RegisterHealthServer(grpcServer, healthServer)
+	err = z.registerHealthServer(ctx, zanzanaServer, tracer)
+	if err != nil {
+		z.logger.Error("failed to register health server", "error", err)
+	}
 
 	if _, err := grpcserver.ProvideReflectionService(z.cfg, z.handle); err != nil {
 		return fmt.Errorf("failed to register reflection for zanzana: %w", err)
 	}
+
+	return nil
+}
+
+func (z *Zanzana) registerHealthServer(ctx context.Context, zanzanaServer *zanzanaserver.Server, tracer tracing.Tracer) error {
+	healthCfg := z.cfg
+	healthCfg.GRPCServer.TLSConfig = nil
+	healthCfg.GRPCServer.Address = "127.0.0.1:10001"
+	handle, err := grpcserver.ProvideService(
+		healthCfg,
+		z.features,
+		interceptors.AuthenticatorFunc(grpcutils.NewUnsafeAuthenticator(nil)),
+		tracer,
+		prometheus.DefaultRegisterer,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create zanzana grpc server: %w", err)
+	}
+
+	// register grpc health server
+	grpcServer := handle.GetServer()
+	healthServer := zanzana.NewHealthServer(zanzanaServer)
+	healthv1pb.RegisterHealthServer(grpcServer, healthServer)
+
+	if _, err := grpcserver.ProvideReflectionService(healthCfg, handle); err != nil {
+		return fmt.Errorf("failed to register reflection for health server: %w", err)
+	}
+
+	go func() {
+		if err := handle.Run(ctx); err != nil {
+			z.logger.Error("failed to start zanzana grpc health server", "error", err)
+		}
+	}()
 
 	return nil
 }
