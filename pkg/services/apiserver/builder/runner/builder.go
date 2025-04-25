@@ -1,6 +1,8 @@
 package runner
 
 import (
+	"strings"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
@@ -10,6 +12,7 @@ import (
 
 	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana-app-sdk/resource"
+
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
 	grafanaregistry "github.com/grafana/grafana/pkg/apiserver/registry/generic"
 	grafanarest "github.com/grafana/grafana/pkg/apiserver/rest"
@@ -60,21 +63,41 @@ func (b *appBuilder) GetGroupVersion() schema.GroupVersion {
 // InstallSchema implements APIGroupBuilder.InstallSchema
 func (b *appBuilder) InstallSchema(scheme *runtime.Scheme) error {
 	gv := b.GetGroupVersion()
+	// Make a map of GroupKind to a single resource.Kind to use as __internal
+	internalKinds := make(map[schema.GroupKind]resource.Kind)
+	for _, kinds := range b.config.ManagedKinds {
+		for _, kind := range kinds {
+			cur, ok := internalKinds[kind.GroupVersionKind().GroupKind()]
+			if !ok {
+				internalKinds[kind.GroupVersionKind().GroupKind()] = kind
+				continue
+			}
+
+			// Compare versions, set the latest to be the correct one in the map
+			// string compare for now at least
+			if strings.Compare(kind.Version(), cur.Version()) > 0 {
+				internalKinds[kind.GroupVersionKind().GroupKind()] = kind
+			}
+		}
+	}
 	for _, kinds := range b.config.ManagedKinds {
 		for _, kind := range kinds {
 			scheme.AddKnownTypeWithName(gv.WithKind(kind.Kind()), kind.ZeroValue())
 			scheme.AddKnownTypeWithName(gv.WithKind(kind.Kind()+"List"), kind.ZeroListValue())
-
-			// Link this group to the internal representation.
-			// This is used for server-side-apply (PATCH), and avoids the error:
-			// "no kind is registered for the type"
-			gvInternal := schema.GroupVersion{
-				Group:   gv.Group,
-				Version: runtime.APIVersionInternal,
-			}
-			scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()), kind.ZeroValue())
-			scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()+"List"), kind.ZeroListValue())
+			// Need a way to determine if conversion is supported--once we have that, we can register conversion
+			// in the scheme using b.app.Convert to handle the conversion.
 		}
+	}
+	for _, kind := range internalKinds {
+		// Link this group to the internal representation.
+		// This is used for server-side-apply (PATCH), and avoids the error:
+		// "no kind is registered for the type"
+		gvInternal := schema.GroupVersion{
+			Group:   gv.Group,
+			Version: runtime.APIVersionInternal,
+		}
+		scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()), kind.ZeroValue())
+		scheme.AddKnownTypeWithName(gvInternal.WithKind(kind.Kind()+"List"), kind.ZeroListValue())
 	}
 	return scheme.SetVersionPriority(gv)
 }
