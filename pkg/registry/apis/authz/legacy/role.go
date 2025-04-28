@@ -87,7 +87,7 @@ func (s *legacySQLStore) queryRoles(ctx context.Context, sql *legacysql.LegacyDa
 		var lastID int64
 		for rows.Next() {
 			r := accesscontrol.Role{}
-			err = rows.Scan(&r.OrgID, &r.ID, &r.UID, &r.Name, &r.DisplayName,
+			err = rows.Scan(&r.Version, &r.OrgID, &r.ID, &r.UID, &r.Name, &r.DisplayName,
 				&r.Description, &r.Group, &r.Hidden, &r.Created, &r.Updated,
 			)
 			if err != nil {
