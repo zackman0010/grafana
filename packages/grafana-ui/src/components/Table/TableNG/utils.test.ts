@@ -136,7 +136,7 @@ const mockOptions = {
   crossFilterOrder,
   crossFilterRows,
   isCountRowsSet: false,
-  styles: { cell: '', cellWrapped: '' },
+  styles: { cell: '', cellWrapped: '', dataGrid: '' },
   theme: createTheme(),
   setSortColumns: () => {},
   sortColumnsRef,
