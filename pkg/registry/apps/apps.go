@@ -10,6 +10,7 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apps/advisor"
 	"github.com/grafana/grafana/pkg/registry/apps/investigations"
 	"github.com/grafana/grafana/pkg/registry/apps/playlist"
+	"github.com/grafana/grafana/pkg/registry/apps/plugins"
 	"github.com/grafana/grafana/pkg/services/apiserver"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder/runner"
@@ -35,6 +36,7 @@ func ProvideRegistryServiceSink(
 	playlistAppProvider *playlist.PlaylistAppProvider,
 	investigationAppProvider *investigations.InvestigationsAppProvider,
 	advisorAppProvider *advisor.AdvisorAppProvider,
+	pluginsAppProvider *plugins.AppProvider,
 	grafanaCfg *setting.Cfg,
 ) (*Service, error) {
 	cfgWrapper := func(ctx context.Context) (*rest.Config, error) {
@@ -61,6 +63,9 @@ func ProvideRegistryServiceSink(
 	if features.IsEnabledGlobally(featuremgmt.FlagGrafanaAdvisor) &&
 		!slices.Contains(grafanaCfg.DisablePlugins, "grafana-advisor-app") {
 		providers = append(providers, advisorAppProvider)
+	}
+	if features.IsEnabledGlobally(featuremgmt.FlagPluginsApp) {
+		providers = append(providers, pluginsAppProvider)
 	}
 	apiGroupRunner, err = runner.NewAPIGroupRunner(cfg, providers...)
 

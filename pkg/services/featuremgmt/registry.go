@@ -1775,6 +1775,12 @@ var (
 			HideFromDocs:      true,
 			Expression:        "true", // enabled by default
 		},
+		{
+			Name:        "pluginsApp",
+			Description: "Enables the plugins app",
+			Stage:       FeatureStageExperimental,
+			Owner:       grafanaPluginsPlatformSquad,
+		},
 	}
 )
 

@@ -85,6 +85,7 @@ COPY apps/investigations apps/investigations
 COPY apps/advisor apps/advisor
 COPY apps/dashboard apps/dashboard
 COPY apps/folder apps/folder
+COPY apps/plugins apps/plugins
 COPY apps apps
 COPY kindsv2 kindsv2
 COPY apps/alerting/notifications apps/alerting/notifications

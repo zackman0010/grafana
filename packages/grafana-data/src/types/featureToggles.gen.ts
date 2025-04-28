@@ -1031,4 +1031,8 @@ export interface FeatureToggles {
   * @default true
   */
   alertingBulkActionsInUI?: boolean;
+  /**
+  * Enables the plugins app
+  */
+  pluginsApp?: boolean;
 }

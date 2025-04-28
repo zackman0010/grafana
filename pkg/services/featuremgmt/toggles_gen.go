@@ -938,4 +938,8 @@ const (
 	// FlagAlertingBulkActionsInUI
 	// Enables the alerting bulk actions in the UI
 	FlagAlertingBulkActionsInUI = "alertingBulkActionsInUI"
+
+	// FlagPluginsApp
+	// Enables the plugins app
+	FlagPluginsApp = "pluginsApp"
 )
