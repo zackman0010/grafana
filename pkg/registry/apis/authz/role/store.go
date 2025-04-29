@@ -9,11 +9,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/rest"
 
+	types "github.com/grafana/authlib/types"
+
 	claims "github.com/grafana/authlib/types"
+	authzV0 "github.com/grafana/grafana/apps/authz/pkg/apis/authz/v0alpha1"
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
-	iamv0 "github.com/grafana/grafana/pkg/apis/iam/v0alpha1"
-	"github.com/grafana/grafana/pkg/registry/apis/iam/common"
-	"github.com/grafana/grafana/pkg/registry/apis/iam/legacy"
+	"github.com/grafana/grafana/pkg/registry/apis/authz/common"
+	"github.com/grafana/grafana/pkg/registry/apis/authz/legacy"
 	"github.com/grafana/grafana/pkg/services/apiserver/endpoints/request"
 	"github.com/grafana/grafana/pkg/services/user"
 )
@@ -26,19 +28,20 @@ var (
 	_ rest.Storage              = (*LegacyStore)(nil)
 )
 
-var resource = iamv0.UserResourceInfo
+// var resource = authzV0.
 
-func NewLegacyStore(store legacy.LegacyIdentityStore, ac claims.AccessClient) *LegacyStore {
+func NewLegacyStore(store legacy.LegacyAccessStore, ac claims.AccessClient) *LegacyStore {
 	return &LegacyStore{store, ac}
 }
 
 type LegacyStore struct {
-	store legacy.LegacyIdentityStore
-	ac    claims.AccessClient
+	store          legacy.LegacyAccessStore
+	ac             claims.AccessClient
+	tableConverter rest.TableConvertor
 }
 
 func (s *LegacyStore) New() runtime.Object {
-	return resource.NewFunc()
+	return authzV0.RoleKind().ZeroValue()
 }
 
 func (s *LegacyStore) Destroy() {}
@@ -48,22 +51,27 @@ func (s *LegacyStore) NamespaceScoped() bool {
 }
 
 func (s *LegacyStore) GetSingularName() string {
-	return resource.GetSingularName()
+	return strings.ToLower(authzV0.RoleKind().Kind())
 }
 
 func (s *LegacyStore) NewList() runtime.Object {
-	return resource.NewListFunc()
+	return authzV0.RoleKind().ZeroListValue()
 }
 
 func (s *LegacyStore) ConvertToTable(ctx context.Context, object runtime.Object, tableOptions runtime.Object) (*metav1.Table, error) {
-	return resource.TableConverter().ConvertToTable(ctx, object, tableOptions)
+	return s.tableConverter.ConvertToTable(ctx, object, tableOptions)
 }
 
 func (s *LegacyStore) List(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
+	id, ok := types.AuthInfoFrom(ctx)
+	if !ok {
+		return nil, fmt.Errorf("failed to get auth info from context")
+	}
+
 	res, err := common.List(
 		ctx, resource.GetName(), s.ac, common.PaginationFromListOptions(options),
-		func(ctx context.Context, ns claims.NamespaceInfo, p common.Pagination) (*common.ListResponse[iamv0.User], error) {
-			found, err := s.store.ListUsers(ctx, ns, legacy.ListUserQuery{
+		func(ctx context.Context, ns claims.NamespaceInfo, p common.Pagination) (*common.ListResponse[authzV0.User], error) {
+			found, err := s.store.ListRoles(ctx, ns, legacy.ListRolesQuery{
 				Pagination: p,
 			})
 
@@ -71,12 +79,12 @@ func (s *LegacyStore) List(ctx context.Context, options *internalversion.ListOpt
 				return nil, err
 			}
 
-			users := make([]iamv0.User, 0, len(found.Users))
+			users := make([]authzV0.User, 0, len(found.Users))
 			for _, u := range found.Users {
 				users = append(users, toUserItem(&u, ns.Value))
 			}
 
-			return &common.ListResponse[iamv0.User]{
+			return &common.ListResponse[authzV0.User]{
 				Items:    users,
 				RV:       found.RV,
 				Continue: found.Continue,
@@ -88,7 +96,7 @@ func (s *LegacyStore) List(ctx context.Context, options *internalversion.ListOpt
 		return nil, err
 	}
 
-	obj := &iamv0.UserList{Items: res.Items}
+	obj := &authzV0.UserList{Items: res.Items}
 	obj.Continue = common.OptionalFormatInt(res.Continue)
 	obj.ResourceVersion = common.OptionalFormatInt(res.RV)
 	return obj, nil
@@ -116,15 +124,15 @@ func (s *LegacyStore) Get(ctx context.Context, name string, options *metav1.GetO
 	return &obj, nil
 }
 
-func toUserItem(u *user.User, ns string) iamv0.User {
-	item := &iamv0.User{
+func toUserItem(u *user.User, ns string) authzV0.User {
+	item := &authzV0.User{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              u.UID,
 			Namespace:         ns,
 			ResourceVersion:   fmt.Sprintf("%d", u.Updated.UnixMilli()),
 			CreationTimestamp: metav1.NewTime(u.Created),
 		},
-		Spec: iamv0.UserSpec{
+		Spec: authzV0.UserSpec{
 			Name:          u.Name,
 			Login:         u.Login,
 			Email:         u.Email,
