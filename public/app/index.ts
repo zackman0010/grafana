@@ -19,12 +19,14 @@ if (window.nonce) {
 window.__grafana_app_bundle_loaded = true;
 
 import app from './app';
+import { currentMockApiState } from './mock-api-utils';
 
 const prepareInit = async () => {
-  if (process.env.frontend_dev_mock_api) {
-    return import('test/mock-api/worker').then((workerModule) => {
-      workerModule.default.start({ onUnhandledRequest: 'bypass' });
-    });
+  const mockApiEnabled = currentMockApiState();
+  if (process.env.NODE_ENV === 'development' && mockApiEnabled) {
+    const { default: worker } = await import('test/mock-api/worker');
+
+    worker.start({ onUnhandledRequest: 'bypass' });
   }
   return Promise.resolve();
 };
