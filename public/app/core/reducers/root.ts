@@ -1,6 +1,7 @@
 import { ReducersMapObject } from '@reduxjs/toolkit';
 import { AnyAction, combineReducers } from 'redux';
 
+import { pluginsAPI } from 'app/api/clients/plugins';
 import sharedReducers from 'app/core/reducers';
 import ldapReducers from 'app/features/admin/state/reducers';
 import alertingReducers from 'app/features/alerting/state/reducers';
@@ -71,6 +72,7 @@ const rootReducers = {
   [provisioningAPI.reducerPath]: provisioningAPI.reducer,
   [folderAPI.reducerPath]: folderAPI.reducer,
   [advisorAPI.reducerPath]: advisorAPI.reducer,
+  [pluginsAPI.reducerPath]: pluginsAPI.reducer,
   // PLOP_INJECT_REDUCER
   // Used by the API client generator
 };
