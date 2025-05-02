@@ -4,8 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
-      - release-*.*.*
+      - grambbledook/test-grafana-build-compatibility
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'grafana/grafana-build'
-          ref: 'main'
+          ref: c5579fc045feb85391a3d3df38782c7dac724876
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
