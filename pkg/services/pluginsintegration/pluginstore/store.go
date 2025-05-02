@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/grafana/authlib/types"
+	"github.com/grafana/grafana-app-sdk/k8s"
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8stypes "k8s.io/apimachinery/pkg/types"
@@ -22,6 +23,7 @@ import (
 	"github.com/grafana/grafana/pkg/plugins/manager/loader"
 	"github.com/grafana/grafana/pkg/plugins/manager/registry"
 	"github.com/grafana/grafana/pkg/plugins/manager/sources"
+	"github.com/grafana/grafana/pkg/services/apiserver"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
@@ -49,7 +51,7 @@ type Service struct {
 }
 
 func ProvideService(cfg *setting.Cfg, pluginRegistry registry.Service, pluginSources sources.Registry,
-	pluginLoader loader.Service, unifiedStorage resource.ResourceClient) (*Service, error) {
+	pluginLoader loader.Service, unifiedStorage resource.ResourceClient, restCfgProvider apiserver.RestConfigProvider) (*Service, error) {
 	ctx := context.Background()
 	start := time.Now()
 	totalPlugins := 0
@@ -70,6 +72,15 @@ func ProvideService(cfg *setting.Cfg, pluginRegistry registry.Service, pluginSou
 			if !plugin.IsExternalPlugin() {
 				continue
 			}
+
+			// More appropriate way to create plugin resources?
+			kubeConfig, err := restCfgProvider.GetRestConfig(ctx)
+			if err != nil {
+				return nil, err
+			}
+			clientGenerator := k8s.NewClientRegistry(*kubeConfig, k8s.ClientConfig{})
+			_, err = clientGenerator.ClientFor(pluginsv0alpha1.PluginKind())
+			// TODO client.Create()...
 
 			p, err := s.getPluginResource(ctx, plugin.ID)
 			if err != nil {
