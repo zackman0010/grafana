@@ -66,7 +66,7 @@ func CreateIntegrationTestCtx(t *testing.T, cfg *setting.Cfg, coreRegistry *core
 		Terminator:   term,
 	})
 
-	ps, err := pluginstore.ProvideService(reg, sources.ProvideService(cfg), l)
+	ps, err := pluginstore.ProvideService(setting.NewCfg(), reg, sources.ProvideService(cfg), l, nil)
 	require.NoError(t, err)
 
 	return &IntegrationTestCtx{
