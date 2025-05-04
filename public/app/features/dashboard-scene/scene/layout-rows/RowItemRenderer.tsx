@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { GrafanaTheme2 } from '@grafana/data';
 import { selectors } from '@grafana/e2e-selectors';
-import { SceneComponentProps } from '@grafana/scenes';
+import { MultiValueVariable, SceneComponentProps, sceneGraph } from '@grafana/scenes';
 import { clearButtonStyles, Icon, Tooltip, useElementSelection, usePointerDistance, useStyles2 } from '@grafana/ui';
 import { t } from 'app/core/internationalization';
 
@@ -13,10 +13,36 @@ import { useIsClone } from '../../utils/clone';
 import { useDashboardState, useInterpolatedTitle } from '../../utils/utils';
 import { DashboardScene } from '../DashboardScene';
 
-import { RowItem } from './RowItem';
+import { RowItem, RowItemState } from './RowItem';
+import { useRowRepeater } from './RowItemRepeater';
 
 export function RowItemRenderer({ model }: SceneComponentProps<RowItem>) {
-  const { layout, collapse: isCollapsed, fillScreen, hideHeader: isHeaderHidden, isDropTarget, key } = model.useState();
+  const { repeatByVariable } = model.useState();
+
+  if (repeatByVariable) {
+    const variable = sceneGraph.lookupVariable(repeatByVariable, model.parent!);
+
+    if (variable && variable instanceof MultiValueVariable) {
+      return <RowItemRepeater row={model} key={model.state.key!} variable={variable} />;
+    }
+  }
+
+  return <RenderSingleRow model={model} state={model.state} key={model.state.key!} />;
+}
+
+export function RowItemRepeater({ row, variable }: { row: RowItem; variable: MultiValueVariable }) {
+  const repeatedRows = useRowRepeater(row, variable);
+
+  return (
+    <>
+      <RenderSingleRow model={row} state={row.state} key={row.state.key!} />
+      {repeatedRows?.map((rowClone) => <rowClone.Component model={rowClone} key={rowClone.state.key!} />)}
+    </>
+  );
+}
+
+function RenderSingleRow({ model, state }: { model: RowItem; state: RowItemState }) {
+  const { layout, collapse: isCollapsed, fillScreen, hideHeader: isHeaderHidden, isDropTarget, key } = state;
   const isClone = useIsClone(model);
   const { isEditing } = useDashboardState(model);
   const [isConditionallyHidden, conditionalRenderingClass, conditionalRenderingOverlay] =

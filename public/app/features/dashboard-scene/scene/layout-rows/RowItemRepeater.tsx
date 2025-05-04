@@ -15,36 +15,22 @@ export interface Props {
   variable: MultiValueVariable;
 }
 
-export function RowItemRepeater({
-  row,
-  manager,
-  variable,
-}: {
-  row: RowItem;
-  manager: RowsLayoutManager;
-  variable: MultiValueVariable;
-}) {
-  const { repeatedRows } = row.useState();
-
+export function useRowRepeater(row: RowItem, variable: MultiValueVariable) {
   useEffect(() => {
     if (!sceneGraph.hasVariableDependencyInLoadingState(row)) {
       performRowRepeats(variable, row);
     }
 
+    const manager = sceneGraph.getAncestor(row, RowsLayoutManager);
     const unsub = manager.registerVariableChangeHandler({
       variable,
       handler: () => performRowRepeats(variable, row),
     });
 
     return unsub;
-  }, [variable, row, manager]);
+  }, [variable, row]);
 
-  return (
-    <>
-      <row.Component model={row} key={row.state.key!} />
-      {repeatedRows?.map((rowClone) => <rowClone.Component model={rowClone} key={rowClone.state.key!} />)}
-    </>
-  );
+  return row.state.repeatedRows;
 }
 
 export function performRowRepeats(variable: MultiValueVariable, row: RowItem) {
