@@ -9,6 +9,7 @@ permissions: {}
 jobs:
   push-and-pr:
     if: github.repository == 'grafana/grafana'
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
