@@ -1,0 +1,41 @@
+name: Reproduce push error
+on:
+  push:
+  - km/reproduce-push-error
+
+permissions: {}
+
+jobs:
+  push-and-pr:
+    if: github.repository == 'grafana/grafana'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout Grafana
+        uses: actions/checkout@v4
+        with:
+          ref: km/reproduce-push-error
+          fetch-tags: true
+      - name: Configure git user
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local --add --bool push.autoSetupRemote true
+      - name: Create branch
+        run: git checkout -b "km/${{ github.run_id }}"
+      - run: |
+          touch new-file.txt
+          git add new-file.txt && git commit --allow-empty -m "Add new file (testing)"
+      - name: Git push
+        run: git push
+      - name: Create PR without backports
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            -l "no-changelog" \
+            -B "km/${{ github.run_id }}" \
+            --base "km/reproduce-push-error"
+            --title "[Testing (@kminehart)] Testing automation push error" \
+            --body "Ignore this, testing pushes from automation for support ticket because of all of the backport.yml failures"
