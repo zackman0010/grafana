@@ -1,7 +1,8 @@
 name: Reproduce push error
 on:
   push:
-  - km/reproduce-push-error
+    branches:
+    - km/reproduce-push-error
 
 permissions: {}
 
@@ -36,6 +37,7 @@ jobs:
           gh pr create \
             -l "no-changelog" \
             -B "km/${{ github.run_id }}" \
-            --base "km/reproduce-push-error"
+            --dry-run=true \
+            --base "km/reproduce-push-error" \
             --title "[Testing (@kminehart)] Testing automation push error" \
             --body "Ignore this, testing pushes from automation for support ticket because of all of the backport.yml failures"
