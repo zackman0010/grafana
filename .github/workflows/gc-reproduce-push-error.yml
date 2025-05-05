@@ -2,7 +2,7 @@ name: Reproduce push error
 on:
   push:
     branches:
-    - km/reproduce-push-error-11.5.0
+    - gc/reproduce-push-error-11.5.0
 
 permissions: {}
 
@@ -13,20 +13,38 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
     steps:
+      - name: "Get vault secrets"
+        id: vault-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@main
+        with:
+          # Secrets placed in the ci/data/repo/grafana/grafana/delivery-bot-app path in Vault
+          repo_secrets: |
+            GRAFANA_DELIVERY_BOT_APP_PEM=delivery-bot-app:PRIVATE_KEY
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.DELIVERY_BOT_APP_ID }}
+          private-key: ${{ env.GRAFANA_DELIVERY_BOT_APP_PEM }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
       - name: Checkout Grafana
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-tags: true
           fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Configure git user
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local --add --bool push.autoSetupRemote true
-          git checkout km/reproduce-push-error-11.5.0
-          git checkout -b "km/${{ github.run_id }}"
+          git checkout gc/reproduce-push-error-11.5.0
+          git checkout -b "gc/${{ github.run_id }}"
       - run: |
           touch new-file.txt
           git add new-file.txt && git commit --allow-empty -m "Add new file (testing)"
@@ -38,8 +56,8 @@ jobs:
         run: |
           gh pr create \
             -l "no-changelog" \
-            -B "km/${{ github.run_id }}" \
+            -B "gc/${{ github.run_id }}" \
             --dry-run=true \
-            --base "km/reproduce-push-error" \
-            --title "[Testing (@kminehart)] Testing automation push error" \
+            --base "gc/reproduce-push-error" \
+            --title "[Testing (@guicaulada)] Testing automation push error" \
             --body "Ignore this, testing pushes from automation for support ticket because of all of the backport.yml failures"
