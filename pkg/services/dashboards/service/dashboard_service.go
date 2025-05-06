@@ -78,6 +78,7 @@ const (
 	k8sDashboardKvNamespace              = "dashboard-cleanup"
 	k8sDashboardKvLastResourceVersionKey = "last-resource-version"
 	provisioningConcurrencyLimit         = 10
+	dashboardSearchLimit                 = 100000
 )
 
 type DashboardServiceImpl struct {
@@ -1718,10 +1719,10 @@ func (dr *DashboardServiceImpl) GetDashboardTags(ctx context.Context, query *das
 			Facet: map[string]*resource.ResourceSearchRequest_Facet{
 				"tags": {
 					Field: "tags",
-					Limit: 100000,
+					Limit: dashboardSearchLimit,
 				},
 			},
-			Limit: 100000})
+			Limit: dashboardSearchLimit})
 		if err != nil {
 			return nil, err
 		}
@@ -1962,7 +1963,7 @@ func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Contex
 			Fields: []*resource.Requirement{},
 			Labels: []*resource.Requirement{},
 		},
-		Limit: 100000}
+		Limit: dashboardSearchLimit}
 
 	if len(query.DashboardUIDs) > 0 {
 		request.Options.Fields = []*resource.Requirement{{
@@ -2069,7 +2070,7 @@ func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Contex
 	}
 
 	if query.Limit < 1 {
-		query.Limit = 1000
+		query.Limit = dashboardSearchLimit
 	}
 
 	if query.Page < 1 {
