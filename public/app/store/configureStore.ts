@@ -2,6 +2,7 @@ import { configureStore as reduxConfigureStore, createListenerMiddleware } from 
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { Middleware } from 'redux';
 
+import { reportingAPI } from 'app/api/clients/reporting/baseAPI';
 import { pluginsAPI } from 'app/api/clients/plugins';
 import { browseDashboardsAPI } from 'app/features/browse-dashboards/api/browseDashboardsAPI';
 import { publicDashboardApi } from 'app/features/dashboard/api/publicDashboardApi';
@@ -52,6 +53,7 @@ export function configureStore(initialState?: Partial<StoreState>) {
         provisioningAPI.middleware,
         folderAPI.middleware,
         advisorAPI.middleware,
+        reportingAPI.middleware,
         pluginsAPI.middleware,
         // PLOP_INJECT_MIDDLEWARE
         // Used by the API client generator
