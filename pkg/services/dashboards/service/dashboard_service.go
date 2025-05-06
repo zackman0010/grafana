@@ -2069,7 +2069,7 @@ func (dr *DashboardServiceImpl) searchDashboardsThroughK8sRaw(ctx context.Contex
 	}
 
 	if query.Limit < 1 {
-		query.Limit = 1000
+		query.Limit = 100000
 	}
 
 	if query.Page < 1 {
