@@ -11,17 +11,21 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 
+permissions: {}
+
 jobs:
   sqlite:
     name: Sqlite
     runs-on: ubuntu-latest-8-cores
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Setup Go
-        uses: actions/setup-go@111f3307d8850f501ac008e886eec1fd1932a34
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache: true
@@ -31,6 +35,8 @@ jobs:
   mysql:
     name: MySQL
     runs-on: ubuntu-latest-8-cores
+    permissions:
+      contents: read
     env:
       GRAFANA_TEST_DB: mysql
       MYSQL_HOST: 127.0.0.1
@@ -47,9 +53,11 @@ jobs:
           - 3306:3306
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup Go
-        uses: actions/setup-go@111f3307d8850f501ac008e886eec1fd1932a34
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache: true
@@ -61,6 +69,8 @@ jobs:
   postgres:
     name: Postgres
     runs-on: ubuntu-latest-8-cores
+    permissions:
+      contents: read
     services:
       postgres:
         image: postgres:12.3-alpine
@@ -72,9 +82,11 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup Go
-        uses: actions/setup-go@111f3307d8850f501ac008e886eec1fd1932a34
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
           cache: true
