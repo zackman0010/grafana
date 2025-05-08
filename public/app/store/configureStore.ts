@@ -2,8 +2,8 @@ import { configureStore as reduxConfigureStore, createListenerMiddleware } from 
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { Middleware } from 'redux';
 
-import { reportingAPI } from 'app/api/clients/reporting/baseAPI';
 import { pluginsAPI } from 'app/api/clients/plugins';
+import { reportingAPI } from 'app/api/clients/reporting/baseAPI';
 import { browseDashboardsAPI } from 'app/features/browse-dashboards/api/browseDashboardsAPI';
 import { publicDashboardApi } from 'app/features/dashboard/api/publicDashboardApi';
 import { cloudMigrationAPI } from 'app/features/migrate-to-cloud/api';

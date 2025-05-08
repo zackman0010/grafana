@@ -2,7 +2,6 @@ package pluginstore
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"sort"
@@ -10,22 +9,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/grafana/authlib/types"
 	"github.com/grafana/grafana-app-sdk/k8s"
-	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	sdkresource "github.com/grafana/grafana-app-sdk/resource"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8stypes "k8s.io/apimachinery/pkg/types"
 
 	pluginsv0alpha1 "github.com/grafana/grafana/apps/plugins/pkg/apis/plugins/v0alpha1"
+	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/manager/loader"
 	"github.com/grafana/grafana/pkg/plugins/manager/registry"
 	"github.com/grafana/grafana/pkg/plugins/manager/sources"
-	"github.com/grafana/grafana/pkg/services/apiserver"
+	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/setting"
-	"github.com/grafana/grafana/pkg/storage/unified/resource"
 )
 
 var _ Store = (*Service)(nil)
@@ -44,89 +42,61 @@ type Store interface {
 }
 
 type Service struct {
-	stackID        string
-	pluginRegistry registry.Service
-	pluginLoader   loader.Service
-	unifiedStorage resource.ResourceClient
+	stackID         string
+	pluginRegistry  registry.Service
+	pluginLoader    loader.Service
+	pluginSources   sources.Registry
+	restCfgProvider restconfig.RestConfigProvider
+
+	readyCh chan struct{}
 }
 
 func ProvideService(cfg *setting.Cfg, pluginRegistry registry.Service, pluginSources sources.Registry,
-	pluginLoader loader.Service, unifiedStorage resource.ResourceClient, restCfgProvider apiserver.RestConfigProvider) (*Service, error) {
-	ctx := context.Background()
-	start := time.Now()
-	totalPlugins := 0
-	logger := log.New("plugin.store")
-	logger.Info("Loading plugins...")
+	pluginLoader loader.Service, restCfgProvider restconfig.RestConfigProvider) (*Service, error) {
+	return New(cfg.StackID, pluginRegistry, pluginLoader, pluginSources, restCfgProvider), nil
+}
 
-	s := New(cfg.StackID, pluginRegistry, pluginLoader, unifiedStorage)
-	for _, ps := range pluginSources.List(ctx) {
-		loadedPlugins, err := pluginLoader.Load(ctx, ps)
-		if err != nil {
-			logger.Error("Loading plugin source failed", "source", ps.PluginClass(ctx), "error", err)
-			return nil, err
-		}
-
-		totalPlugins += len(loadedPlugins)
-
-		for _, plugin := range loadedPlugins {
-			if !plugin.IsExternalPlugin() {
-				continue
-			}
-
-			// More appropriate way to create plugin resources?
-			kubeConfig, err := restCfgProvider.GetRestConfig(ctx)
-			if err != nil {
-				return nil, err
-			}
-			clientGenerator := k8s.NewClientRegistry(*kubeConfig, k8s.ClientConfig{})
-			_, err = clientGenerator.ClientFor(pluginsv0alpha1.PluginKind())
-			// TODO client.Create()...
-
-			p, err := s.getPluginResource(ctx, plugin.ID)
-			if err != nil {
-				if !errors.Is(err, errPluginNotExists) {
-					logger.Error("Failed to get plugin resource", "plugin", plugin.ID, "error", err)
-					return nil, err
-				}
-			}
-
-			if p != nil {
-				err = s.updatePluginResource(context.Background(), plugin.ID, plugin.JSONData)
-				if err != nil {
-					logger.Error("Failed to update plugin resource", "plugin", plugin.ID, "error", err)
-				}
-				continue
-			}
-
-			err = s.createPluginResource(context.Background(), plugin.ID, plugin.JSONData)
-			if err != nil {
-				logger.Error("Failed to create plugin resource", "plugin", plugin.ID, "error", err)
-				return nil, err
-			}
-		}
+func New(stackID string, pluginRegistry registry.Service, pluginLoader loader.Service,
+	pluginSources sources.Registry, restCfgProvider restconfig.RestConfigProvider) *Service {
+	return &Service{
+		stackID:         stackID,
+		pluginRegistry:  pluginRegistry,
+		pluginLoader:    pluginLoader,
+		pluginSources:   pluginSources,
+		restCfgProvider: restCfgProvider,
+		readyCh:         make(chan struct{}),
 	}
-
-	logger.Info("Plugins loaded", "count", totalPlugins, "duration", time.Since(start))
-
-	return s, nil
 }
 
 func (s *Service) Run(ctx context.Context) error {
+	logger := log.New("plugin.store")
+	logger.Info("Starting plugin store")
+	defer logger.Info("Plugin store stopped")
+
+	// Initialize plugin client
+	kubeConfig, err := s.restCfgProvider.GetRestConfig(ctx)
+	if err != nil {
+		return err
+	}
+	clientGenerator := k8s.NewClientRegistry(*kubeConfig, k8s.ClientConfig{})
+	pluginClient, err := clientGenerator.ClientFor(pluginsv0alpha1.PluginKind())
+	if err != nil {
+		return fmt.Errorf("failed to create plugin client: %w", err)
+	}
+
+	if err := s.loadPlugins(ctx, logger, pluginClient); err != nil {
+		return err
+	}
 	<-ctx.Done()
 	s.shutdown(ctx)
 	return ctx.Err()
 }
 
-func New(stackID string, pluginRegistry registry.Service, pluginLoader loader.Service, unifiedStorage resource.ResourceClient) *Service {
-	return &Service{
-		stackID:        stackID,
-		pluginRegistry: pluginRegistry,
-		pluginLoader:   pluginLoader,
-		unifiedStorage: unifiedStorage,
-	}
-}
-
 func (s *Service) Plugin(ctx context.Context, pluginID string) (Plugin, bool) {
+	if err := s.awaitReadyOrTimeout(ctx); err != nil {
+		return Plugin{}, false
+	}
+
 	p, exists := s.plugin(ctx, pluginID)
 	if !exists {
 		return Plugin{}, false
@@ -136,6 +106,10 @@ func (s *Service) Plugin(ctx context.Context, pluginID string) (Plugin, bool) {
 }
 
 func (s *Service) Plugins(ctx context.Context, pluginTypes ...plugins.Type) []Plugin {
+	if err := s.awaitReadyOrTimeout(ctx); err != nil {
+		return nil
+	}
+
 	// if no types passed, assume all
 	if len(pluginTypes) == 0 {
 		pluginTypes = plugins.PluginTypes
@@ -153,6 +127,30 @@ func (s *Service) Plugins(ctx context.Context, pluginTypes ...plugins.Type) []Pl
 		}
 	}
 	return pluginsList
+}
+
+func (s *Service) awaitReadyOrTimeout(ctx context.Context) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-s.readyCh:
+		return nil
+	}
+}
+
+func (s *Service) Routes(ctx context.Context) []*plugins.StaticRoute {
+	staticRoutes := make([]*plugins.StaticRoute, 0)
+
+	if err := s.awaitReadyOrTimeout(ctx); err != nil {
+		return staticRoutes
+	}
+
+	for _, p := range s.availablePlugins(ctx) {
+		if p.StaticRoute() != nil {
+			staticRoutes = append(staticRoutes, p.StaticRoute())
+		}
+	}
+	return staticRoutes
 }
 
 // plugin finds a plugin with `pluginID` from the registry that is not decommissioned
@@ -185,17 +183,6 @@ func (s *Service) availablePlugins(ctx context.Context) []*plugins.Plugin {
 	return res
 }
 
-func (s *Service) Routes(ctx context.Context) []*plugins.StaticRoute {
-	staticRoutes := make([]*plugins.StaticRoute, 0)
-
-	for _, p := range s.availablePlugins(ctx) {
-		if p.StaticRoute() != nil {
-			staticRoutes = append(staticRoutes, p.StaticRoute())
-		}
-	}
-	return staticRoutes
-}
-
 func (s *Service) shutdown(ctx context.Context) {
 	var wg sync.WaitGroup
 	for _, plugin := range s.pluginRegistry.Plugins(ctx) {
@@ -212,61 +199,8 @@ func (s *Service) shutdown(ctx context.Context) {
 	wg.Wait()
 }
 
-// createPluginResource creates a new plugin resource in unified storage
-func (s *Service) createPluginResource(ctx context.Context, pluginID string, jsonData plugins.JSONData) error {
-	ctx, _ = identity.WithServiceIdentity(ctx, 1)
-
-	namespace, err := getNamespace(s.stackID)
-	if err != nil {
-		return err
-	}
-
-	key := &resource.ResourceKey{
-		Group:     pluginsv0alpha1.APIGroup,
-		Resource:  "plugins",
-		Namespace: namespace,
-		Name:      pluginID,
-	}
-
-	plugin := &pluginsv0alpha1.Plugin{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       pluginsv0alpha1.PluginKind().Kind(),
-			APIVersion: pluginsv0alpha1.GroupVersion.String(),
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      pluginID,
-			Namespace: namespace,
-			UID:       k8stypes.UID(uuid.NewString()),
-		},
-		Spec: pluginsv0alpha1.PluginSpec{
-			Id:      jsonData.ID,
-			Version: jsonData.Info.Version,
-		},
-	}
-
-	value, err := json.Marshal(plugin)
-	if err != nil {
-		return err
-	}
-
-	req := &resource.CreateRequest{
-		Key:   key,
-		Value: value,
-	}
-
-	rsp, err := s.unifiedStorage.Create(ctx, req)
-	if err != nil {
-		return err
-	}
-	if rsp.Error != nil {
-		return fmt.Errorf("failed to create plugin resource: %s", rsp.Error.Message)
-	}
-
-	return nil
-}
-
-// getPluginResource retrieves a plugin resource from unified storage
-func (s *Service) getPluginResource(ctx context.Context, pluginID string) (*pluginsv0alpha1.Plugin, error) {
+// getPluginResource retrieves a plugin resource using the Kubernetes client
+func (s *Service) getPluginResource(ctx context.Context, pluginID string, pluginClient sdkresource.Client) (*pluginsv0alpha1.Plugin, error) {
 	ctx, _ = identity.WithServiceIdentity(ctx, 1)
 
 	namespace, err := getNamespace(s.stackID)
@@ -274,141 +208,25 @@ func (s *Service) getPluginResource(ctx context.Context, pluginID string) (*plug
 		return nil, err
 	}
 
-	key := &resource.ResourceKey{
-		Group:     pluginsv0alpha1.APIGroup,
-		Resource:  "plugins",
-		Namespace: namespace,
+	identifier := sdkresource.Identifier{
 		Name:      pluginID,
+		Namespace: namespace,
 	}
 
-	req := &resource.ReadRequest{
-		Key: key,
-	}
-
-	rsp, err := s.unifiedStorage.Read(ctx, req)
+	obj, err := pluginClient.Get(ctx, identifier)
 	if err != nil {
-		return nil, err
-	}
-	if rsp.Error != nil {
-		if rsp.Error.Code == 404 {
+		if errors.Is(err, errPluginNotExists) {
 			return nil, errPluginNotExists
 		}
-		return nil, fmt.Errorf("failed to read plugin resource: %s", rsp.Error.Message)
-	}
-
-	var plugin pluginsv0alpha1.Plugin
-	if err := json.Unmarshal(rsp.Value, &plugin); err != nil {
 		return nil, err
 	}
 
-	return &plugin, nil
-}
-
-// updatePluginResource updates an existing plugin resource in unified storage
-func (s *Service) updatePluginResource(ctx context.Context, pluginID string, spec plugins.JSONData) error {
-	ctx, _ = identity.WithServiceIdentity(ctx, 1)
-
-	current, err := s.getPluginResource(ctx, pluginID)
-	if err != nil {
-		return err
+	plugin, ok := obj.(*pluginsv0alpha1.Plugin)
+	if !ok {
+		return nil, fmt.Errorf("unexpected type: %T", obj)
 	}
 
-	namespace, err := getNamespace(s.stackID)
-	if err != nil {
-		return err
-	}
-
-	key := &resource.ResourceKey{
-		Group:     pluginsv0alpha1.APIGroup,
-		Resource:  "plugins",
-		Namespace: namespace,
-		Name:      pluginID,
-	}
-
-	plugin := &pluginsv0alpha1.Plugin{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       pluginsv0alpha1.PluginKind().Kind(),
-			APIVersion: pluginsv0alpha1.GroupVersion.String(),
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:            pluginID,
-			Namespace:       namespace,
-			UID:             current.ObjectMeta.UID,
-			ResourceVersion: current.ObjectMeta.ResourceVersion,
-		},
-		Spec: pluginsv0alpha1.PluginSpec{
-			Id:      spec.ID,
-			Version: spec.Info.Version,
-		},
-	}
-
-	value, err := json.Marshal(plugin)
-	if err != nil {
-		return err
-	}
-
-	resourceVersion, err := strconv.ParseInt(current.ObjectMeta.ResourceVersion, 10, 64)
-	if err != nil {
-		return fmt.Errorf("invalid resource version: %s", current.ObjectMeta.ResourceVersion)
-	}
-
-	req := &resource.UpdateRequest{
-		Key:             key,
-		ResourceVersion: resourceVersion,
-		Value:           value,
-	}
-
-	rsp, err := s.unifiedStorage.Update(ctx, req)
-	if err != nil {
-		return err
-	}
-	if rsp.Error != nil {
-		return fmt.Errorf("failed to update plugin resource: %s", rsp.Error.Message)
-	}
-
-	return nil
-}
-
-// deletePluginResource deletes a plugin resource from unified storage
-func (s *Service) deletePluginResource(ctx context.Context, pluginID string) error {
-	ctx, _ = identity.WithServiceIdentity(ctx, 1)
-
-	current, err := s.getPluginResource(ctx, pluginID)
-	if err != nil {
-		return err
-	}
-
-	namespace, err := getNamespace(s.stackID)
-	if err != nil {
-		return err
-	}
-
-	key := &resource.ResourceKey{
-		Group:     pluginsv0alpha1.APIGroup,
-		Resource:  "plugins",
-		Namespace: namespace,
-		Name:      pluginID,
-	}
-
-	resourceVersion, err := strconv.ParseInt(current.ObjectMeta.ResourceVersion, 10, 64)
-	if err != nil {
-		return fmt.Errorf("invalid resource version: %s", current.ObjectMeta.ResourceVersion)
-	}
-
-	req := &resource.DeleteRequest{
-		Key:             key,
-		ResourceVersion: resourceVersion,
-	}
-
-	rsp, err := s.unifiedStorage.Delete(ctx, req)
-	if err != nil {
-		return err
-	}
-	if rsp.Error != nil {
-		return fmt.Errorf("failed to delete plugin resource: %s", rsp.Error.Message)
-	}
-
-	return nil
+	return plugin, nil
 }
 
 func getNamespace(stackID string) (string, error) {
@@ -420,4 +238,86 @@ func getNamespace(stackID string) (string, error) {
 		return "", fmt.Errorf("invalid stack id: %s", stackID)
 	}
 	return types.CloudNamespaceFormatter(stackId), nil
+}
+
+func (s *Service) loadPlugins(ctx context.Context, logger log.Logger, pluginClient sdkresource.Client) error {
+	start := time.Now()
+	totalPlugins := 0
+	logger.Info("Loading plugins...")
+
+	for _, ps := range s.pluginSources.List(ctx) {
+		loadedPlugins, err := s.pluginLoader.Load(ctx, ps)
+		if err != nil {
+			logger.Error("Loading plugin source failed", "source", ps.PluginClass(ctx), "error", err)
+			return err
+		}
+
+		totalPlugins += len(loadedPlugins)
+
+		for _, plugin := range loadedPlugins {
+			if !plugin.IsExternalPlugin() {
+				continue
+			}
+
+			namespace, err := getNamespace(s.stackID)
+			if err != nil {
+				return err
+			}
+
+			// Create plugin identifier
+			identifier := sdkresource.Identifier{
+				Name:      plugin.ID,
+				Namespace: namespace,
+			}
+
+			// Create or update plugin resource using Kubernetes client
+			pluginResource := &pluginsv0alpha1.Plugin{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       pluginsv0alpha1.PluginKind().Kind(),
+					APIVersion: pluginsv0alpha1.PluginKind().Version(),
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      plugin.ID,
+					Namespace: namespace,
+				},
+				Spec: pluginsv0alpha1.PluginSpec{
+					Id:      plugin.JSONData.ID,
+					Version: plugin.JSONData.Info.Version,
+				},
+			}
+
+			var statusErr *apierrors.StatusError
+			// Check if plugin exists
+			existingPlugin, err := pluginClient.Get(ctx, identifier)
+			if err != nil {
+				if !errors.As(err, &statusErr) || statusErr.ErrStatus.Code != 404 {
+					logger.Error("Failed to get plugin resource", "plugin", plugin.ID, "error", err)
+					return err
+				}
+				// Plugin doesn't exist, create it
+				_, err := pluginClient.Create(ctx, identifier, pluginResource, sdkresource.CreateOptions{})
+				if err != nil {
+					logger.Error("Failed to create plugin resource", "plugin", plugin.ID, "error", err)
+					return err
+				}
+				continue
+			}
+
+			// Update existing plugin
+			if existingPlugin != nil {
+				if meta, ok := existingPlugin.(metav1.Object); ok {
+					pluginResource.ObjectMeta.UID = meta.GetUID()
+					pluginResource.ObjectMeta.ResourceVersion = meta.GetResourceVersion()
+				}
+				_, err := pluginClient.Update(ctx, identifier, pluginResource, sdkresource.UpdateOptions{})
+				if err != nil {
+					logger.Error("Failed to update plugin resource", "plugin", plugin.ID, "error", err)
+				}
+			}
+		}
+	}
+
+	logger.Info("Plugins loaded", "count", totalPlugins, "duration", time.Since(start))
+	close(s.readyCh)
+	return nil
 }
