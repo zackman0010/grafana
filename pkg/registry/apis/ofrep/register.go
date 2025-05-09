@@ -10,6 +10,7 @@ import (
 	"k8s.io/kube-openapi/pkg/common"
 	"k8s.io/kube-openapi/pkg/spec3"
 
+	"github.com/gorilla/mux"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
 )
 
@@ -58,19 +59,41 @@ func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
 	return &builder.APIRoutes{
 		Root: []builder.APIRouteHandler{
 			{
-				Path: "evaluate",
+				Path: "evaluate/flag",
 				Spec: &spec3.PathProps{
 					Get: &spec3.Operation{},
 				},
-				Handler: b.handleEvaluateList,
+				Handler: b.handleFlagsList,
+			},
+			{
+				Path: "evaluate/{flagKey}",
+				Spec: &spec3.PathProps{
+					Get: &spec3.Operation{},
+				},
+				Handler: b.handleEvaluateFlag,
 			},
 		},
 	}
 }
 
-func (b *APIBuilder) handleEvaluateList(w http.ResponseWriter, r *http.Request) {
+func (b *APIBuilder) handleFlagsList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	_, err := w.Write([]byte("[]"))
+	_, err := w.Write([]byte("flags list"))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	flagKey := vars["flagKey"]
+	if flagKey == "" {
+		http.Error(w, "flagKey parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(flagKey))
 	if err != nil {
 		panic(err)
 	}
