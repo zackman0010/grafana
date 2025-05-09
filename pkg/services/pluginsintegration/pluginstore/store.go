@@ -10,9 +10,7 @@ import (
 	"time"
 
 	"github.com/grafana/authlib/types"
-	"github.com/grafana/grafana-app-sdk/k8s"
 	sdkresource "github.com/grafana/grafana-app-sdk/resource"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	pluginsv0alpha1 "github.com/grafana/grafana/apps/plugins/pkg/apis/plugins/v0alpha1"
@@ -48,6 +46,7 @@ type Service struct {
 	pluginSources   sources.Registry
 	restCfgProvider restconfig.RestConfigProvider
 
+	log     log.Logger
 	readyCh chan struct{}
 }
 
@@ -65,26 +64,12 @@ func New(stackID string, pluginRegistry registry.Service, pluginLoader loader.Se
 		pluginSources:   pluginSources,
 		restCfgProvider: restCfgProvider,
 		readyCh:         make(chan struct{}),
+		log:             log.New("plugin.store"),
 	}
 }
 
 func (s *Service) Run(ctx context.Context) error {
-	logger := log.New("plugin.store")
-	logger.Info("Starting plugin store")
-	defer logger.Info("Plugin store stopped")
-
-	// Initialize plugin client
-	kubeConfig, err := s.restCfgProvider.GetRestConfig(ctx)
-	if err != nil {
-		return err
-	}
-	clientGenerator := k8s.NewClientRegistry(*kubeConfig, k8s.ClientConfig{})
-	pluginClient, err := clientGenerator.ClientFor(pluginsv0alpha1.PluginKind())
-	if err != nil {
-		return fmt.Errorf("failed to create plugin client: %w", err)
-	}
-
-	if err := s.loadPlugins(ctx, logger, pluginClient); err != nil {
+	if err := s.loadPlugins(ctx); err != nil {
 		return err
 	}
 	<-ctx.Done()
@@ -240,84 +225,22 @@ func getNamespace(stackID string) (string, error) {
 	return types.CloudNamespaceFormatter(stackId), nil
 }
 
-func (s *Service) loadPlugins(ctx context.Context, logger log.Logger, pluginClient sdkresource.Client) error {
+func (s *Service) loadPlugins(ctx context.Context) error {
 	start := time.Now()
 	totalPlugins := 0
-	logger.Info("Loading plugins...")
+	s.log.Info("Loading plugins...")
 
 	for _, ps := range s.pluginSources.List(ctx) {
 		loadedPlugins, err := s.pluginLoader.Load(ctx, ps)
 		if err != nil {
-			logger.Error("Loading plugin source failed", "source", ps.PluginClass(ctx), "error", err)
+			s.log.Error("Loading plugin source failed", "source", ps.PluginClass(ctx), "error", err)
 			return err
 		}
 
 		totalPlugins += len(loadedPlugins)
-
-		for _, plugin := range loadedPlugins {
-			if !plugin.IsExternalPlugin() {
-				continue
-			}
-
-			namespace, err := getNamespace(s.stackID)
-			if err != nil {
-				return err
-			}
-
-			// Create plugin identifier
-			identifier := sdkresource.Identifier{
-				Name:      plugin.ID,
-				Namespace: namespace,
-			}
-
-			// Create or update plugin resource using Kubernetes client
-			pluginResource := &pluginsv0alpha1.Plugin{
-				TypeMeta: metav1.TypeMeta{
-					Kind:       pluginsv0alpha1.PluginKind().Kind(),
-					APIVersion: pluginsv0alpha1.PluginKind().Version(),
-				},
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      plugin.ID,
-					Namespace: namespace,
-				},
-				Spec: pluginsv0alpha1.PluginSpec{
-					Id:      plugin.JSONData.ID,
-					Version: plugin.JSONData.Info.Version,
-				},
-			}
-
-			var statusErr *apierrors.StatusError
-			// Check if plugin exists
-			existingPlugin, err := pluginClient.Get(ctx, identifier)
-			if err != nil {
-				if !errors.As(err, &statusErr) || statusErr.ErrStatus.Code != 404 {
-					logger.Error("Failed to get plugin resource", "plugin", plugin.ID, "error", err)
-					return err
-				}
-				// Plugin doesn't exist, create it
-				_, err := pluginClient.Create(ctx, identifier, pluginResource, sdkresource.CreateOptions{})
-				if err != nil {
-					logger.Error("Failed to create plugin resource", "plugin", plugin.ID, "error", err)
-					return err
-				}
-				continue
-			}
-
-			// Update existing plugin
-			if existingPlugin != nil {
-				if meta, ok := existingPlugin.(metav1.Object); ok {
-					pluginResource.ObjectMeta.UID = meta.GetUID()
-					pluginResource.ObjectMeta.ResourceVersion = meta.GetResourceVersion()
-				}
-				_, err := pluginClient.Update(ctx, identifier, pluginResource, sdkresource.UpdateOptions{})
-				if err != nil {
-					logger.Error("Failed to update plugin resource", "plugin", plugin.ID, "error", err)
-				}
-			}
-		}
 	}
 
-	logger.Info("Plugins loaded", "count", totalPlugins, "duration", time.Since(start))
+	s.log.Info("Plugins loaded", "count", totalPlugins, "duration", time.Since(start))
 	close(s.readyCh)
 	return nil
 }

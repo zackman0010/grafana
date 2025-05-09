@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/grafana/authlib/types"
 	"github.com/grafana/grafana-app-sdk/k8s"
@@ -14,8 +15,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	pluginsv0alpha1 "github.com/grafana/grafana/apps/plugins/pkg/apis/plugins/v0alpha1"
-	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/plugins"
+	"github.com/grafana/grafana/pkg/plugins/log"
+	pluginsapp "github.com/grafana/grafana/pkg/registry/apps/plugins"
 	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/setting"
 )
@@ -26,20 +28,22 @@ type EnhancedRegistry struct {
 	restConfig   restconfig.RestConfigProvider
 	log          log.Logger
 	pluginClient sdkresource.Client
+	pluginsApp   *pluginsapp.AppProvider
 	initOnce     sync.Once
 	initErr      error
 }
 
 // ProvideService returns a new enhanced registry service.
-func ProvideService(cfg *setting.Cfg, restCfgProvider restconfig.RestConfigProvider) (*EnhancedRegistry, error) {
-	return NewEnhancedRegistry(cfg.StackID, restCfgProvider), nil
+func ProvideService(cfg *setting.Cfg, restCfgProvider restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) (*EnhancedRegistry, error) {
+	return NewEnhancedRegistry(cfg.StackID, restCfgProvider, pluginsApp), nil
 }
 
 // NewEnhancedRegistry creates a new enhanced registry.
-func NewEnhancedRegistry(stackID string, restConfig restconfig.RestConfigProvider) *EnhancedRegistry {
+func NewEnhancedRegistry(stackID string, restConfig restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) *EnhancedRegistry {
 	return &EnhancedRegistry{
 		stackID:    stackID,
 		restConfig: restConfig,
+		pluginsApp: pluginsApp,
 		log:        log.New("plugins.registry.enhanced"),
 	}
 }
@@ -58,8 +62,26 @@ func (r *EnhancedRegistry) ensureClient(ctx context.Context) error {
 			r.initErr = fmt.Errorf("failed to create plugin client: %w", err)
 			return
 		}
+		r.initErr = waitForCondition(r.pluginsApp.IsReady, 10*time.Second, 500*time.Millisecond)
 	})
 	return r.initErr
+}
+
+func waitForCondition(conditionFunc func() bool, timeout, interval time.Duration) error {
+	timeoutChan := time.After(timeout)
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-timeoutChan:
+			return errors.New("timeout waiting for condition")
+		case <-ticker.C:
+			if conditionFunc() {
+				return nil // success
+			}
+		}
+	}
 }
 
 // Plugin returns a plugin by its ID.
@@ -91,16 +113,7 @@ func (r *EnhancedRegistry) Plugin(ctx context.Context, pluginID string, version 
 	// Convert Kubernetes resource to plugin
 	if plugin, ok := pluginResource.(*pluginsv0alpha1.Plugin); ok {
 		// Create a new plugin instance from the Kubernetes resource
-		p := &plugins.Plugin{
-			JSONData: plugins.JSONData{
-				ID: plugin.Spec.Id,
-				Info: plugins.Info{
-					Description: "Plugin loaded from Kubernetes",
-					Version:     plugin.Spec.Version,
-				},
-			},
-		}
-		return p, true
+		return specToPlugin(plugin.Spec), true
 	}
 	return nil, false
 }
@@ -127,24 +140,13 @@ func (r *EnhancedRegistry) Plugins(ctx context.Context) []*plugins.Plugin {
 		return ps
 	}
 
-	// Convert Kubernetes resources to plugins
-	list, ok := pluginList.(*pluginsv0alpha1.PluginList)
-	if !ok {
-		r.log.Error("Failed to convert plugin list to correct type")
-		return ps
-	}
-
-	for _, plugin := range list.Items {
-		p := &plugins.Plugin{
-			JSONData: plugins.JSONData{
-				ID: plugin.Spec.Id,
-				Info: plugins.Info{
-					Description: "Plugin loaded from Kubernetes",
-					Version:     plugin.Spec.Version,
-				},
-			},
+	for _, plugin := range pluginList.GetItems() {
+		p, ok := plugin.(*pluginsv0alpha1.Plugin)
+		if !ok {
+			r.log.Error("Failed to get plugin spec from Kubernetes", "error", err)
+			continue
 		}
-		ps = append(ps, p)
+		ps = append(ps, specToPlugin(p.Spec))
 	}
 
 	return ps
@@ -192,7 +194,7 @@ func (r *EnhancedRegistry) Add(ctx context.Context, p *plugins.Plugin) error {
 			return err
 		}
 		// Plugin doesn't exist, create it
-		_, err := r.pluginClient.Create(ctx, identifier, pluginResource, sdkresource.CreateOptions{})
+		_, err = r.pluginClient.Create(ctx, identifier, pluginResource, sdkresource.CreateOptions{})
 		if err != nil {
 			r.log.Error("Failed to create plugin resource", "plugin", p.ID, "error", err)
 			return err
@@ -236,6 +238,20 @@ func (r *EnhancedRegistry) Remove(ctx context.Context, pluginID string, version 
 	}
 
 	return nil
+}
+
+func specToPlugin(spec pluginsv0alpha1.PluginSpec) *plugins.Plugin {
+	p := &plugins.Plugin{
+		JSONData: plugins.JSONData{
+			ID: spec.Id,
+			Info: plugins.Info{
+				Description: "Plugin loaded from Kubernetes",
+				Version:     spec.Version,
+			},
+		},
+	}
+	p.SetLogger(log.New(fmt.Sprintf("plugin.%s", spec.Id)))
+	return p
 }
 
 func getNamespace(stackID string) (string, error) {
