@@ -6,6 +6,7 @@ import { useStyles2 } from '@grafana/ui';
 
 import { useIsConditionallyHidden } from '../../conditional-rendering/useIsConditionallyHidden';
 import { useDashboardState } from '../../utils/utils';
+import { useIsRenderingSoloPanel } from '../SoloPanelContext';
 
 import { AutoGridItem } from './AutoGridItem';
 import { DRAGGED_ITEM_HEIGHT, DRAGGED_ITEM_LEFT, DRAGGED_ITEM_TOP, DRAGGED_ITEM_WIDTH } from './const';
@@ -17,6 +18,11 @@ export function AutoGridItemRenderer({ model }: SceneComponentProps<AutoGridItem
   const [isConditionallyHidden, conditionalRenderingClass, conditionalRenderingOverlay] =
     useIsConditionallyHidden(model);
   const styles = useStyles2(getStyles);
+  const isSolo = useIsRenderingSoloPanel(body.state.key);
+
+  if (isSolo) {
+    return <body.Component model={body} />;
+  }
 
   if (isConditionallyHidden && !isEditing) {
     return null;

@@ -11,6 +11,7 @@ import { DashboardEditPaneSplitter } from '../edit-pane/DashboardEditPaneSplitte
 
 import { DashboardScene } from './DashboardScene';
 import { PanelSearchLayout } from './PanelSearchLayout';
+import { SoloPanelContext } from './SoloPanelContext';
 
 export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardScene>) {
   const {
@@ -18,34 +19,34 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
     overlay,
     editview,
     editPanel,
-    viewPanelScene,
+    viewPanel,
     panelSearch,
     panelsPerRow,
     isEditing,
     scopesBridge,
     layoutOrchestrator,
+    body,
   } = model.useState();
   const { type } = useParams();
   const location = useLocation();
   const navIndex = useSelector((state) => state.navIndex);
   const pageNav = model.getPageNav(location, navIndex);
-  const bodyToRender = model.getBodyToRender();
   const navModel = getNavModel(navIndex, `dashboards/${type === 'snapshot' ? 'snapshots' : 'browse'}`);
   const isSettingsOpen = editview !== undefined;
 
   // Remember scroll pos when going into view panel, edit panel or settings
   useMemo(() => {
-    if (viewPanelScene || isSettingsOpen || editPanel) {
+    if (viewPanel || isSettingsOpen || editPanel) {
       model.rememberScrollPos();
     }
-  }, [isSettingsOpen, editPanel, viewPanelScene, model]);
+  }, [isSettingsOpen, editPanel, viewPanel, model]);
 
   // Restore scroll pos when coming back
   useEffect(() => {
-    if (!viewPanelScene && !isSettingsOpen && !editPanel) {
+    if (!viewPanel && !isSettingsOpen && !editPanel) {
       model.restoreScrollPos();
     }
-  }, [isSettingsOpen, editPanel, viewPanelScene, model]);
+  }, [isSettingsOpen, editPanel, viewPanel, model]);
 
   if (editview) {
     return (
@@ -58,11 +59,19 @@ export function DashboardSceneRenderer({ model }: SceneComponentProps<DashboardS
   }
 
   function renderBody() {
-    if (!viewPanelScene && (panelSearch || panelsPerRow)) {
-      return <PanelSearchLayout panelSearch={panelSearch} panelsPerRow={panelsPerRow} dashboard={model} />;
+    if (viewPanel) {
+      return (
+        <SoloPanelContext.Provider value={{ keyPath: viewPanel }}>
+          <body.Component model={body} />
+        </SoloPanelContext.Provider>
+      );
     }
 
-    return <bodyToRender.Component model={bodyToRender} />;
+    // if (!viewPanelScene && (panelSearch || panelsPerRow)) {
+    //   return <PanelSearchLayout panelSearch={panelSearch} panelsPerRow={panelsPerRow} dashboard={model} />;
+    // }
+
+    return <body.Component model={body} />;
   }
 
   return (

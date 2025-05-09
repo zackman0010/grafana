@@ -6,6 +6,7 @@ import { useStyles2 } from '@grafana/ui';
 
 import { useHasClonedParents } from '../../utils/clone';
 import { useDashboardState } from '../../utils/utils';
+import { useIsRenderingSoloPanel } from '../SoloPanelContext';
 import { CanvasGridAddActions } from '../layouts-shared/CanvasGridAddActions';
 
 import { AutoGridLayout, AutoGridLayoutState } from './AutoGridLayout';
@@ -18,6 +19,17 @@ export function AutoGridLayoutRenderer({ model }: SceneComponentProps<AutoGridLa
   const { layoutOrchestrator, isEditing } = useDashboardState(model);
   const layoutManager = sceneGraph.getAncestor(model, AutoGridLayoutManager);
   const { fillScreen } = layoutManager.useState();
+  const isSolo = useIsRenderingSoloPanel();
+
+  if (isSolo) {
+    return (
+      <>
+        {children.map((item) => (
+          <item.Component key={item.state.key} model={item} />
+        ))}
+      </>
+    );
+  }
 
   if (isHidden || !layoutOrchestrator) {
     return null;
