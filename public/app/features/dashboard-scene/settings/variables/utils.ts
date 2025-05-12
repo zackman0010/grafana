@@ -80,6 +80,7 @@ export const EDITABLE_VARIABLES: Record<EditableVariableType, EditableVariableCo
     name: 'Ad hoc filters',
     description: 'Add key/value filters on the fly',
     editor: AdHocFiltersVariableEditor,
+    getOptions: getAdhocFiltersVariableOptions,
   },
   groupby: {
     name: 'Group by',
