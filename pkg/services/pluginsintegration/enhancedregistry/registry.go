@@ -13,18 +13,17 @@ import (
 	sdkresource "github.com/grafana/grafana-app-sdk/resource"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apiserver/pkg/endpoints/request"
 
 	pluginsv0alpha1 "github.com/grafana/grafana/apps/plugins/pkg/apis/plugins/v0alpha1"
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/log"
 	pluginsapp "github.com/grafana/grafana/pkg/registry/apps/plugins"
 	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
-	"github.com/grafana/grafana/pkg/setting"
 )
 
 // EnhancedRegistry is a registry that uses Kubernetes as the source of truth for plugins.
 type EnhancedRegistry struct {
-	stackID      string
 	restConfig   restconfig.RestConfigProvider
 	log          log.Logger
 	pluginClient sdkresource.Client
@@ -34,14 +33,13 @@ type EnhancedRegistry struct {
 }
 
 // ProvideService returns a new enhanced registry service.
-func ProvideService(cfg *setting.Cfg, restCfgProvider restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) (*EnhancedRegistry, error) {
-	return NewEnhancedRegistry(cfg.StackID, restCfgProvider, pluginsApp), nil
+func ProvideService(restCfgProvider restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) (*EnhancedRegistry, error) {
+	return NewEnhancedRegistry(restCfgProvider, pluginsApp), nil
 }
 
 // NewEnhancedRegistry creates a new enhanced registry.
-func NewEnhancedRegistry(stackID string, restConfig restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) *EnhancedRegistry {
+func NewEnhancedRegistry(restConfig restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) *EnhancedRegistry {
 	return &EnhancedRegistry{
-		stackID:    stackID,
 		restConfig: restConfig,
 		pluginsApp: pluginsApp,
 		log:        log.New("plugins.registry.enhanced"),
@@ -85,15 +83,15 @@ func waitForCondition(conditionFunc func() bool, timeout, interval time.Duration
 }
 
 // Plugin returns a plugin by its ID.
-func (r *EnhancedRegistry) Plugin(ctx context.Context, pluginID string, version string) (*plugins.Plugin, bool) {
+func (r *EnhancedRegistry) Plugin(ctx context.Context, pluginID string, _ string) (*plugins.Plugin, bool) {
 	if err := r.ensureClient(ctx); err != nil {
 		r.log.Error("Failed to initialize plugin client", "error", err)
 		return nil, false
 	}
 
-	namespace, err := getNamespace(r.stackID)
-	if err != nil {
-		r.log.Error("Failed to get namespace", "error", err)
+	namespace, ok := request.NamespaceFrom(ctx)
+	if !ok {
+		r.log.Error("Failed to get namespace")
 		return nil, false
 	}
 
@@ -127,9 +125,9 @@ func (r *EnhancedRegistry) Plugins(ctx context.Context) []*plugins.Plugin {
 
 	var ps []*plugins.Plugin
 
-	namespace, err := getNamespace(r.stackID)
-	if err != nil {
-		r.log.Error("Failed to get namespace", "error", err)
+	namespace, ok := request.NamespaceFrom(ctx)
+	if !ok {
+		r.log.Error("Failed to get namespace")
 		return ps
 	}
 
@@ -158,9 +156,9 @@ func (r *EnhancedRegistry) Add(ctx context.Context, p *plugins.Plugin) error {
 		return fmt.Errorf("failed to initialize plugin client: %w", err)
 	}
 
-	namespace, err := getNamespace(r.stackID)
-	if err != nil {
-		return err
+	namespace, ok := request.NamespaceFrom(ctx)
+	if !ok {
+		return errors.New("failed to get namespace")
 	}
 
 	// Create plugin identifier
@@ -221,9 +219,9 @@ func (r *EnhancedRegistry) Remove(ctx context.Context, pluginID string, version 
 		return fmt.Errorf("failed to initialize plugin client: %w", err)
 	}
 
-	namespace, err := getNamespace(r.stackID)
-	if err != nil {
-		return err
+	namespace, ok := request.NamespaceFrom(ctx)
+	if !ok {
+		return errors.New("failed to get namespace")
 	}
 
 	identifier := sdkresource.Identifier{
@@ -231,7 +229,7 @@ func (r *EnhancedRegistry) Remove(ctx context.Context, pluginID string, version 
 		Namespace: namespace,
 	}
 
-	err = r.pluginClient.Delete(ctx, identifier, sdkresource.DeleteOptions{})
+	err := r.pluginClient.Delete(ctx, identifier, sdkresource.DeleteOptions{})
 	if err != nil {
 		r.log.Error("Failed to delete plugin resource", "plugin", pluginID, "error", err)
 		return err
