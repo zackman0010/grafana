@@ -4,11 +4,13 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 // @ts-expect-error - there are no types for this package
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
-import { Configuration } from 'webpack';
+import type { Configuration } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-import { DIST_DIR } from './constants';
-import { getPackageJson, getPluginJson, getEntries, hasLicense } from './utils';
+// @ts-ignore - extensions support for node 24
+import { DIST_DIR } from './constants.ts';
+// @ts-ignore - support for node 24
+import { getPackageJson, getPluginJson, getEntries, hasLicense } from './utils.ts';
 
 function skipFiles(f: string): boolean {
   if (f.includes('/dist/')) {

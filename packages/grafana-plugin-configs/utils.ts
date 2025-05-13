@@ -3,12 +3,17 @@ import { glob } from 'glob';
 import path from 'path';
 import process from 'process';
 
+function loadJson(path: string) {
+  const rawJson = fs.readFileSync(path, 'utf8');
+  return JSON.parse(rawJson);
+}
+
 export function getPackageJson() {
-  return require(path.resolve(process.cwd(), 'package.json'));
+  return loadJson(path.resolve(process.cwd(), 'package.json'));
 }
 
 export function getPluginJson() {
-  return require(path.resolve(process.cwd(), 'plugin.json'));
+  return loadJson(path.resolve(process.cwd(), 'plugin.json'));
 }
 
 export async function getEntries(): Promise<Record<string, string>> {
