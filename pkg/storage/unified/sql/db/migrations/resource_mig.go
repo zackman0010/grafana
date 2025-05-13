@@ -167,5 +167,13 @@ func initResourceTables(mg *migrator.Migrator) string {
 		Name: "IDX_resource_history_namespace_group_resource_name_generation",
 	}))
 
+	// Add add title+legacy id columns (no indicies yet... will add when this is used in the query path)
+	mg.AddMigration("Add title to resource table", migrator.NewAddColumnMigration(resource_table, &migrator.Column{
+		Name: "title", Type: migrator.DB_Varchar, Nullable: true,
+	}))
+	mg.AddMigration("Add legacy_id to resource table", migrator.NewAddColumnMigration(resource_table, &migrator.Column{
+		Name: "legacy_id", Type: migrator.DB_BigInt, Nullable: true,
+	}))
+
 	return marker
 }

@@ -340,6 +340,8 @@ func (b *backend) create(ctx context.Context, event resource.WriteEvent) (int64,
 			SQLTemplate: sqltemplate.New(b.dialect),
 			WriteEvent:  event,
 			Folder:      folder,
+			Title:       event.Object.FindTitle(""),
+			LegacyID:    event.Object.GetDeprecatedInternalID(),
 			GUID:        guid,
 		}); err != nil {
 			if isRowAlreadyExistsError(err) {
