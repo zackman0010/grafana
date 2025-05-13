@@ -45,7 +45,8 @@ type DatabaseConfig struct {
 	// SQLite only
 	QueryRetries int
 	// SQLite only
-	TransactionRetries int
+	TransactionRetries          int
+	QueryInstrumentationEnabled bool
 }
 
 func NewDatabaseConfig(cfg *setting.Cfg, features featuremgmt.FeatureToggles) (*DatabaseConfig, error) {
