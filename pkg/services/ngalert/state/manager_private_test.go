@@ -3567,9 +3567,8 @@ func TestProcessEvalResults_StateTransitions(t *testing.T) {
 								PreviousStateReason: eval.Error.String(),
 								PreviousState:       eval.Alerting,
 								State: &State{
-									Labels: labels["system + rule + labels1"],
-									State:  eval.Alerting,
-									// FIXME(@moustafab): this is the one that will be failing
+									Labels:             labels["system + rule + labels1"],
+									State:              eval.Alerting,
 									Error:              nil,
 									Annotations:        baseRule.Annotations,
 									LatestResult:       newEvaluationWithValues(t3, eval.Alerting, map[string]float64{"A": 1.0}),
