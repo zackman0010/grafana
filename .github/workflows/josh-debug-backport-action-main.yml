@@ -39,7 +39,7 @@ jobs:
           git branch -vv
           git remote -v
           git log -n 5 --oneline
-          GIT_TRACE2=1 git push --set-upstream origin backport-${{ github.run_id }}-to-main
+          GIT_TRACE2=1 GIT_CURL_VERBOSE=1 git push --set-upstream origin backport-${{ github.run_id }}-to-main
       - name: Create PR without backports
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
