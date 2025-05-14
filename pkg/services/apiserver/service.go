@@ -243,18 +243,17 @@ func (s *service) start(ctx context.Context) error {
 			return err
 		}
 		pvs := s.scheme.PrioritizedVersionsForGroup(gvs[0].Group)
+		if a, ok := b.(builder.APIGroupAuthorizer); ok {
+			auth := a.GetAuthorizer()
+			if auth != nil {
+				s.authorizer.Register(gvs[0], auth)
+			}
+		}
 
 		for j, gv := range pvs {
 			if s.features.IsEnabledGlobally(featuremgmt.FlagKubernetesAggregator) {
 				// set the priority for the group+version
 				kubeaggregator.APIVersionPriorities[gv] = kubeaggregator.Priority{Group: int32(15000 + i), Version: int32(len(pvs) - j)}
-			}
-
-			if a, ok := b.(builder.APIGroupAuthorizer); ok {
-				auth := a.GetAuthorizer()
-				if auth != nil {
-					s.authorizer.Register(gv, auth)
-				}
 			}
 		}
 	}
