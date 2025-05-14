@@ -29,7 +29,8 @@ jobs:
         run: |
           git fetch --depth=2 origin release-11.2.10
           git switch --create backport-${{ github.run_id }}-to-release-11.2.10 origin/release-11.2.10
-      - run: |
+      - name: Pretend to cherry-pick
+        run: |
           touch new-file.txt
           git add new-file.txt
           git commit --allow-empty -m "Add new file (testing)"
