@@ -31,7 +31,12 @@ jobs:
           touch new-file.txt
           git add new-file.txt && git commit --allow-empty -m "Add new file (testing)"
       - name: Git push
-        run: git push
+        run: |
+          git status
+          git branch -vv
+          git remote -v
+          git log -n 5 --oneline
+          GIT_TRACE2=1 git push
       - name: Create PR without backports
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
