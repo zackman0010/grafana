@@ -30,7 +30,6 @@ import (
 	"github.com/grafana/grafana/pkg/infra/metrics"
 	"github.com/grafana/grafana/pkg/infra/serverlock"
 	"github.com/grafana/grafana/pkg/infra/tracing"
-	"github.com/grafana/grafana/pkg/middleware"
 	"github.com/grafana/grafana/pkg/modules"
 	servicetracing "github.com/grafana/grafana/pkg/modules/tracing"
 	"github.com/grafana/grafana/pkg/plugins"
@@ -183,8 +182,8 @@ func ProvideService(
 			resp := responsewriter.WrapForHTTP1Or2(c.Resp)
 			s.handler.ServeHTTP(resp, req)
 		}
-		k8sRoute.Any("/", middleware.ReqSignedIn, handler)
-		k8sRoute.Any("/*", middleware.ReqSignedIn, handler)
+		k8sRoute.Any("/", handler)
+		k8sRoute.Any("/*", handler)
 	}
 
 	s.rr.Group("/apis", proxyHandler)

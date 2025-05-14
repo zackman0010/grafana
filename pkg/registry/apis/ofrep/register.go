@@ -73,16 +73,16 @@ func (b *APIBuilder) GetOpenAPIDefinitions() common.GetOpenAPIDefinitions {
 
 func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
 	return &builder.APIRoutes{
-		Root: []builder.APIRouteHandler{
+		Namespace: []builder.APIRouteHandler{
 			{
-				Path: "evaluate/flag",
+				Path: "ofrep/v1/evaluate/flag",
 				Spec: &spec3.PathProps{
 					Get: &spec3.Operation{},
 				},
 				Handler: b.handleFlagsList,
 			},
 			{
-				Path: "evaluate/{flagKey}",
+				Path: "ofrep/v1/evaluate/{flagKey}",
 				Spec: &spec3.PathProps{
 					Get: &spec3.Operation{},
 				},
