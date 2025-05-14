@@ -1,0 +1,53 @@
+name: Reproduce push error
+on:
+  push:
+    branches:
+    - joshhunt/debug-backport-action
+
+permissions: {}
+
+jobs:
+  push-and-pr:
+    if: github.repository == 'grafana/grafana'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout Grafana
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+          fetch-tags: false
+      - name: Configure git user
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local --add --bool push.autoSetupRemote true
+      - name: Create backport branch
+        run: |
+          git switch --create backport-${{ github.run_id }}-to-main origin/main
+      - name: Pretend to cherry-pick
+        run: |
+          touch new-file.txt
+          git add new-file.txt
+          git commit --allow-empty -m "Add new file (testing)"
+      - name: Git push
+        run: |
+          git status
+          git branch -vv
+          git remote -v
+          git log -n 5 --oneline
+          GIT_TRACE2=1 git push --set-upstream origin backport-${{ github.run_id }}-to-main
+      - name: Create PR without backports
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            -l "no-changelog" \
+            -B "backport-${{ github.run_id }}-to-main" \
+            --dry-run=true \
+            --base "main" \
+            --title "[Testing (@joshhunt)] Testing automation push error" \
+            --body "Ignore this, testing pushes from automation for support ticket because of all of the backport.yml failures"
