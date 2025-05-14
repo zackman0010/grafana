@@ -1,11 +1,15 @@
 /* eslint-disable id-blacklist, no-restricted-imports */
 import moment, { Moment } from 'moment-timezone';
 
+import { formatDate } from '@grafana/i18n';
+
 import { TimeZone } from '../types/time';
 
 import { DateTimeOptions, getTimeZone } from './common';
 import { systemDateFormats } from './formats';
 import { DateTimeInput, toUtc, dateTimeAsMoment } from './moment_wrapper';
+
+const localeFormatPreferenceEnabled = true;
 
 /**
  * The type describing the options that can be passed to the {@link dateTimeFormat}
@@ -23,6 +27,26 @@ export interface DateTimeOptionsWithFormat extends DateTimeOptions {
 
 type DateTimeFormatter<T extends DateTimeOptions = DateTimeOptions> = (dateInUtc: DateTimeInput, options?: T) => string;
 
+function toDate(dateInUtc: DateTimeInput): Date {
+  if (dateInUtc instanceof Date) {
+    return dateInUtc;
+  }
+
+  if (typeof dateInUtc === 'string' || typeof dateInUtc === 'number') {
+    return new Date(dateInUtc);
+  }
+
+  return dateTimeAsMoment(dateInUtc).toDate();
+}
+
+function toIANATimezone(grafanaTimezone: string) {
+  if (grafanaTimezone === 'browser') {
+    return undefined;
+  }
+
+  return grafanaTimezone;
+}
+
 /**
  * Helper function to format date and time according to the specified options. If no options
  * are supplied, then default values are used. For more details, see {@link DateTimeOptionsWithFormat}.
@@ -32,8 +56,23 @@ type DateTimeFormatter<T extends DateTimeOptions = DateTimeOptions> = (dateInUtc
  *
  * @public
  */
-export const dateTimeFormat: DateTimeFormatter<DateTimeOptionsWithFormat> = (dateInUtc, options?) =>
-  toTz(dateInUtc, getTimeZone(options)).format(getFormat(options));
+export const dateTimeFormat: DateTimeFormatter<DateTimeOptionsWithFormat> = (dateInUtc, options?) => {
+  // If a custom format is provided (or the toggle isn't enabled), use the previous implementation
+  if (!localeFormatPreferenceEnabled || options?.format) {
+    return toTz(dateInUtc, getTimeZone(options)).format(getFormat(options));
+  }
+
+  const timeZone = getTimeZone(options);
+  const ianaTimezone = toIANATimezone(timeZone);
+  console.log('[dateTimeFormat] timeZone', timeZone);
+
+  const dateAsDate = toDate(dateInUtc);
+  return formatDate(dateAsDate, {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: ianaTimezone,
+  });
+};
 
 /**
  * Helper function to format date and time according to the standard ISO format e.g. 2013-02-04T22:44:30.652Z.
