@@ -1,8 +1,11 @@
 package ofrep
 
 import (
+	"context"
 	"net/http"
 
+	"github.com/grafana/grafana/pkg/services/featuremgmt"
+	"github.com/grafana/grafana/pkg/setting"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
@@ -18,20 +21,33 @@ var _ builder.APIGroupBuilder = (*APIBuilder)(nil)
 var _ builder.APIGroupRouteProvider = (*APIBuilder)(nil)
 var _ builder.APIGroupVersionProvider = (*APIBuilder)(nil)
 
-type APIBuilder struct{}
-
-func NewAPIBuilder() *APIBuilder {
-	return &APIBuilder{}
+type APIBuilder struct {
+	cfg         *setting.Cfg
+	openFeature *featuremgmt.OpenFeatureService
 }
 
-func RegisterAPIService(apiregistration builder.APIRegistrar) *APIBuilder {
-	builder := NewAPIBuilder()
-	apiregistration.RegisterAPI(builder)
-	return builder
+//
+//func NewAPIBuilder(cfg *setting.Cfg, openFeature *featuremgmt.OpenFeatureService) *APIBuilder {
+//	return &APIBuilder{
+//		cfg:         cfg,
+//		openFeature: openFeature,
+//	}
+//}
+
+func RegisterAPIService(apiregistration builder.APIRegistrar, cfg *setting.Cfg, openFeature *featuremgmt.OpenFeatureService) *APIBuilder {
+	b := &APIBuilder{
+		cfg:         cfg,
+		openFeature: openFeature,
+	}
+	apiregistration.RegisterAPI(b)
+	return b
 }
 
 func (b *APIBuilder) GetAuthorizer() authorizer.Authorizer {
-	return nil
+	return authorizer.AuthorizerFunc(func(ctx context.Context, attr authorizer.Attributes) (authorizer.Decision, string, error) {
+		// Allow all requests - we'll handle auth in the handler
+		return authorizer.DecisionAllow, "", nil
+	})
 }
 
 func (b *APIBuilder) GetGroupVersion() schema.GroupVersion {
@@ -91,10 +107,31 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "flagKey parameter is required", http.StatusBadRequest)
 		return
 	}
+	//
+	//// if anonymous && isAuthed - return err
+	//ident, err := identity.GetRequester(r.Context())
+	//if err != nil {
+	//	http.Error(w, "failed to get requester identity", http.StatusInternalServerError)
+	//}
 
+	// TODO: check if context's stackID (and maybe targeting key) is the expected one - HOW? If not, return err
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(flagKey))
 	if err != nil {
 		panic(err)
 	}
+}
+
+var authedFlags = []string{
+	"flagOne",
+	"flagTwo",
+}
+
+func isAuthed(flagKey string) bool {
+	for _, flag := range authedFlags {
+		if flag == flagKey {
+			return true
+		}
+	}
+	return false
 }
