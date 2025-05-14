@@ -41,5 +41,5 @@ jobs:
             -B "km/${{ github.run_id }}" \
             --dry-run=true \
             --base "km/reproduce-push-error" \
-            --title "[Testing (@kminehart)] Testing automation push error" \
+            --title "[Testing (@joshhunt)] Testing automation push error" \
             --body "Ignore this, testing pushes from automation for support ticket because of all of the backport.yml failures"
