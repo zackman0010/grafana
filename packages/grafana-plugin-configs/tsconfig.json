@@ -6,6 +6,13 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler"
   },
+  "ts-node": {
+    "transpileOnly": true,
+    "swc": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "extends": "@grafana/tsconfig",
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
   "include": ["./types", "."]
