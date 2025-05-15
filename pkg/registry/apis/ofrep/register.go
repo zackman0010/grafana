@@ -2,11 +2,15 @@ package ofrep
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 
-	"github.com/grafana/grafana/pkg/apimachinery/identity"
+	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/util/errhttp"
+	"github.com/grafana/grafana/pkg/util/proxyutil"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
@@ -25,20 +29,14 @@ var _ builder.APIGroupVersionProvider = (*APIBuilder)(nil)
 type APIBuilder struct {
 	cfg         *setting.Cfg
 	openFeature *featuremgmt.OpenFeatureService
+	logger      log.Logger
 }
-
-//
-//func NewAPIBuilder(cfg *setting.Cfg, openFeature *featuremgmt.OpenFeatureService) *APIBuilder {
-//	return &APIBuilder{
-//		cfg:         cfg,
-//		openFeature: openFeature,
-//	}
-//}
 
 func RegisterAPIService(apiregistration builder.APIRegistrar, cfg *setting.Cfg, openFeature *featuremgmt.OpenFeatureService) *APIBuilder {
 	b := &APIBuilder{
 		cfg:         cfg,
 		openFeature: openFeature,
+		logger:      log.New("grafana-apiserver.feature-flags"),
 	}
 	apiregistration.RegisterAPI(b)
 	return b
@@ -73,6 +71,14 @@ func (b *APIBuilder) GetOpenAPIDefinitions() common.GetOpenAPIDefinitions {
 }
 
 func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
+	// TODO: refactor this - before proxying we need to inspect if evalCtx's stackID matches the identity's stackID
+	// Also auth vs non-authed flags need to be handled differently.
+
+	evalFlagHandler, bulkEvalHandler := b.handleProxyRequest, b.handleProxyRequest
+	if b.cfg.OpenFeature.ProviderType == setting.StaticProviderType {
+		evalFlagHandler, bulkEvalHandler = b.handleEvaluateFlag, b.handleFlagsList
+	}
+
 	return &builder.APIRoutes{
 		Namespace: []builder.APIRouteHandler{
 			{
@@ -80,14 +86,14 @@ func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
 				Spec: &spec3.PathProps{
 					Get: &spec3.Operation{},
 				},
-				Handler: b.handleFlagsList,
+				Handler: bulkEvalHandler,
 			},
 			{
 				Path: "ofrep/v1/evaluate/{flagKey}",
 				Spec: &spec3.PathProps{
 					Get: &spec3.Operation{},
 				},
-				Handler: b.handleEvaluateFlag,
+				Handler: evalFlagHandler,
 			},
 		},
 	}
@@ -109,28 +115,59 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// if anonymous && isAuthed - return err
-	i, err := identity.GetRequester(r.Context())
-	if err != nil {
-		http.Error(w, "failed to get requester identity", http.StatusInternalServerError)
+	isAuthedUser := false
+	publicFlag := isPublicFlag(flagKey)
+
+	if !isAuthedUser && !publicFlag {
+		http.Error(w, "unauthorized to evaluate flag", http.StatusUnauthorized)
 		return
 	}
 
-	_ = i
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte(flagKey))
+	result, err := b.openFeature.EvalFlagWithStaticProvider(r.Context(), flagKey)
 	if err != nil {
-		panic(err)
+		http.Error(w, "failed to evaluate flag", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		b.logger.Error("Failed to encode flag evaluation result", "error", err)
 	}
 }
 
-var authedFlags = []string{
-	"flagOne",
-	"flagTwo",
+func (b *APIBuilder) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
+	proxyPath := r.URL.Path
+	if proxyPath == "" {
+		errhttp.Write(r.Context(), fmt.Errorf("proxy path is required"), w)
+		return
+	}
+
+	if b.cfg.OpenFeature.URL == nil {
+		errhttp.Write(r.Context(), fmt.Errorf("OpenFeature provider URL is not set"), w)
+		return
+	}
+
+	director := func(req *http.Request) {
+		req.URL.Scheme = b.cfg.OpenFeature.URL.Scheme
+		req.URL.Host = b.cfg.OpenFeature.URL.Host
+		req.URL.Path = proxyPath
+	}
+
+	b.logger.Debug("Proxying request to Open Feature provider", "path", proxyPath)
+	proxy := proxyutil.NewReverseProxy(b.logger, director)
+	proxy.ServeHTTP(w, r)
 }
 
-func isAuthed(flagKey string) bool {
-	for _, flag := range authedFlags {
+var publicFlags = []string{
+	"correlations",
+	"publicDashboardsScene",
+	"lokiExperimentalStreaming",
+}
+
+func isPublicFlag(flagKey string) bool {
+	for _, flag := range publicFlags {
 		if flag == flagKey {
 			return true
 		}
