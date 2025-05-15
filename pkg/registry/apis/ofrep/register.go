@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/grafana/grafana/pkg/apimachinery/identity"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	"github.com/grafana/grafana/pkg/setting"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -107,16 +108,16 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "flagKey parameter is required", http.StatusBadRequest)
 		return
 	}
-	//
-	//// if anonymous && isAuthed - return err
-	//ident, err := identity.GetRequester(r.Context())
-	//if err != nil {
-	//	http.Error(w, "failed to get requester identity", http.StatusInternalServerError)
-	//}
 
-	// TODO: check if context's stackID (and maybe targeting key) is the expected one - HOW? If not, return err
+	// if anonymous && isAuthed - return err
+	i, err := identity.GetRequester(r.Context())
+	if err != nil {
+		http.Error(w, "failed to get requester identity", http.StatusInternalServerError)
+	}
+
+	_ = i
 	w.WriteHeader(http.StatusOK)
-	_, err := w.Write([]byte(flagKey))
+	_, err = w.Write([]byte(flagKey))
 	if err != nil {
 		panic(err)
 	}
