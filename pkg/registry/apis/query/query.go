@@ -192,12 +192,13 @@ func (b *QueryAPIBuilder) execute(ctx context.Context, req parsedRequestInfo) (q
 		b.log.Debug("executing single query")
 		qdr, err = b.handleQuerySingleDatasource(ctx, req.Requests[0])
 		if err == nil && isSingleAlertQuery(req) {
-			b.log.Debug("handling alert query with single query")
+			b.log.Debug("handling alert query with single query") //if it's an alert query WITHOUT expressions it was handled by "expressions" in SSE
+			// alerting eval always called expressions even if it wasn't an expression. :mind_blown:
 			qdr, err = b.convertQueryFromAlerting(ctx, req.Requests[0], qdr)
 		}
 	default:
 		b.log.Debug("executing concurrent queries")
-		qdr, err = b.executeConcurrentQueries(ctx, req.Requests)
+		qdr, err = b.executeConcurrentQueries(ctx, req.Requests) //multiple calls to handleQuerySingleDatasource
 	}
 
 	if err != nil {

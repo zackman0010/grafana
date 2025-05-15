@@ -110,7 +110,7 @@ func (p *queryParser) parseRequest(ctx context.Context, input *query.QueryDataRe
 				p.logger.Error("Failed to parse bytes for expression", "error", err)
 				return rsp, err
 			}
-			exp, err := p.reader.ReadQuery(q, iter)
+			exp, err := p.reader.ReadQuery(q, iter) //TODO this ISN'T used by "regular"/ST expression path
 			if err != nil {
 				p.logger.Error("Failed to read query for expression", "error", err)
 				return rsp, NewErrorWithRefID(q.RefID, err)
@@ -118,7 +118,7 @@ func (p *queryParser) parseRequest(ctx context.Context, input *query.QueryDataRe
 			exp.GraphID = int64(len(expressions) + 1)
 			expressions[q.RefID] = &exp
 		} else {
-			key := fmt.Sprintf("%s/%s", ds.Type, ds.UID)
+			key := fmt.Sprintf("%s/%s", ds.Type, ds.UID) //TODO double check if / is allowed in UID schema. arry.toString could be used here (tuple of two strings)
 			idx, ok := index[key]
 			if !ok {
 				idx = len(index)
@@ -146,7 +146,11 @@ func (p *queryParser) parseRequest(ctx context.Context, input *query.QueryDataRe
 	}
 
 	// Make sure all referenced variables exist and the expression order is stable
-	if len(expressions) > 0 {
+	if len(expressions) > 0 { //TODO this probably overlaps with graph.go? o.g. SSE is two calls:
+		// 1. build graph
+		// 2. build pipeline
+		// can we call into buildGraph in graph.go
+		// call common code as soon as possible
 		queryNode := &expr.ExpressionQuery{
 			GraphID: -1,
 		}
@@ -192,7 +196,7 @@ func (p *queryParser) parseRequest(ctx context.Context, input *query.QueryDataRe
 				if q != nil && q.Hide {
 					q.Hide = false
 				}
-				if target.ID() == exp.ID() {
+				if target.ID() == exp.ID() { //TODO does this work if A requires B and B requires C and C referecnes A
 					return rsp, makeCyclicError(refId)
 				}
 				dg.SetEdge(dg.NewEdge(target, exp))
