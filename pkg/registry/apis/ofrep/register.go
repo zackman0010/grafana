@@ -113,6 +113,7 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 	i, err := identity.GetRequester(r.Context())
 	if err != nil {
 		http.Error(w, "failed to get requester identity", http.StatusInternalServerError)
+		return
 	}
 
 	_ = i
