@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path"
 
+	"github.com/grafana/grafana/pkg/middleware"
 	"github.com/prometheus/client_golang/prometheus"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -182,8 +183,9 @@ func ProvideService(
 			resp := responsewriter.WrapForHTTP1Or2(c.Resp)
 			s.handler.ServeHTTP(resp, req)
 		}
-		k8sRoute.Any("/", handler)
-		k8sRoute.Any("/*", handler)
+		k8sRoute.Any("/ofrep/v1/*", handler)
+		k8sRoute.Any("/", middleware.ReqSignedIn, handler)
+		k8sRoute.Any("/*", middleware.ReqSignedIn, handler)
 	}
 
 	s.rr.Group("/apis", proxyHandler)
