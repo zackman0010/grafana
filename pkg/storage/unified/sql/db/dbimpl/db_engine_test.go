@@ -81,6 +81,16 @@ func TestNewResourceDbProvider(t *testing.T) {
 		require.Equal(t, dbTypeSQLite, engine.engine.Dialect().DriverName())
 	})
 
+	t.Run("No database type", func(t *testing.T) {
+		t.Parallel()
+		cfg := setting.NewCfg()
+
+		engine, err := newResourceDBProvider(nil, cfg, nil)
+		require.Error(t, err)
+		require.Nil(t, engine)
+		require.Contains(t, err.Error(), "unknown")
+	})
+
 	t.Run("Unknown database type", func(t *testing.T) {
 		t.Parallel()
 		cfg := setting.NewCfg()

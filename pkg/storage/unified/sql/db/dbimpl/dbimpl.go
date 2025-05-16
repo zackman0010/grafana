@@ -78,8 +78,8 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 	// as fallback, and as it uses a dedicated INI section, then keys are not
 	// prefixed with "db_"
 	getter := newConfGetter(cfg.SectionWithEnvOverrides("resource_api"), "db_")
-	fallbackConfig, err := sqlstore.NewDatabaseConfig(cfg, nil)
-	if err != nil {
+	fallbackConfig, fallbackErr := sqlstore.NewDatabaseConfig(cfg, nil)
+	if fallbackErr != nil {
 		// Ignore error here and keep going.
 		fallbackConfig = nil
 	}
@@ -121,7 +121,10 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 		p.engine = grafanaDB.GetEngine()
 		return p, nil
 	default:
-		return p, fmt.Errorf("no database type specified")
+		if fallbackErr != nil {
+			return nil, fallbackErr
+		}
+		return nil, fmt.Errorf("no database type specified")
 	}
 }
 
