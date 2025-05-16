@@ -6,6 +6,7 @@ import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import { type Configuration } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 // @ts-ignore - node needs the extension to strip types successfully
 import { DIST_DIR } from './constants.ts';
 // @ts-ignore - node needs the extension to strip types successfully
