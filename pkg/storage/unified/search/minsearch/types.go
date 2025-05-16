@@ -2,6 +2,7 @@ package minisearch
 
 import (
 	"context"
+	"iter"
 )
 
 // FieldMapping is a mapping of a field name to a field type
@@ -50,9 +51,16 @@ type StoreOptions struct {
 	PrevVersion uint64 // If greater than 0, the document will be modify only if the previous version matches
 }
 
+type StoredDocument struct {
+	UID       string
+	Value     []byte
+	Version   uint64
+	IsDeleted bool
+}
+
 // The DocumentStore is the storage that will be used to store the documents
 type DocumentStore interface {
-	ListGreaterThanVersion(ctx context.Context, key string, version uint64) (StoredDocumentIterator, error)
+	ListGreaterThanVersion(ctx context.Context, key string, version uint64) iter.Seq2[StoredDocument, error]
 	Save(ctx context.Context, key string, docID string, doc []byte, opts StoreOptions) (version uint64, err error)
 	SoftDelete(ctx context.Context, key string, docID string, opts StoreOptions) (version uint64, err error)
 	FullSync(ctx context.Context, key string, iter StoreDocumentListIterator) (err error)
@@ -72,13 +80,4 @@ type StoreDocumentListIterator interface {
 
 	// UID returns the uid of the document
 	UID() string
-}
-
-type StoredDocumentIterator interface {
-	StoreDocumentListIterator
-	// IsDeleted returns true if the document is deleted
-	IsDeleted() bool
-
-	// Version returns the version of the document
-	Version() uint64
 }

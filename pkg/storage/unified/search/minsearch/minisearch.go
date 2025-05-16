@@ -117,26 +117,21 @@ func (m *minisearch) buildIndex(ctx context.Context) error {
 		return errors.New("index not initialized")
 	}
 	batch := m.index.NewBatch()
-	iter, err := m.docstore.ListGreaterThanVersion(ctx, m.key, 0)
-	if err != nil {
-		return err
-	}
-	for iter.Next() {
-		if err := iter.Error(); err != nil {
-			return err
-		}
-		if iter.IsDeleted() {
-			continue
-		}
-
-		doc := Document{}
-		err = json.Unmarshal(iter.Document(), &doc)
+	for doc, err := range m.docstore.ListGreaterThanVersion(ctx, m.key, 0) {
 		if err != nil {
 			return err
 		}
-		batch.Index(iter.UID(), doc)
-		if iter.Version() > m.lastVersion {
-			m.lastVersion = iter.Version()
+		if doc.IsDeleted {
+			continue
+		}
+		out := Document{}
+		err = json.Unmarshal(doc.Value, &out)
+		if err != nil {
+			return err
+		}
+		batch.Index(doc.UID, out)
+		if doc.Version > m.lastVersion {
+			m.lastVersion = doc.Version
 		}
 	}
 	return m.index.Batch(batch)
@@ -155,24 +150,18 @@ func (m *minisearch) partialResync(ctx context.Context) error {
 	version := m.lastVersion
 	m.mu.RUnlock()
 
-	iter, err := m.docstore.ListGreaterThanVersion(ctx, m.key, version)
-	if err != nil {
-		return err
-	}
-
 	batch := m.index.NewBatch()
-	for iter.Next() {
-		if err := iter.Error(); err != nil {
+	for doc, err := range m.docstore.ListGreaterThanVersion(ctx, m.key, version) {
+		if err != nil {
 			return err
 		}
-		nextVersion := iter.Version()
-		if nextVersion > version {
-			version = nextVersion
-		}
-		if iter.IsDeleted() {
-			batch.Delete(iter.UID())
+		if doc.IsDeleted {
+			batch.Delete(doc.UID)
 		} else {
-			batch.Index(iter.UID(), iter.Document())
+			batch.Index(doc.UID, doc.Value)
+		}
+		if doc.Version > version {
+			version = doc.Version
 		}
 	}
 	m.mu.Lock()

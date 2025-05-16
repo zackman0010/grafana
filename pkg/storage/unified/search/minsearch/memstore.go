@@ -3,6 +3,7 @@ package minisearch
 import (
 	"context"
 	"errors"
+	"iter"
 	"sync"
 	"time"
 )
@@ -67,33 +68,27 @@ func (i *inMemoryDocumentIterator) UID() string {
 	return i.docs[i.current].uid
 }
 
-func (s *inMemoryDocumentStore) ListGreaterThanVersion(ctx context.Context, key string, version uint64) (StoredDocumentIterator, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
+func (s *inMemoryDocumentStore) ListGreaterThanVersion(ctx context.Context, key string, version uint64) iter.Seq2[StoredDocument, error] {
+	return func(yield func(StoredDocument, error) bool) {
+		s.mu.RLock()
+		defer s.mu.RUnlock()
 
-	if _, ok := s.docs[key]; !ok {
-		return &inMemoryDocumentIterator{
-			docs:    []memDoc{},
-			current: -1,
-		}, nil
-	}
-	var docs []memDoc
-	for _, doc := range s.docs[key] {
-		if doc.version > version {
-			docs = append(docs, memDoc{
-				doc:       doc.doc,
-				version:   doc.version,
-				key:       doc.key,
-				uid:       doc.uid,
-				isDeleted: doc.isDeleted,
-			})
+		if _, ok := s.docs[key]; !ok {
+			return
+		}
+		for _, doc := range s.docs[key] {
+			if doc.version >= version {
+				if !yield(StoredDocument{
+					UID:       doc.uid,
+					Value:     doc.doc,
+					Version:   doc.version,
+					IsDeleted: doc.isDeleted,
+				}, nil) {
+					return
+				}
+			}
 		}
 	}
-
-	return &inMemoryDocumentIterator{
-		docs:    docs,
-		current: -1,
-	}, nil
 }
 
 // must be called with the lock held

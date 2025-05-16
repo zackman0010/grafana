@@ -71,27 +71,28 @@ func TestInMemoryDocumentStore(t *testing.T) {
 		}
 
 		// Test listing with version 0
-		iter, err := store.ListGreaterThanVersion(ctx, "users.grafana.app", 0)
-		require.NoError(t, err)
 		count := 0
-		for iter.Next() {
+		for _, err := range store.ListGreaterThanVersion(ctx, "users.grafana.app", 0) {
+			require.NoError(t, err)
 			count++
 		}
 		assert.Equal(t, 3, count)
 
 		// Test listing with middle version
-		iter, err = store.ListGreaterThanVersion(ctx, "users.grafana.app", versions[0])
-		require.NoError(t, err)
 		count = 0
-		for iter.Next() {
+		for _, err := range store.ListGreaterThanVersion(ctx, "users.grafana.app", versions[0]) {
+			require.NoError(t, err)
 			count++
 		}
 		assert.Equal(t, 2, count)
 
 		// Test listing with non-existent key
-		iter, err = store.ListGreaterThanVersion(ctx, "non-existent", 0)
-		require.NoError(t, err)
-		assert.False(t, iter.Next())
+		count = 0
+		for _, err := range store.ListGreaterThanVersion(ctx, "non-existent", 0) {
+			require.NoError(t, err)
+			count++
+		}
+		assert.Equal(t, 0, count)
 	})
 
 	t.Run("FullSync", func(t *testing.T) {
@@ -134,18 +135,16 @@ func TestInMemoryDocumentStore(t *testing.T) {
 		require.NoError(t, err)
 
 		// Verify results
-		res, err := store.ListGreaterThanVersion(ctx, "users.grafana.app", 0)
-		require.NoError(t, err)
-		added := 0
+		count := 0
 		deleted := 0
-		for res.Next() {
-			if res.IsDeleted() {
+		for doc, err := range store.ListGreaterThanVersion(ctx, "users.grafana.app", 0) {
+			require.NoError(t, err)
+			count++
+			if doc.IsDeleted {
 				deleted++
-			} else {
-				added++
 			}
 		}
-		assert.Equal(t, 2, added)   // Should have 2 documents (uid2 and uid3)
+		assert.Equal(t, 3, count)
 		assert.Equal(t, 1, deleted) // Should have 1 deleted document (uid1)
 	})
 }
