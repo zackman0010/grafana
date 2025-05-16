@@ -78,7 +78,6 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 	// as fallback, and as it uses a dedicated INI section, then keys are not
 	// prefixed with "db_"
 	getter := newConfGetter(cfg.SectionWithEnvOverrides("resource_api"), "db_")
-	fallbackGetter := newConfGetter(cfg.SectionWithEnvOverrides("database"), "")
 	fallbackConfig, err := sqlstore.NewDatabaseConfig(cfg, nil)
 	if err != nil {
 		// Ignore error here and keep going.
@@ -116,7 +115,7 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 		return p, err
 	case grafanaDB != nil:
 		// try to use the grafana db connection (should only happen in tests)
-		if fallbackGetter.Bool(grafanaDBInstrumentQueriesKey) {
+		if newConfGetter(cfg.SectionWithEnvOverrides("database"), "").Bool(grafanaDBInstrumentQueriesKey) {
 			return nil, errGrafanaDBInstrumentedNotSupported
 		}
 		p.engine = grafanaDB.GetEngine()
