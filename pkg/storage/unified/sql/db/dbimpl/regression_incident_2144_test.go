@@ -14,8 +14,6 @@ import (
 const noIsolationLevelSupportErrStr = "sql: driver does not support non-" +
 	"default isolation level"
 
-const grafanaDBInstrumentQueriesKey = "instrument_queries"
-
 func TestReproIncident2144IndependentOfGrafanaDB(t *testing.T) {
 	t.Parallel()
 	registerTestSQLDrivers()

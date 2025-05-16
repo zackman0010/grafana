@@ -28,6 +28,8 @@ const (
 	dbTypeSQLite   = "sqlite3"
 )
 
+const grafanaDBInstrumentQueriesKey = "instrument_queries"
+
 var errGrafanaDBInstrumentedNotSupported = errors.New("the Resource API is " +
 	"attempting to leverage the database from core Grafana defined in the" +
 	" [database] INI section since a database configuration was not provided" +
@@ -77,6 +79,7 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 	// prefixed with "db_"
 	getter := newConfGetter(cfg.SectionWithEnvOverrides("resource_api"), "db_")
 	fallbackConfig, err := sqlstore.NewDatabaseConfig(cfg, nil)
+	fallbackGetter := newConfGetter(cfg.SectionWithEnvOverrides("database"), "")
 	if err != nil {
 		// Ignore error here and keep going.
 		fallbackConfig = nil
@@ -113,7 +116,7 @@ func newResourceDBProvider(grafanaDB infraDB.DB, cfg *setting.Cfg, tracer trace.
 		return p, err
 	case grafanaDB != nil:
 		// try to use the grafana db connection (should only happen in tests)
-		if fallbackConfig != nil && fallbackConfig.QueryInstrumentationEnabled {
+		if fallbackGetter.Bool(grafanaDBInstrumentQueriesKey) {
 			return nil, errGrafanaDBInstrumentedNotSupported
 		}
 		p.engine = grafanaDB.GetEngine()

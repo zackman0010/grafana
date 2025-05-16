@@ -246,7 +246,6 @@ func (ss *SQLStore) initEngine(engine *xorm.Engine) error {
 	ss.dbCfg = dbCfg
 
 	if ss.cfg.DatabaseInstrumentQueries {
-		ss.dbCfg.QueryInstrumentationEnabled = true
 		ss.dbCfg.Type = WrapDatabaseDriverWithHooks(ss.dbCfg.Type, ss.tracer)
 	}
 
