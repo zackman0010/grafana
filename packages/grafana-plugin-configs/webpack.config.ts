@@ -6,9 +6,9 @@ import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import { type Configuration } from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// @ts-ignore - node 24 needs the extension to strip types successfully
+// @ts-ignore - node needs the extension to strip types successfully
 import { DIST_DIR } from './constants.ts';
-// @ts-ignore - node 24 needs the extension to strip types successfully
+// @ts-ignore - node needs the extension to strip types successfully
 import { getPackageJson, getPluginJson, getEntries, hasLicense } from './utils.ts';
 
 function skipFiles(f: string): boolean {
