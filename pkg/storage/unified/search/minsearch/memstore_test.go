@@ -122,16 +122,14 @@ func TestInMemoryDocumentStore(t *testing.T) {
 			{key: "users.grafana.app", uid: "user3", document: []byte("data for user3")},
 		}
 
-		iter := &inMemoryDocumentIterator{
-			docs:    make([]memDoc, len(newDocs)),
-			current: -1,
-		}
-		for i, doc := range newDocs {
-			iter.docs[i] = memDoc{doc: doc.document, key: doc.key, uid: doc.uid}
-		}
-
 		// Perform full sync
-		err := store.FullSync(ctx, "users.grafana.app", iter)
+		err := store.FullSync(ctx, "users.grafana.app", func(yield func(DocumentData, error) bool) {
+			for _, doc := range newDocs {
+				if !yield(DocumentData{UID: doc.uid, Value: doc.document}, nil) {
+					return
+				}
+			}
+		})
 		require.NoError(t, err)
 
 		// Verify results

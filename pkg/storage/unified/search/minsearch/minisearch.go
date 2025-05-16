@@ -138,11 +138,29 @@ func (m *minisearch) buildIndex(ctx context.Context) error {
 }
 
 func (m *minisearch) fullResync(ctx context.Context) error {
-	iter, err := m.lister(ctx)
-	if err != nil {
-		return err
-	}
-	return m.store.FullSync(ctx, m.key, &docToStoredDocIterator{iter: iter})
+	return m.store.FullSync(ctx, m.key, func(yield func(DocumentData, error) bool) {
+		lister, err := m.lister(ctx)
+		if err != nil {
+			yield(DocumentData{}, err)
+			return
+		}
+		for lister.Next() {
+			if lister.Error() != nil {
+				yield(DocumentData{}, lister.Error())
+				return
+			}
+			doc := lister.Document()
+			value, err := json.Marshal(doc)
+			if err != nil {
+				yield(DocumentData{}, err)
+				return
+			}
+
+			if !yield(DocumentData{UID: lister.UID(), Value: value}, nil) {
+				return
+			}
+		}
+	})
 }
 
 func (m *minisearch) partialResync(ctx context.Context) error {
@@ -272,26 +290,4 @@ func (m *minisearch) PrintAllDocuments(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-type docToStoredDocIterator struct {
-	iter DocumentIterator
-}
-
-func (i *docToStoredDocIterator) Next() bool {
-	return i.iter.Next()
-}
-
-func (i *docToStoredDocIterator) Error() error {
-	return i.iter.Error()
-}
-
-func (i *docToStoredDocIterator) Document() []byte {
-	doc := i.iter.Document()
-	jsonDoc, _ := json.Marshal(doc) // move decoding to next()
-	return jsonDoc
-}
-
-func (i *docToStoredDocIterator) UID() string {
-	return i.iter.UID()
 }

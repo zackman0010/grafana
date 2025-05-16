@@ -77,7 +77,7 @@ func (s *inMemoryDocumentStore) ListGreaterThanVersion(ctx context.Context, key 
 			return
 		}
 		for _, doc := range s.docs[key] {
-			if doc.version >= version {
+			if doc.version > version {
 				if !yield(StoredDocument{
 					UID:       doc.uid,
 					Value:     doc.doc,
@@ -163,7 +163,7 @@ func (s *inMemoryDocumentStore) SoftDelete(ctx context.Context, key string, docI
 }
 
 // FullSync replaces all documents with the given iterator
-func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, iter StoreDocumentListIterator) error {
+func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, docs iter.Seq2[DocumentData, error]) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -172,24 +172,19 @@ func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, iter S
 	}
 	// Add new documents
 	seen := make(map[string]bool, len(s.docs[key]))
-	for iter.Next() {
-		if err := iter.Error(); err != nil {
+	for doc, err := range docs {
+		if err != nil {
 			return err
 		}
-		doc := iter.Document()
-
-		s.docs[key][iter.UID()] = memDoc{
-			doc:     doc,
+		s.docs[key][doc.UID] = memDoc{
+			doc:     doc.Value,
 			version: s.newVersion(),
 			key:     key,
-			uid:     iter.UID(),
+			uid:     doc.UID,
 		}
-		seen[iter.UID()] = true
+		seen[doc.UID] = true
 	}
 
-	if err := iter.Error(); err != nil {
-		return err
-	}
 	// Mark deleted documents
 	for uid := range s.docs[key] {
 		if !seen[uid] {

@@ -58,26 +58,15 @@ type StoredDocument struct {
 	IsDeleted bool
 }
 
+type DocumentData struct {
+	UID   string
+	Value []byte
+}
+
 // The DocumentStore is the storage that will be used to store the documents
 type DocumentStore interface {
 	ListGreaterThanVersion(ctx context.Context, key string, version uint64) iter.Seq2[StoredDocument, error]
 	Save(ctx context.Context, key string, docID string, doc []byte, opts StoreOptions) (version uint64, err error)
 	SoftDelete(ctx context.Context, key string, docID string, opts StoreOptions) (version uint64, err error)
-	FullSync(ctx context.Context, key string, iter StoreDocumentListIterator) (err error)
-}
-
-type StoreDocumentListIterator interface {
-	// Next advances iterator and returns true if there is next value is available from the iterator.
-	// Error() should be checked after every call of Next(), even when Next() returns true.
-	Next() bool
-
-	// Error returns iterator error, if any. This should be checked after any Next() call.
-	// (Some iterator implementations return true from Next, but also set the error at the same time).
-	Error() error
-
-	// Data returns the current document data
-	Document() []byte
-
-	// UID returns the uid of the document
-	UID() string
+	FullSync(ctx context.Context, key string, it iter.Seq2[DocumentData, error]) (err error)
 }
