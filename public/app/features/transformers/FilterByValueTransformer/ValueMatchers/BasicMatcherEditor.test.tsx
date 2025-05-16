@@ -13,8 +13,8 @@ describe('BasicMatcherEditor', () => {
   it('shows variable suggestions', async () => {
     // Mock template service variables
     const mockVariables: TypedVariableModel[] = [
-      { name: 'var1', label: 'Variable 1', type: 'custom' } as TypedVariableModel,
-      { name: 'var2', label: 'Variable 2', type: 'custom' } as TypedVariableModel,
+      { name: 'var1', label: 'Var 1', type: 'custom' } as TypedVariableModel,
+      { name: 'var2', label: 'Var 2', type: 'custom' } as TypedVariableModel,
     ];
 
     const mockTemplateSrv = {
