@@ -64,7 +64,7 @@ func (r *EnhancedRegistry) ensureClient(ctx context.Context) error {
 			r.initErr = fmt.Errorf("failed to create plugin client: %w", err)
 			return
 		}
-		r.initErr = waitForCondition(r.pluginsApp.IsReady, 10*time.Second, 500*time.Millisecond)
+		r.initErr = waitForCondition(r.pluginsApp.IsReady, 20*time.Second, 500*time.Millisecond)
 	})
 	return r.initErr
 }

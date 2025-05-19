@@ -72,11 +72,7 @@ const rootReducers = {
   [provisioningAPI.reducerPath]: provisioningAPI.reducer,
   [folderAPI.reducerPath]: folderAPI.reducer,
   [advisorAPI.reducerPath]: advisorAPI.reducer,
-<<<<<<< HEAD
-  [reportingAPI.reducerPath]: reportingAPI.reducer,
   [pluginsAPI.reducerPath]: pluginsAPI.reducer,
-=======
->>>>>>> main
   // PLOP_INJECT_REDUCER
   // Used by the API client generator
 };

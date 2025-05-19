@@ -15,7 +15,7 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/resources"
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/secrets"
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/webhooks/pullrequest"
-	"github.com/grafana/grafana/pkg/services/apiserver"
+	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/services/rendering"
 	grafanasecrets "github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/setting"
@@ -39,7 +39,7 @@ func ProvideWebhooks(
 	ghFactory *github.Factory,
 	renderer rendering.Service,
 	blobstore resource.ResourceClient,
-	configProvider apiserver.RestConfigProvider,
+	configProvider restconfig.RestConfigProvider,
 ) WebhookExtraBuilder {
 	return WebhookExtraBuilder{
 		ExtraBuilder: func(b *provisioningapis.APIBuilder) provisioningapis.Extra {
