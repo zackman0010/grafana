@@ -162,9 +162,11 @@ func (m *minisearch) partialResync(ctx context.Context) error {
 		}
 
 		var data map[string]interface{}
-		err = json.Unmarshal(doc.Value, &data)
-		if err != nil {
-			return err
+		if len(doc.Value) > 0 {
+			err = json.Unmarshal(doc.Value, &data)
+			if err != nil {
+				return err
+			}
 		}
 
 		if doc.IsDeleted {
