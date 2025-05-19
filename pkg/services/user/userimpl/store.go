@@ -18,15 +18,19 @@ import (
 )
 
 type store interface {
+	// CRUD -> Unified
 	Insert(context.Context, *user.User) (int64, error)
-	GetByID(context.Context, int64) (*user.User, error)
+	Delete(context.Context, int64) error
+	Update(context.Context, *user.UpdateUserCommand) error
 	GetByUID(ctx context.Context, uid string) (*user.User, error)
+
 	ListByIdOrUID(ctx context.Context, uids []string, ids []int64) ([]*user.User, error)
+
+	// Partial
+	GetByID(context.Context, int64) (*user.User, error)
 	GetByLogin(context.Context, *user.GetUserByLoginQuery) (*user.User, error)
 	GetByEmail(context.Context, *user.GetUserByEmailQuery) (*user.User, error)
-	Delete(context.Context, int64) error
 	LoginConflict(ctx context.Context, login, email string) error
-	Update(context.Context, *user.UpdateUserCommand) error
 	UpdateLastSeenAt(context.Context, *user.UpdateUserLastSeenAtCommand) error
 	GetSignedInUser(context.Context, *user.GetSignedInUserQuery) (*user.SignedInUser, error)
 	GetProfile(context.Context, *user.GetUserProfileQuery) (*user.UserProfileDTO, error)
@@ -41,6 +45,7 @@ type sqlStore struct {
 	dialect migrator.Dialect
 	logger  log.Logger
 	cfg     *setting.Cfg
+	ms      *minisearch.Minisearch
 }
 
 func ProvideStore(db db.DB, cfg *setting.Cfg) sqlStore {

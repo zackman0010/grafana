@@ -16,10 +16,6 @@ const (
 	defaultResyncInterval = 24 * time.Hour
 )
 
-var (
-	updatedAtField = "__updated_at"
-)
-
 // minisearch is a tiny search engine that is used to efficiently index and search documents
 // It is designed to provide search-after-write consisency.
 type minisearch struct {
@@ -50,8 +46,9 @@ func New(opts Options) (*minisearch, error) {
 	if opts.Key == "" {
 		return nil, errors.New("Key is required")
 	}
-	if len(opts.Fields) == 0 {
-		opts.Fields = []FieldMapping{}
+	fields := []FieldMapping{}
+	for _, field := range opts.Fields {
+		fields = append(fields, field)
 	}
 	if opts.Lister == nil {
 		return nil, errors.New("Lister is required")
@@ -62,11 +59,6 @@ func New(opts Options) (*minisearch, error) {
 	if opts.FullResyncInterval == 0 {
 		opts.FullResyncInterval = defaultResyncInterval
 	}
-	for _, field := range opts.Fields {
-		if field.Name == updatedAtField {
-			return nil, errors.New(updatedAtField + " is a reserved field name")
-		}
-	}
 
 	return &minisearch{
 		key:          opts.Key,
@@ -74,7 +66,7 @@ func New(opts Options) (*minisearch, error) {
 		lister:       opts.Lister,
 		store:        opts.Store,
 		resyncPeriod: opts.FullResyncInterval,
-		fieldMapping: opts.Fields,
+		fieldMapping: fields,
 	}, nil
 }
 
@@ -124,12 +116,12 @@ func (m *minisearch) buildIndex(ctx context.Context) error {
 		if doc.IsDeleted {
 			continue
 		}
-		out := Document{}
-		err = json.Unmarshal(doc.Value, &out)
+		var data map[string]interface{}
+		err = json.Unmarshal(doc.Value, &data)
 		if err != nil {
 			return err
 		}
-		batch.Index(doc.UID, out)
+		batch.Index(doc.UID, data)
 		if doc.Version > m.lastVersion {
 			m.lastVersion = doc.Version
 		}
@@ -139,24 +131,19 @@ func (m *minisearch) buildIndex(ctx context.Context) error {
 
 func (m *minisearch) fullResync(ctx context.Context) error {
 	return m.store.FullSync(ctx, m.key, func(yield func(DocumentData, error) bool) {
-		lister, err := m.lister(ctx)
-		if err != nil {
-			yield(DocumentData{}, err)
-			return
-		}
-		for lister.Next() {
-			if lister.Error() != nil {
-				yield(DocumentData{}, lister.Error())
+		lister := m.lister(ctx)
+		for doc, err := range lister {
+			if err != nil {
+				yield(DocumentData{}, err)
 				return
 			}
-			doc := lister.Document()
-			value, err := json.Marshal(doc)
+			value, err := json.Marshal(doc.Data)
 			if err != nil {
 				yield(DocumentData{}, err)
 				return
 			}
 
-			if !yield(DocumentData{UID: lister.UID(), Value: value}, nil) {
+			if !yield(DocumentData{UID: doc.UID, Value: value}, nil) {
 				return
 			}
 		}
@@ -173,10 +160,17 @@ func (m *minisearch) partialResync(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+
+		var data map[string]interface{}
+		err = json.Unmarshal(doc.Value, &data)
+		if err != nil {
+			return err
+		}
+
 		if doc.IsDeleted {
 			batch.Delete(doc.UID)
 		} else {
-			batch.Index(doc.UID, doc.Value)
+			batch.Index(doc.UID, data)
 		}
 		if doc.Version > version {
 			version = doc.Version
@@ -190,11 +184,6 @@ func (m *minisearch) partialResync(ctx context.Context) error {
 
 func (m *minisearch) indexMapping() (mapping.IndexMapping, error) {
 	dm := bleve.NewDocumentStaticMapping()
-	// Add the updatedAt field
-	updatedAtFieldMapping := bleve.NewDateTimeFieldMapping()
-	updatedAtFieldMapping.Index = true
-	updatedAtFieldMapping.Store = true
-	dm.AddFieldMappingsAt(updatedAtField, updatedAtFieldMapping)
 
 	// Add the other fields
 	for _, field := range m.fieldMapping {
@@ -223,12 +212,12 @@ func (m *minisearch) indexMapping() (mapping.IndexMapping, error) {
 	return mapper, nil
 }
 
-func (m *minisearch) Save(ctx context.Context, uid string, doc Document) error {
-	jsonDoc, err := json.Marshal(doc)
+func (m *minisearch) Save(ctx context.Context, doc Document) error {
+	value, err := json.Marshal(doc.Data)
 	if err != nil {
 		return err
 	}
-	m.store.Save(ctx, m.key, uid, jsonDoc, StoreOptions{})
+	m.store.Save(ctx, m.key, doc.UID, value, StoreOptions{})
 	return nil
 }
 
@@ -250,7 +239,7 @@ func (m *minisearch) Search(ctx context.Context, req *bleve.SearchRequest) ([]Do
 
 	docs := make([]Document, 0, len(searchResults.Hits))
 	for _, hit := range searchResults.Hits {
-		docs = append(docs, hit.Fields)
+		docs = append(docs, Document{UID: hit.ID, Data: hit.Fields})
 	}
 	return docs, nil
 }

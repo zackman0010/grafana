@@ -2,6 +2,7 @@ package minisearch
 
 import (
 	"context"
+	"iter"
 	"testing"
 
 	"github.com/blevesearch/bleve/v2"
@@ -9,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNew(t *testing.T) {
+func TestNewMinisearch(t *testing.T) {
 	tests := []struct {
 		name    string
 		opts    Options
@@ -20,9 +21,9 @@ func TestNew(t *testing.T) {
 			opts: Options{
 				Key:    "test",
 				Fields: []FieldMapping{},
-				Lister: newTestDocumentLister([]testDocument{
-					{doc: Document{"name": "test1"}, uid: "test1"},
-					{doc: Document{"name": "test2"}, uid: "test2"},
+				Lister: testLister([]Document{
+					{UID: "test1", Data: map[string]interface{}{"name": "name1"}},
+					{UID: "test2", Data: map[string]interface{}{"name": "name2"}},
 				}),
 				Store: newInMemoryDocumentStore(),
 			},
@@ -32,7 +33,7 @@ func TestNew(t *testing.T) {
 			name: "missing key",
 			opts: Options{
 				Fields: []FieldMapping{},
-				Lister: newTestDocumentLister([]testDocument{}),
+				Lister: testLister([]Document{}),
 				Store:  newInMemoryDocumentStore(),
 			},
 			wantErr: true,
@@ -51,7 +52,7 @@ func TestNew(t *testing.T) {
 			opts: Options{
 				Key:    "test",
 				Fields: []FieldMapping{},
-				Lister: newTestDocumentLister([]testDocument{}),
+				Lister: testLister([]Document{}),
 			},
 			wantErr: true,
 		},
@@ -74,10 +75,10 @@ func TestNew(t *testing.T) {
 func TestSaveAndDelete(t *testing.T) {
 	store := newInMemoryDocumentStore()
 	ms, err := New(Options{
-		Key:    "key",
+		Key:    "ns/group/resource",
 		Fields: []FieldMapping{},
-		Lister: newTestDocumentLister([]testDocument{
-			{doc: Document{"name": "name1"}, uid: "id1"},
+		Lister: testLister([]Document{
+			{UID: "id1", Data: map[string]interface{}{"name": "name1"}},
 		}),
 		Store: store,
 	})
@@ -93,7 +94,7 @@ func TestSaveAndDelete(t *testing.T) {
 	require.EqualValues(t, 1, count)
 
 	// Test Save
-	err = ms.Save(ctx, "id2", Document{"name": "test"})
+	err = ms.Save(ctx, Document{UID: "id2", Data: map[string]interface{}{"name": "name2"}})
 	require.NoError(t, err)
 
 	// Should have 2 documents
@@ -114,15 +115,15 @@ func TestSaveAndDelete(t *testing.T) {
 func TestSearchQuery(t *testing.T) {
 	store := newInMemoryDocumentStore()
 	ms, err := New(Options{
-		Key: "key",
+		Key: "key", //
 		Fields: []FieldMapping{
 			{Name: "name", Type: FieldTypeText, Index: true, Store: true},
 			{Name: "description", Type: FieldTypeText, Index: true, Store: true},
 		},
-		Lister: newTestDocumentLister([]testDocument{
-			{doc: Document{"name": "test1", "description": "first test document", "other": "other"}, uid: "id1"},
-			{doc: Document{"name": "test2", "description": "second test document", "other": "other"}, uid: "id2"},
-			{doc: Document{"name": "other", "description": "unrelated document", "other": "other"}, uid: "id3"},
+		Lister: testLister([]Document{
+			{UID: "id1", Data: map[string]interface{}{"name": "test1", "description": "first test document", "other": "other"}},
+			{UID: "id2", Data: map[string]interface{}{"name": "test2", "description": "second test document", "other": "other"}},
+			{UID: "id3", Data: map[string]interface{}{"name": "other", "description": "unrelated document", "other": "other"}},
 		}),
 		Store: store,
 	})
@@ -138,7 +139,7 @@ func TestSearchQuery(t *testing.T) {
 
 	// Test searching for "test"
 	req := bleve.NewSearchRequest(bleve.NewQueryStringQuery("test"))
-	req.Fields = []string{"*"}
+	req.Fields = []string{"name", "description"}
 	results, err := ms.Search(ctx, req)
 	require.NoError(t, err)
 	require.Len(t, results, 2)
@@ -146,21 +147,21 @@ func TestSearchQuery(t *testing.T) {
 	// Verify the results contain the expected documents
 	found := make(map[string]bool)
 	for _, doc := range results {
-		name := doc["name"].(string)
+		name := doc.Data["name"].(string)
 		found[name] = true
 	}
 	assert.True(t, found["test1"])
 	assert.True(t, found["test2"])
 	assert.False(t, found["other"])
 
-	// Test searching for "unrelated"
+	// // Test searching for "unrelated"
 	req = bleve.NewSearchRequest(bleve.NewQueryStringQuery("unrelated"))
 	req.Fields = []string{"*"}
 	results, err = ms.Search(ctx, req)
 	require.NoError(t, err)
 	require.Len(t, results, 1)
-	assert.Equal(t, "other", results[0]["name"])
-	assert.Equal(t, "unrelated document", results[0]["description"])
+	assert.Equal(t, "other", results[0].Data["name"])
+	assert.Equal(t, "unrelated document", results[0].Data["description"])
 
 	// Test searching for non-existent term
 	results, err = ms.Search(ctx, bleve.NewSearchRequest(bleve.NewQueryStringQuery("nonexistent")))
@@ -168,52 +169,37 @@ func TestSearchQuery(t *testing.T) {
 	require.Empty(t, results)
 
 	// Test searching by field
-	results, err = ms.Search(ctx, bleve.NewSearchRequest(bleve.NewPhraseQuery([]string{"test1"}, "name")))
+	req = bleve.NewSearchRequest(bleve.NewPhraseQuery([]string{"test1"}, "name"))
+	req.Fields = []string{"*"}
+	results, err = ms.Search(ctx, req)
 	require.NoError(t, err)
 	require.Len(t, results, 1)
 
 	// Test searching by field
-	results, err = ms.Search(ctx, bleve.NewSearchRequest(bleve.NewPhraseQuery([]string{"Test1"}, "name")))
+	req = bleve.NewSearchRequest(bleve.NewPhraseQuery([]string{"Test1"}, "name"))
+	req.Fields = []string{"*"}
+	results, err = ms.Search(ctx, req)
 	require.NoError(t, err)
 	require.Len(t, results, 0)
 
+	// Let's try with a match
+	req = bleve.NewSearchRequest(bleve.NewMatchQuery("Test1"))
+	req.Fields = []string{"name"}
+	results, err = ms.Search(ctx, req)
+	require.NoError(t, err)
+	require.Len(t, results, 1)
+	assert.Equal(t, "test1", results[0].Data["name"])
+
 }
 
-type testDocument struct {
-	doc Document
-	uid string
-}
-
-var _ DocumentIterator = &testDocumentIterator{}
-
-type testDocumentIterator struct {
-	docs    []testDocument
-	current int
-	err     error
-}
-
-func newTestDocumentLister(docs []testDocument) DocumentLister {
-	return func(ctx context.Context) (DocumentIterator, error) {
-		return &testDocumentIterator{
-			docs:    docs,
-			current: -1,
-		}, nil
+func testLister(docs []Document) DocumentLister {
+	return func(ctx context.Context) iter.Seq2[Document, error] {
+		return func(yield func(Document, error) bool) {
+			for _, doc := range docs {
+				if !yield(doc, nil) {
+					return
+				}
+			}
+		}
 	}
-}
-
-func (i *testDocumentIterator) Next() bool {
-	i.current++
-	return i.current < len(i.docs)
-}
-
-func (i *testDocumentIterator) Error() error {
-	return i.err
-}
-
-func (i *testDocumentIterator) Document() Document {
-	return i.docs[i.current].doc
-}
-
-func (i *testDocumentIterator) UID() string {
-	return i.docs[i.current].uid
 }

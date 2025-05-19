@@ -13,8 +13,10 @@ type FieldMapping struct {
 	Store bool      // Whether to store the field
 }
 
-// Document is a single document to be indexed
-type Document map[string]interface{}
+type Document struct {
+	UID  string
+	Data map[string]interface{}
+}
 
 // FieldType is the type of the field
 type FieldType int
@@ -27,24 +29,7 @@ const (
 )
 
 // DocumentLister returns all the documents that need to be indexed
-type DocumentLister func(ctx context.Context) (DocumentIterator, error)
-
-// DocumentIterator is an iterator over a list of documents
-type DocumentIterator interface {
-	// Next advances iterator and returns true if there is next value is available from the iterator.
-	// Error() should be checked after every call of Next(), even when Next() returns true.
-	Next() bool
-
-	// Error returns iterator error, if any. This should be checked after any Next() call.
-	// (Some iterator implementations return true from Next, but also set the error at the same time).
-	Error() error
-
-	// Current returns the current document
-	Document() Document
-
-	// UID returns the uid of the document
-	UID() string
-}
+type DocumentLister func(ctx context.Context) iter.Seq2[Document, error]
 
 // Store
 type StoreOptions struct {
@@ -68,5 +53,14 @@ type DocumentStore interface {
 	ListGreaterThanVersion(ctx context.Context, key string, version uint64) iter.Seq2[StoredDocument, error]
 	Save(ctx context.Context, key string, docID string, doc []byte, opts StoreOptions) (version uint64, err error)
 	SoftDelete(ctx context.Context, key string, docID string, opts StoreOptions) (version uint64, err error)
-	FullSync(ctx context.Context, key string, it iter.Seq2[DocumentData, error]) (err error)
+
+	// TODO: Remoe this, could be implemented using Save and SoftDelete instead
+	FullSync(ctx context.Context, key string, it iter.Seq2[DocumentData, error]) (err error) //
+
+	// TODO
+	// 1. Fullsync should be removed from the store.
+	// 2. Implement a Delete method which is not a full delete
+	// 3. Concurrency issues; On concurrent save for the same key, the wrong one could be stored in the index and lead to drift with reality.
+	//    We will ignore this for now and rely on the periodic full sync to keep the index in sync with the database.
+
 }
