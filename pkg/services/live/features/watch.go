@@ -11,8 +11,6 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/dynamic"
 
-	provisioning "github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1"
-
 	"github.com/grafana/authlib/types"
 	"github.com/grafana/grafana-app-sdk/logging"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -20,20 +18,21 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/live"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
-	"github.com/grafana/grafana/pkg/services/apiserver"
+	provisioning "github.com/grafana/grafana/pkg/apis/provisioning/v0alpha1"
+	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/services/live/model"
 )
 
 // WatchRunner will start a watch task and broadcast results
 type WatchRunner struct {
 	publisher      model.ChannelPublisher
-	configProvider apiserver.RestConfigProvider
+	configProvider restconfig.RestConfigProvider
 
 	watchingMu sync.Mutex
 	watching   map[string]*watcher
 }
 
-func NewWatchRunner(publisher model.ChannelPublisher, configProvider apiserver.RestConfigProvider) *WatchRunner {
+func NewWatchRunner(publisher model.ChannelPublisher, configProvider restconfig.RestConfigProvider) *WatchRunner {
 	return &WatchRunner{
 		publisher:      publisher,
 		configProvider: configProvider,

@@ -38,6 +38,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/angularinspector"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/angularpatternsstore"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/clientmiddleware"
+	"github.com/grafana/grafana/pkg/services/pluginsintegration/enhancedregistry"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/keyretriever"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/keyretriever/dynamic"
 	"github.com/grafana/grafana/pkg/services/pluginsintegration/keystore"
@@ -103,8 +104,8 @@ var WireSet = wire.NewSet(
 	wire.Bind(new(pluginerrs.ErrorTracker), new(*pluginerrs.ErrorRegistry)),
 	pluginerrs.ProvideStore,
 	wire.Bind(new(plugins.ErrorResolver), new(*pluginerrs.Store)),
-	registry.ProvideService,
-	wire.Bind(new(registry.Service), new(*registry.InMemory)),
+	enhancedregistry.ProvideService,
+	wire.Bind(new(registry.Service), new(*enhancedregistry.EnhancedRegistry)),
 	repo.ProvideService,
 	wire.Bind(new(repo.Service), new(*repo.Manager)),
 	licensing.ProvideLicensing,

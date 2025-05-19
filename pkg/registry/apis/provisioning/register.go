@@ -51,8 +51,8 @@ import (
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/resources/signature"
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/safepath"
 	"github.com/grafana/grafana/pkg/registry/apis/provisioning/secrets"
-	"github.com/grafana/grafana/pkg/services/apiserver"
 	"github.com/grafana/grafana/pkg/services/apiserver/builder"
+	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
 	grafanasecrets "github.com/grafana/grafana/pkg/services/secrets"
 	"github.com/grafana/grafana/pkg/setting"
@@ -108,7 +108,7 @@ func NewAPIBuilder(
 	features featuremgmt.FeatureToggles,
 	unified resource.ResourceClient,
 	clonedir string, // where repo clones are managed
-	configProvider apiserver.RestConfigProvider,
+	configProvider restconfig.RestConfigProvider,
 	ghFactory *github.Factory,
 	legacyMigrator legacy.LegacyMigrator,
 	storageStatus dualwrite.Service,
@@ -153,7 +153,7 @@ func RegisterAPIService(
 	apiregistration builder.APIRegistrar,
 	reg prometheus.Registerer,
 	client resource.ResourceClient, // implements resource.RepositoryClient
-	configProvider apiserver.RestConfigProvider,
+	configProvider restconfig.RestConfigProvider,
 	ghFactory *github.Factory,
 	access authlib.AccessClient,
 	legacyMigrator legacy.LegacyMigrator,

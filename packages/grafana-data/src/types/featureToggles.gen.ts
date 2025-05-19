@@ -1019,4 +1019,8 @@ export interface FeatureToggles {
   * Use proxy-based read-only objects for plugin extensions instead of deep cloning
   */
   extensionsReadOnlyProxy?: boolean;
+  /**
+  * Enables the plugins app
+  */
+  pluginsApp?: boolean;
 }
