@@ -10,6 +10,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/services/sqlstore/session"
 	"github.com/grafana/grafana/pkg/util/xorm"
+	"github.com/jmoiron/sqlx"
 )
 
 var (
@@ -106,6 +107,10 @@ type Dialect interface {
 	// Implementations are not expected to quote the arguments
 	// therefore any callers should take care to quote arguments as necessary
 	Concat(...string) string
+
+	// New!
+	GetMigrationLog(sqlx *sqlx.DB, tableName string) (map[string]MigrationLog, error)
+	IsTableExist(sqlx *sqlx.DB, tableName string) (bool, error)
 }
 
 type LockCfg struct {

@@ -9,6 +9,7 @@ import (
 
 	"github.com/VividCortex/mysqlerr"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/grafana/grafana/pkg/util/xorm"
 )
@@ -168,6 +169,37 @@ func (db *MySQLDialect) CleanDB(engine *xorm.Engine) error {
 	return nil
 }
 
+func (db *MySQLDialect) CleanDBSQLX(sqlx *sqlx.DB) error {
+	rows, err := sqlx.Query("SELECT * FROM information_schema.tables")
+	if err != nil {
+		return fmt.Errorf("%v: %w", "failed to get tables", err)
+	}
+	defer func() { _ = rows.Close() }()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return fmt.Errorf("failed to scan table name: %w", err)
+		}
+
+		if _, err := sqlx.Exec("set foreign_key_checks = 0"); err != nil {
+			return fmt.Errorf("%v: %w", "failed to disable foreign key checks", err)
+		}
+		if _, err := sqlx.Exec("drop table ?", tableName); err != nil {
+			return fmt.Errorf("failed to delete table %q: %w", tableName, err)
+		}
+		if _, err := sqlx.Exec("set foreign_key_checks = 1"); err != nil {
+			return fmt.Errorf("%v: %w", "failed to disable foreign key checks", err)
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("failed to iterate over tables: %w", err)
+	}
+
+	return nil
+}
+
 // TruncateDBTables truncates all the tables.
 // A special case is the dashboard_acl table where we keep the default permissions.
 func (db *MySQLDialect) TruncateDBTables(engine *xorm.Engine) error {
@@ -195,6 +227,44 @@ func (db *MySQLDialect) TruncateDBTables(engine *xorm.Engine) error {
 				return fmt.Errorf("failed to truncate table %q: %w", table.Name, err)
 			}
 		}
+	}
+
+	return nil
+}
+
+func (db *MySQLDialect) TruncateDBTablesSQLX(sqlx *sqlx.DB) error {
+	rows, err := sqlx.Query("SELECT * FROM information_schema.tables")
+	if err != nil {
+		return fmt.Errorf("%v: %w", "failed to get tables", err)
+	}
+	defer func() { _ = rows.Close() }()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return fmt.Errorf("failed to scan table name: %w", err)
+		}
+
+		switch tableName {
+		case "migration_log":
+			continue
+		case "dashboard_acl":
+			// keep default dashboard permissions
+			if _, err := sqlx.Exec("DELETE FROM ? WHERE dashboard_id != -1 AND org_id != -1;", tableName); err != nil {
+				return fmt.Errorf("failed to truncate table %q: %w", tableName, err)
+			}
+			if _, err := sqlx.Exec("ALTER TABLE ? AUTO_INCREMENT = 3", tableName); err != nil {
+				return fmt.Errorf("failed to reset table %q: %w", tableName, err)
+			}
+		default:
+			if _, err := sqlx.Exec("TRUNCATE TABLE ?", tableName); err != nil {
+				return fmt.Errorf("failed to truncate table %q: %w", tableName, err)
+			}
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("failed to iterate over tables: %w", err)
 	}
 
 	return nil
@@ -316,4 +386,41 @@ func (db *MySQLDialect) GetDBName(dsn string) (string, error) {
 	}
 
 	return cfg.DBName, nil
+}
+
+func (db *MySQLDialect) GetMigrationLog(sqlx *sqlx.DB, tableName string) (map[string]MigrationLog, error) {
+	rows, err := sqlx.Query("SELECT id, migration_id, sql, success, error, timestamp FROM ?", tableName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get migration log: %w", err)
+	}
+	defer func() { _ = rows.Close() }()
+
+	logMap := make(map[string]MigrationLog)
+
+	for rows.Next() {
+		var logItem MigrationLog
+		if err := rows.Scan(&logItem.Id, &logItem.MigrationID, &logItem.SQL, &logItem.Success, &logItem.Error, &logItem.Timestamp); err != nil {
+			return nil, fmt.Errorf("failed to scan migration log: %w", err)
+		}
+
+		if logItem.Success {
+			logMap[logItem.MigrationID] = logItem
+		}
+	}
+
+	return logMap, nil
+}
+
+func (db *MySQLDialect) IsTableExist(sqlx *sqlx.DB, tableName string) (bool, error) {
+	// TODO: This actually does not work because we need to check the error from the table not existing
+	row := sqlx.QueryRow("SELECT 1 FROM ? WHERE 1=1 LIMIT 1", tableName)
+	if row.Err() != nil {
+		if errors.Is(row.Err(), sql.ErrNoRows) {
+			return false, nil
+		}
+
+		return false, fmt.Errorf("failed to check if table exists: %w", row.Err())
+	}
+
+	return true, nil
 }
