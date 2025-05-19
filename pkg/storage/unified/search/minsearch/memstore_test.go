@@ -143,6 +143,6 @@ func TestInMemoryDocumentStore(t *testing.T) {
 			}
 		}
 		assert.Equal(t, 3, count)
-		assert.Equal(t, 1, deleted) // Should have 1 deleted document (uid1)
+		assert.Equal(t, 1, deleted)
 	})
 }

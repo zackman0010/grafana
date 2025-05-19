@@ -11,61 +11,17 @@ import (
 // inMemoryDocumentStore is an in-memory implementation of DocumentStore
 type inMemoryDocumentStore struct {
 	mu   sync.RWMutex
-	docs map[string]map[string]memDoc
+	docs map[string]map[string]StoredDocument
 
 	nextLock sync.Mutex
 	next     uint64
 }
 
-type memDoc struct {
-	doc       []byte
-	isDeleted bool
-	version   uint64
-	key       string
-	uid       string
-}
-
 // newInMemoryDocumentStore creates a new in-memory document store
 func newInMemoryDocumentStore() *inMemoryDocumentStore {
 	return &inMemoryDocumentStore{
-		docs: make(map[string]map[string]memDoc),
+		docs: make(map[string]map[string]StoredDocument),
 	}
-}
-
-// inMemoryDocumentIterator implements StoredDocumentIterator
-type inMemoryDocumentIterator struct {
-	docs    []memDoc
-	current int
-	err     error
-}
-
-func (i *inMemoryDocumentIterator) Next() bool {
-	i.current++
-	return i.current < len(i.docs)
-}
-
-func (i *inMemoryDocumentIterator) Error() error {
-	return i.err
-}
-
-func (i *inMemoryDocumentIterator) Document() []byte {
-	return i.docs[i.current].doc
-}
-
-func (i *inMemoryDocumentIterator) Version() uint64 {
-	return i.docs[i.current].version
-}
-
-func (i *inMemoryDocumentIterator) IsDeleted() bool {
-	return i.docs[i.current].isDeleted
-}
-
-func (i *inMemoryDocumentIterator) Key() string {
-	return i.docs[i.current].key
-}
-
-func (i *inMemoryDocumentIterator) UID() string {
-	return i.docs[i.current].uid
 }
 
 func (s *inMemoryDocumentStore) ListGreaterThanVersion(ctx context.Context, key string, version uint64) iter.Seq2[StoredDocument, error] {
@@ -77,13 +33,8 @@ func (s *inMemoryDocumentStore) ListGreaterThanVersion(ctx context.Context, key 
 			return
 		}
 		for _, doc := range s.docs[key] {
-			if doc.version > version {
-				if !yield(StoredDocument{
-					UID:       doc.uid,
-					Value:     doc.doc,
-					Version:   doc.version,
-					IsDeleted: doc.isDeleted,
-				}, nil) {
+			if doc.Version > version {
+				if !yield(doc, nil) {
 					return
 				}
 			}
@@ -109,7 +60,7 @@ func (s *inMemoryDocumentStore) Save(ctx context.Context, key string, docID stri
 	defer s.mu.Unlock()
 
 	if _, ok := s.docs[key]; !ok {
-		s.docs[key] = make(map[string]memDoc)
+		s.docs[key] = make(map[string]StoredDocument)
 	}
 
 	if opts.PrevVersion > 0 {
@@ -117,17 +68,17 @@ func (s *inMemoryDocumentStore) Save(ctx context.Context, key string, docID stri
 		if !ok {
 			return 0, errors.New("document not found")
 		}
-		if opts.PrevVersion != prevDoc.version {
+		if opts.PrevVersion != prevDoc.Version {
 			return 0, errors.New("version mismatch")
 		}
 	}
 
 	version := s.newVersion()
-	s.docs[key][docID] = memDoc{
-		doc:     doc,
-		version: version,
-		key:     key,
-		uid:     docID,
+	s.docs[key][docID] = StoredDocument{
+		Value:     doc,
+		Version:   version,
+		UID:       docID,
+		IsDeleted: false,
 	}
 	return version, nil
 }
@@ -145,18 +96,17 @@ func (s *inMemoryDocumentStore) SoftDelete(ctx context.Context, key string, docI
 		if !ok {
 			return 0, errors.New("document not found")
 		}
-		if opts.PrevVersion != prevDoc.version {
+		if opts.PrevVersion != prevDoc.Version {
 			return 0, errors.New("version mismatch")
 		}
 	}
 
 	version := s.newVersion()
-	s.docs[key][docID] = memDoc{
-		doc:       []byte{},
-		isDeleted: true,
-		version:   version,
-		key:       key,
-		uid:       docID,
+	s.docs[key][docID] = StoredDocument{
+		Value:     []byte{},
+		IsDeleted: true,
+		Version:   version,
+		UID:       docID,
 	}
 
 	return version, nil
@@ -168,7 +118,7 @@ func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, docs i
 	defer s.mu.Unlock()
 
 	if _, ok := s.docs[key]; !ok {
-		s.docs[key] = make(map[string]memDoc)
+		s.docs[key] = make(map[string]StoredDocument)
 	}
 	// Add new documents
 	seen := make(map[string]bool, len(s.docs[key]))
@@ -176,11 +126,10 @@ func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, docs i
 		if err != nil {
 			return err
 		}
-		s.docs[key][doc.UID] = memDoc{
-			doc:     doc.Value,
-			version: s.newVersion(),
-			key:     key,
-			uid:     doc.UID,
+		s.docs[key][doc.UID] = StoredDocument{
+			Value:   doc.Value,
+			Version: s.newVersion(),
+			UID:     doc.UID,
 		}
 		seen[doc.UID] = true
 	}
@@ -188,11 +137,11 @@ func (s *inMemoryDocumentStore) FullSync(ctx context.Context, key string, docs i
 	// Mark deleted documents
 	for uid := range s.docs[key] {
 		if !seen[uid] {
-			s.docs[key][uid] = memDoc{
-				doc:       []byte{},
-				isDeleted: true,
-				key:       key,
-				uid:       uid,
+			s.docs[key][uid] = StoredDocument{
+				Value:     []byte{},
+				Version:   s.docs[key][uid].Version,
+				IsDeleted: true,
+				UID:       uid,
 			}
 		}
 	}
