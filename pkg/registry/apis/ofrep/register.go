@@ -82,16 +82,18 @@ func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
 	return &builder.APIRoutes{
 		Namespace: []builder.APIRouteHandler{
 			{
-				Path: "ofrep/v1/evaluate/flag",
+				// http://localhost:3000/apis/ofrep/v1/namespaces/default/ofrep/v1/evaluate/flags
+				Path: "ofrep/v1/evaluate/flags",
 				Spec: &spec3.PathProps{
-					Get: &spec3.Operation{},
+					Post: &spec3.Operation{},
 				},
 				Handler: bulkEvalHandler,
 			},
 			{
-				Path: "ofrep/v1/evaluate/{flagKey}",
+				// http://localhost:3000/apis/ofrep/v1/namespaces/default/ofrep/v1/evaluate/flags/{flagKey}
+				Path: "ofrep/v1/evaluate/flags/{flagKey}",
 				Spec: &spec3.PathProps{
-					Get: &spec3.Operation{},
+					Post: &spec3.Operation{},
 				},
 				Handler: evalFlagHandler,
 			},
@@ -100,11 +102,28 @@ func (b *APIBuilder) GetAPIRoutes(gv schema.GroupVersion) *builder.APIRoutes {
 }
 
 func (b *APIBuilder) handleFlagsList(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, err := w.Write([]byte("flags list"))
+	// TODO: replace with identity check
+	isAuthedUser := false
+
+	result, err := b.openFeature.EvalAllFlagsWithStaticProvider(r.Context())
 	if err != nil {
-		panic(err)
+		http.Error(w, "failed to evaluate flags", http.StatusInternalServerError)
+		return
 	}
+
+	if !isAuthedUser {
+		var publicOnly []featuremgmt.OFREPFlag
+
+		for _, flag := range result.Flags {
+			if isPublicFlag(flag.Key) {
+				publicOnly = append(publicOnly, flag)
+			}
+		}
+
+		result.Flags = publicOnly
+	}
+
+	writeResponse(result, b.logger, w)
 }
 
 func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) {
@@ -115,6 +134,7 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// TODO: replace with identity check
 	isAuthedUser := false
 	publicFlag := isPublicFlag(flagKey)
 
@@ -129,12 +149,7 @@ func (b *APIBuilder) handleEvaluateFlag(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	if err := json.NewEncoder(w).Encode(result); err != nil {
-		b.logger.Error("Failed to encode flag evaluation result", "error", err)
-	}
+	writeResponse(result, b.logger, w)
 }
 
 func (b *APIBuilder) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
@@ -160,17 +175,23 @@ func (b *APIBuilder) handleProxyRequest(w http.ResponseWriter, r *http.Request) 
 	proxy.ServeHTTP(w, r)
 }
 
-var publicFlags = []string{
-	"correlations",
-	"publicDashboardsScene",
-	"lokiExperimentalStreaming",
+func writeResponse(result any, logger log.Logger, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		logger.Error("Failed to encode flag evaluation result", "error", err)
+	}
+}
+
+// TODO: public can be a property in pkg/services/featuremgmt/registry.go
+var publicFlags = map[string]bool{
+	"correlations":              true,
+	"publicDashboardsScene":     true,
+	"lokiExperimentalStreaming": true,
 }
 
 func isPublicFlag(flagKey string) bool {
-	for _, flag := range publicFlags {
-		if flag == flagKey {
-			return true
-		}
-	}
-	return false
+	_, exists := publicFlags[flagKey]
+	return exists
 }
