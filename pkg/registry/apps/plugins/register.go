@@ -13,8 +13,6 @@ import (
 
 type AppProvider struct {
 	app.Provider
-
-	ready bool
 }
 
 func RegisterApp(_ *setting.Cfg) *AppProvider {
@@ -26,14 +24,4 @@ func RegisterApp(_ *setting.Cfg) *AppProvider {
 	}
 	provider.Provider = simple.NewAppProvider(apis.LocalManifest(), appCfg, pluginsapp.New)
 	return provider
-}
-
-func (a *AppProvider) NewApp(cfg app.Config) (app.App, error) {
-	newApp, err := a.Provider.NewApp(cfg)
-	a.ready = true
-	return newApp, err
-}
-
-func (a *AppProvider) IsReady() bool {
-	return a.ready
 }

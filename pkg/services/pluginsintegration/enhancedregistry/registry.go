@@ -4,21 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
-	"sync"
-	"time"
-
 	"github.com/grafana/authlib/types"
 	"github.com/grafana/grafana-app-sdk/k8s"
 	sdkresource "github.com/grafana/grafana-app-sdk/resource"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apiserver/pkg/endpoints/request"
+	"strconv"
+	"sync"
 
 	pluginsv0alpha1 "github.com/grafana/grafana/apps/plugins/pkg/apis/plugins/v0alpha1"
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/log"
-	pluginsapp "github.com/grafana/grafana/pkg/registry/apps/plugins"
 	"github.com/grafana/grafana/pkg/services/apiserver/restconfig"
 	"github.com/grafana/grafana/pkg/setting"
 )
@@ -26,7 +23,6 @@ import (
 // EnhancedRegistry is a registry that uses Kubernetes as the source of truth for plugins.
 type EnhancedRegistry struct {
 	pluginClient sdkresource.Client
-	pluginsApp   *pluginsapp.AppProvider
 	restConfig   restconfig.RestConfigProvider
 	cfg          *setting.Cfg
 
@@ -36,16 +32,15 @@ type EnhancedRegistry struct {
 }
 
 // ProvideService returns a new enhanced registry service.
-func ProvideService(cfg *setting.Cfg, restCfgProvider restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) (*EnhancedRegistry, error) {
-	return NewEnhancedRegistry(cfg, restCfgProvider, pluginsApp), nil
+func ProvideService(cfg *setting.Cfg, restCfgProvider restconfig.RestConfigProvider) (*EnhancedRegistry, error) {
+	return NewEnhancedRegistry(cfg, restCfgProvider), nil
 }
 
 // NewEnhancedRegistry creates a new enhanced registry.
-func NewEnhancedRegistry(cfg *setting.Cfg, restConfig restconfig.RestConfigProvider, pluginsApp *pluginsapp.AppProvider) *EnhancedRegistry {
+func NewEnhancedRegistry(cfg *setting.Cfg, restConfig restconfig.RestConfigProvider) *EnhancedRegistry {
 	return &EnhancedRegistry{
 		cfg:        cfg,
 		restConfig: restConfig,
-		pluginsApp: pluginsApp,
 		log:        log.New("plugins.registry.enhanced"),
 	}
 }
@@ -64,7 +59,7 @@ func (r *EnhancedRegistry) ensureClient(ctx context.Context) error {
 			r.initErr = fmt.Errorf("failed to create plugin client: %w", err)
 			return
 		}
-		r.initErr = waitForCondition(r.pluginsApp.IsReady, 20*time.Second, 500*time.Millisecond)
+		r.initErr = nil
 	})
 	return r.initErr
 }
@@ -253,21 +248,4 @@ func (r *EnhancedRegistry) getNamespace(ctx context.Context) (string, error) {
 		return "", fmt.Errorf("invalid stack id: %s", r.cfg.StackID)
 	}
 	return types.CloudNamespaceFormatter(stackID), nil
-}
-
-func waitForCondition(conditionFunc func() bool, timeout, interval time.Duration) error {
-	timeoutChan := time.After(timeout)
-	ticker := time.NewTicker(interval)
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-timeoutChan:
-			return errors.New("timeout waiting for condition")
-		case <-ticker.C:
-			if conditionFunc() {
-				return nil // success
-			}
-		}
-	}
 }

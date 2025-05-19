@@ -101,6 +101,8 @@ type service struct {
 	unified            resource.ResourceClient
 	restConfigProvider restconfig.RestConfigProvider
 
+	eventualRestConfigProvider *restconfig.EventualRestConfigProvider
+
 	buildHandlerChainFuncFromBuilders builder.BuildHandlerChainFuncFromBuilders
 	aggregatorRunner                  aggregatorrunner.AggregatorRunner
 }
@@ -119,7 +121,6 @@ func ProvideService(
 	pluginStore pluginstore.Store,
 	storageStatus dualwrite.Service,
 	unified resource.ResourceClient,
-	restConfigProvider restconfig.RestConfigProvider,
 	buildHandlerChainFuncFromBuilders builder.BuildHandlerChainFuncFromBuilders,
 	reg prometheus.Registerer,
 	aggregatorRunner aggregatorrunner.AggregatorRunner,
@@ -148,9 +149,9 @@ func ProvideService(
 		serverLockService:                 serverLockService,
 		storageStatus:                     storageStatus,
 		unified:                           unified,
-		restConfigProvider:                restConfigProvider,
 		buildHandlerChainFuncFromBuilders: buildHandlerChainFuncFromBuilders,
 		aggregatorRunner:                  aggregatorRunner,
+		eventualRestConfigProvider:        eventualRestConfigProvider,
 	}
 	// This will be used when running as a dskit service
 	service := services.NewBasicService(s.start, s.running, nil).WithName(modules.GrafanaAPIServer)
@@ -196,9 +197,6 @@ func ProvideService(
 	s.rr.Group("/healthz", proxyHandler)
 	s.rr.Group("/openapi", proxyHandler)
 	s.rr.Group("/version", proxyHandler)
-
-	eventualRestConfigProvider.SetRestConfigProvider(s)
-	eventualRestConfigProvider.MarkAsReady()
 
 	return s, nil
 }
@@ -391,6 +389,9 @@ func (s *service) start(ctx context.Context) error {
 	s.handler = runningServer.Handler
 	// used by local clients to make requests to the server
 	s.restConfig = runningServer.LoopbackClientConfig
+
+	s.eventualRestConfigProvider.SetRestConfigProvider(s)
+	s.eventualRestConfigProvider.MarkAsReady()
 
 	return nil
 }
