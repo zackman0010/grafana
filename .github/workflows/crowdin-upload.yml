@@ -15,6 +15,7 @@ on:
 
 jobs:
   upload-sources-to-crowdin:
+    name: Upload sources to Crowdin
     runs-on: ubuntu-latest
 
     permissions:
