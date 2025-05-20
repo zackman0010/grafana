@@ -94,12 +94,11 @@ type service struct {
 	storageStatus     dualwrite.Service
 	kvStore           kvstore.KVStore
 
-	pluginClient       plugins.Client
-	datasources        datasource.ScopedPluginDatasourceProvider
-	contextProvider    datasource.PluginContextWrapper
-	pluginStore        pluginstore.Store
-	unified            resource.ResourceClient
-	restConfigProvider restconfig.RestConfigProvider
+	pluginClient    plugins.Client
+	datasources     datasource.ScopedPluginDatasourceProvider
+	contextProvider datasource.PluginContextWrapper
+	pluginStore     pluginstore.Store
+	unified         resource.ResourceClient
 
 	eventualRestConfigProvider *restconfig.EventualRestConfigProvider
 
@@ -291,7 +290,7 @@ func (s *service) start(ctx context.Context) error {
 			return err
 		}
 	} else {
-		getter := apistore.NewRESTOptionsGetterForClient(s.unified, o.RecommendedOptions.Etcd.StorageConfig, s.restConfigProvider)
+		getter := apistore.NewRESTOptionsGetterForClient(s.unified, o.RecommendedOptions.Etcd.StorageConfig, s.eventualRestConfigProvider)
 		optsregister = getter.RegisterOptions
 
 		// Use unified storage client
