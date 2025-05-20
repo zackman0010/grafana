@@ -137,8 +137,15 @@ func schema_pkg_apis_plugins_v0alpha1_PluginSpec(ref common.ReferenceCallback) c
 							Format:  "",
 						},
 					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
 				},
-				Required: []string{"id", "version"},
+				Required: []string{"id", "version", "type"},
 			},
 		},
 	}

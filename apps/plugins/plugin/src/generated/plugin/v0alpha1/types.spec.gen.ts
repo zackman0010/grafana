@@ -4,10 +4,12 @@
 export interface Spec {
 	id: string;
 	version: string;
+	type: string;
 }
 
 export const defaultSpec = (): Spec => ({
 	id: "",
 	version: "",
+	type: "",
 });
 

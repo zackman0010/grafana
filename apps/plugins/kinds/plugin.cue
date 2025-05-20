@@ -21,6 +21,7 @@ plugin: {
         spec: {
           id:       string
           version:  string
+          type:     string
         }
       }
     }
