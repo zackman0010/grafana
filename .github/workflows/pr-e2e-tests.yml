@@ -19,8 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: 'grafana/grafana-build'
           ref: grambbledook/update-build-tools-to-copy-citools
+          repository: 'grafana/grafana-build'
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
