@@ -140,6 +140,7 @@ func (s *Service) Check(ctx context.Context, req *authzv1.CheckRequest) (*authzv
 	if _, ok := s.permDenialCache.Get(ctx, permDenialKey); ok {
 		s.metrics.permissionCacheUsage.WithLabelValues("true", checkReq.Action).Inc()
 		s.metrics.requestCount.WithLabelValues("false", "true", req.GetVerb(), req.GetGroup(), req.GetResource()).Inc()
+		span.SetAttributes(attribute.Bool("cached", true))
 		return &authzv1.CheckResponse{Allowed: false}, nil
 	}
 
@@ -374,11 +375,13 @@ func (s *Service) getIdentityPermissions(ctx context.Context, ns types.Namespace
 func (s *Service) getCachedIdentityPermissions(ctx context.Context, ns types.NamespaceInfo, idType types.IdentityType, userID, action string) (map[string]bool, error) {
 	ctx, span := s.tracer.Start(ctx, "authz_direct_db.service.getCachedIdentityPermissions")
 	defer span.End()
+	span.SetAttributes(attribute.Bool("cached", false))
 
 	switch idType {
 	case types.TypeAnonymous:
 		anonPermKey := anonymousPermCacheKey(ns.Value, action)
 		if cached, ok := s.permCache.Get(ctx, anonPermKey); ok {
+			span.SetAttributes(attribute.Bool("cached", true))
 			return cached, nil
 		}
 		return nil, cache.ErrNotFound
@@ -391,6 +394,7 @@ func (s *Service) getCachedIdentityPermissions(ctx context.Context, ns types.Nam
 		}
 		userPermKey := userPermCacheKey(ns.Value, userIdentifiers.UID, action)
 		if cached, ok := s.permCache.Get(ctx, userPermKey); ok {
+			span.SetAttributes(attribute.Bool("cached", true))
 			return cached, nil
 		}
 		return nil, cache.ErrNotFound
@@ -482,13 +486,19 @@ func (s *Service) getRendererPermissions(ctx context.Context, action string) (ma
 }
 
 func (s *Service) GetUserIdentifiers(ctx context.Context, ns types.NamespaceInfo, userUID string) (*store.UserIdentifiers, error) {
+	ctx, span := s.tracer.Start(ctx, "authz_direct_db.service.GetUserIdentifiers")
+	defer span.End()
+	span.SetAttributes(attribute.Bool("cached", false))
+
 	uidCacheKey := userIdentifierCacheKey(ns.Value, userUID)
 	if cached, ok := s.idCache.Get(ctx, uidCacheKey); ok {
+		span.SetAttributes(attribute.Bool("cached", true))
 		return &cached, nil
 	}
 
 	idCacheKey := userIdentifierCacheKeyById(ns.Value, userUID)
 	if cached, ok := s.idCache.Get(ctx, idCacheKey); ok {
+		span.SetAttributes(attribute.Bool("cached", true))
 		return &cached, nil
 	}
 
@@ -513,10 +523,12 @@ func (s *Service) GetUserIdentifiers(ctx context.Context, ns types.NamespaceInfo
 func (s *Service) getUserTeams(ctx context.Context, ns types.NamespaceInfo, userIdentifiers *store.UserIdentifiers) ([]int64, error) {
 	ctx, span := s.tracer.Start(ctx, "authz_direct_db.service.getUserTeams")
 	defer span.End()
+	span.SetAttributes(attribute.Bool("cached", false))
 
 	teamIDs := make([]int64, 0, 50)
 	teamsCacheKey := userTeamCacheKey(ns.Value, userIdentifiers.UID)
 	if cached, ok := s.teamCache.Get(ctx, teamsCacheKey); ok {
+		span.SetAttributes(attribute.Bool("cached", true))
 		return cached, nil
 	}
 
@@ -547,9 +559,11 @@ func (s *Service) getUserTeams(ctx context.Context, ns types.NamespaceInfo, user
 func (s *Service) getUserBasicRole(ctx context.Context, ns types.NamespaceInfo, userIdentifiers *store.UserIdentifiers) (store.BasicRole, error) {
 	ctx, span := s.tracer.Start(ctx, "authz_direct_db.service.getUserBasicRole")
 	defer span.End()
+	span.SetAttributes(attribute.Bool("cached", false))
 
 	basicRoleKey := userBasicRoleCacheKey(ns.Value, userIdentifiers.UID)
 	if cached, ok := s.basicRoleCache.Get(ctx, basicRoleKey); ok {
+		span.SetAttributes(attribute.Bool("cached", true))
 		return cached, nil
 	}
 
@@ -645,9 +659,11 @@ func (s *Service) checkInheritedPermissions(ctx context.Context, scopeMap map[st
 func (s *Service) buildFolderTree(ctx context.Context, ns types.NamespaceInfo) (folderTree, error) {
 	ctx, span := s.tracer.Start(ctx, "authz_direct_db.service.buildFolderTree")
 	defer span.End()
+	span.SetAttributes(attribute.Bool("cached", false))
 
 	key := folderCacheKey(ns.Value)
 	if cached, ok := s.folderCache.Get(ctx, key); ok {
+		span.SetAttributes(attribute.Bool("cached", true))
 		return cached, nil
 	}
 
