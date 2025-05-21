@@ -115,7 +115,7 @@ func TestIntegrationDistributor(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, res.StatusCode, http.StatusOK)
-		res.Body.Close()
+		_ = res.Body.Close()
 	})
 
 	t.Run("should expose memberlist endpoint", func(t *testing.T) {
@@ -124,7 +124,7 @@ func TestIntegrationDistributor(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, res.StatusCode, http.StatusOK)
-		res.Body.Close()
+		_ = res.Body.Close()
 	})
 
 	t.Run("GetStats", func(t *testing.T) {
@@ -267,7 +267,7 @@ func TestIntegrationDistributor(t *testing.T) {
 		}
 	})
 
-	stopServers := func(t *testing.T, done chan error) {
+	stopServers := func(done chan error) {
 		var wg sync.WaitGroup
 		for _, testServer := range testServers {
 			wg.Add(1)
@@ -291,28 +291,27 @@ func TestIntegrationDistributor(t *testing.T) {
 			stopErrs = append(stopErrs, err)
 			mu.Unlock()
 		}
-
-		for _, runErr := range runErrs {
-			if runErr != nil {
-				t.Fatalf("unexpected run error from module server: %v", runErr)
-			}
-		}
-
-		for _, stopErr := range stopErrs {
-			if stopErr != nil {
-				t.Fatalf("unexpected stop error from module server: %v", stopErr)
-			}
-		}
-
 		done <- nil
 	}
 
 	done := make(chan error, 1)
-	go stopServers(t, done)
+	go stopServers(done)
 	select {
 	case <-done:
 	case <-time.After(30 * time.Second):
 		t.Fatal("timeout waiting for servers to shutdown")
+	}
+
+	for _, runErr := range runErrs {
+		if runErr != nil {
+			t.Fatalf("unexpected run error from module server: %v", runErr)
+		}
+	}
+
+	for _, stopErr := range stopErrs {
+		if stopErr != nil {
+			t.Fatalf("unexpected stop error from module server: %v", stopErr)
+		}
 	}
 }
 
