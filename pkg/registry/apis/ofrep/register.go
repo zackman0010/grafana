@@ -51,8 +51,8 @@ func (b *APIBuilder) GetAuthorizer() authorizer.Authorizer {
 
 func (b *APIBuilder) GetGroupVersion() schema.GroupVersion {
 	return schema.GroupVersion{
-		Group:   "ofrep",
-		Version: "v1",
+		Group:   "features.grafana.app",
+		Version: "v0alpha1",
 	}
 }
 
