@@ -21,6 +21,7 @@ import (
 	claims "github.com/grafana/authlib/types"
 
 	"github.com/grafana/grafana/pkg/apimachinery/utils"
+	"github.com/grafana/grafana/pkg/storage/unified/resource/raw"
 	"github.com/grafana/grafana/pkg/storage/unified/resourcepb"
 )
 
@@ -87,26 +88,26 @@ type BackendReadResponse struct {
 // the underlying raw storage medium.  This interface is never exposed directly,
 // it is provided by concrete instances that actually write values.
 type StorageBackend interface {
-	// Write a Create/Update/Delete,
+	// WriteEvent writes a Create/Update/Delete,
 	// NOTE: the contents of WriteEvent have been validated
 	// Return the revisionVersion for this event or error
 	WriteEvent(context.Context, WriteEvent) (int64, error)
 
-	// Read a resource from storage optionally at an explicit version
+	// ReadResource reads a resource from storage optionally at an explicit version.
 	ReadResource(context.Context, *resourcepb.ReadRequest) *BackendReadResponse
 
-	// When the ResourceServer executes a List request, this iterator will
-	// query the backend for potential results.  All results will be
+	// ListIterator will query the backend for potential results
+	// when the ResourceServer executes a List request.  All results will be
 	// checked against the kubernetes requirements before finally returning
 	// results.  The list options can be used to improve performance
-	// but are the the final answer.
+	// but are the final answer.
 	ListIterator(context.Context, *resourcepb.ListRequest, func(ListIterator) error) (int64, error)
 
-	// Get all events from the store
+	// WatchWriteEvents gets all events from the store.
 	// For HA setups, this will be more events than the local WriteEvent above!
 	WatchWriteEvents(ctx context.Context) (<-chan *WrittenEvent, error)
 
-	// Get resource stats within the storage backend.  When namespace is empty, it will apply to all
+	// GetResourceStats gets resource stats within the storage backend.  When namespace is empty, it will apply to all.
 	GetResourceStats(ctx context.Context, namespace string, minCount int) ([]ResourceStats, error)
 }
 
@@ -117,21 +118,29 @@ type ResourceStats struct {
 	ResourceVersion int64
 }
 
-// This interface is not exposed to end users directly
-// Access to this interface is already gated by access control
+// BlobSupport is not exposed to end users directly.
+// Access to this interface is already gated by access control.
 type BlobSupport interface {
-	// Indicates if storage layer supports signed urls
+	// SupportsSignedURLs indicates if storage layer supports signed urls.
 	SupportsSignedURLs() bool
 
-	// Get the raw blob bytes and metadata -- limited to protobuf message size
-	// For larger payloads, we should use presigned URLs to upload from the client
+	// PutResourceBlob gets the raw blob bytes and metadata -- limited to protobuf message size.
+	// For larger payloads, we should use presigned URLs to upload from the client.
 	PutResourceBlob(context.Context, *resourcepb.PutBlobRequest) (*resourcepb.PutBlobResponse, error)
 
-	// Get blob contents.  When possible, this will return a signed URL
-	// For large payloads, signed URLs are required to avoid protobuf message size limits
+	// GetResourceBlob gets the blob contents.  When possible, this will return a signed URL.
+	// For large payloads, signed URLs are required to avoid protobuf message size limits.
 	GetResourceBlob(ctx context.Context, resource *resourcepb.ResourceKey, info *utils.BlobInfo, mustProxy bool) (*resourcepb.GetBlobResponse, error)
 
 	// TODO? List+Delete?  This is for admin access
+}
+
+// storageGateway is the interface that defines how the raw object is saved.
+// It doesn't provide any semantics around metadata.
+type storageGateway interface {
+	Set(ctx context.Context, guid, tenant, group, resource string, data []byte) error
+	Get(ctx context.Context, guid, tenant, group, resource string) ([]byte, error)
+	Delete(ctx context.Context, guid, tenant, group, resource string) error
 }
 
 type BlobConfig struct {
@@ -219,6 +228,10 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 		}
 	}
 
+	// Create a no-op raw storage. Only if blob storage is enabled
+	// we will override it.
+	var rawStorage storageGateway = raw.NoopDataStore{}
+
 	// Initialize the blob storage
 	blobstore := opts.Blob.Backend
 	if blobstore == nil {
@@ -229,9 +242,12 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 				return nil, err
 			}
 
+			instrumentedBucket := NewInstrumentedBucket(bucket, opts.Reg, opts.Tracer)
+			rawStorage = raw.NewObjectDataStore(instrumentedBucket)
+
 			blobstore, err = NewCDKBlobSupport(ctx, CDKBlobSupportOptions{
 				Tracer: opts.Tracer,
-				Bucket: NewInstrumentedBucket(bucket, opts.Reg, opts.Tracer),
+				Bucket: instrumentedBucket,
 			})
 			if err != nil {
 				return nil, err
@@ -251,6 +267,7 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 		log:            logger,
 		backend:        opts.Backend,
 		blob:           blobstore,
+		rawStorage:     rawStorage,
 		diagnostics:    opts.Diagnostics,
 		access:         opts.AccessClient,
 		writeHooks:     opts.WriteHooks,
@@ -282,10 +299,13 @@ func NewResourceServer(opts ResourceServerOptions) (ResourceServer, error) {
 var _ ResourceServer = &server{}
 
 type server struct {
-	tracer         trace.Tracer
-	log            *slog.Logger
+	tracer trace.Tracer
+	log    *slog.Logger
+	reg    prometheus.Registerer
+
 	backend        StorageBackend
 	blob           BlobSupport
+	rawStorage     storageGateway
 	search         *searchSupport
 	diagnostics    resourcepb.DiagnosticsServer
 	access         claims.AccessClient
@@ -566,6 +586,9 @@ func (s *server) Create(ctx context.Context, req *resourcepb.CreateRequest) (*re
 	if err != nil {
 		rsp.Error = AsErrorResult(err)
 	}
+
+	s.rawStorage.Set(ctx, "guid", event.Key.Namespace, event.Key.Group, event.Key.Resource, event.Value)
+
 	s.log.Debug("server.WriteEvent", "type", event.Type, "rv", rsp.ResourceVersion, "previousRV", event.PreviousRV, "group", event.Key.Group, "namespace", event.Key.Namespace, "name", event.Key.Name, "resource", event.Key.Resource)
 	return rsp, nil
 }
