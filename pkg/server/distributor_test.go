@@ -39,6 +39,7 @@ var (
 	maxPlaylistPerNamespace = 50  // upper bound on how many playlists we will seed to each stack.
 )
 
+//nolint:gocyclo
 func TestIntegrationDistributor(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
@@ -110,16 +111,20 @@ func TestIntegrationDistributor(t *testing.T) {
 
 	t.Run("should expose ring endpoint", func(t *testing.T) {
 		client := http.Client{}
-		res, _ := client.Get("http://localhost:3001/ring")
+		res, err := client.Get("http://localhost:3001/ring")
+		require.NoError(t, err)
 
 		require.Equal(t, res.StatusCode, http.StatusOK)
+		res.Body.Close()
 	})
 
 	t.Run("should expose memberlist endpoint", func(t *testing.T) {
 		client := http.Client{}
-		res, _ := client.Get("http://localhost:3001/memberlist")
+		res, err := client.Get("http://localhost:3001/memberlist")
+		require.NoError(t, err)
 
 		require.Equal(t, res.StatusCode, http.StatusOK)
+		res.Body.Close()
 	})
 
 	t.Run("GetStats", func(t *testing.T) {
@@ -262,7 +267,7 @@ func TestIntegrationDistributor(t *testing.T) {
 		}
 	})
 
-	stopServers := func(done chan error) {
+	stopServers := func(t *testing.T, done chan error) {
 		var wg sync.WaitGroup
 		for _, testServer := range testServers {
 			wg.Add(1)
@@ -303,7 +308,7 @@ func TestIntegrationDistributor(t *testing.T) {
 	}
 
 	done := make(chan error, 1)
-	go stopServers(done)
+	go stopServers(t, done)
 	select {
 	case <-done:
 	case <-time.After(30 * time.Second):
@@ -346,8 +351,10 @@ func createStorageServerApi(t *testing.T, instanceId, bindAddr, dbType, dbConnSt
 	section, err := cfg.Raw.NewSection("database")
 	require.NoError(t, err)
 
-	section.NewKey("type", dbType)
-	section.NewKey("connection_string", dbConnStr)
+	_, err = section.NewKey("type", dbType)
+	require.NoError(t, err)
+	_, err = section.NewKey("connection_string", dbConnStr)
+	require.NoError(t, err)
 
 	cfg.HTTPPort = "3001"
 	cfg.HTTPAddr = bindAddr
@@ -389,8 +396,10 @@ func createBaselineServer(t *testing.T, dbType, dbConnStr string, testNamespaces
 	section, err := cfg.Raw.NewSection("database")
 	require.NoError(t, err)
 
-	section.NewKey("type", dbType)
-	section.NewKey("connection_string", dbConnStr)
+	_, err = section.NewKey("type", dbType)
+	require.NoError(t, err)
+	_, err = section.NewKey("connection_string", dbConnStr)
+	require.NoError(t, err)
 	cfg.IndexPath = "/tmp/grafana-test-index-path/baseline-server"
 	cfg.IndexFileThreshold = testIndexFileThreshold
 	features := featuremgmt.WithFeatures(featuremgmt.FlagUnifiedStorageSearch)
@@ -413,7 +422,7 @@ func createBaselineServer(t *testing.T, dbType, dbConnStr string, testNamespaces
 	ctx := claims.WithAuthInfo(context.Background(), testUserA)
 
 	for _, ns := range testNamespaces {
-		for _ = range rand.Intn(maxPlaylistPerNamespace) + 1 {
+		for range rand.Intn(maxPlaylistPerNamespace) + 1 {
 			_, err = server.Create(ctx, generatePlaylistPayload(ns))
 			require.NoError(t, err)
 		}

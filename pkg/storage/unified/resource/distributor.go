@@ -242,7 +242,10 @@ func (ds *distributorServer) getClientToDistributeRequest(ctx context.Context, n
 
 	ds.log.Info("distributing request to ", "methodName", methodName, "instanceId", rs.Instances[0].Id)
 
-	grpc.SetHeader(ctx, metadata.Pairs("proxied-instance-id", rs.Instances[0].Id))
+	err = grpc.SetHeader(ctx, metadata.Pairs("proxied-instance-id", rs.Instances[0].Id))
+	if err != nil {
+		return ctx, nil, err
+	}
 
 	return userutils.InjectOrgID(ctx, namespace), client.(*RingClient).Client, nil
 }
