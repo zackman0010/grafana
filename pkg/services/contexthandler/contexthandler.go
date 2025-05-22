@@ -143,7 +143,9 @@ func (h *ContextHandler) Middleware(next http.Handler) http.Handler {
 
 		// End the span to make next handlers not wrapped within middleware span
 		span.End()
-		next.ServeHTTP(w, r.WithContext(ctx))
+		if next != nil {
+			next.ServeHTTP(w, r.WithContext(ctx))
+		}
 	})
 }
 
